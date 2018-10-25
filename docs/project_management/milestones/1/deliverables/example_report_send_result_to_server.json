@@ -1,0 +1,206 @@
+{
+  "cpu_usage": [
+    {
+      "relative_time_ns": 38000000010,
+      "value": 42.4242
+    },
+    {
+      "relative_time_ns": 42000000010,
+      "value": 67.2353
+    },
+    {
+      "relative_time_ns": 56000000010,
+      "value": 96.1002
+    },
+    {
+      "relative_time_ns": 78000000010,
+      "value": 77.3543
+    }
+  ],
+  "duration_ns": 120000000020,
+  "end_time": "2011-02-06T22:44:21.000",
+  "geo_locations": [
+    {
+      "accuracy": 2.1,
+      "altitude": 184.3,
+      "heading": 0,
+      "latitude": 32.747895,
+      "longitude": -97.092505,
+      "provider": "accurate location provider",
+      "relative_time_ns": 14000000010,
+      "speed": 0,
+      "time": "2011-02-06T22:42:14.000"
+    },
+    {
+      "accuracy": 12.1,
+      "altitude": 184.7,
+      "heading": 0,
+      "latitude": 32.748071,
+      "longitude": -97.092108,
+      "provider": "accurate location provider",
+      "relative_time_ns": 38000000010,
+      "speed": 0,
+      "time": "2011-02-06T22:42:38.000"
+    }
+  ],
+  "measurements": {
+    "QOS": {
+      "reason": "UNABLE_TO_CONNECT",
+      "relative_end_time_ns": 117000000010,
+      "relative_start_time_ns": 46000000010,
+      "status": "FAILED"
+    },
+    "SPEED": {
+      "bytes_download": 537484,
+      "bytes_download_including_slow_start": 537889,
+      "bytes_upload": 12396739,
+      "bytes_upload_including_slow_start": 12496739,
+      "connection_info": {
+        "actual_num_streams_download": 2,
+        "actual_num_streams_upload": 2,
+        "address": "42.43.44.45",
+        "client_interface_download_measurement_traffic": {
+          "bytes_rx": 123123213,
+          "bytes_tx": 8989347893434
+        },
+        "client_interface_total_traffic": {
+          "bytes_rx": 467346731234,
+          "bytes_tx": 3672367823234
+        },
+        "client_interface_upload_measurement_traffic": {
+          "bytes_rx": 889893488998,
+          "bytes_tx": 12313
+        },
+        "encrpyted": false,
+        "port": 8080,
+        "requested_num_streams_download": 2,
+        "requested_num_streams_upload": 2,
+        "server_mss": 23352,
+        "server_mtu": 2423,
+        "tcp_opt_sack_requested": true,
+        "web_socket_info_download": {
+          "frame_count": 212,
+          "frame_count_including_slow_start": 243,
+          "frame_size": 24423,
+          "overhead": 1234,
+          "overhead_including_slow_start": 12,
+          "overhead_per_frame": 2
+        },
+        "web_socket_info_upload": {
+          "frame_count": 243,
+          "frame_count_including_slow_start": 263,
+          "frame_size": 25123,
+          "overhead": 623,
+          "overhead_including_slow_start": 21,
+          "overhead_per_frame": 1
+        }
+      },
+      "download_raw_data": [
+        {
+          "bytes": 1983,
+          "relative_time_ns": 19000000010,
+          "stream_id": 0
+        },
+        {
+          "bytes": 198743,
+          "relative_time_ns": 24000000010,
+          "stream_id": 1
+        },
+        {
+          "bytes": 19838484,
+          "relative_time_ns": 32000000010,
+          "stream_id": 0
+        }
+      ],
+      "duration_download_ns": 14000000010,
+      "duration_rtt_ns": 10000000008,
+      "duration_upload_ns": 21000000010,
+      "relative_end_time_ns": 46000000010,
+      "relative_start_time_download_ns": 18000000010,
+      "relative_start_time_ns": 1234,
+      "relative_start_time_rtt_ns": 4000000010,
+      "relative_start_time_upload_ns": 35000000010,
+      "rtt_info": {
+        "num_error": 0,
+        "num_missing": 0,
+        "num_received": 2,
+        "num_sent": 2,
+        "packet_size": 12,
+        "requested_num_packets": 2,
+        "rtts": [
+          {
+            "relative_time_ns": 6000000010,
+            "rtt_ns": 1436
+          },
+          {
+            "relative_time_ns": 12000000010,
+            "rtt_ns": 874
+          }
+        ]
+      },
+      "status": "FINISHED",
+      "upload_raw_data": [
+        {
+          "bytes": 1983,
+          "relative_time_ns": 39000000010,
+          "stream_id": 0
+        },
+        {
+          "bytes": 198743,
+          "relative_time_ns": 42000000010,
+          "stream_id": 1
+        }
+      ]
+    }
+  },
+  "mem_usage": [
+    {
+      "relative_time_ns": 42000000010,
+      "value": 42.4242
+    },
+    {
+      "relative_time_ns": 48000000010,
+      "value": 21.2353
+    },
+    {
+      "relative_time_ns": 73000000010,
+      "value": 36.4545
+    },
+    {
+      "relative_time_ns": 94000000010,
+      "value": 65.223
+    },
+    {
+      "relative_time_ns": 98000000010,
+      "value": 73.563
+    }
+  ],
+  "network_points_in_time": [
+    {
+      "bssid": "45:87:66:45:32:aa",
+      "network_type_id": 99,
+      "relative_time_ns": 1000000010,
+      "ssid": "Arlington Public WiFi",
+      "time": "2011-02-06T22:43:02.000"
+    }
+  ],
+  "signals": [
+    {
+      "network_type_id": 99,
+      "relative_time_ns": 24000000010,
+      "wifi_bssid": "45:87:66:45:32:aa",
+      "wifi_link_speed_bps": 25000000,
+      "wifi_rssi_dbm": -57,
+      "wifi_ssid": "Arlington Public WiFi"
+    },
+    {
+      "network_type_id": 99,
+      "relative_time_ns": 32000000010,
+      "wifi_bssid": "45:87:66:45:32:aa",
+      "wifi_link_speed_bps": 25000000,
+      "wifi_rssi_dbm": -52,
+      "wifi_ssid": "Arlington Public WiFi"
+    }
+  ],
+  "start_time": "2011-02-06T22:42:14.000"
+}

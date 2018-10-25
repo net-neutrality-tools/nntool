@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: dev
+
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: false
+
+#  messages:
+#    cache-seconds: 1 # short cache for development
+
+#  jackson:
+#    serialization:
+#      indent_output: true
+
+#management:
+#  trace:
+#    include: request-headers,response-headers,errors # Items to be included in the trace.
+
+server:
+  port: 8080

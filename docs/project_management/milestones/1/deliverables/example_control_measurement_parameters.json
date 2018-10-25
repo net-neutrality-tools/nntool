@@ -1,0 +1,32 @@
+{
+  "measurement_type_params": {
+    "QOS": {
+      "objectives": {
+        "TCP": [
+        ]
+      }
+    },
+    "SPEED": {
+      "durations": {
+        "download": 10,
+        "download_slow_start": 3,
+        "upload": 10,
+        "upload_slow_start": 3
+      },
+      "flows": {
+        "download": 3,
+        "download_slow_start": 3,
+        "rtt": 3,
+        "upload": 3,
+        "upload_slow_start": 3
+      },
+      "javascript_measurement_code_url": "measurement.berec.eu",
+      "measurement_server": {
+        "base_url": "berec.eu"
+      },
+      "rtt_count": 10
+    }
+  },
+  "result_collector_base_url": "collector.berec.eu",
+  "uuid": "959df36f-c5ed-4f12-bf4c-28b8e4ff7ce0"
+}

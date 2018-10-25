@@ -1,0 +1,16 @@
+{
+  "anonymous": false,
+  "requested_measurement_types": {
+    "QOS": {
+      "library_version": "1.2.1",
+      "protocol_version": "2.0",
+      "test_counter": 2
+    },
+    "SPEED": {
+      "library_version": "1.2.1",
+      "protocol_version": "2.0",
+      "test_counter": 2
+    }
+  },
+  "tag": "TAG"
+}

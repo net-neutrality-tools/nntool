@@ -1,0 +1,16 @@
+apply from: "${project.rootDir}/gradle/java8.gradle"
+
+apply plugin: 'war'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+//apply plugin: 'propdeps'
+apply plugin: 'eclipse-wtp'
+
+defaultTasks 'bootRun'
+
+if (project.hasProperty('prod')) {
+    apply from: "${project.rootDir}/gradle/spring_profile_prod.gradle"
+} else {
+    apply from: "${project.rootDir}/gradle/spring_profile_dev.gradle"
+}

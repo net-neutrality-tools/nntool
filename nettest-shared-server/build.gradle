@@ -1,0 +1,37 @@
+apply from: "${project.rootDir}/gradle/java8.gradle"
+
+dependencies {
+	compile project(':nettest-shared')
+
+	compile group: 'javax.inject', name: 'javax.inject', version: javax_inject_version
+
+    compile group: 'joda-time', name: 'joda-time', version: joda_time_version
+	compile group: 'com.google.code.gson', name: 'gson', version: gson_version
+	compile group: 'com.fatboyindustrial.gson-jodatime-serialisers', name: 'gson-jodatime-serialisers', version: gson_jodatime_serialisers_version
+
+	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: springfox_version
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: springfox_version
+
+	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jsonSchema', version: jackson_version
+
+	// Import Spring Boot’s default logging framework (Logback).
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: spring_boot_version
+
+	// Support for aspect-oriented programming including spring-aop and AspectJ.
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: spring_boot_version
+
+	compile(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: spring_boot_version) {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+
+		// Spring Data
+	compile group: 'org.springframework.data', name: 'spring-data-commons', version: spring_data_commons_version
+
+	testCompile group: 'junit', name: 'junit', version: junit_version
+	//Once everything is used with springBoot, the slf4j can be removed
+	testCompile group: 'org.slf4j', name: 'slf4j-simple', version: slf4j_simple_version
+	//testCompile 'junit:junit:4.12'
+
+	compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0' // javax_servlet_version?
+
+}

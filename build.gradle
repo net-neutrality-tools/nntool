@@ -1,0 +1,32 @@
+buildscript {
+    repositories {
+        google()
+
+        mavenLocal()
+        mavenCentral()
+
+        maven { url 'http://repo.spring.io/plugins-release' }
+        maven { url 'http://repo.spring.io/milestone' }
+        maven { url 'https://plugins.gradle.org/m2/' }
+    }
+
+    dependencies {
+        classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: spring_boot_version
+    }
+}
+
+allprojects {
+    group = 'at.alladin.nettest'
+    version = '1.0'
+
+    repositories {
+        google()
+
+        mavenCentral()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url 'https://nexus.pentaho.org/content/groups/omni/' }
+        maven { url 'http://maven.restlet.com' }
+    }
+}
+
+defaultTasks 'build'
