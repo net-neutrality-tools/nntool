@@ -52,7 +52,7 @@ public class SwaggerConfiguration {
 	@Bean
     public Docket collectorApiV1() {
         return new Docket(DocumentationType.SWAGGER_2)
-        		.groupName("collector/controller_v1")
+        		.groupName("collector_v1")
         		.apiInfo(collectorApiInfoV1())
         		.select()
         			.apis(RequestHandlerSelectors.any())
@@ -72,13 +72,11 @@ public class SwaggerConfiguration {
 	 */
 	private ApiInfo collectorApiInfoV1() {
 		return new ApiInfoBuilder()
-			.title("Collector/Controller REST API")
-			.description(
-				"collector/controller REST API documentation of nntool.eu project."
-			)
+			.title("Collector REST API")
+			.description("Collector REST API documentation of nntool.eu project.")
 			.license("Apache License 2.0")
 			.licenseUrl("https://www.apache.org/licenses/LICENSE-2.0.html")
-			.termsOfServiceUrl("http://nntool.eu")
+			.termsOfServiceUrl("https://nntool.eu")
 			.contact(new Contact("alladin-IT GmbH", "https://alladin.at", null))
 			.version("v1")
 			.build();

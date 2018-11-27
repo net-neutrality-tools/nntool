@@ -1,5 +1,7 @@
 include 'nettest-shared'
 include 'nettest-shared-server'
 
+include 'controller-service'
 include 'collector-service'
+include 'statistic-service'
 

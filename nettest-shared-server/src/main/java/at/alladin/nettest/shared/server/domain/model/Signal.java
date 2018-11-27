@@ -71,14 +71,14 @@ public class Signal {
 	@JsonProperty("signal_strength_2g3g_dbm")	
 	private Integer signalStrength2g3gDbm;
 	
-	/**
-	 * The bit error rate as defined in (ETSI) TS 27.007 8.5 (If available).
-	 */
-	@JsonPropertyDescription("The bit error rate as defined in (ETSI) TS 27.007 8.5 (If available).")
-	@Expose
-	@SerializedName("gsm_bit_error_rate")
-	@JsonProperty("gsm_bit_error_rate")	
-	private Integer gsmBitErrorRate;
+//	/**
+//	 * The bit error rate as defined in (ETSI) TS 27.007 8.5 (If available).
+//	 */
+//	@JsonPropertyDescription("The bit error rate as defined in (ETSI) TS 27.007 8.5 (If available).")
+//	@Expose
+//	@SerializedName("gsm_bit_error_rate")
+//	@JsonProperty("gsm_bit_error_rate")	
+//	private Integer gsmBitErrorRate;
 	
     /**
      * The LTE reference signal received power, in dBm (If available).
@@ -96,7 +96,7 @@ public class Signal {
     @Expose
     @SerializedName("lte_rsrp_db")
     @JsonProperty("lte_rsrp_db")
-    private Integer lteRsrqDb;   
+    private Integer lteRsrqDb;
     
     /**
      * The LTE reference signal signal-to-noise ratio, in dB (If available).

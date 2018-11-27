@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: prod
+
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+
+server:
+  port: 8080
+  #compression:
+  #  enabled: true
+  #  mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json

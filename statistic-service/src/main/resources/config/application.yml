@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: statistic-service
+    
+  profiles:
+    # This gets set during Gradle build.
+    # It can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`.
+    active: #spring.profiles.active#
+
+  #messages:
+  #  basename: i18n/messages
+   

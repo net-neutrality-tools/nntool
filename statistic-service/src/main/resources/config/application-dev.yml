@@ -1,0 +1,25 @@
+spring:
+  profiles:
+    active: dev
+  
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: false
+#  datasource:
+#    type: com.zaxxer.hikari.HikariDataSource
+#    platform: postgres
+#    url: jdbc:postgresql://localhost:5432/db
+#    username: 
+#    password: 
+
+server:
+  port: 8083
+  
+logging:
+  level:
+    ROOT: INFO
+    at.alladin.nettest: DEBUG
+    org.springframework.cache: TRACE
+    

@@ -1,1562 +1,1685 @@
 {
-  "swagger": "2.0",
-  "info": {
-    "description": "Statistic Service REST API documentation of nntool.eu project.",
-    "version": "v1",
-    "title": "Statistic Service REST API",
-    "termsOfService": "http://nntool.eu",
-    "contact": {
-      "name": "alladin-IT GmbH",
-      "url": "https://alladin.at"
-    },
-    "license": {
-      "name": "Apache License 2.0",
-      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-    }
-  },
-  "host": "localhost:8080",
-  "basePath": "/",
-  "tags": [
-    {
-      "name": "documentation-resource",
-      "description": "Documentation Resource"
-    },
-    {
-      "name": "export-resource",
-      "description": "Export Resource"
-    },
-    {
-      "name": "measurement-resource",
-      "description": "Measurement Resource"
-    },
-    {
-      "name": "version-resource",
-      "description": "Version Resource"
-    }
-  ],
-  "paths": {
-    "/api/v1/documentation/json-schemas/api": {
-      "get": {
-        "tags": [
-          "documentation-resource"
-        ],
-        "summary": "Returns the json schema of the REST API DTO classes.",
-        "operationId": "renderApiJsonSchemaUsingGET",
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "object"
-              }
+    "info": {
+        "termsOfService": "https://nntool.eu", 
+        "description": "Statistic Service REST API documentation of nntool.eu project.", 
+        "license": {
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html", 
+            "name": "Apache License 2.0"
+        }, 
+        "title": "Statistic Service REST API", 
+        "contact": {
+            "url": "https://alladin.at", 
+            "name": "alladin-IT GmbH"
+        }, 
+        "version": "v1"
+    }, 
+    "paths": {
+        "/api/v1/documentation/json-schemas/data-model": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK", 
+                        "schema": {
+                            "additionalProperties": {
+                                "type": "object"
+                            }, 
+                            "type": "object"
+                        }
+                    }
+                }, 
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ], 
+                "deprecated": false, 
+                "description": "This returns the JSON schema of the data model classes.", 
+                "tags": [
+                    "documentation-resource"
+                ], 
+                "summary": "Returns the json schema of the data model classes.", 
+                "operationId": "renderDataModelJsonSchemaUsingGET"
             }
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/api/v1/documentation/json-schemas/data-model": {
-      "get": {
-        "tags": [
-          "documentation-resource"
-        ],
-        "summary": "Returns the json schema of the data model classes.",
-        "operationId": "renderDataModelJsonSchemaUsingGET",
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "object"
-              }
+        }, 
+        "/api/v1/exports/{year}/{month}/{day}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }, 
+                    "500": {
+                        "description": "Internal Server Error", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }, 
+                    "400": {
+                        "description": "Bad Request", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }, 
+                "description": "Export measurements by year, month and day as CSV.", 
+                "parameters": [
+                    {
+                        "description": "day", 
+                        "format": "int32", 
+                        "required": true, 
+                        "in": "path", 
+                        "type": "integer", 
+                        "name": "day"
+                    }, 
+                    {
+                        "description": "month", 
+                        "format": "int32", 
+                        "required": true, 
+                        "in": "path", 
+                        "type": "integer", 
+                        "name": "month"
+                    }, 
+                    {
+                        "description": "year", 
+                        "format": "int32", 
+                        "required": true, 
+                        "in": "path", 
+                        "type": "integer", 
+                        "name": "year"
+                    }
+                ], 
+                "produces": [
+                    "*/*"
+                ], 
+                "deprecated": false, 
+                "tags": [
+                    "export-resource"
+                ], 
+                "summary": "Export measurements by year, month and day as CSV.", 
+                "operationId": "exportDailyDataUsingGET_1"
             }
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/api/v1/documentation/open-api": {
-      "get": {
-        "tags": [
-          "documentation-resource"
-        ],
-        "summary": "Redirects to the OpenApi specification.",
-        "description": "This request redirects the user to the OpenAPI specification at /v2/api-docs?group=<group>.",
-        "operationId": "redirectToSwaggerSpecUsingGET",
-        "produces": [
-          "*/*"
-        ],
-        "responses": {
-          "301": {
-            "description": "Moved Permanently"
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/api/v1/documentation/swagger": {
-      "get": {
-        "tags": [
-          "documentation-resource"
-        ],
-        "summary": "Redirects to the swagger UI.",
-        "description": "This request redirects the user to the swagger UI at /swagger-ui.html.",
-        "operationId": "redirectToSwaggerUiUsingGET",
-        "produces": [
-          "*/*"
-        ],
-        "responses": {
-          "301": {
-            "description": "Moved Permanently"
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/api/v1/exports/{openDataUuid}": {
-      "get": {
-        "tags": [
-          "export-resource"
-        ],
-        "summary": "Exports a single measurement as CSV.",
-        "description": "Exports a single measurement as CSV.",
-        "operationId": "exportSingleMeasurementUsingGET_1",
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "openDataUuid",
-            "in": "path",
-            "description": "openDataUuid",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
+        }, 
+        "/api/v1/documentation/json-schemas/api": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK", 
+                        "schema": {
+                            "additionalProperties": {
+                                "type": "object"
+                            }, 
+                            "type": "object"
+                        }
+                    }
+                }, 
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ], 
+                "deprecated": false, 
+                "description": "This returns the JSON schema of the REST API DTO classes.", 
+                "tags": [
+                    "documentation-resource"
+                ], 
+                "summary": "Returns the json schema of the REST API DTO classes.", 
+                "operationId": "renderApiJsonSchemaUsingGET"
             }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
+        }, 
+        "/api/v1/exports/{openDataUuid}.{extension}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }, 
+                    "500": {
+                        "description": "Internal Server Error", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }, 
+                    "400": {
+                        "description": "Bad Request", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }, 
+                "description": "Exports a single measurement as CSV, JSON or YAML file.", 
+                "parameters": [
+                    {
+                        "description": "extension", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "extension", 
+                        "in": "path"
+                    }, 
+                    {
+                        "description": "openDataUuid", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "openDataUuid", 
+                        "in": "path"
+                    }
+                ], 
+                "produces": [
+                    "*/*"
+                ], 
+                "deprecated": false, 
+                "tags": [
+                    "export-resource"
+                ], 
+                "summary": "Exports a single measurement as CSV, JSON or YAML file.", 
+                "operationId": "exportSingleMeasurementUsingGET"
             }
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/api/v1/exports/{openDataUuid}.{extension}.zip": {
-      "get": {
-        "tags": [
-          "export-resource"
-        ],
-        "summary": "Exports a single measurement as ZIP file including a file with custom extension.",
-        "description": "Exports a single measurement as ZIP file including a file with custom extension. Supported custom extensions are CSV, JSON, YAML.",
-        "operationId": "exportSingleMeasurementUsingGET",
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "extension",
-            "in": "path",
-            "description": "extension",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "openDataUuid",
-            "in": "path",
-            "description": "openDataUuid",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
+        }, 
+        "/api/v1/exports/{year}/{month}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }, 
+                    "500": {
+                        "description": "Internal Server Error", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }, 
+                    "400": {
+                        "description": "Bad Request", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }, 
+                "description": "Export measurements by year and month as CSV.", 
+                "parameters": [
+                    {
+                        "description": "month", 
+                        "format": "int32", 
+                        "required": true, 
+                        "in": "path", 
+                        "type": "integer", 
+                        "name": "month"
+                    }, 
+                    {
+                        "description": "year", 
+                        "format": "int32", 
+                        "required": true, 
+                        "in": "path", 
+                        "type": "integer", 
+                        "name": "year"
+                    }
+                ], 
+                "produces": [
+                    "*/*"
+                ], 
+                "deprecated": false, 
+                "tags": [
+                    "export-resource"
+                ], 
+                "summary": "Export measurements by year and month as CSV.", 
+                "operationId": "exportMonthlyDataUsingGET_1"
             }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
+        }, 
+        "/api/v1/exports/{year}/{month}.{extension}.zip": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }, 
+                    "500": {
+                        "description": "Internal Server Error", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }, 
+                    "400": {
+                        "description": "Bad Request", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }, 
+                "description": "Export measurements by year and month as ZIP file including a file with custom extension. Supported custom extensions are CSV, JSON, YAML.", 
+                "parameters": [
+                    {
+                        "description": "extension", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "extension", 
+                        "in": "path"
+                    }, 
+                    {
+                        "description": "month", 
+                        "format": "int32", 
+                        "required": true, 
+                        "in": "path", 
+                        "type": "integer", 
+                        "name": "month"
+                    }, 
+                    {
+                        "description": "year", 
+                        "format": "int32", 
+                        "required": true, 
+                        "in": "path", 
+                        "type": "integer", 
+                        "name": "year"
+                    }
+                ], 
+                "produces": [
+                    "*/*"
+                ], 
+                "deprecated": false, 
+                "tags": [
+                    "export-resource"
+                ], 
+                "summary": "Export measurements by year and month as ZIP file including a file with custom extension.", 
+                "operationId": "exportMonthlyDataUsingGET"
             }
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/api/v1/exports/{year}/{month}": {
-      "get": {
-        "tags": [
-          "export-resource"
-        ],
-        "summary": "Export measurements by year and month as CSV.",
-        "description": "Export measurements by year and month as CSV.",
-        "operationId": "exportMonthlyDataUsingGET_1",
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "month",
-            "in": "path",
-            "description": "month",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "year",
-            "in": "path",
-            "description": "year",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
+        }, 
+        "/api/v1/versions": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse\u00abVersionResponse\u00bb"
+                        }
+                    }
+                }, 
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ], 
+                "deprecated": false, 
+                "description": "Returns the software version of the statistic server.", 
+                "tags": [
+                    "version-resource"
+                ], 
+                "summary": "Get the server version.", 
+                "operationId": "getVersionUsingGET"
             }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
+        }, 
+        "/api/v1/measurements/measurements/{openDataUuid}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse\u00abFullMeasurementResponse\u00bb"
+                        }
+                    }, 
+                    "500": {
+                        "description": "Internal Server Error", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }, 
+                    "400": {
+                        "description": "Bad Request", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }, 
+                "description": "Returns a measurement by open-data UUID with either all or a custom selection of measurement types.", 
+                "parameters": [
+                    {
+                        "enum": [
+                            "SPEED", 
+                            "QOS"
+                        ], 
+                        "description": "Set of included measurement types (e.g. SPEED, QOS). If nothing is provided all measurement types are returned", 
+                        "allowEmptyValue": false, 
+                        "items": {
+                            "enum": [
+                                "SPEED", 
+                                "QOS"
+                            ], 
+                            "type": "string"
+                        }, 
+                        "required": false, 
+                        "collectionFormat": "multi", 
+                        "in": "query", 
+                        "type": "array", 
+                        "name": "include"
+                    }, 
+                    {
+                        "description": "The open-data UUID", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "openDataUuid", 
+                        "in": "path"
+                    }
+                ], 
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ], 
+                "deprecated": false, 
+                "tags": [
+                    "measurement-resource"
+                ], 
+                "summary": "Returns an open-data measurement.", 
+                "operationId": "getMeasurementUsingGET"
             }
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/api/v1/exports/{year}/{month}.{extension}.zip": {
-      "get": {
-        "tags": [
-          "export-resource"
-        ],
-        "summary": "Export measurements by year and month as ZIP file including a file with custom extension.",
-        "description": "Export measurements by year and month as ZIP file including a file with custom extension. Supported custom extensions are CSV, JSON, YAML.",
-        "operationId": "exportMonthlyDataUsingGET",
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "extension",
-            "in": "path",
-            "description": "extension",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "month",
-            "in": "path",
-            "description": "month",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "year",
-            "in": "path",
-            "description": "year",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
+        }, 
+        "/api/v1/exports/{year}/{month}/{day}.{extension}.zip": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }, 
+                    "500": {
+                        "description": "Internal Server Error", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }, 
+                    "400": {
+                        "description": "Bad Request", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }, 
+                "description": "Export measurements by year, month and day as ZIP file including a file with custom extension. Supported custom extensions are CSV, JSON, YAML.", 
+                "parameters": [
+                    {
+                        "description": "day", 
+                        "format": "int32", 
+                        "required": true, 
+                        "in": "path", 
+                        "type": "integer", 
+                        "name": "day"
+                    }, 
+                    {
+                        "description": "extension", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "extension", 
+                        "in": "path"
+                    }, 
+                    {
+                        "description": "month", 
+                        "format": "int32", 
+                        "required": true, 
+                        "in": "path", 
+                        "type": "integer", 
+                        "name": "month"
+                    }, 
+                    {
+                        "description": "year", 
+                        "format": "int32", 
+                        "required": true, 
+                        "in": "path", 
+                        "type": "integer", 
+                        "name": "year"
+                    }
+                ], 
+                "produces": [
+                    "*/*"
+                ], 
+                "deprecated": false, 
+                "tags": [
+                    "export-resource"
+                ], 
+                "summary": "Export measurements by year, month and day as ZIP file including a file with custom extension.", 
+                "operationId": "exportDailyDataUsingGET"
             }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
+        }, 
+        "/api/v1/measurements/measurements/{openDataUuid}/details": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse\u00abDetailMeasurementResponse\u00bb"
+                        }
+                    }, 
+                    "500": {
+                        "description": "Internal Server Error", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }, 
+                    "400": {
+                        "description": "Bad Request", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }, 
+                "description": "Returns the open-data measurement details, either in grouped or plain form.", 
+                "parameters": [
+                    {
+                        "description": "Flag that indicates if the details should be grouped", 
+                        "allowEmptyValue": false, 
+                        "default": false, 
+                        "required": false, 
+                        "x-example": false, 
+                        "in": "query", 
+                        "type": "boolean", 
+                        "name": "grouped"
+                    }, 
+                    {
+                        "description": "The open-data UUID", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "openDataUuid", 
+                        "in": "path"
+                    }
+                ], 
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ], 
+                "deprecated": false, 
+                "tags": [
+                    "measurement-resource"
+                ], 
+                "summary": "Get details of an open-data measurement.", 
+                "operationId": "getMeasurementDetailsUsingGET"
             }
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/api/v1/exports/{year}/{month}/{day}": {
-      "get": {
-        "tags": [
-          "export-resource"
-        ],
-        "summary": "Export measurements by year, month and day as CSV.",
-        "description": "Export measurements by year, month and day as CSV.",
-        "operationId": "exportDailyDataUsingGET_1",
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "day",
-            "in": "path",
-            "description": "day",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "month",
-            "in": "path",
-            "description": "month",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "year",
-            "in": "path",
-            "description": "year",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
+        }, 
+        "/api/v1/documentation/swagger-spec": {
+            "get": {
+                "responses": {
+                    "301": {
+                        "description": "Moved Permanently"
+                    }
+                }, 
+                "produces": [
+                    "*/*"
+                ], 
+                "deprecated": false, 
+                "description": "This request redirects the user to the OpenAPI specification at /v2/api-docs?group=<group>.", 
+                "tags": [
+                    "documentation-resource"
+                ], 
+                "summary": "Redirects to the OpenApi specification.", 
+                "operationId": "redirectToSwaggerSpecUsingGET"
             }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
+        }, 
+        "/api/v1/exports/{openDataUuid}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }, 
+                    "500": {
+                        "description": "Internal Server Error", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }, 
+                    "400": {
+                        "description": "Bad Request", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }, 
+                "description": "Exports a single measurement as CSV.", 
+                "parameters": [
+                    {
+                        "description": "openDataUuid", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "openDataUuid", 
+                        "in": "path"
+                    }
+                ], 
+                "produces": [
+                    "*/*"
+                ], 
+                "deprecated": false, 
+                "tags": [
+                    "export-resource"
+                ], 
+                "summary": "Exports a single measurement as CSV.", 
+                "operationId": "exportSingleMeasurementUsingGET_1"
             }
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/api/v1/exports/{year}/{month}/{day}.{extension}.zip": {
-      "get": {
-        "tags": [
-          "export-resource"
-        ],
-        "summary": "Export measurements by year, month and day as ZIP file including a file with custom extension.",
-        "description": "Export measurements by year, month and day as ZIP file including a file with custom extension. Supported custom extensions are CSV, JSON, YAML.",
-        "operationId": "exportDailyDataUsingGET",
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "day",
-            "in": "path",
-            "description": "day",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "extension",
-            "in": "path",
-            "description": "extension",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "month",
-            "in": "path",
-            "description": "month",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "year",
-            "in": "path",
-            "description": "year",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
+        }, 
+        "/api/v1/documentation/swagger-ui": {
+            "get": {
+                "responses": {
+                    "301": {
+                        "description": "Moved Permanently"
+                    }
+                }, 
+                "produces": [
+                    "*/*"
+                ], 
+                "deprecated": false, 
+                "description": "This request redirects the user to the swagger UI at /swagger-ui.html.", 
+                "tags": [
+                    "documentation-resource"
+                ], 
+                "summary": "Redirects to the swagger UI.", 
+                "operationId": "redirectToSwaggerUiUsingGET"
             }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
+        }, 
+        "/api/v1/measurements/": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse\u00abApiPagination\u00abBriefMeasurementResponse\u00bb\u00bb"
+                        }
+                    }, 
+                    "500": {
+                        "description": "Internal Server Error", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }, 
+                    "400": {
+                        "description": "Bad Request", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }, 
+                "description": "This resource returns brief information of each queried open-data measurement.", 
+                "parameters": [
+                    {
+                        "format": "int64", 
+                        "required": false, 
+                        "type": "integer", 
+                        "name": "offset", 
+                        "in": "query"
+                    }, 
+                    {
+                        "format": "int32", 
+                        "required": false, 
+                        "type": "integer", 
+                        "name": "pageNumber", 
+                        "in": "query"
+                    }, 
+                    {
+                        "format": "int32", 
+                        "required": false, 
+                        "type": "integer", 
+                        "name": "pageSize", 
+                        "in": "query"
+                    }, 
+                    {
+                        "required": false, 
+                        "type": "boolean", 
+                        "name": "paged", 
+                        "in": "query"
+                    }, 
+                    {
+                        "description": "search", 
+                        "default": "*", 
+                        "required": false, 
+                        "in": "query", 
+                        "type": "string", 
+                        "name": "search"
+                    }, 
+                    {
+                        "required": false, 
+                        "type": "boolean", 
+                        "name": "sort.sorted", 
+                        "in": "query"
+                    }, 
+                    {
+                        "required": false, 
+                        "type": "boolean", 
+                        "name": "sort.unsorted", 
+                        "in": "query"
+                    }, 
+                    {
+                        "required": false, 
+                        "type": "boolean", 
+                        "name": "unpaged", 
+                        "in": "query"
+                    }
+                ], 
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ], 
+                "deprecated": false, 
+                "tags": [
+                    "measurement-resource"
+                ], 
+                "summary": "Retrieve a paginated and searched list of open-data measurements.", 
+                "operationId": "getMeasurementsUsingGET"
             }
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/api/v1/measurements/": {
-      "get": {
-        "tags": [
-          "measurement-resource"
-        ],
-        "summary": "Retrieve a paginated and searched list of open-data measurements.",
-        "description": "This resource returns brief information of each queried open-data measurement.",
-        "operationId": "getMeasurementsUsingGET",
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "parameters": [
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "pageNumber",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "paged",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "search",
-            "in": "query",
-            "description": "search",
-            "required": false,
-            "type": "string",
-            "default": "*"
-          },
-          {
-            "name": "sort.sorted",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "sort.unsorted",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "name": "unpaged",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse«ApiPagination«BriefMeasurementResponse»»"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/api/v1/measurements/measurements/{openDataUuid}": {
-      "get": {
-        "tags": [
-          "measurement-resource"
-        ],
-        "summary": "Returns an open-data measurement.",
-        "description": "Returns a measurement by open-data UUID with either all or a custom selection of measurement types.",
-        "operationId": "getMeasurementUsingGET",
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "parameters": [
-          {
-            "name": "include",
-            "in": "query",
-            "description": "Set of included measurement types (e.g. SPEED, QOS). If nothing is provided all measurement types are returned",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "SPEED",
-                "QOS"
-              ]
-            },
-            "collectionFormat": "multi",
-            "allowEmptyValue": false,
-            "enum": [
-              "SPEED",
-              "QOS"
-            ]
-          },
-          {
-            "name": "openDataUuid",
-            "in": "path",
-            "description": "The open-data UUID",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse«FullMeasurementResponse»"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/api/v1/measurements/measurements/{openDataUuid}/details": {
-      "get": {
-        "tags": [
-          "measurement-resource"
-        ],
-        "summary": "Get details of an open-data measurement.",
-        "description": "Returns the open-data measurement details, either in grouped or plain form.",
-        "operationId": "getMeasurementDetailsUsingGET",
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "parameters": [
-          {
-            "name": "grouped",
-            "in": "query",
-            "description": "Flag that indicates if the details should be grouped",
-            "required": false,
-            "type": "boolean",
-            "default": false,
-            "allowEmptyValue": false,
-            "x-example": false
-          },
-          {
-            "name": "openDataUuid",
-            "in": "path",
-            "description": "The open-data UUID",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse«DetailMeasurementResponse»"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/api/v1/versions": {
-      "get": {
-        "tags": [
-          "version-resource"
-        ],
-        "summary": "Get the server version.",
-        "description": "Returns the software version of the statistic server.",
-        "operationId": "getVersionUsingGET",
-        "produces": [
-          "application/json;charset=UTF-8"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse«VersionResponse»"
-            }
-          }
-        },
-        "deprecated": false
-      }
-    }
-  },
-  "definitions": {
-    "ApiError": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "type": "string",
-          "example": "'Internal Server Error', 'Not Found', ...",
-          "description": "String representation of the status."
-        },
-        "exception": {
-          "type": "string",
-          "description": "Exception class name."
-        },
-        "message": {
-          "type": "string",
-          "example": "java.lang.RuntimeException",
-          "description": "The error or exception message."
-        },
-        "path": {
-          "type": "string",
-          "description": "URI path/resource that caused the error."
-        },
-        "status": {
-          "type": "integer",
-          "format": "int32",
-          "example": "400, 404, 500, ...",
-          "description": "Status code for the error."
-        },
-        "time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Date and time at which the error occurred."
-        },
-        "trace": {
-          "type": "string",
-          "description": "Exception stack trace."
         }
-      },
-      "title": "ApiError",
-      "description": "DTO that wraps server errors and/or exceptions."
-    },
-    "ApiPagination«BriefMeasurementResponse»": {
-      "type": "object",
-      "properties": {
-        "content": {
-          "type": "array",
-          "description": "Paginated list of objects.",
-          "items": {
-            "$ref": "#/definitions/BriefMeasurementResponse"
-          }
-        },
-        "page_number": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Current page number (>= 0)."
-        },
-        "page_size": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Current page size (> 0)."
-        },
-        "total_elements": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Total amount of objects (>= 0)."
-        },
-        "total_pages": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Total amount of pages (>= 0)."
+    }, 
+    "tags": [
+        {
+            "name": "documentation-resource", 
+            "description": "Documentation Resource"
+        }, 
+        {
+            "name": "export-resource", 
+            "description": "Export Resource"
+        }, 
+        {
+            "name": "measurement-resource", 
+            "description": "Measurement Resource"
+        }, 
+        {
+            "name": "version-resource", 
+            "description": "Version Resource"
         }
-      },
-      "title": "ApiPagination«BriefMeasurementResponse»",
-      "description": "Wrapper for paginated responses (e.g. list of measurements)."
-    },
-    "ApiResponse": {
-      "type": "object",
-      "properties": {
-        "data": {
-          "type": "object",
-          "description": "Actual data that is returned for the request/response."
-        },
-        "errors": {
-          "type": "array",
-          "description": "Optional list of errors that occurred during request processing.",
-          "items": {
-            "$ref": "#/definitions/ApiError"
-          }
+    ], 
+    "basePath": "/", 
+    "host": "localhost:8083", 
+    "definitions": {
+        "FullMeasurementResponse": {
+            "description": "This DTO class contains all measurement information that is sent to the measurement agent.", 
+            "required": [
+                "agent_info", 
+                "device_info", 
+                "duration_ns", 
+                "end_time", 
+                "geo_locations", 
+                "measurements", 
+                "network_info", 
+                "open_data_uuid", 
+                "start_time", 
+                "uuid"
+            ], 
+            "type": "object", 
+            "properties": {
+                "geo_locations": {
+                    "items": {
+                        "$ref": "#/definitions/GeoLocationDto"
+                    }, 
+                    "type": "array", 
+                    "description": "List of all captured geographic locations."
+                }, 
+                "open_data_uuid": {
+                    "type": "string", 
+                    "description": "The open-data identifier (UUIDv4) of the measurement."
+                }, 
+                "source": {
+                    "type": "string", 
+                    "description": "Measurement source. Can be either own system or imported from open-data."
+                }, 
+                "start_time": {
+                    "type": "string", 
+                    "description": "Start Date and time for this (sub-) measurement.", 
+                    "format": "date-time"
+                }, 
+                "measurements": {
+                    "additionalProperties": {
+                        "$ref": "#/definitions/FullSubMeasurement"
+                    }, 
+                    "type": "object", 
+                    "description": "Contains the result of a Speed and/or QoS measurement."
+                }, 
+                "agent_info": {
+                    "description": "Contains information about the measurement measurement agent.", 
+                    "$ref": "#/definitions/MeasurementAgentInfoDto"
+                }, 
+                "duration_ns": {
+                    "type": "integer", 
+                    "description": "Duration of a measurement.", 
+                    "format": "int64"
+                }, 
+                "device_info": {
+                    "description": "Contains information about the device the measurement software is running on.", 
+                    "$ref": "#/definitions/DeviceInfoDto"
+                }, 
+                "end_time": {
+                    "type": "string", 
+                    "description": "End Date and time for this (sub-) measurement. Date and time is always stored as UTC.", 
+                    "format": "date-time"
+                }, 
+                "network_info": {
+                    "description": "Contains network related information gathered during the test.", 
+                    "$ref": "#/definitions/NetworkInfoDto"
+                }, 
+                "uuid": {
+                    "type": "string", 
+                    "description": "The unique identifier (UUIDv4) of the measurement."
+                }
+            }, 
+            "title": "FullMeasurementResponse"
+        }, 
+        "GeoLocationDto": {
+            "description": "GeoLocation object to be used on the measurement agent side and inside DTOs.", 
+            "required": [
+                "latitude", 
+                "longitude", 
+                "relative_time_ns", 
+                "time"
+            ], 
+            "type": "object", 
+            "properties": {
+                "altitude": {
+                    "type": "number", 
+                    "description": "Geographic location altitude.", 
+                    "format": "double"
+                }, 
+                "time": {
+                    "type": "string", 
+                    "description": "Time and date the geographic location information was captured (UTC).", 
+                    "format": "date-time"
+                }, 
+                "longitude": {
+                    "type": "number", 
+                    "description": "Geographic location longitude.", 
+                    "format": "double"
+                }, 
+                "provider": {
+                    "type": "string", 
+                    "description": "Geographic location provider."
+                }, 
+                "latitude": {
+                    "type": "number", 
+                    "description": "Geographic location latitude.", 
+                    "format": "double"
+                }, 
+                "speed": {
+                    "type": "number", 
+                    "description": "Movement speed.", 
+                    "format": "double"
+                }, 
+                "heading": {
+                    "type": "number", 
+                    "description": "Movement heading.", 
+                    "format": "double"
+                }, 
+                "relative_time_ns": {
+                    "type": "integer", 
+                    "description": "Relative time in nanoseconds (to measurement begin).", 
+                    "format": "int64"
+                }, 
+                "accuracy": {
+                    "type": "number", 
+                    "description": "Geographic location accuracy.", 
+                    "format": "double"
+                }
+            }, 
+            "title": "GeoLocationDto"
+        }, 
+        "NetworkPointInTimeInfoDto": {
+            "description": "Contains all relevant network information of a single point in time.", 
+            "required": [
+                "network_type_id", 
+                "network_type_name", 
+                "relative_time_ns", 
+                "time"
+            ], 
+            "type": "object", 
+            "properties": {
+                "network_type_name": {
+                    "type": "string", 
+                    "description": "Network type name."
+                }, 
+                "bssid": {
+                    "type": "string", 
+                    "description": "BSSID of the network."
+                }, 
+                "network_type_id": {
+                    "type": "integer", 
+                    "description": "Network type id as it gets returned by the Android API.", 
+                    "format": "int32"
+                }, 
+                "relative_time_ns": {
+                    "type": "integer", 
+                    "description": "Time and date the signal information was captured (UTC).", 
+                    "format": "int64"
+                }, 
+                "ssid": {
+                    "type": "string", 
+                    "description": "SSID of the network."
+                }, 
+                "country_code_asn": {
+                    "type": "string", 
+                    "description": "Country code derived from the AS (e.g. \"AT\")."
+                }, 
+                "sim_operator_mcc_mnc": {
+                    "type": "string", 
+                    "description": "The MCC/MNC of the SIM operator, if available."
+                }, 
+                "network_country": {
+                    "type": "string", 
+                    "description": "The network operator country code (e.g. \"AT\"), if available."
+                }, 
+                "agent_public_ip": {
+                    "type": "string", 
+                    "description": "Public IP address of the measurement agent."
+                }, 
+                "provider_name": {
+                    "type": "string", 
+                    "description": "The name of the provider."
+                }, 
+                "sim_country": {
+                    "type": "string", 
+                    "description": "The SIM operator country code (e.g. \"AT\"), if available."
+                }, 
+                "network_type_group_name": {
+                    "type": "string", 
+                    "description": "Network group name (e.g. 2G, 3G, LAN, etc)."
+                }, 
+                "network_type_category": {
+                    "type": "string", 
+                    "description": "Contains the different network categories."
+                }, 
+                "network_operator_mcc_mnc": {
+                    "type": "string", 
+                    "description": "The MCC/MNC of the network operator, if available."
+                }, 
+                "agent_public_ip_country_code": {
+                    "type": "string", 
+                    "description": "Country of the measurement agent which is gathered by Geo-IP lookup."
+                }, 
+                "public_ip_asn": {
+                    "type": "integer", 
+                    "description": "ASN for the public IP address.", 
+                    "format": "int64"
+                }, 
+                "public_ip_as_name": {
+                    "type": "string", 
+                    "description": "Name of ASN."
+                }, 
+                "network_operator_name": {
+                    "type": "string", 
+                    "description": "The network operator name, if available."
+                }, 
+                "provider_short_name": {
+                    "type": "string", 
+                    "description": "The short name (or shortcut) of the provider."
+                }, 
+                "public_ip_rdns": {
+                    "type": "string", 
+                    "description": "Reverse DNS for the public IP address."
+                }, 
+                "sim_operator_name": {
+                    "type": "string", 
+                    "description": "SIM operator name, if available."
+                }, 
+                "time": {
+                    "type": "string", 
+                    "description": "Time and date the signal information was captured (UTC).", 
+                    "format": "date-time"
+                }
+            }, 
+            "title": "NetworkPointInTimeInfoDto"
+        }, 
+        "NetworkInfoDto": {
+            "description": "Contains network related information gathered during the test.", 
+            "required": [
+                "network_point_in_time_info"
+            ], 
+            "type": "object", 
+            "properties": {
+                "network_point_in_time_info": {
+                    "items": {
+                        "$ref": "#/definitions/NetworkPointInTimeInfoDto"
+                    }, 
+                    "type": "array", 
+                    "description": "Contains all relevant network information of a single point in time."
+                }, 
+                "signals": {
+                    "items": {
+                        "$ref": "#/definitions/SignalDto"
+                    }, 
+                    "type": "array", 
+                    "description": "List of captured signal information."
+                }, 
+                "cell_locations": {
+                    "items": {
+                        "$ref": "#/definitions/CellLocationDto"
+                    }, 
+                    "type": "array", 
+                    "description": "List of captured cell information."
+                }
+            }, 
+            "title": "NetworkInfoDto"
+        }, 
+        "DeviceInfoDto": {
+            "description": "Contains information about the device the measurement software is running on.", 
+            "required": [
+                "code_name", 
+                "os_info"
+            ], 
+            "type": "object", 
+            "properties": {
+                "os_info": {
+                    "description": "Contains information about the measurement agent's OS.", 
+                    "$ref": "#/definitions/OperatingSystemInfoDto"
+                }, 
+                "model": {
+                    "type": "string", 
+                    "description": "Detailed device designation."
+                }, 
+                "full_name": {
+                    "type": "string", 
+                    "description": "The device name that is commonly known to users (e.g. Google Pixel)."
+                }, 
+                "code_name": {
+                    "type": "string", 
+                    "description": "Device code name."
+                }
+            }, 
+            "title": "DeviceInfoDto"
+        }, 
+        "BriefDeviceInfo": {
+            "description": "BriefDeviceInfo contains the most important values from DeviceInfo class.", 
+            "required": [
+                "device_code_name", 
+                "os_name", 
+                "os_version"
+            ], 
+            "type": "object", 
+            "properties": {
+                "os_name": {
+                    "type": "string", 
+                    "description": "Device operating system name."
+                }, 
+                "device_code_name": {
+                    "type": "string", 
+                    "description": "Device code name."
+                }, 
+                "avg_mem_usage": {
+                    "type": "number", 
+                    "description": "Average Memory usage during the measurement.", 
+                    "format": "double"
+                }, 
+                "os_version": {
+                    "type": "string", 
+                    "description": "Device operating system version."
+                }, 
+                "avg_cpu_usage": {
+                    "type": "number", 
+                    "description": "Average CPU usage during the measurement.", 
+                    "format": "double"
+                }, 
+                "device_full_name": {
+                    "type": "string", 
+                    "description": "The device name that is commonly known to users (e.g. Google Pixel)."
+                }
+            }, 
+            "title": "BriefDeviceInfo"
+        }, 
+        "ApiResponse": {
+            "description": "Object that is used as wrapper for every response.", 
+            "required": [
+                "data"
+            ], 
+            "type": "object", 
+            "properties": {
+                "errors": {
+                    "items": {
+                        "$ref": "#/definitions/ApiError"
+                    }, 
+                    "type": "array", 
+                    "description": "Optional list of errors that occurred during request processing."
+                }, 
+                "data": {
+                    "type": "object", 
+                    "description": "Actual data that is returned for the request/response."
+                }
+            }, 
+            "title": "ApiResponse"
+        }, 
+        "ApiResponse\u00abDetailMeasurementResponse\u00bb": {
+            "description": "Object that is used as wrapper for every response.", 
+            "required": [
+                "data"
+            ], 
+            "type": "object", 
+            "properties": {
+                "errors": {
+                    "items": {
+                        "$ref": "#/definitions/ApiError"
+                    }, 
+                    "type": "array", 
+                    "description": "Optional list of errors that occurred during request processing."
+                }, 
+                "data": {
+                    "description": "Actual data that is returned for the request/response.", 
+                    "$ref": "#/definitions/DetailMeasurementResponse"
+                }
+            }, 
+            "title": "ApiResponse\u00abDetailMeasurementResponse\u00bb"
+        }, 
+        "ApiResponse\u00abFullMeasurementResponse\u00bb": {
+            "description": "Object that is used as wrapper for every response.", 
+            "required": [
+                "data"
+            ], 
+            "type": "object", 
+            "properties": {
+                "errors": {
+                    "items": {
+                        "$ref": "#/definitions/ApiError"
+                    }, 
+                    "type": "array", 
+                    "description": "Optional list of errors that occurred during request processing."
+                }, 
+                "data": {
+                    "description": "Actual data that is returned for the request/response.", 
+                    "$ref": "#/definitions/FullMeasurementResponse"
+                }
+            }, 
+            "title": "ApiResponse\u00abFullMeasurementResponse\u00bb"
+        }, 
+        "DetailMeasurementResponse": {
+            "description": "This DTO contains a list of detail groups.", 
+            "required": [
+                "groups"
+            ], 
+            "type": "object", 
+            "properties": {
+                "groups": {
+                    "items": {
+                        "$ref": "#/definitions/DetailMeasurementGroup"
+                    }, 
+                    "type": "array", 
+                    "description": "A list of detail groups."
+                }
+            }, 
+            "title": "DetailMeasurementResponse"
+        }, 
+        "BriefMeasurementResponse": {
+            "description": "The BriefMeasurementResponse contains the most important values of a measurement. It is used to show a preview (list) of measurements to the end user.", 
+            "required": [
+                "device_info", 
+                "duration_ns", 
+                "measurements", 
+                "network_type_id", 
+                "network_type_name", 
+                "start_time", 
+                "type", 
+                "uuid"
+            ], 
+            "type": "object", 
+            "properties": {
+                "network_type_name": {
+                    "type": "string", 
+                    "description": "Network type name."
+                }, 
+                "speedMeasurementAvailable": {
+                    "type": "boolean"
+                }, 
+                "start_time": {
+                    "type": "string", 
+                    "description": "Overall start time in UTC.", 
+                    "format": "date-time"
+                }, 
+                "measurements": {
+                    "additionalProperties": {
+                        "$ref": "#/definitions/BriefSubMeasurement"
+                    }, 
+                    "type": "object", 
+                    "description": "Map that contains available information for each measurement type (Speed, QoS). If map misses speed then no speed measurement was done, likewise for QoS, ..."
+                }, 
+                "network_type_id": {
+                    "type": "integer", 
+                    "description": "Network type id.", 
+                    "format": "int32"
+                }, 
+                "duration_ns": {
+                    "type": "integer", 
+                    "description": "Overall duration of all sub measurements.", 
+                    "format": "int64"
+                }, 
+                "device_info": {
+                    "description": "BriefDeviceInfo contains the most important values from DeviceInfo class.", 
+                    "$ref": "#/definitions/BriefDeviceInfo"
+                }, 
+                "qoSMeasurementAvailable": {
+                    "type": "boolean"
+                }, 
+                "first_accurate_geo_location": {
+                    "description": "The first accurate GeoLocation i.e. the location where the measurement was started.", 
+                    "$ref": "#/definitions/GeoLocationDto"
+                }, 
+                "type": {
+                    "enum": [
+                        "MOBILE", 
+                        "BROWSER", 
+                        "DESKTOP"
+                    ], 
+                    "type": "string", 
+                    "description": "The type of measurement agent."
+                }, 
+                "uuid": {
+                    "type": "string", 
+                    "description": "The UUIDv4 identifier of the measurement object."
+                }
+            }, 
+            "title": "BriefMeasurementResponse"
+        }, 
+        "ApiError": {
+            "description": "DTO that wraps server errors and/or exceptions. The Java stack-trace is only added if the service runs in development mode.", 
+            "required": [
+                "error", 
+                "message", 
+                "path", 
+                "status", 
+                "time"
+            ], 
+            "type": "object", 
+            "properties": {
+                "status": {
+                    "description": "Status code for the error.", 
+                    "type": "integer", 
+                    "example": "400, 404, 500, ...", 
+                    "format": "int32"
+                }, 
+                "exception": {
+                    "type": "string", 
+                    "description": "Exception class name."
+                }, 
+                "trace": {
+                    "type": "string", 
+                    "description": "Exception stack tracewhich is only added if the service runs in development mode."
+                }, 
+                "error": {
+                    "type": "string", 
+                    "example": "'Internal Server Error', 'Not Found', ...", 
+                    "description": "String representation of the status."
+                }, 
+                "time": {
+                    "type": "string", 
+                    "description": "Date and time at which the error occurred.", 
+                    "format": "date-time"
+                }, 
+                "path": {
+                    "type": "string", 
+                    "description": "URI path/resource that caused the error."
+                }, 
+                "message": {
+                    "type": "string", 
+                    "example": "java.lang.RuntimeException", 
+                    "description": "The error or exception message."
+                }
+            }, 
+            "title": "ApiError"
+        }, 
+        "CellLocationDto": {
+            "description": "Cell location information from a point in time on the measurement agent.", 
+            "required": [
+                "relative_time_ns", 
+                "time"
+            ], 
+            "type": "object", 
+            "properties": {
+                "cell_id": {
+                    "type": "integer", 
+                    "description": "Contains the cell-ID, if available.", 
+                    "format": "int32"
+                }, 
+                "area_code": {
+                    "type": "integer", 
+                    "description": "Contains the area code (e.g. location area code (GSM), tracking area code (LTE)), if available.", 
+                    "format": "int32"
+                }, 
+                "longitude": {
+                    "type": "number", 
+                    "description": "Geographic location longitude of this cell.", 
+                    "format": "double"
+                }, 
+                "primary_scrambling_code": {
+                    "type": "integer", 
+                    "description": "Contains the primary scrambling code, if available.", 
+                    "format": "int32"
+                }, 
+                "time": {
+                    "type": "string", 
+                    "description": "Time and date the cell location information was captured (UTC).", 
+                    "format": "date-time"
+                }, 
+                "latitude": {
+                    "type": "number", 
+                    "description": "Geographic location latitude of this cell.", 
+                    "format": "double"
+                }, 
+                "relative_time_ns": {
+                    "type": "integer", 
+                    "description": "Relative time in nanoseconds (to test begin).", 
+                    "format": "int64"
+                }, 
+                "arfcn": {
+                    "type": "integer", 
+                    "description": "Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN), if available.", 
+                    "format": "int32"
+                }
+            }, 
+            "title": "CellLocationDto"
+        }, 
+        "DetailMeasurementGroup": {
+            "description": "Measurement detail group object which contains a translated title, an optional description, and icon and the items.", 
+            "required": [
+                "description", 
+                "icon_character", 
+                "items", 
+                "title"
+            ], 
+            "type": "object", 
+            "properties": {
+                "icon_character": {
+                    "type": "string", 
+                    "description": "The icon to be used for the given group (as a single char in the corresponding icon font)."
+                }, 
+                "title": {
+                    "type": "string", 
+                    "description": "The already translated title of the given group."
+                }, 
+                "description": {
+                    "type": "string", 
+                    "description": "The already translated (optional) description of the given group."
+                }, 
+                "items": {
+                    "items": {
+                        "$ref": "#/definitions/DetailMeasurementGroupItem"
+                    }, 
+                    "type": "array", 
+                    "description": "Contains all the entries of the given group."
+                }
+            }, 
+            "title": "DetailMeasurementGroup"
+        }, 
+        "ApiPagination\u00abBriefMeasurementResponse\u00bb": {
+            "description": "Wrapper for paginated responses (e.g. list of measurements).", 
+            "required": [
+                "content", 
+                "page_number", 
+                "page_size", 
+                "total_elements", 
+                "total_pages"
+            ], 
+            "type": "object", 
+            "properties": {
+                "content": {
+                    "items": {
+                        "$ref": "#/definitions/BriefMeasurementResponse"
+                    }, 
+                    "type": "array", 
+                    "description": "Paginated list of objects."
+                }, 
+                "total_elements": {
+                    "type": "integer", 
+                    "description": "Total amount of objects (>= 0).", 
+                    "format": "int64"
+                }, 
+                "page_number": {
+                    "type": "integer", 
+                    "description": "Current page number (>= 0).", 
+                    "format": "int32"
+                }, 
+                "page_size": {
+                    "type": "integer", 
+                    "description": "Current page size (> 0).", 
+                    "format": "int32"
+                }, 
+                "total_pages": {
+                    "type": "integer", 
+                    "description": "Total amount of pages (>= 0).", 
+                    "format": "int32"
+                }
+            }, 
+            "title": "ApiPagination\u00abBriefMeasurementResponse\u00bb"
+        }, 
+        "BriefSubMeasurement": {
+            "description": "Brief/short information of a sub measurement.", 
+            "required": [
+                "duration_ns", 
+                "start_time"
+            ], 
+            "type": "object", 
+            "properties": {
+                "duration_ns": {
+                    "type": "integer", 
+                    "description": "Duration of this sub measurement.", 
+                    "format": "int64"
+                }, 
+                "start_time": {
+                    "type": "string", 
+                    "description": "Start time of this sub measurement in UTC.", 
+                    "format": "date-time"
+                }
+            }, 
+            "title": "BriefSubMeasurement"
+        }, 
+        "FullSubMeasurement": {
+            "description": "This DTO class is a base class for all specific full measurement classes.", 
+            "required": [
+                "duration_ns", 
+                "end_time", 
+                "implausible", 
+                "reason", 
+                "relative_end_time_ns", 
+                "relative_start_time_ns", 
+                "start_time", 
+                "status"
+            ], 
+            "type": "object", 
+            "properties": {
+                "status": {
+                    "enum": [
+                        "STARTED", 
+                        "FINISHED", 
+                        "FAILED", 
+                        "ABORTED"
+                    ], 
+                    "type": "string", 
+                    "description": "The status of a measurement."
+                }, 
+                "relative_start_time_ns": {
+                    "type": "integer", 
+                    "description": "Start time in nanoseconds relative to the start time of the overall measurement object.", 
+                    "format": "int64"
+                }, 
+                "version_library": {
+                    "type": "string", 
+                    "description": "The library version this measurement used, if available."
+                }, 
+                "start_time": {
+                    "type": "string", 
+                    "description": "Start Date and time for this sub measurement. Date and time is always stored as UTC.", 
+                    "format": "date-time"
+                }, 
+                "relative_end_time_ns": {
+                    "type": "integer", 
+                    "description": "End time in nanoseconds relative to the end time of the overall measurement object.", 
+                    "format": "int64"
+                }, 
+                "duration_ns": {
+                    "type": "integer", 
+                    "description": "Duration of a measurement.", 
+                    "format": "int64"
+                }, 
+                "reason": {
+                    "enum": [
+                        "UNABLE_TO_CONNECT", 
+                        "CONNECTION_LOST", 
+                        "NETWORK_CATEGORY_CHANGED", 
+                        "APP_BACKGROUNDED", 
+                        "USER_ABORTED"
+                    ], 
+                    "type": "string", 
+                    "description": "The reason why a measurement failed."
+                }, 
+                "end_time": {
+                    "type": "string", 
+                    "description": "End Date and time for this sub measurement. Date and time is always stored as UTC.", 
+                    "format": "date-time"
+                }, 
+                "implausible": {
+                    "type": "boolean", 
+                    "description": "Flag to mark this QoS measurement as implausible. An implausible QoS result is one that could not have been measured that way. This flag exists for potentially tampered results, so they do not count as valid results (e.g. to prevent tampering w/statistics)."
+                }, 
+                "version_protocol": {
+                    "type": "string", 
+                    "description": "The protocol version this measurement used, if available."
+                }
+            }, 
+            "title": "FullSubMeasurement"
+        }, 
+        "SignalDto": {
+            "description": "Contains signal information from a point in time on the measurement agent.", 
+            "required": [
+                "network_type_id", 
+                "relative_time_ns", 
+                "time"
+            ], 
+            "type": "object", 
+            "properties": {
+                "lte_rssnr_db": {
+                    "type": "integer", 
+                    "description": "The LTE reference signal signal-to-noise ratio, in dB (If available).", 
+                    "format": "int32"
+                }, 
+                "lte_rsrp_dbm": {
+                    "type": "integer", 
+                    "description": "The LTE reference signal received power, in dBm (If available).", 
+                    "format": "int32"
+                }, 
+                "lte_cqi": {
+                    "type": "integer", 
+                    "description": "The LTE channel quality indicator (If available).", 
+                    "format": "int32"
+                }, 
+                "lte_rsrp_db": {
+                    "type": "integer", 
+                    "description": "The LTE reference signal received quality, in dB (If available).", 
+                    "format": "int32"
+                }, 
+                "wifi_bssid": {
+                    "type": "string", 
+                    "description": "BSSID of the network (if available)."
+                }, 
+                "network_type_id": {
+                    "type": "integer", 
+                    "description": "Network type id as it gets returned by the Android API.", 
+                    "format": "int32"
+                }, 
+                "wifi_rssi_dbm": {
+                    "type": "integer", 
+                    "description": "The received signal strength indicator of the current 802.11 network, in dBm (If available).", 
+                    "format": "int32"
+                }, 
+                "signal_strength_2g3g_dbm": {
+                    "type": "integer", 
+                    "description": "The received signal strength of 2G or 3G connections, in dBm (If available).", 
+                    "format": "int32"
+                }, 
+                "time": {
+                    "type": "string", 
+                    "description": "Time and date the signal information was captured (UTC).", 
+                    "format": "date-time"
+                }, 
+                "wifi_link_speed_bps": {
+                    "type": "integer", 
+                    "description": "The current WiFi link speed, in bits per second (If available).", 
+                    "format": "int32"
+                }, 
+                "wifi_ssid": {
+                    "type": "string", 
+                    "description": "SSID of the network (if available)."
+                }, 
+                "relative_time_ns": {
+                    "type": "integer", 
+                    "description": "Relative time in nanoseconds (to test begin).", 
+                    "format": "int64"
+                }
+            }, 
+            "title": "SignalDto"
+        }, 
+        "DetailMeasurementGroupItem": {
+            "description": "This class specifies a single detail item with key, translated title, value and the unit of the value.", 
+            "required": [
+                "key", 
+                "title", 
+                "value"
+            ], 
+            "type": "object", 
+            "properties": {
+                "value": {
+                    "type": "string", 
+                    "description": "The actual value of this item in the given unit."
+                }, 
+                "unit": {
+                    "type": "string", 
+                    "description": "The unit of the value."
+                }, 
+                "key": {
+                    "type": "string", 
+                    "description": "The key is the path to the chosen field inside the data model, e.g. \"device_info.model\"."
+                }, 
+                "title": {
+                    "type": "string", 
+                    "description": "The translated title of this item."
+                }
+            }, 
+            "title": "DetailMeasurementGroupItem"
+        }, 
+        "VersionResponse": {
+            "description": "Class for all kind of versions that the server reveals.", 
+            "type": "object", 
+            "properties": {
+                "collector_service_version": {
+                    "type": "string", 
+                    "description": "Collector service version number."
+                }, 
+                "statistic_service_version": {
+                    "type": "string", 
+                    "description": "Statistic service version number."
+                }, 
+                "controller_service_version": {
+                    "type": "string", 
+                    "description": "Controller service version number."
+                }, 
+                "map_service_version": {
+                    "type": "string", 
+                    "description": "Map service version number."
+                }
+            }, 
+            "title": "VersionResponse"
+        }, 
+        "ApiResponse\u00abApiPagination\u00abBriefMeasurementResponse\u00bb\u00bb": {
+            "description": "Object that is used as wrapper for every response.", 
+            "required": [
+                "data"
+            ], 
+            "type": "object", 
+            "properties": {
+                "errors": {
+                    "items": {
+                        "$ref": "#/definitions/ApiError"
+                    }, 
+                    "type": "array", 
+                    "description": "Optional list of errors that occurred during request processing."
+                }, 
+                "data": {
+                    "description": "Actual data that is returned for the request/response.", 
+                    "$ref": "#/definitions/ApiPagination\u00abBriefMeasurementResponse\u00bb"
+                }
+            }, 
+            "title": "ApiResponse\u00abApiPagination\u00abBriefMeasurementResponse\u00bb\u00bb"
+        }, 
+        "ApiResponse\u00abVersionResponse\u00bb": {
+            "description": "Object that is used as wrapper for every response.", 
+            "required": [
+                "data"
+            ], 
+            "type": "object", 
+            "properties": {
+                "errors": {
+                    "items": {
+                        "$ref": "#/definitions/ApiError"
+                    }, 
+                    "type": "array", 
+                    "description": "Optional list of errors that occurred during request processing."
+                }, 
+                "data": {
+                    "description": "Actual data that is returned for the request/response.", 
+                    "$ref": "#/definitions/VersionResponse"
+                }
+            }, 
+            "title": "ApiResponse\u00abVersionResponse\u00bb"
+        }, 
+        "MeasurementAgentInfoDto": {
+            "description": "Contains information about the measurement agent.", 
+            "required": [
+                "app_version_code", 
+                "app_version_name", 
+                "language", 
+                "type"
+            ], 
+            "type": "object", 
+            "properties": {
+                "language": {
+                    "type": "string", 
+                    "description": "The agent's language."
+                }, 
+                "app_version_name": {
+                    "type": "string", 
+                    "description": "Application version name (e.g. 1.0.0)."
+                }, 
+                "app_git_revision": {
+                    "type": "string", 
+                    "description": "Git revision name."
+                }, 
+                "app_version_code": {
+                    "type": "integer", 
+                    "description": "Application version code number (e.g. 10).", 
+                    "format": "int32"
+                }, 
+                "timezone": {
+                    "type": "string", 
+                    "description": "The agent's time zone (e.g. UTC-6h)."
+                }, 
+                "type": {
+                    "enum": [
+                        "MOBILE", 
+                        "BROWSER", 
+                        "DESKTOP"
+                    ], 
+                    "type": "string", 
+                    "description": "The type of agent."
+                }
+            }, 
+            "title": "MeasurementAgentInfoDto"
+        }, 
+        "OperatingSystemInfoDto": {
+            "description": "Contains information about the measurement agent's OS.", 
+            "required": [
+                "name", 
+                "version"
+            ], 
+            "type": "object", 
+            "properties": {
+                "cpu_min": {
+                    "type": "number", 
+                    "description": "Minimum CPU usage, as double between 0 - 100.", 
+                    "format": "double"
+                }, 
+                "cpu_median": {
+                    "type": "number", 
+                    "description": "Median CPU usage, as double between 0 - 100.", 
+                    "format": "double"
+                }, 
+                "cpu_max": {
+                    "type": "number", 
+                    "description": "Maximum CPU usage, as double between 0 - 100.", 
+                    "format": "double"
+                }, 
+                "memory_median": {
+                    "type": "number", 
+                    "description": "Median Memory usage, as double between 0 - 100.", 
+                    "format": "double"
+                }, 
+                "cpu_average": {
+                    "type": "number", 
+                    "description": "Average CPU usage, as double between 0 - 100.", 
+                    "format": "double"
+                }, 
+                "name": {
+                    "type": "string", 
+                    "description": "Operating system name (e.g. Android or iOS)."
+                }, 
+                "memory_min": {
+                    "type": "number", 
+                    "description": "Minimum Memory usage, as double between 0 - 100.", 
+                    "format": "double"
+                }, 
+                "version": {
+                    "type": "string", 
+                    "description": "Operating system version."
+                }, 
+                "memory_max": {
+                    "type": "number", 
+                    "description": "Maximum Memory usage, as double between 0 - 100.", 
+                    "format": "double"
+                }, 
+                "api_level": {
+                    "type": "string", 
+                    "description": "API level of operating system or SDK (e.g. Android API level or Swift SDK version)."
+                }, 
+                "memory_average": {
+                    "type": "number", 
+                    "description": "Average Memory usage, as double between 0 - 100.", 
+                    "format": "double"
+                }
+            }, 
+            "title": "OperatingSystemInfoDto"
         }
-      },
-      "title": "ApiResponse",
-      "description": "Object that is used as wrapper for every response."
-    },
-    "ApiResponse«ApiPagination«BriefMeasurementResponse»»": {
-      "type": "object",
-      "properties": {
-        "data": {
-          "description": "Actual data that is returned for the request/response.",
-          "$ref": "#/definitions/ApiPagination«BriefMeasurementResponse»"
-        },
-        "errors": {
-          "type": "array",
-          "description": "Optional list of errors that occurred during request processing.",
-          "items": {
-            "$ref": "#/definitions/ApiError"
-          }
-        }
-      },
-      "title": "ApiResponse«ApiPagination«BriefMeasurementResponse»»",
-      "description": "Object that is used as wrapper for every response."
-    },
-    "ApiResponse«DetailMeasurementResponse»": {
-      "type": "object",
-      "properties": {
-        "data": {
-          "description": "Actual data that is returned for the request/response.",
-          "$ref": "#/definitions/DetailMeasurementResponse"
-        },
-        "errors": {
-          "type": "array",
-          "description": "Optional list of errors that occurred during request processing.",
-          "items": {
-            "$ref": "#/definitions/ApiError"
-          }
-        }
-      },
-      "title": "ApiResponse«DetailMeasurementResponse»",
-      "description": "Object that is used as wrapper for every response."
-    },
-    "ApiResponse«FullMeasurementResponse»": {
-      "type": "object",
-      "properties": {
-        "data": {
-          "description": "Actual data that is returned for the request/response.",
-          "$ref": "#/definitions/FullMeasurementResponse"
-        },
-        "errors": {
-          "type": "array",
-          "description": "Optional list of errors that occurred during request processing.",
-          "items": {
-            "$ref": "#/definitions/ApiError"
-          }
-        }
-      },
-      "title": "ApiResponse«FullMeasurementResponse»",
-      "description": "Object that is used as wrapper for every response."
-    },
-    "ApiResponse«VersionResponse»": {
-      "type": "object",
-      "properties": {
-        "data": {
-          "description": "Actual data that is returned for the request/response.",
-          "$ref": "#/definitions/VersionResponse"
-        },
-        "errors": {
-          "type": "array",
-          "description": "Optional list of errors that occurred during request processing.",
-          "items": {
-            "$ref": "#/definitions/ApiError"
-          }
-        }
-      },
-      "title": "ApiResponse«VersionResponse»",
-      "description": "Object that is used as wrapper for every response."
-    },
-    "BriefDeviceInfo": {
-      "type": "object",
-      "properties": {
-        "avg_cpu_usage": {
-          "type": "number",
-          "format": "double",
-          "description": "Average CPU usage during the measurement."
-        },
-        "avg_mem_usage": {
-          "type": "number",
-          "format": "double",
-          "description": "Average Memory usage during the measurement."
-        },
-        "device_code_name": {
-          "type": "string",
-          "description": "Device code name."
-        },
-        "device_full_name": {
-          "type": "string",
-          "description": "The device name that is commonly known to users (e.g. Google Pixel)."
-        },
-        "os_name": {
-          "type": "string",
-          "description": "Device operating system name."
-        },
-        "os_version": {
-          "type": "string",
-          "description": "Device operating system version."
-        }
-      },
-      "title": "BriefDeviceInfo",
-      "description": "BriefDeviceInfo contains the most important values from DeviceInfo class."
-    },
-    "BriefMeasurementResponse": {
-      "type": "object",
-      "properties": {
-        "device_info": {
-          "description": "BriefDeviceInfo contains the most important values from DeviceInfo class.",
-          "$ref": "#/definitions/BriefDeviceInfo"
-        },
-        "duration_ns": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Overall duration of all sub measurements."
-        },
-        "first_geo_location": {
-          "description": "The first GeoLocation i.e. the location where the measurement was started.",
-          "$ref": "#/definitions/GeoLocationDto"
-        },
-        "measurements": {
-          "type": "object",
-          "description": "Map that contains available information for each measurement type (Speed, QoS). If map misses speed then no speed measurement was done, likewise for QoS, ...",
-          "additionalProperties": {
-            "$ref": "#/definitions/BriefSubMeasurement"
-          }
-        },
-        "network_type_id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Network type id."
-        },
-        "network_type_name": {
-          "type": "string",
-          "description": "Network type name."
-        },
-        "qoSMeasurementAvailable": {
-          "type": "boolean"
-        },
-        "speedMeasurementAvailable": {
-          "type": "boolean"
-        },
-        "start_time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Overall start time in UTC."
-        },
-        "type": {
-          "type": "string",
-          "description": "The type of client.",
-          "enum": [
-            "MOBILE",
-            "BROWSER",
-            "DESKTOP"
-          ]
-        },
-        "uuid": {
-          "type": "string",
-          "description": "The UUIDv4 identifier of the measurement object."
-        }
-      },
-      "title": "BriefMeasurementResponse",
-      "description": "The BriefMeasurementResponse contains the most important values of a measurement. It is used to show a preview (list) of measurements to the end user."
-    },
-    "BriefSubMeasurement": {
-      "type": "object",
-      "properties": {
-        "duration_ns": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Duration of this sub measurement."
-        },
-        "start_time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Start time of this sub measurement in UTC."
-        }
-      },
-      "title": "BriefSubMeasurement",
-      "description": "Brief/short information of a sub measurement."
-    },
-    "CellLocationDto": {
-      "type": "object",
-      "properties": {
-        "area_code": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Contains the area code (e.g. location area code (GSM), tracking area code (LTE)), if available."
-        },
-        "arfcn": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN), if available."
-        },
-        "cell_id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Contains the cell-ID, if available."
-        },
-        "latitude": {
-          "type": "number",
-          "format": "double",
-          "description": "Geographic location latitude of this cell."
-        },
-        "longitude": {
-          "type": "number",
-          "format": "double",
-          "description": "Geographic location longitude of this cell."
-        },
-        "primary_scrambling_code": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Contains the primary scrambling code, if available."
-        },
-        "relative_time_ns": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Relative time in nanoseconds (to test begin)."
-        },
-        "time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Time and date the cell location information was captured (UTC)."
-        }
-      },
-      "title": "CellLocationDto",
-      "description": "Cell location information from a point in time on the client."
-    },
-    "ClientInfoDto": {
-      "type": "object",
-      "properties": {
-        "app_git_revision": {
-          "type": "string",
-          "description": "Git revision name."
-        },
-        "app_version_code": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Application version code number (e.g. 10)."
-        },
-        "app_version_name": {
-          "type": "string",
-          "description": "Application version name (e.g. 1.0.0)."
-        },
-        "language": {
-          "type": "string",
-          "description": "The client's language."
-        },
-        "timezone": {
-          "type": "string",
-          "description": "The client's time zone (e.g. UTC-6h)."
-        },
-        "type": {
-          "type": "string",
-          "description": "The type of client.",
-          "enum": [
-            "MOBILE",
-            "BROWSER",
-            "DESKTOP"
-          ]
-        }
-      },
-      "title": "ClientInfoDto",
-      "description": "Contains information about the measurement client."
-    },
-    "DetailMeasurementGroup": {
-      "type": "object",
-      "properties": {
-        "description": {
-          "type": "string",
-          "description": "The already translated (optional) description of the given group."
-        },
-        "icon_character": {
-          "type": "string",
-          "description": "The icon to be used for the given group (as a single char in the corresponding icon font)."
-        },
-        "items": {
-          "type": "array",
-          "description": "Contains all the entries of the given group.",
-          "items": {
-            "$ref": "#/definitions/DetailMeasurementGroupItem"
-          }
-        },
-        "title": {
-          "type": "string",
-          "description": "The already translated title of the given group."
-        }
-      },
-      "title": "DetailMeasurementGroup",
-      "description": "Measurement detail group object which contains a translated title, an optional description, and icon and the items."
-    },
-    "DetailMeasurementGroupItem": {
-      "type": "object",
-      "properties": {
-        "key": {
-          "type": "string",
-          "description": "The key is the path to the chosen field inside the data model, e.g. \"client_info.app_version_name\"."
-        },
-        "title": {
-          "type": "string",
-          "description": "The translated title of this item."
-        },
-        "unit": {
-          "type": "string",
-          "description": "The unit of the value."
-        },
-        "value": {
-          "type": "string",
-          "description": "The actual value of this item in the given unit."
-        }
-      },
-      "title": "DetailMeasurementGroupItem",
-      "description": "This class specifies a single detail item with key, translated title, value and the unit of the value."
-    },
-    "DetailMeasurementResponse": {
-      "type": "object",
-      "properties": {
-        "groups": {
-          "type": "array",
-          "description": "A list of detail groups.",
-          "items": {
-            "$ref": "#/definitions/DetailMeasurementGroup"
-          }
-        }
-      },
-      "title": "DetailMeasurementResponse",
-      "description": "This DTO contains a list of detail groups."
-    },
-    "DeviceInfoDto": {
-      "type": "object",
-      "properties": {
-        "code_name": {
-          "type": "string",
-          "description": "Device code name."
-        },
-        "full_name": {
-          "type": "string",
-          "description": "The device name that is commonly known to users (e.g. Google Pixel)."
-        },
-        "model": {
-          "type": "string",
-          "description": "Detailed device designation."
-        },
-        "os_info": {
-          "description": "Contains information about the client's OS.",
-          "$ref": "#/definitions/OperatingSystemInfoDto"
-        }
-      },
-      "title": "DeviceInfoDto",
-      "description": "Contains information about the device the measurement software is running on."
-    },
-    "FullMeasurementResponse": {
-      "type": "object",
-      "properties": {
-        "client_info": {
-          "description": "Contains information about the measurement client.",
-          "$ref": "#/definitions/ClientInfoDto"
-        },
-        "device_info": {
-          "description": "Contains information about the device the measurement software is running on.",
-          "$ref": "#/definitions/DeviceInfoDto"
-        },
-        "duration_ns": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Duration of a measurement."
-        },
-        "end_time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "End Date and time for this (sub-) measurement. Date and time is always stored as UTC."
-        },
-        "geo_locations": {
-          "type": "array",
-          "description": "List of all captured geographic locations.",
-          "items": {
-            "$ref": "#/definitions/GeoLocationDto"
-          }
-        },
-        "measurements": {
-          "type": "object",
-          "description": "Contains the result of a Speed and/or QoS measurement.",
-          "additionalProperties": {
-            "$ref": "#/definitions/FullSubMeasurement"
-          }
-        },
-        "network_info": {
-          "description": "Contains network related information gathered during the test.",
-          "$ref": "#/definitions/NetworkInfoDto"
-        },
-        "open_data_uuid": {
-          "type": "string",
-          "description": "The open-data identifier (UUIDv4) of the measurement."
-        },
-        "source": {
-          "type": "string",
-          "description": "Measurement source. Can be either own system or imported from open-data."
-        },
-        "start_time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Start Date and time for this (sub-) measurement."
-        },
-        "uuid": {
-          "type": "string",
-          "description": "The unique identifier (UUIDv4) of the measurement."
-        }
-      },
-      "title": "FullMeasurementResponse",
-      "description": "This DTO class contains all measurement information that is sent to the client."
-    },
-    "FullSubMeasurement": {
-      "type": "object",
-      "properties": {
-        "duration_ns": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Duration of a measurement."
-        },
-        "end_time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "End Date and time for this sub measurement. Date and time is always stored as UTC."
-        },
-        "implausible": {
-          "type": "boolean",
-          "description": "Flag to mark a measurement as implausible."
-        },
-        "reason": {
-          "type": "string",
-          "description": "The reason why a measurement failed.",
-          "enum": [
-            "UNABLE_TO_CONNECT",
-            "CONNECTION_LOST",
-            "NETWORK_CATEGORY_CHANGED",
-            "APP_BACKGROUNDED",
-            "USER_ABORTED"
-          ]
-        },
-        "relative_end_time_ns": {
-          "type": "integer",
-          "format": "int64",
-          "description": "End time in nanoseconds relative to the end time of the overall measurement object."
-        },
-        "relative_start_time_ns": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Start time in nanoseconds relative to the start time of the overall measurement object."
-        },
-        "start_time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Start Date and time for this sub measurement. Date and time is always stored as UTC."
-        },
-        "status": {
-          "type": "string",
-          "description": "The status of a measurement.",
-          "enum": [
-            "STARTED",
-            "FINISHED",
-            "FAILED",
-            "ABORTED"
-          ]
-        },
-        "version_library": {
-          "type": "string",
-          "description": "The library version this measurement used, if available."
-        },
-        "version_protocol": {
-          "type": "string",
-          "description": "The protocol version this measurement used, if available."
-        }
-      },
-      "title": "FullSubMeasurement",
-      "description": "This DTO class is a base class for all specific full measurement classes."
-    },
-    "GeoLocationDto": {
-      "type": "object",
-      "properties": {
-        "accuracy": {
-          "type": "number",
-          "format": "double",
-          "description": "Geographic location accuracy."
-        },
-        "altitude": {
-          "type": "number",
-          "format": "double",
-          "description": "Geographic location altitude."
-        },
-        "heading": {
-          "type": "number",
-          "format": "double",
-          "description": "Movement heading."
-        },
-        "latitude": {
-          "type": "number",
-          "format": "double",
-          "description": "Geographic location latitude."
-        },
-        "longitude": {
-          "type": "number",
-          "format": "double",
-          "description": "Geographic location longitude."
-        },
-        "provider": {
-          "type": "string",
-          "description": "Geographic location provider."
-        },
-        "relative_time_ns": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Relative time in nanoseconds (to measurement begin)."
-        },
-        "speed": {
-          "type": "number",
-          "format": "double",
-          "description": "Movement speed."
-        },
-        "time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Time and date the geographic location information was captured (UTC)."
-        }
-      },
-      "title": "GeoLocationDto",
-      "description": "GeoLocation object to be used on the client side and inside DTOs."
-    },
-    "NetworkInfoDto": {
-      "type": "object",
-      "properties": {
-        "cell_locations": {
-          "type": "array",
-          "description": "List of captured cell information.",
-          "items": {
-            "$ref": "#/definitions/CellLocationDto"
-          }
-        },
-        "network_point_in_time_info": {
-          "type": "array",
-          "description": "Contains all relevant network information of a single point in time.",
-          "items": {
-            "$ref": "#/definitions/NetworkPointInTimeInfoDto"
-          }
-        },
-        "signals": {
-          "type": "array",
-          "description": "List of captured signal information.",
-          "items": {
-            "$ref": "#/definitions/SignalDto"
-          }
-        }
-      },
-      "title": "NetworkInfoDto",
-      "description": "Contains network related information gathered during the test."
-    },
-    "NetworkPointInTimeInfoDto": {
-      "type": "object",
-      "properties": {
-        "bssid": {
-          "type": "string",
-          "description": "BSSID of the network."
-        },
-        "client_public_ip": {
-          "type": "string",
-          "description": "Public IP address of the client."
-        },
-        "client_public_ip_country_code": {
-          "type": "string",
-          "description": "Country of the client which is gathered by Geo-IP lookup."
-        },
-        "country_code_asn": {
-          "type": "string",
-          "description": "Country code derived from the AS (e.g. \"AT\")."
-        },
-        "network_country": {
-          "type": "string",
-          "description": "The network operator country code (e.g. \"AT\"), if available."
-        },
-        "network_operator_mcc_mnc": {
-          "type": "string",
-          "description": "The MCC/MNC of the network operator, if available."
-        },
-        "network_operator_name": {
-          "type": "string",
-          "description": "The network operator name, if available."
-        },
-        "network_type_category": {
-          "type": "string",
-          "description": "Contains the different network categories."
-        },
-        "network_type_group_name": {
-          "type": "string",
-          "description": "Network group name (e.g. 2G, 3G, LAN, etc)."
-        },
-        "network_type_id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Network type id as it gets returned by the Android API."
-        },
-        "network_type_name": {
-          "type": "string",
-          "description": "Network type name."
-        },
-        "provider_name": {
-          "type": "string",
-          "description": "The name of the provider."
-        },
-        "provider_short_name": {
-          "type": "string",
-          "description": "The short name (or shortcut) of the provider."
-        },
-        "public_ip_as_name": {
-          "type": "string",
-          "description": "Name of ASN."
-        },
-        "public_ip_asn": {
-          "type": "integer",
-          "format": "int64",
-          "description": "ASN for the public IP address."
-        },
-        "public_ip_rdns": {
-          "type": "string",
-          "description": "Reverse DNS for the public IP address."
-        },
-        "relative_time_ns": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Time and date the signal information was captured (UTC)."
-        },
-        "sim_country": {
-          "type": "string",
-          "description": "The SIM operator country code (e.g. \"AT\"), if available."
-        },
-        "sim_operator_mcc_mnc": {
-          "type": "string",
-          "description": "The MCC/MNC of the SIM operator, if available."
-        },
-        "sim_operator_name": {
-          "type": "string",
-          "description": "SIM operator name, if available."
-        },
-        "ssid": {
-          "type": "string",
-          "description": "SSID of the network."
-        },
-        "time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Time and date the signal information was captured (UTC)."
-        }
-      },
-      "title": "NetworkPointInTimeInfoDto",
-      "description": "Contains all relevant network information of a single point in time."
-    },
-    "OperatingSystemInfoDto": {
-      "type": "object",
-      "properties": {
-        "api_level": {
-          "type": "string",
-          "description": "API level of operating system or SDK (e.g. Android API level or Swift SDK version)."
-        },
-        "cpu_average": {
-          "type": "number",
-          "format": "double",
-          "description": "Average CPU usage, as double between 0 - 100."
-        },
-        "cpu_max": {
-          "type": "number",
-          "format": "double",
-          "description": "Maximum CPU usage, as double between 0 - 100."
-        },
-        "cpu_median": {
-          "type": "number",
-          "format": "double",
-          "description": "Median CPU usage, as double between 0 - 100."
-        },
-        "cpu_min": {
-          "type": "number",
-          "format": "double",
-          "description": "Minimum CPU usage, as double between 0 - 100."
-        },
-        "memory_average": {
-          "type": "number",
-          "format": "double",
-          "description": "Average Memory usage, as double between 0 - 100."
-        },
-        "memory_max": {
-          "type": "number",
-          "format": "double",
-          "description": "Maximum Memory usage, as double between 0 - 100."
-        },
-        "memory_median": {
-          "type": "number",
-          "format": "double",
-          "description": "Median Memory usage, as double between 0 - 100."
-        },
-        "memory_min": {
-          "type": "number",
-          "format": "double",
-          "description": "Minimum Memory usage, as double between 0 - 100."
-        },
-        "name": {
-          "type": "string",
-          "description": "Operating system name (e.g. Android or iOS)."
-        },
-        "version": {
-          "type": "string",
-          "description": "Operating system version."
-        }
-      },
-      "title": "OperatingSystemInfoDto",
-      "description": "Contains information about the client's OS."
-    },
-    "SignalDto": {
-      "type": "object",
-      "properties": {
-        "gsm_bit_error_rate": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The bit error rate as defined in (ETSI) TS 27.007 8.5 (If available)."
-        },
-        "lte_cqi": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The LTE channel quality indicator (If available)."
-        },
-        "lte_rsrp_db": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The LTE reference signal received quality, in dB (If available)."
-        },
-        "lte_rsrp_dbm": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The LTE reference signal received power, in dBm (If available)."
-        },
-        "lte_rssnr_db": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The LTE reference signal signal-to-noise ratio, in dB (If available)."
-        },
-        "network_type_id": {
-          "type": "integer",
-          "format": "int32",
-          "description": "Network type id as it gets returned by the Android API."
-        },
-        "relative_time_ns": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Relative time in nanoseconds (to test begin)."
-        },
-        "signal_strength_2g3g_dbm": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The received signal strength of 2G or 3G connections, in dBm (If available)."
-        },
-        "time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Time and date the signal information was captured (UTC)."
-        },
-        "wifi_bssid": {
-          "type": "string",
-          "description": "BSSID of the network (if available)."
-        },
-        "wifi_link_speed_bps": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The current WiFi link speed, in bits per second (If available)."
-        },
-        "wifi_rssi_dbm": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The received signal strength indicator of the current 802.11 network, in dBm (If available)."
-        },
-        "wifi_ssid": {
-          "type": "string",
-          "description": "SSID of the network (if available)."
-        }
-      },
-      "title": "SignalDto",
-      "description": "Contains signal information from a point in time on the client."
-    },
-    "VersionResponse": {
-      "type": "object",
-      "properties": {
-        "collector_service_version": {
-          "type": "string",
-          "description": "Collector service version number."
-        },
-        "map_service_version": {
-          "type": "string",
-          "description": "Map service version number."
-        },
-        "statistic_service_version": {
-          "type": "string",
-          "description": "Statistic service version number."
-        }
-      },
-      "title": "VersionResponse",
-      "description": "Class for all kind of versions that the server reveals."
-    }
-  }
+    }, 
+    "swagger": "2.0"
 }

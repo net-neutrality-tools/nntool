@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementType;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 
 /**
  * Top-Level measurement object that contains sub-measurements (speed, QoS, ...).
@@ -54,7 +54,7 @@ public class Measurement {
 	@Expose
 	@SerializedName("measurements")
 	@JsonProperty("measurements")
-	private /*Enum*/Map<MeasurementType, SubMeasurement> measurements;
+	private /*Enum*/Map<MeasurementTypeDto, SubMeasurement> measurements;
 
 	/**
 	 * Measurement source. Can be either own system or imported from open-data.
@@ -84,13 +84,13 @@ public class Measurement {
 	private GeoLocationInfo geoLocationInfo;
 
 	/**
-	 * @see ClientInfo
+	 * @see MeasurementAgentInfo
 	 */
 	@JsonPropertyDescription("Contains information about the measurement client.")
 	@Expose
 	@SerializedName("client_info")
 	@JsonProperty("client_info")
-	private ClientInfo clientInfo;
+	private MeasurementAgentInfo clientInfo;
 
 	/**
 	 * @see DeviceInfo

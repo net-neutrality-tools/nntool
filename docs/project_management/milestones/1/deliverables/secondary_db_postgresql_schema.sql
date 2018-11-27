@@ -1,4 +1,13 @@
-create table if not exists settings
+create schema public
+;
+
+comment on schema public is 'standard public schema'
+;
+
+alter schema public owner to postgres
+;
+
+create table settings
 (
 	id varchar(100) not null
 		constraint settings_pkey
@@ -10,7 +19,7 @@ create table if not exists settings
 comment on column settings.json is 'Contains the settings'
 ;
 
-create table if not exists devices
+create table devices
 (
 	id bigserial not null
 		constraint devices_pkey
@@ -26,7 +35,7 @@ comment on column devices.code_name is 'Device code name.'
 comment on column devices.full_name is 'The device name that is commonly known to users (e.g. Google Pixel).'
 ;
 
-create table if not exists translations
+create table translations
 (
 	language_code varchar(50) not null
 		constraint translations_pkey
@@ -38,39 +47,39 @@ create table if not exists translations
 comment on column translations.json is 'Contains the specific key-value pairs for the given language'
 ;
 
-create table if not exists clients
+create table measurement_agents
 (
-	client_type varchar(40),
+	type varchar(40),
 	registration_time timestamp,
 	terms_and_conditions_accepted boolean,
 	terms_and_conditions_accepted_version integer,
 	terms_and_conditions_accepted_time timestamp,
 	uuid uuid not null
-		constraint clients_pkey
+		constraint measurement_agents_pkey
 			primary key,
 	group_name varchar
 )
 ;
 
-comment on column clients.client_type is 'The type of client (e.g. MOBILE, BROWSER)'
+comment on column measurement_agents.type is 'The type of agent (e.g. MOBILE, BROWSER, DESKTOP)'
 ;
 
-comment on column clients.registration_time is 'Time stamp in UTC when the client was registered.'
+comment on column measurement_agents.registration_time is 'Time stamp in UTC when the agent was registered.'
 ;
 
-comment on column clients.terms_and_conditions_accepted is 'Flag if the terms and conditions were accepted by the client.'
+comment on column measurement_agents.terms_and_conditions_accepted is 'Flag if the terms and conditions were accepted by the agent.'
 ;
 
-comment on column clients.terms_and_conditions_accepted_version is 'Version of the terms and conditions that was accepted by the client.'
+comment on column measurement_agents.terms_and_conditions_accepted_version is 'Version of the terms and conditions that was accepted by the agent.'
 ;
 
-comment on column clients.terms_and_conditions_accepted_time is 'Time stamp when the latest terms and conditions were accepted by the client.'
+comment on column measurement_agents.terms_and_conditions_accepted_time is 'Time stamp when the latest terms and conditions were accepted by the agent.'
 ;
 
-comment on column clients.group_name is 'The client''s group name/identifier'
+comment on column measurement_agents.group_name is 'The agent''s group name/identifier'
 ;
 
-create table if not exists qos_objectives
+create table qos_objectives
 (
 	id serial not null
 		constraint qos_objectives_pkey
@@ -106,7 +115,7 @@ comment on column qos_objectives.parameters is 'A map of QoS objective parameter
 comment on column qos_objectives.evaluations is 'A list of custom evaluations for this QoS objective. Evaluations are used to present human readable results to the end user.'
 ;
 
-create table if not exists network_types
+create table network_types
 (
 	id bigserial not null
 		constraint network_types_pkey
@@ -126,7 +135,7 @@ comment on column network_types.group_name is 'Network group name (e.g. 2G, 3G, 
 comment on column network_types.category is 'Contains the different network categories.'
 ;
 
-create table if not exists measurements
+create table measurements
 (
 	uuid uuid not null
 		constraint measurements_pkey
@@ -151,14 +160,14 @@ create table if not exists measurements
 	provider_name varchar,
 	provider_shortname varchar,
 	open_data_uuid uuid,
-	client_app_version_name varchar,
-	client_app_version_code integer,
-	client_language varchar(8),
-	client_app_git_rev varchar,
-	client_timezone varchar,
-	client_uuid uuid not null
-		constraint measurements_client_uuid_fkey
-			references clients,
+	agent_app_version_name varchar,
+	agent_app_version_code integer,
+	agent_language varchar(8),
+	agent_app_git_rev varchar,
+	agent_timezone varchar,
+	agent_uuid uuid not null
+		constraint measurements_measurement_agent_uuid_fkey
+			references measurement_agents,
 	network_signal_info jsonb,
 	network_cell_location_info jsonb,
 	mobile_network_operator_mcc integer,
@@ -183,7 +192,7 @@ create table if not exists measurements
 	wifi_network_rssi_dbm integer,
 	network_group_name varchar,
 	network_client_public_ip_country_code varchar,
-	client_type varchar,
+	agent_type varchar,
 	geo_location_latitude double precision,
 	geo_location_longitude double precision,
 	network_cell_location_arfcn integer,
@@ -232,7 +241,7 @@ comment on column measurements.device_model is 'Detailed device designation.'
 comment on column measurements.device_fullname is 'The device name that is commonly known to users (e.g. Google Pixel).'
 ;
 
-comment on column measurements.network_client_public_ip is 'Public IP address of the client.'
+comment on column measurements.network_client_public_ip is 'Public IP address of the agent.'
 ;
 
 comment on column measurements.provider_public_ip_asn is 'ASN for the public IP address.'
@@ -256,22 +265,22 @@ comment on column measurements.provider_shortname is 'The short name (or shortcu
 comment on column measurements.open_data_uuid is 'The open-data identifier (UUIDv4) of the measurement.'
 ;
 
-comment on column measurements.client_app_version_name is 'Application version name (e.g. 1.0.0).'
+comment on column measurements.agent_app_version_name is 'Application version name (e.g. 1.0.0).'
 ;
 
-comment on column measurements.client_app_version_code is 'Application version code number (e.g. 10).'
+comment on column measurements.agent_app_version_code is 'Application version code number (e.g. 10).'
 ;
 
-comment on column measurements.client_language is 'The client''s language.'
+comment on column measurements.agent_language is 'The agent''s language.'
 ;
 
-comment on column measurements.client_app_git_rev is 'Git revision.'
+comment on column measurements.agent_app_git_rev is 'Git revision.'
 ;
 
-comment on column measurements.client_timezone is 'The client''s time zone.'
+comment on column measurements.agent_timezone is 'The agent''s time zone.'
 ;
 
-comment on column measurements.client_uuid is 'The client''s UUID.'
+comment on column measurements.agent_uuid is 'The agent''s UUID.'
 ;
 
 comment on column measurements.network_signal_info is 'Contains signal information captured during the test.'
@@ -337,10 +346,10 @@ comment on column measurements.wifi_network_rssi_dbm is 'The received signal str
 comment on column measurements.network_group_name is 'Network group name (e.g. 2G, 3G, LAN).'
 ;
 
-comment on column measurements.network_client_public_ip_country_code is 'Country code derived from the client''s IP (e.g. "AT").'
+comment on column measurements.network_client_public_ip_country_code is 'Country code derived from the agent''s IP (e.g. "AT").'
 ;
 
-comment on column measurements.client_type is 'The type of client (e.g. MOBILE, BROWSER)'
+comment on column measurements.agent_type is 'The type of agent (e.g. MOBILE, BROWSER, DESKTOP)'
 ;
 
 comment on column measurements.geo_location_latitude is 'Geographic location latitude.'
@@ -352,7 +361,7 @@ comment on column measurements.geo_location_longitude is 'Geographic location lo
 comment on column measurements.network_cell_location_arfcn is 'Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN)'
 ;
 
-comment on column measurements.tag is 'Contains a tag provided by the client.'
+comment on column measurements.tag is 'Contains a tag provided by the agent.'
 ;
 
 comment on column measurements.wifi_initial_bssid is 'Initial BSSID of the network.'
@@ -361,7 +370,7 @@ comment on column measurements.wifi_initial_bssid is 'Initial BSSID of the netwo
 comment on column measurements.wifi_initial_ssid is 'Initial SSID of the network.'
 ;
 
-create table if not exists qos_measurements
+create table qos_measurements
 (
 	id bigserial not null
 		constraint qos_measurements_pkey
@@ -412,7 +421,7 @@ comment on column qos_measurements.version_library is 'The library version this 
 comment on column qos_measurements.implausible is 'Flag to mark a measurement as implausible'
 ;
 
-create table if not exists qos_measurement_results
+create table qos_measurement_results
 (
 	id bigserial not null
 		constraint qos_measurement_results_pkey
@@ -446,7 +455,7 @@ comment on column qos_measurement_results.success_count is 'The count of positiv
 comment on column qos_measurement_results.failure_count is 'The count of negative evalutations (failures)'
 ;
 
-create table if not exists speed_measurements
+create table speed_measurements
 (
 	id bigserial not null
 		constraint speed_measurements_pkey
@@ -581,7 +590,7 @@ comment on column speed_measurements.requested_duration_upload_slow_start_ns is 
 comment on column speed_measurements.requested_duration_download_slow_start_ns is 'The nominal duration for the download slow-start phase.'
 ;
 
-create table if not exists providers
+create table providers
 (
 	id bigserial not null
 		constraint providers_pkey
@@ -605,7 +614,7 @@ comment on column providers.asn_mappings is 'Contains a list of all valid/possib
 comment on column providers.mcc_mnc_mappings is 'Contains a list of all valid/possible MCC/MNC mappings for this provider.'
 ;
 
-create table if not exists measurement_servers
+create table measurement_servers
 (
 	uuid uuid not null
 		constraint measurement_servers_pkey
@@ -660,4 +669,5 @@ comment on column measurement_servers.geo_location_latitude is 'Geographic locat
 
 comment on column measurement_servers.geo_location_longitude is 'Geographic location longitude.'
 ;
+
 

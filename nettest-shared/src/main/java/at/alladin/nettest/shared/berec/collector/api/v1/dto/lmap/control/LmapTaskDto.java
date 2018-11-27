@@ -1,0 +1,120 @@
+package at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.common.LmapFunctionDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.common.LmapOptionDto;
+
+/**
+ * Configuration of LMAP Tasks.
+ * @author fk
+ *
+ */
+@io.swagger.annotations.ApiModel(description = "Configuration of LMAP Tasks.")
+@JsonClassDescription("Configuration of LMAP Tasks.")
+@JsonInclude(Include.NON_EMPTY)
+public class LmapTaskDto {
+	
+	/**
+	 * The unique name of a Task.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "The unique name of a Task.")
+	@JsonPropertyDescription("The unique name of a Task.")
+	@Expose
+	@SerializedName("name")
+	@JsonProperty(required = true, value = "name")
+	private String name;
+	
+	/**
+	 * A list of entries in a registry identifying functions.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "A list of entries in a registry identifying functions.")
+	@JsonPropertyDescription("A list of entries in a registry identifying functions.")
+	@Expose
+	@SerializedName("function")
+	@JsonProperty(required = true, value = "function")
+	private List<LmapFunctionDto> functions = new ArrayList<>();
+	
+	/**
+	 * The (local) program to invoke in order to execute the Task. 
+	 * If this leaf is not set, then the system will try to identify a suitable program based on the registry information present.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = false, value = "The (local) program to invoke in order to execute the Task. If this leaf is not set, then the system will try to identify a suitable program based on the registry information present.")
+	@JsonPropertyDescription("The (local) program to invoke in order to execute the Task. If this leaf is not set, then the system will try to identify a suitable program based on the registry information present.")
+	@Expose
+	@SerializedName("program")
+	@JsonProperty(required = false, value = "program")
+	private String program;
+	
+	/**
+	 * The list of Task-specific options.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "The list of Task-specific options.")
+	@JsonPropertyDescription("The list of Task-specific options.")
+	@Expose
+	@SerializedName("option")
+	@JsonProperty(required = true, value = "option")
+	private List<LmapOptionDto> options = new ArrayList<>();
+	
+	/**
+	 * A set of Task-specific tags that are reported together with the measurement results to a Collector. 
+	 * A tag can be used, for example, to carry the Measurement Cycle ID.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "A set of Task-specific tags that are reported together with the measurement results to a Collector. A tag can be used, for example, to carry the Measurement Cycle ID.")
+	@JsonPropertyDescription("A set of Task-specific tags that are reported together with the measurement results to a Collector. A tag can be used, for example, to carry the Measurement Cycle ID.")
+	@Expose
+	@SerializedName("tag")
+	@JsonProperty(required = true, value = "tag")
+	private List<String> tagList = new ArrayList<>();
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String taskName) {
+		this.name = taskName;
+	}
+
+	public List<LmapFunctionDto> getFunctions() {
+		return functions;
+	}
+
+	public void setFunctions(List<LmapFunctionDto> functions) {
+		this.functions = functions;
+	}
+
+	public String getProgram() {
+		return program;
+	}
+
+	public void setProgram(String program) {
+		this.program = program;
+	}
+
+	public List<LmapOptionDto> getOptions() {
+		return options;
+	}
+
+	public void setOptions(List<LmapOptionDto> options) {
+		this.options = options;
+	}
+
+	public List<String> getTagList() {
+		return tagList;
+	}
+
+	public void setTagList(List<String> tagList) {
+		this.tagList = tagList;
+	}
+	
+	
+}

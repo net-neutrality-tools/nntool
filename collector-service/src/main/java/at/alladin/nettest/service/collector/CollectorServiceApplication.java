@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.ComponentScan;
 
 import at.alladin.nettest.service.collector.config.CollectorServiceProperties;
 import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
@@ -18,7 +19,10 @@ import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
 @EnableConfigurationProperties({
 	CollectorServiceProperties.class
 })
-//@ComponentScan({"at.alladin.nettest.service.collector", "at.alladin.nettest.shared.server.service"})
+@ComponentScan({
+	"at.alladin.nettest.service.collector", 
+	"at.alladin.nettest.shared.server.web.api.v1"
+})
 public class CollectorServiceApplication extends SpringBootServletInitializer {
 
 	/**

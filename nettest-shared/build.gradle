@@ -2,11 +2,13 @@ apply from: "${project.rootDir}/gradle/java7.gradle"
 //apply plugin: 'eclipse-wtp'
 
 dependencies {
-  compile group: 'joda-time', name: 'joda-time', version: joda_time_version
+	compile group: 'joda-time', name: 'joda-time', version: joda_time_version
 	compile group: 'com.google.code.gson', name: 'gson', version: gson_version
 	compile group: 'com.fatboyindustrial.gson-jodatime-serialisers', name: 'gson-jodatime-serialisers', version: gson_jodatime_serialisers_version
 	
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.5'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.5'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: '2.9.5'
 	
 	// Swagger
 	compile group: 'io.swagger', name: 'swagger-annotations', version: '1.5.20'
