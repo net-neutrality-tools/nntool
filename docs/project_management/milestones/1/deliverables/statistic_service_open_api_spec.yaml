@@ -1,1263 +1,1408 @@
-openapi: 3.0.0
+components:
+  schemas:
+    ApiError:
+      description: DTO that wraps server errors and/or exceptions. The Java stack-trace
+        is only added if the service runs in development mode.
+      properties:
+        error:
+          description: String representation of the status.
+          example: '''Internal Server Error'', ''Not Found'', ...'
+          type: string
+        exception:
+          description: Exception class name.
+          nullable: true
+          type: string
+        message:
+          description: The error or exception message.
+          example: java.lang.RuntimeException
+          type: string
+        path:
+          description: URI path/resource that caused the error.
+          type: string
+        status:
+          description: Status code for the error.
+          example: 400, 404, 500, ...
+          format: int32
+          type: integer
+        time:
+          description: Date and time at which the error occurred.
+          format: date-time
+          type: string
+        trace:
+          description: Exception stack tracewhich is only added if the service runs
+            in development mode.
+          nullable: true
+          type: string
+      required:
+      - error
+      - message
+      - path
+      - status
+      - time
+      title: ApiError
+      type: object
+    ApiPagination_BriefMeasurementResponse_:
+      description: Wrapper for paginated responses (e.g. list of measurements).
+      properties:
+        content:
+          description: Paginated list of objects.
+          items:
+            $ref: '#/components/schemas/BriefMeasurementResponse'
+          type: array
+        page_number:
+          description: Current page number (>= 0).
+          format: int32
+          type: integer
+        page_size:
+          description: Current page size (> 0).
+          format: int32
+          type: integer
+        total_elements:
+          description: Total amount of objects (>= 0).
+          format: int64
+          type: integer
+        total_pages:
+          description: Total amount of pages (>= 0).
+          format: int32
+          type: integer
+      required:
+      - content
+      - page_number
+      - page_size
+      - total_elements
+      - total_pages
+      title: "ApiPagination\xABBriefMeasurementResponse\xBB"
+      type: object
+    ApiResponse:
+      description: Object that is used as wrapper for every response.
+      properties:
+        data:
+          description: Actual data that is returned for the request/response.
+          type: object
+        errors:
+          description: Optional list of errors that occurred during request processing.
+          items:
+            $ref: '#/components/schemas/ApiError'
+          nullable: true
+          type: array
+      required:
+      - data
+      title: ApiResponse
+      type: object
+    ApiResponse_ApiPagination_BriefMeasurementResponse_:
+      description: Object that is used as wrapper for every response.
+      properties:
+        data:
+          $ref: '#/components/schemas/ApiPagination_BriefMeasurementResponse_'
+          description: Actual data that is returned for the request/response.
+        errors:
+          description: Optional list of errors that occurred during request processing.
+          items:
+            $ref: '#/components/schemas/ApiError'
+          nullable: true
+          type: array
+      required:
+      - data
+      title: "ApiResponse\xABApiPagination\xABBriefMeasurementResponse\xBB\xBB"
+      type: object
+    ApiResponse_DetailMeasurementResponse_:
+      description: Object that is used as wrapper for every response.
+      properties:
+        data:
+          $ref: '#/components/schemas/DetailMeasurementResponse'
+          description: Actual data that is returned for the request/response.
+        errors:
+          description: Optional list of errors that occurred during request processing.
+          items:
+            $ref: '#/components/schemas/ApiError'
+          nullable: true
+          type: array
+      required:
+      - data
+      title: "ApiResponse\xABDetailMeasurementResponse\xBB"
+      type: object
+    ApiResponse_FullMeasurementResponse_:
+      description: Object that is used as wrapper for every response.
+      properties:
+        data:
+          $ref: '#/components/schemas/FullMeasurementResponse'
+          description: Actual data that is returned for the request/response.
+        errors:
+          description: Optional list of errors that occurred during request processing.
+          items:
+            $ref: '#/components/schemas/ApiError'
+          nullable: true
+          type: array
+      required:
+      - data
+      title: "ApiResponse\xABFullMeasurementResponse\xBB"
+      type: object
+    ApiResponse_VersionResponse_:
+      description: Object that is used as wrapper for every response.
+      properties:
+        data:
+          $ref: '#/components/schemas/VersionResponse'
+          description: Actual data that is returned for the request/response.
+        errors:
+          description: Optional list of errors that occurred during request processing.
+          items:
+            $ref: '#/components/schemas/ApiError'
+          nullable: true
+          type: array
+      required:
+      - data
+      title: "ApiResponse\xABVersionResponse\xBB"
+      type: object
+    BriefDeviceInfo:
+      description: BriefDeviceInfo contains the most important values from DeviceInfo
+        class.
+      properties:
+        avg_cpu_usage:
+          description: Average CPU usage during the measurement.
+          format: double
+          nullable: true
+          type: number
+        avg_mem_usage:
+          description: Average Memory usage during the measurement.
+          format: double
+          nullable: true
+          type: number
+        device_code_name:
+          description: Device code name.
+          type: string
+        device_full_name:
+          description: The device name that is commonly known to users (e.g. Google
+            Pixel).
+          nullable: true
+          type: string
+        os_name:
+          description: Device operating system name.
+          type: string
+        os_version:
+          description: Device operating system version.
+          type: string
+      required:
+      - device_code_name
+      - os_name
+      - os_version
+      title: BriefDeviceInfo
+      type: object
+    BriefMeasurementResponse:
+      description: The BriefMeasurementResponse contains the most important values
+        of a measurement. It is used to show a preview (list) of measurements to the
+        end user.
+      properties:
+        device_info:
+          $ref: '#/components/schemas/BriefDeviceInfo'
+          description: BriefDeviceInfo contains the most important values from DeviceInfo
+            class.
+        duration_ns:
+          description: Overall duration of all sub measurements.
+          format: int64
+          type: integer
+        first_accurate_geo_location:
+          $ref: '#/components/schemas/GeoLocationDto'
+          description: The first accurate GeoLocation i.e. the location where the
+            measurement was started.
+          nullable: true
+        measurements:
+          additionalProperties:
+            $ref: '#/components/schemas/BriefSubMeasurement'
+          description: Map that contains available information for each measurement
+            type (Speed, QoS). If map misses speed then no speed measurement was done,
+            likewise for QoS, ...
+          type: object
+        network_type_id:
+          description: Network type id.
+          format: int32
+          type: integer
+        network_type_name:
+          description: Network type name.
+          type: string
+        qoSMeasurementAvailable:
+          nullable: true
+          type: boolean
+        speedMeasurementAvailable:
+          nullable: true
+          type: boolean
+        start_time:
+          description: Overall start time in UTC.
+          format: date-time
+          type: string
+        type:
+          description: The type of measurement agent.
+          enum:
+          - MOBILE
+          - BROWSER
+          - DESKTOP
+          type: string
+        uuid:
+          description: The UUIDv4 identifier of the measurement object.
+          type: string
+      required:
+      - device_info
+      - duration_ns
+      - measurements
+      - network_type_id
+      - network_type_name
+      - start_time
+      - type
+      - uuid
+      title: BriefMeasurementResponse
+      type: object
+    BriefSubMeasurement:
+      description: Brief/short information of a sub measurement.
+      properties:
+        duration_ns:
+          description: Duration of this sub measurement.
+          format: int64
+          type: integer
+        start_time:
+          description: Start time of this sub measurement in UTC.
+          format: date-time
+          type: string
+      required:
+      - duration_ns
+      - start_time
+      title: BriefSubMeasurement
+      type: object
+    CellLocationDto:
+      description: Cell location information from a point in time on the measurement
+        agent.
+      properties:
+        area_code:
+          description: Contains the area code (e.g. location area code (GSM), tracking
+            area code (LTE)), if available.
+          format: int32
+          nullable: true
+          type: integer
+        arfcn:
+          description: Contains the ARFCN (Absolute Radio Frequency Channel Number)
+            (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN), if available.
+          format: int32
+          nullable: true
+          type: integer
+        cell_id:
+          description: Contains the cell-ID, if available.
+          format: int32
+          nullable: true
+          type: integer
+        latitude:
+          description: Geographic location latitude of this cell.
+          format: double
+          nullable: true
+          type: number
+        longitude:
+          description: Geographic location longitude of this cell.
+          format: double
+          nullable: true
+          type: number
+        primary_scrambling_code:
+          description: Contains the primary scrambling code, if available.
+          format: int32
+          nullable: true
+          type: integer
+        relative_time_ns:
+          description: Relative time in nanoseconds (to test begin).
+          format: int64
+          type: integer
+        time:
+          description: Time and date the cell location information was captured (UTC).
+          format: date-time
+          type: string
+      required:
+      - relative_time_ns
+      - time
+      title: CellLocationDto
+      type: object
+    DetailMeasurementGroup:
+      description: Measurement detail group object which contains a translated title,
+        an optional description, and icon and the items.
+      properties:
+        description:
+          description: The already translated (optional) description of the given
+            group.
+          type: string
+        icon_character:
+          description: The icon to be used for the given group (as a single char in
+            the corresponding icon font).
+          type: string
+        items:
+          description: Contains all the entries of the given group.
+          items:
+            $ref: '#/components/schemas/DetailMeasurementGroupItem'
+          type: array
+        title:
+          description: The already translated title of the given group.
+          type: string
+      required:
+      - description
+      - icon_character
+      - items
+      - title
+      title: DetailMeasurementGroup
+      type: object
+    DetailMeasurementGroupItem:
+      description: This class specifies a single detail item with key, translated
+        title, value and the unit of the value.
+      properties:
+        key:
+          description: The key is the path to the chosen field inside the data model,
+            e.g. "device_info.model".
+          type: string
+        title:
+          description: The translated title of this item.
+          type: string
+        unit:
+          description: The unit of the value.
+          nullable: true
+          type: string
+        value:
+          description: The actual value of this item in the given unit.
+          type: string
+      required:
+      - key
+      - title
+      - value
+      title: DetailMeasurementGroupItem
+      type: object
+    DetailMeasurementResponse:
+      description: This DTO contains a list of detail groups.
+      properties:
+        groups:
+          description: A list of detail groups.
+          items:
+            $ref: '#/components/schemas/DetailMeasurementGroup'
+          type: array
+      required:
+      - groups
+      title: DetailMeasurementResponse
+      type: object
+    DeviceInfoDto:
+      description: Contains information about the device the measurement software
+        is running on.
+      properties:
+        code_name:
+          description: Device code name.
+          type: string
+        full_name:
+          description: The device name that is commonly known to users (e.g. Google
+            Pixel).
+          nullable: true
+          type: string
+        model:
+          description: Detailed device designation.
+          nullable: true
+          type: string
+        os_info:
+          $ref: '#/components/schemas/OperatingSystemInfoDto'
+          description: Contains information about the measurement agent's OS.
+      required:
+      - code_name
+      - os_info
+      title: DeviceInfoDto
+      type: object
+    FullMeasurementResponse:
+      description: This DTO class contains all measurement information that is sent
+        to the measurement agent.
+      properties:
+        agent_info:
+          $ref: '#/components/schemas/MeasurementAgentInfoDto'
+          description: Contains information about the measurement measurement agent.
+        device_info:
+          $ref: '#/components/schemas/DeviceInfoDto'
+          description: Contains information about the device the measurement software
+            is running on.
+        duration_ns:
+          description: Duration of a measurement.
+          format: int64
+          type: integer
+        end_time:
+          description: End Date and time for this (sub-) measurement. Date and time
+            is always stored as UTC.
+          format: date-time
+          type: string
+        geo_locations:
+          description: List of all captured geographic locations.
+          items:
+            $ref: '#/components/schemas/GeoLocationDto'
+          type: array
+        measurements:
+          additionalProperties:
+            $ref: '#/components/schemas/FullSubMeasurement'
+          description: Contains the result of a Speed and/or QoS measurement.
+          type: object
+        network_info:
+          $ref: '#/components/schemas/NetworkInfoDto'
+          description: Contains network related information gathered during the test.
+        open_data_uuid:
+          description: The open-data identifier (UUIDv4) of the measurement.
+          type: string
+        source:
+          description: Measurement source. Can be either own system or imported from
+            open-data.
+          nullable: true
+          type: string
+        start_time:
+          description: Start Date and time for this (sub-) measurement.
+          format: date-time
+          type: string
+        uuid:
+          description: The unique identifier (UUIDv4) of the measurement.
+          type: string
+      required:
+      - agent_info
+      - device_info
+      - duration_ns
+      - end_time
+      - geo_locations
+      - measurements
+      - network_info
+      - open_data_uuid
+      - start_time
+      - uuid
+      title: FullMeasurementResponse
+      type: object
+    FullSubMeasurement:
+      description: This DTO class is a base class for all specific full measurement
+        classes.
+      properties:
+        duration_ns:
+          description: Duration of a measurement.
+          format: int64
+          type: integer
+        end_time:
+          description: End Date and time for this sub measurement. Date and time is
+            always stored as UTC.
+          format: date-time
+          type: string
+        implausible:
+          description: Flag to mark this QoS measurement as implausible. An implausible
+            QoS result is one that could not have been measured that way. This flag
+            exists for potentially tampered results, so they do not count as valid
+            results (e.g. to prevent tampering w/statistics).
+          type: boolean
+        reason:
+          description: The reason why a measurement failed.
+          enum:
+          - UNABLE_TO_CONNECT
+          - CONNECTION_LOST
+          - NETWORK_CATEGORY_CHANGED
+          - APP_BACKGROUNDED
+          - USER_ABORTED
+          type: string
+        relative_end_time_ns:
+          description: End time in nanoseconds relative to the end time of the overall
+            measurement object.
+          format: int64
+          type: integer
+        relative_start_time_ns:
+          description: Start time in nanoseconds relative to the start time of the
+            overall measurement object.
+          format: int64
+          type: integer
+        start_time:
+          description: Start Date and time for this sub measurement. Date and time
+            is always stored as UTC.
+          format: date-time
+          type: string
+        status:
+          description: The status of a measurement.
+          enum:
+          - STARTED
+          - FINISHED
+          - FAILED
+          - ABORTED
+          type: string
+        version_library:
+          description: The library version this measurement used, if available.
+          nullable: true
+          type: string
+        version_protocol:
+          description: The protocol version this measurement used, if available.
+          nullable: true
+          type: string
+      required:
+      - duration_ns
+      - end_time
+      - implausible
+      - reason
+      - relative_end_time_ns
+      - relative_start_time_ns
+      - start_time
+      - status
+      title: FullSubMeasurement
+      type: object
+    GeoLocationDto:
+      description: GeoLocation object to be used on the measurement agent side and
+        inside DTOs.
+      properties:
+        accuracy:
+          description: Geographic location accuracy.
+          format: double
+          nullable: true
+          type: number
+        altitude:
+          description: Geographic location altitude.
+          format: double
+          nullable: true
+          type: number
+        heading:
+          description: Movement heading.
+          format: double
+          nullable: true
+          type: number
+        latitude:
+          description: Geographic location latitude.
+          format: double
+          type: number
+        longitude:
+          description: Geographic location longitude.
+          format: double
+          type: number
+        provider:
+          description: Geographic location provider.
+          nullable: true
+          type: string
+        relative_time_ns:
+          description: Relative time in nanoseconds (to measurement begin).
+          format: int64
+          type: integer
+        speed:
+          description: Movement speed.
+          format: double
+          nullable: true
+          type: number
+        time:
+          description: Time and date the geographic location information was captured
+            (UTC).
+          format: date-time
+          type: string
+      required:
+      - latitude
+      - longitude
+      - relative_time_ns
+      - time
+      title: GeoLocationDto
+      type: object
+    MeasurementAgentInfoDto:
+      description: Contains information about the measurement agent.
+      properties:
+        app_git_revision:
+          description: Git revision name.
+          nullable: true
+          type: string
+        app_version_code:
+          description: Application version code number (e.g. 10).
+          format: int32
+          type: integer
+        app_version_name:
+          description: Application version name (e.g. 1.0.0).
+          type: string
+        language:
+          description: The agent's language.
+          type: string
+        timezone:
+          description: The agent's time zone (e.g. UTC-6h).
+          nullable: true
+          type: string
+        type:
+          description: The type of agent.
+          enum:
+          - MOBILE
+          - BROWSER
+          - DESKTOP
+          type: string
+      required:
+      - app_version_code
+      - app_version_name
+      - language
+      - type
+      title: MeasurementAgentInfoDto
+      type: object
+    NetworkInfoDto:
+      description: Contains network related information gathered during the test.
+      properties:
+        cell_locations:
+          description: List of captured cell information.
+          items:
+            $ref: '#/components/schemas/CellLocationDto'
+          nullable: true
+          type: array
+        network_point_in_time_info:
+          description: Contains all relevant network information of a single point
+            in time.
+          items:
+            $ref: '#/components/schemas/NetworkPointInTimeInfoDto'
+          type: array
+        signals:
+          description: List of captured signal information.
+          items:
+            $ref: '#/components/schemas/SignalDto'
+          nullable: true
+          type: array
+      required:
+      - network_point_in_time_info
+      title: NetworkInfoDto
+      type: object
+    NetworkPointInTimeInfoDto:
+      description: Contains all relevant network information of a single point in
+        time.
+      properties:
+        agent_public_ip:
+          description: Public IP address of the measurement agent.
+          nullable: true
+          type: string
+        agent_public_ip_country_code:
+          description: Country of the measurement agent which is gathered by Geo-IP
+            lookup.
+          nullable: true
+          type: string
+        bssid:
+          description: BSSID of the network.
+          nullable: true
+          type: string
+        country_code_asn:
+          description: Country code derived from the AS (e.g. "AT").
+          nullable: true
+          type: string
+        network_country:
+          description: The network operator country code (e.g. "AT"), if available.
+          nullable: true
+          type: string
+        network_operator_mcc_mnc:
+          description: The MCC/MNC of the network operator, if available.
+          nullable: true
+          type: string
+        network_operator_name:
+          description: The network operator name, if available.
+          nullable: true
+          type: string
+        network_type_category:
+          description: Contains the different network categories.
+          nullable: true
+          type: string
+        network_type_group_name:
+          description: Network group name (e.g. 2G, 3G, LAN, etc).
+          nullable: true
+          type: string
+        network_type_id:
+          description: Network type id as it gets returned by the Android API.
+          format: int32
+          type: integer
+        network_type_name:
+          description: Network type name.
+          type: string
+        provider_name:
+          description: The name of the provider.
+          nullable: true
+          type: string
+        provider_short_name:
+          description: The short name (or shortcut) of the provider.
+          nullable: true
+          type: string
+        public_ip_as_name:
+          description: Name of ASN.
+          nullable: true
+          type: string
+        public_ip_asn:
+          description: ASN for the public IP address.
+          format: int64
+          nullable: true
+          type: integer
+        public_ip_rdns:
+          description: Reverse DNS for the public IP address.
+          nullable: true
+          type: string
+        relative_time_ns:
+          description: Time and date the signal information was captured (UTC).
+          format: int64
+          type: integer
+        sim_country:
+          description: The SIM operator country code (e.g. "AT"), if available.
+          nullable: true
+          type: string
+        sim_operator_mcc_mnc:
+          description: The MCC/MNC of the SIM operator, if available.
+          nullable: true
+          type: string
+        sim_operator_name:
+          description: SIM operator name, if available.
+          nullable: true
+          type: string
+        ssid:
+          description: SSID of the network.
+          nullable: true
+          type: string
+        time:
+          description: Time and date the signal information was captured (UTC).
+          format: date-time
+          type: string
+      required:
+      - network_type_id
+      - network_type_name
+      - relative_time_ns
+      - time
+      title: NetworkPointInTimeInfoDto
+      type: object
+    OperatingSystemInfoDto:
+      description: Contains information about the measurement agent's OS.
+      properties:
+        api_level:
+          description: API level of operating system or SDK (e.g. Android API level
+            or Swift SDK version).
+          nullable: true
+          type: string
+        cpu_average:
+          description: Average CPU usage, as double between 0 - 100.
+          format: double
+          nullable: true
+          type: number
+        cpu_max:
+          description: Maximum CPU usage, as double between 0 - 100.
+          format: double
+          nullable: true
+          type: number
+        cpu_median:
+          description: Median CPU usage, as double between 0 - 100.
+          format: double
+          nullable: true
+          type: number
+        cpu_min:
+          description: Minimum CPU usage, as double between 0 - 100.
+          format: double
+          nullable: true
+          type: number
+        memory_average:
+          description: Average Memory usage, as double between 0 - 100.
+          format: double
+          nullable: true
+          type: number
+        memory_max:
+          description: Maximum Memory usage, as double between 0 - 100.
+          format: double
+          nullable: true
+          type: number
+        memory_median:
+          description: Median Memory usage, as double between 0 - 100.
+          format: double
+          nullable: true
+          type: number
+        memory_min:
+          description: Minimum Memory usage, as double between 0 - 100.
+          format: double
+          nullable: true
+          type: number
+        name:
+          description: Operating system name (e.g. Android or iOS).
+          type: string
+        version:
+          description: Operating system version.
+          type: string
+      required:
+      - name
+      - version
+      title: OperatingSystemInfoDto
+      type: object
+    SignalDto:
+      description: Contains signal information from a point in time on the measurement
+        agent.
+      properties:
+        lte_cqi:
+          description: The LTE channel quality indicator (If available).
+          format: int32
+          nullable: true
+          type: integer
+        lte_rsrp_db:
+          description: The LTE reference signal received quality, in dB (If available).
+          format: int32
+          nullable: true
+          type: integer
+        lte_rsrp_dbm:
+          description: The LTE reference signal received power, in dBm (If available).
+          format: int32
+          nullable: true
+          type: integer
+        lte_rssnr_db:
+          description: The LTE reference signal signal-to-noise ratio, in dB (If available).
+          format: int32
+          nullable: true
+          type: integer
+        network_type_id:
+          description: Network type id as it gets returned by the Android API.
+          format: int32
+          type: integer
+        relative_time_ns:
+          description: Relative time in nanoseconds (to test begin).
+          format: int64
+          type: integer
+        signal_strength_2g3g_dbm:
+          description: The received signal strength of 2G or 3G connections, in dBm
+            (If available).
+          format: int32
+          nullable: true
+          type: integer
+        time:
+          description: Time and date the signal information was captured (UTC).
+          format: date-time
+          type: string
+        wifi_bssid:
+          description: BSSID of the network (if available).
+          nullable: true
+          type: string
+        wifi_link_speed_bps:
+          description: The current WiFi link speed, in bits per second (If available).
+          format: int32
+          nullable: true
+          type: integer
+        wifi_rssi_dbm:
+          description: The received signal strength indicator of the current 802.11
+            network, in dBm (If available).
+          format: int32
+          nullable: true
+          type: integer
+        wifi_ssid:
+          description: SSID of the network (if available).
+          nullable: true
+          type: string
+      required:
+      - network_type_id
+      - relative_time_ns
+      - time
+      title: SignalDto
+      type: object
+    VersionResponse:
+      description: Class for all kind of versions that the server reveals.
+      properties:
+        collector_service_version:
+          description: Collector service version number.
+          nullable: true
+          type: string
+        controller_service_version:
+          description: Controller service version number.
+          nullable: true
+          type: string
+        map_service_version:
+          description: Map service version number.
+          nullable: true
+          type: string
+        statistic_service_version:
+          description: Statistic service version number.
+          nullable: true
+          type: string
+      title: VersionResponse
+      type: object
 info:
-  description: Statistic Service REST API documentation of nntool.eu project.
-  version: v1
-  title: Statistic Service REST API
-  termsOfService: 'http://nntool.eu'
   contact:
     name: alladin-IT GmbH
-    url: 'https://alladin.at'
+    url: https://alladin.at
+  description: Statistic Service REST API documentation of nntool.eu project.
   license:
     name: Apache License 2.0
-    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
-tags:
-  - name: documentation-resource
-    description: Documentation Resource
-  - name: export-resource
-    description: Export Resource
-  - name: measurement-resource
-    description: Measurement Resource
-  - name: version-resource
-    description: Version Resource
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://nntool.eu
+  title: Statistic Service REST API
+  version: v1
+openapi: 3.0.0
 paths:
   /api/v1/documentation/json-schemas/api:
     get:
-      tags:
-        - documentation-resource
-      summary: Returns the json schema of the REST API DTO classes.
+      deprecated: false
+      description: This returns the JSON schema of the REST API DTO classes.
       operationId: renderApiJsonSchemaUsingGET
       responses:
         '200':
-          description: OK
           content:
             application/json;charset=UTF-8:
               schema:
-                type: object
                 additionalProperties:
                   type: object
-      deprecated: false
+                type: object
+          description: OK
+      summary: Returns the json schema of the REST API DTO classes.
+      tags:
+      - documentation-resource
   /api/v1/documentation/json-schemas/data-model:
     get:
-      tags:
-        - documentation-resource
-      summary: Returns the json schema of the data model classes.
+      deprecated: false
+      description: This returns the JSON schema of the data model classes.
       operationId: renderDataModelJsonSchemaUsingGET
       responses:
         '200':
-          description: OK
           content:
             application/json;charset=UTF-8:
               schema:
-                type: object
                 additionalProperties:
                   type: object
-      deprecated: false
-  /api/v1/documentation/open-api:
-    get:
+                type: object
+          description: OK
+      summary: Returns the json schema of the data model classes.
       tags:
-        - documentation-resource
-      summary: Redirects to the OpenApi specification.
-      description: >-
-        This request redirects the user to the OpenAPI specification at
+      - documentation-resource
+  /api/v1/documentation/swagger-spec:
+    get:
+      deprecated: false
+      description: This request redirects the user to the OpenAPI specification at
         /v2/api-docs?group=.
       operationId: redirectToSwaggerSpecUsingGET
       responses:
         '301':
           description: Moved Permanently
-      deprecated: false
-  /api/v1/documentation/swagger:
-    get:
+      summary: Redirects to the OpenApi specification.
       tags:
-        - documentation-resource
-      summary: Redirects to the swagger UI.
+      - documentation-resource
+  /api/v1/documentation/swagger-ui:
+    get:
+      deprecated: false
       description: This request redirects the user to the swagger UI at /swagger-ui.html.
       operationId: redirectToSwaggerUiUsingGET
       responses:
         '301':
           description: Moved Permanently
-      deprecated: false
-  '/api/v1/exports/{openDataUuid}':
-    get:
+      summary: Redirects to the swagger UI.
       tags:
-        - export-resource
-      summary: Exports a single measurement as CSV.
+      - documentation-resource
+  /api/v1/exports/{openDataUuid}:
+    get:
+      deprecated: false
       description: Exports a single measurement as CSV.
       operationId: exportSingleMeasurementUsingGET_1
       parameters:
-        - name: openDataUuid
-          in: path
-          description: openDataUuid
-          required: true
-          schema:
-            type: string
+      - description: openDataUuid
+        in: path
+        name: openDataUuid
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: OK
         '400':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
           description: Bad Request
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
         '500':
-          description: Internal Server Error
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-      deprecated: false
-  '/api/v1/exports/{openDataUuid}.{extension}.zip':
-    get:
+          description: Internal Server Error
+      summary: Exports a single measurement as CSV.
       tags:
-        - export-resource
-      summary: >-
-        Exports a single measurement as ZIP file including a file with custom
-        extension.
-      description: >-
-        Exports a single measurement as ZIP file including a file with custom
-        extension. Supported custom extensions are CSV, JSON, YAML.
+      - export-resource
+  /api/v1/exports/{openDataUuid}.{extension}:
+    get:
+      deprecated: false
+      description: Exports a single measurement as CSV, JSON or YAML file.
       operationId: exportSingleMeasurementUsingGET
       parameters:
-        - name: extension
-          in: path
-          description: extension
-          required: true
-          schema:
-            type: string
-        - name: openDataUuid
-          in: path
-          description: openDataUuid
-          required: true
-          schema:
-            type: string
+      - description: extension
+        in: path
+        name: extension
+        required: true
+        schema:
+          type: string
+      - description: openDataUuid
+        in: path
+        name: openDataUuid
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: OK
         '400':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
           description: Bad Request
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
         '500':
-          description: Internal Server Error
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-      deprecated: false
-  '/api/v1/exports/{year}/{month}':
-    get:
+          description: Internal Server Error
+      summary: Exports a single measurement as CSV, JSON or YAML file.
       tags:
-        - export-resource
-      summary: Export measurements by year and month as CSV.
+      - export-resource
+  /api/v1/exports/{year}/{month}:
+    get:
+      deprecated: false
       description: Export measurements by year and month as CSV.
       operationId: exportMonthlyDataUsingGET_1
       parameters:
-        - name: month
-          in: path
-          description: month
-          required: true
-          schema:
-            type: integer
-            format: int32
-        - name: year
-          in: path
-          description: year
-          required: true
-          schema:
-            type: integer
-            format: int32
+      - description: month
+        in: path
+        name: month
+        required: true
+        schema:
+          format: int32
+          type: integer
+      - description: year
+        in: path
+        name: year
+        required: true
+        schema:
+          format: int32
+          type: integer
       responses:
         '200':
           description: OK
         '400':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
           description: Bad Request
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
         '500':
-          description: Internal Server Error
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-      deprecated: false
-  '/api/v1/exports/{year}/{month}.{extension}.zip':
-    get:
+          description: Internal Server Error
+      summary: Export measurements by year and month as CSV.
       tags:
-        - export-resource
-      summary: >-
-        Export measurements by year and month as ZIP file including a file with
-        custom extension.
-      description: >-
-        Export measurements by year and month as ZIP file including a file with
-        custom extension. Supported custom extensions are CSV, JSON, YAML.
+      - export-resource
+  /api/v1/exports/{year}/{month}.{extension}.zip:
+    get:
+      deprecated: false
+      description: Export measurements by year and month as ZIP file including a file
+        with custom extension. Supported custom extensions are CSV, JSON, YAML.
       operationId: exportMonthlyDataUsingGET
       parameters:
-        - name: extension
-          in: path
-          description: extension
-          required: true
-          schema:
-            type: string
-        - name: month
-          in: path
-          description: month
-          required: true
-          schema:
-            type: integer
-            format: int32
-        - name: year
-          in: path
-          description: year
-          required: true
-          schema:
-            type: integer
-            format: int32
+      - description: extension
+        in: path
+        name: extension
+        required: true
+        schema:
+          type: string
+      - description: month
+        in: path
+        name: month
+        required: true
+        schema:
+          format: int32
+          type: integer
+      - description: year
+        in: path
+        name: year
+        required: true
+        schema:
+          format: int32
+          type: integer
       responses:
         '200':
           description: OK
         '400':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
           description: Bad Request
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
         '500':
-          description: Internal Server Error
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-      deprecated: false
-  '/api/v1/exports/{year}/{month}/{day}':
-    get:
+          description: Internal Server Error
+      summary: Export measurements by year and month as ZIP file including a file
+        with custom extension.
       tags:
-        - export-resource
-      summary: 'Export measurements by year, month and day as CSV.'
-      description: 'Export measurements by year, month and day as CSV.'
+      - export-resource
+  /api/v1/exports/{year}/{month}/{day}:
+    get:
+      deprecated: false
+      description: Export measurements by year, month and day as CSV.
       operationId: exportDailyDataUsingGET_1
       parameters:
-        - name: day
-          in: path
-          description: day
-          required: true
-          schema:
-            type: integer
-            format: int32
-        - name: month
-          in: path
-          description: month
-          required: true
-          schema:
-            type: integer
-            format: int32
-        - name: year
-          in: path
-          description: year
-          required: true
-          schema:
-            type: integer
-            format: int32
+      - description: day
+        in: path
+        name: day
+        required: true
+        schema:
+          format: int32
+          type: integer
+      - description: month
+        in: path
+        name: month
+        required: true
+        schema:
+          format: int32
+          type: integer
+      - description: year
+        in: path
+        name: year
+        required: true
+        schema:
+          format: int32
+          type: integer
       responses:
         '200':
           description: OK
         '400':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
           description: Bad Request
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
         '500':
-          description: Internal Server Error
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-      deprecated: false
-  '/api/v1/exports/{year}/{month}/{day}.{extension}.zip':
-    get:
+          description: Internal Server Error
+      summary: Export measurements by year, month and day as CSV.
       tags:
-        - export-resource
-      summary: >-
-        Export measurements by year, month and day as ZIP file including a file
-        with custom extension.
-      description: >-
-        Export measurements by year, month and day as ZIP file including a file
-        with custom extension. Supported custom extensions are CSV, JSON, YAML.
+      - export-resource
+  /api/v1/exports/{year}/{month}/{day}.{extension}.zip:
+    get:
+      deprecated: false
+      description: Export measurements by year, month and day as ZIP file including
+        a file with custom extension. Supported custom extensions are CSV, JSON, YAML.
       operationId: exportDailyDataUsingGET
       parameters:
-        - name: day
-          in: path
-          description: day
-          required: true
-          schema:
-            type: integer
-            format: int32
-        - name: extension
-          in: path
-          description: extension
-          required: true
-          schema:
-            type: string
-        - name: month
-          in: path
-          description: month
-          required: true
-          schema:
-            type: integer
-            format: int32
-        - name: year
-          in: path
-          description: year
-          required: true
-          schema:
-            type: integer
-            format: int32
+      - description: day
+        in: path
+        name: day
+        required: true
+        schema:
+          format: int32
+          type: integer
+      - description: extension
+        in: path
+        name: extension
+        required: true
+        schema:
+          type: string
+      - description: month
+        in: path
+        name: month
+        required: true
+        schema:
+          format: int32
+          type: integer
+      - description: year
+        in: path
+        name: year
+        required: true
+        schema:
+          format: int32
+          type: integer
       responses:
         '200':
           description: OK
         '400':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
           description: Bad Request
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
         '500':
-          description: Internal Server Error
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-      deprecated: false
+          description: Internal Server Error
+      summary: Export measurements by year, month and day as ZIP file including a
+        file with custom extension.
+      tags:
+      - export-resource
   /api/v1/measurements/:
     get:
-      tags:
-        - measurement-resource
-      summary: Retrieve a paginated and searched list of open-data measurements.
-      description: >-
-        This resource returns brief information of each queried open-data
+      deprecated: false
+      description: This resource returns brief information of each queried open-data
         measurement.
       operationId: getMeasurementsUsingGET
       parameters:
-        - name: offset
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int64
-        - name: pageNumber
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
-        - name: pageSize
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
-        - name: paged
-          in: query
-          required: false
-          schema:
-            type: boolean
-        - name: search
-          in: query
-          description: search
-          required: false
-          schema:
-            type: string
-            default: '*'
-        - name: sort.sorted
-          in: query
-          required: false
-          schema:
-            type: boolean
-        - name: sort.unsorted
-          in: query
-          required: false
-          schema:
-            type: boolean
-        - name: unpaged
-          in: query
-          required: false
-          schema:
-            type: boolean
+      - in: query
+        name: offset
+        required: false
+        schema:
+          format: int64
+          type: integer
+      - in: query
+        name: pageNumber
+        required: false
+        schema:
+          format: int32
+          type: integer
+      - in: query
+        name: pageSize
+        required: false
+        schema:
+          format: int32
+          type: integer
+      - in: query
+        name: paged
+        required: false
+        schema:
+          type: boolean
+      - description: search
+        in: query
+        name: search
+        required: false
+        schema:
+          default: '*'
+          type: string
+      - in: query
+        name: sort.sorted
+        required: false
+        schema:
+          type: boolean
+      - in: query
+        name: sort.unsorted
+        required: false
+        schema:
+          type: boolean
+      - in: query
+        name: unpaged
+        required: false
+        schema:
+          type: boolean
       responses:
         '200':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_ApiPagination_BriefMeasurementResponse_'
           description: OK
-          content:
-            application/json;charset=UTF-8:
-              schema:
-                $ref: >-
-                  #/components/schemas/ApiResponse_ApiPagination_BriefMeasurementResponse_
         '400':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
           description: Bad Request
-          content:
-            application/json;charset=UTF-8:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
         '500':
-          description: Internal Server Error
           content:
             application/json;charset=UTF-8:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-      deprecated: false
-  '/api/v1/measurements/measurements/{openDataUuid}':
-    get:
+          description: Internal Server Error
+      summary: Retrieve a paginated and searched list of open-data measurements.
       tags:
-        - measurement-resource
-      summary: Returns an open-data measurement.
-      description: >-
-        Returns a measurement by open-data UUID with either all or a custom
+      - measurement-resource
+  /api/v1/measurements/measurements/{openDataUuid}:
+    get:
+      deprecated: false
+      description: Returns a measurement by open-data UUID with either all or a custom
         selection of measurement types.
       operationId: getMeasurementUsingGET
       parameters:
-        - name: include
-          in: query
-          description: >-
-            Set of included measurement types (e.g. SPEED, QOS). If nothing is
-            provided all measurement types are returned
-          required: false
-          allowEmptyValue: false
-          explode: true
-          schema:
-            type: array
-            items:
-              type: string
-              enum:
-                - SPEED
-                - QOS
+      - allowEmptyValue: false
+        description: Set of included measurement types (e.g. SPEED, QOS). If nothing
+          is provided all measurement types are returned
+        explode: true
+        in: query
+        name: include
+        required: false
+        schema:
+          enum:
+          - SPEED
+          - QOS
+          items:
             enum:
-              - SPEED
-              - QOS
-        - name: openDataUuid
-          in: path
-          description: The open-data UUID
-          required: true
-          schema:
+            - SPEED
+            - QOS
             type: string
+          type: array
+      - description: The open-data UUID
+        in: path
+        name: openDataUuid
+        required: true
+        schema:
+          type: string
       responses:
         '200':
-          description: OK
           content:
             application/json;charset=UTF-8:
               schema:
                 $ref: '#/components/schemas/ApiResponse_FullMeasurementResponse_'
+          description: OK
         '400':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
           description: Bad Request
-          content:
-            application/json;charset=UTF-8:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
         '500':
-          description: Internal Server Error
           content:
             application/json;charset=UTF-8:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-      deprecated: false
-  '/api/v1/measurements/measurements/{openDataUuid}/details':
-    get:
+          description: Internal Server Error
+      summary: Returns an open-data measurement.
       tags:
-        - measurement-resource
-      summary: Get details of an open-data measurement.
-      description: >-
-        Returns the open-data measurement details, either in grouped or plain
-        form.
+      - measurement-resource
+  /api/v1/measurements/measurements/{openDataUuid}/details:
+    get:
+      deprecated: false
+      description: Returns the open-data measurement details, either in grouped or
+        plain form.
       operationId: getMeasurementDetailsUsingGET
       parameters:
-        - name: grouped
-          in: query
-          description: Flag that indicates if the details should be grouped
-          required: false
-          allowEmptyValue: false
-          example: false
-          schema:
-            type: boolean
-            default: false
-        - name: openDataUuid
-          in: path
-          description: The open-data UUID
-          required: true
-          schema:
-            type: string
+      - allowEmptyValue: false
+        description: Flag that indicates if the details should be grouped
+        example: false
+        in: query
+        name: grouped
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: The open-data UUID
+        in: path
+        name: openDataUuid
+        required: true
+        schema:
+          type: string
       responses:
         '200':
-          description: OK
           content:
             application/json;charset=UTF-8:
               schema:
                 $ref: '#/components/schemas/ApiResponse_DetailMeasurementResponse_'
+          description: OK
         '400':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
           description: Bad Request
-          content:
-            application/json;charset=UTF-8:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
         '500':
-          description: Internal Server Error
           content:
             application/json;charset=UTF-8:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-      deprecated: false
+          description: Internal Server Error
+      summary: Get details of an open-data measurement.
+      tags:
+      - measurement-resource
   /api/v1/versions:
     get:
-      tags:
-        - version-resource
-      summary: Get the server version.
+      deprecated: false
       description: Returns the software version of the statistic server.
       operationId: getVersionUsingGET
       responses:
         '200':
-          description: OK
           content:
             application/json;charset=UTF-8:
               schema:
                 $ref: '#/components/schemas/ApiResponse_VersionResponse_'
-      deprecated: false
+          description: OK
+      summary: Get the server version.
+      tags:
+      - version-resource
 servers:
-  - url: '//localhost:8080/'
-components:
-  schemas:
-    ApiError:
-      type: object
-      properties:
-        error:
-          type: string
-          example: '''Internal Server Error'', ''Not Found'', ...'
-          description: String representation of the status.
-        exception:
-          type: string
-          description: Exception class name.
-        message:
-          type: string
-          example: java.lang.RuntimeException
-          description: The error or exception message.
-        path:
-          type: string
-          description: URI path/resource that caused the error.
-        status:
-          type: integer
-          format: int32
-          example: '400, 404, 500, ...'
-          description: Status code for the error.
-        time:
-          type: string
-          format: date-time
-          description: Date and time at which the error occurred.
-        trace:
-          type: string
-          description: Exception stack trace.
-      title: ApiError
-      description: DTO that wraps server errors and/or exceptions.
-    ApiResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          description: Actual data that is returned for the request/response.
-        errors:
-          type: array
-          description: Optional list of errors that occurred during request processing.
-          items:
-            $ref: '#/components/schemas/ApiError'
-      title: ApiResponse
-      description: Object that is used as wrapper for every response.
-    BriefDeviceInfo:
-      type: object
-      properties:
-        avg_cpu_usage:
-          type: number
-          format: double
-          description: Average CPU usage during the measurement.
-        avg_mem_usage:
-          type: number
-          format: double
-          description: Average Memory usage during the measurement.
-        device_code_name:
-          type: string
-          description: Device code name.
-        device_full_name:
-          type: string
-          description: The device name that is commonly known to users (e.g. Google Pixel).
-        os_name:
-          type: string
-          description: Device operating system name.
-        os_version:
-          type: string
-          description: Device operating system version.
-      title: BriefDeviceInfo
-      description: >-
-        BriefDeviceInfo contains the most important values from DeviceInfo
-        class.
-    BriefMeasurementResponse:
-      type: object
-      properties:
-        device_info:
-          description: >-
-            BriefDeviceInfo contains the most important values from DeviceInfo
-            class.
-          $ref: '#/components/schemas/BriefDeviceInfo'
-        duration_ns:
-          type: integer
-          format: int64
-          description: Overall duration of all sub measurements.
-        first_geo_location:
-          description: >-
-            The first GeoLocation i.e. the location where the measurement was
-            started.
-          $ref: '#/components/schemas/GeoLocationDto'
-        measurements:
-          type: object
-          description: >-
-            Map that contains available information for each measurement type
-            (Speed, QoS). If map misses speed then no speed measurement was
-            done, likewise for QoS, ...
-          additionalProperties:
-            $ref: '#/components/schemas/BriefSubMeasurement'
-        network_type_id:
-          type: integer
-          format: int32
-          description: Network type id.
-        network_type_name:
-          type: string
-          description: Network type name.
-        qoSMeasurementAvailable:
-          type: boolean
-        speedMeasurementAvailable:
-          type: boolean
-        start_time:
-          type: string
-          format: date-time
-          description: Overall start time in UTC.
-        type:
-          type: string
-          description: The type of client.
-          enum:
-            - MOBILE
-            - BROWSER
-            - DESKTOP
-        uuid:
-          type: string
-          description: The UUIDv4 identifier of the measurement object.
-      title: BriefMeasurementResponse
-      description: >-
-        The BriefMeasurementResponse contains the most important values of a
-        measurement. It is used to show a preview (list) of measurements to the
-        end user.
-    BriefSubMeasurement:
-      type: object
-      properties:
-        duration_ns:
-          type: integer
-          format: int64
-          description: Duration of this sub measurement.
-        start_time:
-          type: string
-          format: date-time
-          description: Start time of this sub measurement in UTC.
-      title: BriefSubMeasurement
-      description: Brief/short information of a sub measurement.
-    CellLocationDto:
-      type: object
-      properties:
-        area_code:
-          type: integer
-          format: int32
-          description: >-
-            Contains the area code (e.g. location area code (GSM), tracking area
-            code (LTE)), if available.
-        arfcn:
-          type: integer
-          format: int32
-          description: >-
-            Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g.
-            16-bit GSM ARFCN or 18-bit LTE EARFCN), if available.
-        cell_id:
-          type: integer
-          format: int32
-          description: 'Contains the cell-ID, if available.'
-        latitude:
-          type: number
-          format: double
-          description: Geographic location latitude of this cell.
-        longitude:
-          type: number
-          format: double
-          description: Geographic location longitude of this cell.
-        primary_scrambling_code:
-          type: integer
-          format: int32
-          description: 'Contains the primary scrambling code, if available.'
-        relative_time_ns:
-          type: integer
-          format: int64
-          description: Relative time in nanoseconds (to test begin).
-        time:
-          type: string
-          format: date-time
-          description: Time and date the cell location information was captured (UTC).
-      title: CellLocationDto
-      description: Cell location information from a point in time on the client.
-    ClientInfoDto:
-      type: object
-      properties:
-        app_git_revision:
-          type: string
-          description: Git revision name.
-        app_version_code:
-          type: integer
-          format: int32
-          description: Application version code number (e.g. 10).
-        app_version_name:
-          type: string
-          description: Application version name (e.g. 1.0.0).
-        language:
-          type: string
-          description: The client's language.
-        timezone:
-          type: string
-          description: The client's time zone (e.g. UTC-6h).
-        type:
-          type: string
-          description: The type of client.
-          enum:
-            - MOBILE
-            - BROWSER
-            - DESKTOP
-      title: ClientInfoDto
-      description: Contains information about the measurement client.
-    DetailMeasurementGroup:
-      type: object
-      properties:
-        description:
-          type: string
-          description: The already translated (optional) description of the given group.
-        icon_character:
-          type: string
-          description: >-
-            The icon to be used for the given group (as a single char in the
-            corresponding icon font).
-        items:
-          type: array
-          description: Contains all the entries of the given group.
-          items:
-            $ref: '#/components/schemas/DetailMeasurementGroupItem'
-        title:
-          type: string
-          description: The already translated title of the given group.
-      title: DetailMeasurementGroup
-      description: >-
-        Measurement detail group object which contains a translated title, an
-        optional description, and icon and the items.
-    DetailMeasurementGroupItem:
-      type: object
-      properties:
-        key:
-          type: string
-          description: >-
-            The key is the path to the chosen field inside the data model, e.g.
-            "client_info.app_version_name".
-        title:
-          type: string
-          description: The translated title of this item.
-        unit:
-          type: string
-          description: The unit of the value.
-        value:
-          type: string
-          description: The actual value of this item in the given unit.
-      title: DetailMeasurementGroupItem
-      description: >-
-        This class specifies a single detail item with key, translated title,
-        value and the unit of the value.
-    DetailMeasurementResponse:
-      type: object
-      properties:
-        groups:
-          type: array
-          description: A list of detail groups.
-          items:
-            $ref: '#/components/schemas/DetailMeasurementGroup'
-      title: DetailMeasurementResponse
-      description: This DTO contains a list of detail groups.
-    DeviceInfoDto:
-      type: object
-      properties:
-        code_name:
-          type: string
-          description: Device code name.
-        full_name:
-          type: string
-          description: The device name that is commonly known to users (e.g. Google Pixel).
-        model:
-          type: string
-          description: Detailed device designation.
-        os_info:
-          description: Contains information about the client's OS.
-          $ref: '#/components/schemas/OperatingSystemInfoDto'
-      title: DeviceInfoDto
-      description: >-
-        Contains information about the device the measurement software is
-        running on.
-    FullMeasurementResponse:
-      type: object
-      properties:
-        client_info:
-          description: Contains information about the measurement client.
-          $ref: '#/components/schemas/ClientInfoDto'
-        device_info:
-          description: >-
-            Contains information about the device the measurement software is
-            running on.
-          $ref: '#/components/schemas/DeviceInfoDto'
-        duration_ns:
-          type: integer
-          format: int64
-          description: Duration of a measurement.
-        end_time:
-          type: string
-          format: date-time
-          description: >-
-            End Date and time for this (sub-) measurement. Date and time is
-            always stored as UTC.
-        geo_locations:
-          type: array
-          description: List of all captured geographic locations.
-          items:
-            $ref: '#/components/schemas/GeoLocationDto'
-        measurements:
-          type: object
-          description: Contains the result of a Speed and/or QoS measurement.
-          additionalProperties:
-            $ref: '#/components/schemas/FullSubMeasurement'
-        network_info:
-          description: Contains network related information gathered during the test.
-          $ref: '#/components/schemas/NetworkInfoDto'
-        open_data_uuid:
-          type: string
-          description: The open-data identifier (UUIDv4) of the measurement.
-        source:
-          type: string
-          description: >-
-            Measurement source. Can be either own system or imported from
-            open-data.
-        start_time:
-          type: string
-          format: date-time
-          description: Start Date and time for this (sub-) measurement.
-        uuid:
-          type: string
-          description: The unique identifier (UUIDv4) of the measurement.
-      title: FullMeasurementResponse
-      description: >-
-        This DTO class contains all measurement information that is sent to the
-        client.
-    FullSubMeasurement:
-      type: object
-      properties:
-        duration_ns:
-          type: integer
-          format: int64
-          description: Duration of a measurement.
-        end_time:
-          type: string
-          format: date-time
-          description: >-
-            End Date and time for this sub measurement. Date and time is always
-            stored as UTC.
-        implausible:
-          type: boolean
-          description: Flag to mark a measurement as implausible.
-        reason:
-          type: string
-          description: The reason why a measurement failed.
-          enum:
-            - UNABLE_TO_CONNECT
-            - CONNECTION_LOST
-            - NETWORK_CATEGORY_CHANGED
-            - APP_BACKGROUNDED
-            - USER_ABORTED
-        relative_end_time_ns:
-          type: integer
-          format: int64
-          description: >-
-            End time in nanoseconds relative to the end time of the overall
-            measurement object.
-        relative_start_time_ns:
-          type: integer
-          format: int64
-          description: >-
-            Start time in nanoseconds relative to the start time of the overall
-            measurement object.
-        start_time:
-          type: string
-          format: date-time
-          description: >-
-            Start Date and time for this sub measurement. Date and time is
-            always stored as UTC.
-        status:
-          type: string
-          description: The status of a measurement.
-          enum:
-            - STARTED
-            - FINISHED
-            - FAILED
-            - ABORTED
-        version_library:
-          type: string
-          description: 'The library version this measurement used, if available.'
-        version_protocol:
-          type: string
-          description: 'The protocol version this measurement used, if available.'
-      title: FullSubMeasurement
-      description: >-
-        This DTO class is a base class for all specific full measurement
-        classes.
-    GeoLocationDto:
-      type: object
-      properties:
-        accuracy:
-          type: number
-          format: double
-          description: Geographic location accuracy.
-        altitude:
-          type: number
-          format: double
-          description: Geographic location altitude.
-        heading:
-          type: number
-          format: double
-          description: Movement heading.
-        latitude:
-          type: number
-          format: double
-          description: Geographic location latitude.
-        longitude:
-          type: number
-          format: double
-          description: Geographic location longitude.
-        provider:
-          type: string
-          description: Geographic location provider.
-        relative_time_ns:
-          type: integer
-          format: int64
-          description: Relative time in nanoseconds (to measurement begin).
-        speed:
-          type: number
-          format: double
-          description: Movement speed.
-        time:
-          type: string
-          format: date-time
-          description: >-
-            Time and date the geographic location information was captured
-            (UTC).
-      title: GeoLocationDto
-      description: GeoLocation object to be used on the client side and inside DTOs.
-    NetworkInfoDto:
-      type: object
-      properties:
-        cell_locations:
-          type: array
-          description: List of captured cell information.
-          items:
-            $ref: '#/components/schemas/CellLocationDto'
-        network_point_in_time_info:
-          type: array
-          description: Contains all relevant network information of a single point in time.
-          items:
-            $ref: '#/components/schemas/NetworkPointInTimeInfoDto'
-        signals:
-          type: array
-          description: List of captured signal information.
-          items:
-            $ref: '#/components/schemas/SignalDto'
-      title: NetworkInfoDto
-      description: Contains network related information gathered during the test.
-    NetworkPointInTimeInfoDto:
-      type: object
-      properties:
-        bssid:
-          type: string
-          description: BSSID of the network.
-        client_public_ip:
-          type: string
-          description: Public IP address of the client.
-        client_public_ip_country_code:
-          type: string
-          description: Country of the client which is gathered by Geo-IP lookup.
-        country_code_asn:
-          type: string
-          description: Country code derived from the AS (e.g. "AT").
-        network_country:
-          type: string
-          description: 'The network operator country code (e.g. "AT"), if available.'
-        network_operator_mcc_mnc:
-          type: string
-          description: 'The MCC/MNC of the network operator, if available.'
-        network_operator_name:
-          type: string
-          description: 'The network operator name, if available.'
-        network_type_category:
-          type: string
-          description: Contains the different network categories.
-        network_type_group_name:
-          type: string
-          description: 'Network group name (e.g. 2G, 3G, LAN, etc).'
-        network_type_id:
-          type: integer
-          format: int32
-          description: Network type id as it gets returned by the Android API.
-        network_type_name:
-          type: string
-          description: Network type name.
-        provider_name:
-          type: string
-          description: The name of the provider.
-        provider_short_name:
-          type: string
-          description: The short name (or shortcut) of the provider.
-        public_ip_as_name:
-          type: string
-          description: Name of ASN.
-        public_ip_asn:
-          type: integer
-          format: int64
-          description: ASN for the public IP address.
-        public_ip_rdns:
-          type: string
-          description: Reverse DNS for the public IP address.
-        relative_time_ns:
-          type: integer
-          format: int64
-          description: Time and date the signal information was captured (UTC).
-        sim_country:
-          type: string
-          description: 'The SIM operator country code (e.g. "AT"), if available.'
-        sim_operator_mcc_mnc:
-          type: string
-          description: 'The MCC/MNC of the SIM operator, if available.'
-        sim_operator_name:
-          type: string
-          description: 'SIM operator name, if available.'
-        ssid:
-          type: string
-          description: SSID of the network.
-        time:
-          type: string
-          format: date-time
-          description: Time and date the signal information was captured (UTC).
-      title: NetworkPointInTimeInfoDto
-      description: Contains all relevant network information of a single point in time.
-    OperatingSystemInfoDto:
-      type: object
-      properties:
-        api_level:
-          type: string
-          description: >-
-            API level of operating system or SDK (e.g. Android API level or
-            Swift SDK version).
-        cpu_average:
-          type: number
-          format: double
-          description: 'Average CPU usage, as double between 0 - 100.'
-        cpu_max:
-          type: number
-          format: double
-          description: 'Maximum CPU usage, as double between 0 - 100.'
-        cpu_median:
-          type: number
-          format: double
-          description: 'Median CPU usage, as double between 0 - 100.'
-        cpu_min:
-          type: number
-          format: double
-          description: 'Minimum CPU usage, as double between 0 - 100.'
-        memory_average:
-          type: number
-          format: double
-          description: 'Average Memory usage, as double between 0 - 100.'
-        memory_max:
-          type: number
-          format: double
-          description: 'Maximum Memory usage, as double between 0 - 100.'
-        memory_median:
-          type: number
-          format: double
-          description: 'Median Memory usage, as double between 0 - 100.'
-        memory_min:
-          type: number
-          format: double
-          description: 'Minimum Memory usage, as double between 0 - 100.'
-        name:
-          type: string
-          description: Operating system name (e.g. Android or iOS).
-        version:
-          type: string
-          description: Operating system version.
-      title: OperatingSystemInfoDto
-      description: Contains information about the client's OS.
-    SignalDto:
-      type: object
-      properties:
-        gsm_bit_error_rate:
-          type: integer
-          format: int32
-          description: >-
-            The bit error rate as defined in (ETSI) TS 27.007 8.5 (If
-            available).
-        lte_cqi:
-          type: integer
-          format: int32
-          description: The LTE channel quality indicator (If available).
-        lte_rsrp_db:
-          type: integer
-          format: int32
-          description: 'The LTE reference signal received quality, in dB (If available).'
-        lte_rsrp_dbm:
-          type: integer
-          format: int32
-          description: 'The LTE reference signal received power, in dBm (If available).'
-        lte_rssnr_db:
-          type: integer
-          format: int32
-          description: >-
-            The LTE reference signal signal-to-noise ratio, in dB (If
-            available).
-        network_type_id:
-          type: integer
-          format: int32
-          description: Network type id as it gets returned by the Android API.
-        relative_time_ns:
-          type: integer
-          format: int64
-          description: Relative time in nanoseconds (to test begin).
-        signal_strength_2g3g_dbm:
-          type: integer
-          format: int32
-          description: >-
-            The received signal strength of 2G or 3G connections, in dBm (If
-            available).
-        time:
-          type: string
-          format: date-time
-          description: Time and date the signal information was captured (UTC).
-        wifi_bssid:
-          type: string
-          description: BSSID of the network (if available).
-        wifi_link_speed_bps:
-          type: integer
-          format: int32
-          description: 'The current WiFi link speed, in bits per second (If available).'
-        wifi_rssi_dbm:
-          type: integer
-          format: int32
-          description: >-
-            The received signal strength indicator of the current 802.11
-            network, in dBm (If available).
-        wifi_ssid:
-          type: string
-          description: SSID of the network (if available).
-      title: SignalDto
-      description: Contains signal information from a point in time on the client.
-    VersionResponse:
-      type: object
-      properties:
-        collector_service_version:
-          type: string
-          description: Collector service version number.
-        map_service_version:
-          type: string
-          description: Map service version number.
-        statistic_service_version:
-          type: string
-          description: Statistic service version number.
-      title: VersionResponse
-      description: Class for all kind of versions that the server reveals.
-    ApiPagination_BriefMeasurementResponse_:
-      type: object
-      properties:
-        content:
-          type: array
-          description: Paginated list of objects.
-          items:
-            $ref: '#/components/schemas/BriefMeasurementResponse'
-        page_number:
-          type: integer
-          format: int32
-          description: Current page number (>= 0).
-        page_size:
-          type: integer
-          format: int32
-          description: Current page size (> 0).
-        total_elements:
-          type: integer
-          format: int64
-          description: Total amount of objects (>= 0).
-        total_pages:
-          type: integer
-          format: int32
-          description: Total amount of pages (>= 0).
-      title: ApiPagination«BriefMeasurementResponse»
-      description: Wrapper for paginated responses (e.g. list of measurements).
-    ApiResponse_ApiPagination_BriefMeasurementResponse_:
-      type: object
-      properties:
-        data:
-          description: Actual data that is returned for the request/response.
-          $ref: '#/components/schemas/ApiPagination_BriefMeasurementResponse_'
-        errors:
-          type: array
-          description: Optional list of errors that occurred during request processing.
-          items:
-            $ref: '#/components/schemas/ApiError'
-      title: ApiResponse«ApiPagination«BriefMeasurementResponse»»
-      description: Object that is used as wrapper for every response.
-    ApiResponse_DetailMeasurementResponse_:
-      type: object
-      properties:
-        data:
-          description: Actual data that is returned for the request/response.
-          $ref: '#/components/schemas/DetailMeasurementResponse'
-        errors:
-          type: array
-          description: Optional list of errors that occurred during request processing.
-          items:
-            $ref: '#/components/schemas/ApiError'
-      title: ApiResponse«DetailMeasurementResponse»
-      description: Object that is used as wrapper for every response.
-    ApiResponse_FullMeasurementResponse_:
-      type: object
-      properties:
-        data:
-          description: Actual data that is returned for the request/response.
-          $ref: '#/components/schemas/FullMeasurementResponse'
-        errors:
-          type: array
-          description: Optional list of errors that occurred during request processing.
-          items:
-            $ref: '#/components/schemas/ApiError'
-      title: ApiResponse«FullMeasurementResponse»
-      description: Object that is used as wrapper for every response.
-    ApiResponse_VersionResponse_:
-      type: object
-      properties:
-        data:
-          description: Actual data that is returned for the request/response.
-          $ref: '#/components/schemas/VersionResponse'
-        errors:
-          type: array
-          description: Optional list of errors that occurred during request processing.
-          items:
-            $ref: '#/components/schemas/ApiError'
-      title: ApiResponse«VersionResponse»
-      description: Object that is used as wrapper for every response.
+- url: //localhost:8083/
+tags:
+- description: Documentation Resource
+  name: documentation-resource
+- description: Export Resource
+  name: export-resource
+- description: Measurement Resource
+  name: measurement-resource
+- description: Version Resource
+  name: version-resource

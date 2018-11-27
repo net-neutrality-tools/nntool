@@ -35,6 +35,15 @@ public class SubMeasurement {
 	private MeasurementStatusInfo statusInfo;
 	
 	/**
+	 * @see SubMeasurementLmapResult
+	 */
+	@JsonPropertyDescription("This class holds LMAP specific result values (see LMAP report result model, RFC 8194)")
+	@Expose
+	@SerializedName("lmap_result")
+	@JsonProperty("lmap_result")
+	private SubMeasurementLmapResult lmapResult;
+	
+	/**
 	 * Flag to mark a measurement as implausible.
 	 */
 	@JsonPropertyDescription("Flag to mark a measurement as implausible.")
@@ -69,4 +78,5 @@ public class SubMeasurement {
 	@SerializedName("version_library")
 	@JsonProperty("version_library")
 	private String versionLibrary;
+	
 }

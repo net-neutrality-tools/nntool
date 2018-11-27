@@ -22,11 +22,11 @@ public class VersionResource {
 
 	/**
 	 * Get the server version.
-	 * Returns the software version of the collector/controller.
+	 * Returns the software version of the collector.
 	 *
 	 * @return
 	 */
-	@io.swagger.annotations.ApiOperation(value = "Get the server version.", notes = "Returns the software version of the collector/controller.")
+	@io.swagger.annotations.ApiOperation(value = "Get the server version.", notes = "Returns the software version of the collector.")
 	/*@io.swagger.annotations.ApiResponses({
 		//@io.swagger.annotations.ApiResponse(code = 200, message = "OK"),
 		//@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ApiResponse.class),

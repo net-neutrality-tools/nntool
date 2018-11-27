@@ -1,0 +1,32 @@
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+spring:
+  application:
+    name: controller-service
+
+#  messages:
+#    basename: classpath:/i18n/messages
+    #cache-seconds: ...
+  jackson:
+    serialization:
+      indent_output: true
+      write_dates_as_timestamps: false
+
+server:
+  port: 8080
+
+#springfox:
+#  documentation:
+#    swagger:
+#      v2:
+#        path: /api/v1-documentation
+
+# ===================================================================
+# Controller service specific properties
+# ===================================================================
+
+controller:

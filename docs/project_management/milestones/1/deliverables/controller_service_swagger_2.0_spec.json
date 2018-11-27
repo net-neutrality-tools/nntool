@@ -1,0 +1,1544 @@
+{
+    "info": {
+        "termsOfService": "https://nntool.eu", 
+        "description": "Controller REST API documentation of nntool.eu project.", 
+        "license": {
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html", 
+            "name": "Apache License 2.0"
+        }, 
+        "title": "Controller REST API", 
+        "contact": {
+            "url": "https://alladin.at", 
+            "name": "alladin-IT GmbH"
+        }, 
+        "version": "v1"
+    }, 
+    "paths": {
+        "/api/v1/documentation/json-schemas/data-model": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK", 
+                        "schema": {
+                            "additionalProperties": {
+                                "type": "object"
+                            }, 
+                            "type": "object"
+                        }
+                    }
+                }, 
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ], 
+                "deprecated": false, 
+                "description": "This returns the JSON schema of the data model classes.", 
+                "tags": [
+                    "documentation-resource"
+                ], 
+                "summary": "Returns the json schema of the data model classes.", 
+                "operationId": "renderDataModelJsonSchemaUsingGET"
+            }
+        }, 
+        "/api/v1/ip": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse\u00abIpResponse\u00bb"
+                        }
+                    }
+                }, 
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ], 
+                "deprecated": false, 
+                "description": "Returns public IP address and version of requesting client.", 
+                "tags": [
+                    "ip-resource"
+                ], 
+                "summary": "Get client public IP address.", 
+                "operationId": "getIpUsingGET"
+            }
+        }, 
+        "/api/v1/documentation/json-schemas/api": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK", 
+                        "schema": {
+                            "additionalProperties": {
+                                "type": "object"
+                            }, 
+                            "type": "object"
+                        }
+                    }
+                }, 
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ], 
+                "deprecated": false, 
+                "description": "This returns the JSON schema of the REST API DTO classes.", 
+                "tags": [
+                    "documentation-resource"
+                ], 
+                "summary": "Returns the json schema of the REST API DTO classes.", 
+                "operationId": "renderApiJsonSchemaUsingGET"
+            }
+        }, 
+        "/api/v1/measurement-agents": {
+            "post": {
+                "responses": {
+                    "201": {
+                        "description": "Created - New client created successfully. The response also contains the current settings.", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse\u00abRegistrationResponse\u00bb"
+                        }
+                    }, 
+                    "500": {
+                        "description": "Internal Server Error", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }, 
+                    "400": {
+                        "description": "Bad Request - Occurs if the request is malformed or if the terms and conditions aren't accepted by the client.", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }, 
+                "description": "This resource is used to register new measurement agents. Measurement agents will be assigned a UUID. Terms and conditions must be accepted in the request object.", 
+                "parameters": [
+                    {
+                        "schema": {
+                            "$ref": "#/definitions/ApiRequest\u00abRegistrationRequest\u00bb"
+                        }, 
+                        "description": "Registration request", 
+                        "required": false, 
+                        "name": "registrationApiRequest", 
+                        "in": "body"
+                    }
+                ], 
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ], 
+                "deprecated": false, 
+                "tags": [
+                    "measurement-agent-resource"
+                ], 
+                "summary": "Registers a new measurement agent.", 
+                "consumes": [
+                    "application/json"
+                ], 
+                "operationId": "registerClientUsingPOST"
+            }
+        }, 
+        "/api/v1/versions": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse\u00abVersionResponse\u00bb"
+                        }
+                    }
+                }, 
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ], 
+                "deprecated": false, 
+                "description": "Returns the software version of the controller.", 
+                "tags": [
+                    "version-resource"
+                ], 
+                "summary": "Get the server version.", 
+                "operationId": "getVersionUsingGET"
+            }
+        }, 
+        "/api/v1/documentation/swagger-spec": {
+            "get": {
+                "responses": {
+                    "301": {
+                        "description": "Moved Permanently"
+                    }
+                }, 
+                "produces": [
+                    "*/*"
+                ], 
+                "deprecated": false, 
+                "description": "This request redirects the user to the OpenAPI specification at /v2/api-docs?group=<group>.", 
+                "tags": [
+                    "documentation-resource"
+                ], 
+                "summary": "Redirects to the OpenApi specification.", 
+                "operationId": "redirectToSwaggerSpecUsingGET"
+            }
+        }, 
+        "/api/v1/measurements": {
+            "post": {
+                "responses": {
+                    "201": {
+                        "description": "Created - Measurement paramaters are provided.", 
+                        "schema": {
+                            "type": "object"
+                        }
+                    }, 
+                    "500": {
+                        "description": "Internal Server Error", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }, 
+                    "400": {
+                        "description": "Bad Request", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }, 
+                "description": "This request will fetch the current measurement parameters and configuration from the server.", 
+                "parameters": [
+                    {
+                        "schema": {
+                            "$ref": "#/definitions/LmapControlDto"
+                        }, 
+                        "description": "Initiation request", 
+                        "required": false, 
+                        "name": "measurementInitiationRequest", 
+                        "in": "body"
+                    }
+                ], 
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ], 
+                "deprecated": false, 
+                "tags": [
+                    "measurement-initiation-resource"
+                ], 
+                "summary": "Request a new measurement.", 
+                "consumes": [
+                    "application/json"
+                ], 
+                "operationId": "requestMeasurementUsingPOST"
+            }
+        }, 
+        "/api/v1/documentation/swagger-ui": {
+            "get": {
+                "responses": {
+                    "301": {
+                        "description": "Moved Permanently"
+                    }
+                }, 
+                "produces": [
+                    "*/*"
+                ], 
+                "deprecated": false, 
+                "description": "This request redirects the user to the swagger UI at /swagger-ui.html.", 
+                "tags": [
+                    "documentation-resource"
+                ], 
+                "summary": "Redirects to the swagger UI.", 
+                "operationId": "redirectToSwaggerUiUsingGET"
+            }
+        }, 
+        "/api/v1/measurement-agents/{agentUuid}/settings": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse\u00abSettingsResponse\u00bb"
+                        }
+                    }, 
+                    "404": {
+                        "description": "Not Found - If the agentUuid is not found on the server", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }, 
+                    "500": {
+                        "description": "Internal Server Error", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }, 
+                    "400": {
+                        "description": "Bad Request", 
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }, 
+                "description": "This resource is used to get the current settings for this measurement agent from the server.", 
+                "parameters": [
+                    {
+                        "description": "The measurement agent's UUID", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "agentUuid", 
+                        "in": "path"
+                    }, 
+                    {
+                        "description": "The agent's UUID. This value is ignored if the resource path already contains the agent's UUID.", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "requestInfo.agentId", 
+                        "in": "query"
+                    }, 
+                    {
+                        "enum": [
+                            "MOBILE", 
+                            "BROWSER", 
+                            "DESKTOP"
+                        ], 
+                        "description": "Type of agent.", 
+                        "required": true, 
+                        "in": "query", 
+                        "type": "string", 
+                        "name": "requestInfo.agentType"
+                    }, 
+                    {
+                        "description": "API level of operating system or SDK (e.g. Android API level or Swift SDK version).", 
+                        "required": false, 
+                        "type": "string", 
+                        "name": "requestInfo.apiLevel", 
+                        "in": "query"
+                    }, 
+                    {
+                        "description": "Git revision name.", 
+                        "required": false, 
+                        "type": "string", 
+                        "name": "requestInfo.appGitRevision", 
+                        "in": "query"
+                    }, 
+                    {
+                        "description": "Application version code number (e.g. 10).", 
+                        "format": "int32", 
+                        "required": false, 
+                        "in": "query", 
+                        "type": "integer", 
+                        "name": "requestInfo.appVersionCode"
+                    }, 
+                    {
+                        "description": "Application version name (e.g. 1.0.0).", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "requestInfo.appVersionName", 
+                        "in": "query"
+                    }, 
+                    {
+                        "description": "Device code name.", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "requestInfo.codeName", 
+                        "in": "query"
+                    }, 
+                    {
+                        "description": "Geographic location accuracy.", 
+                        "format": "double", 
+                        "required": false, 
+                        "in": "query", 
+                        "type": "number", 
+                        "name": "requestInfo.geoLocation.accuracy"
+                    }, 
+                    {
+                        "description": "Geographic location altitude.", 
+                        "format": "double", 
+                        "required": false, 
+                        "in": "query", 
+                        "type": "number", 
+                        "name": "requestInfo.geoLocation.altitude"
+                    }, 
+                    {
+                        "description": "Movement heading.", 
+                        "format": "double", 
+                        "required": false, 
+                        "in": "query", 
+                        "type": "number", 
+                        "name": "requestInfo.geoLocation.heading"
+                    }, 
+                    {
+                        "description": "Geographic location latitude.", 
+                        "format": "double", 
+                        "required": true, 
+                        "in": "query", 
+                        "type": "number", 
+                        "name": "requestInfo.geoLocation.latitude"
+                    }, 
+                    {
+                        "description": "Geographic location longitude.", 
+                        "format": "double", 
+                        "required": true, 
+                        "in": "query", 
+                        "type": "number", 
+                        "name": "requestInfo.geoLocation.longitude"
+                    }, 
+                    {
+                        "description": "Geographic location provider.", 
+                        "required": false, 
+                        "type": "string", 
+                        "name": "requestInfo.geoLocation.provider", 
+                        "in": "query"
+                    }, 
+                    {
+                        "description": "Relative time in nanoseconds (to measurement begin).", 
+                        "format": "int64", 
+                        "required": true, 
+                        "in": "query", 
+                        "type": "integer", 
+                        "name": "requestInfo.geoLocation.relativeTimeNs"
+                    }, 
+                    {
+                        "description": "Movement speed.", 
+                        "format": "double", 
+                        "required": false, 
+                        "in": "query", 
+                        "type": "number", 
+                        "name": "requestInfo.geoLocation.speed"
+                    }, 
+                    {
+                        "description": "Time and date the geographic location information was captured (UTC).", 
+                        "format": "date-time", 
+                        "required": true, 
+                        "in": "query", 
+                        "type": "string", 
+                        "name": "requestInfo.geoLocation.time"
+                    }, 
+                    {
+                        "description": "Language specified by the measurement agent.", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "requestInfo.language", 
+                        "in": "query"
+                    }, 
+                    {
+                        "description": "Detailed device designation.", 
+                        "required": false, 
+                        "type": "string", 
+                        "name": "requestInfo.model", 
+                        "in": "query"
+                    }, 
+                    {
+                        "description": "Operating system name.", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "requestInfo.osName", 
+                        "in": "query"
+                    }, 
+                    {
+                        "description": "Operating system version.", 
+                        "required": true, 
+                        "type": "string", 
+                        "name": "requestInfo.osVersion", 
+                        "in": "query"
+                    }, 
+                    {
+                        "description": "The measurement agent's time zone. Is only stored if a measurement is sent to the server.", 
+                        "required": false, 
+                        "type": "string", 
+                        "name": "requestInfo.timezone", 
+                        "in": "query"
+                    }
+                ], 
+                "produces": [
+                    "application/json;charset=UTF-8"
+                ], 
+                "deprecated": false, 
+                "tags": [
+                    "measurement-agent-resource"
+                ], 
+                "summary": "Retrieve the current settings.", 
+                "operationId": "getSettingsUsingGET"
+            }
+        }
+    }, 
+    "tags": [
+        {
+            "name": "documentation-resource", 
+            "description": "Documentation Resource"
+        }, 
+        {
+            "name": "ip-resource", 
+            "description": "Ip Resource"
+        }, 
+        {
+            "name": "measurement-agent-resource", 
+            "description": "Measurement Agent Resource"
+        }, 
+        {
+            "name": "measurement-initiation-resource", 
+            "description": "Measurement Initiation Resource"
+        }, 
+        {
+            "name": "version-resource", 
+            "description": "Version Resource"
+        }
+    ], 
+    "basePath": "/", 
+    "host": "localhost:8080", 
+    "definitions": {
+        "LmapTaskDto": {
+            "description": "Configuration of LMAP Tasks.", 
+            "required": [
+                "function", 
+                "name", 
+                "option", 
+                "tag"
+            ], 
+            "type": "object", 
+            "properties": {
+                "function": {
+                    "items": {
+                        "$ref": "#/definitions/LmapFunctionDto"
+                    }, 
+                    "type": "array", 
+                    "description": "A list of entries in a registry identifying functions."
+                }, 
+                "program": {
+                    "type": "string", 
+                    "description": "The (local) program to invoke in order to execute the Task. If this leaf is not set, then the system will try to identify a suitable program based on the registry information present."
+                }, 
+                "tag": {
+                    "items": {
+                        "type": "string"
+                    }, 
+                    "type": "array", 
+                    "description": "A set of Task-specific tags that are reported together with the measurement results to a Collector. A tag can be used, for example, to carry the Measurement Cycle ID."
+                }, 
+                "name": {
+                    "type": "string", 
+                    "description": "The unique name of a Task."
+                }, 
+                "option": {
+                    "items": {
+                        "$ref": "#/definitions/LmapOptionDto"
+                    }, 
+                    "type": "array", 
+                    "description": "The list of Task-specific options."
+                }
+            }, 
+            "title": "LmapTaskDto"
+        }, 
+        "Urls": {
+            "description": "Object that contains base URLs for controller, collector, map and statistic services.", 
+            "required": [
+                "collector_service", 
+                "controller_service", 
+                "controller_service_ipv4", 
+                "controller_service_ipv6", 
+                "map_service", 
+                "statistic_service", 
+                "website"
+            ], 
+            "type": "object", 
+            "properties": {
+                "website": {
+                    "type": "string", 
+                    "description": "Base URL of the web site of the form \"[protocol]://[domain]:[port]/[path]\"."
+                }, 
+                "collector_service": {
+                    "type": "string", 
+                    "description": "Base URL of the collector service of the form \"[protocol]://[domain]:[port]/[path]\". This domain name should have A and AAAA records."
+                }, 
+                "map_service": {
+                    "type": "string", 
+                    "description": "Base URL of the map service of the form \"[protocol]://[domain]:[port]/[path]\"."
+                }, 
+                "statistic_service": {
+                    "type": "string", 
+                    "description": "Base URL of the statistic service of the form \"[protocol]://[domain]:[port]/[path]\"."
+                }, 
+                "controller_service_ipv4": {
+                    "type": "string", 
+                    "description": "IPv4-only base URL of the controller service. This domain name must only have an A record."
+                }, 
+                "controller_service_ipv6": {
+                    "type": "string", 
+                    "description": "IPv6-only base URL of the controller service. This domain name must only have an AAAA record."
+                }, 
+                "controller_service": {
+                    "type": "string", 
+                    "description": "Base URL of the controller service of the form \"[protocol]://[domain]:[port]/[path]\". This domain name should have A and AAAA records."
+                }
+            }, 
+            "title": "Urls"
+        }, 
+        "TranslatedQoSTypeInfo": {
+            "description": "Contains translated information for each available QoS measurement type.", 
+            "required": [
+                "description", 
+                "name"
+            ], 
+            "type": "object", 
+            "properties": {
+                "description": {
+                    "type": "string", 
+                    "description": "The translated QoS type description."
+                }, 
+                "name": {
+                    "type": "string", 
+                    "description": "The translated QoS type name."
+                }
+            }, 
+            "title": "TranslatedQoSTypeInfo"
+        }, 
+        "LmapOptionDto": {
+            "description": "Options may be used to identify the role of a Task or to pass a Channel name to a Task.", 
+            "type": "object", 
+            "properties": {
+                "value": {
+                    "type": "string", 
+                    "description": "The value of the option."
+                }, 
+                "id": {
+                    "type": "string", 
+                    "description": "An identifier uniquely identifying an option. This identifier is required by YANG to uniquely identify a name/value pair, but it otherwise has no semantic value."
+                }, 
+                "name": {
+                    "type": "string", 
+                    "description": "The name of the option."
+                }, 
+                "measurement-parameters": {
+                    "description": "The additional measurement parameters of the option.", 
+                    "$ref": "#/definitions/MeasurementTypeParameters"
+                }
+            }, 
+            "title": "LmapOptionDto"
+        }, 
+        "GeoLocationDto": {
+            "description": "GeoLocation object to be used on the measurement agent side and inside DTOs.", 
+            "required": [
+                "latitude", 
+                "longitude", 
+                "relative_time_ns", 
+                "time"
+            ], 
+            "type": "object", 
+            "properties": {
+                "altitude": {
+                    "type": "number", 
+                    "description": "Geographic location altitude.", 
+                    "format": "double"
+                }, 
+                "time": {
+                    "type": "string", 
+                    "description": "Time and date the geographic location information was captured (UTC).", 
+                    "format": "date-time"
+                }, 
+                "longitude": {
+                    "type": "number", 
+                    "description": "Geographic location longitude.", 
+                    "format": "double"
+                }, 
+                "provider": {
+                    "type": "string", 
+                    "description": "Geographic location provider."
+                }, 
+                "latitude": {
+                    "type": "number", 
+                    "description": "Geographic location latitude.", 
+                    "format": "double"
+                }, 
+                "speed": {
+                    "type": "number", 
+                    "description": "Movement speed.", 
+                    "format": "double"
+                }, 
+                "heading": {
+                    "type": "number", 
+                    "description": "Movement heading.", 
+                    "format": "double"
+                }, 
+                "relative_time_ns": {
+                    "type": "integer", 
+                    "description": "Relative time in nanoseconds (to measurement begin).", 
+                    "format": "int64"
+                }, 
+                "accuracy": {
+                    "type": "number", 
+                    "description": "Geographic location accuracy.", 
+                    "format": "double"
+                }
+            }, 
+            "title": "GeoLocationDto"
+        }, 
+        "SettingsResponse": {
+            "description": "The settings response object sent to the measurement agent.", 
+            "required": [
+                "urls", 
+                "versions"
+            ], 
+            "type": "object", 
+            "properties": {
+                "qos_type_info": {
+                    "additionalProperties": {
+                        "$ref": "#/definitions/TranslatedQoSTypeInfo"
+                    }, 
+                    "type": "object", 
+                    "description": "Map of QoS measurement types to translated type information."
+                }, 
+                "urls": {
+                    "description": "Object that contains base URLs for controller, collector, map and statistic services.", 
+                    "$ref": "#/definitions/Urls"
+                }, 
+                "versions": {
+                    "description": "Class for all kind of versions that the server reveals.", 
+                    "$ref": "#/definitions/VersionResponse"
+                }
+            }, 
+            "title": "SettingsResponse"
+        }, 
+        "LmapFunctionDto": {
+            "description": "This grouping models a list of entries in a registry that identify functions of a Task.", 
+            "required": [
+                "role", 
+                "uri"
+            ], 
+            "type": "object", 
+            "properties": {
+                "role": {
+                    "items": {
+                        "type": "string"
+                    }, 
+                    "type": "array", 
+                    "description": "A set of roles for the identified registry entry."
+                }, 
+                "uri": {
+                    "type": "string", 
+                    "description": "The unique name of a Task."
+                }
+            }, 
+            "title": "LmapFunctionDto"
+        }, 
+        "LmapStopDto": {
+            "type": "object", 
+            "title": "LmapStopDto"
+        }, 
+        "LmapActionDto": {
+            "description": "An Action describes a Task that is invoked by the Schedule. Multiple Actions are invoked according to the execution-mode of the Schedule.", 
+            "required": [
+                "destination", 
+                "failures", 
+                "invocations", 
+                "last-completion", 
+                "last-failed-completion", 
+                "last-failed-message", 
+                "last-failed-status", 
+                "last-invocation", 
+                "last-message", 
+                "last-status", 
+                "name", 
+                "option", 
+                "overlaps", 
+                "state", 
+                "storage", 
+                "suppression-tag", 
+                "suppressions", 
+                "tag", 
+                "task"
+            ], 
+            "type": "object", 
+            "properties": {
+                "last-invocation": {
+                    "type": "string", 
+                    "description": "The date and time of the last invocation of this Action.", 
+                    "format": "date-time"
+                }, 
+                "last-status": {
+                    "type": "integer", 
+                    "description": "The status code returned by the last execution of this Action (with 0 indicating successful execution).", 
+                    "format": "int32"
+                }, 
+                "last-failed-completion": {
+                    "type": "string", 
+                    "description": "The date and time of the last failed completion of this Action.", 
+                    "format": "date-time"
+                }, 
+                "name": {
+                    "type": "string", 
+                    "description": "The unique identifier for this Action."
+                }, 
+                "parameters": {
+                    "type": "object", 
+                    "description": "This container is a placeholder for runtime parameters defined in Task-specific data models augmenting the base LMAP report data model."
+                }, 
+                "last-failed-message": {
+                    "type": "string", 
+                    "description": "The status message produced by the last failed execution of this Action."
+                }, 
+                "overlaps": {
+                    "type": "integer", 
+                    "description": "Number of executions prevented due to overlaps with a previous invocation of this Action.", 
+                    "format": "int32"
+                }, 
+                "destination": {
+                    "items": {
+                        "type": "string"
+                    }, 
+                    "type": "array", 
+                    "description": "A set of Schedules receiving the output produced by this Action. The output is stored temporarily since the Destination Schedules will in general not be running when output is passed to them. The behavior of an Action passing data to its own Schedule is implementation specific."
+                }, 
+                "storage": {
+                    "type": "integer", 
+                    "description": "The amount of secondary storage (e.g., allocated in a file system) holding temporary data allocated to the Schedule in bytes.  This object reports the amount of allocated physical storage and not the storage used by logical data records.", 
+                    "format": "int64"
+                }, 
+                "invocations": {
+                    "type": "integer", 
+                    "description": "Number of invocations of this Action. This counter does not include suppressed invocations or invocations that were prevented due to an overlap with a previous invocation of this Action.", 
+                    "format": "int32"
+                }, 
+                "task": {
+                    "type": "string", 
+                    "description": "The Task invoked by this Action."
+                }, 
+                "suppression-tag": {
+                    "items": {
+                        "type": "string"
+                    }, 
+                    "type": "array", 
+                    "description": "A set of Suppression tags that are used to select Actions to be suppressed."
+                }, 
+                "state": {
+                    "enum": [
+                        "ENABLED", 
+                        "DISABLED", 
+                        "RUNNING", 
+                        "SUPPRESSED"
+                    ], 
+                    "type": "string", 
+                    "description": "The current state of the Action (One of: enabled, disabled, running, suppressed)."
+                }, 
+                "tag": {
+                    "items": {
+                        "type": "string"
+                    }, 
+                    "type": "array", 
+                    "description": "A set of Action-specific tags that are reported together with the measurement results to a Collector."
+                }, 
+                "option": {
+                    "items": {
+                        "$ref": "#/definitions/LmapOptionDto"
+                    }, 
+                    "type": "array", 
+                    "description": "The list of Action-specific options that are appended to the list of Task-specific options."
+                }, 
+                "failures": {
+                    "type": "integer", 
+                    "description": "Number of failed executions of this Action.", 
+                    "format": "int32"
+                }, 
+                "suppressions": {
+                    "type": "integer", 
+                    "description": "Number of suppressed executions of this Action.", 
+                    "format": "int32"
+                }, 
+                "last-completion": {
+                    "type": "string", 
+                    "description": "The date and time of the last completion of this Action.", 
+                    "format": "date-time"
+                }, 
+                "last-message": {
+                    "type": "string", 
+                    "description": "The status message produced by the last execution of this Action."
+                }, 
+                "last-failed-status": {
+                    "type": "integer", 
+                    "description": "The status code returned by the last failed execution of this Action.", 
+                    "format": "int32"
+                }
+            }, 
+            "title": "LmapActionDto"
+        }, 
+        "IpResponse": {
+            "description": "Response object sent to the measurement agent after a successful IP request.", 
+            "required": [
+                "ip_address", 
+                "ip_version"
+            ], 
+            "type": "object", 
+            "properties": {
+                "ip_version": {
+                    "enum": [
+                        "IPv4", 
+                        "IPv6"
+                    ], 
+                    "type": "string", 
+                    "description": "The measurement agent's public IP version (IPv4 or IPv6)."
+                }, 
+                "ip_address": {
+                    "type": "string", 
+                    "description": "The measurement agent's public IP address."
+                }
+            }, 
+            "title": "IpResponse"
+        }, 
+        "LmapEventDto": {
+            "description": "Implementations may be forced to delay acting upon the occurrence of events in the face of local constraints. An Action triggered by an event therefore should not rely on the accuracy provided by the scheduler implementation.", 
+            "required": [
+                "name"
+            ], 
+            "type": "object", 
+            "properties": {
+                "random-spread": {
+                    "type": "integer", 
+                    "description": "This optional leaf adds a random spread to the computation of the event's trigger time. The random spread is a uniformly distributed random number taken from the interval [0:random-spread].", 
+                    "format": "int32"
+                }, 
+                "cycle-interval": {
+                    "type": "integer", 
+                    "description": "The optional cycle-interval defines the duration of the time interval in seconds that is used to calculate cycle numbers. No cycle number is calculated if the optional cycle-interval does not exist.", 
+                    "format": "int32"
+                }, 
+                "name": {
+                    "type": "string", 
+                    "description": "The unique name of an event source, used when referencing this event."
+                }, 
+                "event-type": {
+                    "description": "Different types of events are handled by different branches of this choice. Note that this choice can be extended via augmentations.", 
+                    "$ref": "#/definitions/LmapEventTypeDto"
+                }
+            }, 
+            "title": "LmapEventDto"
+        }, 
+        "LmapEventTypeDto": {
+            "required": [
+                "type"
+            ], 
+            "type": "object", 
+            "properties": {
+                "type": {
+                    "enum": [
+                        "IMMEDIATE"
+                    ], 
+                    "type": "string", 
+                    "description": "Type identifier of the given event."
+                }
+            }, 
+            "title": "LmapEventTypeDto"
+        }, 
+        "RegistrationResponse": {
+            "description": "Measurement agent registration response object which is returned to the measurement agent after successful registration. For convenience this response also contains the current settings.", 
+            "required": [
+                "agent_uuid"
+            ], 
+            "type": "object", 
+            "properties": {
+                "agent_uuid": {
+                    "type": "string", 
+                    "description": "The generated measurement agent UUID."
+                }, 
+                "settings": {
+                    "description": "The settings response object sent to the measurement agent.", 
+                    "$ref": "#/definitions/SettingsResponse"
+                }
+            }, 
+            "title": "RegistrationResponse"
+        }, 
+        "ApiResponse": {
+            "description": "Object that is used as wrapper for every response.", 
+            "required": [
+                "data"
+            ], 
+            "type": "object", 
+            "properties": {
+                "errors": {
+                    "items": {
+                        "$ref": "#/definitions/ApiError"
+                    }, 
+                    "type": "array", 
+                    "description": "Optional list of errors that occurred during request processing."
+                }, 
+                "data": {
+                    "type": "object", 
+                    "description": "Actual data that is returned for the request/response."
+                }
+            }, 
+            "title": "ApiResponse"
+        }, 
+        "LmapScheduleDto": {
+            "description": "Configuration of a particular Schedule.", 
+            "required": [
+                "action", 
+                "failures", 
+                "invocations", 
+                "name", 
+                "overlaps", 
+                "start", 
+                "state", 
+                "storage", 
+                "suppression-tag", 
+                "suppressions", 
+                "tag"
+            ], 
+            "type": "object", 
+            "properties": {
+                "last-invocation": {
+                    "type": "string", 
+                    "description": "The date and time of the last invocation of this Schedule.", 
+                    "format": "date-time"
+                }, 
+                "overlaps": {
+                    "type": "integer", 
+                    "description": "Number of executions prevented due to overlaps with a previous invocation of this Schedule.", 
+                    "format": "int32"
+                }, 
+                "name": {
+                    "type": "string", 
+                    "description": "The locally unique, administratively assigned name for this Schedule."
+                }, 
+                "suppressions": {
+                    "type": "integer", 
+                    "description": "Number of suppressed executions of this Schedule.", 
+                    "format": "int32"
+                }, 
+                "storage": {
+                    "type": "integer", 
+                    "description": "The amount of secondary storage (e.g., allocated in a file system) holding temporary data allocated to the Schedule in bytes.  This object reports the amount of allocated physical storage and not the storage used by logical data records.", 
+                    "format": "int64"
+                }, 
+                "stop": {
+                    "description": "This choice contains optional leafs that control the graceful forced termination of scheduled Actions. When the end has been reached, the scheduled Actions should be forced to terminate the measurements. This may involve being active some additional time in order to properly finish the Action's activity (e.g., waiting for any messages that are still outstanding). If set to a LmapStopDurationDto it will behave like a typical timeout set for the execution of this schedule.", 
+                    "$ref": "#/definitions/LmapStopDto"
+                }, 
+                "invocations": {
+                    "type": "integer", 
+                    "description": "Number of invocations of this Schedule. This counter does not include suppressed invocations or invocations that were prevented due to an overlap with a previous invocation of this Schedule.", 
+                    "format": "int32"
+                }, 
+                "start": {
+                    "type": "string", 
+                    "description": "The event source controlling the start of the scheduled Actions. Referencing the LmapEventDto.name of an Action."
+                }, 
+                "state": {
+                    "enum": [
+                        "ENABLED", 
+                        "DISABLED", 
+                        "RUNNING", 
+                        "SUPPRESSED"
+                    ], 
+                    "type": "string", 
+                    "description": "The current state of the Schedule (One of: enabled, disabled, running, suppressed)."
+                }, 
+                "tag": {
+                    "items": {
+                        "type": "string"
+                    }, 
+                    "type": "array", 
+                    "description": "A set of Schedule-specific tags that are reported together with the measurement results to a Collector."
+                }, 
+                "execution-mode": {
+                    "enum": [
+                        "SEQUENTIAL", 
+                        "PARALLEL", 
+                        "PIPELINED"
+                    ], 
+                    "type": "string", 
+                    "description": "The execution mode of this Schedule determines in which order the Actions of the Schedule are executed. Supported values are: sequential, pipelined, parallel."
+                }, 
+                "action": {
+                    "items": {
+                        "$ref": "#/definitions/LmapActionDto"
+                    }, 
+                    "type": "array", 
+                    "description": "An Action describes a Task that is invoked by the Schedule. Multiple Actions are invoked according to the execution-mode of the Schedule."
+                }, 
+                "failures": {
+                    "type": "integer", 
+                    "description": "Number of failed executions of this Schedule. A failed execution is an execution where at least one Action failed.", 
+                    "format": "int32"
+                }, 
+                "suppression-tag": {
+                    "items": {
+                        "type": "string"
+                    }, 
+                    "type": "array", 
+                    "description": "A set of Suppression tags that are used to select Schedules to be suppressed."
+                }
+            }, 
+            "title": "LmapScheduleDto"
+        }, 
+        "LmapSuppressionDto": {
+            "description": "Suppression information to prevent Schedules or certain Actions from starting.", 
+            "required": [
+                "match", 
+                "name", 
+                "state"
+            ], 
+            "type": "object", 
+            "properties": {
+                "end": {
+                    "type": "integer", 
+                    "description": "The event source controlling the end of the Suppression period. If not present, Suppression continues indefinitely. Referencing the LmapEventDto.name of an Action.", 
+                    "format": "int32"
+                }, 
+                "name": {
+                    "type": "string", 
+                    "description": "The locally unique, administratively assigned name for this Suppression."
+                }, 
+                "start": {
+                    "type": "integer", 
+                    "description": "The event source controlling the start of the Suppression period. Referencing the LmapEventDto.name of an Action.", 
+                    "format": "int32"
+                }, 
+                "state": {
+                    "enum": [
+                        "ENABLED", 
+                        "DISABLED", 
+                        "ACTIVE"
+                    ], 
+                    "type": "string", 
+                    "description": "The current state of the Suppression."
+                }, 
+                "stop-running": {
+                    "type": "boolean", 
+                    "description": "If 'stop-running' is true, running Schedules and Actions matching the Suppression will be terminated when Suppression is activated. If 'stop-running' is false, running Schedules and Actions will not be affected if Suppression is activated."
+                }, 
+                "match": {
+                    "items": {
+                        "type": "string"
+                    }, 
+                    "type": "array", 
+                    "description": "A set of Suppression match patterns. The Suppression will apply to all Schedules (and their Actions) that have a matching value in their suppression-tags and to all Actions that have a matching value in their suppression-tags."
+                }
+            }, 
+            "title": "LmapSuppressionDto"
+        }, 
+        "ApiResponse\u00abRegistrationResponse\u00bb": {
+            "description": "Object that is used as wrapper for every response.", 
+            "required": [
+                "data"
+            ], 
+            "type": "object", 
+            "properties": {
+                "errors": {
+                    "items": {
+                        "$ref": "#/definitions/ApiError"
+                    }, 
+                    "type": "array", 
+                    "description": "Optional list of errors that occurred during request processing."
+                }, 
+                "data": {
+                    "description": "Actual data that is returned for the request/response.", 
+                    "$ref": "#/definitions/RegistrationResponse"
+                }
+            }, 
+            "title": "ApiResponse\u00abRegistrationResponse\u00bb"
+        }, 
+        "ApiRequestInfo": {
+            "description": "Additional information that is sent by measurement agent alongside the request.", 
+            "required": [
+                "agent_type", 
+                "agent_uuid", 
+                "app_version_name", 
+                "code_name", 
+                "language", 
+                "os_name", 
+                "os_version"
+            ], 
+            "type": "object", 
+            "properties": {
+                "os_name": {
+                    "type": "string", 
+                    "description": "Operating system name."
+                }, 
+                "language": {
+                    "type": "string", 
+                    "description": "Language specified by the measurement agent."
+                }, 
+                "app_version_name": {
+                    "type": "string", 
+                    "description": "Application version name (e.g. 1.0.0)."
+                }, 
+                "app_git_revision": {
+                    "type": "string", 
+                    "description": "Git revision name."
+                }, 
+                "agent_uuid": {
+                    "type": "string", 
+                    "description": "The agent's UUID. This value is ignored if the resource path already contains the agent's UUID."
+                }, 
+                "os_version": {
+                    "type": "string", 
+                    "description": "Operating system version."
+                }, 
+                "geo_location": {
+                    "description": "The measurement agent device location at the time the request was sent or null if the measurement agent doesn't have location information.", 
+                    "$ref": "#/definitions/GeoLocationDto"
+                }, 
+                "agent_type": {
+                    "enum": [
+                        "MOBILE", 
+                        "BROWSER", 
+                        "DESKTOP"
+                    ], 
+                    "type": "string", 
+                    "description": "Type of agent."
+                }, 
+                "code_name": {
+                    "type": "string", 
+                    "description": "Device code name."
+                }, 
+                "timezone": {
+                    "type": "string", 
+                    "description": "The measurement agent's time zone. Is only stored if a measurement is sent to the server."
+                }, 
+                "app_version_code": {
+                    "type": "integer", 
+                    "description": "Application version code number (e.g. 10).", 
+                    "format": "int32"
+                }, 
+                "model": {
+                    "type": "string", 
+                    "description": "Detailed device designation."
+                }, 
+                "api_level": {
+                    "type": "string", 
+                    "description": "API level of operating system or SDK (e.g. Android API level or Swift SDK version)."
+                }
+            }, 
+            "title": "ApiRequestInfo"
+        }, 
+        "ApiError": {
+            "description": "DTO that wraps server errors and/or exceptions. The Java stack-trace is only added if the service runs in development mode.", 
+            "required": [
+                "error", 
+                "message", 
+                "path", 
+                "status", 
+                "time"
+            ], 
+            "type": "object", 
+            "properties": {
+                "status": {
+                    "description": "Status code for the error.", 
+                    "type": "integer", 
+                    "example": "400, 404, 500, ...", 
+                    "format": "int32"
+                }, 
+                "exception": {
+                    "type": "string", 
+                    "description": "Exception class name."
+                }, 
+                "trace": {
+                    "type": "string", 
+                    "description": "Exception stack tracewhich is only added if the service runs in development mode."
+                }, 
+                "error": {
+                    "type": "string", 
+                    "example": "'Internal Server Error', 'Not Found', ...", 
+                    "description": "String representation of the status."
+                }, 
+                "time": {
+                    "type": "string", 
+                    "description": "Date and time at which the error occurred.", 
+                    "format": "date-time"
+                }, 
+                "path": {
+                    "type": "string", 
+                    "description": "URI path/resource that caused the error."
+                }, 
+                "message": {
+                    "type": "string", 
+                    "example": "java.lang.RuntimeException", 
+                    "description": "The error or exception message."
+                }
+            }, 
+            "title": "ApiError"
+        }, 
+        "LmapCapabilityDto": {
+            "description": "Agent capabilities including a list of supported Tasks.", 
+            "required": [
+                "tag", 
+                "tasks", 
+                "version"
+            ], 
+            "type": "object", 
+            "properties": {
+                "tasks": {
+                    "items": {
+                        "$ref": "#/definitions/LmapCapabilityTaskDto"
+                    }, 
+                    "type": "array", 
+                    "description": "A list of Tasks that the Measurement Agent supports."
+                }, 
+                "tag": {
+                    "items": {
+                        "type": "string"
+                    }, 
+                    "type": "array", 
+                    "description": "An optional unordered set of tags that provide additional information about the capabilities of the Measurement Agent."
+                }, 
+                "version": {
+                    "type": "string", 
+                    "description": "A short description of the software implementing the Measurement Agent. This should include the version number of the Measurement Agent software."
+                }
+            }, 
+            "title": "LmapCapabilityDto"
+        }, 
+        "MeasurementTypeParameters": {
+            "type": "object", 
+            "description": "Base class for sub measurement parameters that are sent to the measurement agent. These can contain special measurement instructions (e.g. stream count, duration, timeouts, ...).", 
+            "title": "MeasurementTypeParameters"
+        }, 
+        "LmapAgentDto": {
+            "description": "Configuration of parameters affecting the whole Measurement Agent. Corresponds to the Agent in the LMAP standard", 
+            "required": [
+                "last-started"
+            ], 
+            "type": "object", 
+            "properties": {
+                "last-started": {
+                    "type": "string", 
+                    "description": "The date and time the Measurement Agent last started (i.e. the date to the previous execution of the measurement agent before the current one).", 
+                    "format": "date-time"
+                }, 
+                "measurement-point": {
+                    "type": "string", 
+                    "description": "The measurement point indicating where the Measurement Agent is located on a path."
+                }, 
+                "report-agent-id": {
+                    "type": "boolean", 
+                    "description": "The 'report-agent-id' controls whether the 'agent-id' is reported to Collectors. Set to true if anonymized results are desired."
+                }, 
+                "group-id": {
+                    "type": "string", 
+                    "description": "The group-id identifies a group of Measurement Agents. In certain deployments, the group-id may be considered less sensitive than the agent-id."
+                }, 
+                "agent-id": {
+                    "type": "string", 
+                    "description": "The agent-id identifies a Measurement Agent with a very low probability of collision (i.e. a UUID v4). In certain deployments, the agent-id may be considered sensitive, and hence this object is optional."
+                }, 
+                "controller-timeout": {
+                    "type": "integer", 
+                    "description": "A timer is started after each successful contact with a Controller. When the timer reaches the controller-timeout, an event (controller-lost) is raised indicating that connectivity to the Controller has been lost.", 
+                    "format": "int32"
+                }, 
+                "report-measurement-point": {
+                    "type": "boolean", 
+                    "description": "The 'report-measurement-point' controls whether the 'measurement-point' is reported to Collectors."
+                }, 
+                "report-group-id": {
+                    "type": "boolean", 
+                    "description": "The 'report-group-id' controls whether the 'group-id' is reported to Collectors."
+                }
+            }, 
+            "title": "LmapAgentDto"
+        }, 
+        "RegistrationRequest": {
+            "description": "Registration request DTO. It contains the fields needed to register a new measurement agent.", 
+            "required": [
+                "terms_and_conditions_accepted"
+            ], 
+            "type": "object", 
+            "properties": {
+                "terms_and_conditions_accepted_version": {
+                    "type": "integer", 
+                    "description": "The version of the presented terms and conditions that the measurement agent agreed to (or declined).", 
+                    "format": "int32"
+                }, 
+                "terms_and_conditions_accepted": {
+                    "type": "boolean", 
+                    "description": "Boolean whether the measurement agent has accepted the presented terms and conditions."
+                }, 
+                "group_name": {
+                    "type": "string", 
+                    "description": "The measurement agent's group name/identifier."
+                }
+            }, 
+            "title": "RegistrationRequest"
+        }, 
+        "VersionResponse": {
+            "description": "Class for all kind of versions that the server reveals.", 
+            "type": "object", 
+            "properties": {
+                "collector_service_version": {
+                    "type": "string", 
+                    "description": "Collector service version number."
+                }, 
+                "statistic_service_version": {
+                    "type": "string", 
+                    "description": "Statistic service version number."
+                }, 
+                "controller_service_version": {
+                    "type": "string", 
+                    "description": "Controller service version number."
+                }, 
+                "map_service_version": {
+                    "type": "string", 
+                    "description": "Map service version number."
+                }
+            }, 
+            "title": "VersionResponse"
+        }, 
+        "ApiResponse\u00abVersionResponse\u00bb": {
+            "description": "Object that is used as wrapper for every response.", 
+            "required": [
+                "data"
+            ], 
+            "type": "object", 
+            "properties": {
+                "errors": {
+                    "items": {
+                        "$ref": "#/definitions/ApiError"
+                    }, 
+                    "type": "array", 
+                    "description": "Optional list of errors that occurred during request processing."
+                }, 
+                "data": {
+                    "description": "Actual data that is returned for the request/response.", 
+                    "$ref": "#/definitions/VersionResponse"
+                }
+            }, 
+            "title": "ApiResponse\u00abVersionResponse\u00bb"
+        }, 
+        "ApiRequest\u00abRegistrationRequest\u00bb": {
+            "description": "Object that is used as wrapper for every request.", 
+            "required": [
+                "data"
+            ], 
+            "type": "object", 
+            "properties": {
+                "request_info": {
+                    "description": "Additional information that is sent by measurement agent alongside the request.", 
+                    "$ref": "#/definitions/ApiRequestInfo"
+                }, 
+                "data": {
+                    "description": "Actual data that is returned for the request/response.", 
+                    "$ref": "#/definitions/RegistrationRequest"
+                }
+            }, 
+            "title": "ApiRequest\u00abRegistrationRequest\u00bb"
+        }, 
+        "LmapCapabilityTaskDto": {
+            "description": "A list of Tasks that the Measurement Agent supports.", 
+            "required": [
+                "function", 
+                "name"
+            ], 
+            "type": "object", 
+            "properties": {
+                "function": {
+                    "items": {
+                        "$ref": "#/definitions/LmapFunctionDto"
+                    }, 
+                    "type": "array", 
+                    "description": "A list of entries in a registry identifying functions."
+                }, 
+                "program": {
+                    "type": "string", 
+                    "description": "The (local) program to invoke in order to execute the Task. If this leaf is not set, then the system will try to identify a suitable program based on the registry information present."
+                }, 
+                "name": {
+                    "type": "string", 
+                    "description": "The unique name of a Task capability. Refers to the LmapTaskDto.name and needs be the exact same in order to match."
+                }, 
+                "version": {
+                    "type": "string", 
+                    "description": "A short description of the software implementing the Task. This should include the version number of the Measurement Task software."
+                }
+            }, 
+            "title": "LmapCapabilityTaskDto"
+        }, 
+        "ApiResponse\u00abIpResponse\u00bb": {
+            "description": "Object that is used as wrapper for every response.", 
+            "required": [
+                "data"
+            ], 
+            "type": "object", 
+            "properties": {
+                "errors": {
+                    "items": {
+                        "$ref": "#/definitions/ApiError"
+                    }, 
+                    "type": "array", 
+                    "description": "Optional list of errors that occurred during request processing."
+                }, 
+                "data": {
+                    "description": "Actual data that is returned for the request/response.", 
+                    "$ref": "#/definitions/IpResponse"
+                }
+            }, 
+            "title": "ApiResponse\u00abIpResponse\u00bb"
+        }, 
+        "ApiResponse\u00abSettingsResponse\u00bb": {
+            "description": "Object that is used as wrapper for every response.", 
+            "required": [
+                "data"
+            ], 
+            "type": "object", 
+            "properties": {
+                "errors": {
+                    "items": {
+                        "$ref": "#/definitions/ApiError"
+                    }, 
+                    "type": "array", 
+                    "description": "Optional list of errors that occurred during request processing."
+                }, 
+                "data": {
+                    "description": "Actual data that is returned for the request/response.", 
+                    "$ref": "#/definitions/SettingsResponse"
+                }
+            }, 
+            "title": "ApiResponse\u00abSettingsResponse\u00bb"
+        }, 
+        "LmapControlDto": {
+            "description": "Configuration and control of a Measurement Agent.", 
+            "required": [
+                "additional-request-info", 
+                "agent", 
+                "capabilities", 
+                "events", 
+                "schedules", 
+                "suppressions", 
+                "tasks"
+            ], 
+            "type": "object", 
+            "properties": {
+                "tasks": {
+                    "items": {
+                        "$ref": "#/definitions/LmapTaskDto"
+                    }, 
+                    "type": "array", 
+                    "description": "Configuration of LMAP Tasks."
+                }, 
+                "suppressions": {
+                    "items": {
+                        "$ref": "#/definitions/LmapSuppressionDto"
+                    }, 
+                    "type": "array", 
+                    "description": "Suppression information to prevent Schedules or certain Actions from starting."
+                }, 
+                "capabilities": {
+                    "description": "Agent capabilities including a list of supported Tasks.", 
+                    "$ref": "#/definitions/LmapCapabilityDto"
+                }, 
+                "additional-request-info": {
+                    "description": "Additional information that is sent by client alongside the request. This contains most information from ClientInfo.", 
+                    "$ref": "#/definitions/ApiRequestInfo"
+                }, 
+                "agent": {
+                    "description": "Configuration of parameters affecting the whole Measurement Agent.", 
+                    "$ref": "#/definitions/LmapAgentDto"
+                }, 
+                "schedules": {
+                    "items": {
+                        "$ref": "#/definitions/LmapScheduleDto"
+                    }, 
+                    "type": "array", 
+                    "description": "Configuration of LMAP Schedules. Schedules control which Tasks are executed by the LMAP implementation."
+                }, 
+                "events": {
+                    "items": {
+                        "$ref": "#/definitions/LmapEventDto"
+                    }, 
+                    "type": "array", 
+                    "description": "Configuration of LMAP events. Implementations may be forced to delay acting upon the occurrence of events in the face of local constraints. An Action triggered by an event therefore should not rely on the accuracy provided by the scheduler implementation."
+                }
+            }, 
+            "title": "LmapControlDto"
+        }
+    }, 
+    "swagger": "2.0"
+}
