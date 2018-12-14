@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<head>
+    <meta charset='utf-8'/>
+    <title>common</title>
+    <meta name='viewport' content='width=device-width'/>
+    <meta content='yes' name='apple-mobile-web-app-capable'/>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <script language='JavaScript' type='text/javascript' src='common.js'></script>
+</head>
+
+<body onload="setButtons()">
+    <div style="width: 100%; overflow: hidden;">
+
+        <div style="width: 500px; float: left;">
+            <h1 style="padding-left:50px;">common 1.0.0</h1>
+            
+            <div style="padding-left:50px;border-spacing:100px;">
+                <br>
+                <button id='reloadButton' onclick='reload()' disabled='disabled'>Reload</button>
+                <button id='stopButton' onclick='measurementStop()' disabled='disabled'>Stop</button>
+                <br>
+                <br>
+
+                <button id='measurementButton' onclick='measurementStart("all")'>Start</button>
+                <button id='rttButton' onclick='measurementStart("rtt")'>Start RTT</button>
+                <button id='downloadButton' onclick='measurementStart("download")'>Start Download</button>
+                <button id='uploadButton' onclick='measurementStart("upload")'>Start Upload</button>
+            </div>
+        </div>
+        
+        <div style="margin-left: 500px;">
+            <br>
+            <table>
+                <tr>
+                    <td><div style="padding-left:40px;border-spacing:20px;">Status: </div></td>
+                    <td><div style="padding-left:20px;border-spacing:20px;" id="status">common loading</div></td>
+                </tr>
+
+                <tr>
+                    <td><div style="padding-left:40px;border-spacing:20px;">RTT: </div></td>
+                    <td><div style="padding-left:20px;border-spacing:20px;" id="rtt">-</div></td>
+                </tr>
+
+                <tr>
+                    <td><div style="padding-left:40px;border-spacing:20px;">Download: </div></td>
+                    <td><div style="padding-left:20px;border-spacing:20px;" id="download">-</div></td>
+                </tr>
+
+                <tr>
+                    <td><div style="padding-left:40px;border-spacing:20px;">Upload: </div></td>
+                    <td><div style="padding-left:20px;border-spacing:20px;" id="upload">-</div></td>
+                </tr>
+            </table>
+                
+            <div style="padding-left:50px;border-spacing:20px;"><pre id="kpis"></pre></div>
+        </div>
+        
+    </div>
+
+    <script type="text/javascript">
+        
+		/*
+		 *********************************************************************************
+		 *                                                                               *
+		 *       ..--== zafaco GmbH ==--..                                               *
+		 *                                                                               *
+		 *       Website: http://www.zafaco.de                                           *
+		 *                                                                               *
+		 *       Copyright 2018                                                          *
+		 *                                                                               *
+		 *********************************************************************************
+		 */
+
+		/*!
+		 *      \author zafaco GmbH <info@zafaco.de>
+		 *      \date Last update: 2018-12-14
+		 *      \note Copyright (c) 2018 zafaco GmbH. All rights reserved.
+		 */
+       
+        var speed;
+        var speedParameters = {};
+
+        function measurementStart(testCase)
+        {
+            outputPrepare();
+            
+			speedParameters.cmd                               = 'start';
+			speedParameters.platform                          = 'web';
+
+			speedParameters.wsTargets                         = [];
+			speedParameters.wsTargets.push('placeholderTarget');
+
+			speedParameters.wsTargetsV4                       = [];
+			speedParameters.wsTargetsV4.push('placeholderTargetv4');
+
+			speedParameters.wsTargetsRtt                      = [];
+			speedParameters.wsTargetsRtt					  = speedParameters.wsTargets;
+
+			speedParameters.wsTLD                             = 'reference.nntool.eu';
+			speedParameters.wsTargetPort                      = '443';
+			speedParameters.wsWss                             = 1;
+	
+			speedParameters.wsAuthToken						  = 'placeholderToken';
+			speedParameters.wsAuthTimestamp					  = 'placeholderTimestamp';
+
+			speedParameters.wsWorkerPath                      = 'Worker.js';
+			speedParameters.performRouteToClientLookup        = false;
+			
+            if (testCase === 'all')
+            {
+                speedParameters.performRttMeasurement         = true;
+                speedParameters.performDownloadMeasurement    = true;
+                speedParameters.performUploadMeasurement      = true;
+            }
+            if (testCase === 'rtt')
+            {
+                speedParameters.performRttMeasurement         = true;
+                speedParameters.performDownloadMeasurement    = false;
+                speedParameters.performUploadMeasurement      = false;
+            }
+            if (testCase === 'download')
+            {
+                speedParameters.performRttMeasurement         = false;
+                speedParameters.performDownloadMeasurement    = true;
+                speedParameters.performUploadMeasurement      = false;
+            }
+            if (testCase === 'upload')
+            {
+                speedParameters.performRttMeasurement         = false;
+                speedParameters.performDownloadMeasurement    = false;
+                speedParameters.performUploadMeasurement      = true;
+            }
+            
+            delete speed;
+            speed = null;
+            speed = new Speed();
+            
+            speed.measurementStart(speedParameters);
+        }
+        
+        function measurementStop()
+        {
+            wsMeasurement.measurementControl(JSON.stringify({cmd:'stop'}));
+            
+            toggleButtons(true);
+        }
+        
+        
+        function setButtons()
+        {
+            document.getElementById('reloadButton').disabled              = false;
+            toggleButtons(true);
+            
+            document.getElementById('status').innerHTML                   = 'MeasurementLoad successful';
+        }
+        
+        function toggleButtons(enable)
+        {
+            document.getElementById('measurementButton').disabled         = !enable; 
+            document.getElementById('rttButton').disabled                 = !enable;       
+            document.getElementById('downloadButton').disabled            = !enable;
+            document.getElementById('uploadButton').disabled              = !enable;
+            document.getElementById('stopButton').disabled                = enable;
+        }
+
+        function measurementCallback(data)
+        {
+            outputData(data);
+        }
+        
+        function outputPrepare()
+        {
+            outputClear();
+            toggleButtons(false);
+        }
+
+        function outputClear()
+        {
+            document.getElementById('status').innerHTML = 'MeasurementLoad successful';
+            document.getElementById('rtt').innerHTML = '-';
+            document.getElementById('download').innerHTML = '-';
+            document.getElementById('upload').innerHTML = '-';
+            document.getElementById('kpis').innerHTML = '';
+        }
+
+        function outputData(data)
+        {
+            data = JSON.parse(data);
+
+            switch (data.cmd)
+            {
+                case 'info':
+                
+                case 'completed':
+                {
+                    if (data.cmd === 'completed')
+                    {
+                        outputToHtml('Measurement successful', 'status');
+                        outputToHtml(JSON.stringify(orderKeys(data), null, 4), 'kpis');
+                        document.getElementById('stopButton').disabled = true;
+
+                        break;
+                    }
+                }
+                
+                case 'finish':
+                {
+                    outputToHtml(data.test_case + ': ' + data.msg, 'status');
+                }
+                
+                case 'report':
+                {
+                    if (data.cmd !== 'info' && data.cmd !== 'error')
+                    {
+                        var output = '';
+                        
+                        if (data.test_case === 'rtt')
+                        {
+                            outputToHtml(data.rtt_avg, 'rtt');
+                        }
+                        if (data.test_case === 'download')
+                        {
+                            outputToHtml(data.download_rate_avg_mbits, 'download');
+                        }
+                        if (data.test_case === 'upload')
+                        {
+                            outputToHtml(data.upload_rate_avg_mbits, 'upload');
+                        }
+                        
+                        outputToHtml(JSON.stringify(orderKeys(data), null, 4), 'kpis');
+                    }
+                    break;
+                }
+                
+                case 'error':
+                {
+                    outputToHtml(data.test_case + ': ' + data.msg, 'status');
+                    outputToHtml(JSON.stringify(orderKeys(data), null, 4), 'kpis');
+                    document.getElementById('stopButton').disabled = true;
+                    break;
+                }
+            }
+        }
+
+        function outputToHtml(output, id)
+        {
+            var element = document.getElementById(id);
+
+            if (id === 'rtt')       output = output + ' ms';
+            if (id === 'download')  output = output + ' Mbit/s';
+            if (id === 'upload')    output = output + ' Mbit/s';
+
+            element.innerHTML = output;
+        }
+
+        function reload()
+        {
+             location.reload();
+        }
+        
+        function orderKeys(obj)
+        {
+            var keys = Object.keys(obj).sort(function keyOrder(k1, k2)
+            {
+                if (k1 < k2) return -1;
+                else if (k1 > k2) return +1;
+                else return 0;
+            });
+
+            var i, after = {};
+            for (i = 0; i < keys.length; i++)
+            {
+                after[keys[i]] = obj[keys[i]];
+                delete obj[keys[i]];
+            }
+
+            for (i = 0; i < keys.length; i++)
+            {
+                obj[keys[i]] = after[keys[i]];
+            }
+            
+            return obj;
+        }
+
+    </script>
+
+</body>
+</html>
