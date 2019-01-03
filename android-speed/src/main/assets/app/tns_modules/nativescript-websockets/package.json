@@ -1,0 +1,83 @@
+{
+  "_args": [
+    [
+      "nativescript-websockets@1.5.3",
+      "/home/stephan/Development/repository_berec/common-mobile"
+    ]
+  ],
+  "_from": "nativescript-websockets@1.5.3",
+  "_id": "nativescript-websockets@1.5.3",
+  "_inBundle": false,
+  "_integrity": "sha512-9RLsXuuBNPvUZTepfJ6R/iD706hxzX6imhqmU6mL1mB2ZJGZKZdWltVMkHDLJfXmz/X0bYSv1Vdw2fcu3E0OkQ==",
+  "_location": "/nativescript-websockets",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "nativescript-websockets@1.5.3",
+    "name": "nativescript-websockets",
+    "escapedName": "nativescript-websockets",
+    "rawSpec": "1.5.3",
+    "saveSpec": null,
+    "fetchSpec": "1.5.3"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/nativescript-websockets/-/nativescript-websockets-1.5.3.tgz",
+  "_spec": "1.5.3",
+  "_where": "/home/stephan/Development/repository_berec/common-mobile",
+  "author": {
+    "name": "Nathanael Anderson",
+    "email": "nathan@master-technology.com"
+  },
+  "bugs": {
+    "url": "https://github.com/nathanaela/nativescript-websockets/issues"
+  },
+  "contributors": [
+    {
+      "name": "Aleksey Gureiev",
+      "email": "spyromus@noizeramp.com",
+      "url": "https://github.com/alg"
+    },
+    {
+      "name": "Choi Won",
+      "email": "help@myso.kr",
+      "url": "https://github.com/myso-kr"
+    },
+    {
+      "name": "Linus Gasser",
+      "email": "linus.gasser@epfl.ch",
+      "url": "https://github.com/ineiti"
+    }
+  ],
+  "description": "A WebSocket NativeScript module for Android and iOS",
+  "homepage": "https://github.com/nathanaela/nativescript-websockets",
+  "keywords": [
+    "NativeScript",
+    "WebSockets",
+    "Development",
+    "JavaScript",
+    "Android",
+    "iOS",
+    "Sockets",
+    "Websocket"
+  ],
+  "license": {
+    "type": "MIT & Apache 2.0",
+    "url": "https://github.com/nathanaela/nativescript-sqlite/blob/master/LICENSE"
+  },
+  "main": "websockets",
+  "name": "nativescript-websockets",
+  "nativescript": {
+    "platforms": {
+      "android": "1.5.0",
+      "ios": "1.5.0"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nathanaela/nativescript-websockets.git"
+  },
+  "version": "1.5.3"
+}
