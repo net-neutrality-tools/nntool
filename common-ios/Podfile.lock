@@ -1,0 +1,42 @@
+PODS:
+  - CocoaLumberjack (3.4.2):
+    - CocoaLumberjack/Default (= 3.4.2)
+    - CocoaLumberjack/Extensions (= 3.4.2)
+  - CocoaLumberjack/Default (3.4.2)
+  - CocoaLumberjack/Extensions (3.4.2):
+    - CocoaLumberjack/Default
+  - FMDB (2.7.2):
+    - FMDB/standard (= 2.7.2)
+  - FMDB/standard (2.7.2)
+  - PocketSocket (1.0.1):
+    - PocketSocket/Client (= 1.0.1)
+    - PocketSocket/Core (= 1.0.1)
+    - PocketSocket/Server (= 1.0.1)
+  - PocketSocket/Client (1.0.1):
+    - PocketSocket/Core
+  - PocketSocket/Core (1.0.1)
+  - PocketSocket/Server (1.0.1):
+    - PocketSocket/Client
+
+DEPENDENCIES:
+  - CocoaLumberjack (>= 3.4.2)
+  - FMDB (>= 2.7.2)
+  - PocketSocket (from `../PocketSocket`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - CocoaLumberjack
+    - FMDB
+
+EXTERNAL SOURCES:
+  PocketSocket:
+    :path: "../PocketSocket"
+
+SPEC CHECKSUMS:
+  CocoaLumberjack: db7cc9e464771f12054c22ff6947c5a58d43a0fd
+  FMDB: 6198a90e7b6900cfc046e6bc0ef6ebb7be9236aa
+  PocketSocket: fbaf3f047e2de9d7c1bd850329fd64f0f2e306e2
+
+PODFILE CHECKSUM: 4804684f49d46d1b6aaeb98619e890eb3ca2322e
+
+COCOAPODS: 1.5.3

@@ -1,0 +1,37 @@
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+# Uncomment the next line to define a global platform for your project
+platform :ios, '10.0'
+
+# ignore all warnings from all pods
+inhibit_all_warnings!
+
+
+# Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+use_frameworks!
+pod 'FMDB', '>= 2.7.2'
+pod 'CocoaLumberjack', '>= 3.4.2'
+
+target 'Common'
+
+
+# Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+use_frameworks!
+pod 'FMDB', '>= 2.7.2'
+pod 'CocoaLumberjack', '>= 3.4.2'
+pod 'PocketSocket', :path => '../PocketSocket'
+
+target 'Speed'
+target 'Demo'
+target 'Demo Release'
+
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if ['QoSKit'].include? "#{target}"
+      target.build_configurations.each do |config|
+        config.build_settings['ENABLE_BITCODE'] = 'NO'
+      end
+    end
+  end
+end
