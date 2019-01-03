@@ -5,15 +5,15 @@
  *                                                                               *
  *       Website: http://www.zafaco.de                                           *
  *                                                                               *
- *       Copyright 2018                                                          *
+ *       Copyright 2018 - 2019                                                   *
  *                                                                               *
  *********************************************************************************
  */
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2018-12-14
- *      \note Copyright (c) 2018 zafaco GmbH. All rights reserved.
+ *      \date Last update: 2019-01-02
+ *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
 
@@ -32,23 +32,6 @@ global.measurementStart = function(measurementParameters)
 global.measurementStop = function()
 {
     wsMeasurement.measurementControl(JSON.stringify({cmd:'stop'}));
-}
-
-function getMeasurementParameters(testCase, platform)
-{
-    var wsConfig            = new WSConfig();
-    measurementParameters   = null;
-    measurementParameters   = wsConfig.getSpeedParameters(testCase, platform);
-
-    if (typeof measurementParameters.removeKPIs !== 'undefined')
-    {
-        for (var indexToRemove in measurementParameters.removeKPIs)
-        {
-            removeKPIs.push(measurementParameters.removeKPIs[indexToRemove]);
-        }
-    }
-
-    return measurementParameters;
 }
 
 global.console.log = function(message)
