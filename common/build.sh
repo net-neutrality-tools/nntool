@@ -7,15 +7,15 @@
 # *                                                                               *
 # *       Website: http://www.zafaco.de                                           *
 # *                                                                               *
-# *       Copyright 2018                                                          *
+# *       Copyright 2019                                                          *
 # *                                                                               *
 # *********************************************************************************
 # */
 
 #/*!
 # *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2018-12-14
-# *      \note Copyright (c) 2018 zafaco GmbH. All rights reserved.
+# *      \date Last update: 2019-01-02
+# *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
 # */
 
 
@@ -30,14 +30,14 @@ mkdir build/plain
 mkdir build/plain/core
 
 mkdir build/plain/common
-mkdir build/plain/common_mobile
+mkdir build/plain/common-mobile
 
 mkdir build/uglified
 mkdir build/uglified/core
 mkdir build/uglified/core/modules
 
 mkdir build/uglified/common
-mkdir build/uglified/common_mobile
+mkdir build/uglified/common-mobile
 
 
 #---------------------------------------------------------
@@ -89,33 +89,33 @@ cd ../
 
 #---------------------------------------------------------
 
-#build common_mobile
-cp -R src/common_mobile/* build/plain/common_mobile/
-cd build/plain/common_mobile/
-for f in *.js; do short=${f%.js}; uglifyjs -c drop_console=true -m --comments /^!/ -- $f > ../../uglified/common_mobile/$short.js; done
+#build common-mobile
+cp -R src/common-mobile/* build/plain/common-mobile/
+cd build/plain/common-mobile/
+for f in *.js; do short=${f%.js}; uglifyjs -c drop_console=true -m --comments /^!/ -- $f > ../../uglified/common-mobile/$short.js; done
 cd ../../
-cat plain/common_mobile/common_mobile.header.js	>> plain/common_mobile/common_mobile.js
-cat plain/core/modules/Tool.js 					>> plain/common_mobile/common_mobile.js
-cat plain/core/ControlSingleThread.js			>> plain/common_mobile/common_mobile.js
-cat plain/core/Measurement.js 					>> plain/common_mobile/common_mobile.js
-cat plain/core/Worker.js 						>> plain/common_mobile/common_mobile.js
-cat plain/core/WorkerSingleThread.js 			>> plain/common_mobile/common_mobile.js
-cat plain/common_mobile/common_mobile.footer.js	>> plain/common_mobile/common_mobile.js
+cat plain/common-mobile/common-mobile.header.js	>> plain/common-mobile/common-mobile.js
+cat plain/core/modules/Tool.js 					>> plain/common-mobile/common-mobile.js
+cat plain/core/ControlSingleThread.js			>> plain/common-mobile/common-mobile.js
+cat plain/core/Measurement.js 					>> plain/common-mobile/common-mobile.js
+cat plain/core/Worker.js 						>> plain/common-mobile/common-mobile.js
+cat plain/core/WorkerSingleThread.js 			>> plain/common-mobile/common-mobile.js
+cat plain/common-mobile/common-mobile.footer.js	>> plain/common-mobile/common-mobile.js
 
-uglifyjs -c drop_console=true -m --comments /^!/ plain/common_mobile/common_mobile.js > uglified/common_mobile/common_mobile.js
+uglifyjs -c drop_console=true -m --comments /^!/ plain/common-mobile/common-mobile.js > uglified/common-mobile/common-mobile.js
 
 
-cp plain/core/Worker.js plain/common_mobile/
+cp plain/core/Worker.js plain/common-mobile/
 
-rm plain/common_mobile/common_mobile.header.js
-rm plain/common_mobile/common_mobile.footer.js
+rm plain/common-mobile/common-mobile.header.js
+rm plain/common-mobile/common-mobile.footer.js
 rm -R plain/core/
 
 
-cp uglified/core/Worker.js uglified/common_mobile/
+cp uglified/core/Worker.js uglified/common-mobile/
 
-rm uglified/common_mobile/common_mobile.header.js
-rm uglified/common_mobile/common_mobile.footer.js
+rm uglified/common-mobile/common-mobile.header.js
+rm uglified/common-mobile/common-mobile.footer.js
 rm -R uglified/core/
 
 
