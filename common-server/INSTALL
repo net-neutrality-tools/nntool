@@ -1,0 +1,112 @@
+#/*
+# *********************************************************************************
+# *                                                                               *
+# *       ..--== zafaco GmbH ==--..                                               *
+# *                                                                               *
+# *       Website: http://www.zafaco.de                                           *
+# *                                                                               *
+# *       Copyright 2019                                                          *
+# *                                                                               *
+# *********************************************************************************
+# */
+
+#/*!
+# *      \author zafaco GmbH <info@zafaco.de>
+# *      \date Last update: 2019-01-02
+# *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
+# */
+
+echo "";
+echo " -- WebSocket Measurement Server  -- ";
+echo "";
+
+# set font-style and colors
+BOLD=`tput bold`
+BLACK=`tput setaf 0`
+RED=`tput setaf 1`
+GREEN=`tput setaf 2`
+YELLOW=`tput setaf 3`
+WHITE=`tput setaf 7`
+RESET=`tput sgr0`
+
+# set -e
+GREP=`which grep`
+CUT=`which cut`
+CP=`which cp`
+RM=`which rm`
+MKDIR=`which mkdir`
+SED=`which sed`
+MV=`which mv`
+DPKG=`which dpkg`
+SUDO=`which sudo`
+
+bridge_flag="0";
+error="0";
+
+#check make und cmake-----------------------------------------------------------
+if which cmake >/dev/null; then
+	CMAKE=`which cmake 2>/dev/null`
+	echo "cmake: "$GREEN"Installed"$RESET" (Version: `$CMAKE --version | $GREP cmake | $CUT -f3 -d " "`)";
+else
+	echo "cmake: "$RED"Missing!"$RESET;
+	error="1";
+fi
+
+if which make >/dev/null; then
+	MAKE=`which make 2>/dev/null`
+	echo "make: "$GREEN"Installed"$RESET" (Version: `$MAKE --version | $GREP Make | $CUT -f3 -d " "`)";
+else
+	echo "make: "$RED"Missing!"$RESET;
+	error="1";
+fi
+
+if [ "$error" = "1" ]; then
+	exit 1;
+fi
+	
+echo "";
+
+#compile------------------------------------------------------------------------
+echo -n ""$BOLD"Do you want to compile WebSocket Measurement Server? [Y/n] "$GREEN"(default=Y)"$RESET" : ";
+read compile;
+if [ "$compile" != "n" ]; then
+	echo "";
+	echo -n ""$BOLD"Do you need debugging symbols? [N/y] "$RED"(default=N)"$RESET" : ";
+	read cmake;
+	if [ "$cmake" != "y" ]; then
+		debugging="RELEASE";
+	else
+		debugging="DEBUG";
+	fi
+
+	$CMAKE -DCMAKE_BUILD_TYPE="$debugging" . || ( echo ""$RED"ERROR"$RESET": Is cmake or a compiler installed on this System?" && exit );
+	trap 'echo '$RED'ERROR'$WHITE': Compiling the Project; exit 1' ERR
+	$MAKE
+fi
+
+echo "";
+
+#cleanup -----------------------------------------------------------------------
+echo -n ""$BOLD"Do you want to clean WebSocket Measurement Server Project? [Y/n] "$GREEN"(default=Y)"$RESET" : ";
+read clean;
+if [ "$clean" != "n" ]; then
+	$RM -rf ./cmake_install.cmake 2>/dev/null
+	$RM -rf ./CMakeFiles 2>/dev/null
+	$RM -rf ./Makefile 2>/dev/null
+	
+	$RM -rf ./src/cmake_install.cmake 2>/dev/null
+	$RM -rf ./src/CMakeFiles 2>/dev/null
+	$RM -rf ./src/Makefile 2>/dev/null
+	$RM -rf ./src/version.h 2>/dev/null
+	$RM -rf ./src/version.h.txt 2>/dev/null	
+
+	$RM -rf ./CMakeCache.txt 2>/dev/null
+	$RM -rf ./CPackConfig.cmake 2>/dev/null
+	$RM -rf ./_CPack_Packages 2>/dev/null
+	$RM -rf ./CPackSourceConfig.cmake 2>/dev/null
+	$RM -rf ./install_manifest.txt 2>/dev/null
+fi
+
+echo "";
+
+exit 0
