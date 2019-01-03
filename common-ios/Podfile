@@ -23,7 +23,6 @@ pod 'PocketSocket', :path => '../PocketSocket'
 
 target 'Speed'
 target 'Demo'
-target 'Demo Release'
 
 
 post_install do |installer|
