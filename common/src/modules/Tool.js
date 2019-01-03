@@ -117,7 +117,7 @@ JSTool.prototype.generateRandomData = function (length, asString)
     mask += 'abcdefghijklmnopqrstuvwxyz';
     mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     mask += '0123456789';
-    mask += '~`!@#$%^&*()_+-={}[]:;?,./|\\';
+    mask += '~`!@#$%^&*()_+-={}[]:;<>?,./|\\';
     var data = '';
     for (var i = length; i > 0; --i)
     {
