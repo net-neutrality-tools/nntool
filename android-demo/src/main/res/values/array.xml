@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="nav_drawer">
+        <item>Speed</item>
+        <item>Settings</item>
+    </string-array>
+
+    <string-array name="webview_caching">
+        <item>LOAD_CACHE_ELSE_NETWORK</item>
+        <item>LOAD_CACHE_ONLY</item>
+        <item>LOAD_DEFAULT</item>
+        <item>LOAD_NO_CACHE</item>
+    </string-array>
+
+</resources>
