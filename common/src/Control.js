@@ -5,15 +5,15 @@
  *                                                                               *
  *       Website: http://www.zafaco.de                                           *
  *                                                                               *
- *       Copyright 2018                                                          *
+ *       Copyright 2018 - 2019                                                   *
  *                                                                               *
  *********************************************************************************
  */
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2018-12-14
- *      \note Copyright (c) 2018 zafaco GmbH. All rights reserved.
+ *      \date Last update: 2019-01-02
+ *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
 /* global logDebug, logReports, wsControl, __dirname */
@@ -121,7 +121,7 @@ function WSControl()
     var ulMeasurementRunningTime    = 10000;
     var ulParallelStreams           = 4;
     var ulTimeout                   = 5000;
-    var ulFrameSize                 = 65500;
+    var ulFrameSize                 = 110000;
     
     var wsParallelStreams;
     var wsStartupTime;
