@@ -57,6 +57,10 @@ public class NativeScript
         mHttp = new Http();
     }
 
+    /**
+     * Method setDefaultIndexUrl
+     * @param sDefaultIndexUrl
+     */
     public void setDefaultIndexUrl(String sDefaultIndexUrl)
     {
         defaultIndexUrl = sDefaultIndexUrl;
@@ -73,7 +77,7 @@ public class NativeScript
      * Method startMeasurement
      * @param app
      */
-    @com.tns.JavaScriptImplementation(javaScriptFile = "app/index.js")
+    @com.tns.JavaScriptImplementation(javaScriptFile = "index.js")
     public void startMeasurement(Application app)
     {
         //------------------------------------------------------------------------------------------
@@ -87,7 +91,7 @@ public class NativeScript
 
         //nsRuntime.run();
         //nsRuntime.runModule(new File(app.getApplicationContext().getFilesDir(), "app/index.js"));
-        nsRuntime.runScript(new File(app.getApplicationContext().getFilesDir(), "app/index.js"));
+        nsRuntime.runScript(new File(app.getApplicationContext().getFilesDir(), "index.js"));
         //------------------------------------------------------------------------------------------
     }
 
