@@ -5,15 +5,15 @@
  *                                                                               *
  *       Website: http://www.zafaco.de                                           *
  *                                                                               *
- *       Copyright 2018                                                          *
+ *       Copyright 2018 - 2019                                                   *
  *                                                                               *
  *********************************************************************************
  */
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2018-12-14
- *      \note Copyright (c) 2018 zafaco GmbH. All rights reserved.
+ *      \date Last update: 2019-01-04
+ *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
 /* global logDebug, self, wsControl, global */
@@ -353,16 +353,16 @@ function connect()
 
             if (data.cmd === 'rttReport')
             {
-                wsRttValues.avg         = Number(data.avg);
-                wsRttValues.med         = Number(data.med);
-                wsRttValues.min         = Number(data.min);
-                wsRttValues.max         = Number(data.max);
+                wsRttValues.avg         = Number(data.avg) * 1000;
+                wsRttValues.med         = Number(data.med) * 1000;
+                wsRttValues.min         = Number(data.min) * 1000;
+                wsRttValues.max         = Number(data.max) * 1000;
                 wsRttValues.requests    = Number(data.req);
                 wsRttValues.replies     = Number(data.rep);
                 wsRttValues.errors      = Number(data.err);
                 wsRttValues.missing     = Number(data.mis);
                 wsRttValues.packetsize  = Number(data.pSz);
-                wsRttValues.stDevPop    = Number(data.std_dev_pop);
+                wsRttValues.stDevPop    = Number(data.std_dev_pop) * 1000;
                 wsRttValues.server      = String(data.srv);
             }
 

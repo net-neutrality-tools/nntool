@@ -66,15 +66,15 @@
 		 *                                                                               *
 		 *       Website: http://www.zafaco.de                                           *
 		 *                                                                               *
-		 *       Copyright 2018                                                          *
+		 *       Copyright 2018 - 2019                                                   *
 		 *                                                                               *
 		 *********************************************************************************
 		 */
 
 		/*!
 		 *      \author zafaco GmbH <info@zafaco.de>
-		 *      \date Last update: 2018-12-14
-		 *      \note Copyright (c) 2018 zafaco GmbH. All rights reserved.
+		 *      \date Last update: 2019-01-04
+		 *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
 		 */
        
         var speed;
@@ -216,15 +216,15 @@
                         
                         if (data.test_case === 'rtt')
                         {
-                            outputToHtml(data.rtt_avg, 'rtt');
+                            outputToHtml(data.rtt_info.average_ns, 'rtt');
                         }
                         if (data.test_case === 'download')
                         {
-                            outputToHtml(data.download_rate_avg_mbits, 'download');
+                            outputToHtml((data.download_info.throughput_avg_bps / 1000 / 1000).toFixed(2), 'download');
                         }
                         if (data.test_case === 'upload')
                         {
-                            outputToHtml(data.upload_rate_avg_mbits, 'upload');
+                            outputToHtml((data.upload_info.throughput_avg_bps / 1000 / 1000).toFixed(2), 'upload');
                         }
                         
                         outputToHtml(JSON.stringify(orderKeys(data), null, 4), 'kpis');
@@ -246,7 +246,7 @@
         {
             var element = document.getElementById(id);
 
-            if (id === 'rtt')       output = output + ' ms';
+            if (id === 'rtt')       output = output + ' ns';
             if (id === 'download')  output = output + ' Mbit/s';
             if (id === 'upload')    output = output + ' Mbit/s';
 

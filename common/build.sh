@@ -14,7 +14,7 @@
 
 #/*!
 # *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2019-01-02
+# *      \date Last update: 2019-01-04
 # *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
 # */
 
@@ -105,14 +105,10 @@ cat plain/common-mobile/common-mobile.footer.js	>> plain/common-mobile/common-mo
 uglifyjs -c drop_console=true -m --comments /^!/ plain/common-mobile/common-mobile.js > uglified/common-mobile/common-mobile.js
 
 
-cp plain/core/Worker.js plain/common-mobile/
-
 rm plain/common-mobile/common-mobile.header.js
 rm plain/common-mobile/common-mobile.footer.js
 rm -R plain/core/
 
-
-cp uglified/core/Worker.js uglified/common-mobile/
 
 rm uglified/common-mobile/common-mobile.header.js
 rm uglified/common-mobile/common-mobile.footer.js
