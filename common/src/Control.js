@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-02
+ *      \date Last update: 2019-01-04
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -40,7 +40,6 @@ function WSControl()
     var wsFrames;
     var wsFramesTotal;
     var wsSpeedAvgBitS;
-    var wsSpeedAvgMBitS;
     var wsSpeedMinBitS;
     var wsSpeedMaxBitS;
     var wsOverhead;
@@ -142,6 +141,7 @@ function WSControl()
 
     var wsRttValues =
     {
+		duration:			undefined,
         avg:                undefined,
         med:                undefined,
         min:                undefined,
@@ -158,8 +158,6 @@ function WSControl()
     var wsDownloadValues = 
     {
         rateAvg:          undefined,
-        rateMin:          undefined,
-        rateMax:          undefined,
         data:             undefined,
         dataTotal:        undefined,
         duration:         undefined,
@@ -171,15 +169,12 @@ function WSControl()
         framesTotal:      undefined,
         overheadPerFrame: undefined,
         overhead:         undefined,
-        overheadTotal:    undefined,
-        rateAvgMBitS:     undefined
+        overheadTotal:    undefined
     };
     
     var wsUploadValues = 
     {
         rateAvg:          undefined,
-        rateMin:          undefined,
-        rateMax:          undefined,
         data:             undefined,
         dataTotal:        undefined,
         duration:         undefined,
@@ -191,8 +186,7 @@ function WSControl()
         framesTotal:      undefined,
         overheadPerFrame: undefined,
         overhead:         undefined,
-        overheadTotal:    undefined,
-        rateAvgMBitS:     undefined
+        overheadTotal:    undefined
     };
 
 
@@ -498,8 +492,12 @@ function WSControl()
 
                 if (wsTestCase === 'rtt')
                 {
-                    if (data.wsRttValues) wsRttValues = data.wsRttValues;
-                    
+                    if (data.wsRttValues)
+					{
+						wsRttValues = data.wsRttValues;
+						wsRttValues.duration = Math.round(wsMeasurementTime * 1000) + ' ns';
+					}
+					
                     for (key in wsRttValues)
                     {
                         if (typeof wsRttValues[key] === 'undefined' ||  wsRttValues[key] === 'undefined' ||  wsRttValues[key] === null ||  wsRttValues[key] === 'null')
@@ -810,7 +808,6 @@ function WSControl()
             wsOverhead           = (wsFrames * wsOverheadPerFrame);
             wsOverheadTotal      = (wsFramesTotal * wsOverheadPerFrame);
             wsSpeedAvgBitS       = (((wsData * 8) + (wsOverhead * 8)) / (Math.round(wsMeasurementTime) / 1000));
-            wsSpeedAvgMBitS      = +(wsSpeedAvgBitS / 1000 / 1000).toFixed(2);
 
             //set min/max rates
             if (wsSpeedAvgBitS < wsSpeedMinBitS)
@@ -834,36 +831,34 @@ function WSControl()
         
         if (logReports && wsTestCase === 'rtt')
         {
-            console.log(finishString + 'Time:           ' + Math.round(wsMeasurementTime) + ' ms');
-            console.log(finishString + 'RTT Avg:        ' + wsRttValues.avg + ' ms');
-            console.log(finishString + 'RTT Median:     ' + wsRttValues.med + ' ms');
-            console.log(finishString + 'RTT Min:        ' + wsRttValues.min + ' ms');
-            console.log(finishString + 'RTT Max:        ' + wsRttValues.max + ' ms');
-            console.log(finishString + 'RTT Requests:   ' + wsRttValues.requests);
-            console.log(finishString + 'RTT Replies:    ' + wsRttValues.replies);
-            console.log(finishString + 'RTT Errors:     ' + wsRttValues.errors);
-            console.log(finishString + 'RTT Missing:    ' + wsRttValues.missing);
-            console.log(finishString + 'RTT Packetsize: ' + wsRttValues.packetsize);
-            console.log(finishString + 'RTT Std Dev Pop:' + wsRttValues.stDevPop + ' ms');
-            console.log(finishString + 'RTT Server:     ' + wsRttValues.server);
+            console.log(finishString + 'Time:           		' + wsRttValues.duration + ' ns');
+            console.log(finishString + 'RTT Avgerage:        		' + wsRttValues.avg + ' ns');
+            console.log(finishString + 'RTT Median:     		' + wsRttValues.med + ' ns');
+            console.log(finishString + 'RTT Min:        		' + wsRttValues.min + ' ns');
+            console.log(finishString + 'RTT Max:        		' + wsRttValues.max + ' ns');
+            console.log(finishString + 'RTT Sent:   			' + wsRttValues.requests);
+            console.log(finishString + 'RTT Received:    		' + wsRttValues.replies);
+            console.log(finishString + 'RTT Errors:     		' + wsRttValues.errors);
+            console.log(finishString + 'RTT Missing:    		' + wsRttValues.missing);
+            console.log(finishString + 'RTT Packet Size: 		' + wsRttValues.packetsize);
+            console.log(finishString + 'RTT Standard Deviation:		' + wsRttValues.stDevPop + ' ns');
+            console.log(finishString + 'RTT Peer:     			' + wsRttValues.server);
         }
         else if (logReports)
         {
-            console.log(finishString + 'Time:           ' + Math.round(wsMeasurementTime) + ' ms');
-            console.log(finishString + 'Data:           ' + (wsData + wsOverhead) + ' bytes');
-            console.log(finishString + 'TCP Throughput: ' + wsSpeedAvgMBitS + ' Mbit/s');
+            console.log(finishString + 'Time:           		' + Math.round(wsMeasurementTime * 1000) + ' ns');
+            console.log(finishString + 'Data:           		' + (wsData + wsOverhead) + ' bytes');
+            console.log(finishString + 'TCP Throughput: 		' + (wsSpeedAvgBitS / 1000 / 1000).toFixed(2) + ' MBit/s');
         }
         
         //set KPIs 
         if (wsTestCase === 'download')
         {
             wsDownloadValues.rateAvg       = Math.round(wsSpeedAvgBitS);
-            wsDownloadValues.rateMin       = Math.round(wsSpeedMinBitS);
-            wsDownloadValues.rateMax       = Math.round(wsSpeedMaxBitS);
             wsDownloadValues.data          = wsData + wsOverhead;
             wsDownloadValues.dataTotal     = wsDataTotal + wsOverheadTotal;  
-            wsDownloadValues.duration      = Math.round(wsMeasurementTime);
-            wsDownloadValues.durationTotal = Math.round(wsMeasurementTimeTotal);
+            wsDownloadValues.duration      = Math.round(wsMeasurementTime) * 1000;
+            wsDownloadValues.durationTotal = Math.round(wsMeasurementTimeTotal) * 1000;
             wsDownloadValues.streamsStart  = wsStreamsStart;
             wsDownloadValues.streamsEnd    = wsStreamsEnd;
             wsDownloadValues.frameSize     = wsFrameSize;
@@ -871,18 +866,15 @@ function WSControl()
             wsDownloadValues.framesTotal   = wsFramesTotal;
             wsDownloadValues.overhead      = wsOverhead;
             wsDownloadValues.overheadTotal = wsOverheadTotal;
-            wsDownloadValues.rateAvgMBitS  = wsSpeedAvgMBitS;
         }
         
         if (wsTestCase === 'upload')
         {
             wsUploadValues.rateAvg         = Math.round(wsSpeedAvgBitS);
-            wsUploadValues.rateMin         = Math.round(wsSpeedMinBitS);
-            wsUploadValues.rateMax         = Math.round(wsSpeedMaxBitS);
             wsUploadValues.data            = wsData + wsOverhead;
             wsUploadValues.dataTotal       = wsDataTotal + wsOverheadTotal;  
-            wsUploadValues.duration        = Math.round(wsMeasurementTime);
-            wsUploadValues.durationTotal   = Math.round(wsMeasurementTimeTotal);
+            wsUploadValues.duration        = Math.round(wsMeasurementTime) * 1000;
+            wsUploadValues.durationTotal   = Math.round(wsMeasurementTimeTotal) * 1000;
             wsUploadValues.streamsStart    = wsStreamsStart;
             wsUploadValues.streamsEnd      = wsStreamsEnd;
             wsUploadValues.frameSize       = wsFrameSize;
@@ -890,7 +882,6 @@ function WSControl()
             wsUploadValues.framesTotal     = wsFramesTotal;
             wsUploadValues.overhead        = wsOverhead;
             wsUploadValues.overheadTotal   = wsOverheadTotal;  
-            wsUploadValues.rateAvgMBitS    = wsSpeedAvgMBitS;
         }
         
         reportToMeasurement(cmd, msg);
@@ -927,20 +918,21 @@ function WSControl()
      */
     function getKPIsRtt(report)
     {
-        report.rtt_avg                          = wsRttValues.avg;
-        report.rtt_med                          = wsRttValues.med;
-        report.rtt_min                          = wsRttValues.min;
-        report.rtt_max                          = wsRttValues.max;
-        report.rtt_requests                     = wsRttValues.requests;
-        report.rtt_replies                      = wsRttValues.replies;
-        report.rtt_errors                       = wsRttValues.errors;
-        report.rtt_missing                      = wsRttValues.missing;
-        report.rtt_packetsize                   = wsRttValues.packetsize;
-        report.rtt_std_dev_pop                  = wsRttValues.stDevPop;
+		report.duration_ns				= wsRttValues.duration;
+        report.average_ns               = wsRttValues.avg;
+        report.median_ms                = wsRttValues.med;
+        report.min_ns                   = wsRttValues.min;
+        report.max_ns                   = wsRttValues.max;
+        report.num_sent                 = wsRttValues.requests;
+        report.num_received             = wsRttValues.replies;
+        report.num_error                = wsRttValues.errors;
+        report.num_missing              = wsRttValues.missing;
+        report.packet_size              = wsRttValues.packetsize;
+        report.standard_deviation_ns	= wsRttValues.stDevPop;
         
         if (typeof wsRttValues.server !== 'undefined')
         {
-            report.server_rtt                   = wsRttValues.server + '.' + wsTLD;
+            report.peer                 = wsRttValues.server + '.' + wsTLD;
         }
         
         return report;
@@ -954,22 +946,19 @@ function WSControl()
      */
     function getKPIsDownload(report)
     {
-        report.download_rate_avg            = wsDownloadValues.rateAvg;
-        report.download_rate_min            = wsDownloadValues.rateMin;
-        report.download_rate_max            = wsDownloadValues.rateMax;
-        report.download_data                = wsDownloadValues.data;
-        report.download_data_total          = wsDownloadValues.dataTotal;
-        report.download_duration            = wsDownloadValues.duration;
-        report.download_duration_total      = wsDownloadValues.durationTotal;
-        report.download_streams_start       = wsDownloadValues.streamsStart;
-        report.download_streams_end         = wsDownloadValues.streamsEnd;
-        report.download_frame_size          = wsDownloadValues.frameSize;
-        report.download_frames              = wsDownloadValues.frames;
-        report.download_frames_total        = wsDownloadValues.framesTotal;
-        report.download_overhead            = wsDownloadValues.overhead;
-        report.download_overhead_total      = wsDownloadValues.overheadTotal;
-        report.download_overhead_per_frame  = wsDownloadValues.overheadPerFrame;
-        report.download_rate_avg_mbits      = wsDownloadValues.rateAvgMBitS;
+        report.throughput_avg_bps            			= wsDownloadValues.rateAvg;
+        report.bytes               						= wsDownloadValues.data;
+        report.bytes_including_slow_start      			= wsDownloadValues.dataTotal;
+        report.duration_ns            					= wsDownloadValues.duration;
+        report.duration_ns_total      					= wsDownloadValues.durationTotal;
+        report.num_streams_start       					= wsDownloadValues.streamsStart;
+        report.num_streams_end         					= wsDownloadValues.streamsEnd;
+        report.frame_size          						= wsDownloadValues.frameSize;
+        report.frame_count              				= wsDownloadValues.frames;
+        report.frame_count_including_slow_start        	= wsDownloadValues.framesTotal;
+        report.overhead            						= wsDownloadValues.overhead;
+        report.overhead_per_frame_including_slow_start  = wsDownloadValues.overheadTotal;
+        report.overhead_per_frame  						= wsDownloadValues.overheadPerFrame;
 
         return report;
     }
@@ -982,22 +971,19 @@ function WSControl()
      */
     function getKPIsUpload(report)
     {
-        report.upload_rate_avg              = wsUploadValues.rateAvg;
-        report.upload_rate_min              = wsUploadValues.rateMin;
-        report.upload_rate_max              = wsUploadValues.rateMax;
-        report.upload_data                  = wsUploadValues.data;
-        report.upload_data_total            = wsUploadValues.dataTotal;
-        report.upload_duration              = wsUploadValues.duration;
-        report.upload_duration_total        = wsUploadValues.durationTotal;
-        report.upload_streams_start         = wsUploadValues.streamsStart;
-        report.upload_streams_end           = wsUploadValues.streamsEnd;
-        report.upload_frame_size            = wsUploadValues.frameSize;
-        report.upload_frames                = wsUploadValues.frames;
-        report.upload_frames_total          = wsUploadValues.framesTotal;
-        report.upload_overhead              = wsUploadValues.overhead;
-        report.upload_overhead_total        = wsUploadValues.overheadTotal;
-        report.upload_overhead_per_frame    = wsUploadValues.overheadPerFrame;
-        report.upload_rate_avg_mbits        = wsUploadValues.rateAvgMBitS;
+        report.throughput_avg_bps              			= wsUploadValues.rateAvg;
+        report.bytes                 					= wsUploadValues.data;
+        report.bytes_including_slow_start        		= wsUploadValues.dataTotal;
+        report.duration_ns              				= wsUploadValues.duration;
+        report.duration_ns_total        				= wsUploadValues.durationTotal;
+        report.num_streams_start         				= wsUploadValues.streamsStart;
+        report.num_streams_end           				= wsUploadValues.streamsEnd;
+        report.frame_size            					= wsUploadValues.frameSize;
+        report.frame_count                				= wsUploadValues.frames;
+        report.frame_count_including_slow_start         = wsUploadValues.framesTotal;
+        report.overhead              					= wsUploadValues.overhead;
+        report.overhead_per_frame_including_slow_start	= wsUploadValues.overheadTotal;
+        report.overhead_per_frame    					= wsUploadValues.overheadPerFrame;
 
         return report;
     }
@@ -1066,7 +1052,6 @@ function WSControl()
         wsFrames                    = 0;
         wsFramesTotal               = 0;
         wsSpeedAvgBitS              = 0;
-        wsSpeedAvgMBitS             = 0;
         wsSpeedMinBitS              = 0;
         wsSpeedMaxBitS              = 0;
         wsOverhead                  = 0;

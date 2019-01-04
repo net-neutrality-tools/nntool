@@ -5,15 +5,15 @@
  *                                                                               *
  *       Website: http://www.zafaco.de                                           *
  *                                                                               *
- *       Copyright 2018                                                          *
+ *       Copyright 2018 - 2019                                                   *
  *                                                                               *
  *********************************************************************************
  */
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2018-12-14
- *      \note Copyright (c) 2018 zafaco GmbH. All rights reserved.
+ *      \date Last update: 2019-01-04
+ *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
 /* global jsinterface, require, global */
@@ -55,12 +55,13 @@ function WSMeasurement()
     var wsMeasurementParameters             = {};
     
     //KPIs
-    var deviceKPIs                          = {};
-    var availabilityKPIs                    = {};
+	var globalKPIs							= {};
     var rttKPIs                             = {};
     var downloadKPIs                        = {};
     var uploadKPIs                          = {};
     var timestampKPIs                       = {};
+	var clientKPIs 							= {};
+	var deviceKPIs                          = {};
     var routeKPIs                           = {};
     
     var wsRttTimer                          = 0;
@@ -92,8 +93,13 @@ function WSMeasurement()
 
             if (typeof wsMeasurementParameters.platform !== 'undefined') platform = String(wsMeasurementParameters.platform);
          
-            deviceKPIs                          = JSON.parse(jsTool.getDeviceKPIs(platform));
-            deviceKPIs.client_speed_version   = speedVersion;
+			globalKPIs.start_time			= jsTool.getFormattedDate();
+			
+			clientKPIs.timezone				= jsTool.getTimezone();
+			clientKPIs.type 				= platform.toUpperCase();
+			clientKPIs.speed_version		= speedVersion;
+			
+            deviceKPIs                      = JSON.parse(jsTool.getDeviceKPIs(platform));
             
             if (wsMeasurementParameters.platform === 'mobile')
             {
@@ -103,7 +109,7 @@ function WSMeasurement()
             else
             {
                 //catch Firefox < 38, as it has no WebSocket in WebWorker Support
-                if ((deviceKPIs.client_browser.search('Firefox') !== -1) && Number(deviceKPIs.client_browser_version) < 38)
+                if ((deviceKPIs.browser_info.name.search('Firefox') !== -1) && Number(deviceKPIs.browser_info.version) < 38)
                 {
                     wsMeasurementParameters.singleThread = true;
                 }
@@ -112,19 +118,19 @@ function WSMeasurement()
                 //ie11: no WebSocket in WebWorker Support
                 //edge14: no WebSocket in WebWorker Support
                 //edge>14: WebSocket in WebWorker Support, but poor (/4) upload performance
-                if ((deviceKPIs.client_browser.search('Internet Explorer 11') !== -1) || ((deviceKPIs.client_browser.search('Edge') !== -1) && (Number(deviceKPIs.client_browser_version) > 13)))
+                if ((deviceKPIs.browser_info.name.search('Internet Explorer 11') !== -1) || ((deviceKPIs.browser_info.name.search('Edge') !== -1) && (Number(deviceKPIs.browser_info.version) > 13)))
                 {
                     wsMeasurementParameters.singleThread = true;
                 }
 
                 //catch Safari 5, 6 and 7, as they only have partial WebSocket support
-                if ((deviceKPIs.client_browser.search('Safari 5') !== -1) || (deviceKPIs.client_browser.search('Safari 6') !== -1) || (deviceKPIs.client_browser.search('Safari 7') !== -1))
+                if ((deviceKPIs.browser_info.name.search('Safari 5') !== -1) || (deviceKPIs.browser_info.name.search('Safari 6') !== -1) || (deviceKPIs.browser_info.name.search('Safari 7') !== -1))
                 {
                     var data = {};
                     data.cmd                                = 'error';
-                    availabilityKPIs.cmd                    = 'error';     
-                    availabilityKPIs.error_code             = 5;
-                    availabilityKPIs.error_description      = 'WebSockets are only partially supported by your browser';
+                    globalKPIs.cmd                    		= 'error';     
+                    globalKPIs.error_code             		= 5;
+                    globalKPIs.error_description      		= 'WebSockets are only partially supported by your browser';
                     data                                    = JSON.stringify(data);
                     this.controlCallback(data);
                     return;
@@ -156,7 +162,7 @@ function WSMeasurement()
                 }
 
                 jsTool.setCookie(cookieName + '_id', cookie, 365);
-                deviceKPIs.client_cookie = cookie;
+                clientKPIs.cookie = cookie;
             }
         }
 
@@ -170,9 +176,9 @@ function WSMeasurement()
         {
             var data = {};
             data.cmd                                = 'error';
-            availabilityKPIs.cmd                    = 'error';     
-            availabilityKPIs.error_code             = 3;
-            availabilityKPIs.error_description      = 'WebSockets are not supported by your browser';
+            globalKPIs.cmd                    = 'error';     
+            globalKPIs.error_code             = 3;
+            globalKPIs.error_description      = 'WebSockets are not supported by your browser';
             data                                    = JSON.stringify(data);
             this.controlCallback(data);
             return;
@@ -182,9 +188,9 @@ function WSMeasurement()
         {
             var data = {};
             data.cmd                                = 'error';
-            availabilityKPIs.cmd                    = 'error';     
-            availabilityKPIs.error_code             = 1;
-            availabilityKPIs.error_description      = 'Measurement Parameters Missing';
+            globalKPIs.cmd                    = 'error';     
+            globalKPIs.error_code             = 1;
+            globalKPIs.error_description      = 'Measurement Parameters Missing';
             data                                    = JSON.stringify(data);
             this.controlCallback(data);
             return;
@@ -221,20 +227,34 @@ function WSMeasurement()
     this.controlCallback = function(data)
     {
         data = JSON.parse(data);
-        
+		
+		globalKPIs.cmd 				= data.cmd;
+		globalKPIs.msg 				= data.msg;
+		globalKPIs.test_case 			= data.test_case;
+		globalKPIs.error_code 		= data.error_code;
+		globalKPIs.error_description 	= data.error_description;
+		
         if(data.test_case === 'routeToClient')
         {
-            routeKPIs.server_client_route       = data.server_client_route;
-            routeKPIs.server_client_route_hops  = data.server_client_route_hops;
+            routeKPIs.server_client       = data.server_client_route;
+            routeKPIs.server_client_hops  = data.server_client_route_hops;
         }
         
-        if (data.test_case === 'rtt')           rttKPIs             = data;
+        if (data.test_case === 'rtt')
+		{
+			rttKPIs             = data;
+		}
+		
         if (data.test_case === 'download')
         {
             downloadKPIs        = data;
         }
-        if (data.test_case === 'upload')        uploadKPIs          = data;
-
+		
+        if (data.test_case === 'upload')
+		{
+			uploadKPIs          = data;
+		}
+		
         if (data.cmd === 'error')
         {
             setEndTimestamps(data.test_case);
@@ -286,7 +306,6 @@ function WSMeasurement()
     {
         data = JSON.parse(data);
         deviceKPIs = jsTool.extend(deviceKPIs, data);
-        //$.extend(deviceKPIs, data);
     };
 
     
@@ -355,12 +374,9 @@ function WSMeasurement()
         if (performRttMeasurement && !performedRttMeasurement)
         {
             setEndTimestamps();
-            if (!timestampKPIs.timestamp_rtt_start) timestampKPIs.timestamp_rtt_start = jsTool.getTimestamp() + (waitTimeShort);
+            if (!timestampKPIs.rtt_start) timestampKPIs.rtt_start = (jsTool.getTimestamp() + waitTimeShort) * 1000;
             wsMeasurementParameters.testCase = 'rtt';
             wsRttTimer = setTimeout(wsControl.measurementSetup, waitTimeShort, JSON.stringify(wsMeasurementParameters));
-            
-            var stats = {};
-            stats.timestamp_rtt_start   = timestampKPIs.timestamp_rtt_start; 
             
             return;
         }
@@ -377,7 +393,7 @@ function WSMeasurement()
             
             var waitTimeDownload = waitTimeShort;
             
-            if (!timestampKPIs.timestamp_download_start) timestampKPIs.timestamp_download_start = jsTool.getTimestamp() + waitTimeDownload;
+            if (!timestampKPIs.download_start) timestampKPIs.download_start = (jsTool.getTimestamp() + waitTimeDownload) * 1000;
             wsMeasurementParameters.testCase = 'download';
             if (typeof require !== 'undefined')
             {
@@ -395,21 +411,15 @@ function WSMeasurement()
             }
             wsDownloadTimer = setTimeout(wsControl.measurementSetup, waitTimeDownload, JSON.stringify(wsMeasurementParameters));
             
-            var stats = {};
-            stats.timestamp_download_start   = timestampKPIs.timestamp_download_start; 
-            
             return;
         }
         else
         if (performUploadMeasurement && !performedUploadMeasurement)
         {
             setEndTimestamps();
-            if (!timestampKPIs.timestamp_upload_start) timestampKPIs.timestamp_upload_start = jsTool.getTimestamp() + waitTime;
+            if (!timestampKPIs.upload_start) timestampKPIs.upload_start = (jsTool.getTimestamp() + waitTime) * 1000;
             wsMeasurementParameters.testCase = 'upload';
             wsUploadTimer = setTimeout(wsControl.measurementSetup, waitTime, JSON.stringify(wsMeasurementParameters));
-            
-            var stats = {};
-            stats.timestamp_upload_start   = timestampKPIs.timestamp_upload_start; 
             
             return;
         }  
@@ -426,17 +436,17 @@ function WSMeasurement()
      */
     function setEndTimestamps(test_case)
     {
-        if ((performRttMeasurement && performedRttMeasurement && !timestampKPIs.timestamp_rtt_end) || test_case === 'rtt')
+        if ((performRttMeasurement && performedRttMeasurement && !timestampKPIs.rtt_end) || test_case === 'rtt')
         {
-            timestampKPIs.timestamp_rtt_end = jsTool.getTimestamp();
+            timestampKPIs.rtt_end = jsTool.getTimestamp() * 1000;
         }
-        if ((performDownloadMeasurement && performedDownloadMeasurement && !timestampKPIs.timestamp_download_end)  || test_case === 'download')
+        if ((performDownloadMeasurement && performedDownloadMeasurement && !timestampKPIs.download_end)  || test_case === 'download')
         {
-            timestampKPIs.timestamp_download_end = jsTool.getTimestamp();
+            timestampKPIs.download_end = jsTool.getTimestamp() * 1000;
         }
-        if ((performUploadMeasurement && performedUploadMeasurement && !timestampKPIs.timestamp_upload_end)  || test_case === 'upload')
+        if ((performUploadMeasurement && performedUploadMeasurement && !timestampKPIs.upload_end)  || test_case === 'upload')
         {
-			timestampKPIs.timestamp_upload_end = jsTool.getTimestamp();
+			timestampKPIs.upload_end = jsTool.getTimestamp() * 1000;
         }
     }
     
@@ -446,8 +456,16 @@ function WSMeasurement()
      */
     function getKPIs()
     {
-        var kpis = jsTool.extend(availabilityKPIs, rttKPIs, downloadKPIs, uploadKPIs, timestampKPIs, deviceKPIs, routeKPIs);
-        
+        var kpis = {};
+		kpis = jsTool.extend(globalKPIs);
+		if (!jsTool.isEmpty(rttKPIs)) 		kpis.rtt_info 		= rttKPIs;
+		if (!jsTool.isEmpty(downloadKPIs)) 	kpis.download_info	= downloadKPIs;
+		if (!jsTool.isEmpty(uploadKPIs)) 	kpis.upload_info 	= uploadKPIs;
+		if (!jsTool.isEmpty(timestampKPIs))	kpis.time_info 		= timestampKPIs;
+		if (!jsTool.isEmpty(clientKPIs))	kpis.client_info	= clientKPIs;
+		if (!jsTool.isEmpty(deviceKPIs))	kpis.device_info	= deviceKPIs;
+		if (!jsTool.isEmpty(routeKPIs))		kpis.route_info		= routeKPIs;
+		
         return kpis;
     }
 

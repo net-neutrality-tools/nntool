@@ -5,15 +5,15 @@
  *                                                                               *
  *       Website: http://www.zafaco.de                                           *
  *                                                                               *
- *       Copyright 2018                                                          *
+ *       Copyright 2018 - 2019                                                   *
  *                                                                               *
  *********************************************************************************
  */
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2018-12-14
- *      \note Copyright (c) 2018 zafaco GmbH. All rights reserved.
+ *      \date Last update: 2019-01-04
+ *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
 /* global jsTool, jsinterface, getRouteToClientCallback */
@@ -55,16 +55,10 @@ var htPostTool;
  */
 JSTool.prototype.getDeviceKPIs = function (platform)
 {
-    var jsDate;
-    var jsTimezone;
-    
     var jsClientOS;
     var jsClientOSVersion;
     var jsClientBrowser;
     var jsClientBrowserVersion;
-    
-    jsDate                                                  = this.getFormattedDate();
-    jsTimezone                                              = this.getTimezone();
 
     if (platform !== 'mobile')
     {
@@ -86,20 +80,24 @@ JSTool.prototype.getDeviceKPIs = function (platform)
 
     var deviceKPIs = 
     {
-        date:                   jsDate,
-        timezone:               jsTimezone,
-        client_browser:         jsClientBrowser,
-        client_browser_version: jsClientBrowserVersion,
-        client_os:              jsClientOS,
-        client_os_version:      jsClientOSVersion
+		browser_info:
+		{
+			name:       jsClientBrowser,
+			version:	jsClientBrowserVersion
+		},
+		os_info:
+		{
+			name:       jsClientOS,
+        	version:	jsClientOSVersion
+		}
+
     };
 
     console.log('device kpis:');
-    console.log('date:                  ' + deviceKPIs.date);
-    console.log('timezone:              ' + deviceKPIs.timezone);
-    console.log('client browser:        ' + deviceKPIs.client_browser);
-    console.log('client os:             ' + deviceKPIs.client_os);
-    console.log('client os version:     ' + deviceKPIs.client_os_version);
+    console.log('browser name:			' + jsClientBrowser);
+	console.log('browser version:		' + jsClientBrowserVersion);
+	console.log('os name:			' + jsClientOS);
+	console.log('version name:			' + jsClientOSVersion);
     
     return JSON.stringify(deviceKPIs);
 };
@@ -352,6 +350,18 @@ JSTool.prototype.performRouteToClientLookup = function(target, port)
     htPostTool.setTimeout(15000);
     htPostTool.setMaxTries(1);
     htPostTool.executeRequest();
+};
+
+JSTool.prototype.isEmpty = function(obj)
+{
+	for (var key in obj)
+	{
+		if (obj.hasOwnProperty(key))
+		{
+			return false;
+		}
+	}
+	return true;
 };
 
 
