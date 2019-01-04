@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-02
+ *      \date Last update: 2019-01-04
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -109,8 +109,6 @@
 -(void)showKpisFromResponse:(NSDictionary*)response
 {
     NSString *kpis = response.description;
-    kpis = [kpis stringByReplacingOccurrencesOfString:@"{\n" withString:@""];
-    kpis = [kpis stringByReplacingOccurrencesOfString:@"\n}" withString:@""];
     kpis = [kpis stringByReplacingOccurrencesOfString:@";" withString:@""];
     self.kpisTextView.text = kpis;
     
@@ -125,15 +123,15 @@
     {
         if ([[response objectForKey:@"test_case"] isEqualToString:@"rtt"])
         {
-            self.rttLabel.text = [NSString stringWithFormat:@"%@ ms", [self.tool formatNumberToCommaSeperatedString:[response objectForKey:@"rtt_avg"] withMinDecimalPlaces:2 withMaxDecimalPlace:2]];
+            self.rttLabel.text = [NSString stringWithFormat:@"%@ ns", [[response objectForKey:@"rtt_info"] objectForKey:@"average_ns"]];
         }
         if ([[response objectForKey:@"test_case"] isEqualToString:@"download"])
         {
-            self.downloadLabel.text = [NSString stringWithFormat:@"%@ Mbit/s", [self.tool formatNumberToCommaSeperatedString:[response objectForKey:@"download_rate_avg_mbits"] withMinDecimalPlaces:2 withMaxDecimalPlace:2]];
+            self.downloadLabel.text = [NSString stringWithFormat:@"%@ Mbit/s", [self.tool formatNumberToCommaSeperatedString:[NSNumber numberWithDouble:([[[response objectForKey:@"download_info"] objectForKey:@"throughput_avg_bps"] doubleValue] /1000.0 / 1000.0)] withMinDecimalPlaces:2 withMaxDecimalPlace:2]];
         }
         if ([[response objectForKey:@"test_case"] isEqualToString:@"upload"])
         {
-            self.uploadLabel.text = [NSString stringWithFormat:@"%@ Mbit/s", [self.tool formatNumberToCommaSeperatedString:[response objectForKey:@"upload_rate_avg_mbits"] withMinDecimalPlaces:2 withMaxDecimalPlace:2]];
+            self.uploadLabel.text = [NSString stringWithFormat:@"%@ Mbit/s", [self.tool formatNumberToCommaSeperatedString:[NSNumber numberWithDouble:([[[response objectForKey:@"upload_info"] objectForKey:@"throughput_avg_bps"] doubleValue] /1000.0 / 1000.0)] withMinDecimalPlaces:2 withMaxDecimalPlace:2]];
         }
     }
     
