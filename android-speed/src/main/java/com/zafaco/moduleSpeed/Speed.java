@@ -42,6 +42,9 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Class Speed
+ */
 @JavaScriptImplementation(javaScriptFile = "app/index.mobile.js")
 public class Speed
 {
@@ -104,6 +107,10 @@ public class Speed
         initSpeedParameter();
     }
 
+    /**
+     * Method setDownloadStarted
+     * @throws Exception
+     */
     public void setDownloadStarted() throws Exception
     {
         isDownloadRunning = true;
@@ -120,11 +127,18 @@ public class Speed
         Common.addToJSONMTWSMeasurementAdditional(jData);
     }
 
+    /**
+     * Method setDownloadStopped
+     */
     public void setDownloadStopped()
     {
         isDownloadRunning = false;
     }
 
+    /**
+     * Method setUploadStarted
+     * @throws Exception
+     */
     public void setUploadStarted() throws Exception
     {
         isUploadRunning = true;
@@ -141,11 +155,17 @@ public class Speed
         Common.addToJSONMTWSMeasurementAdditional(jData);
     }
 
+    /**
+     * Method setUploadStopped
+     */
     public void setUploadStopped()
     {
         isUploadRunning = false;
     }
 
+    /**
+     * Method initSpeedParameter
+     */
     private void initSpeedParameter()
     {
         try
@@ -180,6 +200,11 @@ public class Speed
 
     //Measurement Start/Stop -----------------------------------------------------------------------
 
+    /**
+     * Method startMeasurement
+     * @param app
+     * @param interfaceCallback
+     */
     public void startMeasurement( Application app, GenericInterface interfaceCallback)
     {
         try
@@ -228,6 +253,9 @@ public class Speed
         //------------------------------------------------------------------------------------------
     }
 
+    /**
+     * Method stopMeasurement
+     */
     public void stopMeasurement()
     {
         //Init Main JSON Object
@@ -242,9 +270,11 @@ public class Speed
         stopListener();
     }
 
-
     //Listener -------------------------------------------------------------------------------------
 
+    /**
+     * Method startListener
+     */
     private void startListener()
     {
         listenerNetwork = new ListenerNetwork(ctx, new ModulesInterface()
@@ -308,11 +338,19 @@ public class Speed
 
         listenerGeoLocation = new ListenerGeoLocation(ctx, new ModulesInterface()
         {
+            /**
+             * Method receiveString
+             * @param message
+             */
             @Override
             public void receiveString(String message) {
 
             }
 
+            /**
+             * Method receiveData
+             * @param message
+             */
             @Override
             public void receiveData(JSONObject message)
             {
@@ -357,7 +395,9 @@ public class Speed
         listenerGeoLocation.getPosition(min_time, min_distance, LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-
+    /**
+     * Method stopListener
+     */
     private void stopListener()
     {
         listenerNetwork.stopUpdates();
@@ -366,14 +406,25 @@ public class Speed
 
     //Getter/Setter --------------------------------------------------------------------------------
 
+    /**
+     * Method setMeasurementRunning
+     * @param flag
+     */
     public void setMeasurementRunning(boolean flag) {
         testRunning = flag;
     }
 
+    /**
+     * Method getMeasurementRunning
+     * @return
+     */
     public boolean getMeasurementRunning() {
         return testRunning;
     }
 
+    /**
+     * Method writeToFile
+     */
     private void writeToFile()
     {
         JSONObject jData = Common.getJSONMTWSMeasurement();
@@ -404,6 +455,10 @@ public class Speed
 
     }
 
+    /**
+     * Method performRouteToClientLookup
+     * @param report
+     */
     public void performRouteToClientLookup( JSONObject report )
     {
         JSONObject jData = new JSONObject();
@@ -437,7 +492,5 @@ public class Speed
             Common.addToJSONMTWSMeasurementAdditional(jAdd);
         }
         catch (Exception ex) { mTool.printTrace(ex); }
-
-
     }
 }

@@ -41,6 +41,8 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
+
 import java.util.Objects;
 
 /**
@@ -52,6 +54,8 @@ public class SpeedFragment extends Fragment implements FocusedFragment
     private Common mCommon = wsTool.getCommonObject();
     private Tool mTool = wsTool.getToolObject();
     private Speed mSpeed = wsTool.getSpeedObject();
+
+    DecimalFormat f = new DecimalFormat("#0.00");
 
     /**************************** Variables ****************************/
 
@@ -160,6 +164,8 @@ public class SpeedFragment extends Fragment implements FocusedFragment
                     //------------------------------------------------------------------------------
                     case "info":
 
+                        updateUi(jsonReport.getString("test_case")+": "+jsonReport.getString("msg"), (TextView) view.findViewById(R.id.status));
+
                         if(jsonReport.getString("test_case").equals("download") && jsonReport.getString("msg").equals("starting measurement"))
                         {
                             mSpeed.setDownloadStarted();
@@ -198,13 +204,14 @@ public class SpeedFragment extends Fragment implements FocusedFragment
                         switch(jsonReport.getString("test_case"))
                         {
                             case "rtt":
-                                updateUi(jsonReport.getString("rtt_avg")+" ms", (TextView) view.findViewById(R.id.rtt));
+                                updateUi(f.format(jsonReport.getJSONObject("rtt_info").getDouble("average_ns")/1000)+" ms", (TextView) view.findViewById(R.id.rtt));
                                 break;
                             case "download":
-                                updateUi(jsonReport.getString("download_rate_avg_mbits")+" Mbit/s", (TextView) view.findViewById(R.id.download));
+                                updateUi(f.format(jsonReport.getJSONObject("download_info").getDouble("throughput_avg_bps")/1000/1000)+" Mbit/s", (TextView) view.findViewById(R.id.download));
                                 break;
                             case "upload":
-                                updateUi(jsonReport.getString("upload_rate_avg_mbits")+" Mbit/s", (TextView) view.findViewById(R.id.upload));
+
+                                updateUi(f.format(jsonReport.getJSONObject("upload_info").getDouble("throughput_avg_bps")/1000/1000)+" Mbit/s", (TextView) view.findViewById(R.id.upload));
                                 break;
                         }
 

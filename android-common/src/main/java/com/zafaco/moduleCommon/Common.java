@@ -31,25 +31,11 @@ public class Common
     public static boolean DEBUG_CONSOLE = true;
 
     /****************** Default Measurement Parameters ********************/
+
     private static int defaultService                               = 913;
-    private static String defaultPlatform                           = "mobile";
-
-    private static boolean defaultPerformRttMeasurement             = true;
-    private static boolean defaultPerformDownloadMeasuement         = true;
-    private static boolean defaultPerformUploadMeasurement          = true;
-
-    private static boolean defaultPerformTR064Lookup                = true;
-
-    private static String defaultwsParallelStreams                  = "4";
-    private static boolean defaultwsStartupTime                     = true;
-    private static boolean defaultwsMeasureTime                     = true;
-    /************************* Default Parameters *************************/
-
-    private static String defaultWebViewUrl                         = "http://kyago.de/mobile/live/index.mobile.html";
 
     /***************************** Variables ******************************/
 
-    private final String PREFS_NAME = "ZafacoAPI_Preferences";
     private final Context ctx;
 
     //Module Objects
