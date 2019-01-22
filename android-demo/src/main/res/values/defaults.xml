@@ -1,0 +1,14 @@
+<resources>
+    <string translatable="false" name="default_qos_control_host">ENTER_YOUR_QOS_SERVER_HOST_HERE</string>
+    <integer name="default_qos_control_port">5233</integer>
+    <integer-array name="qos_tcp_test_port_list">
+        <item>5333</item>
+        <item>5334</item>
+        <item>5335</item>
+    </integer-array>
+    <integer-array name="qos_udp_test_port_list">
+        <item>5004</item>
+        <item>5005</item>
+        <item>7082</item>
+    </integer-array>
+</resources>

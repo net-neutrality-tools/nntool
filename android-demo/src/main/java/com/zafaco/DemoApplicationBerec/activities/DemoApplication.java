@@ -177,6 +177,10 @@ public class DemoApplication extends AppCompatActivity
                 fragmentTag = "SpeedFragment";
                 break;
             case 1:
+                fragment = new PortBlockingFragment();
+                fragmentTag = "PortBlockingFragment";
+                break;
+            case 2:
                 Intent i = new Intent(this, Preferences.class);
                 startActivity(i);
 

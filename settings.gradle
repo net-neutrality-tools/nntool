@@ -5,3 +5,10 @@ include 'controller-service'
 include 'collector-service'
 include 'statistic-service'
 
+include 'android-demo'
+include 'android-common'
+include 'android-speed'
+
+include 'qos-client-android'
+include 'qos-client-java'
+

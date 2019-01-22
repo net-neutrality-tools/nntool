@@ -3,6 +3,7 @@
 
     <string-array name="nav_drawer">
         <item>Speed</item>
+        <item>Port Blocking</item>
         <item>Settings</item>
     </string-array>
 
