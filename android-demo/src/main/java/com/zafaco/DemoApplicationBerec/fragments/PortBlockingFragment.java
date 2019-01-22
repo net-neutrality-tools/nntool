@@ -26,8 +26,8 @@ import at.alladin.nettest.qos.QoSMeasurementClientControlAdapter;
 import at.alladin.nettest.qos.QoSMeasurementClientProgressAdapter;
 import at.alladin.nettest.qos.android.QoSMeasurementClientAndroid;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
-import at.alladin.rmbt.client.RMBTClient;
-import at.alladin.rmbt.client.v2.task.result.QoSResultCollector;
+import at.alladin.nntool.client.ClientHolder;
+import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 
 public class PortBlockingFragment extends Fragment implements FocusedFragment
 {
@@ -89,7 +89,7 @@ public class PortBlockingFragment extends Fragment implements FocusedFragment
 
 
 
-        RMBTClient client = RMBTClient.getInstance(getResources().getString(R.string.default_qos_control_host),
+        ClientHolder client = ClientHolder.getInstance(getResources().getString(R.string.default_qos_control_host),
                 Integer.toString(getResources().getInteger(R.integer.default_qos_control_port)),
                 getResources().getIntArray(R.array.qos_tcp_test_port_list),
                 getResources().getIntArray(R.array.qos_udp_test_port_list));

@@ -1,6 +1,6 @@
 package at.alladin.nettest.qos;
 
-import static at.alladin.rmbt.client.v2.task.AbstractQoSTask.PARAM_QOS_CONCURRENCY_GROUP;
+import static at.alladin.nntool.client.v2.task.AbstractQoSTask.PARAM_QOS_CONCURRENCY_GROUP;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
-import at.alladin.rmbt.client.QualityOfServiceTest;
-import at.alladin.rmbt.client.RMBTClient;
-import at.alladin.rmbt.client.helper.TestStatus;
-import at.alladin.rmbt.client.v2.task.QoSTestEnum;
-import at.alladin.rmbt.client.v2.task.TaskDesc;
-import at.alladin.rmbt.client.v2.task.result.QoSResultCollector;
-import at.alladin.rmbt.client.v2.task.service.TestSettings;
+import at.alladin.nntool.client.QualityOfServiceTest;
+import at.alladin.nntool.client.ClientHolder;
+import at.alladin.nntool.client.helper.TestStatus;
+import at.alladin.nntool.client.v2.task.QoSTestEnum;
+import at.alladin.nntool.client.v2.task.TaskDesc;
+import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
+import at.alladin.nntool.client.v2.task.service.TestSettings;
 
 public class QoSMeasurementClient {
 
@@ -23,7 +23,7 @@ public class QoSMeasurementClient {
 
     protected final List<QoSMeasurementClientProgressListener> progressListeners = Collections.synchronizedList(new ArrayList<QoSMeasurementClientProgressListener>());
 
-    protected RMBTClient client;
+    protected ClientHolder client;
 
     protected TestSettings testSettings;
 
@@ -228,7 +228,7 @@ public class QoSMeasurementClient {
         return running.get();
     }
 
-    public void setClient(final RMBTClient client) {
+    public void setClient(final ClientHolder client) {
         this.client = client;
     }
 

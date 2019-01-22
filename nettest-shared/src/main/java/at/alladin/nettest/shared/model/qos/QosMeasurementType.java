@@ -21,15 +21,15 @@ import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.rmbt.shared.qos.AbstractResult;
-import at.alladin.rmbt.shared.qos.DnsResult;
-import at.alladin.rmbt.shared.qos.HttpProxyResult;
-import at.alladin.rmbt.shared.qos.NonTransparentProxyResult;
-import at.alladin.rmbt.shared.qos.TcpResult;
-import at.alladin.rmbt.shared.qos.TracerouteResult;
-import at.alladin.rmbt.shared.qos.UdpResult;
-import at.alladin.rmbt.shared.qos.VoipResult;
-import at.alladin.rmbt.shared.qos.WebsiteResult;
+import at.alladin.nntool.shared.qos.AbstractResult;
+import at.alladin.nntool.shared.qos.DnsResult;
+import at.alladin.nntool.shared.qos.HttpProxyResult;
+import at.alladin.nntool.shared.qos.NonTransparentProxyResult;
+import at.alladin.nntool.shared.qos.TcpResult;
+import at.alladin.nntool.shared.qos.TracerouteResult;
+import at.alladin.nntool.shared.qos.UdpResult;
+import at.alladin.nntool.shared.qos.VoipResult;
+import at.alladin.nntool.shared.qos.WebsiteResult;
 
 /**
  * The specific QoS type

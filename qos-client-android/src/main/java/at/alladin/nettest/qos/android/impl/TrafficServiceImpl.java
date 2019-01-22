@@ -19,7 +19,7 @@ package at.alladin.nettest.qos.android.impl;
 
 import android.net.TrafficStats;
 
-import at.alladin.rmbt.client.v2.task.service.TrafficService;
+import at.alladin.nntool.client.v2.task.service.TrafficService;
 
 /**
  * 

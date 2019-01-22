@@ -22,7 +22,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import at.alladin.rmbt.shared.qos.AbstractResult;
+import at.alladin.nntool.shared.qos.AbstractResult;
 
 /**
  * can be added to an {@link AbstractResult} field to exclude it from evaluation (makes it faster) 

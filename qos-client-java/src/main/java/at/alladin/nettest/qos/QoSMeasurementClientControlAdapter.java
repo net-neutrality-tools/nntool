@@ -3,7 +3,7 @@ package at.alladin.nettest.qos;
 import java.util.List;
 
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
-import at.alladin.rmbt.client.v2.task.result.QoSResultCollector;
+import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 
 public abstract class QoSMeasurementClientControlAdapter implements QoSMeasurementClientControlListener {
 

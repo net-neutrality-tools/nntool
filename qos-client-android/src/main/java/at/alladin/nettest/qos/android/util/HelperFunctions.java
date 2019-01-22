@@ -2,8 +2,6 @@ package at.alladin.nettest.qos.android.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.LinkProperties;
 import android.net.Network;
@@ -11,17 +9,13 @@ import android.net.NetworkInfo;
 import android.net.RouteInfo;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
-import at.alladin.nettest.shared.model.Client;
 //import at.alladin.nettest.shared.model.request.BasicRequest;
-import at.alladin.rmbt.client.helper.RevisionHelper;
+
 
 //TODO: rename
 public class HelperFunctions {

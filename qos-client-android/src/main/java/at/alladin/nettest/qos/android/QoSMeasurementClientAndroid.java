@@ -20,15 +20,15 @@ import at.alladin.nettest.qos.android.util.HelperFunctions;
 import at.alladin.nettest.qos.android.util.ObtainQoSSettingsTask;
 import at.alladin.nettest.shared.model.Client;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
-import at.alladin.rmbt.client.QualityOfServiceTest;
-import at.alladin.rmbt.client.RMBTClient;
-import at.alladin.rmbt.client.helper.Config;
-import at.alladin.rmbt.client.helper.TestStatus;
-import at.alladin.rmbt.client.v2.task.QoSTestEnum;
-import at.alladin.rmbt.client.v2.task.TaskDesc;
-import at.alladin.rmbt.client.v2.task.service.TestSettings;
+import at.alladin.nntool.client.QualityOfServiceTest;
+import at.alladin.nntool.client.ClientHolder;
+import at.alladin.nntool.client.helper.Config;
+import at.alladin.nntool.client.helper.TestStatus;
+import at.alladin.nntool.client.v2.task.QoSTestEnum;
+import at.alladin.nntool.client.v2.task.TaskDesc;
+import at.alladin.nntool.client.v2.task.service.TestSettings;
 
-import static at.alladin.rmbt.client.v2.task.AbstractQoSTask.PARAM_QOS_CONCURRENCY_GROUP;
+import static at.alladin.nntool.client.v2.task.AbstractQoSTask.PARAM_QOS_CONCURRENCY_GROUP;
 
 public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements Runnable {
 
@@ -42,7 +42,7 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
 
     private String latestTestUuid;
 
-    public QoSMeasurementClientAndroid(final RMBTClient client, final Context context) {
+    public QoSMeasurementClientAndroid(final ClientHolder client, final Context context) {
         this.client = client;
         this.context = context;
     }
@@ -115,7 +115,7 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
 //                request.setNdt(true);
 
                 //TODO: fill client software version
-                client = RMBTClient.getInstance(measurementContext.getControlServerHost(), null,
+                client = ClientHolder.getInstance(measurementContext.getControlServerHost(), null,
                         measurementContext.getControlServerPort(), measurementContext.isUseTls(),
                         null, uuid, RMBT_CLIENT_TYPE, Config.RMBT_CLIENT_NAME,
                         "CLIENT_SOFTWARE_VERSION", null, request);

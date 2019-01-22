@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import at.alladin.rmbt.util.tools.TracerouteService;
+import at.alladin.nntool.util.tools.TracerouteService;
 
 /**
  * 
