@@ -5,6 +5,7 @@ import android.os.Build;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,7 +19,9 @@ import at.alladin.nettest.qos.android.impl.TrafficServiceImpl;
 import at.alladin.nettest.qos.android.impl.WebsiteTestServiceImpl;
 import at.alladin.nettest.qos.android.util.HelperFunctions;
 import at.alladin.nettest.qos.android.util.ObtainQoSSettingsTask;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.SpeedMeasurementTypeParameters;
 import at.alladin.nettest.shared.model.Client;
+import at.alladin.nettest.shared.model.MeasurementQos;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.ClientHolder;
@@ -109,16 +112,8 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
                 final String uuid = HelperFunctions.getUuid(context.getApplicationContext());
                 // No measurement request without the server
                 final Object request = null;
-//                final MeasurementRequest request = HelperFunctions.fillBasicInfo(MeasurementRequest.class, context.getApplicationContext());
-//                request.setClientType(Client.ClientType.MOBILE);
-//                request.setUuid(uuid);
-//                request.setNdt(true);
 
-                //TODO: fill client software version
-                client = ClientHolder.getInstance(measurementContext.getControlServerHost(), null,
-                        measurementContext.getControlServerPort(), measurementContext.isUseTls(),
-                        null, uuid, RMBT_CLIENT_TYPE, Config.RMBT_CLIENT_NAME,
-                        "CLIENT_SOFTWARE_VERSION", null, request);
+                client = ClientHolder.getInstance(measurementContext.getControlServerHost(), "5233", new int[7078], new int[5052]);
             }
 
             final TestSettings qosTestSettings = new TestSettings();
