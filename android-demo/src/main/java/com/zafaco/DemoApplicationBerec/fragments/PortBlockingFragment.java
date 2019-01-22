@@ -161,7 +161,14 @@ public class PortBlockingFragment extends Fragment implements FocusedFragment
                 @Override
                 public void onMeasurementFinished(String qosTestUuid, QoSResultCollector qoSResultCollector) {
                     Log.i(TAG, qoSResultCollector.toJson().toString());
-                    updateUi(resultFormatPattern.matcher(qoSResultCollector.toJson().toString().replace(",", ",\n")).replaceAll("\n\n{"), (TextView) view.findViewById(R.id.results));
+                    if (qoSResultCollector.toJson().toString().equals("[]")) {
+                        updateUi(String.format("Could not connect to specified QoS service @ host: %s port: %d. " +
+                                        "\n\nPlease provide a valid configuration in the src/main/res/values/defaults.xml. See the README for more details!",
+                                getResources().getString(R.string.default_qos_control_host), getResources().getInteger(R.integer.default_qos_control_port)),
+                                (TextView) view.findViewById(R.id.results));
+                    } else {
+                        updateUi(resultFormatPattern.matcher(qoSResultCollector.toJson().toString().replace(",", ",\n")).replaceAll("\n\n{"), (TextView) view.findViewById(R.id.results));
+                    }
                 }
             });
             qosClient.start();
