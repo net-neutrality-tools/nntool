@@ -1,3 +1,13 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.1'
+    }
+}
+
 apply plugin: 'com.android.application'
 
 android
@@ -53,10 +63,12 @@ android
 
 dependencies
 {
+
         implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
 
         implementation project(path: ':android-common')
         implementation project(path: ':android-speed')
+        implementation project(':qos-client-android')
 
         implementation 'com.android.support:multidex:1.0.3'
 
