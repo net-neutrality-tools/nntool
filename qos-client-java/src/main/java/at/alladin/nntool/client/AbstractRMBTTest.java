@@ -33,7 +33,7 @@ import javax.net.ssl.SSLSocket;
 import at.alladin.nntool.client.helper.Config;
 
 public abstract class AbstractRMBTTest {
-    protected static final String EXPECT_GREETING = Config.RMBT_VERSION_STRING;
+    protected static final String EXPECT_GREETING = Config.VERSION_STRING;
 	
     protected final ClientHolder client;
     protected final RMBTTestParameter params;

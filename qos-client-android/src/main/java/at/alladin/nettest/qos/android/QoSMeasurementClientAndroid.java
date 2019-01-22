@@ -5,7 +5,6 @@ import android.os.Build;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,9 +18,7 @@ import at.alladin.nettest.qos.android.impl.TrafficServiceImpl;
 import at.alladin.nettest.qos.android.impl.WebsiteTestServiceImpl;
 import at.alladin.nettest.qos.android.util.HelperFunctions;
 import at.alladin.nettest.qos.android.util.ObtainQoSSettingsTask;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.SpeedMeasurementTypeParameters;
 import at.alladin.nettest.shared.model.Client;
-import at.alladin.nettest.shared.model.MeasurementQos;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.ClientHolder;
@@ -124,7 +121,7 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
 //            if (client != null && client.getControlConnection() != null) {
 //                qosTestSettings.setStartTimeNs(client.getControlConnection().getStartTimeNs());
 //            }
-            qosTestSettings.setUseSsl(Config.RMBT_QOS_SSL);
+            qosTestSettings.setUseSsl(Config.QOS_SSL);
 
             //If the sdk version of the currently operating android device is larger than LOLLIPOP, we provide the DNS servers ourselves, as the DNS library fails for some devices
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

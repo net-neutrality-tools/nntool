@@ -139,7 +139,7 @@ public class ClientHolder
                 params.put("out_port", Integer.toString(port));
                 params.put("qostest", "tcp");
 
-                TaskDesc task = new TaskDesc(host, 5233, Config.RMBT_QOS_SSL, fakeToken,
+                TaskDesc task = new TaskDesc(host, Integer.parseInt(controlConnectionPort), Config.QOS_SSL, fakeToken,
                         0, 1, 0, System.nanoTime(), params, "tcp");
                 taskDescList.add(task);
             }
@@ -160,7 +160,7 @@ public class ClientHolder
                 params.put("out_port", Integer.toString(port));
                 params.put("qostest", "udp");
 
-                TaskDesc task = new TaskDesc(host, 5233, Config.RMBT_QOS_SSL, fakeToken,
+                TaskDesc task = new TaskDesc(host, Integer.parseInt(controlConnectionPort), Config.QOS_SSL, fakeToken,
                         0, 1, 0, System.nanoTime(), params, "udp");
                 taskDescList.add(task);
             }
@@ -340,7 +340,7 @@ public class ClientHolder
         final TrustManager[] trustManagers = new TrustManager[] { tm };
         
         javax.net.ssl.SSLContext sc;
-        sc = javax.net.ssl.SSLContext.getInstance(Config.RMBT_ENCRYPTION_STRING);
+        sc = javax.net.ssl.SSLContext.getInstance(Config.ENCRYPTION_STRING);
         
         sc.init(null, trustManagers, new java.security.SecureRandom());
         return sc;

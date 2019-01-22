@@ -32,32 +32,32 @@ public abstract interface Config
      * 
      *********************/
     
-    public static final String RMBT_CLIENT_NAME = "RMBT";
-    public static final String RMBT_VERSION_NUMBER = "0.3";
-    public static final String RMBT_VERSION_STRING = RMBT_CLIENT_NAME + "v" + RMBT_VERSION_NUMBER;
-    public static final String RMBT_CONTROL_DEFAULT_SERVER = "";    //TODO: replace w/useful value and replace as a whole once POC phase is over
-    public static final int RMBT_CONTROL_PORT = 443;
-    public static final boolean RMBT_CONTROL_SSL = true;
-    public static final boolean RMBT_QOS_SSL = false;//true;
-    public static final String RMBT_CONTROL_PATH = "";
-    public static final String RMBT_CONTROL_MAIN_URL = "/";
-    public static final String RMBT_CONTROL_V2_TESTS = "/qosTestRequest";
-    public static final String RMBT_CONTROL_NDT_RESULT_URL = "ndtResult";
-    public static final String RMBT_NEWS_HOST_URL = "/news";
-    public static final String RMBT_IP_HOST_URL = "/ip";
-    public static final String RMBT_HISTORY_HOST_URL = "/history";
-    public static final String RMBT_TESTRESULT_HOST_URL = "/testresult";
-    public static final String RMBT_TESTRESULT_DETAIL_HOST_URL = "/testresultdetail";
-    public static final String RMBT_TESTRESULT_QOS_HOST_URL = "/qosTestResult";
-    public static final String RMBT_TESTRESULT_OPENDATA_HOST_URL = "/opentests/";
-    public static final String RMBT_SYNC_HOST_URL = "/sync";
-    public static final String RMBT_SETTINGS_HOST_URL = "/settings";
-    public static final String RMBT_LOG_HOST_URL = "/log";
+    public static final String CLIENT_NAME = "NNTool";
+    public static final String VERSION_NUMBER = "0.3";
+    public static final String VERSION_STRING = CLIENT_NAME + "v" + VERSION_NUMBER;
+    public static final String CONTROL_DEFAULT_SERVER = "";    //TODO: replace w/useful value and replace as a whole once POC phase is over
+    public static final int CONTROL_PORT = 443;
+    public static final boolean CONTROL_SSL = true;
+    public static final boolean QOS_SSL = true;//true;
+    public static final String CONTROL_PATH = "";
+    public static final String CONTROL_MAIN_URL = "/";
+    public static final String CONTROL_V2_TESTS = "/qosTestRequest";
+    public static final String CONTROL_NDT_RESULT_URL = "ndtResult";
+    public static final String NEWS_HOST_URL = "/news";
+    public static final String IP_HOST_URL = "/ip";
+    public static final String HISTORY_HOST_URL = "/history";
+    public static final String TESTRESULT_HOST_URL = "/testresult";
+    public static final String TESTRESULT_DETAIL_HOST_URL = "/testresultdetail";
+    public static final String TESTRESULT_QOS_HOST_URL = "/qosTestResult";
+    public static final String TESTRESULT_OPENDATA_HOST_URL = "/opentests/";
+    public static final String SYNC_HOST_URL = "/sync";
+    public static final String SETTINGS_HOST_URL = "/settings";
+    public static final String LOG_HOST_URL = "/log";
     
     // Verschluesselungsart -> TLS oder SSL
-    public static final String RMBT_ENCRYPTION_STRING = "TLS";
+    public static final String ENCRYPTION_STRING = "TLS";
     
-    public static final int RMBT_SPEED_TEST_INTERVAL = 250;
+    public static final int SPEED_TEST_INTERVAL = 250;
     
     public static final String MLAB_NS = "http://mlab-ns.appspot.com/ndt?format=json";
     public static final String NDT_FALLBACK_HOST = "ndt.iupui.donar.measurement-lab.org";
