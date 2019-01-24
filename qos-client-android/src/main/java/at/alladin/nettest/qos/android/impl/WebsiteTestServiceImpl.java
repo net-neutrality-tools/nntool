@@ -19,13 +19,10 @@ package at.alladin.nettest.qos.android.impl;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.TrafficStats;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Process;
 import android.util.Log;
-import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -35,8 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import at.alladin.nettest.qos.android.impl.util.AsyncHtmlContentRetriever;
 import at.alladin.nettest.qos.android.impl.util.AsyncHtmlContentRetriever.ContentRetrieverListener;
-import at.alladin.nettest.shared.helper.GsonBasicHelper;
-import at.alladin.rmbt.client.v2.task.service.WebsiteTestService;
+import at.alladin.nntool.client.v2.task.service.WebsiteTestService;
 
 /**
  * 

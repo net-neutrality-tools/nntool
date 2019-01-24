@@ -1,7 +1,7 @@
 package at.alladin.nettest.qos;
 
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
-import at.alladin.rmbt.client.v2.task.QoSTestEnum;
+import at.alladin.nntool.client.v2.task.QoSTestEnum;
 
 public abstract class QoSMeasurementClientProgressAdapter implements QoSMeasurementClientProgressListener {
 

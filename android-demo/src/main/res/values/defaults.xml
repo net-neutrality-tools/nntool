@@ -7,8 +7,9 @@
         <item>5335</item>
     </integer-array>
     <integer-array name="qos_udp_test_port_list">
-        <item>5004</item>
-        <item>5005</item>
-        <item>7082</item>
+        <item>53</item>
+        <item>500</item>
+        <item>4500</item>
+        <item>5060</item>
     </integer-array>
 </resources>

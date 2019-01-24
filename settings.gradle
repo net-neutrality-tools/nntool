@@ -5,6 +5,8 @@ include 'controller-service'
 include 'collector-service'
 include 'statistic-service'
 
+include 'qos-service'
+
 include 'android-demo'
 include 'android-common'
 include 'android-speed'
