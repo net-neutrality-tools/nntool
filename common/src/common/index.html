@@ -13,18 +13,60 @@
 
         <div style="width: 500px; float: left;">
             <h1 style="padding-left:50px;">common 1.0.0</h1>
+			
+				<div style="padding-left:50px;border-spacing:100px;">
+					
+				<table>
+					<tr>
+						<td>Download</td>
+						<td><input type='radio' name='downloadParameters' value='{"streams":4, "frameSize":2048}'			>low</td>
+						<td><input type='radio' name='downloadParameters' value='{"streams":4, "frameSize":32768}' checked	>default</td>
+						<td><input type='radio' name='downloadParameters' value='{"streams":4, "frameSize":524288}'			>high</td> 
+						<td><input type='radio' name='downloadParameters' value='{"streams":8, "frameSize":524288}'			>very high</td> 
+					</tr>
+
+					<tr>
+						<td>Upload</td>
+						<td><input type='radio' name='uploadParameters'	value='{"streams":4, "frameSize":2048}'			>low</td>
+						<td><input type='radio' name='uploadParameters'	value='{"streams":4, "frameSize":65535}' checked>default</td>
+						<td><input type='radio' name='uploadParameters'	value='{"streams":10, "frameSize":65535}'		>high</td>
+						<td><input type='radio' name='uploadParameters'	value='{"streams":80, "frameSize":65535}'		 >very high</td> 
+					</tr>
+					
+					<tr>
+						<td>IP Version</td>
+						<td><input type='radio' name='ipVersion' checked	>auto</td>
+						<td><input type='radio' name='ipVersion' 			>ipv4</td>
+						<td><input type='radio' name='ipVersion' 			>ipv6</td>
+						<td></td> 
+					</tr>
+					
+					<tr>
+						<td>Single Stream</td>
+						<td><input type='radio' name='singleStream' checked	>off</td>
+						<td><input type='radio' name='singleStream' 	>on</td>
+						<td></td>
+						<td></td> 
+					</tr>
+				</table>
             
-            <div style="padding-left:50px;border-spacing:100px;">
                 <br>
-                <button id='reloadButton' onclick='reload()' disabled='disabled'>Reload</button>
-                <button id='stopButton' onclick='measurementStop()' disabled='disabled'>Stop</button>
+                <button id='loadButton' onclick='load()' disabled='disabled'		>Load</button>
+                <button id='stopButton' onclick='speedStop()' disabled='disabled'	>Stop</button>
                 <br>
                 <br>
 
-                <button id='measurementButton' onclick='measurementStart("all")'>Start</button>
-                <button id='rttButton' onclick='measurementStart("rtt")'>Start RTT</button>
-                <button id='downloadButton' onclick='measurementStart("download")'>Start Download</button>
-                <button id='uploadButton' onclick='measurementStart("upload")'>Start Upload</button>
+                <button id='speedStartButton' onclick='speedStart("all")'		>Start</button>
+                <button id='rttButton' onclick='speedStart("rtt")'				>RTT</button>
+                <button id='downloadButton' onclick='speedStart("download")'	>Download</button>
+                <button id='uploadButton' onclick='speedStart("upload")'		>Upload</button>
+			</div>
+			<br><br>
+			<h1 style="padding-left:50px;">port blocking 1.0.0</h1>
+			
+				<div style="padding-left:50px;border-spacing:100px;">
+					
+                <button id='portBlockingStartButton' onclick='portBlockingStart()'>Start</button>
             </div>
         </div>
         
@@ -50,6 +92,11 @@
                     <td><div style="padding-left:40px;border-spacing:20px;">Upload: </div></td>
                     <td><div style="padding-left:20px;border-spacing:20px;" id="upload">-</div></td>
                 </tr>
+				
+				<tr>
+                    <td><div style="padding-left:40px;border-spacing:20px;">Port Blocking: </div></td>
+                    <td><div style="padding-left:20px;border-spacing:20px;" id="port_blocking">-</div></td>
+                </tr>
             </table>
                 
             <div style="padding-left:50px;border-spacing:20px;"><pre id="kpis"></pre></div>
@@ -73,14 +120,17 @@
 
 		/*!
 		 *      \author zafaco GmbH <info@zafaco.de>
-		 *      \date Last update: 2019-01-04
+		 *      \date Last update: 2019-01-25
 		 *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
 		 */
        
         var speed;
         var speedParameters = {};
+		
+		var portBlocking;
+		var portBlockingParameters = {};
 
-        function measurementStart(testCase)
+        function speedStart(testCase)
         {
             outputPrepare();
             
@@ -90,11 +140,32 @@
 			speedParameters.wsTargets                         = [];
 			speedParameters.wsTargets.push('peer-ias-de-01');
 
-			speedParameters.wsTargetsV4                       = [];
-			speedParameters.wsTargetsV4.push('peer-ias-de-01');
-
 			speedParameters.wsTargetsRtt                      = [];
-			speedParameters.wsTargetsRtt					  = speedParameters.wsTargets;
+			speedParameters.wsTargetsRtt.push('peer-ias-de-01');
+			
+			var ipVersion = document.getElementsByName('ipVersion');
+			if (ipVersion[1].checked || ipVersion[2].checked)
+			{
+				var targetIpVersion;
+				if (ipVersion[1].checked)
+				{
+					targetIpVersion = '-ipv4';
+				}
+				else if (ipVersion[2].checked)
+				{
+					targetIpVersion = '-ipv6';
+				}
+				
+				speedParameters.wsTargets.forEach(function(element, index)
+				{
+					speedParameters.wsTargets[index] = speedParameters.wsTargets[index] + targetIpVersion;
+				});
+				
+				speedParameters.wsTargetsRtt.forEach(function(element, index)
+				{
+					speedParameters.wsTargetsRtt[index] = speedParameters.wsTargetsRtt[index] + targetIpVersion;
+				});
+			}
 
 			speedParameters.wsTLD                             = 'net-neutrality.tools';
 			speedParameters.wsTargetPort                      = '80';
@@ -130,7 +201,45 @@
                 speedParameters.performDownloadMeasurement    = false;
                 speedParameters.performUploadMeasurement      = true;
             }
-            
+			
+			
+			var downloadParameters = document.getElementsByName('downloadParameters');
+			for (var i=0; i<downloadParameters.length; i++) 
+            {
+				if (downloadParameters[i].checked)
+				{
+					var parsedDownloadParameters 				= JSON.parse(downloadParameters[i].value);
+					speedParameters.wsParallelStreamsDownload	= parsedDownloadParameters.streams;
+					speedParameters.wsFrameSizeDownload			= parsedDownloadParameters.frameSize;
+				}
+			}
+			
+			var uploadParameters = document.getElementsByName('uploadParameters');
+			for (var i=0; i<uploadParameters.length; i++) 
+            {
+				if (uploadParameters[i].checked)
+				{
+					var parsedUploadParameters 					= JSON.parse(uploadParameters[i].value);
+					speedParameters.wsParallelStreamsUpload		= parsedUploadParameters.streams;
+					speedParameters.wsFrameSizeUpload			= parsedUploadParameters.frameSize;
+				}
+			}
+			
+			var singleStream = document.getElementsByName('singleStream');
+			if (singleStream[1].checked)
+			{
+				speedParameters.wsFrameSizeDownload			*= speedParameters.wsParallelStreamsDownload;
+				speedParameters.wsParallelStreamsDownload	= 1;
+				
+				speedParameters.wsFrameSizeUpload			*= speedParameters.wsFrameSizeUpload;
+				speedParameters.wsParallelStreamsUpload 	= 1;
+				
+				if (speedParameters.wsFrameSizeUpload > 65535)
+				{
+					speedParameters.wsFrameSizeUpload = 65535;
+				}
+			}
+			
             delete speed;
             speed = null;
             speed = new Speed();
@@ -138,29 +247,51 @@
             speed.measurementStart(speedParameters);
         }
         
-        function measurementStop()
+        function speedStop()
         {
             wsMeasurement.measurementControl(JSON.stringify({cmd:'stop'}));
             
             toggleButtons(true);
         }
-        
+		
+		function portBlockingStart()
+		{
+			outputPrepare();
+            
+			portBlockingParameters.platform		= 'web';
+			portBlockingParameters.target		= 'peer-ias-de-01.net-neutrality.tools';
+			portBlockingParameters.targetIpv4	= '82.199.148.52';
+			portBlockingParameters.targetIpv6	= '2a01:4a0:f::11';
+			
+			portBlockingParameters.user			= 'berec';
+			portBlockingParameters.password 	= 'berec';
+			portBlockingParameters.ports		= [123, 500, 4500, 5060, 7000];
+			portBlockingParameters.timeout		= 5000;
+			
+			delete portBlocking;
+            portBlocking = null;
+            portBlocking = new PortBlocking();
+            
+           	portBlocking.measurementStart(portBlockingParameters);
+		}
         
         function setButtons()
         {
-            document.getElementById('reloadButton').disabled              = false;
             toggleButtons(true);
+			document.getElementById('loadButton').disabled                = true;
             
             document.getElementById('status').innerHTML                   = 'MeasurementLoad successful';
         }
         
         function toggleButtons(enable)
         {
-            document.getElementById('measurementButton').disabled         = !enable; 
+            document.getElementById('speedStartButton').disabled          = !enable; 
             document.getElementById('rttButton').disabled                 = !enable;       
             document.getElementById('downloadButton').disabled            = !enable;
             document.getElementById('uploadButton').disabled              = !enable;
             document.getElementById('stopButton').disabled                = enable;
+			document.getElementById('loadButton').disabled                = !enable;
+			document.getElementById('portBlockingStartButton').disabled   = !enable;
         }
 
         function measurementCallback(data)
@@ -180,6 +311,7 @@
             document.getElementById('rtt').innerHTML = '-';
             document.getElementById('download').innerHTML = '-';
             document.getElementById('upload').innerHTML = '-';
+			document.getElementById('port_blocking').innerHTML = '-';
             document.getElementById('kpis').innerHTML = '';
         }
 
@@ -190,45 +322,54 @@
             switch (data.cmd)
             {
                 case 'info':
+				{
+					outputToHtml('Measurement running', 'status');
+					break;
+				}
                 
                 case 'completed':
                 {
-                    if (data.cmd === 'completed')
-                    {
-                        outputToHtml('Measurement successful', 'status');
-                        outputToHtml(JSON.stringify(orderKeys(data), null, 4), 'kpis');
-                        document.getElementById('stopButton').disabled = true;
-
-                        break;
-                    }
+					outputToHtml('Measurement successful', 'status');
+					outputToHtml(JSON.stringify(orderKeys(data), null, 4), 'kpis');
+					document.getElementById('stopButton').disabled = true;
+					break;
                 }
                 
                 case 'finish':
                 {
                     outputToHtml(data.test_case + ': ' + data.msg, 'status');
+					document.getElementById('loadButton').disabled = false;
                 }
                 
                 case 'report':
                 {
-                    if (data.cmd !== 'info' && data.cmd !== 'error')
-                    {
-                        var output = '';
-                        
-                        if (data.test_case === 'rtt')
-                        {
-                            outputToHtml(data.rtt_info.average_ns, 'rtt');
-                        }
-                        if (data.test_case === 'download')
-                        {
-                            outputToHtml((data.download_info.throughput_avg_bps / 1000 / 1000).toFixed(2), 'download');
-                        }
-                        if (data.test_case === 'upload')
-                        {
-                            outputToHtml((data.upload_info.throughput_avg_bps / 1000 / 1000).toFixed(2), 'upload');
-                        }
-                        
-                        outputToHtml(JSON.stringify(orderKeys(data), null, 4), 'kpis');
-                    }
+					outputToHtml('Measurement running', 'status');
+					var output = '';
+
+					if (data.test_case === 'rtt' && data.rtt_info.average_ns !== 0)
+					{
+						outputToHtml(data.rtt_info.average_ns, 'rtt');
+					}
+					if (data.test_case === 'download' && data.download_info.throughput_avg_bps !== 0)
+					{
+						outputToHtml((data.download_info.throughput_avg_bps / 1000 / 1000).toFixed(2), 'download');
+					}
+					if (data.test_case === 'upload' && data.upload_info.throughput_avg_bps !== 0)
+					{
+						outputToHtml((data.upload_info.throughput_avg_bps / 1000 / 1000).toFixed(2), 'upload');
+					}
+					if (data.test_case === 'port_blocking' && data.port_blocking.results.length !== 0)
+					{
+						var reachable = 0;
+						data.port_blocking.results.forEach(function(element)
+						{
+							if (element.reachable === true) reachable++;
+						});
+						
+						outputToHtml('' + reachable + ' of ' + data.port_blocking.results.length + ' reachable', 'port_blocking');
+					}
+
+					outputToHtml(JSON.stringify(orderKeys(data), null, 4), 'kpis');
                     break;
                 }
                 
@@ -237,6 +378,7 @@
                     outputToHtml(data.test_case + ': ' + data.msg, 'status');
                     outputToHtml(JSON.stringify(orderKeys(data), null, 4), 'kpis');
                     document.getElementById('stopButton').disabled = true;
+					document.getElementById('loadButton').disabled = false;
                     break;
                 }
             }
@@ -253,7 +395,7 @@
             element.innerHTML = output;
         }
 
-        function reload()
+        function load()
         {
              location.reload();
         }

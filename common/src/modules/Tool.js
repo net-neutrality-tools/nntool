@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-04
+ *      \date Last update: 2019-01-14
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -108,21 +108,42 @@ JSTool.prototype.getDeviceKPIs = function (platform)
  * @public
  * @param {int} length Random Data Length
  * @param {bool} asString Indicates if the callback should be a string
+ * @param {bool} asArrayBuffer Indicates if the callback should be a n ArrayBuffer
  */
-JSTool.prototype.generateRandomData = function (length, asString)
+JSTool.prototype.generateRandomData = function (length, asString, asArrayBuffer)
 {
     var mask = '';
     mask += 'abcdefghijklmnopqrstuvwxyz';
     mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     mask += '0123456789';
     mask += '~`!@#$%^&*()_+-={}[]:;?,./|\\';
-    var data = '';
-    for (var i = length; i > 0; --i)
-    {
-        data += mask[Math.floor(Math.random() * mask.length)];
-    }
-    if (asString) return data;
-    else return new Blob([data]);
+	
+	if (asArrayBuffer)
+	{
+	  	var	arrayBuffer = new ArrayBuffer(length);
+  		var bufferView = new Uint8Array(arrayBuffer);
+		for (var i = length; i > 0; --i)
+		{
+			bufferView[i] = mask.charCodeAt(Math.floor(Math.random() * mask.length));
+		}
+		return arrayBuffer;
+	}
+	else
+	{
+		var data = '';
+		for (var i = length; i > 0; --i)
+		{
+			data += mask[Math.floor(Math.random() * mask.length)];
+		}
+		if (asString)
+		{
+			return data;
+		}
+		else
+		{
+			return new Blob([data]);
+		}
+	}
 };
 
 /**

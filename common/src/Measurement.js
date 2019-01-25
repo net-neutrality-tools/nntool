@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-04
+ *      \date Last update: 2019-01-25
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -70,7 +70,8 @@ function WSMeasurement()
     
     var measurementStopped                  = false;
     
-    
+	var gcTimer;
+	var gcTimerInterval						= 10;
     
     
     /*-------------------------public functions------------------------*/
@@ -136,6 +137,14 @@ function WSMeasurement()
                     return;
                 }
             }
+			
+			if (typeof require !== 'undefined' && platformModule.isIOS)
+			{
+				gcTimer = setInterval(function ()
+				{
+					utils.GC();
+				}, gcTimerInterval);
+			}
             
             //log measurement mode
             if (typeof wsMeasurementParameters.singleThread !== 'undefined')
@@ -158,7 +167,7 @@ function WSMeasurement()
                 var cookie = jsTool.getCookie(cookieName + '_id');
                 if (!cookie) 
                 {
-                    cookie = jsTool.generateRandomData(64, true);
+                    cookie = jsTool.generateRandomData(64, true, false);
                 }
 
                 jsTool.setCookie(cookieName + '_id', cookie, 365);
@@ -175,11 +184,11 @@ function WSMeasurement()
         if (typeof window !== 'undefined' && !window.WebSocket)
         {
             var data = {};
-            data.cmd                                = 'error';
+            data.cmd                          = 'error';
             globalKPIs.cmd                    = 'error';     
             globalKPIs.error_code             = 3;
             globalKPIs.error_description      = 'WebSockets are not supported by your browser';
-            data                                    = JSON.stringify(data);
+            data                              = JSON.stringify(data);
             this.controlCallback(data);
             return;
         }
@@ -187,11 +196,11 @@ function WSMeasurement()
         if (!wsMeasurementParameters.cmd || !platform || (!performRttMeasurement && !performDownloadMeasurement && !performUploadMeasurement))
         {
             var data = {};
-            data.cmd                                = 'error';
+            data.cmd                          = 'error';
             globalKPIs.cmd                    = 'error';     
             globalKPIs.error_code             = 1;
             globalKPIs.error_description      = 'Measurement Parameters Missing';
-            data                                    = JSON.stringify(data);
+            data                              = JSON.stringify(data);
             this.controlCallback(data);
             return;
         }
@@ -208,6 +217,7 @@ function WSMeasurement()
             {
                 measurementStopped = true;
                 
+				clearTimeout(gcTimer);
                 clearTimeout(wsRttTimer);
                 clearTimeout(wsDownloadTimer);
                 clearTimeout(wsUploadTimer);
@@ -228,11 +238,11 @@ function WSMeasurement()
     {
         data = JSON.parse(data);
 		
-		globalKPIs.cmd 				= data.cmd;
-		globalKPIs.msg 				= data.msg;
+		globalKPIs.cmd 					= data.cmd;
+		globalKPIs.msg 					= data.msg;
 		globalKPIs.test_case 			= data.test_case;
-		globalKPIs.error_code 		= data.error_code;
-		globalKPIs.error_description 	= data.error_description;
+		globalKPIs.error_code 			= data.error_code;
+		globalKPIs.error_description	= data.error_description;
 		
         if(data.test_case === 'routeToClient')
         {
@@ -476,6 +486,7 @@ function WSMeasurement()
      */
     function resetWsControl()
     {
+		clearInterval(gcTimer);
         wsControl = null;
         delete wsControl;
     }

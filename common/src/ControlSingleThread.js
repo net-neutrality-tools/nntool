@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-04
+ *      \date Last update: 2019-01-23
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -114,13 +114,14 @@ function WSControlSingleThread()
     var dlStartupTime               = 3000;
     var dlMeasurementRunningTime    = 10000;
     var dlParallelStreams           = 4;
-    var dlTimeout                   = 5000;
+    var dlTimeout                   = 10000;
+	var dlFrameSize					= 32768;
     
     var ulStartupTime               = 3000;
     var ulMeasurementRunningTime    = 10000;
     var ulParallelStreams           = 4;
-    var ulTimeout                   = 5000;
-    var ulFrameSize                 = 110000;
+    var ulTimeout                   = 10000;
+    var ulFrameSize                 = 65535;
     
     var wsParallelStreams;
     var wsStartupTime;
@@ -203,6 +204,12 @@ function WSControlSingleThread()
         wsMeasurementError      = false;
         measurementParameters   = JSON.parse(measurementParameters);
         wsTestCase              = measurementParameters.testCase;
+		
+		if (typeof measurementParameters.wsParallelStreamsDownload  !== 'undefined' && wsTestCase === 'download') 	dlParallelStreams	= Number(measurementParameters.wsParallelStreamsDownload);
+		if (typeof measurementParameters.wsParallelStreamsUpload  !== 'undefined' && wsTestCase === 'upload') 		ulParallelStreams	= Number(measurementParameters.wsParallelStreamsUpload);
+		
+		if (typeof measurementParameters.wsFrameSizeDownload  !== 'undefined' && wsTestCase === 'download') 		dlFrameSize			= Number(measurementParameters.wsFrameSizeDownload);
+		if (typeof measurementParameters.wsFrameSizeUpload  !== 'undefined' && wsTestCase === 'upload') 			ulFrameSize			= Number(measurementParameters.wsFrameSizeUpload);
 
         switch (wsTestCase)
         {
@@ -222,24 +229,32 @@ function WSControlSingleThread()
             }
             case 'download':
             {
+				wsParallelStreams                   = dlParallelStreams;
+				wsFrameSize 						= dlFrameSize;
+				
+				if (wsFrameSize >= 65536)
+				{
+					dlWsOverheadPerFrame	= 8;
+				}
+				else if (wsFrameSize < 126)
+				{
+					dlWsOverheadPerFrame	= 2;
+				}
+				
                 wsOverheadPerFrame                  = dlWsOverheadPerFrame;
                 wsDownloadValues.overheadPerFrame   = dlWsOverheadPerFrame;
-                wsParallelStreams                   = dlParallelStreams;
                 wsStartupTime                       = dlStartupTime;
                 wsMeasurementRunningTime            = dlMeasurementRunningTime;
                 wsReportInterval                    = dlReportInterval;
                 wsTimeout                           = dlTimeout;
                 wsProtocol                          = dlProtocol;
+				
                 break;
             }
             case 'upload':
             {
-                if (typeof measurementParameters.wsUploadFrameSize !== 'undefined')
-                {
-                    ulFrameSize             = Number(measurementParameters.wsUploadFrameSize);
-                }
-                
-                wsFrameSize                 = ulFrameSize;
+				wsParallelStreams               = ulParallelStreams;
+                wsFrameSize 					= ulFrameSize;
                 
                 if (ulFrameSize >= 65536)
                 {
@@ -252,24 +267,23 @@ function WSControlSingleThread()
                 
                 wsOverheadPerFrame              = ulWsOverheadPerFrame;
                 wsUploadValues.overheadPerFrame = ulWsOverheadPerFrame;
-                wsParallelStreams               = ulParallelStreams;
                 wsStartupTime                   = ulStartupTime;
                 wsMeasurementRunningTime        = ulMeasurementRunningTime;
                 wsReportInterval                = ulReportInterval;
                 wsTimeout                       = ulTimeout;
                 wsProtocol                      = ulProtocol;
+				
                 break;
             }
         }
         
-        if (typeof measurementParameters.wsTargets !== 'undefined')             wsTargets                   = measurementParameters.wsTargets;
+        if (typeof measurementParameters.wsTargets !== 'undefined')            wsTargets                   = measurementParameters.wsTargets;
         if (typeof measurementParameters.wsTargetsRtt !== 'undefined')         wsTargetsRtt                = measurementParameters.wsTargetsRtt;   
         if (typeof measurementParameters.wsTLD !== 'undefined')                wsTLD                       = String(measurementParameters.wsTLD);     
         if (typeof measurementParameters.wsTargetPort !== 'undefined')         wsTargetPort                = String(measurementParameters.wsTargetPort);
         if (typeof measurementParameters.wsWss !== 'undefined')                wsWss                       = String(measurementParameters.wsWss);
         if (typeof measurementParameters.wsStartupTime !== 'undefined')        wsStartupTime               = Number(measurementParameters.wsStartupTime);
         if (typeof measurementParameters.wsTimeout !== 'undefined')            wsTimeout                   = Number(measurementParameters.wsTimeout);
-        if (typeof measurementParameters.wsParallelStreams  !== 'undefined' && (wsTestCase === 'download' || wsTestCase === 'upload')) wsParallelStreams           = Number(measurementParameters.wsParallelStreams);
         if (typeof measurementParameters.wsMeasureTime      !== 'undefined' && (wsTestCase === 'download' || wsTestCase === 'upload')) wsMeasurementRunningTime    = Number(measurementParameters.wsMeasureTime);
         
         if (typeof measurementParameters.wsWorkerPath !== 'undefined')          wsWorkerPath               = String(measurementParameters.wsWorkerPath);
@@ -309,6 +323,7 @@ function WSControlSingleThread()
             console.log('startup time:      ' + wsStartupTime);
             console.log('measurement time:  ' + wsMeasurementRunningTime);
             console.log('parallel streams:  ' + wsParallelStreams);
+			console.log('frame size:  		' + wsFrameSize);
             console.log('timeout:           ' + wsTimeout);        
         }
         
@@ -438,10 +453,12 @@ function WSControlSingleThread()
                     
                     if (wsTestCase === 'upload')
                     {
-                        for (var wsWorkersStatusID = 0; wsWorkersStatusID < wsWorkersStatus.length; wsWorkersStatusID++)
-                        {
-                            wsWorkers[wsWorkersStatusID].startUpload();
-                        }
+						var workerData = prepareWorkerData('uploadStart');
+						
+						for (var wsID = 0; wsID < wsWorkers.length; wsID++)
+						{
+							wsWorkers[wsID].onmessageSM(workerData);
+						}
                     }
 
                     clearTimeout(wsTimeoutTimer);
@@ -483,7 +500,7 @@ function WSControlSingleThread()
                     if (data.wsRttValues)
 					{
 						wsRttValues = data.wsRttValues;
-						wsRttValues.duration = Math.round(wsMeasurementTime * 1000) + ' ns';
+						wsRttValues.duration = Math.round(wsMeasurementTime * 1000);
 					}
 					
                     for (key in wsRttValues)
@@ -503,27 +520,14 @@ function WSControlSingleThread()
 
                     if (wsTestCase === 'download')
                     {
-                        if (wsFrameSize >= 65536)
-                        {
-                            wsOverheadPerFrame                  = 8;
-                            dlWsOverheadPerFrame                = wsOverheadPerFrame;
-                            wsDownloadValues.overheadPerFrame   = wsOverheadPerFrame;
-                        }
-                        else if (wsFrameSize < 126)
-                        {
-                            wsOverheadPerFrame                  = 2;
-                            dlWsOverheadPerFrame                = wsOverheadPerFrame;
-                            wsDownloadValues.overheadPerFrame   = wsOverheadPerFrame;
-                        }
-
                         dlStartupData   += data.wsData;
                         dlStartupFrames += data.wsFrames;
                     }
 
                     if (wsTestCase === 'upload')
                     {
-                        ulStartupData           += data.wsData;
-                        ulStartupFrames         += data.wsFrames;
+                        ulStartupData   += data.wsData;
+                        ulStartupFrames	+= data.wsFrames;
                     }
 
                     break;
@@ -894,7 +898,7 @@ function WSControlSingleThread()
         if (wsTestCase === 'upload')    report = getKPIsUpload(report);
         report = getKPIsAvailability(report);
 
-        if (wsControl.callback === 'wsMeasurement')  this.wsMeasurement.controlCallback(JSON.stringify(report));
+        if (wsControl !== null && wsControl.callback !== null && wsControl.callback === 'wsMeasurement')  this.wsMeasurement.controlCallback(JSON.stringify(report));
     }
     
     /**
@@ -1019,7 +1023,7 @@ function WSControlSingleThread()
             workerData.rttRequestWait           = rttRequestWait;
             workerData.rttTimeout               = rttTimeout;
             workerData.rttPayloadSize           = rttPayloadSize;
-        }    
+        }
         
         return JSON.stringify(workerData);
     }
