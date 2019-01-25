@@ -7,7 +7,8 @@ cp "${PROJECT_DIR}/../common-mobile/node_modules/tns-core-modules-widgets/platfo
 
 mkdir -p "${PROJECT_DIR}/src/main/assets/app"
 cp -R "${PROJECT_DIR}/../common-mobile/platforms/android/app/src/main/assets/app/tns_modules" "${PROJECT_DIR}/src/main/assets/app"
-cp "${PROJECT_DIR}/../common/build/uglified/common_mobile/common_mobile.js" "${PROJECT_DIR}/src/main/assets/app/tns_modules"
+cp "${PROJECT_DIR}/../common/build/uglified/common-mobile/common-mobile.js" "${PROJECT_DIR}/src/main/assets/app/tns_modules"
+#cp "${PROJECT_DIR}/../common/build/plain/common-mobile/common-mobile.js" "${PROJECT_DIR}/src/main/assets/app/tns_modules"
 
 cp -R "${PROJECT_DIR}/../common-mobile/platforms/android/app/src/main/java/technology" "${PROJECT_DIR}/src/main/java"
 cp -R "${PROJECT_DIR}/../common-mobile/platforms/android/app/src/main/java/com/tns" "${PROJECT_DIR}/src/main/java/com"
