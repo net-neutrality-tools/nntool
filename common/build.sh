@@ -14,7 +14,7 @@
 
 #/*!
 # *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2019-01-04
+# *      \date Last update: 2019-01-22
 # *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
 # */
 
@@ -68,6 +68,7 @@ cat plain/core/ControlSingleThread.js			>> plain/common/common.js
 cat plain/core/Measurement.js 					>> plain/common/common.js
 cat plain/core/Worker.js 						>> plain/common/common.js
 cat plain/core/WorkerSingleThread.js 			>> plain/common/common.js
+cat plain/core/PortBlocking.js 					>> plain/common/common.js
 cat plain/common/common.footer.js				>> plain/common/common.js
 
 uglifyjs -c drop_console=true -m --comments /^!/ plain/common/common.js > uglified/common/common.js

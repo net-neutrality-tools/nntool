@@ -5,15 +5,15 @@
  *                                                                               *
  *       Website: http://www.zafaco.de                                           *
  *                                                                               *
- *       Copyright 2018                                                          *
+ *       Copyright 2018 - 2019                                                   *
  *                                                                               *
  *********************************************************************************
  */
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2018-12-14
- *      \note Copyright (c) 2018 zafaco GmbH. All rights reserved.
+ *      \date Last update: 2019-01-24
+ *      \note Copyright (c) 2018 -2019 zafaco GmbH. All rights reserved.
  */
 
 /* global logDebug, wsControl, global */
@@ -61,6 +61,7 @@ function WSWorkerSingleThread()
     var ulData;
     var ulDataPointer           = 0;
     var ulInterval;
+	var ulIntervalTiming		= 4;
     var ulReportDict            = {};
 
     var ulDataSize              = 512345;
@@ -94,8 +95,10 @@ function WSWorkerSingleThread()
                 reportToControlSM('info', 'websocket connecting');
                 setWsParametersSM(data);
 
-                if (wsTestCase === 'upload') wsFrameSize = data.wsFrameSize;
-
+				if (wsTestCase === 'download' || wsTestCase === 'upload')
+				{
+					wsFrameSize = data.wsFrameSize;
+				}
                 wsAuthToken           = data.wsAuthToken;
                 wsAuthTimestamp       = data.wsAuthTimestamp;  
 
@@ -126,6 +129,12 @@ function WSWorkerSingleThread()
                 resetCounterSM();
                 break;
             }
+				
+			case 'uploadStart':
+			{
+				uploadSM();
+				break;
+			}
 
             case 'close':
             {   
@@ -153,16 +162,6 @@ function WSWorkerSingleThread()
             }
         }
     };
-
-    /**
-    * @function startUpload
-    * @description Function to perform the Upload Test Case
-    * @private
-    */
-    this.startUpload = function()
-    {
-        setTimeout(uploadSM, 200);
-    };
     
     /**
     * @function connectSM
@@ -183,6 +182,10 @@ function WSWorkerSingleThread()
         try 
         {
             var wsProtocols = [wsProtocol, wsAuthToken, wsAuthTimestamp];
+			if (wsTestCase === 'download')
+			{
+				wsProtocols.push(wsFrameSize);
+			}
             webSocket = new WebSocket(target, wsProtocols);
         }
         catch (error)
@@ -203,7 +206,7 @@ function WSWorkerSingleThread()
             else if (wsTestCase === 'upload')
             {
                 wsCompleted = false;
-                ulData = jsTool.generateRandomData(ulDataSize, true);
+                ulData = jsTool.generateRandomData(ulDataSize, true, false);
             }
         };
 
@@ -222,7 +225,7 @@ function WSWorkerSingleThread()
             if (wsTestCase === 'download')
             {
                 wsData      += event.data.size;
-                wsFrameSize = event.data.size;
+                //wsFrameSize = event.data.size;
                 wsFrames++;
             }
             else
@@ -282,16 +285,21 @@ function WSWorkerSingleThread()
             reportToControlSM('info', 'start upload'); 
             ulStarted = true;
         }
+		
+		if (typeof require !== 'undefined')
+        {
+			ulIntervalTiming = 1;
+		}
 
         ulInterval = setInterval(function ()
         {
+			if (wsCompleted)
+            {
+                clearInterval(ulInterval);
+            }
+			
             if (webSocket.bufferedAmount <= ulBufferSize)
             {
-                if (wsCompleted)
-                {
-                    clearInterval(ulInterval);
-                }
-
                 var ulPayload = ulData.slice(ulDataPointer, ulDataPointer + wsFrameSize);
                 ulDataPointer += wsFrameSize;
                 if (ulDataPointer > ulDataSize)
@@ -305,7 +313,7 @@ function WSWorkerSingleThread()
                     webSocket.send(ulPayload);
                 }
             }
-        }, 4);
+        }, ulIntervalTiming);
     };
 
     /**
