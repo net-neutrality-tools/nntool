@@ -123,7 +123,7 @@ var _WebSocket = org.java_websocket.client.WebSocketClient.extend('technology.ma
     onMessageBinary: function(binaryMessage) {
         if (this.wrapper && binaryMessage)
 		{
-			if (binaryMessage.limit() >= 8192)
+			if (binaryMessage.limit() >= 2048)
 			{
 				//skip string parsing if message is random download data
 				binaryMessage = {size:binaryMessage.limit()};
@@ -256,21 +256,12 @@ var NativeWebSockets = function(url, options) {
 
     // TODO: Replace Hack when we support protocols in Android; we want to "emulate" that the first protocol sent was accepted
     //this._protocol = options.protocols || "";
-	
-	
+
 	if (options.protocols && !Array.isArray(options.protocols)) {
         this._protocols = [options.protocols];
     } else {
-		var protocols = '';
-		options.protocols.forEach(function(element, index)
-		{
-			protocols += element;
-			if (!options.protocols[index+1]) return;
-			protocols += ' , ';
-		});
-        this._protocols = [protocols] || [];
+        this._protocols = options.protocols;
     }
-	
 
     this._browser = !!options.browser;
     this._timeout = options.timeout;
@@ -282,7 +273,11 @@ var NativeWebSockets = function(url, options) {
     this._timeout = options.timeout || 10000;
 
     this._headers = options.headers || [];
+	
+	org.java_websocket.WebSocketImpl.RCVBUF = 20000000;
+		
     if (this._debug === true) {
+		
         org.java_websocket.WebSocketImpl.DEBUG = true;
     }
 
@@ -310,12 +305,14 @@ NativeWebSockets.prototype._reCreate = function() {
 
     // Must have a protocol, even if it is blank
 	var knownProtocols = new java.util.ArrayList();
-    if(this._protocols){
+
+    if(this._protocols)
+    {
 		this._protocols.forEach(function(element, index)
 		{
-			knownProtocols.add(new org.java_websocket.protocols.Protocol(element));
+			knownProtocols.add(new org.java_websocket.protocols.Protocol(String(element)));
 		});
-       
+
     } else {
 	    knownProtocols.add(new org.java_websocket.protocols.Protocol(""));
 	}

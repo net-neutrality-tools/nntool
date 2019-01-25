@@ -34,35 +34,39 @@ var _WebSocket = NSObject.extend({
         if (!this.wrapper) {
             return;
         }
-        if (Object.prototype.toString.apply(message) === "[object NSConcreteMutableData]")
+		if (!isNaN(message))
 		{
-			if (message.length >= 8192)
+			message = {size:message};
+		}
+        else if (Object.prototype.toString.apply(message) === "[object NSConcreteMutableData]")
+		{
+			if (message.length >= 2048)
 			{
 				//skip string parsing if message is random download data
 				message = {size:message.length};
 			}
 			else
 			{
-            // This is a HACK currently; but after benchmarking it --
-            // it is much faster than I would have expected.
-            // but since v1.30 of the IOS Runtimes
-            // should autowrap NSData as a ArrayBuffer this hack should be short lived automatically.
+				// This is a HACK currently; but after benchmarking it --
+				// it is much faster than I would have expected.
+				// but since v1.30 of the IOS Runtimes
+				// should autowrap NSData as a ArrayBuffer this hack should be short lived automatically.
 
-            var stringMessage = message.toString();
-            var convertedBuffer = new ArrayBuffer(message.length);
-            var view = new Uint8Array(convertedBuffer);
-            var len = stringMessage.length-1;
-            for (var j=0,i=0;i<len;j++,i+=2) {
-                // The stringMessage is laid out "<12345678 12345678 12345678>" with a space every eight characters and starts & ends with < & >
-                if (i % 9 === 0) { i++; }
-                // The data is in Hex, so we need to parse two hex locations for each 8 bit number
-                view[j] = (parseInt(stringMessage[i], 16) << 4) + parseInt(stringMessage[i+1], 16);
-            }
+				var stringMessage = message.toString();
+				var convertedBuffer = new ArrayBuffer(message.length);
+				var view = new Uint8Array(convertedBuffer);
+				var len = stringMessage.length-1;
+				for (var j=0,i=0;i<len;j++,i+=2) {
+					// The stringMessage is laid out "<12345678 12345678 12345678>" with a space every eight characters and starts & ends with < & >
+					if (i % 9 === 0) { i++; }
+					// The data is in Hex, so we need to parse two hex locations for each 8 bit number
+					view[j] = (parseInt(stringMessage[i], 16) << 4) + parseInt(stringMessage[i+1], 16);
+				}
 
-            // Force the GC to eliminate this string; so that this memory is available once we call the message handler;
-            // Normally we would just let the GC clean up later; but this string can be huge and is not needed, so we don't want to waste memory for no purpose when calling into the users code.
-            stringMessage=null;
-            message = convertedBuffer;
+				// Force the GC to eliminate this string; so that this memory is available once we call the message handler;
+				// Normally we would just let the GC clean up later; but this string can be huge and is not needed, so we don't want to waste memory for no purpose when calling into the users code.
+				stringMessage=null;
+				message = convertedBuffer;
 			}  
         }
 
