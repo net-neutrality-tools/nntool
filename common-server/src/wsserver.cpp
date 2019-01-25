@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-02
+ *      \date Last update: 2019-01-16
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -32,7 +32,6 @@ bool DEBUG_NOPOLL_ERROR;
 bool DEBUG_NOPOLL_CRITICAL;
 bool DAEMONMODE;
 bool RUNNING;
-bool SERVERMONITORING   = false;
 bool CLIENTMONITORING   = false;
 
 bool OVERLOADED;
@@ -47,7 +46,6 @@ int mPortTraceroute     = 8080;
 #include "wshandler.h"
 #include "wslistener.h"
 #include "htlistener.h"
-#include "serverMonitoring.h"
 
 
 
@@ -153,31 +151,10 @@ int main(int argc, char** argv)
         }
     }
     
-    CServerMonitoring *pServerMonitoring = NULL;
-
-    if (SERVERMONITORING)
-    {
-        pServerMonitoring = new CServerMonitoring();
-
-        if(pServerMonitoring->createThread() != 0 )
-        {
-            TRC_ERR("Error: Failure while creating Server Monitoring Thread");
-            return EXIT_FAILURE;
-        }
-    }       
-    
-    if (SERVERMONITORING)
-    {
-        pServerMonitoring->waitForEnd();
-    }
     pHtListenerTraceroute->waitForEnd();
     pWsTlsListener->waitForEnd();
     pWsListener->waitForEnd();
     
-    if (SERVERMONITORING)
-    {
-        delete(pServerMonitoring);
-    }
     delete(pHtListenerTraceroute);
     delete(pWsTlsListener);
     delete(pWsListener);

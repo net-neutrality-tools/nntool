@@ -12,7 +12,7 @@
 
 #/*!
 # *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2019-01-02
+# *      \date Last update: 2019-01-16
 # *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
 # */
 
@@ -41,7 +41,6 @@ add_executable(common-server
     wshandler.cpp
     wslistener.cpp
     htlistener.cpp
-    serverMonitoring.cpp
 )
 
 TARGET_LINK_LIBRARIES(common-server
@@ -50,7 +49,6 @@ TARGET_LINK_LIBRARIES(common-server
     -lssl
     -lcrypto
     -lnopoll
-    -lmysqlcppconn
 )
 
 INCLUDE(CPack)

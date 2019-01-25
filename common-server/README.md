@@ -5,7 +5,6 @@ make
 cmake
 g++
 pkg-config
-libmysqlcppconn-dev
 liblog4cpp5-dev
 libssl-dev
 libtool
