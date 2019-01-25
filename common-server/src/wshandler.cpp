@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-02
+ *      \date Last update: 2019-01-16
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -81,13 +81,6 @@ bool                showRttStart;
 
 string              certDir;
 
-int                 mysqlClientMonitoringTrigger;
-string              mysqlHost;
-string              mysqlPort;
-string              mysqlDb;
-string              mysqlUser;
-string              mysqlPw;
-
 
 
 
@@ -148,8 +141,6 @@ CWsHandler::CWsHandler(sockaddr_in6 *pClient, int nSocket, string nClientIp, boo
     showRttStart                = true;
     
     certDir                     = "/var/opt/common-server/certs/";
-    
-    mysqlClientMonitoringTrigger= 5;
 }
 
 
@@ -275,14 +266,20 @@ int CWsHandler::websocket_open_handler(noPollCtx *ctx, noPollConn *conn, noPollP
             string requestedProtocol = *itRequestedProtocols;
             if (requestedProtocol.compare(*itAllowedProtocols) == 0)
             {
-                if (requestestedProtocols.size() >= 2)
+                if (requestestedProtocols.size() > 2)
                 {
                     acceptedProtocol        = requestestedProtocols.at(0);
                     authToken               = requestestedProtocols.at(1);
                     string authTimestamp    = requestestedProtocols.at(2);
-                    TRC_DEBUG("WebSocket handler: requested protocol:   \"" + requestedProtocol + "\"");
-                    TRC_DEBUG("WebSocket handler: requested timestamp:  \"" + authTimestamp + "\"");
-                    TRC_DEBUG("WebSocket handler: requested token:      \"" + authToken + "\"");
+                    TRC_DEBUG("WebSocket handler: requested protocol:   			\"" + requestedProtocol + "\"");
+                    TRC_DEBUG("WebSocket handler: requested timestamp:  			\"" + authTimestamp + "\"");
+                    TRC_DEBUG("WebSocket handler: requested token:      			\"" + authToken + "\"");
+					
+					if (acceptedProtocol.compare("download") == 0 && requestestedProtocols.size() > 3)
+					{
+						downloadFrameSize = atoi(requestestedProtocols.at(3).c_str());
+						TRC_DEBUG("WebSocket handler: requested download frame size:	\"" + to_string(downloadFrameSize) + "\"");
+					}
                 
                     protocolAllowed = checkAuth(authToken, authTimestamp);
                     
@@ -674,15 +671,8 @@ void CWsHandler::sendRoundTripTimeResponse(noPollCtx *ctx, noPollConn *conn)
 
 int CWsHandler::download(noPollCtx *ctx, noPollConn *conn)
 {
-    TRC_DEBUG("WebSocket handler: download");
-    
-    TRC_DEBUG("WebSocket handler: download frame size: " + to_string(downloadFrameSize));
-    
-    if (CLIENTMONITORING)
-    {
-        mysqlClientMonitoring("wsDownloadProtocol");
-    }
-    
+    TRC_DEBUG("WebSocket handler: download, frame size: " + to_string(downloadFrameSize));
+
     downloadRunning = true;
     
     vector<char>randomDataValues;
@@ -854,53 +844,6 @@ bool CWsHandler::checkAuth(string authToken, string authTimestamp)
     
     TRC_DEBUG("WebSocket handler: authentication successful");
     return true;
-}
-
-void CWsHandler::mysqlClientMonitoring(string protocol)
-{
-    try
-    {
-		mysqlHost   = "localhost";
-		mysqlPort   = "3306";
-		mysqlDb     = "server-monitoring";
-		mysqlUser   = "";
-		mysqlPw     = "";
-    
-        sql::Driver *driver;
-        sql::Connection *con;
-        sql::Statement *stmt;
-        sql::PreparedStatement *pstmt;
-    
-        unsigned long long timestamp = CTool::get_timestamp_sec();
-        
-        char randomData[64];
-        CTool::randomData(randomData, 64);
-
-        driver = get_driver_instance();
-        con = driver->connect("tcp://" + mysqlHost + ":" + mysqlPort, mysqlUser, mysqlPw);
-        con->setSchema(mysqlDb);
-
-        pstmt = con->prepareStatement("INSERT INTO client_monitoring(id, timestamp, auth_token, protocol) VALUES (?, ?, ?, ?)");
-        pstmt->setString(1, sha1(to_string(CTool::get_timestamp()) + randomData));
-        pstmt->setBigInt(2, to_string(timestamp));
-        pstmt->setString(3, authToken);
-        pstmt->setString(4, protocol);
-        pstmt->executeUpdate();
-        delete pstmt;
-
-        stmt = con->createStatement();
-        stmt->execute("DELETE FROM client_monitoring WHERE timestamp < " + to_string(timestamp - 120));
-        delete stmt;
-
-        delete con;
-        driver->threadEnd();
-
-        TRC_DEBUG("WebSocket handler: clientMonitoring: mysql ok");
-    }
-    catch (sql::SQLException &e)
-    {
-        TRC_ERR("WebSocket handler: clientMonitoring: mysql error: " + to_string(e.getErrorCode()));
-    }
 }
 
 void CWsHandler::printTcpMetrics()
