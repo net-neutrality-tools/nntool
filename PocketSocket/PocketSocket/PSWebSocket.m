@@ -18,6 +18,7 @@
 #import "PSWebSocketBuffer.h"
 #import <sys/socket.h>
 #import <arpa/inet.h>
+#import <malloc/malloc.h>
 
 
 @interface PSWebSocket() <NSStreamDelegate, PSWebSocketDriverDelegate> {
@@ -550,7 +551,15 @@
     }];
 }
 - (void)driver:(PSWebSocketDriver *)driver didReceiveMessage:(id)message {
-    [self notifyDelegateDidReceiveMessage:message];
+    if (((NSMutableData*)message).length >= (NSUInteger)2048)
+    {
+        [self notifyDelegateDidReceiveMessage:(id)[NSNumber numberWithInt:((NSMutableData*)message).length]];
+        message = nil;
+    }
+    else
+    {
+        [self notifyDelegateDidReceiveMessage:message];
+    }
 }
 - (void)driver:(PSWebSocketDriver *)driver didReceivePing:(NSData *)ping {
     //NSLog(@"PING: didReceivePing2");

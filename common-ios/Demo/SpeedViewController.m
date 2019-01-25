@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-04
+ *      \date Last update: 2019-01-24
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -39,9 +39,12 @@
 /**************************** UI Elements ****************************/
 
 @property (weak, nonatomic) IBOutlet UIButton *loadButton;
-@property (weak, nonatomic) IBOutlet UIButton *startButton;
 @property (weak, nonatomic) IBOutlet UIButton *stopButton;
 @property (weak, nonatomic) IBOutlet UIButton *clearButton;
+@property (weak, nonatomic) IBOutlet UIButton *startButton;
+@property (weak, nonatomic) IBOutlet UIButton *startRttButton;
+@property (weak, nonatomic) IBOutlet UIButton *startDownloadButton;
+@property (weak, nonatomic) IBOutlet UIButton *startUploadButton;
 
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 @property (weak, nonatomic) IBOutlet UILabel *rttLabel;
@@ -50,6 +53,10 @@
 
 @property (weak, nonatomic) IBOutlet UITextView *kpisTextView;
 
+@property (weak, nonatomic) IBOutlet UISegmentedControl *downloadParameters;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *uploadParameters;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *ipVersionParameters;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *singleStreamParameters;
 
 
 
@@ -80,16 +87,6 @@
     [self measurementLoad];
 }
 
-- (IBAction)startButtonTouched:(id)sender
-{
-    [self toggleButtons:false];
-    self.stopButton.enabled                         = true;
-    
-    [self clearUI];
-    
-    [self measurementStart];
-}
-
 - (IBAction)stopButtonTouched:(id)sender
 {
     [self toggleButtons:false];
@@ -104,6 +101,26 @@
     [self clearUI];
     
     [self measurementClearCache];
+}
+
+- (IBAction)startButtonTouched:(id)sender
+{
+    [self measurementStartWithTestCaseRtt:true withTestCaseDownload:true withTestCaseUpload:true];
+}
+
+- (IBAction)startRttButtonTouched:(id)sender
+{
+    [self measurementStartWithTestCaseRtt:true withTestCaseDownload:false withTestCaseUpload:false];
+}
+
+- (IBAction)startDownloadButtonTouched:(id)sender
+{
+    [self measurementStartWithTestCaseRtt:false withTestCaseDownload:true withTestCaseUpload:false];
+}
+
+- (IBAction)startUploadButtonTouched:(id)sender
+{
+    [self measurementStartWithTestCaseRtt:false withTestCaseDownload:false withTestCaseUpload:true];
 }
 
 -(void)showKpisFromResponse:(NSDictionary*)response
@@ -133,6 +150,9 @@
         {
             self.uploadLabel.text = [NSString stringWithFormat:@"%@ Mbit/s", [self.tool formatNumberToCommaSeperatedString:[NSNumber numberWithDouble:([[[response objectForKey:@"upload_info"] objectForKey:@"throughput_avg_bps"] doubleValue] /1000.0 / 1000.0)] withMinDecimalPlaces:2 withMaxDecimalPlace:2]];
         }
+        
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        pasteboard.string = self.kpisTextView.text;
     }
     
 }
@@ -157,20 +177,124 @@
     [self.speed measurementLoad];
 }
 
--(void)measurementStart
+-(void)measurementStartWithTestCaseRtt:(bool)rtt withTestCaseDownload:(bool)download withTestCaseUpload:(bool)upload
 {
+    [self toggleButtons:false];
+    self.stopButton.enabled = true;
+    
+    [self clearUI];
+    
     DDLogInfo(@"Measurement started");
     self.statusLabel.text = @"Measurement started";
     
     //set measurement parameters
     self.speed.platform                           = @"mobile";
     
-    self.speed.performRttMeasurement              = true;
-    self.speed.performDownloadMeasurement         = true;
-    self.speed.performUploadMeasurement           = true;
+    self.speed.targets                            = [NSArray arrayWithObjects:@"peer-ias-de-01", nil];
+    self.speed.targetsRtt                         = [NSArray arrayWithObjects:@"peer-ias-de-01", nil];
     
+    if ([self.ipVersionParameters selectedSegmentIndex] == 1 || [self.ipVersionParameters selectedSegmentIndex] == 2)
+    {
+        NSString *targetIpVersion = @"";
+        if ([self.ipVersionParameters selectedSegmentIndex] == 1)
+        {
+            targetIpVersion = @"-ipv4";
+        }
+        else if ([self.ipVersionParameters selectedSegmentIndex] == 2)
+        {
+            targetIpVersion = @"-ipv6";
+        }
+
+        NSMutableArray *targets = [NSMutableArray new];
+        for (int i=0; i<[self.speed.targets count]; i++)
+        {
+            [targets addObject:[self.speed.targets[i] stringByAppendingString:targetIpVersion]];
+        }
+        self.speed.targets = targets;
+        targets = [NSMutableArray new];
+        
+        for (int i=0; i<[self.speed.targetsRtt count]; i++)
+        {
+            [targets addObject:[self.speed.targetsRtt[i] stringByAppendingString:targetIpVersion]];
+        }
+        self.speed.targetsRtt = targets;
+    }
+    
+    self.speed.performRttMeasurement              = rtt;
+    self.speed.performDownloadMeasurement         = download;
+    self.speed.performUploadMeasurement           = upload;
     self.speed.performRouteToClientLookup         = true;
     self.speed.performGeolocationLookup           = true;
+    
+    switch([self.downloadParameters selectedSegmentIndex])
+    {
+        case 0:
+        {
+            self.speed.parallelStreamsDownload = [NSNumber numberWithInt:4];
+            self.speed.frameSizeDownload = [NSNumber numberWithInt:2048];
+            break;
+        }
+        case 1:
+        {
+            self.speed.parallelStreamsDownload = [NSNumber numberWithInt:4];
+            self.speed.frameSizeDownload = [NSNumber numberWithInt:32768];
+            break;
+        }
+        case 2:
+        {
+            self.speed.parallelStreamsDownload = [NSNumber numberWithInt:4];
+            self.speed.frameSizeDownload = [NSNumber numberWithInt:524288];
+            break;
+        }
+        case 3:
+        {
+            self.speed.parallelStreamsDownload = [NSNumber numberWithInt:8];
+            self.speed.frameSizeDownload = [NSNumber numberWithInt:524288];
+            break;
+        }
+    }
+    
+    switch([self.uploadParameters selectedSegmentIndex])
+    {
+        case 0:
+        {
+            self.speed.parallelStreamsUpload = [NSNumber numberWithInt:4];
+            self.speed.frameSizeUpload = [NSNumber numberWithInt:2048];
+            break;
+        }
+        case 1:
+        {
+            self.speed.parallelStreamsUpload = [NSNumber numberWithInt:4];
+            self.speed.frameSizeUpload = [NSNumber numberWithInt:32768];
+            break;
+        }
+        case 2:
+        {
+            self.speed.parallelStreamsUpload = [NSNumber numberWithInt:4];
+            self.speed.frameSizeUpload = [NSNumber numberWithInt:65535];
+            break;
+        }
+        case 3:
+        {
+            self.speed.parallelStreamsUpload = [NSNumber numberWithInt:20];
+            self.speed.frameSizeUpload = [NSNumber numberWithInt:65535];
+            break;
+        }
+    }
+    
+    if ([self.singleStreamParameters selectedSegmentIndex] == 1)
+    {
+        self.speed.frameSizeDownload        = [NSNumber numberWithInt: [self.speed.frameSizeDownload intValue] * [self.speed.parallelStreamsDownload intValue]];
+        self.speed.parallelStreamsDownload  = [NSNumber numberWithInt:1];
+       
+        self.speed.frameSizeUpload          = [NSNumber numberWithInt: [self.speed.frameSizeUpload intValue] * [self.speed.parallelStreamsUpload intValue]];
+        self.speed.parallelStreamsUpload    = [NSNumber numberWithInt:1];
+        
+        if ([self.speed.frameSizeUpload intValue] > 65535)
+        {
+            self.speed.frameSizeUpload      = [NSNumber numberWithInt:65535];
+        }
+    }
     
     [self.speed measurementStart];
 }
@@ -204,8 +328,11 @@
     DDLogInfo(@"MeasurementLoad successful");
     self.statusLabel.text = @"MeasurementLoad successful";
     
-    self.startButton.enabled        = true;
-    self.clearButton.enabled        = true;
+    self.clearButton.enabled            = true;
+    self.startButton.enabled            = true;
+    self.startRttButton.enabled         = true;
+    self.startDownloadButton.enabled    = true;
+    self.startUploadButton.enabled      = true;
 }
 
 -(void)measurementCallbackWithResponse:(NSDictionary *)response
@@ -273,9 +400,12 @@
     
     if (!self.speed)
     {
-        self.startButton.enabled        = false;
-        self.stopButton.enabled         = false;
-        self.clearButton.enabled        = false;
+        self.stopButton.enabled             = false;
+        self.clearButton.enabled            = false;
+        self.startButton.enabled            = false;
+        self.startRttButton.enabled         = false;
+        self.startDownloadButton.enabled    = false;
+        self.startUploadButton.enabled      = false;
     }
     
     [self loadButtonTouched:nil];
@@ -289,9 +419,12 @@
 -(void)toggleButtons:(bool)enable
 {
     self.loadButton.enabled                     = enable;
-    self.startButton.enabled                    = enable;
     self.stopButton.enabled                     = enable;
     self.clearButton.enabled                    = enable;
+    self.startButton.enabled                    = enable;
+    self.startRttButton.enabled                 = enable;
+    self.startDownloadButton.enabled            = enable;
+    self.startUploadButton.enabled              = enable;
 }
 
 -(void)clearUI
