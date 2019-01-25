@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-02
+ *      \date Last update: 2019-01-23
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -37,10 +37,13 @@
 
 static NSString *const defaultPlatform                      = @"mobile";
 
+static NSString *const defaultTargetsTld                    = @"net-neutrality.tools";
+static NSString *const defaultTargetsPort                   = @"80";
+static NSInteger const defaultWss                           = 0;
+
 static const bool defaultPerformRttMeasurement              = true;
 static const bool defaultPerformDownloadMeasuement          = true;
 static const bool defaultPerformUploadMeasurement           = true;
-
 static const bool defaultPerformRouteToClientLookup         = true;
 static const bool defaultPerformGeolocationLookup           = true;
 
@@ -117,6 +120,10 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
 
     //set default parameters
     self.platform                                   = defaultPlatform;
+    
+    self.targetsTld                                 = defaultTargetsTld;
+    self.targetsPort                                = defaultTargetsPort;
+    self.wss                                        = defaultWss;
     
     self.performRttMeasurement                      = defaultPerformRttMeasurement;
     self.performDownloadMeasurement                 = defaultPerformDownloadMeasuement;
@@ -212,14 +219,12 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
     [measurementParametersDict setObject:@"start"                                                       forKey:@"cmd"];
     [measurementParametersDict setObject:self.platform                                                  forKey:@"platform"];
     
-    [measurementParametersDict setObject:[NSArray arrayWithObject:@"peer-ias-de-01"]                    forKey:@"wsTargets"];
-    [measurementParametersDict setObject:[NSArray arrayWithObject:@"peer-ias-de-01"]                    forKey:@"wsTargetsV4"];
+    [measurementParametersDict setObject:self.targets                                                   forKey:@"wsTargets"];
+    [measurementParametersDict setObject:self.targetsRtt                                                forKey:@"wsTargetsRtt"];
     
-    [measurementParametersDict setObject:[NSArray arrayWithObject:@"peer-ias-de-01"]                    forKey:@"wsTargetsRtt"];
-    
-    [measurementParametersDict setObject:@"net-neutrality.tools"                                        forKey:@"wsTLD"];
-    [measurementParametersDict setObject:@"80"                                                          forKey:@"wsTargetPort"];
-    [measurementParametersDict setObject:[NSNumber numberWithInt:0]                                     forKey:@"wsWss"];
+    [measurementParametersDict setObject:self.targetsTld                                                forKey:@"wsTLD"];
+    [measurementParametersDict setObject:self.targetsPort                                               forKey:@"wsTargetPort"];
+    [measurementParametersDict setObject:[NSNumber numberWithInteger:self.wss]                          forKey:@"wsWss"];
     
     [measurementParametersDict setObject:@"placeholderToken"                                            forKey:@"wsAuthToken"];
     [measurementParametersDict setObject:@"placeholderTimestamp"                                        forKey:@"wsAuthTimestamp"];
@@ -230,10 +235,13 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
     
     [measurementParametersDict setObject:[NSNumber numberWithBool:false]                                forKey:@"cookieId"];
     
+    if (self.startupTime) [measurementParametersDict setObject:self.startupTime                         forKey:@"wsStartupTime"];
+    if (self.measureTime) [measurementParametersDict setObject:self.measureTime                         forKey:@"wsMeasureTime"];
     
-    if (self.wsStartupTime) [measurementParametersDict setObject:self.wsStartupTime                     forKey:@"wsStartupTime"];
-    if (self.wsMeasureTime) [measurementParametersDict setObject:self.wsMeasureTime                     forKey:@"wsMeasureTime"];
-    if (self.wsParallelStreams) [measurementParametersDict setObject:self.wsParallelStreams             forKey:@"wsParallelStreams"];
+    if (self.parallelStreamsDownload) [measurementParametersDict setObject:self.parallelStreamsDownload forKey:@"wsParallelStreamsDownload"];
+    if (self.parallelStreamsUpload) [measurementParametersDict setObject:self.parallelStreamsUpload     forKey:@"wsParallelStreamsUpload"];
+    if (self.frameSizeDownload) [measurementParametersDict setObject:self.frameSizeDownload             forKey:@"wsFrameSizeDownload"];
+    if (self.frameSizeUpload) [measurementParametersDict setObject:self.frameSizeUpload                 forKey:@"wsFrameSizeUpload"];
     
     NSData *measurementParametersJson = [NSJSONSerialization dataWithJSONObject:measurementParametersDict options:0 error:nil];
     NSString *measurementParameters = [[NSString alloc] initWithData:measurementParametersJson encoding:NSUTF8StringEncoding];

@@ -409,7 +409,7 @@
 		2782F6FF21188D6200C9E246 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "zafaco GmbH";
 				TargetAttributes = {
 					273C63CC21189F6B00235BC3 = {

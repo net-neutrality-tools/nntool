@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-02
+ *      \date Last update: 2019-01-23
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -65,20 +65,26 @@ FOUNDATION_EXPORT const unsigned char SpeedVersionString[];
 
 @property (nonatomic, strong) NSString *platform;                       /**< Platform Identifier */
 
+@property (nonatomic, strong) NSArray *targets;                         /**< DL/UL: Measurement target servers */
+@property (nonatomic, strong) NSArray *targetsRtt;                      /**< RTT: Measurement target servers */
+@property (nonatomic, strong) NSString *targetsTld;                     /**< TLD of measurement target servers */
+@property (nonatomic, strong) NSString *targetsPort;                    /**< Port of measurement target servers */
+@property (nonatomic) NSInteger wss;                                    /**< WebSocket Secure */
+
 @property (nonatomic) bool performRttMeasurement;                       /**< Perform RTT Measurement */
 @property (nonatomic) bool performDownloadMeasurement;                  /**< Perform Download Measurement */
 @property (nonatomic) bool performUploadMeasurement;                    /**< Perform Upload Measurement */
-
 @property (nonatomic) bool performRouteToClientLookup;                  /**< Perform Native RouteToClient Lookup */
 @property (nonatomic) bool performGeolocationLookup;                    /**< Perform Geolocation Lookup */
 
 @property (nonatomic) NSInteger routeToClientTargetPort;                /**< RouteToClient Target Port */
 
-@property (nonatomic, strong) NSNumber *wsStartupTime;                  /**< DL/UL: Time between connection established and Measurement Start in ms */
-@property (nonatomic, strong) NSNumber *wsMeasureTime;                  /**< DL/UL: Measurement Duration in ms */
-@property (nonatomic, strong) NSNumber *wsParallelStreams;              /**< DL/UL: Number of parallel Measurement Streams */
-
-
+@property (nonatomic, strong) NSNumber *startupTime;                    /**< DL/UL: Time between connection established and Measurement Start in ms */
+@property (nonatomic, strong) NSNumber *measureTime;                    /**< DL/UL: Measurement Duration in ms */
+@property (nonatomic, strong) NSNumber *parallelStreamsDownload;        /**< DL: Number of parallel Measurement Streams */
+@property (nonatomic, strong) NSNumber *parallelStreamsUpload;          /**< UL: Number of parallel Measurement Streams */
+@property (nonatomic, strong) NSNumber *frameSizeDownload;              /**< DL: WebSocket Frame Size */
+@property (nonatomic, strong) NSNumber *frameSizeUpload;                /**< UL: WebSocket Frame Size */
 
 
 /**************************** Public Delegate Functions Speed ****************************/
