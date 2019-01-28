@@ -25,7 +25,7 @@
  *
  * <h2>1. Communication between server and client</h2>
  * <h3>1.1 Overview</h3>
- * Each client is communicating with the test server by using a simple protocol. This protocol is called QoS Testserver Protocol (QTP) and is seperated into 3 parts. 
+ * Each client is communicating with the test server by using a simple protocol. This protocol is called QoS Testserver Protocol (QTP) and consists of three parts.
  * These parts have to be executed in the correct order. All parts are important and none must be omitted. They are:<br>
  * <ol>
  * 		<li>establishing connection / handshake</h1>
