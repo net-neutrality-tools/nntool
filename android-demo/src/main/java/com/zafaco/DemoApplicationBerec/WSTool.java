@@ -43,16 +43,25 @@ public final class WSTool
 	private static volatile WSTool mInstance = null;
 
 	/**************************** Loging Level ****************************/
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 
 	/****************** Measurement Parameters ********************/
-	private String platform                           = "mobile";
+	private String platform                         = "mobile";
 
-	private boolean performRttMeasurement             = true;
-	private boolean performDownloadMeasuement         = true;
-	private boolean performUploadMeasurement          = true;
+	private boolean performRttMeasurement           = true;
+	private boolean performDownloadMeasuement       = true;
+	private boolean performUploadMeasurement        = true;
 
-	private int performRouteToClientLookup            = 8080;
+	private int performRouteToClientLookup          = 8080;
+
+	private String wsTargets						= "peer-ias-de-01";
+	private String wsTargetsRtt						= "peer-ias-de-01";
+	private String wsTLD 							= "net-neutrality.tools";
+
+	private int wsParallelStreamsDownload      		= 4;
+	private int wsParallelStreamsUpload        		= 4;
+	private int wsFrameSizeDownload            		= 32768;
+	private int wsFrameSizeUpload              		= 32768;
 
 	/************************* Default Parameters *************************/
 
@@ -135,8 +144,6 @@ public final class WSTool
 		mSpeed = new Speed(ctx);
 
 		mCommon.setDebug(DEBUG);
-
-		initSpeedParameter();
 	}
 
 	/**
@@ -208,22 +215,17 @@ public final class WSTool
 	/**
 	 * Method initSpeedParameter
 	 */
-	private void initSpeedParameter()
+	public void initSpeedParameter()
 	{
 		try
 		{
 			JSONObject mMeasurementParameter = new JSONObject();
 
-			JSONArray jArray = new JSONArray();
-			String jTmp = "peer-ias-de-01";
-			jArray.put(jTmp);
-
 			mMeasurementParameter.put("cmd", "start");
 			mMeasurementParameter.put("platform", platform);
-			mMeasurementParameter.put("wsTargets", jArray);
-			mMeasurementParameter.put("wsTargetsV4", jArray);
-			mMeasurementParameter.put("wsTargetsRtt", jArray);
-			mMeasurementParameter.put("wsTLD", "net-neutrality.tools");
+			mMeasurementParameter.put("wsTargets", new JSONArray().put(wsTargets));
+			mMeasurementParameter.put("wsTargetsRtt", new JSONArray().put(wsTargetsRtt));
+			mMeasurementParameter.put("wsTLD", wsTLD);
 			mMeasurementParameter.put("wsTargetPort", 80);
 			mMeasurementParameter.put("wsWss", 0);
 			mMeasurementParameter.put("wsAuthToken", "placeholderToken");
@@ -232,6 +234,11 @@ public final class WSTool
             mMeasurementParameter.put("performRttMeasurement", performRttMeasurement);
             mMeasurementParameter.put("performDownloadMeasurement", performDownloadMeasuement);
             mMeasurementParameter.put("performUploadMeasurement", performUploadMeasurement);
+
+			mMeasurementParameter.put("wsParallelStreamsDownload", wsParallelStreamsDownload);
+			mMeasurementParameter.put("wsParallelStreamsUpload", wsParallelStreamsUpload);
+			mMeasurementParameter.put("wsFrameSizeDownload", wsFrameSizeDownload);
+			mMeasurementParameter.put("wsFrameSizeUpload", wsFrameSizeUpload);
 
 			mMeasurementParameter.put("cookieId", false);
 
@@ -646,6 +653,188 @@ public final class WSTool
 	public static JSONObject getJSONMeasurement()
 	{
 		return mDataStorage;
+	}
+
+	//Profiles -------------------------------------------------------------------------------------
+
+	/**
+	 * Method setDownloadProfileLow
+	 */
+	public void setDownloadProfileLow()
+	{
+		wsParallelStreamsDownload = 4;
+		wsFrameSizeDownload = 2048;
+	}
+
+	/**
+	 * Method setDownloadProfileMiddle
+	 */
+	public void setDownloadProfileMiddle()
+	{
+		wsParallelStreamsDownload = 4;
+		wsFrameSizeDownload = 32768;
+	}
+
+	/**
+	 * Method setDownloadProfileHigh
+	 */
+	public void setDownloadProfileHigh()
+	{
+		wsParallelStreamsDownload = 4;
+		wsFrameSizeDownload = 524288;
+	}
+
+	/**
+	 * Method setDownloadProfileVeryHigh
+	 */
+	public void setDownloadProfileVeryHigh()
+	{
+		wsParallelStreamsDownload = 8;
+		wsFrameSizeDownload = 524288;
+	}
+
+	/**
+	 * Method setUploadProfileLow
+	 */
+	public void setUploadProfileLow()
+	{
+		wsParallelStreamsUpload = 4;
+		wsFrameSizeUpload = 2048;
+	}
+
+	/**
+	 * Method setUploadProfileMiddle
+	 */
+	public void setUploadProfileMiddle()
+	{
+		wsParallelStreamsUpload = 4;
+		wsFrameSizeUpload = 32768;
+	}
+
+	/**
+	 * Method setUploadProfileHigh
+	 */
+	public void setUploadProfileHigh()
+	{
+		wsParallelStreamsUpload = 4;
+		wsFrameSizeUpload = 65535;
+	}
+
+	/**
+	 * Method setUploadProfileVeryHigh
+	 */
+	public void setUploadProfileVeryHigh()
+	{
+		wsParallelStreamsUpload = 20;
+		wsFrameSizeUpload = 65535;
+	}
+
+	/**
+	 * Method setIPAuto
+	 */
+	public void setIPAuto()
+	{
+		if(wsTargets.contains("ipv"))
+		{
+			wsTargets = wsTargets.substring(0, wsTargets.lastIndexOf("-"));
+		}
+		if(wsTargetsRtt.contains("ipv"))
+		{
+			wsTargetsRtt = wsTargetsRtt.substring(0, wsTargetsRtt.lastIndexOf("-"));
+		}
+	}
+
+	/**
+	 * Method setIPV4
+	 */
+	public void setIPV4()
+	{
+		setIPAuto();
+
+		wsTargets = wsTargets+"-ipv4";
+		wsTargetsRtt = wsTargetsRtt+"-ipv4";
+	}
+
+	/**
+	 * Method setIPV6
+	 */
+	public void setIPV6()
+	{
+		setIPAuto();
+
+		wsTargets = wsTargets+"-ipv6";
+		wsTargetsRtt = wsTargetsRtt+"-ipv6";
+	}
+
+	/**
+	 * Method setUploadProfileVeryHigh
+	 */
+	public void setSingleStreamOff()
+	{
+		wsFrameSizeDownload = 32768;
+		wsParallelStreamsDownload = 4;
+
+		wsFrameSizeUpload = 32768;
+		wsParallelStreamsUpload = 4;
+	}
+
+	/**
+	 * Method setUploadProfileVeryHigh
+	 */
+	public void setSingleStreamOn()
+	{
+		wsFrameSizeDownload = wsFrameSizeDownload * wsParallelStreamsDownload;
+		wsParallelStreamsDownload = 1;
+
+		wsFrameSizeUpload = wsFrameSizeUpload * wsParallelStreamsUpload;
+		wsParallelStreamsUpload = 1;
+
+		if (wsFrameSizeUpload > 65535)
+		{
+			wsFrameSizeUpload = 65535;
+		}
+
+	}
+	//TestCases ------------------------------------------------------------------------------------
+
+	/**
+	 * Method setTestcaseAll
+	 */
+	public void setTestcaseAll()
+	{
+		performRttMeasurement             = true;
+		performDownloadMeasuement         = true;
+		performUploadMeasurement          = true;
+	}
+
+	/**
+	 * Method setTestcaseAll
+	 */
+	public void setTestcaseRTT()
+	{
+		performRttMeasurement             = true;
+		performDownloadMeasuement         = false;
+		performUploadMeasurement          = false;
+	}
+
+	/**
+	 * Method setTestcaseAll
+	 */
+	public void setTestcaseDownload()
+	{
+		performRttMeasurement             = false;
+		performDownloadMeasuement         = true;
+		performUploadMeasurement          = false;
+	}
+
+	/**
+	 * Method setTestcaseAll
+	 */
+	public void setTestcaseUpload()
+	{
+		performRttMeasurement             = false;
+		performDownloadMeasuement         = false;
+		performUploadMeasurement          = true;
 	}
 
 	//----------------------------------------------------------------------------------------------

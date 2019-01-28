@@ -27,8 +27,8 @@ import java.util.Iterator;
 public class Common
 {
     /**************************** Loging Level ****************************/
-    public static boolean DEBUG = true;
-    public static boolean DEBUG_CONSOLE = true;
+    public static boolean DEBUG = false;
+    public static boolean DEBUG_CONSOLE = false;
 
     /****************** Default Measurement Parameters ********************/
 

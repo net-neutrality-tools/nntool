@@ -57,6 +57,15 @@ public class Speed
 
     private static int defaultRouteToClientTargetPort               = 8080;
 
+    private String wsTargets						                = "peer-ias-de-01";
+    private String wsTargetsRtt						                = "peer-ias-de-01";
+    private String wsTLD 							                = "net-neutrality.tools";
+
+    private int defaultWsParallelStreamsDownload                    = 4;
+    private int defaultWsParallelStreamsUpload                      = 4;
+    private int defaultWsFrameSizeDownload                          = 32768;
+    private int defaultWsFrameSizeUpload                            = 65535;
+
     /************************* Default Parameters *************************/
 
     private static String defaultIndexUrl                           = "";
@@ -178,10 +187,9 @@ public class Speed
 
             jsonMTWSMeasurement.put("cmd", "start");
             jsonMTWSMeasurement.put("platform", defaultPlatform);
-            jsonMTWSMeasurement.put("wsTargets", jArray);
-            jsonMTWSMeasurement.put("wsTargetsV4", jArray);
-            jsonMTWSMeasurement.put("wsTargetsRtt", jArray);
-            jsonMTWSMeasurement.put("wsTLD", "net-neutrality.tools");
+            jsonMTWSMeasurement.put("wsTargets", new JSONArray().put(wsTargets));
+            jsonMTWSMeasurement.put("wsTargetsRtt", new JSONArray().put(wsTargetsRtt));
+            jsonMTWSMeasurement.put("wsTLD", wsTLD);
             jsonMTWSMeasurement.put("wsTargetPort", 80);
             jsonMTWSMeasurement.put("wsWss", 0);
             jsonMTWSMeasurement.put("wsAuthToken", "placeholderToken");
@@ -190,6 +198,11 @@ public class Speed
             jsonMTWSMeasurement.put("performRttMeasurement", defaultPerformRttMeasurement);
             jsonMTWSMeasurement.put("performDownloadMeasurement", defaultPerformDownloadMeasuement);
             jsonMTWSMeasurement.put("performUploadMeasurement", defaultPerformUploadMeasurement);
+
+            jsonMTWSMeasurement.put("wsParallelStreamsDownload", defaultWsParallelStreamsDownload);
+            jsonMTWSMeasurement.put("wsParallelStreamsUpload", defaultWsParallelStreamsUpload);
+            jsonMTWSMeasurement.put("wsFrameSizeDownload", defaultWsFrameSizeDownload);
+            jsonMTWSMeasurement.put("wsFrameSizeUpload", defaultWsFrameSizeUpload);
 
             jsonMTWSMeasurement.put("cookieId", false);
 
@@ -430,7 +443,7 @@ public class Speed
         JSONObject jData = Common.getJSONMTWSMeasurement();
 
         File path = ctx.getFilesDir();
-        File file = new File(path, "app/index.js");
+        File file = new File(path, "index.js");
 
         try
         {
@@ -492,5 +505,188 @@ public class Speed
             Common.addToJSONMTWSMeasurementAdditional(jAdd);
         }
         catch (Exception ex) { mTool.printTrace(ex); }
+    }
+
+    //Profiles -------------------------------------------------------------------------------------
+
+    /**
+     * Method setDownloadProfileLow
+     */
+    public void setDownloadProfileLow()
+    {
+        defaultWsParallelStreamsDownload = 4;
+        defaultWsFrameSizeDownload = 2048;
+    }
+
+    /**
+     * Method setDownloadProfileMiddle
+     */
+    public void setDownloadProfileMiddle()
+    {
+        defaultWsParallelStreamsDownload = 4;
+        defaultWsFrameSizeDownload = 32768;
+    }
+
+    /**
+     * Method setDownloadProfileHigh
+     */
+    public void setDownloadProfileHigh()
+    {
+        defaultWsParallelStreamsDownload = 4;
+        defaultWsFrameSizeDownload = 524288;
+    }
+
+    /**
+     * Method setDownloadProfileVeryHigh
+     */
+    public void setDownloadProfileVeryHigh()
+    {
+        defaultWsParallelStreamsDownload = 8;
+        defaultWsFrameSizeDownload = 524288;
+    }
+
+    /**
+     * Method setUploadProfileLow
+     */
+    public void setUploadProfileLow()
+    {
+        defaultWsParallelStreamsUpload = 4;
+        defaultWsFrameSizeUpload = 2048;
+    }
+
+    /**
+     * Method setUploadProfileMiddle
+     */
+    public void setUploadProfileMiddle()
+    {
+        defaultWsParallelStreamsUpload = 4;
+        defaultWsFrameSizeUpload = 32768;
+    }
+
+    /**
+     * Method setUploadProfileHigh
+     */
+    public void setUploadProfileHigh()
+    {
+        defaultWsParallelStreamsUpload = 4;
+        defaultWsFrameSizeUpload = 65535;
+    }
+
+    /**
+     * Method setUploadProfileVeryHigh
+     */
+    public void setUploadProfileVeryHigh()
+    {
+        defaultWsParallelStreamsUpload = 20;
+        defaultWsFrameSizeUpload = 65535;
+    }
+
+    /**
+     * Method setIPAuto
+     */
+    public void setIPAuto()
+    {
+        if(wsTargets.contains("ipv"))
+        {
+            wsTargets = wsTargets.substring(0, wsTargets.lastIndexOf("-"));
+        }
+        if(wsTargetsRtt.contains("ipv"))
+        {
+            wsTargetsRtt = wsTargetsRtt.substring(0, wsTargetsRtt.lastIndexOf("-"));
+        }
+    }
+
+    /**
+     * Method setIPV4
+     */
+    public void setIPV4()
+    {
+        setIPAuto();
+
+        wsTargets = wsTargets+"-ipv4";
+        wsTargetsRtt = wsTargetsRtt+"-ipv4";
+    }
+
+    /**
+     * Method setIPV6
+     */
+    public void setIPV6()
+    {
+        setIPAuto();
+
+        wsTargets = wsTargets+"-ipv6";
+        wsTargetsRtt = wsTargetsRtt+"-ipv6";
+    }
+
+    /**
+     * Method setUploadProfileVeryHigh
+     */
+    public void setSingleStreamOff()
+    {
+        defaultWsFrameSizeDownload = 32768;
+        defaultWsParallelStreamsDownload = 4;
+
+        defaultWsFrameSizeUpload = 32768;
+        defaultWsParallelStreamsUpload = 4;
+    }
+
+    /**
+     * Method setUploadProfileVeryHigh
+     */
+    public void setSingleStreamOn()
+    {
+        defaultWsFrameSizeDownload = defaultWsFrameSizeDownload * defaultWsParallelStreamsDownload;
+        defaultWsParallelStreamsDownload = 1;
+
+        defaultWsFrameSizeUpload = defaultWsFrameSizeUpload * defaultWsParallelStreamsUpload;
+        defaultWsParallelStreamsUpload = 1;
+
+        if (defaultWsFrameSizeUpload > 65535)
+        {
+            defaultWsFrameSizeUpload = 65535;
+        }
+
+    }
+
+    //TestCases ------------------------------------------------------------------------------------
+
+    /**
+     * Method setTestcaseAll
+     */
+    public void setTestcaseAll()
+    {
+        defaultPerformRttMeasurement             = true;
+        defaultPerformDownloadMeasuement         = true;
+        defaultPerformUploadMeasurement          = true;
+    }
+
+    /**
+     * Method setTestcaseAll
+     */
+    public void setTestcaseRTT()
+    {
+        defaultPerformRttMeasurement             = true;
+        defaultPerformDownloadMeasuement         = false;
+        defaultPerformUploadMeasurement          = false;
+    }
+
+    /**
+     * Method setTestcaseAll
+     */
+    public void setTestcaseDownload()
+    {
+        defaultPerformRttMeasurement             = false;
+        defaultPerformDownloadMeasuement         = true;
+        defaultPerformUploadMeasurement          = false;
+    }
+
+    /**
+     * Method setTestcaseAll
+     */
+    public void setTestcaseUpload()
+    {
+        defaultPerformRttMeasurement             = false;
+        defaultPerformDownloadMeasuement         = false;
+        defaultPerformUploadMeasurement          = true;
     }
 }
