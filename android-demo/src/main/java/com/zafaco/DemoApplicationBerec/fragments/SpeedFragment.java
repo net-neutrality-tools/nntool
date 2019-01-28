@@ -37,6 +37,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import org.json.JSONObject;
@@ -55,12 +57,17 @@ public class SpeedFragment extends Fragment implements FocusedFragment
     private Tool mTool = wsTool.getToolObject();
     private Speed mSpeed = wsTool.getSpeedObject();
 
-    DecimalFormat f = new DecimalFormat("#0.00");
+    private DecimalFormat f = new DecimalFormat("#0.00");
 
     /**************************** Variables ****************************/
 
-    Context ctx;
-    View view;
+    private Context ctx;
+    private View mView;
+
+    private Button buttonStart;
+    private Button buttonRtt;
+    private Button buttonDownload;
+    private Button buttonUpload;
 
     /*******************************************************************/
 
@@ -74,13 +81,30 @@ public class SpeedFragment extends Fragment implements FocusedFragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        view = inflater.inflate(R.layout.fragment_measurement, container, false);
+        mView = inflater.inflate(R.layout.fragment_speed, container, false);
 
         //Start button
-        Button buttonOne = view.findViewById(R.id.button);
-        buttonOne.setOnClickListener(handleClickMeasurementStart);
+        buttonStart      = mView.findViewById(R.id.buttonStart);
+        buttonRtt        = mView.findViewById(R.id.buttonRTT);
+        buttonDownload   = mView.findViewById(R.id.buttonDownload);
+        buttonUpload     = mView.findViewById(R.id.buttonUpload);
 
-        return view;
+        RadioGroup radioDownload    = mView.findViewById(R.id.radioGroupDL);
+        RadioGroup radioUpload      = mView.findViewById(R.id.radioGroupUL);
+        RadioGroup radioIP          = mView.findViewById(R.id.radioGroupIP);
+        RadioGroup radioStream      = mView.findViewById(R.id.radioGroupST);
+
+        buttonStart.setOnClickListener(handleClickMeasurementStart);
+        buttonRtt.setOnClickListener(handleClickMeasurementStart);
+        buttonDownload.setOnClickListener(handleClickMeasurementStart);
+        buttonUpload.setOnClickListener(handleClickMeasurementStart);
+
+        radioDownload.setOnCheckedChangeListener(handleCheckMeasurementSettings);
+        radioUpload.setOnCheckedChangeListener(handleCheckMeasurementSettings);
+        radioIP.setOnCheckedChangeListener(handleCheckMeasurementSettings);
+        radioStream.setOnCheckedChangeListener(handleCheckMeasurementSettings);
+
+        return mView;
     }
 
     /**
@@ -90,8 +114,6 @@ public class SpeedFragment extends Fragment implements FocusedFragment
     public void onResume()
     {
         ctx = Objects.requireNonNull(getActivity()).getApplicationContext();
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 
         super.onResume();
     }
@@ -119,31 +141,92 @@ public class SpeedFragment extends Fragment implements FocusedFragment
         @Override
         public void onClick(View v)
         {
+            switch (v.getId())
+            {
+                case R.id.buttonStart:      wsTool.setTestcaseAll();        break;
+                case R.id.buttonRTT:        wsTool.setTestcaseRTT();        break;
+                case R.id.buttonDownload:   wsTool.setTestcaseDownload();   break;
+                case R.id.buttonUpload:     wsTool.setTestcaseUpload();     break;
+            }
+
+            wsTool.initSpeedParameter();
+
             //if running
             if(mSpeed.getMeasurementRunning())
             {
                 //Update Button Text
-                updateButtonUi(R.string.start_test, (Button) view.findViewById(R.id.button));
+                updateButtonUi(R.string.name_msetting_all, buttonStart);
 
                 //Start Measurement
                 mSpeed.stopMeasurement();
 
                 mSpeed.setMeasurementRunning(false);
+
+                buttonRtt.setEnabled(true);
+                buttonDownload.setEnabled(true);
+                buttonUpload.setEnabled(true);
             }
 
             //if not running
             else
             {
                 //Update Button Text
-                updateButtonUi(R.string.cancel_test, (Button) view.findViewById(R.id.button));
+                updateButtonUi(R.string.name_msetting_cancel, buttonStart);
 
                 //Start Measurement
                 mSpeed.startMeasurement(Objects.requireNonNull(getActivity()).getApplication(), interfaceCallback);
 
                 mSpeed.setMeasurementRunning(true);
+
+                buttonRtt.setEnabled(false);
+                buttonDownload.setEnabled(false);
+                buttonUpload.setEnabled(false);
             }
         }
     };
+
+    /**
+     * Hanlder handleCheckMeasurementSettings
+     */
+    private final RadioGroup.OnCheckedChangeListener handleCheckMeasurementSettings = new RadioGroup.OnCheckedChangeListener()
+    {
+        @Override
+        public void onCheckedChanged(RadioGroup radioGroup, int checkedId)
+        {
+            // This will get the radiobutton that has changed in its check state
+            // RadioButton checkedRadioButton = radioGroup.findViewById(checkedId);
+
+            switch (checkedId)
+            {
+                //Download "low" Profile
+                case R.id.radioButtonDLLow:         wsTool.setDownloadProfileLow();         break;
+                //Download "middle" Profile
+                case R.id.radioButtonDLMiddle:      wsTool.setDownloadProfileMiddle();      break;
+                //Download "high" Profile
+                case R.id.radioButtonDLHigh:        wsTool.setDownloadProfileHigh();        break;
+                //Download "very high" Profile
+                case R.id.radioButtonDLVeryHigh:    wsTool.setDownloadProfileVeryHigh();    break;
+                //Upload "low" Profile
+                case R.id.radioButtonULLow:         wsTool.setUploadProfileLow();           break;
+                //Upload "middle" Profile
+                case R.id.radioButtonULMiddle:      wsTool.setUploadProfileMiddle();        break;
+                //Upload "high" Profile
+                case R.id.radioButtonULHigh:        wsTool.setUploadProfileHigh();          break;
+                //Upload "very high" Profile
+                case R.id.radioButtonULVeryHigh:    wsTool.setUploadProfileVeryHigh();      break;
+                //IP Version auto
+                case R.id.radioButtonIPAuto:        wsTool.setIPAuto();                     break;
+                //IP Version 4 only
+                case R.id.radioButtonIPV4:          wsTool.setIPV4();                       break;
+                //IP Version 6 only
+                case R.id.radioButtonIPV6:          wsTool.setIPV6();                       break;
+                //Single Stream off
+                case R.id.radioButtonSSOff:         wsTool.setSingleStreamOff();            break;
+                //Single Stream on
+                case R.id.radioButtonSSOn:          wsTool.setSingleStreamOn();             break;
+            }
+        }
+    } ;
 
     /**
      * Interface interfaceCallback
@@ -164,7 +247,7 @@ public class SpeedFragment extends Fragment implements FocusedFragment
                     //------------------------------------------------------------------------------
                     case "info":
 
-                        updateUi(jsonReport.getString("test_case")+": "+jsonReport.getString("msg"), (TextView) view.findViewById(R.id.status));
+                        updateUi(jsonReport.getString("test_case")+": "+jsonReport.getString("msg"), (TextView) mView.findViewById(R.id.status));
 
                         if(jsonReport.getString("test_case").equals("download") && jsonReport.getString("msg").equals("starting measurement"))
                         {
@@ -179,11 +262,14 @@ public class SpeedFragment extends Fragment implements FocusedFragment
 
                         break;
                     //------------------------------------------------------------------------------
+                    case "error":
+                        break;
+                    //------------------------------------------------------------------------------
                     case "finish":
                         //Show Cancel Button
-                        updateButtonUi(R.string.cancel_test,(Button) view.findViewById(R.id.button));
+                        updateButtonUi(R.string.name_msetting_cancel,(Button) mView.findViewById(R.id.buttonStart));
                         //Show TestCase
-                        updateUi(jsonReport.getString("test_case")+": "+jsonReport.getString("msg"), (TextView) view.findViewById(R.id.status));
+                        updateUi(jsonReport.getString("test_case")+": "+jsonReport.getString("msg"), (TextView) mView.findViewById(R.id.status));
 
                         if(jsonReport.getString("test_case").equals("download"))
                         {
@@ -194,9 +280,20 @@ public class SpeedFragment extends Fragment implements FocusedFragment
                             mSpeed.setUploadStopped();
                         }
 
-                        break;
-                    //------------------------------------------------------------------------------
-                    case "error":
+                        switch(jsonReport.getString("test_case"))
+                        {
+                            case "rtt":
+                                updateUi(f.format(jsonReport.getJSONObject("rtt_info").getDouble("average_ns")/1000)+" ms", (TextView) mView.findViewById(R.id.rtt));
+                                break;
+                            case "download":
+                                updateUi(f.format(jsonReport.getJSONObject("download_info").getDouble("throughput_avg_bps")/1000/1000)+" Mbit/s", (TextView) mView.findViewById(R.id.download));
+                                break;
+                            case "upload":
+
+                                updateUi(f.format(jsonReport.getJSONObject("upload_info").getDouble("throughput_avg_bps")/1000/1000)+" Mbit/s", (TextView) mView.findViewById(R.id.upload));
+                                break;
+                        }
+
                         break;
                     //------------------------------------------------------------------------------
                     case "report":
@@ -204,18 +301,18 @@ public class SpeedFragment extends Fragment implements FocusedFragment
                         switch(jsonReport.getString("test_case"))
                         {
                             case "rtt":
-                                updateUi(f.format(jsonReport.getJSONObject("rtt_info").getDouble("average_ns")/1000)+" ms", (TextView) view.findViewById(R.id.rtt));
+                                updateUi(f.format(jsonReport.getJSONObject("rtt_info").getDouble("average_ns")/1000)+" ms", (TextView) mView.findViewById(R.id.rtt));
                                 break;
                             case "download":
-                                updateUi(f.format(jsonReport.getJSONObject("download_info").getDouble("throughput_avg_bps")/1000/1000)+" Mbit/s", (TextView) view.findViewById(R.id.download));
+                                updateUi(f.format(jsonReport.getJSONObject("download_info").getDouble("throughput_avg_bps")/1000/1000)+" Mbit/s", (TextView) mView.findViewById(R.id.download));
                                 break;
                             case "upload":
 
-                                updateUi(f.format(jsonReport.getJSONObject("upload_info").getDouble("throughput_avg_bps")/1000/1000)+" Mbit/s", (TextView) view.findViewById(R.id.upload));
+                                updateUi(f.format(jsonReport.getJSONObject("upload_info").getDouble("throughput_avg_bps")/1000/1000)+" Mbit/s", (TextView) mView.findViewById(R.id.upload));
                                 break;
                         }
 
-                        updateUi(jsonReport.toString(2), (TextView) view.findViewById(R.id.results));
+                        updateUi(jsonReport.toString(2), (TextView) mView.findViewById(R.id.results));
 
                         break;
                     //------------------------------------------------------------------------------
@@ -231,14 +328,18 @@ public class SpeedFragment extends Fragment implements FocusedFragment
                         mtdatabase.insert(Common.getJSONMTWSMeasurement());
 
                         //Update UI
-                        updateButtonUi(R.string.start_test,(Button) view.findViewById(R.id.button));
-                        updateUi(jsonReport.getString("test_case")+": "+jsonReport.getString("msg"), (TextView) view.findViewById(R.id.status));
-                        updateUi(Common.getJSONMTWSMeasurement().toString(2), (TextView) view.findViewById(R.id.results));
+                        updateButtonUi(R.string.name_msetting_all,buttonStart);
+                        updateUi(jsonReport.getString("test_case")+": "+jsonReport.getString("msg"), (TextView) mView.findViewById(R.id.status));
+                        updateUi(Common.getJSONMTWSMeasurement().toString(2), (TextView) mView.findViewById(R.id.results));
 
                         //Stop Listener
                         mSpeed.stopMeasurement();
 
                         mSpeed.setMeasurementRunning(false);
+
+                        buttonRtt.setEnabled(true);
+                        buttonDownload.setEnabled(true);
+                        buttonUpload.setEnabled(true);
 
                         break;
                     //------------------------------------------------------------------------------
