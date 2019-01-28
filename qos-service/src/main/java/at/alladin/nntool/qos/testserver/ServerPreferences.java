@@ -242,9 +242,14 @@ public class ServerPreferences {
 	private void loadFromConfigFile(String fileName) throws TestServerException {
 		Properties prop = new Properties();
 	   	try {
-	   		prop.load(new FileInputStream(fileName));
-	   		
-	   		String param = prop.getProperty(PARAM_SERVER_PORT);
+			if (new File(fileName).exists()) {
+				prop.load(new FileInputStream(fileName));
+			}
+			else {
+				prop.load(getClass().getResourceAsStream(fileName.startsWith("/") ? fileName : "/" + fileName));
+			}
+
+			String param = prop.getProperty(PARAM_SERVER_PORT);
 	   		if (param!=null) {
 		   		serverPort = Integer.parseInt(param.trim());	   			
 	   		}
