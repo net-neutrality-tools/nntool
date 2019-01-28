@@ -74,12 +74,8 @@ public class EchoProtocolUdpTask extends AbstractEchoProtocolTask {
 					socket.send(sendPacket);
 					socket.receive(receivePacket);
 
-					if (sendPacket.getLength() != receivePacket.getLength()) {
-						result.getResultMap().put(RESULT, "ERROR");
-					}
-
 					final String testResponse = new String(receivePacket.getData(), 0, receivePacket.getLength());
-					if (payload.equals(testResponse)) {
+					if (sendPacket.getLength() == receivePacket.getLength() && payload.equals(testResponse)) {
                         result.getResultMap().put(RESULT, "OK");
                     } else {
                         result.getResultMap().put(RESULT, "ERROR");

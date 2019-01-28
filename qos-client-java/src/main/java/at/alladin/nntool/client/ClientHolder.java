@@ -181,7 +181,7 @@ public class ClientHolder
                 params.put("timeout", "5000000000");
                 params.put("qostest", "echo_protocol");
                 params.put(AbstractEchoProtocolTask.RESULT_PROTOCOL, "tcp");
-                params.put(AbstractEchoProtocolTask.PARAM_PAYLOAD, "I'm a fully grown TCP payload!");
+                params.put(AbstractEchoProtocolTask.PARAM_PAYLOAD, "TCP payload!");
                 final TaskDesc task = new TaskDesc(echoServiceHost, port, false, fakeToken,
                         0, 1, 0, System.nanoTime(), params, "echo_protocol");
                 taskDescList.add(task);
@@ -195,7 +195,7 @@ public class ClientHolder
                 params.put("timeout", "5000000000");
                 params.put("qostest", "echo_protocol");
                 params.put(AbstractEchoProtocolTask.RESULT_PROTOCOL, "udp");
-                params.put(AbstractEchoProtocolTask.PARAM_PAYLOAD, "I'm a fully grown UDP payload!");
+                params.put(AbstractEchoProtocolTask.PARAM_PAYLOAD, "UDP payload!");
                 final TaskDesc task = new TaskDesc(echoServiceHost, port, false, fakeToken,
                         0, 1, 0, System.nanoTime(), params, "echo_protocol");
                 taskDescList.add(task);

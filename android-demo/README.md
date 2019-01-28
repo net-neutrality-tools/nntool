@@ -42,7 +42,8 @@ The results in the demo-application of the port-blocking module are only display
 This will not be the case for later versions of the app.
 
 In case of a failed connection to the qos-service (as defined in the corresponding Settings) the result
-is a simple text providing information about the currently input configuration.
+is a simple text providing information about the currently input configuration (if no echo protocol tests are executed), or 
+just the results for the echo protocol tests (if echo-protocol tests are enabled in the defaults.xml).
 
 The test type (e.g: UDP) can be found under the "test\_type" key.
 For TCP tests, the port is reachable if the result under "tcp\_result\_out" reads "OK".
