@@ -16,6 +16,8 @@
 
 package at.alladin.nntool.qos.testserver;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -39,6 +41,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import at.alladin.nettest.shared.qos.UdpPayload;
+import at.alladin.nettest.shared.qos.util.UdpPayloadUtil;
 import at.alladin.nntool.qos.testserver.ServerPreferences.TestServerServiceEnum;
 import at.alladin.nntool.qos.testserver.entity.ClientToken;
 import at.alladin.nntool.qos.testserver.servers.AbstractUdpServer;
@@ -486,9 +490,20 @@ public class ClientHandler implements Runnable {
 	    	byteOut.reset();
 	    	try {
 	    		Thread.sleep(delay);
+
+	    		final UdpPayload udpPayload = new UdpPayload();
+				udpPayload.setCommunicationFlag(QoSServiceProtocol.UDP_TEST_AWAIT_RESPONSE_IDENTIFIER);
+				udpPayload.setPacketNumber(i);
+				udpPayload.setUuid(token.getUuid());
+				udpPayload.setTimestamp(System.nanoTime());
+
+                /*
 	    		dataOut.writeByte(QoSServiceProtocol.UDP_TEST_AWAIT_RESPONSE_IDENTIFIER);
 	    		dataOut.writeByte(i);
     			dataOut.write(token.getUuid().getBytes());
+    			dataOut.write(Long.toString(System.currentTimeMillis()).getBytes());
+    			*/
+				dataOut.write(UdpPayloadUtil.toBytes(udpPayload));
 	    	} catch (IOException | InterruptedException e) {
 	    		e.printStackTrace();
 	    		sock.close();
@@ -508,11 +523,14 @@ public class ClientHandler implements Runnable {
 
 	    			    DatagramPacket dp = new DatagramPacket(buffer, buffer.length);
     			    	sock.receive(dp);
-    			    	
-	    				int packetNumber = buffer[1];
-	    				
-	    			    TestServerConsole.log(dp.getAddress() + ": UDP Test received packet: #" + packetNumber + " -> " + buffer, 
-	    			    		2, TestServerServiceEnum.UDP_SERVICE);
+
+						final UdpPayload udpPayload = UdpPayloadUtil.toUdpPayload(buffer);
+
+						final long rtt = System.nanoTime() - udpPayload.getTimestamp();
+						final int packetNumber = udpPayload.getPacketNumber();
+
+						TestServerConsole.log(dp.getAddress() + ": UDP Test received packet: #" + packetNumber + " (RTT: " +  (rtt / 1e6)  +"ms) -> " + udpPayload,
+								2, TestServerServiceEnum.UDP_SERVICE);
 	    			    
 	    				//check udp packet:
 	    				if (buffer[0] != QoSServiceProtocol.UDP_TEST_RESPONSE) {
@@ -530,6 +548,7 @@ public class ClientHandler implements Runnable {
 	    				}
 	    				else {
 	    					clientData.getPacketsReceived().add(new Integer(packetNumber));
+							clientData.getRttMap().put(packetNumber, rtt);
 	    				}	    				
 	    			}
 	    			catch (SocketTimeoutException e) {
@@ -828,7 +847,10 @@ public class ClientHandler implements Runnable {
     private void sendRcvResult(final UdpTestCandidate result, final int port, final String command) throws IOException {
 		if (result != null && result.getPacketsReceived() != null && !result.isError()) {
 			TestServerConsole.log("RESULT OK, RCV PACKETS: " + result.getPacketsReceived().size() + ", DUP: " + result.getPacketDuplicates().size(), 1, TestServerServiceEnum.UDP_SERVICE);
-			sendCommand(QoSServiceProtocol.RESPONSE_UDP_NUM_PACKETS_RECEIVED + " " + result.getPacketsReceived().size() + " " + result.getPacketDuplicates().size(), command);
+
+			final Gson gson = new Gson();
+			final String rttResult = gson.toJson(result.getRttMap());
+			sendCommand(QoSServiceProtocol.RESPONSE_UDP_NUM_PACKETS_RECEIVED + " " + result.getPacketsReceived().size() + " " + result.getPacketDuplicates().size() +  " " + rttResult, command);
 		}
 		else {
 			TestServerConsole.log("RESULT ERROR, error: " + (result != null ? result.getErrorMsg() : "sorry, no error message available!"), 
