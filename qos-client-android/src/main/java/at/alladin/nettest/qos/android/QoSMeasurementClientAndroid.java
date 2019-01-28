@@ -110,7 +110,9 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
                 // No measurement request without the server
                 final Object request = null;
 
-                client = ClientHolder.getInstance(measurementContext.getControlServerHost(), "5233", new int[7078], new int[5052]);
+                // default initialization is not needed for the demo application
+                client = ClientHolder.getInstance(measurementContext.getControlServerHost(), "5233", new int[8], new int[5],
+                        null, null, null);
             }
 
             final TestSettings qosTestSettings = new TestSettings();

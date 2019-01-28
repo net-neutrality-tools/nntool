@@ -14,6 +14,11 @@ With fullfilled prerequisites perform the following steps:
 
 ---------------
 
+## Execution ##
+Launch the App *android-demo* in android-simulator or on an android-device and select *Start Test*. Perform another measurement by clicking *Start* again.
+
+---------------
+
 ## Port Blocking
 
 For the port blocking module a specified set of ports is tested against a defined test-service.
@@ -49,5 +54,27 @@ For udp results, the port is reachable if the value under "udp\_objective\_out\_
 
 ---------------
 
-## Execution ##
-Launch the App *android-demo* in android-simulator or on an android-device and select *Start Test*. Perform another measurement by clicking *Start* again.
+## Echo Protocol
+
+For the echo protocol test a given payload is sent to a specified server and the returned payload is checked for equality with the originally sent one.
+
+### Settings
+
+Available settings are located in the src/main/res/values/defaults.xml file (of the android-demo project).
+They are:
+
+* qos\_echo\_service\_host: which defines the location of the echo-service provider to test against
+* qos\_echo\_service\_tcp\_ports: which is a list of TCP ports to test the echo service on (Note: the default echo-service port is 7)
+* qos\_echo\_service\_udp\_ports: which is a list of UDP ports to test the echo service on (Note: the default echo-service port is 7)
+
+### Results
+
+The result of the echo-protocol test is found under the "echo\_protocol\_status" key. It has one of the following 3 values:
+
+* OK: the test succeeded (the payload that was sent to the echo-service host was returned exactly as sent)
+* TIMEOUT: the test ran into a timeout during the execution
+* ERROR: an error occurred during the echo-protocol test
+
+
+---------------
+

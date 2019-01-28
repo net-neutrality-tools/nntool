@@ -34,8 +34,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import at.alladin.nettest.qos.QoSMeasurementClientProgressListener;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.client.v2.task.AbstractEchoProtocolTask;
 import at.alladin.nntool.client.v2.task.AbstractQoSTask;
 import at.alladin.nntool.client.v2.task.DnsTask;
+import at.alladin.nntool.client.v2.task.EchoProtocolTcpTask;
+import at.alladin.nntool.client.v2.task.EchoProtocolUdpTask;
 import at.alladin.nntool.client.v2.task.HttpProxyTask;
 import at.alladin.nntool.client.v2.task.NonTransparentProxyTask;
 import at.alladin.nntool.client.v2.task.QoSControlConnection;
@@ -170,6 +173,19 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 				}
 				else {
 					System.out.println("No WebsiteTestService implementation: Skipping WebsiteTask: " + taskDesc);
+				}
+			} else if (ClientHolder.TASK_ECHO_PROTOCOL.equals(taskId)) {
+				if (taskDesc.getParams().get(AbstractEchoProtocolTask.RESULT_PROTOCOL) != null) {
+					final String protocol = (String) taskDesc.getParams().get(AbstractEchoProtocolTask.RESULT_PROTOCOL);
+					if (AbstractEchoProtocolTask.PROTOCOL_TCP.equals(protocol)) {
+						test = new EchoProtocolTcpTask(this, taskDesc, threadCounter++);
+					} else if (AbstractEchoProtocolTask.PROTOCOL_UDP.equals(protocol)) {
+						test = new EchoProtocolUdpTask(this, taskDesc, threadCounter++);
+					} else {
+						System.out.println("Protocol for EchoProtocol unknown. Use either: " + AbstractEchoProtocolTask.PROTOCOL_UDP + " or " + AbstractEchoProtocolTask.PROTOCOL_TCP);
+					}
+				} else {
+					System.out.println("No protocol specified for the EchoProtocol test. Skipping " + taskDesc);
 				}
 			}
 			

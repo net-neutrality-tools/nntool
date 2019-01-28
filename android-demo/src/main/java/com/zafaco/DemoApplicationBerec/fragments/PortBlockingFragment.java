@@ -87,12 +87,13 @@ public class PortBlockingFragment extends Fragment implements FocusedFragment
             textView.setVisibility(View.GONE);
         }
 
-
-
         ClientHolder client = ClientHolder.getInstance(getResources().getString(R.string.default_qos_control_host),
                 Integer.toString(getResources().getInteger(R.integer.default_qos_control_port)),
                 getResources().getIntArray(R.array.qos_tcp_test_port_list),
-                getResources().getIntArray(R.array.qos_udp_test_port_list));
+                getResources().getIntArray(R.array.qos_udp_test_port_list),
+                getResources().getString(R.string.qos_echo_service_host),
+                getResources().getIntArray(R.array.qos_echo_service_tcp_ports),
+                getResources().getIntArray(R.array.qos_echo_service_udp_ports));
         qosClient = new QoSMeasurementClientAndroid(client, this.getContext().getApplicationContext());
 
         //Start button
@@ -136,6 +137,7 @@ public class PortBlockingFragment extends Fragment implements FocusedFragment
         @Override
         public void onClick(View v)
         {
+            updateButtonUi("TEST RUNNING", (Button) view.findViewById(R.id.button));
             qosClient.addProgressListener(new QoSMeasurementClientProgressAdapter() {
                 @Override
                 public void onProgress(float progress) {
@@ -151,11 +153,13 @@ public class PortBlockingFragment extends Fragment implements FocusedFragment
                 @Override
                 public void onMeasurementStopped() {
                     Log.i(TAG, "Measurement stopped");
+                    updateButtonUi("START TEST ", (Button) view.findViewById(R.id.button));
                 }
 
                 @Override
                 public void onMeasurementError(Exception e) {
                     Log.e(TAG, e.getMessage());
+                    updateButtonUi("START TEST ", (Button) view.findViewById(R.id.button));
                 }
 
                 @Override
@@ -169,6 +173,7 @@ public class PortBlockingFragment extends Fragment implements FocusedFragment
                     } else {
                         updateUi(resultFormatPattern.matcher(qoSResultCollector.toJson().toString().replace(",", ",\n")).replaceAll("\n\n{"), (TextView) view.findViewById(R.id.results));
                     }
+                    updateButtonUi("START TEST ", (Button) view.findViewById(R.id.button));
                 }
             });
             qosClient.start();
@@ -181,7 +186,7 @@ public class PortBlockingFragment extends Fragment implements FocusedFragment
      * @param message Message to Show
      * @param buttonid button id
      */
-    private void updateButtonUi(final int message, final Button buttonid)
+    private void updateButtonUi(final String message, final Button buttonid)
     {
         Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
             @Override
