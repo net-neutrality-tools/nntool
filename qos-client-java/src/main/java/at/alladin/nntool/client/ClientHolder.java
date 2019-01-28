@@ -44,6 +44,7 @@ import org.json.JSONObject;
 import at.alladin.nntool.client.helper.Config;
 import at.alladin.nntool.client.helper.RMBTOutputCallback;
 import at.alladin.nntool.client.helper.TestStatus;
+import at.alladin.nntool.client.v2.task.AbstractEchoProtocolTask;
 import at.alladin.nntool.client.v2.task.TaskDesc;
 import at.alladin.nntool.client.v2.task.service.TestMeasurement;
 import at.alladin.nntool.client.v2.task.service.TrafficService;
@@ -96,6 +97,7 @@ public class ClientHolder
     public final static String TASK_HTTP = "http_proxy";
     public final static String TASK_WEBSITE = "website";
     public final static String TASK_TRACEROUTE = "traceroute";
+    public final static String TASK_ECHO_PROTOCOL = "echo_protocol";
 
     private List<TaskDesc> taskDescList;
 
@@ -116,12 +118,14 @@ public class ClientHolder
     
     private ConcurrentHashMap<TestStatus, TestMeasurement> measurementMap = new ConcurrentHashMap<TestStatus, TestMeasurement>();
 
-    public static ClientHolder getInstance(final String host, final String controlConnectionPort, final int[] tcpTestPorts, final int[] udpTestPorts)
+    public static ClientHolder getInstance(final String host, final String controlConnectionPort, final int[] tcpTestPorts, final int[] udpTestPorts,
+                                           final String echoServiceHost, final int[] echoServiceTcpPorts, final int[] echoServiceUdpPorts)
     {
-        return new ClientHolder(host, controlConnectionPort, tcpTestPorts, udpTestPorts);
+        return new ClientHolder(host, controlConnectionPort, tcpTestPorts, udpTestPorts, echoServiceHost, echoServiceTcpPorts, echoServiceUdpPorts);
     }
 
-    private ClientHolder(final String host, final String controlConnectionPort, final int[] tcpTestPorts, final int[] udpTestPorts) {
+    private ClientHolder(final String host, final String controlConnectionPort, final int[] tcpTestPorts, final int[] udpTestPorts,
+                         final String echoServiceHost, final int[] echoServiceTcpPorts, final int[] echoServiceUdpPorts) {
         taskDescList = new ArrayList<>();
         // The fake token will only be accepted by qos-servers w/out any token checks (it will NOT work in a production env)
         final String fakeToken = "bbd1ee96-0779-4619-b993-bb4bf7089754_1528136454_3gr2gw9lVhtVONV0XO62Vamu/uw=";
@@ -130,7 +134,7 @@ public class ClientHolder
         if (tcpTestPorts != null) {
             int tcpUuid = 100; //provide temp uuids
             for (Integer port : tcpTestPorts) {
-                Map<String, Object> params = new HashMap<>();
+                final Map<String, Object> params = new HashMap<>();
                 params.put("concurrency_group", "200");
                 params.put("server_port", controlConnectionPort);
                 params.put("qos_test_uid", Integer.toString(tcpUuid++));
@@ -139,7 +143,7 @@ public class ClientHolder
                 params.put("out_port", Integer.toString(port));
                 params.put("qostest", "tcp");
 
-                TaskDesc task = new TaskDesc(host, Integer.parseInt(controlConnectionPort), Config.QOS_SSL, fakeToken,
+                final TaskDesc task = new TaskDesc(host, Integer.parseInt(controlConnectionPort), Config.QOS_SSL, fakeToken,
                         0, 1, 0, System.nanoTime(), params, "tcp");
                 taskDescList.add(task);
             }
@@ -150,7 +154,7 @@ public class ClientHolder
         if (udpTestPorts != null) {
             int udpUuid = 300;  //provide temp uuids
             for (Integer port : udpTestPorts) {
-                Map<String, Object> params = new HashMap<>();
+                final Map<String, Object> params = new HashMap<>();
                 params.put("concurrency_group", "201");
                 params.put("out_num_packets", "1");
                 params.put("server_port", controlConnectionPort);
@@ -160,10 +164,43 @@ public class ClientHolder
                 params.put("out_port", Integer.toString(port));
                 params.put("qostest", "udp");
 
-                TaskDesc task = new TaskDesc(host, Integer.parseInt(controlConnectionPort), Config.QOS_SSL, fakeToken,
+                final TaskDesc task = new TaskDesc(host, Integer.parseInt(controlConnectionPort), Config.QOS_SSL, fakeToken,
                         0, 1, 0, System.nanoTime(), params, "udp");
                 taskDescList.add(task);
             }
+        }
+
+        //ECHO PROTOCOL
+        if (echoServiceHost != null) {
+            int echoUuid = 400;
+
+            for (int port : echoServiceTcpPorts) {
+                final Map<String, Object> params = new HashMap<>();
+                params.put("concurrency_group", "301");
+                params.put("qos_test_uid", Integer.toString(echoUuid++));
+                params.put("timeout", "5000000000");
+                params.put("qostest", "echo_protocol");
+                params.put(AbstractEchoProtocolTask.RESULT_PROTOCOL, "tcp");
+                params.put(AbstractEchoProtocolTask.PARAM_PAYLOAD, "I'm a fully grown TCP payload!");
+                final TaskDesc task = new TaskDesc(echoServiceHost, port, false, fakeToken,
+                        0, 1, 0, System.nanoTime(), params, "echo_protocol");
+                taskDescList.add(task);
+            }
+
+            for (int port : echoServiceUdpPorts) {
+
+                final Map<String, Object> params = new HashMap<>();
+                params.put("concurrency_group", "301");
+                params.put("qos_test_uid", Integer.toString(echoUuid++));
+                params.put("timeout", "5000000000");
+                params.put("qostest", "echo_protocol");
+                params.put(AbstractEchoProtocolTask.RESULT_PROTOCOL, "udp");
+                params.put(AbstractEchoProtocolTask.PARAM_PAYLOAD, "I'm a fully grown UDP payload!");
+                final TaskDesc task = new TaskDesc(echoServiceHost, port, false, fakeToken,
+                        0, 1, 0, System.nanoTime(), params, "echo_protocol");
+                taskDescList.add(task);
+            }
+
         }
     }
     
