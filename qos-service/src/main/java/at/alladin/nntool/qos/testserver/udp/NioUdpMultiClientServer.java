@@ -32,8 +32,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nntool.qos.testserver.ServerPreferences.TestServerServiceEnum;
-import at.alladin.nntool.qos.testserver.servers.AbstractUdpServer;
 import at.alladin.nntool.qos.testserver.TestServer;
+import at.alladin.nntool.qos.testserver.servers.AbstractUdpServer;
 import at.alladin.nntool.qos.testserver.util.TestServerConsole;
 import at.alladin.nntool.util.net.rtp.RealtimeTransportProtocol.RtpVersion;
 import at.alladin.nntool.util.net.rtp.RtpUtil;
@@ -71,7 +71,7 @@ public class NioUdpMultiClientServer extends AbstractUdpServer<DatagramChannel> 
 		super(DatagramChannel.class);
 		TestServerConsole.log("Initializing " + TAG +  " on " + address + ":" + port, 1, TestServerServiceEnum.TEST_SERVER);
 		//this.socket = new DatagramSocket(port, TestServer.serverPreferences.getInetAddrBindTo());
-		this.channel = TestServer.createDatagramChannel(port, address);
+		this.channel = TestServer.getInstance().createDatagramChannel(port, address);
 		this.isRunning = new AtomicBoolean(false);
 		this.address = address;
 		this.port = port;
@@ -186,7 +186,7 @@ public class NioUdpMultiClientServer extends AbstractUdpServer<DatagramChannel> 
 												}
 											};
 											
-											TestServer.getCommonThreadPool().submit(onReceiveRunnable);
+											TestServer.getInstance().getCommonThreadPool().submit(onReceiveRunnable);
 										}						
 									}
 								}

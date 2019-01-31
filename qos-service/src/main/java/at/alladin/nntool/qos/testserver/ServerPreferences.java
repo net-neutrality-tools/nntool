@@ -19,6 +19,7 @@ package at.alladin.nntool.qos.testserver;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Comparator;
@@ -159,12 +160,29 @@ public class ServerPreferences {
 	
 	/**
 	 * 
+	 * @param is
+	 * @throws TestServerException
+	 */
+	public ServerPreferences(final InputStream is) throws TestServerException {
+		loadFromConfigFile(is);
+		setUdpPortSet();
+	    checkConstraints();
+	}
+	
+	/**
+	 * 
 	 * @param args
 	 * @throws TestServerException
 	 * @throws UnknownHostException 
 	 */
 	public ServerPreferences(String[] args) throws TestServerException {
-		loadFromConfigFile("config.properties");
+		if (args == null || args.length < 0) {
+			loadFromConfigFile("config.properties");
+			setUdpPortSet();
+		    checkConstraints();
+			return;
+		}
+		
 		try {
 		    for (int i = 0; i < args.length; i++) {
 		    	String arg = args[i].toUpperCase();
@@ -233,22 +251,40 @@ public class ServerPreferences {
 			}
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param fileName
 	 * @throws TestServerException
 	 */
 	private void loadFromConfigFile(String fileName) throws TestServerException {
-		Properties prop = new Properties();
-	   	try {
+		final InputStream is;
+		try {
 			if (new File(fileName).exists()) {
-				prop.load(new FileInputStream(fileName));
+				is = new FileInputStream(fileName);
 			}
 			else {
-				prop.load(getClass().getResourceAsStream(fileName.startsWith("/") ? fileName : "/" + fileName));
+				is = getClass().getResourceAsStream(fileName.startsWith("/") ? fileName : "/" + fileName);
 			}
+		}
+		catch (final IOException ex) {
+	   		ex.printStackTrace();
+			throw new TestServerException("TEST SERVER EXCEPTION", ex);	
+		}
 
+		loadFromConfigFile(is);
+	}
+
+	/**
+	 * 
+	 * @param is
+	 * @throws TestServerException
+	 */
+	private void loadFromConfigFile(final InputStream is) throws TestServerException {
+		Properties prop = new Properties();
+	   	try {
+	   		prop.load(is);
+	   		
 			String param = prop.getProperty(PARAM_SERVER_PORT);
 	   		if (param!=null) {
 		   		serverPort = Integer.parseInt(param.trim());	   			
