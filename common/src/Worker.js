@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-24
+ *      \date Last update: 2019-02-04
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -77,7 +77,7 @@ var wsAuthToken;
 var wsAuthTimestamp;
 
 var rttRequests             = 10;
-var rttRequestTimeout       = 1000;
+var rttRequestTimeout       = 2000;
 var rttRequestWait          = 500;
 var rttTimeout              = ((rttRequests * rttRequestTimeout) + rttRequestWait) * 1.3;
 var rttPayloadSize          = 64;
@@ -366,16 +366,16 @@ function connect()
 
             if (data.cmd === 'rttReport')
             {
-                wsRttValues.avg         = Number(data.avg) * 1000;
-                wsRttValues.med         = Number(data.med) * 1000;
-                wsRttValues.min         = Number(data.min) * 1000;
-                wsRttValues.max         = Number(data.max) * 1000;
+                wsRttValues.avg         = Number(data.avg) * 1000 * 1000;
+                wsRttValues.med         = Number(data.med) * 1000 * 1000;
+                wsRttValues.min         = Number(data.min) * 1000 * 1000;
+                wsRttValues.max         = Number(data.max) * 1000 * 1000;
                 wsRttValues.requests    = Number(data.req);
                 wsRttValues.replies     = Number(data.rep);
                 wsRttValues.errors      = Number(data.err);
                 wsRttValues.missing     = Number(data.mis);
                 wsRttValues.packetsize  = Number(data.pSz);
-                wsRttValues.stDevPop    = Number(data.std_dev_pop) * 1000;
+                wsRttValues.stDevPop    = Number(data.std_dev_pop) * 1000 * 1000;
                 wsRttValues.server      = String(data.srv);
             }
 

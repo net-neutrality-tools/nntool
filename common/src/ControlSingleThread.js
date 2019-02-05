@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-23
+ *      \date Last update: 2019-02-04
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -106,7 +106,7 @@ function WSControlSingleThread()
 
     //default measurement parameters
     var rttRequests                 = 10;
-    var rttRequestTimeout           = 1000;
+    var rttRequestTimeout           = 2000;
     var rttRequestWait              = 500;
     var rttTimeout                  = (rttRequests * (rttRequestTimeout + rttRequestWait)) * 1.1;
     var rttPayloadSize              = 64;
@@ -500,7 +500,7 @@ function WSControlSingleThread()
                     if (data.wsRttValues)
 					{
 						wsRttValues = data.wsRttValues;
-						wsRttValues.duration = Math.round(wsMeasurementTime * 1000);
+						wsRttValues.duration = Math.round(wsMeasurementTime * 1000 * 1000);
 					}
 					
                     for (key in wsRttValues)
@@ -837,7 +837,7 @@ function WSControlSingleThread()
         }
         else if (logReports)
         {
-            console.log(finishString + 'Time:           		' + Math.round(wsMeasurementTime * 1000) + ' ns');
+            console.log(finishString + 'Time:           		' + Math.round(wsMeasurementTime * 1000 * 1000) + ' ns');
             console.log(finishString + 'Data:           		' + (wsData + wsOverhead) + ' bytes');
             console.log(finishString + 'TCP Throughput: 		' + (wsSpeedAvgBitS / 1000 / 1000).toFixed(2) + ' MBit/s');
         }
@@ -848,8 +848,8 @@ function WSControlSingleThread()
             wsDownloadValues.rateAvg       = Math.round(wsSpeedAvgBitS);
             wsDownloadValues.data          = wsData + wsOverhead;
             wsDownloadValues.dataTotal     = wsDataTotal + wsOverheadTotal;  
-            wsDownloadValues.duration      = Math.round(wsMeasurementTime);
-            wsDownloadValues.durationTotal = Math.round(wsMeasurementTimeTotal);
+            wsDownloadValues.duration      = Math.round(wsMeasurementTime) * 1000 * 1000;
+            wsDownloadValues.durationTotal = Math.round(wsMeasurementTimeTotal) * 1000 * 1000;
             wsDownloadValues.streamsStart  = wsStreamsStart;
             wsDownloadValues.streamsEnd    = wsStreamsEnd;
             wsDownloadValues.frameSize     = wsFrameSize;
@@ -864,8 +864,8 @@ function WSControlSingleThread()
             wsUploadValues.rateAvg         = Math.round(wsSpeedAvgBitS);
             wsUploadValues.data            = wsData + wsOverhead;
             wsUploadValues.dataTotal       = wsDataTotal + wsOverheadTotal;  
-            wsUploadValues.duration        = Math.round(wsMeasurementTime);
-            wsUploadValues.durationTotal   = Math.round(wsMeasurementTimeTotal);
+            wsUploadValues.duration        = Math.round(wsMeasurementTime) * 1000 * 1000;
+            wsUploadValues.durationTotal   = Math.round(wsMeasurementTimeTotal) * 1000 * 1000;
             wsUploadValues.streamsStart    = wsStreamsStart;
             wsUploadValues.streamsEnd      = wsStreamsEnd;
             wsUploadValues.frameSize       = wsFrameSize;

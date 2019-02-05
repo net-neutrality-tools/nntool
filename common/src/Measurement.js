@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-25
+ *      \date Last update: 2019-02-04
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -72,6 +72,12 @@ function WSMeasurement()
     
 	var gcTimer;
 	var gcTimerInterval						= 10;
+	
+	var downloadThroughputLowerBoundMbps	= 'undefined';
+	var downloadThroughputUpperBoundMbps	= 'undefined';
+	var uploadThroughputLowerBoundMbps		= 'undefined';
+	var uploadThroughputUpperBoundMbps		= 'undefined';
+	
     
     
     /*-------------------------public functions------------------------*/
@@ -180,6 +186,11 @@ function WSMeasurement()
         if (typeof wsMeasurementParameters.performUploadMeasurement !== 'undefined')        performUploadMeasurement        = Boolean(wsMeasurementParameters.performUploadMeasurement);
         if (typeof wsMeasurementParameters.performRouteToClientLookup !== 'undefined')      performRouteToClientLookup      = Boolean(wsMeasurementParameters.performRouteToClientLookup);
         if (typeof wsMeasurementParameters.routeToClientTargetPort !== 'undefined')         routeToClientTargetPort         = Number(wsMeasurementParameters.routeToClientTargetPort);
+		
+		if (typeof wsMeasurementParameters.downloadThroughputLowerBoundMbps !== 'undefined') downloadThroughputLowerBoundMbps = Number(wsMeasurementParameters.downloadThroughputLowerBoundMbps);
+		if (typeof wsMeasurementParameters.downloadThroughputUpperBoundMbps !== 'undefined') downloadThroughputUpperBoundMbps = Number(wsMeasurementParameters.downloadThroughputUpperBoundMbps);
+		if (typeof wsMeasurementParameters.uploadThroughputLowerBoundMbps !== 'undefined') uploadThroughputLowerBoundMbps = Number(wsMeasurementParameters.uploadThroughputLowerBoundMbps);
+		if (typeof wsMeasurementParameters.uploadThroughputUpperBoundMbps !== 'undefined') uploadThroughputUpperBoundMbps = Number(wsMeasurementParameters.uploadThroughputUpperBoundMbps);
 
         if (typeof window !== 'undefined' && !window.WebSocket)
         {
@@ -281,11 +292,29 @@ function WSMeasurement()
             if (data.test_case === 'download')
             {
                 performedDownloadMeasurement            = true;
+				
+				if (typeof downloadThroughputLowerBoundMbps !== 'undefined' && downloadThroughputLowerBoundMbps * 1000 * 1000 > data.throughput_avg_bps)
+				{
+					data.out_of_bounds = true;
+				}
+				else if (typeof downloadThroughputUpperBoundMbps !== 'undefined' && downloadThroughputUpperBoundMbps * 1000 * 1000 < data.throughput_avg_bps)
+				{
+					data.out_of_bounds = true;
+				}
             }
             
             if (data.test_case === 'upload')
             {
                 performedUploadMeasurement              = true;
+				
+				if (typeof uploadThroughputLowerBoundMbps !== 'undefined' && uploadThroughputLowerBoundMbps * 1000 * 1000 > data.throughput_avg_bps)
+				{
+					data.out_of_bounds = true;
+				}
+				else if (typeof uploadThroughputUpperBoundMbps !== 'undefined' && uploadThroughputUpperBoundMbps * 1000 * 1000 < data.throughput_avg_bps)
+				{
+					data.out_of_bounds = true;
+				}
             }
             
             measurementCampaign();
@@ -384,7 +413,7 @@ function WSMeasurement()
         if (performRttMeasurement && !performedRttMeasurement)
         {
             setEndTimestamps();
-            if (!timestampKPIs.rtt_start) timestampKPIs.rtt_start = (jsTool.getTimestamp() + waitTimeShort) * 1000;
+            if (!timestampKPIs.rtt_start) timestampKPIs.rtt_start = (jsTool.getTimestamp() + waitTimeShort) * 1000 * 1000;
             wsMeasurementParameters.testCase = 'rtt';
             wsRttTimer = setTimeout(wsControl.measurementSetup, waitTimeShort, JSON.stringify(wsMeasurementParameters));
             
@@ -403,7 +432,7 @@ function WSMeasurement()
             
             var waitTimeDownload = waitTimeShort;
             
-            if (!timestampKPIs.download_start) timestampKPIs.download_start = (jsTool.getTimestamp() + waitTimeDownload) * 1000;
+            if (!timestampKPIs.download_start) timestampKPIs.download_start = (jsTool.getTimestamp() + waitTimeDownload) * 1000 * 1000;
             wsMeasurementParameters.testCase = 'download';
             if (typeof require !== 'undefined')
             {
@@ -427,7 +456,7 @@ function WSMeasurement()
         if (performUploadMeasurement && !performedUploadMeasurement)
         {
             setEndTimestamps();
-            if (!timestampKPIs.upload_start) timestampKPIs.upload_start = (jsTool.getTimestamp() + waitTime) * 1000;
+            if (!timestampKPIs.upload_start) timestampKPIs.upload_start = (jsTool.getTimestamp() + waitTime) * 1000 * 1000;
             wsMeasurementParameters.testCase = 'upload';
             wsUploadTimer = setTimeout(wsControl.measurementSetup, waitTime, JSON.stringify(wsMeasurementParameters));
             
@@ -448,15 +477,15 @@ function WSMeasurement()
     {
         if ((performRttMeasurement && performedRttMeasurement && !timestampKPIs.rtt_end) || test_case === 'rtt')
         {
-            timestampKPIs.rtt_end = jsTool.getTimestamp() * 1000;
+            timestampKPIs.rtt_end = jsTool.getTimestamp() * 1000 * 1000;
         }
         if ((performDownloadMeasurement && performedDownloadMeasurement && !timestampKPIs.download_end)  || test_case === 'download')
         {
-            timestampKPIs.download_end = jsTool.getTimestamp() * 1000;
+            timestampKPIs.download_end = jsTool.getTimestamp() * 1000 * 1000;
         }
         if ((performUploadMeasurement && performedUploadMeasurement && !timestampKPIs.upload_end)  || test_case === 'upload')
         {
-			timestampKPIs.upload_end = jsTool.getTimestamp() * 1000;
+			timestampKPIs.upload_end = jsTool.getTimestamp() * 1000 * 1000;
         }
     }
     
