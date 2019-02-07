@@ -226,7 +226,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 				}
 				
 				if (!controlConnectionMap.containsKey(test.getTestServerAddr())) {
-					RMBTTestParameter params = new RMBTTestParameter(test.getTestServerAddr(), test.getTestServerPort(), 
+					TestParameter params = new TestParameter(test.getTestServerAddr(), test.getTestServerPort(),
 									nnTestSettings.isUseSsl(), test.getTaskDesc().getToken(), 
 									test.getTaskDesc().getDuration(), test.getTaskDesc().getNumThreads(),
 									test.getTaskDesc().getNumPings(), test.getTaskDesc().getStartTime());

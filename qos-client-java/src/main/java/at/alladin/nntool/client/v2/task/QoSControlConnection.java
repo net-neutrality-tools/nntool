@@ -25,16 +25,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import at.alladin.nntool.client.AbstractRMBTTest;
+import at.alladin.nntool.client.AbstractTest;
 import at.alladin.nntool.client.ClientHolder;
-import at.alladin.nntool.client.RMBTTestParameter;
+import at.alladin.nntool.client.TestParameter;
 
 /**
  * 
  * @author lb
  *
  */
-public class QoSControlConnection extends AbstractRMBTTest implements Runnable {
+public class QoSControlConnection extends AbstractTest implements Runnable {
 	
 	public final static Pattern ID_REGEX_PATTERN = Pattern.compile("\\+ID([\\d]*)");
 	
@@ -55,7 +55,7 @@ public class QoSControlConnection extends AbstractRMBTTest implements Runnable {
 	 * @param params
 	 * @param threadId
 	 */
-	public QoSControlConnection(ClientHolder client, RMBTTestParameter params) {
+	public QoSControlConnection(ClientHolder client, TestParameter params) {
 		super(client, params, 1);
 	}
 	
