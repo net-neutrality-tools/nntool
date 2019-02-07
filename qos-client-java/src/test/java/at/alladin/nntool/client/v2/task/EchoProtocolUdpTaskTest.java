@@ -73,7 +73,7 @@ public class EchoProtocolUdpTaskTest {
 
             // check the sent data for correctness, when send is called
             mock.send((DatagramPacket) any);
-            result = new Delegate<DatagramPacket>() {
+            result = new Delegate() {
                 void delegateMethod(DatagramPacket packet) {
                     sendPacket = packet;
                 }
@@ -81,7 +81,7 @@ public class EchoProtocolUdpTaskTest {
 
             //return the correct message
             mock.receive((DatagramPacket) any);
-            result = new Delegate<DatagramPacket>() {
+            result = new Delegate() {
                 void delegateMethod(DatagramPacket packet) {
                     packet.setData(CORRECT_MESSAGE.getBytes());
                 }
@@ -111,7 +111,7 @@ public class EchoProtocolUdpTaskTest {
 
             // check the sent data for correctness, when send is called
             mock.send((DatagramPacket) any);
-            result = new Delegate<DatagramPacket>() {
+            result = new Delegate() {
                 void delegateMethod(DatagramPacket packet) {
                     sendPacket = packet;
                 }
@@ -119,7 +119,7 @@ public class EchoProtocolUdpTaskTest {
 
             //return the correct message
             mock.receive((DatagramPacket) any);
-            result = new Delegate<DatagramPacket>() {
+            result = new Delegate() {
                 void delegateMethod(DatagramPacket packet) {
                     packet.setData(WRONG_MESSAGE.getBytes());
                 }
@@ -148,7 +148,7 @@ public class EchoProtocolUdpTaskTest {
 
             // check the sent data for correctness, when send is called
             mock.send((DatagramPacket) any);
-            result = new Delegate<DatagramPacket>() {
+            result = new Delegate() {
                 void delegateMethod(DatagramPacket packet) {
                     sendPacket = packet;
                 }
@@ -156,7 +156,7 @@ public class EchoProtocolUdpTaskTest {
 
             //return the correct message
             mock.receive((DatagramPacket) any);
-            result = new Delegate<DatagramPacket>() {
+            result = new Delegate() {
                 void delegateMethod(DatagramPacket packet) {
                     packet.setData(WRONG_MESSAGE_ADDITIONAL_WHITESPACE.getBytes());
                 }
@@ -208,7 +208,7 @@ public class EchoProtocolUdpTaskTest {
 
             // check the sent data for correctness, when send is called
             mock.send((DatagramPacket) any);
-            result = new Delegate<DatagramPacket>() {
+            result = new Delegate() {
                 void delegateMethod(DatagramPacket packet) {
                     sendPacket = packet;
                 }
