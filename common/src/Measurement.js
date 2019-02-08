@@ -33,7 +33,7 @@ var jsTool = new JSTool();
 function WSMeasurement()
 {
     //private variables
-    var speedVersion                       	= '1.0.0';
+    var speedVersion                           = '1.0.0';
     
     var platform;
     
@@ -55,13 +55,13 @@ function WSMeasurement()
     var wsMeasurementParameters             = {};
     
     //KPIs
-	var globalKPIs							= {};
+    var globalKPIs                            = {};
     var rttKPIs                             = {};
     var downloadKPIs                        = {};
     var uploadKPIs                          = {};
     var timestampKPIs                       = {};
-	var clientKPIs 							= {};
-	var deviceKPIs                          = {};
+    var clientKPIs                             = {};
+    var deviceKPIs                          = {};
     var routeKPIs                           = {};
     
     var wsRttTimer                          = 0;
@@ -70,14 +70,14 @@ function WSMeasurement()
     
     var measurementStopped                  = false;
     
-	var gcTimer;
-	var gcTimerInterval						= 10;
-	
-	var downloadThroughputLowerBoundMbps	= 'undefined';
-	var downloadThroughputUpperBoundMbps	= 'undefined';
-	var uploadThroughputLowerBoundMbps		= 'undefined';
-	var uploadThroughputUpperBoundMbps		= 'undefined';
-	
+    var gcTimer;
+    var gcTimerInterval                        = 10;
+    
+    var downloadThroughputLowerBoundMbps    = 'undefined';
+    var downloadThroughputUpperBoundMbps    = 'undefined';
+    var uploadThroughputLowerBoundMbps        = 'undefined';
+    var uploadThroughputUpperBoundMbps        = 'undefined';
+    
     
     
     /*-------------------------public functions------------------------*/
@@ -94,18 +94,18 @@ function WSMeasurement()
         
         if (wsMeasurementParameters.cmd === 'start')
         {
-			console.log("The browser developer console should only be used for debugging purposes, as an active developer console can cause performance issues");
-			
+            console.log("The browser developer console should only be used for debugging purposes, as an active developer console can cause performance issues");
+            
             resetWsControl();
 
             if (typeof wsMeasurementParameters.platform !== 'undefined') platform = String(wsMeasurementParameters.platform);
          
-			globalKPIs.start_time			= jsTool.getFormattedDate();
-			
-			clientKPIs.timezone				= jsTool.getTimezone();
-			clientKPIs.type 				= platform.toUpperCase();
-			clientKPIs.speed_version		= speedVersion;
-			
+            globalKPIs.start_time            = jsTool.getFormattedDate();
+            
+            clientKPIs.timezone                = jsTool.getTimezone();
+            clientKPIs.type                 = platform.toUpperCase();
+            clientKPIs.speed_version        = speedVersion;
+            
             deviceKPIs                      = JSON.parse(jsTool.getDeviceKPIs(platform));
             
             if (wsMeasurementParameters.platform === 'mobile')
@@ -135,22 +135,22 @@ function WSMeasurement()
                 {
                     var data = {};
                     data.cmd                                = 'error';
-                    globalKPIs.cmd                    		= 'error';     
-                    globalKPIs.error_code             		= 5;
-                    globalKPIs.error_description      		= 'WebSockets are only partially supported by your browser';
+                    globalKPIs.cmd                            = 'error';     
+                    globalKPIs.error_code                     = 5;
+                    globalKPIs.error_description              = 'WebSockets are only partially supported by your browser';
                     data                                    = JSON.stringify(data);
                     this.controlCallback(data);
                     return;
                 }
             }
-			
-			if (typeof require !== 'undefined' && platformModule.isIOS)
-			{
-				gcTimer = setInterval(function ()
-				{
-					utils.GC();
-				}, gcTimerInterval);
-			}
+            
+            if (typeof require !== 'undefined' && platformModule.isIOS)
+            {
+                gcTimer = setInterval(function ()
+                {
+                    utils.GC();
+                }, gcTimerInterval);
+            }
             
             //log measurement mode
             if (typeof wsMeasurementParameters.singleThread !== 'undefined')
@@ -186,11 +186,11 @@ function WSMeasurement()
         if (typeof wsMeasurementParameters.performUploadMeasurement !== 'undefined')        performUploadMeasurement        = Boolean(wsMeasurementParameters.performUploadMeasurement);
         if (typeof wsMeasurementParameters.performRouteToClientLookup !== 'undefined')      performRouteToClientLookup      = Boolean(wsMeasurementParameters.performRouteToClientLookup);
         if (typeof wsMeasurementParameters.routeToClientTargetPort !== 'undefined')         routeToClientTargetPort         = Number(wsMeasurementParameters.routeToClientTargetPort);
-		
-		if (typeof wsMeasurementParameters.downloadThroughputLowerBoundMbps !== 'undefined') downloadThroughputLowerBoundMbps = Number(wsMeasurementParameters.downloadThroughputLowerBoundMbps);
-		if (typeof wsMeasurementParameters.downloadThroughputUpperBoundMbps !== 'undefined') downloadThroughputUpperBoundMbps = Number(wsMeasurementParameters.downloadThroughputUpperBoundMbps);
-		if (typeof wsMeasurementParameters.uploadThroughputLowerBoundMbps !== 'undefined') uploadThroughputLowerBoundMbps = Number(wsMeasurementParameters.uploadThroughputLowerBoundMbps);
-		if (typeof wsMeasurementParameters.uploadThroughputUpperBoundMbps !== 'undefined') uploadThroughputUpperBoundMbps = Number(wsMeasurementParameters.uploadThroughputUpperBoundMbps);
+        
+        if (typeof wsMeasurementParameters.downloadThroughputLowerBoundMbps !== 'undefined') downloadThroughputLowerBoundMbps = Number(wsMeasurementParameters.downloadThroughputLowerBoundMbps);
+        if (typeof wsMeasurementParameters.downloadThroughputUpperBoundMbps !== 'undefined') downloadThroughputUpperBoundMbps = Number(wsMeasurementParameters.downloadThroughputUpperBoundMbps);
+        if (typeof wsMeasurementParameters.uploadThroughputLowerBoundMbps !== 'undefined') uploadThroughputLowerBoundMbps = Number(wsMeasurementParameters.uploadThroughputLowerBoundMbps);
+        if (typeof wsMeasurementParameters.uploadThroughputUpperBoundMbps !== 'undefined') uploadThroughputUpperBoundMbps = Number(wsMeasurementParameters.uploadThroughputUpperBoundMbps);
 
         if (typeof window !== 'undefined' && !window.WebSocket)
         {
@@ -228,7 +228,7 @@ function WSMeasurement()
             {
                 measurementStopped = true;
                 
-				clearTimeout(gcTimer);
+                clearTimeout(gcTimer);
                 clearTimeout(wsRttTimer);
                 clearTimeout(wsDownloadTimer);
                 clearTimeout(wsUploadTimer);
@@ -248,13 +248,13 @@ function WSMeasurement()
     this.controlCallback = function(data)
     {
         data = JSON.parse(data);
-		
-		globalKPIs.cmd 					= data.cmd;
-		globalKPIs.msg 					= data.msg;
-		globalKPIs.test_case 			= data.test_case;
-		globalKPIs.error_code 			= data.error_code;
-		globalKPIs.error_description	= data.error_description;
-		
+        
+        globalKPIs.cmd                     = data.cmd;
+        globalKPIs.msg                     = data.msg;
+        globalKPIs.test_case             = data.test_case;
+        globalKPIs.error_code             = data.error_code;
+        globalKPIs.error_description    = data.error_description;
+        
         if(data.test_case === 'routeToClient')
         {
             routeKPIs.server_client       = data.server_client_route;
@@ -262,20 +262,20 @@ function WSMeasurement()
         }
         
         if (data.test_case === 'rtt')
-		{
-			rttKPIs             = data;
-		}
-		
+        {
+            rttKPIs             = data;
+        }
+        
         if (data.test_case === 'download')
         {
             downloadKPIs        = data;
         }
-		
+        
         if (data.test_case === 'upload')
-		{
-			uploadKPIs          = data;
-		}
-		
+        {
+            uploadKPIs          = data;
+        }
+        
         if (data.cmd === 'error')
         {
             setEndTimestamps(data.test_case);
@@ -292,29 +292,29 @@ function WSMeasurement()
             if (data.test_case === 'download')
             {
                 performedDownloadMeasurement            = true;
-				
-				if (typeof downloadThroughputLowerBoundMbps !== 'undefined' && downloadThroughputLowerBoundMbps * 1000 * 1000 > data.throughput_avg_bps)
-				{
-					data.out_of_bounds = true;
-				}
-				else if (typeof downloadThroughputUpperBoundMbps !== 'undefined' && downloadThroughputUpperBoundMbps * 1000 * 1000 < data.throughput_avg_bps)
-				{
-					data.out_of_bounds = true;
-				}
+                
+                if (typeof downloadThroughputLowerBoundMbps !== 'undefined' && downloadThroughputLowerBoundMbps * 1000 * 1000 > data.throughput_avg_bps)
+                {
+                    data.out_of_bounds = true;
+                }
+                else if (typeof downloadThroughputUpperBoundMbps !== 'undefined' && downloadThroughputUpperBoundMbps * 1000 * 1000 < data.throughput_avg_bps)
+                {
+                    data.out_of_bounds = true;
+                }
             }
             
             if (data.test_case === 'upload')
             {
                 performedUploadMeasurement              = true;
-				
-				if (typeof uploadThroughputLowerBoundMbps !== 'undefined' && uploadThroughputLowerBoundMbps * 1000 * 1000 > data.throughput_avg_bps)
-				{
-					data.out_of_bounds = true;
-				}
-				else if (typeof uploadThroughputUpperBoundMbps !== 'undefined' && uploadThroughputUpperBoundMbps * 1000 * 1000 < data.throughput_avg_bps)
-				{
-					data.out_of_bounds = true;
-				}
+                
+                if (typeof uploadThroughputLowerBoundMbps !== 'undefined' && uploadThroughputLowerBoundMbps * 1000 * 1000 > data.throughput_avg_bps)
+                {
+                    data.out_of_bounds = true;
+                }
+                else if (typeof uploadThroughputUpperBoundMbps !== 'undefined' && uploadThroughputUpperBoundMbps * 1000 * 1000 < data.throughput_avg_bps)
+                {
+                    data.out_of_bounds = true;
+                }
             }
             
             measurementCampaign();
@@ -436,7 +436,7 @@ function WSMeasurement()
             wsMeasurementParameters.testCase = 'download';
             if (typeof require !== 'undefined')
             {
-				/*
+                /*
                 if (v6)
                 {
                     wsMeasurementParameters.ndServerFamily = 6;
@@ -445,7 +445,7 @@ function WSMeasurement()
                 {
                     wsMeasurementParameters.ndServerFamily = 4;
                 }
-				*/
+                */
                 
             }
             wsDownloadTimer = setTimeout(wsControl.measurementSetup, waitTimeDownload, JSON.stringify(wsMeasurementParameters));
@@ -485,7 +485,7 @@ function WSMeasurement()
         }
         if ((performUploadMeasurement && performedUploadMeasurement && !timestampKPIs.upload_end)  || test_case === 'upload')
         {
-			timestampKPIs.upload_end = jsTool.getTimestamp() * 1000 * 1000;
+            timestampKPIs.upload_end = jsTool.getTimestamp() * 1000 * 1000;
         }
     }
     
@@ -496,15 +496,15 @@ function WSMeasurement()
     function getKPIs()
     {
         var kpis = {};
-		kpis = jsTool.extend(globalKPIs);
-		if (!jsTool.isEmpty(rttKPIs)) 		kpis.rtt_info 		= rttKPIs;
-		if (!jsTool.isEmpty(downloadKPIs)) 	kpis.download_info	= downloadKPIs;
-		if (!jsTool.isEmpty(uploadKPIs)) 	kpis.upload_info 	= uploadKPIs;
-		if (!jsTool.isEmpty(timestampKPIs))	kpis.time_info 		= timestampKPIs;
-		if (!jsTool.isEmpty(clientKPIs))	kpis.client_info	= clientKPIs;
-		if (!jsTool.isEmpty(deviceKPIs))	kpis.device_info	= deviceKPIs;
-		if (!jsTool.isEmpty(routeKPIs))		kpis.route_info		= routeKPIs;
-		
+        kpis = jsTool.extend(globalKPIs);
+        if (!jsTool.isEmpty(rttKPIs))         kpis.rtt_info         = rttKPIs;
+        if (!jsTool.isEmpty(downloadKPIs))     kpis.download_info    = downloadKPIs;
+        if (!jsTool.isEmpty(uploadKPIs))     kpis.upload_info     = uploadKPIs;
+        if (!jsTool.isEmpty(timestampKPIs))    kpis.time_info         = timestampKPIs;
+        if (!jsTool.isEmpty(clientKPIs))    kpis.client_info    = clientKPIs;
+        if (!jsTool.isEmpty(deviceKPIs))    kpis.device_info    = deviceKPIs;
+        if (!jsTool.isEmpty(routeKPIs))        kpis.route_info        = routeKPIs;
+        
         return kpis;
     }
 
@@ -515,7 +515,7 @@ function WSMeasurement()
      */
     function resetWsControl()
     {
-		clearInterval(gcTimer);
+        clearInterval(gcTimer);
         wsControl = null;
         delete wsControl;
     }

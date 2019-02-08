@@ -61,7 +61,7 @@ function WSWorkerSingleThread()
     var ulData;
     var ulDataPointer           = 0;
     var ulInterval;
-	var ulIntervalTiming		= 4;
+    var ulIntervalTiming        = 4;
     var ulReportDict            = {};
 
     var ulDataSize              = 512345;
@@ -95,10 +95,10 @@ function WSWorkerSingleThread()
                 reportToControlSM('info', 'websocket connecting');
                 setWsParametersSM(data);
 
-				if (wsTestCase === 'download' || wsTestCase === 'upload')
-				{
-					wsFrameSize = data.wsFrameSize;
-				}
+                if (wsTestCase === 'download' || wsTestCase === 'upload')
+                {
+                    wsFrameSize = data.wsFrameSize;
+                }
                 wsAuthToken           = data.wsAuthToken;
                 wsAuthTimestamp       = data.wsAuthTimestamp;  
 
@@ -129,12 +129,12 @@ function WSWorkerSingleThread()
                 resetCounterSM();
                 break;
             }
-				
-			case 'uploadStart':
-			{
-				uploadSM();
-				break;
-			}
+                
+            case 'uploadStart':
+            {
+                uploadSM();
+                break;
+            }
 
             case 'close':
             {   
@@ -182,10 +182,10 @@ function WSWorkerSingleThread()
         try 
         {
             var wsProtocols = [wsProtocol, wsAuthToken, wsAuthTimestamp];
-			if (wsTestCase === 'download')
-			{
-				wsProtocols.push(wsFrameSize);
-			}
+            if (wsTestCase === 'download')
+            {
+                wsProtocols.push(wsFrameSize);
+            }
             webSocket = new WebSocket(target, wsProtocols);
         }
         catch (error)
@@ -285,19 +285,19 @@ function WSWorkerSingleThread()
             reportToControlSM('info', 'start upload'); 
             ulStarted = true;
         }
-		
-		if (typeof require !== 'undefined')
+        
+        if (typeof require !== 'undefined')
         {
-			ulIntervalTiming = 1;
-		}
+            ulIntervalTiming = 1;
+        }
 
         ulInterval = setInterval(function ()
         {
-			if (wsCompleted)
+            if (wsCompleted)
             {
                 clearInterval(ulInterval);
             }
-			
+            
             if (webSocket.bufferedAmount <= ulBufferSize)
             {
                 var ulPayload = ulData.slice(ulDataPointer, ulDataPointer + wsFrameSize);

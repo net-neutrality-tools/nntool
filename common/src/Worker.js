@@ -85,7 +85,7 @@ var rttPayloadSize          = 64;
 var ulData;
 var ulDataPointer;
 var ulInterval;
-var ulIntervalTiming		= 4;
+var ulIntervalTiming        = 4;
 var ulReportDict            = {};
 
 var ulDataSize              = 2246915;
@@ -153,9 +153,9 @@ onmessage = function (event)
             ndServerFamily = data.ndServerFamily;
 
             if (wsTestCase === 'download' || wsTestCase === 'upload')
-			{
-				wsFrameSize = data.wsFrameSize;
-			}
+            {
+                wsFrameSize = data.wsFrameSize;
+            }
 
             if (wsTestCase === 'rtt')
             {
@@ -223,12 +223,12 @@ onmessage = function (event)
             }
             break;
         }
-			
-		case 'uploadStart':
-		{
-			upload();
-			break;
-		}
+            
+        case 'uploadStart':
+        {
+            upload();
+            break;
+        }
 
         default:
         {
@@ -288,10 +288,10 @@ function connect()
             if (wsTestCase === 'rtt'  || wsTestCase === 'download' || wsTestCase === 'upload')
             {
                 var wsProtocols = [wsProtocol, wsAuthToken, wsAuthTimestamp];
-				if (wsTestCase === 'download')
-				{
-					wsProtocols.push(wsFrameSize);
-				}
+                if (wsTestCase === 'download')
+                {
+                    wsProtocols.push(wsFrameSize);
+                }
                 webSocket = new WebSocket(target, wsProtocols);
             }
             else
@@ -443,11 +443,11 @@ function upload()
 
     ulInterval = setInterval(function ()
     {
-		if (wsCompleted)
-		{
-			clearInterval(ulInterval);
-		}
-		
+        if (wsCompleted)
+        {
+            clearInterval(ulInterval);
+        }
+        
         if (webSocket.bufferedAmount <= ulBufferSize)
         {       
             var ulPayload = ulData.slice(ulDataPointer, ulDataPointer + wsFrameSize);
