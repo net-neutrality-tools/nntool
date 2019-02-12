@@ -38,7 +38,7 @@ public class StatusResource extends ServerResource {
 	@Get
 	public String request() throws JSONException {
 		JSONObject json = new JSONObject();
-		
+
 		json.put("starttime", TestServer.getInstance().serverPreferences.getStartTimestamp());
 		json.put("version", TestServer.TEST_SERVER_VERSION_MAJOR + "." + TestServer.TEST_SERVER_VERSION_MINOR + "." + TestServer.TEST_SERVER_VERSION_PATCH);
 		

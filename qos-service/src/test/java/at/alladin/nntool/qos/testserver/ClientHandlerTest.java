@@ -3,15 +3,29 @@ package at.alladin.nntool.qos.testserver;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.junit.Test;
 
 import at.alladin.nntool.qos.testserver.entity.ClientToken;
 import at.alladin.nntool.qos.testserver.mock.RecordingFilterOutputStreamMock;
-import at.alladin.nntool.qos.testserver.util.TestServerConsole;
+import mockit.Expectations;
+import mockit.Invocation;
+import mockit.Mock;
+import mockit.MockUp;
 import mockit.Mocked;
 
 /**
@@ -21,11 +35,21 @@ import mockit.Mocked;
  */
 public class ClientHandlerTest {
 
-	@Mocked Socket socket;
+	public final String TOKEN = "bbd1ee96-0779-4619-b993-bb4bf7089754";
 	
+	public final String TOKEN_COMMAND = "TOKEN " + TOKEN + "_1528136454_3gr2gw9lVhtVONV0XO62Vamu/uw=";
+	
+	@Mocked Socket socket;
+		
 	@Mocked ServerSocket serverSocket;
 	
-	@Mocked TestServerConsole console;
+	//@Mocked TestServerConsole console;
+	
+	@Mocked BufferedReader reader;
+	
+	@Mocked ThreadPoolExecutor executor;
+	
+	@Mocked DatagramSocket datagramSocket;
 	
 	@Test
 	public void testSendMessage() throws IOException {
@@ -71,5 +95,171 @@ public class ClientHandlerTest {
 				"bbd1ee96-0779-4619-b993-bb4bf7089754", token.getUuid());
 		assertEquals("token Hmac != '3gr2gw9lVhtVONV0XO62Vamu/uw='", 
 				"3gr2gw9lVhtVONV0XO62Vamu/uw=", token.getHmac());		
-	}	
+	}
+
+	@Test
+	public void testMultipleCommandsReceived() throws Exception {
+
+		final Map<String, String> cmdMap = new HashMap<>();
+		
+		new MockUp<ClientHandler>() {
+			
+			@Mock
+			protected ClientToken checkToken(String token) throws IOException {
+				return new ClientToken(UUID.randomUUID().toString(), System.currentTimeMillis(), "ABC");
+			}
+			
+			@Mock
+			protected void runNonTransparentProxyTest(String command) throws Exception {
+				cmdMap.put(QoSServiceProtocol.CMD_NON_TRANSPARENT_PROXY_TEXT, command);
+			}
+			
+			@Mock
+			protected void runIncomingTcpTest(String command, ClientToken token) throws IOException {
+				cmdMap.put(QoSServiceProtocol.CMD_TCP_TEST_IN, command);
+			}
+			
+			@Mock
+			protected void runOutgoingTcpTest(String command, ClientToken token) throws Exception {
+				cmdMap.put(QoSServiceProtocol.CMD_TCP_TEST_OUT, command);
+			}
+					
+			@Mock
+			protected void runIncomingUdpTest(final String command, final ClientToken token) throws IOException, InterruptedException {
+				cmdMap.put(QoSServiceProtocol.CMD_UDP_TEST_IN, command);
+			}
+			
+			@Mock
+			protected void runOutgoingUdpTest(final String command, final ClientToken token) throws IOException, InterruptedException {
+				cmdMap.put(QoSServiceProtocol.CMD_UDP_TEST_OUT, command);
+			}
+			
+			@Mock
+			protected void runVoipTest(final String command, final ClientToken token) throws IOException, InterruptedException {
+				cmdMap.put(QoSServiceProtocol.CMD_VOIP_TEST, command);
+			}
+		};
+
+		new Expectations() {
+			{
+				reader.readLine();
+				returns("TOKEN ABC", QoSServiceProtocol.CMD_NON_TRANSPARENT_PROXY_TEXT + " +ID0",
+						QoSServiceProtocol.CMD_TCP_TEST_IN + " +ID1",
+						QoSServiceProtocol.CMD_TCP_TEST_OUT + " +ID2",
+						QoSServiceProtocol.CMD_UDP_TEST_IN  + " +ID3",
+						QoSServiceProtocol.CMD_UDP_TEST_OUT + " +ID4",
+						QoSServiceProtocol.CMD_VOIP_TEST + " +ID5",
+						"QUIT");
+			}
+		};
+
+		final ClientHandler ch = new ClientHandler(serverSocket, socket);
+
+		ch.run();
+		
+		assertEquals("Test command count != 6", 6, cmdMap.size());
+		assertEquals("NTP command != 'NTPTEST +ID0'", "NTPTEST +ID0", cmdMap.get(QoSServiceProtocol.CMD_NON_TRANSPARENT_PROXY_TEXT));
+		assertEquals("TCP IN command != 'TCPTEST IN +ID1'", "TCPTEST IN +ID1", cmdMap.get(QoSServiceProtocol.CMD_TCP_TEST_IN));
+		assertEquals("TCP OUT command != 'TCPTEXT OUT +ID2'", "TCPTEST OUT +ID2", cmdMap.get(QoSServiceProtocol.CMD_TCP_TEST_OUT));
+		assertEquals("UDP IN command != 'UDPTEST IN +ID3'", "UDPTEST IN +ID3", cmdMap.get(QoSServiceProtocol.CMD_UDP_TEST_IN));
+		assertEquals("UDP OUT command != 'UDPTEST OUT +ID4'", "UDPTEST OUT +ID4", cmdMap.get(QoSServiceProtocol.CMD_UDP_TEST_OUT));
+		assertEquals("VOIP command != 'VOIPTEST +ID5'", "VOIPTEST +ID5", cmdMap.get(QoSServiceProtocol.CMD_VOIP_TEST));
+		
+	}
+	
+	@Test
+	public void testHandeshakeAndRunIncomingTcpTestAfterReceivingCommand() throws Exception {
+
+		final List<String> clientMessages = new ArrayList<>();
+		
+		new MockUp<BufferedOutputStream>() {
+			
+			@Mock
+			public void write(byte b[]) throws IOException {
+				clientMessages.add(new String(b));
+			}
+		};
+		
+		new MockUp<ThreadPoolExecutor>() {
+			
+			@Mock
+			public void execute(Runnable runnable) {
+				runnable.run();
+			}
+		};
+		
+		new Expectations() {
+			{
+				reader.readLine();
+				returns(TOKEN_COMMAND,
+						QoSServiceProtocol.CMD_TCP_TEST_IN + " 100 +ID1",
+						QoSServiceProtocol.CMD_TCP_TEST_IN + " 200 +ID2",
+						QoSServiceProtocol.CMD_TCP_TEST_IN + " 300 +ID3",
+						"QUIT");				
+			}
+		};
+
+		final ClientHandler ch = new ClientHandler(serverSocket, socket);
+
+		ch.run();
+
+		assertEquals("TCP IN test count != 3", 3, clientMessages.size());
+		assertEquals("Message [0] to client != 'HELLO TO 100\\n'", "HELLO TO 100\n", clientMessages.get(0));
+		assertEquals("Message [1] to client != 'HELLO TO 200\\n'", "HELLO TO 200\n", clientMessages.get(1));
+		assertEquals("Message [1] to client != 'HELLO TO 300\\n'", "HELLO TO 300\n", clientMessages.get(2));
+	}
+	
+	@Test
+	public void testHandeshakeAndRunIncomingUdpTestAfterReceivingCommand() throws Exception {
+
+		final List<byte[]> clientMessages = new ArrayList<>();
+		
+		new MockUp<DataOutputStream>() {
+			
+			@Mock
+		    public void write(Invocation invocation, byte[] b) throws IOException {
+				if (TOKEN.equals(new String(b))) {
+					invocation.proceed(b);
+				}
+				else {
+					clientMessages.add(b);
+				}
+		    }
+
+		};
+		
+		new MockUp<ThreadPoolExecutor>() {
+			
+			@Mock
+			public void execute(Runnable runnable) {
+				runnable.run();
+			}
+		};
+		
+		new MockUp<DatagramSocket>() {
+			
+			@Mock
+			public synchronized void receive(DatagramPacket p) throws IOException {
+				p.setData(new byte[] {2});
+			}
+		};
+		
+		new Expectations() {
+			{
+				reader.readLine();
+				returns(TOKEN_COMMAND,
+						QoSServiceProtocol.CMD_UDP_TEST_IN + " 100 1 +ID1",
+						QoSServiceProtocol.CMD_UDP_TEST_IN + " 200 1 +ID2",
+						QoSServiceProtocol.CMD_UDP_TEST_IN + " 300 1 +ID3",
+						"QUIT");				
+			}
+		};
+
+		final ClientHandler ch = new ClientHandler(serverSocket, socket);
+
+		ch.run();
+		
+		assertEquals("UDP IN test count != 3", 3, clientMessages.size());
+	}
+
 }
