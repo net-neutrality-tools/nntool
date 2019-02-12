@@ -1,0 +1,2 @@
+#include "Pods/Target Support Files/Pods-All-QoSKit_iOS/Pods-All-QoSKit_iOS.debug.xcconfig"
+#include "../QoSKit_iOS_Shared.xcconfig"

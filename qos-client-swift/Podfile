@@ -1,0 +1,26 @@
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+use_frameworks!
+
+# ignore all warnings from all pods
+inhibit_all_warnings!
+
+abstract_target 'All' do
+  pod 'CocoaAsyncSocket', '~> 7.6.3'
+
+  pod 'Alamofire', '~> 4.8.1'
+  pod 'AlamofireObjectMapper', '~> 5.2.0'
+
+  pod 'XCGLogger', '~> 6.1.0'
+
+  target 'QoSKit_iOS' do
+    platform :ios, '10.0'
+  end
+
+  target 'QoSKitUnitTests' do
+      platform :ios, '10.0'
+      
+      pod 'Nimble', '~> 7.3.4'
+  end
+end
+
