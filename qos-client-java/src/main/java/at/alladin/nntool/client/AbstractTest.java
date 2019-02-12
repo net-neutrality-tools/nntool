@@ -150,8 +150,7 @@ public abstract class AbstractTest {
         }
         
         line = reader.readLine();
-        final Scanner scanner = new Scanner(line);
-        try
+        try (final Scanner scanner = new Scanner(line))
         {
         	if (response.equals("CHUNKSIZE")) {
                 if (!response.equals(scanner.next()))
@@ -182,10 +181,6 @@ public abstract class AbstractTest {
         	}
 
         }
-        finally
-        {
-            scanner.close();
-        }    	
     }
     
     protected Socket connect(final TestResult testResult) throws IOException
