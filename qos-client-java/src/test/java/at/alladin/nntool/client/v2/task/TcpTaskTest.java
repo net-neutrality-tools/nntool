@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.InetAddress;
@@ -22,7 +21,6 @@ import at.alladin.nntool.client.v2.task.result.QoSTestResult;
 import at.alladin.nntool.client.v2.task.service.TestSettings;
 import mockit.Delegate;
 import mockit.Expectations;
-import mockit.Mock;
 import mockit.Mocked;
 
 import static org.junit.Assert.assertEquals;

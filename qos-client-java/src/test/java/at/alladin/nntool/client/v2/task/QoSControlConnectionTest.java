@@ -1,9 +1,7 @@
 package at.alladin.nntool.client.v2.task;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -13,21 +11,15 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
-import java.util.TreeSet;
 
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.TestParameter;
-import at.alladin.nntool.client.TestResult;
-import at.alladin.nntool.client.v2.task.QoSControlConnection;
-import mockit.Delegate;
 import mockit.Expectations;
 import mockit.Mocked;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 

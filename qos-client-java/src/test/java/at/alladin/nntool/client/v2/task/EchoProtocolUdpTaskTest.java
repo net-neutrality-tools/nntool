@@ -3,14 +3,9 @@ package at.alladin.nntool.client.v2.task;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
@@ -21,7 +16,6 @@ import at.alladin.nntool.client.v2.task.service.TestSettings;
 import mockit.Delegate;
 import mockit.Expectations;
 import mockit.Mocked;
-import mockit.Verifications;
 
 import static org.junit.Assert.assertEquals;
 
