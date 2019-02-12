@@ -15,7 +15,9 @@ buildscript {
     }
 }
 
-allprojects {
+String eclipseProjectPrefix = 'nntool'
+
+allprojects { p ->
     group = 'at.alladin.nettest'
     version = '1.0'
 
@@ -27,6 +29,10 @@ allprojects {
         maven { url 'https://nexus.pentaho.org/content/groups/omni/' }
         maven { url 'http://maven.restlet.com' }
     }
+
+    apply plugin: 'eclipse' 
+    eclipse.project.name = "${eclipseProjectPrefix}-${p.name}"
 }
 
 defaultTasks 'build'
+

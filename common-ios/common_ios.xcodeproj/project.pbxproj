@@ -39,6 +39,7 @@
 		27FFE2BB21DD129F00C04717 /* TNSWidgets.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 27A5A1B721DD097600EA6F0B /* TNSWidgets.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		27FFE2BC21DD12A400C04717 /* NativeScript.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 27A5A1B421DD096700EA6F0B /* NativeScript.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		27FFE2C021DD1B8300C04717 /* common-mobile.js in Resources */ = {isa = PBXBuildFile; fileRef = 27FFE2BF21DD1B8300C04717 /* common-mobile.js */; };
+		E02ECDC321FE2FC500B80A57 /* QoSViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02ECDC221FE2FC500B80A57 /* QoSViewController.swift */; };
 		E50532B73C84099D2CAD406F /* Pods_Speed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDF1DCA5453F4B8ACD59FD62 /* Pods_Speed.framework */; };
 /* End PBXBuildFile section */
 
@@ -129,6 +130,7 @@
 		B92E80AE0B9B49148380246D /* Pods-Demo Release.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo Release.release.xcconfig"; path = "Pods/Target Support Files/Pods-Demo Release/Pods-Demo Release.release.xcconfig"; sourceTree = "<group>"; };
 		CDF1DCA5453F4B8ACD59FD62 /* Pods_Speed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Speed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEE807DD56FA6A2732791598 /* Pods-Common.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Common.release.xcconfig"; path = "Pods/Target Support Files/Pods-Common/Pods-Common.release.xcconfig"; sourceTree = "<group>"; };
+		E02ECDC221FE2FC500B80A57 /* QoSViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSViewController.swift; sourceTree = "<group>"; };
 		E0DF38BC21256B2A00AE1940 /* Demo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Demo-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -244,6 +246,7 @@
 		279D48F021188F7700E6C3DC /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				E02ECDC221FE2FC500B80A57 /* QoSViewController.swift */,
 				2782F70D21188D6200C9E246 /* SpeedViewController.h */,
 				2782F70E21188D6200C9E246 /* SpeedViewController.m */,
 			);
@@ -562,15 +565,29 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/AlamofireObjectMapper/AlamofireObjectMapper.framework",
+				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework",
 				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
+				"${BUILT_PRODUCTS_DIR}/ObjcExceptionBridging/ObjcExceptionBridging.framework",
+				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/PocketSocket/PocketSocket.framework",
+				"${BUILT_PRODUCTS_DIR}/QoSKit/QoSKit.framework",
+				"${BUILT_PRODUCTS_DIR}/XCGLogger/XCGLogger.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlamofireObjectMapper.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaLumberjack.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjcExceptionBridging.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PocketSocket.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/QoSKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XCGLogger.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -592,6 +609,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E02ECDC321FE2FC500B80A57 /* QoSViewController.swift in Sources */,
 				2782F70F21188D6200C9E246 /* SpeedViewController.m in Sources */,
 				2782F71A21188D6300C9E246 /* main.m in Sources */,
 				2782F70C21188D6200C9E246 /* AppDelegate.m in Sources */,
@@ -656,7 +674,7 @@
 			baseConfigurationReference = A31AA3094240ACAFE9F6EFDF /* Pods-Speed.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
@@ -694,6 +712,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zafaco.Speed;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -706,7 +725,7 @@
 			baseConfigurationReference = 88B572B0BD82C4F3CAE52966 /* Pods-Speed.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
@@ -744,6 +763,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zafaco.Speed;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -870,8 +890,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 499LGG5WHR;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/demo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -880,6 +900,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zafaco.Demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Demo/Demo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
@@ -893,8 +914,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 499LGG5WHR;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/demo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -903,6 +924,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zafaco.Demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Demo/Demo-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -914,7 +936,7 @@
 			baseConfigurationReference = A7C75B11E3DDBD919FF14CBF /* Pods-Common.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
@@ -945,7 +967,7 @@
 			baseConfigurationReference = DEE807DD56FA6A2732791598 /* Pods-Common.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
