@@ -52,7 +52,7 @@ public class QoSControlConnectionTest {
                 null, null, "host", null, null);
 
         testParameter = new TestParameter("host", 80, false, "token", 1, 1, 1, 1);
-        sslTestParameter = new TestParameter("host", 80, true, "token", 1, 1, 1, 1);
+        sslTestParameter = new TestParameter("host", 80, true, 1, 1, 1);
 
         loopbackAddress = InetAddress.getLoopbackAddress();
 
