@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-02-04
+ *      \date Last update: 2019-02-11
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -33,7 +33,7 @@ var jsTool = new JSTool();
 function WSMeasurement()
 {
     //private variables
-    var speedVersion                           = '1.0.0';
+    var speedVersion                        = '1.0.0';
     
     var platform;
     
@@ -55,12 +55,12 @@ function WSMeasurement()
     var wsMeasurementParameters             = {};
     
     //KPIs
-    var globalKPIs                            = {};
+    var globalKPIs                          = {};
     var rttKPIs                             = {};
     var downloadKPIs                        = {};
     var uploadKPIs                          = {};
     var timestampKPIs                       = {};
-    var clientKPIs                             = {};
+    var clientKPIs                          = {};
     var deviceKPIs                          = {};
     var routeKPIs                           = {};
     
@@ -71,12 +71,12 @@ function WSMeasurement()
     var measurementStopped                  = false;
     
     var gcTimer;
-    var gcTimerInterval                        = 10;
+    var gcTimerInterval                     = 10;
     
     var downloadThroughputLowerBoundMbps    = 'undefined';
     var downloadThroughputUpperBoundMbps    = 'undefined';
-    var uploadThroughputLowerBoundMbps        = 'undefined';
-    var uploadThroughputUpperBoundMbps        = 'undefined';
+    var uploadThroughputLowerBoundMbps      = 'undefined';
+    var uploadThroughputUpperBoundMbps      = 'undefined';
     
     
     
@@ -249,10 +249,10 @@ function WSMeasurement()
     {
         data = JSON.parse(data);
         
-        globalKPIs.cmd                     = data.cmd;
-        globalKPIs.msg                     = data.msg;
-        globalKPIs.test_case             = data.test_case;
-        globalKPIs.error_code             = data.error_code;
+        globalKPIs.cmd                  = data.cmd;
+        globalKPIs.msg                  = data.msg;
+        globalKPIs.test_case            = data.test_case;
+        globalKPIs.error_code           = data.error_code;
         globalKPIs.error_description    = data.error_description;
         
         if(data.test_case === 'routeToClient')

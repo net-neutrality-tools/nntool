@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-02-04
+ *      \date Last update: 2019-02-13
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -92,6 +92,8 @@ var ulDataSize              = 2246915;
 var ulBufferSize            = 4096 * 1000;
 var ulStarted               = false;
 
+var uploadFramesPerCall     = 1;
+
 var singleThread            = false;
 
 var jsTool;
@@ -155,6 +157,11 @@ onmessage = function (event)
             if (wsTestCase === 'download' || wsTestCase === 'upload')
             {
                 wsFrameSize = data.wsFrameSize;
+            }
+            
+            if (wsTestCase === 'upload')
+            {
+                uploadFramesPerCall     = data.uploadFramesPerCall;
             }
 
             if (wsTestCase === 'rtt')
@@ -448,18 +455,18 @@ function upload()
             clearInterval(ulInterval);
         }
         
-        if (webSocket.bufferedAmount <= ulBufferSize)
+        if (webSocket.bufferedAmount <= ulBufferSize && webSocket.readyState === wsStateOpen)
         {       
-            var ulPayload = ulData.slice(ulDataPointer, ulDataPointer + wsFrameSize);
-            ulDataPointer += wsFrameSize;
-            if (ulDataPointer > ulDataSize)
+            for (var i=0;i<uploadFramesPerCall;i++)
             {
-                ulDataPointer = ulDataPointer - ulDataSize;
-                ulPayload = ulPayload + ulData.slice(0, ulDataPointer);
-            }
-            
-            if (webSocket.readyState === wsStateOpen) 
-            {
+                var ulPayload = ulData.slice(ulDataPointer, ulDataPointer + wsFrameSize);
+                ulDataPointer += wsFrameSize;
+                if (ulDataPointer > ulDataSize)
+                {
+                    ulDataPointer = ulDataPointer - ulDataSize;
+                    ulPayload = ulPayload + ulData.slice(0, ulDataPointer);
+                }
+
                 webSocket.send(ulPayload);
             }
         }

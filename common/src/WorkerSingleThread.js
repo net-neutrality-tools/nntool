@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-24
+ *      \date Last update: 2019-02-13
  *      \note Copyright (c) 2018 -2019 zafaco GmbH. All rights reserved.
  */
 
@@ -67,6 +67,8 @@ function WSWorkerSingleThread()
     var ulDataSize              = 512345;
     var ulBufferSize            = 4096 * 1000;
     var ulStarted               = false;
+    
+    var uploadFramesPerCall     = 1;
 
     /**
      * @function onmessageSM
@@ -99,6 +101,12 @@ function WSWorkerSingleThread()
                 {
                     wsFrameSize = data.wsFrameSize;
                 }
+                
+                if (wsTestCase === 'upload')
+                {
+                    uploadFramesPerCall     = data.uploadFramesPerCall;
+                }
+                
                 wsAuthToken           = data.wsAuthToken;
                 wsAuthTimestamp       = data.wsAuthTimestamp;  
 
@@ -297,19 +305,19 @@ function WSWorkerSingleThread()
             {
                 clearInterval(ulInterval);
             }
-            
-            if (webSocket.bufferedAmount <= ulBufferSize)
-            {
-                var ulPayload = ulData.slice(ulDataPointer, ulDataPointer + wsFrameSize);
-                ulDataPointer += wsFrameSize;
-                if (ulDataPointer > ulDataSize)
-                {
-                    ulDataPointer = ulDataPointer - ulDataSize;
-                    ulPayload = ulPayload + ulData.slice(0, ulDataPointer);
-                }
 
-                if (webSocket.readyState === wsStateOpen) 
+            if (webSocket.bufferedAmount <= ulBufferSize && webSocket.readyState === wsStateOpen)
+            {       
+                for (var i=0;i<uploadFramesPerCall;i++)
                 {
+                    var ulPayload = ulData.slice(ulDataPointer, ulDataPointer + wsFrameSize);
+                    ulDataPointer += wsFrameSize;
+                    if (ulDataPointer > ulDataSize)
+                    {
+                        ulDataPointer = ulDataPointer - ulDataSize;
+                        ulPayload = ulPayload + ulData.slice(0, ulDataPointer);
+                    }
+
                     webSocket.send(ulPayload);
                 }
             }
