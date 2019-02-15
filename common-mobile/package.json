@@ -4,17 +4,17 @@
 	"nativescript": {
 		"id": "com.zafaco.commonmobile",
 		"tns-ios": {
-			"version": "5.0.0"
+			"version": "5.2.0"
 		},
 		"tns-android": {
-			"version": "5.0.0"
+			"version": "5.2.0"
 		}
 	},
 	"dependencies": {
 		"nativescript-theme-core": "1.0.4",
 		"nativescript-websockets": "1.5.3",
-		"node-forge": "0.7.6",
+		"node-forge": "0.8.0",
 		"performance-now": "2.1.0",
-		"tns-core-modules": "5.0.2"
+		"tns-core-modules": "5.2.0"
 	}
 }

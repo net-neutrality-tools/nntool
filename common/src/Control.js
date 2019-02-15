@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-23
+ *      \date Last update: 2019-02-15
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -33,7 +33,7 @@ function WSControl()
 {
     this.wsMeasurement  = '';
     this.callback       = '';
-    
+
     var wsTestCase;
     var wsData;
     var wsDataTotal;
@@ -65,21 +65,21 @@ function WSControl()
     var wsStreamsEnd;
     var wsFrameSize;
     var wsMeasurementError;
-    
-    
+
+
     var wsStateConnecting   = 0;
     var wsStateOpen         = 1;
     var wsStateClosing      = 2;
     var wsStateClosed       = 3;
-    
+
     var wsAuthToken;
     var wsAuthTimestamp;
-    
-    
+
+
     var rttReportInterval           = 501;
     var rttProtocol                 = 'rtt';
-    
-   
+
+
     var dlReportInterval            = 501;
     var dlWsOverheadPerFrame        = 4;
     var dlData                      = 0;
@@ -87,8 +87,8 @@ function WSControl()
     var dlStartupData               = 0;
     var dlStartupFrames             = 0;
     var dlProtocol                  = 'download';
-    
-    
+
+
     var ulReportInterval            = 501;
     var ulWsOverheadPerFrame        = 8;
     var ulReportDict                = {};
@@ -96,45 +96,46 @@ function WSControl()
     var ulStartupFrames             = 0;
     var ulProtocol                  = 'upload';
 
-	var wsTargets;
+    var wsTargets;
     var wsTarget;
     var wsTargetsRtt;
     var wsTargetRtt;
     var wsTLD;
     var wsTargetPort;
     var wsWss;
-    
+
     //default measurement parameters
     var rttRequests                 = 10;
-    var rttRequestTimeout           = 1000;
+    var rttRequestTimeout           = 2000;
     var rttRequestWait              = 500;
     var rttTimeout                  = (rttRequests * (rttRequestTimeout + rttRequestWait)) * 1.1;
     var rttPayloadSize              = 64;
-    
+
     var dlStartupTime               = 3000;
     var dlMeasurementRunningTime    = 10000;
     var dlParallelStreams           = 4;
     var dlTimeout                   = 10000;
-	var dlFrameSize					= 32768;
-    
+    var dlFrameSize                    = 32768;
+
     var ulStartupTime               = 3000;
     var ulMeasurementRunningTime    = 10000;
     var ulParallelStreams           = 4;
     var ulTimeout                   = 10000;
     var ulFrameSize                 = 65535;
-    
+    var uploadFramesPerCall         = 1;
+
     var wsParallelStreams;
     var wsStartupTime;
-    
+
     var singleThread                = false;
-    
+
     var wsWorkerPath                = 'Worker.js';
 
 
 
 
     /*-------------------------KPIs------------------------*/
-    
+
     var wsSystemAvailability;
     var wsServiceAvailability;
     var wsErrorCode;
@@ -142,7 +143,7 @@ function WSControl()
 
     var wsRttValues =
     {
-		duration:			undefined,
+        duration:           undefined,
         avg:                undefined,
         med:                undefined,
         min:                undefined,
@@ -155,25 +156,8 @@ function WSControl()
         stDevPop:           undefined,
         server:             undefined
     };
-    
-    var wsDownloadValues = 
-    {
-        rateAvg:          undefined,
-        data:             undefined,
-        dataTotal:        undefined,
-        duration:         undefined,
-        durationTotal:    undefined,
-        streamsStart:     undefined,
-        streamsEnd:       undefined,
-        frameSize:        undefined,
-        frames:           undefined,
-        framesTotal:      undefined,
-        overheadPerFrame: undefined,
-        overhead:         undefined,
-        overheadTotal:    undefined
-    };
-    
-    var wsUploadValues = 
+
+    var wsDownloadValues =
     {
         rateAvg:          undefined,
         data:             undefined,
@@ -190,11 +174,29 @@ function WSControl()
         overheadTotal:    undefined
     };
 
+    var wsUploadValues =
+    {
+        rateAvg:          undefined,
+        data:             undefined,
+        dataTotal:        undefined,
+        duration:         undefined,
+        durationTotal:    undefined,
+        streamsStart:     undefined,
+        streamsEnd:       undefined,
+        frameSize:        undefined,
+        frames:           undefined,
+        framesTotal:      undefined,
+        overheadPerFrame: undefined,
+        overhead:         undefined,
+        overheadTotal:    undefined,
+        framePerCall:     undefined
+    };
 
-    
-    
+
+
+
     /*-------------------------public functions------------------------*/
-    
+
     /**
      * @function measurementSetup
      * @description Function to Start test cases
@@ -204,16 +206,17 @@ function WSControl()
     this.measurementSetup = function(measurementParameters)
     {
         resetValues();
-        
+
         wsMeasurementError      = false;
         measurementParameters   = JSON.parse(measurementParameters);
         wsTestCase              = measurementParameters.testCase;
-		
-		if (typeof measurementParameters.wsParallelStreamsDownload  !== 'undefined' && wsTestCase === 'download') 	dlParallelStreams	= Number(measurementParameters.wsParallelStreamsDownload);
-		if (typeof measurementParameters.wsParallelStreamsUpload  !== 'undefined' && wsTestCase === 'upload') 		ulParallelStreams	= Number(measurementParameters.wsParallelStreamsUpload);
-		
-		if (typeof measurementParameters.wsFrameSizeDownload  !== 'undefined' && wsTestCase === 'download') 		dlFrameSize			= Number(measurementParameters.wsFrameSizeDownload);
-		if (typeof measurementParameters.wsFrameSizeUpload  !== 'undefined' && wsTestCase === 'upload') 			ulFrameSize			= Number(measurementParameters.wsFrameSizeUpload);
+
+        if (typeof measurementParameters.wsParallelStreamsDownload  !== 'undefined' && wsTestCase === 'download')     dlParallelStreams    = Number(measurementParameters.wsParallelStreamsDownload);
+        if (typeof measurementParameters.wsParallelStreamsUpload  !== 'undefined' && wsTestCase === 'upload')         ulParallelStreams    = Number(measurementParameters.wsParallelStreamsUpload);
+
+        if (typeof measurementParameters.wsFrameSizeDownload  !== 'undefined' && wsTestCase === 'download')         dlFrameSize            = Number(measurementParameters.wsFrameSizeDownload);
+        if (typeof measurementParameters.wsFrameSizeUpload  !== 'undefined' && wsTestCase === 'upload')             ulFrameSize            = Number(measurementParameters.wsFrameSizeUpload);
+        if (typeof measurementParameters.uploadFramesPerCall  !== 'undefined' && wsTestCase === 'upload')             uploadFramesPerCall        = Number(measurementParameters.uploadFramesPerCall);
 
         switch (wsTestCase)
         {
@@ -222,7 +225,7 @@ function WSControl()
                 if (typeof measurementParameters.wsRttRequests !== 'undefined')             rttRequests             = Number(measurementParameters.wsRttRequests);
                 if (typeof measurementParameters.wsRttRequestTimeout !== 'undefined')       rttRequestTimeout       = Number(measurementParameters.wsRttRequestTimeout);
                 if (typeof measurementParameters.wsRttRequestWait !== 'undefined')          rttRequestWait          = Number(measurementParameters.wsRttRequestWait);
-                if (typeof measurementParameters.wsRttTimeout !== 'undefined')              rttTimeout              = Number(measurementParameters.wsRttTimeout); 
+                if (typeof measurementParameters.wsRttTimeout !== 'undefined')              rttTimeout              = Number(measurementParameters.wsRttTimeout);
                 if (typeof measurementParameters.wsRttPayloadSize !== 'undefined')          rttPayloadSize          = Number(measurementParameters.wsRttPayloadSize);
                 wsParallelStreams                                                   = 1;
                 wsMeasurementRunningTime                                            = rttTimeout;
@@ -233,18 +236,18 @@ function WSControl()
             }
             case 'download':
             {
-				wsParallelStreams                   = dlParallelStreams;
-				wsFrameSize 						= dlFrameSize;
-				
-				if (wsFrameSize >= 65536)
-				{
-					dlWsOverheadPerFrame	= 8;
-				}
-				else if (wsFrameSize < 126)
-				{
-					dlWsOverheadPerFrame	= 2;
-				}
-				
+                wsParallelStreams                   = dlParallelStreams;
+                wsFrameSize                         = dlFrameSize;
+
+                if (wsFrameSize >= 65536)
+                {
+                    dlWsOverheadPerFrame    = 8;
+                }
+                else if (wsFrameSize < 126)
+                {
+                    dlWsOverheadPerFrame    = 2;
+                }
+
                 wsOverheadPerFrame                  = dlWsOverheadPerFrame;
                 wsDownloadValues.overheadPerFrame   = dlWsOverheadPerFrame;
                 wsStartupTime                       = dlStartupTime;
@@ -252,14 +255,14 @@ function WSControl()
                 wsReportInterval                    = dlReportInterval;
                 wsTimeout                           = dlTimeout;
                 wsProtocol                          = dlProtocol;
-				
+
                 break;
             }
             case 'upload':
             {
-				wsParallelStreams               = ulParallelStreams;
-                wsFrameSize 					= ulFrameSize;
-                
+                wsParallelStreams               = ulParallelStreams;
+                wsFrameSize                     = ulFrameSize;
+
                 if (ulFrameSize >= 65536)
                 {
                     ulWsOverheadPerFrame    = 12;
@@ -268,7 +271,7 @@ function WSControl()
                 {
                     ulWsOverheadPerFrame    = 6;
                 }
-                
+
                 wsOverheadPerFrame              = ulWsOverheadPerFrame;
                 wsUploadValues.overheadPerFrame = ulWsOverheadPerFrame;
                 wsStartupTime                   = ulStartupTime;
@@ -276,32 +279,32 @@ function WSControl()
                 wsReportInterval                = ulReportInterval;
                 wsTimeout                       = ulTimeout;
                 wsProtocol                      = ulProtocol;
-				
+
                 break;
             }
         }
-        
+
         if (typeof measurementParameters.wsTargets !== 'undefined')            wsTargets                   = measurementParameters.wsTargets;
-        if (typeof measurementParameters.wsTargetsRtt !== 'undefined')         wsTargetsRtt                = measurementParameters.wsTargetsRtt;   
-        if (typeof measurementParameters.wsTLD !== 'undefined')                wsTLD                       = String(measurementParameters.wsTLD);     
+        if (typeof measurementParameters.wsTargetsRtt !== 'undefined')         wsTargetsRtt                = measurementParameters.wsTargetsRtt;
+        if (typeof measurementParameters.wsTLD !== 'undefined')                wsTLD                       = String(measurementParameters.wsTLD);
         if (typeof measurementParameters.wsTargetPort !== 'undefined')         wsTargetPort                = String(measurementParameters.wsTargetPort);
         if (typeof measurementParameters.wsWss !== 'undefined')                wsWss                       = String(measurementParameters.wsWss);
         if (typeof measurementParameters.wsStartupTime !== 'undefined')        wsStartupTime               = Number(measurementParameters.wsStartupTime);
         if (typeof measurementParameters.wsTimeout !== 'undefined')            wsTimeout                   = Number(measurementParameters.wsTimeout);
         if (typeof measurementParameters.wsMeasureTime      !== 'undefined' && (wsTestCase === 'download' || wsTestCase === 'upload')) wsMeasurementRunningTime    = Number(measurementParameters.wsMeasureTime);
-        
+
         if (typeof measurementParameters.wsWorkerPath !== 'undefined')          wsWorkerPath               = String(measurementParameters.wsWorkerPath);
-        
-        
+
+
         wsAuthToken         = String(measurementParameters.wsAuthToken);
         wsAuthTimestamp     = String(measurementParameters.wsAuthTimestamp);
-        
+
         reportToMeasurement('info', 'starting measurement');
-        
+
         console.log(wsTestCase + ': starting measurement using parameters:');
         var wsWssString                 = 'wss://';
         if (!Number(wsWss)) wsWssString = 'ws://';
-        
+
         if (wsTestCase === 'rtt')
         {
             if (wsTargetsRtt.length > 0)
@@ -315,10 +318,10 @@ function WSControl()
             console.log('request wait:      ' + rttRequestWait);
             console.log('timeout:           ' + rttTimeout);
         }
-        
+
         if (wsTestCase === 'download' || wsTestCase === 'upload')
         {
-			if (wsTargets.length > 0)
+            if (wsTargets.length > 0)
             {
                 wsTarget = wsTargets[Math.floor(Math.random() * wsTargets.length)] + '.' + wsTLD;
             }
@@ -327,10 +330,10 @@ function WSControl()
             console.log('startup time:      ' + wsStartupTime);
             console.log('measurement time:  ' + wsMeasurementRunningTime);
             console.log('parallel streams:  ' + wsParallelStreams);
-			console.log('frame size:  		' + wsFrameSize);
-            console.log('timeout:           ' + wsTimeout);        
+            console.log('frame size:        ' + wsFrameSize);
+            console.log('timeout:           ' + wsTimeout);
         }
-        
+
         wsWorkers       = new Array(wsParallelStreams);
         wsWorkersStatus = new Array(wsParallelStreams);
 
@@ -340,9 +343,9 @@ function WSControl()
             {
                 ulReportDict[wsID]  = {};
             }
-            
+
             var workerData = prepareWorkerData('connect', wsID);
-            
+
             if (typeof measurementParameters.singleThread !== 'undefined')
             {
                 singleThread                    = true;
@@ -358,12 +361,12 @@ function WSControl()
                     var WorkerNode              = require("tiny-worker");
                     var path                    = require('path');
                     var ipcRendererMeasurement  = require('electron').ipcRenderer;
-                    
+
                     wsWorkersStatus[wsID]       = wsStateClosed;
                     wsWorkers[wsID]             = new WorkerNode(path.join(__dirname, 'Worker.js'));
-                    
+
                     ipcRendererMeasurement.send('measurementSetWorkerPID', wsWorkers[wsID].child.pid),
-                    
+
                     workerData = JSON.parse(workerData);
                     workerData.ndServerFamily   = measurementParameters.ndServerFamily;
                     workerData = JSON.stringify(workerData);
@@ -373,17 +376,17 @@ function WSControl()
                     wsWorkersStatus[wsID]   = wsStateClosed;
                     wsWorkers[wsID]         = new Worker(wsWorkerPath);
                 }
-                
+
                 wsWorkers[wsID].onmessage = function (event)
                 {
-                    workerCallback(JSON.parse(event.data)); 
+                    workerCallback(JSON.parse(event.data));
                 };
 
                 wsWorkers[wsID].postMessage(workerData);
             }
         }
-        
-        wsTimeoutTimer = setTimeout(measurementTimeout, wsTimeout);  
+
+        wsTimeoutTimer = setTimeout(measurementTimeout, wsTimeout);
     };
 
     /**
@@ -397,13 +400,13 @@ function WSControl()
         clearInterval(wsTimeoutTimer);
         clearInterval(wsInterval);
         clearTimeout(wsStartupTimeout);
-        
+
         console.log(wsTestCase + ': stopping measurement');
- 
+
         if (typeof wsWorkers !== 'undefined')
         {
             var workerData = prepareWorkerData('close');
-            
+
             for (var wsID = 0; wsID < wsWorkers.length; wsID++)
             {
                 wsWorkers[wsID].postMessage(workerData);
@@ -421,12 +424,12 @@ function WSControl()
     {
         workerCallback(JSON.parse(data));
     };
-    
-    
-    
-    
+
+
+
+
     /*-------------------------private functions------------------------*/
-    
+
     /**
      * @function workerCallback
      * @description Function to receive callbacks from the WSWorkers
@@ -442,7 +445,7 @@ function WSControl()
                 wsWorkersStatus[data.wsID] = data.wsState;
                 if (logDebug)
                 {
-                    console.log('wsWorker ' + data.wsID + ' command: \'' + data.cmd + '\' message: \'' + data.msg);  
+                    console.log('wsWorker ' + data.wsID + ' command: \'' + data.cmd + '\' message: \'' + data.msg);
                 }
                 break;
             }
@@ -471,16 +474,16 @@ function WSControl()
                         console.log('all websockets open');
                     }
 
-					if (wsTestCase === 'upload')
+                    if (wsTestCase === 'upload')
                     {
-						var workerData = prepareWorkerData('uploadStart');
+                        var workerData = prepareWorkerData('uploadStart');
 
-						for (var wsID = 0; wsID < wsWorkers.length; wsID++)
-						{
-							wsWorkers[wsID].postMessage(workerData);
-						}
+                        for (var wsID = 0; wsID < wsWorkers.length; wsID++)
+                        {
+                            wsWorkers[wsID].postMessage(workerData);
+                        }
                     }
-					
+
                     clearTimeout(wsTimeoutTimer);
 
                     if (wsTestCase === 'rtt')
@@ -518,11 +521,11 @@ function WSControl()
                 if (wsTestCase === 'rtt')
                 {
                     if (data.wsRttValues)
-					{
-						wsRttValues = data.wsRttValues;
-						wsRttValues.duration = Math.round(wsMeasurementTime * 1000);
-					}
-					
+                    {
+                        wsRttValues = data.wsRttValues;
+                        wsRttValues.duration = Math.round(wsMeasurementTime * 1000 * 1000);
+                    }
+
                     for (key in wsRttValues)
                     {
                         if (typeof wsRttValues[key] === 'undefined' ||  wsRttValues[key] === 'undefined' ||  wsRttValues[key] === null ||  wsRttValues[key] === 'null')
@@ -530,7 +533,7 @@ function WSControl()
                             delete wsRttValues[key];
                         }
                     }
-                    
+
                     break;
                 }
 
@@ -547,7 +550,7 @@ function WSControl()
                     if (wsTestCase === 'upload')
                     {
                         ulStartupData   += data.wsData;
-                        ulStartupFrames	+= data.wsFrames;
+                        ulStartupFrames    += data.wsFrames;
                     }
 
                     break;
@@ -557,7 +560,7 @@ function WSControl()
                     dlData          += data.wsData;
                     dlFrames        += data.wsFrames;
 
-                    if (data.wsTime > wsWorkerTime) 
+                    if (data.wsTime > wsWorkerTime)
                     {
                         wsWorkerTime = data.wsTime;
                     }
@@ -588,14 +591,14 @@ function WSControl()
 
             case 'error':
             {
-                wsWorkersStatus[data.wsID] = data.wsState;                   
+                wsWorkersStatus[data.wsID] = data.wsState;
                 if (data.msg === 'authorizationConnection' && !wsMeasurementError && this.wsTestCase !== 'rtt')
                 {
                     wsMeasurementError = true;
                     measurementError('webSocket authorization unsuccessful or no connection to measurement server', 4, 1, 0);
                 }
                 break;
-            } 
+            }
 
             default:
             {
@@ -604,7 +607,7 @@ function WSControl()
             }
         }
     }
-    
+
     /**
      * @function measurementError
      * @description Function to report errors and close active connections
@@ -617,7 +620,7 @@ function WSControl()
     function measurementError(errorDescription, errorCode, systemAvailability, serviceAvailability)
     {
         clearInterval(wsTimeoutTimer);
-        
+
         if ((errorCode === 2 || errorCode === 4) && wsTestCase === 'rtt')
         {
             wsMeasurementError = true;
@@ -625,7 +628,7 @@ function WSControl()
             measurementFinish();
             return;
         }
-        
+
         console.log(wsTestCase + ': ' + errorDescription);
         wsErrorCode             = errorCode;
         wsErrorDescription      = errorDescription;
@@ -635,7 +638,7 @@ function WSControl()
         for (var wsID = 0; wsID < wsWorkers.length; wsID++)
         {
             var workerData = prepareWorkerData('close', wsID);
-            
+
             if (!singleThread)
             {
                 wsWorkers[wsID].postMessage(workerData);
@@ -658,7 +661,7 @@ function WSControl()
         wsMeasurementError = true;
         measurementError('webSocket timeout error', 2, 1, 0);
     }
-    
+
     /**
      * @function measurementStart
      * @description Function to start measurements
@@ -667,17 +670,17 @@ function WSControl()
     function measurementStart()
     {
         wsStartTime = performance.now();
-        
+
         if (wsTestCase !== 'rtt')
         {
             for (var wsID = 0; wsID < wsWorkers.length; wsID++)
             {
                 if (wsWorkersStatus[wsID] === wsStateOpen) wsStreamsStart++;
                 var workerData = prepareWorkerData('resetCounter', wsID);
-                
+
                 if (!singleThread)
                 {
-                    wsWorkers[wsID].postMessage(workerData); 
+                    wsWorkers[wsID].postMessage(workerData);
                 }
                 else
                 {
@@ -691,10 +694,10 @@ function WSControl()
         console.log(wsTestCase + ': measurement started');
         reportToMeasurement('info', 'measurement started');
     }
-    
+
     /**
      * @function measurementReport
-     * @description Function to report measurement results 
+     * @description Function to report measurement results
      * @private
      */
     function measurementReport()
@@ -708,7 +711,7 @@ function WSControl()
             {
                 if (wsWorkersStatus[wsID] === wsStateOpen) wsStreamsEnd++;
                 var workerData = prepareWorkerData('close', wsID);
-                
+
                 if (!singleThread)
                 {
                     wsWorkers[wsID].postMessage(workerData);
@@ -726,9 +729,9 @@ function WSControl()
             for (var wsID = 0; wsID < wsWorkers.length; wsID++)
             {
                 var workerData = prepareWorkerData('report', wsID);
-                
+
                 if (!singleThread)
-                {                
+                {
                     wsWorkers[wsID].postMessage(workerData);
                 }
                 else
@@ -738,14 +741,14 @@ function WSControl()
             }
             wsMeasurementTime       = performance.now() - wsStartTime;
             wsMeasurementTimeTotal  = performance.now() - wsStartupStartTime;
-            
+
             if (!wsCompleted)
             {
                 setTimeout(report, 100);
             }
         }
     }
-    
+
     /**
      * @function measurementFinish
      * @description Function to finish measurements
@@ -778,19 +781,19 @@ function WSControl()
             wsMeasurementTime       = wsWorkerTime - wsStartTime;
             wsMeasurementTimeTotal  = wsWorkerTime - wsStartupStartTime;
         }
-        
+
         var msg;
-            
+
         if (wsTestCase === 'download')
         {
             wsData          = dlData;
             wsFrames        = dlFrames;
             wsDataTotal     = dlData    + dlStartupData;
             wsFramesTotal   = dlFrames  + dlStartupFrames;
-            
+
             msg = 'ok';
         }
-        
+
         if (wsTestCase === 'upload')
         {
             var ulData = 0;
@@ -798,25 +801,25 @@ function WSControl()
             for (var wsID = 0; wsID < wsWorkers.length; wsID++)
             {
                 var ulStreamReportDict = ulReportDict[wsID];
-                
+
                 for (var streamKey in ulStreamReportDict)
                 {
-                    
+
                     ulData      += ulStreamReportDict[streamKey].bRcv;
                     ulFrames    += ulStreamReportDict[streamKey].hRcv;
                 }
             }
-            
+
             wsData          = ulData;
             wsFrames        = ulFrames;
             wsDataTotal     = ulData    + ulStartupData;
-            wsFramesTotal   = ulFrames  + ulStartupFrames; 
-            
+            wsFramesTotal   = ulFrames  + ulStartupFrames;
+
             msg = 'ok';
         }
-        
+
         if (wsTestCase !== 'rtt')
-        {    
+        {
             wsOverhead           = (wsFrames * wsOverheadPerFrame);
             wsOverheadTotal      = (wsFramesTotal * wsOverheadPerFrame);
             wsSpeedAvgBitS       = (((wsData * 8) + (wsOverhead * 8)) / (Math.round(wsMeasurementTime) / 1000));
@@ -840,37 +843,37 @@ function WSControl()
             finishString = 'Overall ';
             console.log('--------------------------------------------------------');
         }
-        
+
         if (logReports && wsTestCase === 'rtt')
         {
-            console.log(finishString + 'Time:           		' + wsRttValues.duration + ' ns');
-            console.log(finishString + 'RTT Avgerage:        		' + wsRttValues.avg + ' ns');
-            console.log(finishString + 'RTT Median:     		' + wsRttValues.med + ' ns');
-            console.log(finishString + 'RTT Min:        		' + wsRttValues.min + ' ns');
-            console.log(finishString + 'RTT Max:        		' + wsRttValues.max + ' ns');
-            console.log(finishString + 'RTT Sent:   			' + wsRttValues.requests);
-            console.log(finishString + 'RTT Received:    		' + wsRttValues.replies);
-            console.log(finishString + 'RTT Errors:     		' + wsRttValues.errors);
-            console.log(finishString + 'RTT Missing:    		' + wsRttValues.missing);
-            console.log(finishString + 'RTT Packet Size: 		' + wsRttValues.packetsize);
-            console.log(finishString + 'RTT Standard Deviation:		' + wsRttValues.stDevPop + ' ns');
-            console.log(finishString + 'RTT Peer:     			' + wsRttValues.server);
+            console.log(finishString + 'Time:                   ' + wsRttValues.duration + ' ns');
+            console.log(finishString + 'RTT Avgerage:           ' + wsRttValues.avg + ' ns');
+            console.log(finishString + 'RTT Median:             ' + wsRttValues.med + ' ns');
+            console.log(finishString + 'RTT Min:                ' + wsRttValues.min + ' ns');
+            console.log(finishString + 'RTT Max:                ' + wsRttValues.max + ' ns');
+            console.log(finishString + 'RTT Sent:               ' + wsRttValues.requests);
+            console.log(finishString + 'RTT Received:           ' + wsRttValues.replies);
+            console.log(finishString + 'RTT Errors:             ' + wsRttValues.errors);
+            console.log(finishString + 'RTT Missing:            ' + wsRttValues.missing);
+            console.log(finishString + 'RTT Packet Size:        ' + wsRttValues.packetsize);
+            console.log(finishString + 'RTT Standard Deviation: ' + wsRttValues.stDevPop + ' ns');
+            console.log(finishString + 'RTT Peer:               ' + wsRttValues.server);
         }
         else if (logReports)
         {
-            console.log(finishString + 'Time:           		' + Math.round(wsMeasurementTime * 1000) + ' ns');
-            console.log(finishString + 'Data:           		' + (wsData + wsOverhead) + ' bytes');
-            console.log(finishString + 'TCP Throughput: 		' + (wsSpeedAvgBitS / 1000 / 1000).toFixed(2) + ' MBit/s');
+            console.log(finishString + 'Time:                   ' + Math.round(wsMeasurementTime * 1000 * 1000) + ' ns');
+            console.log(finishString + 'Data:                   ' + (wsData + wsOverhead) + ' bytes');
+            console.log(finishString + 'TCP Throughput:         ' + (wsSpeedAvgBitS / 1000 / 1000).toFixed(2) + ' MBit/s');
         }
-        
-        //set KPIs 
+
+        //set KPIs
         if (wsTestCase === 'download')
         {
             wsDownloadValues.rateAvg       = Math.round(wsSpeedAvgBitS);
             wsDownloadValues.data          = wsData + wsOverhead;
-            wsDownloadValues.dataTotal     = wsDataTotal + wsOverheadTotal;  
-            wsDownloadValues.duration      = Math.round(wsMeasurementTime) * 1000;
-            wsDownloadValues.durationTotal = Math.round(wsMeasurementTimeTotal) * 1000;
+            wsDownloadValues.dataTotal     = wsDataTotal + wsOverheadTotal;
+            wsDownloadValues.duration      = Math.round(wsMeasurementTime) * 1000 * 1000;
+            wsDownloadValues.durationTotal = Math.round(wsMeasurementTimeTotal) * 1000 * 1000;
             wsDownloadValues.streamsStart  = wsStreamsStart;
             wsDownloadValues.streamsEnd    = wsStreamsEnd;
             wsDownloadValues.frameSize     = wsFrameSize;
@@ -879,27 +882,28 @@ function WSControl()
             wsDownloadValues.overhead      = wsOverhead;
             wsDownloadValues.overheadTotal = wsOverheadTotal;
         }
-        
+
         if (wsTestCase === 'upload')
         {
             wsUploadValues.rateAvg         = Math.round(wsSpeedAvgBitS);
             wsUploadValues.data            = wsData + wsOverhead;
-            wsUploadValues.dataTotal       = wsDataTotal + wsOverheadTotal;  
-            wsUploadValues.duration        = Math.round(wsMeasurementTime) * 1000;
-            wsUploadValues.durationTotal   = Math.round(wsMeasurementTimeTotal) * 1000;
+            wsUploadValues.dataTotal       = wsDataTotal + wsOverheadTotal;
+            wsUploadValues.duration        = Math.round(wsMeasurementTime) * 1000 * 1000;
+            wsUploadValues.durationTotal   = Math.round(wsMeasurementTimeTotal) * 1000 * 1000;
             wsUploadValues.streamsStart    = wsStreamsStart;
             wsUploadValues.streamsEnd      = wsStreamsEnd;
             wsUploadValues.frameSize       = wsFrameSize;
             wsUploadValues.frames          = wsFrames;
             wsUploadValues.framesTotal     = wsFramesTotal;
             wsUploadValues.overhead        = wsOverhead;
-            wsUploadValues.overheadTotal   = wsOverheadTotal;  
+            wsUploadValues.overheadTotal   = wsOverheadTotal;
+            wsUploadValues.framePerCall    = uploadFramesPerCall;
         }
-        
+
         reportToMeasurement(cmd, msg);
         if (finish) resetValues();
     }
-    
+
     /**
      * @function reportToMeasurement
      * @description Function to report measurement results to the WSControl Callback class
@@ -921,7 +925,7 @@ function WSControl()
 
         if (wsControl !== null && wsControl.callback !== null && wsControl.callback === 'wsMeasurement')  this.wsMeasurement.controlCallback(JSON.stringify(report));
     }
-    
+
     /**
      * @function getKPIsRtt
      * @description Function to collect RTT KPIs
@@ -930,7 +934,7 @@ function WSControl()
      */
     function getKPIsRtt(report)
     {
-		report.duration_ns				= wsRttValues.duration;
+        report.duration_ns                = wsRttValues.duration;
         report.average_ns               = wsRttValues.avg;
         report.median_ms                = wsRttValues.med;
         report.min_ns                   = wsRttValues.min;
@@ -940,16 +944,16 @@ function WSControl()
         report.num_error                = wsRttValues.errors;
         report.num_missing              = wsRttValues.missing;
         report.packet_size              = wsRttValues.packetsize;
-        report.standard_deviation_ns	= wsRttValues.stDevPop;
-        
+        report.standard_deviation_ns    = wsRttValues.stDevPop;
+
         if (typeof wsRttValues.server !== 'undefined')
         {
             report.peer                 = wsRttValues.server + '.' + wsTLD;
         }
-        
+
         return report;
     }
-    
+
     /**
      * @function getKPIsDownload
      * @description Function to collect Download KPIs
@@ -958,23 +962,23 @@ function WSControl()
      */
     function getKPIsDownload(report)
     {
-        report.throughput_avg_bps            			= wsDownloadValues.rateAvg;
-        report.bytes               						= wsDownloadValues.data;
-        report.bytes_including_slow_start      			= wsDownloadValues.dataTotal;
-        report.duration_ns            					= wsDownloadValues.duration;
-        report.duration_ns_total      					= wsDownloadValues.durationTotal;
-        report.num_streams_start       					= wsDownloadValues.streamsStart;
-        report.num_streams_end         					= wsDownloadValues.streamsEnd;
-        report.frame_size          						= wsDownloadValues.frameSize;
-        report.frame_count              				= wsDownloadValues.frames;
-        report.frame_count_including_slow_start        	= wsDownloadValues.framesTotal;
-        report.overhead            						= wsDownloadValues.overhead;
+        report.throughput_avg_bps                       = wsDownloadValues.rateAvg;
+        report.bytes                                    = wsDownloadValues.data;
+        report.bytes_including_slow_start               = wsDownloadValues.dataTotal;
+        report.duration_ns                              = wsDownloadValues.duration;
+        report.duration_ns_total                        = wsDownloadValues.durationTotal;
+        report.num_streams_start                        = wsDownloadValues.streamsStart;
+        report.num_streams_end                          = wsDownloadValues.streamsEnd;
+        report.frame_size                               = wsDownloadValues.frameSize;
+        report.frame_count                              = wsDownloadValues.frames;
+        report.frame_count_including_slow_start         = wsDownloadValues.framesTotal;
+        report.overhead                                 = wsDownloadValues.overhead;
         report.overhead_per_frame_including_slow_start  = wsDownloadValues.overheadTotal;
-        report.overhead_per_frame  						= wsDownloadValues.overheadPerFrame;
+        report.overhead_per_frame                       = wsDownloadValues.overheadPerFrame;
 
         return report;
     }
-    
+
     /**
      * @function getKPIsUpload
      * @description Function to collect Upload KPIs
@@ -983,23 +987,24 @@ function WSControl()
      */
     function getKPIsUpload(report)
     {
-        report.throughput_avg_bps              			= wsUploadValues.rateAvg;
-        report.bytes                 					= wsUploadValues.data;
-        report.bytes_including_slow_start        		= wsUploadValues.dataTotal;
-        report.duration_ns              				= wsUploadValues.duration;
-        report.duration_ns_total        				= wsUploadValues.durationTotal;
-        report.num_streams_start         				= wsUploadValues.streamsStart;
-        report.num_streams_end           				= wsUploadValues.streamsEnd;
-        report.frame_size            					= wsUploadValues.frameSize;
-        report.frame_count                				= wsUploadValues.frames;
+        report.throughput_avg_bps                       = wsUploadValues.rateAvg;
+        report.bytes                                    = wsUploadValues.data;
+        report.bytes_including_slow_start               = wsUploadValues.dataTotal;
+        report.duration_ns                              = wsUploadValues.duration;
+        report.duration_ns_total                        = wsUploadValues.durationTotal;
+        report.num_streams_start                        = wsUploadValues.streamsStart;
+        report.num_streams_end                          = wsUploadValues.streamsEnd;
+        report.frame_size                               = wsUploadValues.frameSize;
+        report.frame_count                              = wsUploadValues.frames;
         report.frame_count_including_slow_start         = wsUploadValues.framesTotal;
-        report.overhead              					= wsUploadValues.overhead;
-        report.overhead_per_frame_including_slow_start	= wsUploadValues.overheadTotal;
-        report.overhead_per_frame    					= wsUploadValues.overheadPerFrame;
+        report.overhead                                 = wsUploadValues.overhead;
+        report.overhead_per_frame_including_slow_start  = wsUploadValues.overheadTotal;
+        report.overhead_per_frame                       = wsUploadValues.overheadPerFrame;
+        report.frames_per_call                          = wsUploadValues.framePerCall;
 
         return report;
     }
-    
+
     /**
      * @function getKPIsAvailability
      * @description Function to collect Availability KPIs
@@ -1010,10 +1015,10 @@ function WSControl()
     {
         report.error_code                   = wsErrorCode;
         report.error_description            = wsErrorDescription;
-        
+
         return report;
     }
-    
+
     /**
      * @function prepareWorkerData
      * @description Function to prepare the WSWorker control data
@@ -1033,10 +1038,11 @@ function WSControl()
         workerData.wsWss                = wsWss;
         workerData.wsProtocol           = wsProtocol;
         workerData.wsFrameSize          = wsFrameSize;
+        workerData.uploadFramesPerCall  = uploadFramesPerCall;
         workerData.wsAuthToken          = wsAuthToken;
         workerData.wsAuthTimestamp      = wsAuthTimestamp;
         workerData.wsTLD                = wsTLD;
-        
+
         if (wsTestCase === 'rtt')
         {
             workerData.rttRequests              = rttRequests;
@@ -1045,10 +1051,10 @@ function WSControl()
             workerData.rttTimeout               = rttTimeout;
             workerData.rttPayloadSize           = rttPayloadSize;
         }
-		
+
         return JSON.stringify(workerData);
     }
-    
+
     /**
      * @function resetValues
      * @description Initialize all variables with default values
@@ -1087,15 +1093,15 @@ function WSControl()
         wsStreamsStart              = 0;
         wsStreamsEnd                = 0;
         wsFrameSize                 = 0;
-        
+
         wsAuthToken                 = '-';
         wsAuthTimestamp             = '-';
-        
+
         dlData                      = 0;
         dlFrames                    = 0;
         dlStartupData               = 0;
         dlStartupFrames             = 0;
-        
+
         ulReportDict                = {};
         ulStartupData               = 0;
         ulStartupFrames             = 0;
