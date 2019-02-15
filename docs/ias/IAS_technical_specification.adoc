@@ -1,4 +1,4 @@
-= Technical Specification - BEREC NNTools.eu
+= Technical Specification - BEREC NNTool.eu
 :toc: left
 :toc-title: Table of Content
 
@@ -31,7 +31,7 @@ The data transmission of all data streams is terminated after a specified time o
 The RFC 6455 specifies that application data is transmitted as sequences of frames (data frames) within WebSocket connections. Different data sizes of WebSocket frame are used, depending on connection speed under test, to ensure adequate performance on client side when using different software components (Chrome, Firefox, etc.).
 To ensure compatibility, the data are transmitted in opcode “Binary Frame” (WebSocket Frame type) format.
 
-Depending on connection speed under test, the following measurement parameters are used for in-browser download measurements:
+Depending on connection speed under test, the following measurement parameters are used for browser and app download measurements:
 [cols=3*,options=header]
 |===
 |Speed class
@@ -45,30 +45,10 @@ Depending on connection speed under test, the following measurement parameters a
 |32768
 |high
 |4
-|131072
+|524288
 |very high
 |8
-|262144
-|===
-
-Depending on connection speed under test, the following measurement parameters are used for in-app download measurements:
-[cols=3*,options=header]
-|===
-|Speed class
-|Streams
-|Frame-size
-|low
-|4
-|2048
-|default
-|4
-|32768
-|high
-|4
-|131072
-|very high
-|8
-|262144
+|524288
 |===
 
 The speed classes mentioned above are defined below.
@@ -107,7 +87,7 @@ The RFC 6455 specifies that application data is transmitted as sequences of fram
 The data transmission of all data streams is terminated after a specified time of 10 seconds. When determining the time period, the effects of TCP Congestion Control are taken into account with a 3 second slow start phase.
 To ensure compatibility, the data are transmitted in opcode “Text Frame” (WebSocket Frame type) format.
 
-Depending on connection speed under test, the following measurement parameters are used for in-browser upload measurements:
+Depending on connection speed under test, the following measurement parameters are used for browser upload measurements:
 [cols=3*,options=header]
 |===
 |Speed class
@@ -120,10 +100,10 @@ Depending on connection speed under test, the following measurement parameters a
 |4
 |65535
 |high
-|10
+|4
 |65535
 |very high
-|80
+|4
 |65535
 |===
 
@@ -138,7 +118,7 @@ Depending on connection speed under test, the following measurement parameters a
 |2048
 |default
 |4
-|32768
+|65535
 |high
 |4
 |65535
@@ -187,11 +167,40 @@ image::images/IAS_delay_measurements.png[align="center"]
 
 === Detecting traffic management practices that impact individual applications
 
-==== Blocked ports
-// TODO
+==== Blocked ports - Web-Browser
+The assessment method BoR (17) 178 describes the test of blocked ports as a functional test in which the establishment of a connection between two units is tested. Connections can be tested using different protocols: IPv4 or IPv6, TCP or UDP.
+
+As part of this implementation, browser-based port tests are available using the UDP protocol. The test is initiated by the measurtement agent and can be performed via IPv4 as well as IPv6.
+For the usage of UDP in a browser, the WebRTC protocol is used, which enables peer-to-peer communication in modern browsers, e.g. for multimedia communication. In this context, WebRTC offers the use of Traversal Using Relays around NAT (TURN), which is defined in RFC 5766. This is an advanced feature of Session Traversal Utilities for NAT (STUN).
+
+In this test case, the measurment agent acts as a TURN client, which requests an allocation to a measurement peer, in this context a TURN server. This process takes place in four communication steps as defined in RFC 5766 and shown below.
+
+image::images/IAS_blocked_ports.png[align="center"]
+
+The test of a UDP port is evaluated as a successful connection if all four defined messages were exchanged within a defined time and the "Allocate success response"-Message contains a valid Relay Address (measurement peer address).
+
+The ports to be tested are configurable, all using the TURN allocation technique described above. The tested ports are usually assigned to a well known service. The following ports are tested in a default setup.
+
+[cols=2*,options=header]
+|===
+|Well known Service
+|Well known Port
+|Network Time Protocol (NTP)
+|123
+|Internet Security Association and Key Management Protocol (ISAKMP)
+|500
+|IPSec NAT Traversal
+|4500
+|Not well known. +
+Example for a blocked Port (Measurement Peer Port is closed)
+|7000
+|===
+
+==== Blocked ports - App
+//ToDo
 
 == Author
 alladin-IT GmbH <info@alladin.at> +
 zafaco GmbH <info@zafaco.de>
 
-Last update: 2019-01-22
+Last update: 2019-02-13
