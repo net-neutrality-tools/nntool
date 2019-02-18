@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-02-13
+ *      \date Last update: 2019-02-18
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -34,7 +34,7 @@ function PortBlocking()
     let pbMeasurementParameters     = {};
     let portsToTest                 = [];
     let portsTested                 = [];
-    
+
     let rtcPeerConnections          = [];
     let timeoutHandler              = [];
     let timeoutHandlerActivePorts   = {};
@@ -45,12 +45,12 @@ function PortBlocking()
     let deviceKPIs                  = {};
     let portBlockingKPIs            = {};
     portBlockingKPIs.results        = [];
-    
-    
-    
-    
+
+
+
+
     /*-------------------------public functions------------------------*/
-    
+
     /**
      * @function measurementControl
      * @description API Function to Start measurements
@@ -64,7 +64,7 @@ function PortBlocking()
 
         globalKPIs.start_time               = jsTool.getFormattedDate();
         globalKPIs.test_case                = 'port_blocking';
-        
+
         clientKPIs.timezone                 = jsTool.getTimezone();
         clientKPIs.type                     = pbMeasurementParameters.platform.toUpperCase();
         clientKPIs.port_blocking_version    = portBlockingVersion;
@@ -75,15 +75,15 @@ function PortBlocking()
         portBlockingKPIs.user       = pbMeasurementParameters.user;
         portBlockingKPIs.password   = pbMeasurementParameters.password;
         portBlockingKPIs.timeout    = pbMeasurementParameters.timeout;
-        
+
         checkUdpPort(portsToTest.shift());
     }
-    
-    
-    
-    
+
+
+
+
     /*-------------------------private functions------------------------*/
-    
+
     /**
      * @function checkUdpPort
      * @description check reachability of udp port
@@ -101,37 +101,13 @@ function PortBlocking()
             {
                 if (event.candidate.ip === pbMeasurementParameters.targetIpv4 || event.candidate.ip === pbMeasurementParameters.targetIpv6)
                 {
-                    validCandidateReceived(event.candidate.ip, port); 
+                    validCandidateReceived(event.candidate.ip, port);
                 }
             };
         }
         else
         {
-            let config = { iceServers: [{ urls: 'turn:' + pbMeasurementParameters.target + ':' + port, username: pbMeasurementParameters.user, credential: pbMeasurementParameters.password}] };
-
-            rtcPeerConnections[port] = new RTCPeerConnection(config);
-
-            let dataChannelConfig = { ordered: false, maxRetransmits: 0 };
-            dataChannel = rtcPeerConnections[port].createDataChannel('dc', dataChannelConfig);
-
-            rtcPeerConnections[port].onicecandidate = function(event)
-            {
-                if (event.candidate)
-                {
-                    let candidate = event.candidate.candidate;
-                    if ((candidate.includes(pbMeasurementParameters.targetIpv4) || candidate.includes(pbMeasurementParameters.targetIpv6)) && candidate.includes('relay'))
-                    {
-                        validCandidateReceived(candidate, port); 
-                    }
-                }
-            };
-
-            rtcPeerConnections[port].createOffer((description)=>
-            {
-                console.log('Offer Created');
-
-                rtcPeerConnections[port].setLocalDescription(description);
-            }, err => {console.log('Offer creation error: ' + err.message)});
+            handleRtcPeerConnection(port);
         }
 
         timeoutHandlerActivePorts[port] = true;
@@ -147,7 +123,40 @@ function PortBlocking()
             measurementStepCompleted();
         }, pbMeasurementParameters.timeout);
     }
-    
+
+    async function handleRtcPeerConnection(port)
+    {
+        let config = { iceServers: [{ urls: 'turn:' + pbMeasurementParameters.target + ':' + port, username: pbMeasurementParameters.user, credential: pbMeasurementParameters.password}] };
+
+        rtcPeerConnections[port] = new RTCPeerConnection(config);
+
+        let dataChannelConfig = { ordered: false, maxRetransmits: 0 };
+        dataChannel = rtcPeerConnections[port].createDataChannel('dc', dataChannelConfig);
+
+        rtcPeerConnections[port].onicecandidate = function(event)
+        {
+            if (event.candidate)
+            {
+                let candidate = event.candidate.candidate;
+                if ((candidate.includes(pbMeasurementParameters.targetIpv4) || candidate.includes(pbMeasurementParameters.targetIpv6)) && candidate.includes('relay'))
+                {
+                    validCandidateReceived(candidate, port);
+                }
+            }
+        };
+
+        try
+        {
+            let offer = await rtcPeerConnections[port].createOffer();
+            rtcPeerConnections[port].setLocalDescription(offer);
+            console.log('Offer Created');
+        }
+        catch(e)
+        {
+            console.log('Offer creation error: ' + e.message);
+        }
+    }
+
     function validCandidateReceived(candidate, port)
     {
         clearTimeout(timeoutHandler[port]);
@@ -155,7 +164,7 @@ function PortBlocking()
 
         console.log('Connection successful to ' + pbMeasurementParameters.target + ':' + port);
 
-        let ipVersion = candidate.includes(pbMeasurementParameters.targetIpv4) ? '4' : '6'; 
+        let ipVersion = candidate.includes(pbMeasurementParameters.targetIpv4) ? '4' : '6';
 
         let portMatched         = false;
         let ipVersionMatched    = false;
@@ -165,7 +174,7 @@ function PortBlocking()
             {
                 portMatched = true;
                 if (portBlockingKPIs.results[i].ip_version === ipVersion) ipVersionMatched = true;
-            } 
+            }
         }
 
         if (!portMatched || !ipVersionMatched)
@@ -173,7 +182,7 @@ function PortBlocking()
            portsTested.push(port); portBlockingKPIs.results.push({"port":port,"reachable":true,"timeout":false,"ip_version":ipVersion});
         }
 
-        measurementStepCompleted(portMatched);  
+        measurementStepCompleted(portMatched);
     }
 
     function measurementStepCompleted(performNextStep, completed)
@@ -191,7 +200,7 @@ function PortBlocking()
             reportToWeb();
         }
     }
-    
+
     /**
      * @function getKPIs
      * @description Return port blocking measurement Results
@@ -203,10 +212,10 @@ function PortBlocking()
         if (!jsTool.isEmpty(clientKPIs))        kpis.client_info    = clientKPIs;
         if (!jsTool.isEmpty(deviceKPIs))        kpis.device_info    = deviceKPIs;
         if (!jsTool.isEmpty(portBlockingKPIs))  kpis.port_blocking  = portBlockingKPIs;
-        
+
         return kpis;
     }
-    
+
     /**
      * @function reportToWeb
      * @description Callback to Browser
