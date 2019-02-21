@@ -14,7 +14,7 @@
 
 #/*!
 # *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2019-02-13
+# *      \date Last update: 2019-02-21
 # *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
 # */
 
@@ -29,16 +29,16 @@ mkdir build
 mkdir build/plain
 mkdir build/plain/core
 
-mkdir build/plain/common
-mkdir build/plain/common-mobile
+mkdir build/plain/web
+mkdir build/plain/mobile
 
 if [ -z $1 ]; then
     mkdir build/uglified
     mkdir build/uglified/core
     mkdir build/uglified/core/modules
 
-    mkdir build/uglified/common
-    mkdir build/uglified/common-mobile
+    mkdir build/uglified/web
+    mkdir build/uglified/mobile
 fi
 
 
@@ -58,40 +58,37 @@ fi
 
 #---------------------------------------------------------
 
-#build common
-cp -R src/common/* build/plain/common/
+#build web
+cp -R src/web/* build/plain/web/
 
 if [ -z $1 ]; then
-    cp -R src/common/index.html build/uglified/common/
-    cd build/plain/common/
-    for f in *.js; do short=${f%.js}; uglifyjs -c drop_console=true -m --comments /^!/ -- $f > ../../uglified/common/$short.js; done
-    cd ../../
-else
-    cd build/
+    cp -R src/web/index.html build/uglified/web/
+    #cd build/plain/web/
+    #for f in *.js; do short=${f%.js}; uglifyjs -c drop_console=true -m --comments /^!/ -- $f > ../../uglified/web/$short.js; done
+    #cd ../../
 fi
 
-cat plain/core/modules/browser.report.js		>> plain/common/common.js
-cat plain/core/modules/Tool.js 					>> plain/common/common.js
-cat plain/core/Control.js						>> plain/common/common.js
-cat plain/core/ControlSingleThread.js			>> plain/common/common.js
-cat plain/core/Measurement.js 					>> plain/common/common.js
-cat plain/core/Worker.js 						>> plain/common/common.js
-cat plain/core/WorkerSingleThread.js 			>> plain/common/common.js
-cat plain/core/PortBlocking.js 					>> plain/common/common.js
-cat plain/common/common.footer.js				>> plain/common/common.js
+cd build/
+
+cat plain/core/modules/browser.report.js    >> plain/web/ias.web.js
+cat plain/core/modules/Tool.js              >> plain/web/ias.web.js
+cat plain/core/Control.js                   >> plain/web/ias.web.js
+cat plain/core/ControlSingleThread.js       >> plain/web/ias.web.js
+cat plain/core/Ias.js                       >> plain/web/ias.web.js
+cat plain/core/Worker.js                    >> plain/web/ias.web.js
+cat plain/core/WorkerSingleThread.js        >> plain/web/ias.web.js
+cat plain/core/PortBlocking.js              >> plain/web/ias.web.js
 
 if [ -z $1 ]; then
-    uglifyjs -c drop_console=true -m --comments /^!/ plain/common/common.js > uglified/common/common.js
+    uglifyjs -c drop_console=true -m --comments /^!/ plain/web/ias.web.js > uglified/web/ias.web.js
 fi
 
-cp plain/core/Worker.js plain/common/
-cp plain/core/modules/Tool.js plain/common/
-rm plain/common/common.footer.js
+cp plain/core/Worker.js plain/web/
+cp plain/core/modules/Tool.js plain/web/
 
 if [ -z $1 ]; then
-    cp uglified/core/Worker.js uglified/common/
-    cp uglified/core/modules/Tool.js uglified/common/
-    rm uglified/common/common.footer.js
+    cp uglified/core/Worker.js uglified/web/
+    cp uglified/core/modules/Tool.js uglified/web/
 fi
 
 cd ../
@@ -99,36 +96,35 @@ cd ../
 
 #---------------------------------------------------------
 
-#build common-mobile
-cp -R src/common-mobile/* build/plain/common-mobile/
+#build mobile
+cp -R src/mobile/* build/plain/mobile/
 
 if [ -z $1 ]; then
-    cd build/plain/common-mobile/
-    for f in *.js; do short=${f%.js}; uglifyjs -c drop_console=true -m --comments /^!/ -- $f > ../../uglified/common-mobile/$short.js; done
+    cd build/plain/mobile/
+    for f in *.js; do short=${f%.js}; uglifyjs -c drop_console=true -m --comments /^!/ -- $f > ../../uglified/mobile/$short.js; done
     cd ../../
 else
     cd build/
 fi
 
-cat plain/common-mobile/common-mobile.header.js	>> plain/common-mobile/common-mobile.js
-cat plain/core/modules/Tool.js 					>> plain/common-mobile/common-mobile.js
-cat plain/core/ControlSingleThread.js			>> plain/common-mobile/common-mobile.js
-cat plain/core/Measurement.js 					>> plain/common-mobile/common-mobile.js
-cat plain/core/Worker.js 						>> plain/common-mobile/common-mobile.js
-cat plain/core/WorkerSingleThread.js 			>> plain/common-mobile/common-mobile.js
-cat plain/common-mobile/common-mobile.footer.js	>> plain/common-mobile/common-mobile.js
+cat plain/mobile/header.js              >> plain/mobile/ias.mobile.js
+cat plain/core/modules/Tool.js          >> plain/mobile/ias.mobile.js
+cat plain/core/ControlSingleThread.js   >> plain/mobile/ias.mobile.js
+cat plain/core/Ias.js                   >> plain/mobile/ias.mobile.js
+cat plain/core/Worker.js                >> plain/mobile/ias.mobile.js
+cat plain/core/WorkerSingleThread.js    >> plain/mobile/ias.mobile.js
 
 if [ -z $1 ]; then
-    uglifyjs -c drop_console=true -m --comments /^!/ plain/common-mobile/common-mobile.js > uglified/common-mobile/common-mobile.js
+    uglifyjs -c drop_console=true -m --comments /^!/ plain/mobile/ias.mobile.js > uglified/mobile/ias.mobile.js
 fi
 
-rm plain/common-mobile/common-mobile.header.js
-rm plain/common-mobile/common-mobile.footer.js
+rm plain/mobile/header.js
+rm plain/mobile/footer.js
 rm -R plain/core/
 
 if [ -z $1 ]; then
-    rm uglified/common-mobile/common-mobile.header.js
-    rm uglified/common-mobile/common-mobile.footer.js
+    rm uglified/mobile/header.js
+    rm uglified/mobile/footer.js
     rm -R uglified/core/
 fi
 

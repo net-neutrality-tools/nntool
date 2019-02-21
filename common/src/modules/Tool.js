@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-14
+ *      \date Last update: 2019-02-21
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -31,10 +31,10 @@ var logDebug    = true;
  * @description Javascript Tool Class
  */
 var JSTool = function ()
-{ 
+{
     //reference to calling wsMeasurement
     this.wsMeasurement = '';
-    
+
     this.localIPs   = '-';
 
     return(this);
@@ -78,7 +78,7 @@ JSTool.prototype.getDeviceKPIs = function (platform)
         }
     }
 
-    var deviceKPIs = 
+    var deviceKPIs =
     {
         browser_info:
         {
@@ -94,11 +94,11 @@ JSTool.prototype.getDeviceKPIs = function (platform)
     };
 
     console.log('device kpis:');
-    console.log('browser name:            ' + jsClientBrowser);
-    console.log('browser version:        ' + jsClientBrowserVersion);
-    console.log('os name:            ' + jsClientOS);
-    console.log('version name:            ' + jsClientOSVersion);
-    
+    console.log('browser name:      ' + jsClientBrowser);
+    console.log('browser version:   ' + jsClientBrowserVersion);
+    console.log('os name:           ' + jsClientOS);
+    console.log('version name:      ' + jsClientOSVersion);
+
     return JSON.stringify(deviceKPIs);
 };
 
@@ -117,7 +117,7 @@ JSTool.prototype.generateRandomData = function (length, asString, asArrayBuffer)
     mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     mask += '0123456789';
     mask += '~`!@#$%^&*()_+-={}[]:;?,./|\\';
-    
+
     if (asArrayBuffer)
     {
           var    arrayBuffer = new ArrayBuffer(length);
@@ -153,17 +153,17 @@ JSTool.prototype.generateRandomData = function (length, asString, asArrayBuffer)
  * @param {string} ip IP Address
  */
 JSTool.prototype.getIPAddressType = function (ip)
-{ 
+{
     if (/^\s*((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\s*$/g.test(ip))
     {
         return 'IPv4';
     }
-    
+
     if (/^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/g.test(ip))
     {
         return 'IPv6';
     }
-    
+
     return false;
 };
 
@@ -177,11 +177,11 @@ JSTool.prototype.getTimestamp = function()
     if (!Date.now)
     {
         Date.now = function()
-        { 
-            return new Date().getTime(); 
+        {
+            return new Date().getTime();
         };
     }
-    
+
     return Date.now();
 };
 
@@ -194,8 +194,8 @@ JSTool.prototype.getFormattedDate = function ()
 {
     var date = new Date();
     var formattedDate;
-    formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2); 
-    
+    formattedDate = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2) + ':' + ('0' + date.getSeconds()).slice(-2);
+
     return formattedDate;
 };
 
@@ -221,13 +221,13 @@ JSTool.prototype.webSocketCloseReasons = function (event)
 {
     switch (event.code)
     {
-        case 1000: 
+        case 1000:
             return 'Normal closure, meaning that the purpose for which the connection was established has been fulfilled.';
             break;
-        case 1001: 
+        case 1001:
             return 'An endpoint is \"going away\", such as a server going down or a browser having navigated away from a page.';
             break;
-        case 1002: 
+        case 1002:
             return 'An endpoint is terminating the connection due to a protocol error';
             break;
         case 1003:
@@ -259,7 +259,7 @@ JSTool.prototype.webSocketCloseReasons = function (event)
             break;
         case 1015:
             return 'The connection was closed due to a failure to perform a TLS handshake (e.g., the server certificate can\'t be verified).';
-            break;    
+            break;
         default:
             return 'Unknown reason';
             break;
@@ -394,13 +394,13 @@ function htPostCallbackTool(data)
 {
     try
     {
-       data = JSON.parse(data); 
+       data = JSON.parse(data);
     }
     catch(e)
     {
         return;
     }
-    
+
     if (typeof data.hops !== 'undefined')
     {
         reportRouteToClientToMeasurement(data);
@@ -431,7 +431,7 @@ function reportRouteToClientToMeasurement(data)
     {
         report.server_client_route_hops = 0;
     }
-    
+
     report.server_client_route      = JSON.stringify(data.hops);
 
     if (typeof getRouteToClientCallback !== 'undefined')
