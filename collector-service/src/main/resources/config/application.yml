@@ -13,8 +13,8 @@ spring:
     #cache-seconds: ...
   jackson:
     serialization:
-      indent_output: true
-      write_dates_as_timestamps: false
+      indent-output: true
+      write-dates-as-timestamps: false
 
 server:
   port: 8081

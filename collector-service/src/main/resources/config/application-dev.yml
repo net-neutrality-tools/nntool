@@ -8,6 +8,17 @@ spring:
     livereload:
       enabled: false
 
+  couchdb:
+    connection:
+      url: http://localhost:5984
+      #username:
+      #password:
+    databases:
+      - name: measurement
+        create-if-not-exists: true
+        entities:
+          - CouchDbMeasurement
+
 #  messages:
 #    cache-seconds: 1 # short cache for development
 
@@ -21,3 +32,7 @@ spring:
 
 server:
   port: 8081
+
+logging:
+  level:
+    at.alladin.nettest: DEBUG

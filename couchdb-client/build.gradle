@@ -1,0 +1,10 @@
+apply from: "${project.rootDir}/gradle/java8.gradle"
+
+dependencies {
+	implementation group: 'com.cloudant', name: 'cloudant-client', version: '2.15.0'
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp-urlconnection', version: '3.8.1'
+
+	implementation group: 'org.slf4j', name: 'slf4j-api', version: slf4j_simple_version
+
+    testImplementation('junit:junit')
+}

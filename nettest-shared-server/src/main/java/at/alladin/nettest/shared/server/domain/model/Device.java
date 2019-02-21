@@ -1,6 +1,7 @@
 package at.alladin.nettest.shared.server.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
@@ -13,6 +14,7 @@ import com.google.gson.annotations.SerializedName;
  *
  */
 @JsonClassDescription("Contains device-specific information.")
+@JsonIgnoreProperties({ "_id", "_rev" })
 public class Device {
 	
 	/**
@@ -42,4 +44,24 @@ public class Device {
 	@JsonProperty("full_name")
 	private String fullname;
 	
+	public String getCodename() {
+		return codename;
+	}
+	
+	public void setCodename(String codename) {
+		this.codename = codename;
+	}
+	
+	public String getFullname() {
+		return fullname;
+	}
+	
+	public void setFullname(String fullname) {
+		this.fullname = fullname;
+	}
+
+	@Override
+	public String toString() {
+		return "Device [id=" + id + ", codename=" + codename + ", fullname=" + fullname + "]";
+	}
 }

@@ -110,4 +110,83 @@ public class Measurement {
 	@JsonProperty("network_info")
 	private NetworkInfo networkInfo;
 
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getOpenDataUuid() {
+		return openDataUuid;
+	}
+
+	public void setOpenDataUuid(String openDataUuid) {
+		this.openDataUuid = openDataUuid;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+
+	public Map<MeasurementTypeDto, SubMeasurement> getMeasurements() {
+		return measurements;
+	}
+
+	public void setMeasurements(Map<MeasurementTypeDto, SubMeasurement> measurements) {
+		this.measurements = measurements;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public MeasurementTime getMeasurementTime() {
+		return measurementTime;
+	}
+
+	public void setMeasurementTime(MeasurementTime measurementTime) {
+		this.measurementTime = measurementTime;
+	}
+
+	public GeoLocationInfo getGeoLocationInfo() {
+		return geoLocationInfo;
+	}
+
+	public void setGeoLocationInfo(GeoLocationInfo geoLocationInfo) {
+		this.geoLocationInfo = geoLocationInfo;
+	}
+
+	public MeasurementAgentInfo getClientInfo() {
+		return clientInfo;
+	}
+
+	public void setClientInfo(MeasurementAgentInfo clientInfo) {
+		this.clientInfo = clientInfo;
+	}
+
+	public DeviceInfo getDeviceInfo() {
+		return deviceInfo;
+	}
+
+	public void setDeviceInfo(DeviceInfo deviceInfo) {
+		this.deviceInfo = deviceInfo;
+	}
+
+	public NetworkInfo getNetworkInfo() {
+		return networkInfo;
+	}
+
+	public void setNetworkInfo(NetworkInfo networkInfo) {
+		this.networkInfo = networkInfo;
+	}
 }

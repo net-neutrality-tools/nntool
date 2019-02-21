@@ -15,6 +15,7 @@ buildscript {
     }
 }
 
+
 String eclipseProjectPrefix = 'nntool'
 
 allprojects { p ->
@@ -35,4 +36,3 @@ allprojects { p ->
 }
 
 defaultTasks 'build'
-

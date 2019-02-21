@@ -1,6 +1,11 @@
 include 'nettest-shared'
 include 'nettest-shared-server'
 
+include 'couchdb-client'
+include 'spring-data-couchdb'
+include 'couchdb-spring-boot-starter'
+include 'couchdb-spring-boot-autoconfigure'
+
 include 'controller-service'
 include 'collector-service'
 include 'statistic-service'

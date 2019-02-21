@@ -8,6 +8,8 @@ repositories {
 
 dependencies {
     compile project(':nettest-shared-server')
+   	compile project(':spring-data-couchdb')
+    compile project(':couchdb-spring-boot-starter')
 
     compile group: 'javax.inject', name: 'javax.inject', version: javax_inject_version
 
