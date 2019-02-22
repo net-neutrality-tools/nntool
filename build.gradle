@@ -1,4 +1,7 @@
 buildscript {
+	ext {
+		eclipse_project_prefix = 'nntool'
+	}
     repositories {
         google()
 
@@ -15,8 +18,11 @@ buildscript {
     }
 }
 
-
-String eclipseProjectPrefix = 'nntool'
+plugins {
+	id 'net.ltgt.apt' version '0.21'
+	id 'net.ltgt.apt-eclipse' version '0.21'
+	id 'net.ltgt.apt-idea' version '0.21'
+}
 
 allprojects { p ->
     group = 'at.alladin.nettest'
@@ -32,7 +38,11 @@ allprojects { p ->
     }
 
     apply plugin: 'eclipse' 
-    eclipse.project.name = "${eclipseProjectPrefix}-${p.name}"
+    eclipse.project.name = "${eclipse_project_prefix}-${p.name}"
+    
+    apply plugin: 'net.ltgt.apt'
+    apply plugin: 'net.ltgt.apt-eclipse'
+    apply plugin: 'net.ltgt.apt-idea'
 }
 
 defaultTasks 'build'

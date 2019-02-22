@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 import at.alladin.nettest.service.collector.config.CollectorServiceProperties;
 import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
+import at.alladin.nettest.shared.server.storage.couchdb.config.EnableCouchDbStorage;
 
 /**
  * The collector's main class which allows the collector to be started as stand-alone Java application or inside a servlet container.
@@ -21,8 +22,9 @@ import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
 })
 @ComponentScan({
 	"at.alladin.nettest.service.collector", 
-	"at.alladin.nettest.shared.server.web.api.v1"
+	"at.alladin.nettest.shared.server.web.api.v1",
 })
+@EnableCouchDbStorage
 public class CollectorServiceApplication extends SpringBootServletInitializer {
 
 	/**
