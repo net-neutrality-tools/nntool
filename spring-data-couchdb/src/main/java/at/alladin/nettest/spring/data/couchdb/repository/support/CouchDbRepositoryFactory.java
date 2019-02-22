@@ -93,6 +93,7 @@ public class CouchDbRepositoryFactory extends RepositoryFactorySupport {
 	 */
 	private class CouchDbQueryLookupStrategy implements QueryLookupStrategy {
 		
+		@SuppressWarnings("unused")
 		private final QueryMethodEvaluationContextProvider evaluationContextProvider;
 
 	    public CouchDbQueryLookupStrategy(QueryMethodEvaluationContextProvider evaluationContextProvider) {

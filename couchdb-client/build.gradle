@@ -6,5 +6,7 @@ dependencies {
 
 	implementation group: 'org.slf4j', name: 'slf4j-api', version: slf4j_simple_version
 
-    testImplementation('junit:junit')
+	////
+
+    testImplementation group: 'junit', name: 'junit', version: junit_version
 }

@@ -100,7 +100,7 @@ public class LmapControlModelExampleTest extends AbstractLmapExampleTest {
 		
 		dto.setAdditionalRequestInfo(apiRequestInfo);
 		
-		String res = objectToJson(dto);
+//		String res = objectToJson(dto);
 //		System.out.println(res);
 	}
 

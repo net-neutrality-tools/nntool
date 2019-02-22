@@ -8,11 +8,17 @@ dependencies {
 	// As a consequence, we are using compileOnly here.
 	compileOnly project(path: ':couchdb-client', configuration: 'default')
 
-	implementation("org.springframework.boot:spring-boot:${spring_boot_version}")
-	implementation("org.springframework.boot:spring-boot-starter:${spring_boot_version}")
-    implementation("org.springframework.boot:spring-boot-autoconfigure:${spring_boot_version}")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:${spring_boot_version}")
 
-    testImplementation('org.springframework:spring-test:${spring_framework_version}')
-    testImplementation('junit:junit')
+	implementation group: 'org.springframework.boot', name: 'spring-boot', version: spring_boot_version
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: spring_boot_version
+	implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: spring_boot_version
+
+    ////
+    
+    annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: spring_boot_version
+
+	////
+
+    testImplementation group: 'org.springframework', name: 'spring-test', version: spring_framework_version
+    testImplementation group: 'junit', name: 'junit', version: junit_version
 }

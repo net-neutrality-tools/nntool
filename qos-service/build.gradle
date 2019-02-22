@@ -1,10 +1,11 @@
 apply from: "${project.rootDir}/gradle/java8.gradle"
 
 dependencies {
-    compile project(':nettest-shared')
+    implementation project(path: ':nettest-shared', configuration: 'default')
 
-    compile group: 'log4j', name: 'apache-log4j-extras', version: log4j_extras_version
-    compile group: 'org.apache.camel', name: 'camel-restlet', version: camel_restlet_version
+	// maybe migrate to slf4j
+    implementation group: 'log4j', name: 'apache-log4j-extras', version: log4j_extras_version
+    implementation group: 'org.apache.camel', name: 'camel-restlet', version: camel_restlet_version
 }
 
 jar {

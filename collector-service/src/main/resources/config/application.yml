@@ -8,9 +8,6 @@ spring:
   application:
     name: collector-service
 
-#  messages:
-#    basename: classpath:/i18n/messages
-    #cache-seconds: ...
   jackson:
     serialization:
       indent-output: true
@@ -18,12 +15,6 @@ spring:
 
 server:
   port: 8081
-
-#springfox:
-#  documentation:
-#    swagger:
-#      v2:
-#        path: /api/v1-documentation
 
 # ===================================================================
 # Collector service specific properties
