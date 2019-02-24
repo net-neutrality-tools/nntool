@@ -87,7 +87,55 @@ public class LmapSuppressionDto {
 	@SerializedName("state")
 	@JsonProperty(required = true, value = "state")
 	private SuppressionState state;
+
+	public String getName() {
+		return name;
+	}
 	
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getStartEvent() {
+		return startEvent;
+	}
+
+	public void setStartEvent(Integer startEvent) {
+		this.startEvent = startEvent;
+	}
+
+	public Integer getEndEvent() {
+		return endEvent;
+	}
+
+	public void setEndEvent(Integer endEvent) {
+		this.endEvent = endEvent;
+	}
+
+	public List<String> getMatchList() {
+		return matchList;
+	}
+
+	public void setMatchList(List<String> matchList) {
+		this.matchList = matchList;
+	}
+
+	public Boolean getStopRunning() {
+		return stopRunning;
+	}
+
+	public void setStopRunning(Boolean stopRunning) {
+		this.stopRunning = stopRunning;
+	}
+
+	public SuppressionState getState() {
+		return state;
+	}
+
+	public void setState(SuppressionState state) {
+		this.state = state;
+	}
+
 	public enum SuppressionState {
 		ENABLED,
 		DISABLED,

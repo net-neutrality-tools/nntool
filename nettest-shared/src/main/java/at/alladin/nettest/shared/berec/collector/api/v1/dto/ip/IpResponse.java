@@ -51,6 +51,22 @@ public class IpResponse {
 		}
 	}
 	
+	public String getIpAddress() {
+		return ipAddress;
+	}
+
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
+	}
+
+	public IpVersion getVersion() {
+		return version;
+	}
+
+	public void setVersion(IpVersion version) {
+		this.version = version;
+	}
+
 	/**
 	 * IP version (IPv4 or IPv6).
 	 * 

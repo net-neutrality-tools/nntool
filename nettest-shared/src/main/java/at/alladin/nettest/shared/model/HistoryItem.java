@@ -24,6 +24,7 @@ import com.google.gson.annotations.SerializedName;
  * @author lb
  *
  */
+@Deprecated
 public class HistoryItem { // rename BriefMeasurementResponse
 
 	@SerializedName("test_uuid")

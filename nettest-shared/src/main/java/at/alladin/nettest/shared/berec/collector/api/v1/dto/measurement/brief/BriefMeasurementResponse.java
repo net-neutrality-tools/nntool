@@ -127,9 +127,83 @@ public class BriefMeasurementResponse {
 	@SerializedName("measurements")
 	@JsonProperty(required = true, value = "measurements")
 	private Map<MeasurementTypeDto, BriefSubMeasurement> measurements;
+	
+	////
 
-////
+	public String getUuid() {
+		return uuid;
+	}
 
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
+	}
+
+	public Long getDurationNs() {
+		return durationNs;
+	}
+
+	public void setDurationNs(Long durationNs) {
+		this.durationNs = durationNs;
+	}
+
+	public GeoLocationDto getFirstAccurateGeoLocation() {
+		return firstAccurateGeoLocation;
+	}
+
+	public void setFirstAccurateGeoLocation(GeoLocationDto firstAccurateGeoLocation) {
+		this.firstAccurateGeoLocation = firstAccurateGeoLocation;
+	}
+
+	public MeasurementAgentTypeDto getType() {
+		return type;
+	}
+
+	public void setType(MeasurementAgentTypeDto type) {
+		this.type = type;
+	}
+
+	public BriefDeviceInfo getDeviceInfo() {
+		return deviceInfo;
+	}
+
+	public void setDeviceInfo(BriefDeviceInfo deviceInfo) {
+		this.deviceInfo = deviceInfo;
+	}
+
+	public Integer getNetworkTypeId() {
+		return networkTypeId;
+	}
+
+	public void setNetworkTypeId(Integer networkTypeId) {
+		this.networkTypeId = networkTypeId;
+	}
+
+	public String getNetworkTypeName() {
+		return networkTypeName;
+	}
+
+	public void setNetworkTypeName(String networkTypeName) {
+		this.networkTypeName = networkTypeName;
+	}
+
+	public Map<MeasurementTypeDto, BriefSubMeasurement> getMeasurements() {
+		return measurements;
+	}
+
+	public void setMeasurements(Map<MeasurementTypeDto, BriefSubMeasurement> measurements) {
+		this.measurements = measurements;
+	}
+
+	////
+	
 	/**
 	 * Convenience method to check if this BriefMeasurementResponse contains a speed measurement.
 	 * @return true if there is a speed measurement, false otherwise.
@@ -146,8 +220,8 @@ public class BriefMeasurementResponse {
 		return measurements != null && measurements.containsKey(MeasurementTypeDto.QOS);
 	}
 
-////
-
+	////
+	
 	/**
 	 * BriefDeviceInfo contains the most important values from DeviceInfo class.
 	 *
@@ -217,5 +291,53 @@ public class BriefMeasurementResponse {
 	    @SerializedName("avg_mem_usage")
 	    @JsonProperty("avg_mem_usage")
 	    private Double averageMemUsage;
+
+		public String getDeviceCodeName() {
+			return deviceCodeName;
+		}
+
+		public void setDeviceCodeName(String deviceCodeName) {
+			this.deviceCodeName = deviceCodeName;
+		}
+
+		public String getDeviceFullName() {
+			return deviceFullName;
+		}
+
+		public void setDeviceFullName(String deviceFullName) {
+			this.deviceFullName = deviceFullName;
+		}
+
+		public String getOsName() {
+			return osName;
+		}
+
+		public void setOsName(String osName) {
+			this.osName = osName;
+		}
+
+		public String getOsVersion() {
+			return osVersion;
+		}
+
+		public void setOsVersion(String osVersion) {
+			this.osVersion = osVersion;
+		}
+
+		public Double getAverageCpuUsage() {
+			return averageCpuUsage;
+		}
+
+		public void setAverageCpuUsage(Double averageCpuUsage) {
+			this.averageCpuUsage = averageCpuUsage;
+		}
+
+		public Double getAverageMemUsage() {
+			return averageMemUsage;
+		}
+
+		public void setAverageMemUsage(Double averageMemUsage) {
+			this.averageMemUsage = averageMemUsage;
+		}
 	}
 }

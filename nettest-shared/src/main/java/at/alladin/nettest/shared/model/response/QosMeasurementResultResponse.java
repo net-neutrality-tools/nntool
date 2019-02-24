@@ -28,6 +28,7 @@ import at.alladin.nettest.shared.model.MeasurementQosResult;
  * @author lb
  *
  */
+@Deprecated
 public class QosMeasurementResultResponse {
 
 	/**

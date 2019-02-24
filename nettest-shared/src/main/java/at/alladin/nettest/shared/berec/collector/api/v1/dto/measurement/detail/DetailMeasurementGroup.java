@@ -57,4 +57,36 @@ public class DetailMeasurementGroup {
 	@SerializedName("items")
 	@JsonProperty(required = true, value = "items")
 	private List<DetailMeasurementGroupItem> items;
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getIconCharacter() {
+		return iconCharacter;
+	}
+
+	public void setIconCharacter(String iconCharacter) {
+		this.iconCharacter = iconCharacter;
+	}
+
+	public List<DetailMeasurementGroupItem> getItems() {
+		return items;
+	}
+
+	public void setItems(List<DetailMeasurementGroupItem> items) {
+		this.items = items;
+	}
 }

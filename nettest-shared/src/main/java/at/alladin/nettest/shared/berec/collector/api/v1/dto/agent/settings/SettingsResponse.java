@@ -52,6 +52,30 @@ public class SettingsResponse extends BasicResponse {
 	@JsonProperty(required = true, value = "versions")
 	private VersionResponse versions;
 
+	public Urls getUrls() {
+		return urls;
+	}
+
+	public void setUrls(Urls urls) {
+		this.urls = urls;
+	}
+
+	public Map<QoSMeasurementTypeDto, TranslatedQoSTypeInfo> getQosTypeInfo() {
+		return qosTypeInfo;
+	}
+
+	public void setQosTypeInfo(Map<QoSMeasurementTypeDto, TranslatedQoSTypeInfo> qosTypeInfo) {
+		this.qosTypeInfo = qosTypeInfo;
+	}
+
+	public VersionResponse getVersions() {
+		return versions;
+	}
+
+	public void setVersions(VersionResponse versions) {
+		this.versions = versions;
+	}
+
 	/**
 	 * Object that contains base URLs for controller, collector, map and statistic services.
 	 *
@@ -136,6 +160,61 @@ public class SettingsResponse extends BasicResponse {
 		@JsonProperty(required = true, value = "website")
 		private String website;
 
+		public String getControllerService() {
+			return controllerService;
+		}
+
+		public void setControllerService(String controllerService) {
+			this.controllerService = controllerService;
+		}
+
+		public String getControllerServiceIpv4() {
+			return controllerServiceIpv4;
+		}
+
+		public void setControllerServiceIpv4(String controllerServiceIpv4) {
+			this.controllerServiceIpv4 = controllerServiceIpv4;
+		}
+
+		public String getControllerServiceIpv6() {
+			return controllerServiceIpv6;
+		}
+
+		public void setControllerServiceIpv6(String controllerServiceIpv6) {
+			this.controllerServiceIpv6 = controllerServiceIpv6;
+		}
+
+		public String getCollectorService() {
+			return collectorService;
+		}
+
+		public void setCollectorService(String collectorService) {
+			this.collectorService = collectorService;
+		}
+
+		public String getMapService() {
+			return mapService;
+		}
+
+		public void setMapService(String mapService) {
+			this.mapService = mapService;
+		}
+
+		public String getStatisticService() {
+			return statisticService;
+		}
+
+		public void setStatisticService(String statisticService) {
+			this.statisticService = statisticService;
+		}
+
+		public String getWebsite() {
+			return website;
+		}
+
+		public void setWebsite(String website) {
+			this.website = website;
+		}
 	}
 
 	/**
@@ -168,5 +247,20 @@ public class SettingsResponse extends BasicResponse {
 		@JsonProperty(required = true, value = "description")
 		private String description;
 
+		public String getName() {
+			return name;
+		}
+		
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		public String getDescription() {
+			return description;
+		}
+		
+		public void setDescription(String description) {
+			this.description = description;
+		}
 	}
 }

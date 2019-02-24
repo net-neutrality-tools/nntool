@@ -18,7 +18,7 @@ import at.alladin.nettest.qos.android.impl.TrafficServiceImpl;
 import at.alladin.nettest.qos.android.impl.WebsiteTestServiceImpl;
 import at.alladin.nettest.qos.android.util.HelperFunctions;
 import at.alladin.nettest.qos.android.util.ObtainQoSSettingsTask;
-import at.alladin.nettest.shared.model.Client;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.ClientHolder;
@@ -32,7 +32,7 @@ import static at.alladin.nntool.client.v2.task.AbstractQoSTask.PARAM_QOS_CONCURR
 
 public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements Runnable {
 
-    private static final Client.ClientType RMBT_CLIENT_TYPE = Client.ClientType.MOBILE;
+    //private static final MeasurementAgentTypeDto RMBT_CLIENT_TYPE = MeasurementAgentTypeDto.MOBILE;
 
     private static final String TAG = "QoSMeasurementClientAnd";
 
