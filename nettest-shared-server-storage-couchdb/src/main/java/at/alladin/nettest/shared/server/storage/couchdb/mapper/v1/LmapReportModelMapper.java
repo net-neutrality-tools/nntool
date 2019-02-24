@@ -89,6 +89,7 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		@Mapping(source = "additionalRequestInfo.apiLevel", 	target = "deviceInfo.osInfo.apiLevel"),
 		@Mapping(source = "additionalRequestInfo.codeName", 	target = "deviceInfo.codeName"),
 		@Mapping(source = "additionalRequestInfo.model", 		target = "deviceInfo.model"),
+		@Mapping(target = "deviceInfo.fullName", ignore = true), // get from database
 		@Mapping(source = "additionalRequestInfo.appVersionName", target = "agentInfo.appVersionName"),
 		@Mapping(source = "additionalRequestInfo.appVersionCode", target = "agentInfo.appVersionCode"),
 		@Mapping(source = "additionalRequestInfo.appGitRevision", target = "agentInfo.appGitRevision"),

@@ -2,11 +2,14 @@ package at.alladin.nettest.shared.server.storage.couchdb.mapper.v1;
 
 import java.util.UUID;
 
+import org.mapstruct.Mapper;
+
 /**
  * 
  * @author alladin-IT GmbH (bp@alladin.at)
  *
  */
+@Mapper(componentModel = "spring")
 public interface UuidMapper {
 
 	default UUID map(String s) {
