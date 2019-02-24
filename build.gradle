@@ -22,6 +22,8 @@ plugins {
 	id 'net.ltgt.apt' version '0.21'
 	id 'net.ltgt.apt-eclipse' version '0.21'
 	id 'net.ltgt.apt-idea' version '0.21'
+	
+	id 'com.adarshr.test-logger' version '1.6.0' // https://github.com/radarsh/gradle-test-logger-plugin
 }
 
 allprojects { p ->
@@ -43,6 +45,8 @@ allprojects { p ->
     apply plugin: 'net.ltgt.apt'
     apply plugin: 'net.ltgt.apt-eclipse'
     apply plugin: 'net.ltgt.apt-idea'
+    
+    apply plugin: 'com.adarshr.test-logger'
 }
 
 defaultTasks 'build'
