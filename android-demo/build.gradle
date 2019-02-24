@@ -61,20 +61,18 @@ android
             }
         }
 
-dependencies
-{
+dependencies {
+    api fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
 
-        implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    api project(':android-common')
+    api project(':android-speed')
+    api project(':qos-client-android')
 
-        implementation project(path: ':android-common')
-        implementation project(path: ':android-speed')
-        implementation project(':qos-client-android')
+    api 'com.android.support:multidex:1.0.3'
 
-        implementation 'com.android.support:multidex:1.0.3'
-
-        api 'com.android.support:appcompat-v7:28.0.0'
-        api 'com.android.support:support-v4:28.0.0'
-        api 'com.android.support:preference-v7:28.0.0'
-        api 'com.google.android.gms:play-services-location:16.0.0'
-        api 'com.google.android.gms:play-services-maps:16.0.0'
+    api 'com.android.support:appcompat-v7:28.0.0'
+    api 'com.android.support:support-v4:28.0.0'
+    api 'com.android.support:preference-v7:28.0.0'
+    api 'com.google.android.gms:play-services-location:16.0.0'
+    api 'com.google.android.gms:play-services-maps:16.0.0'
 }

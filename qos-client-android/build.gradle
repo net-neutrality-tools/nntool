@@ -43,6 +43,5 @@ android {
 }
 
 dependencies {
-	api project(':qos-client-java')
-
+	api project(path: ':qos-client-java', configuration: 'default')
 }
