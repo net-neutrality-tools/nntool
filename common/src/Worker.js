@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-24
+ *      \date Last update: 2019-02-13
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -77,7 +77,7 @@ var wsAuthToken;
 var wsAuthTimestamp;
 
 var rttRequests             = 10;
-var rttRequestTimeout       = 1000;
+var rttRequestTimeout       = 2000;
 var rttRequestWait          = 500;
 var rttTimeout              = ((rttRequests * rttRequestTimeout) + rttRequestWait) * 1.3;
 var rttPayloadSize          = 64;
@@ -85,12 +85,14 @@ var rttPayloadSize          = 64;
 var ulData;
 var ulDataPointer;
 var ulInterval;
-var ulIntervalTiming		= 4;
+var ulIntervalTiming        = 4;
 var ulReportDict            = {};
 
 var ulDataSize              = 2246915;
 var ulBufferSize            = 4096 * 1000;
 var ulStarted               = false;
+
+var uploadFramesPerCall     = 1;
 
 var singleThread            = false;
 
@@ -153,9 +155,14 @@ onmessage = function (event)
             ndServerFamily = data.ndServerFamily;
 
             if (wsTestCase === 'download' || wsTestCase === 'upload')
-			{
-				wsFrameSize = data.wsFrameSize;
-			}
+            {
+                wsFrameSize = data.wsFrameSize;
+            }
+            
+            if (wsTestCase === 'upload')
+            {
+                uploadFramesPerCall     = data.uploadFramesPerCall;
+            }
 
             if (wsTestCase === 'rtt')
             {
@@ -223,12 +230,12 @@ onmessage = function (event)
             }
             break;
         }
-			
-		case 'uploadStart':
-		{
-			upload();
-			break;
-		}
+            
+        case 'uploadStart':
+        {
+            upload();
+            break;
+        }
 
         default:
         {
@@ -288,10 +295,10 @@ function connect()
             if (wsTestCase === 'rtt'  || wsTestCase === 'download' || wsTestCase === 'upload')
             {
                 var wsProtocols = [wsProtocol, wsAuthToken, wsAuthTimestamp];
-				if (wsTestCase === 'download')
-				{
-					wsProtocols.push(wsFrameSize);
-				}
+                if (wsTestCase === 'download')
+                {
+                    wsProtocols.push(wsFrameSize);
+                }
                 webSocket = new WebSocket(target, wsProtocols);
             }
             else
@@ -366,16 +373,16 @@ function connect()
 
             if (data.cmd === 'rttReport')
             {
-                wsRttValues.avg         = Number(data.avg) * 1000;
-                wsRttValues.med         = Number(data.med) * 1000;
-                wsRttValues.min         = Number(data.min) * 1000;
-                wsRttValues.max         = Number(data.max) * 1000;
+                wsRttValues.avg         = Number(data.avg) * 1000 * 1000;
+                wsRttValues.med         = Number(data.med) * 1000 * 1000;
+                wsRttValues.min         = Number(data.min) * 1000 * 1000;
+                wsRttValues.max         = Number(data.max) * 1000 * 1000;
                 wsRttValues.requests    = Number(data.req);
                 wsRttValues.replies     = Number(data.rep);
                 wsRttValues.errors      = Number(data.err);
                 wsRttValues.missing     = Number(data.mis);
                 wsRttValues.packetsize  = Number(data.pSz);
-                wsRttValues.stDevPop    = Number(data.std_dev_pop) * 1000;
+                wsRttValues.stDevPop    = Number(data.std_dev_pop) * 1000 * 1000;
                 wsRttValues.server      = String(data.srv);
             }
 
@@ -443,23 +450,23 @@ function upload()
 
     ulInterval = setInterval(function ()
     {
-		if (wsCompleted)
-		{
-			clearInterval(ulInterval);
-		}
-		
-        if (webSocket.bufferedAmount <= ulBufferSize)
+        if (wsCompleted)
+        {
+            clearInterval(ulInterval);
+        }
+        
+        if (webSocket.bufferedAmount <= ulBufferSize && webSocket.readyState === wsStateOpen)
         {       
-            var ulPayload = ulData.slice(ulDataPointer, ulDataPointer + wsFrameSize);
-            ulDataPointer += wsFrameSize;
-            if (ulDataPointer > ulDataSize)
+            for (var i=0;i<uploadFramesPerCall;i++)
             {
-                ulDataPointer = ulDataPointer - ulDataSize;
-                ulPayload = ulPayload + ulData.slice(0, ulDataPointer);
-            }
-            
-            if (webSocket.readyState === wsStateOpen) 
-            {
+                var ulPayload = ulData.slice(ulDataPointer, ulDataPointer + wsFrameSize);
+                ulDataPointer += wsFrameSize;
+                if (ulDataPointer > ulDataSize)
+                {
+                    ulDataPointer = ulDataPointer - ulDataSize;
+                    ulPayload = ulPayload + ulData.slice(0, ulDataPointer);
+                }
+
                 webSocket.send(ulPayload);
             }
         }

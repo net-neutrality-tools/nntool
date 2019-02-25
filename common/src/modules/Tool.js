@@ -80,24 +80,24 @@ JSTool.prototype.getDeviceKPIs = function (platform)
 
     var deviceKPIs = 
     {
-		browser_info:
-		{
-			name:       jsClientBrowser,
-			version:	jsClientBrowserVersion
-		},
-		os_info:
-		{
-			name:       jsClientOS,
-        	version:	jsClientOSVersion
-		}
+        browser_info:
+        {
+            name:       jsClientBrowser,
+            version:    jsClientBrowserVersion
+        },
+        os_info:
+        {
+            name:       jsClientOS,
+            version:    jsClientOSVersion
+        }
 
     };
 
     console.log('device kpis:');
-    console.log('browser name:			' + jsClientBrowser);
-	console.log('browser version:		' + jsClientBrowserVersion);
-	console.log('os name:			' + jsClientOS);
-	console.log('version name:			' + jsClientOSVersion);
+    console.log('browser name:            ' + jsClientBrowser);
+    console.log('browser version:        ' + jsClientBrowserVersion);
+    console.log('os name:            ' + jsClientOS);
+    console.log('version name:            ' + jsClientOSVersion);
     
     return JSON.stringify(deviceKPIs);
 };
@@ -117,33 +117,33 @@ JSTool.prototype.generateRandomData = function (length, asString, asArrayBuffer)
     mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     mask += '0123456789';
     mask += '~`!@#$%^&*()_+-={}[]:;?,./|\\';
-	
-	if (asArrayBuffer)
-	{
-	  	var	arrayBuffer = new ArrayBuffer(length);
-  		var bufferView = new Uint8Array(arrayBuffer);
-		for (var i = length; i > 0; --i)
-		{
-			bufferView[i] = mask.charCodeAt(Math.floor(Math.random() * mask.length));
-		}
-		return arrayBuffer;
-	}
-	else
-	{
-		var data = '';
-		for (var i = length; i > 0; --i)
-		{
-			data += mask[Math.floor(Math.random() * mask.length)];
-		}
-		if (asString)
-		{
-			return data;
-		}
-		else
-		{
-			return new Blob([data]);
-		}
-	}
+    
+    if (asArrayBuffer)
+    {
+          var    arrayBuffer = new ArrayBuffer(length);
+          var bufferView = new Uint8Array(arrayBuffer);
+        for (var i = length; i > 0; --i)
+        {
+            bufferView[i] = mask.charCodeAt(Math.floor(Math.random() * mask.length));
+        }
+        return arrayBuffer;
+    }
+    else
+    {
+        var data = '';
+        for (var i = length; i > 0; --i)
+        {
+            data += mask[Math.floor(Math.random() * mask.length)];
+        }
+        if (asString)
+        {
+            return data;
+        }
+        else
+        {
+            return new Blob([data]);
+        }
+    }
 };
 
 /**
@@ -375,14 +375,14 @@ JSTool.prototype.performRouteToClientLookup = function(target, port)
 
 JSTool.prototype.isEmpty = function(obj)
 {
-	for (var key in obj)
-	{
-		if (obj.hasOwnProperty(key))
-		{
-			return false;
-		}
-	}
-	return true;
+    for (var key in obj)
+    {
+        if (obj.hasOwnProperty(key))
+        {
+            return false;
+        }
+    }
+    return true;
 };
 
 

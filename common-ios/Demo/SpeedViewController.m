@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-24
+ *      \date Last update: 2019-02-05
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -232,24 +232,32 @@
         {
             self.speed.parallelStreamsDownload = [NSNumber numberWithInt:4];
             self.speed.frameSizeDownload = [NSNumber numberWithInt:2048];
+            self.speed.downloadThroughputLowerBoundMbps = [NSNumber numberWithDouble:0.01];
+            self.speed.downloadThroughputUpperBoundMbps = [NSNumber numberWithDouble:1.05];
             break;
         }
         case 1:
         {
             self.speed.parallelStreamsDownload = [NSNumber numberWithInt:4];
             self.speed.frameSizeDownload = [NSNumber numberWithInt:32768];
+            self.speed.downloadThroughputLowerBoundMbps = [NSNumber numberWithDouble:0.95];
+            self.speed.downloadThroughputUpperBoundMbps = [NSNumber numberWithInt:525];
             break;
         }
         case 2:
         {
             self.speed.parallelStreamsDownload = [NSNumber numberWithInt:4];
             self.speed.frameSizeDownload = [NSNumber numberWithInt:524288];
+            self.speed.downloadThroughputLowerBoundMbps = [NSNumber numberWithInt:475];
+            self.speed.downloadThroughputUpperBoundMbps = [NSNumber numberWithInt:1050];
             break;
         }
         case 3:
         {
             self.speed.parallelStreamsDownload = [NSNumber numberWithInt:8];
             self.speed.frameSizeDownload = [NSNumber numberWithInt:524288];
+            self.speed.downloadThroughputLowerBoundMbps = [NSNumber numberWithInt:950];
+            self.speed.downloadThroughputUpperBoundMbps = [NSNumber numberWithInt:9000];
             break;
         }
     }
@@ -260,24 +268,32 @@
         {
             self.speed.parallelStreamsUpload = [NSNumber numberWithInt:4];
             self.speed.frameSizeUpload = [NSNumber numberWithInt:2048];
+            self.speed.uploadThroughputLowerBoundMbps = [NSNumber numberWithDouble:0.01];
+            self.speed.uploadThroughputUpperBoundMbps = [NSNumber numberWithDouble:1.05];
             break;
         }
         case 1:
         {
             self.speed.parallelStreamsUpload = [NSNumber numberWithInt:4];
             self.speed.frameSizeUpload = [NSNumber numberWithInt:32768];
+            self.speed.uploadThroughputLowerBoundMbps = [NSNumber numberWithDouble:0.95];
+            self.speed.uploadThroughputUpperBoundMbps = [NSNumber numberWithInt:525];
             break;
         }
         case 2:
         {
             self.speed.parallelStreamsUpload = [NSNumber numberWithInt:4];
             self.speed.frameSizeUpload = [NSNumber numberWithInt:65535];
+            self.speed.uploadThroughputLowerBoundMbps = [NSNumber numberWithInt:475];
+            self.speed.uploadThroughputUpperBoundMbps = [NSNumber numberWithInt:1050];
             break;
         }
         case 3:
         {
             self.speed.parallelStreamsUpload = [NSNumber numberWithInt:20];
             self.speed.frameSizeUpload = [NSNumber numberWithInt:65535];
+            self.speed.uploadThroughputLowerBoundMbps = [NSNumber numberWithInt:950];
+            self.speed.uploadThroughputUpperBoundMbps = [NSNumber numberWithInt:9000];
             break;
         }
     }

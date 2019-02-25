@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-23
+ *      \date Last update: 2019-02-05
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -242,6 +242,11 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
     if (self.parallelStreamsUpload) [measurementParametersDict setObject:self.parallelStreamsUpload     forKey:@"wsParallelStreamsUpload"];
     if (self.frameSizeDownload) [measurementParametersDict setObject:self.frameSizeDownload             forKey:@"wsFrameSizeDownload"];
     if (self.frameSizeUpload) [measurementParametersDict setObject:self.frameSizeUpload                 forKey:@"wsFrameSizeUpload"];
+    
+    if (self.downloadThroughputLowerBoundMbps) [measurementParametersDict setObject:self.downloadThroughputLowerBoundMbps forKey:@"downloadThroughputLowerBoundMbps"];
+    if (self.downloadThroughputUpperBoundMbps) [measurementParametersDict setObject:self.downloadThroughputUpperBoundMbps forKey:@"downloadThroughputUpperBoundMbps"];
+    if (self.uploadThroughputLowerBoundMbps) [measurementParametersDict setObject:self.uploadThroughputLowerBoundMbps forKey:@"uploadThroughputLowerBoundMbps"];
+    if (self.uploadThroughputUpperBoundMbps) [measurementParametersDict setObject:self.uploadThroughputUpperBoundMbps forKey:@"uploadThroughputUpperBoundMbps"];
     
     NSData *measurementParametersJson = [NSJSONSerialization dataWithJSONObject:measurementParametersDict options:0 error:nil];
     NSString *measurementParameters = [[NSString alloc] initWithData:measurementParametersJson encoding:NSUTF8StringEncoding];

@@ -21,12 +21,12 @@
 
 global.measurementStart = function(measurementParameters)
 {
-	console.log('Measurement Parameters: \n' + JSON.stringify(measurementParameters));
+    console.log('Measurement Parameters: \n' + JSON.stringify(measurementParameters));
 
-	delete wsMeasurement;
-	wsMeasurement = null;
-	wsMeasurement = new WSMeasurement();
-	wsMeasurement.measurementControl(JSON.stringify(measurementParameters));
+    delete wsMeasurement;
+    wsMeasurement = null;
+    wsMeasurement = new WSMeasurement();
+    wsMeasurement.measurementControl(JSON.stringify(measurementParameters));
 }
 
 global.measurementStop = function()
