@@ -62,7 +62,7 @@ public class InfoResourceIntegrationTest {
 	
 	@Before
 	public void init() throws Exception {
-		TestServer.getInstance().run(new ServerPreferences(getClass().getResourceAsStream("config_udp.properties")));
+		TestServer./*get*/newInstance().run(new ServerPreferences(getClass().getResourceAsStream("config_udp.properties")));
 		ir = new InfoResource();
 		
 		new MockUp<RestService>() {
@@ -77,7 +77,7 @@ public class InfoResourceIntegrationTest {
 	@After
 	public void teardown() {
 		TestServer.getInstance().shutdown();
-		TestServer.newInstance();
+		//TestServer.newInstance();
 	}
 
 	@Test
