@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-24
+ *      \date Last update: 2019-02-13
  *      \note Copyright (c) 2018 -2019 zafaco GmbH. All rights reserved.
  */
 
@@ -61,12 +61,14 @@ function WSWorkerSingleThread()
     var ulData;
     var ulDataPointer           = 0;
     var ulInterval;
-	var ulIntervalTiming		= 4;
+    var ulIntervalTiming        = 4;
     var ulReportDict            = {};
 
     var ulDataSize              = 512345;
     var ulBufferSize            = 4096 * 1000;
     var ulStarted               = false;
+    
+    var uploadFramesPerCall     = 1;
 
     /**
      * @function onmessageSM
@@ -95,10 +97,16 @@ function WSWorkerSingleThread()
                 reportToControlSM('info', 'websocket connecting');
                 setWsParametersSM(data);
 
-				if (wsTestCase === 'download' || wsTestCase === 'upload')
-				{
-					wsFrameSize = data.wsFrameSize;
-				}
+                if (wsTestCase === 'download' || wsTestCase === 'upload')
+                {
+                    wsFrameSize = data.wsFrameSize;
+                }
+                
+                if (wsTestCase === 'upload')
+                {
+                    uploadFramesPerCall     = data.uploadFramesPerCall;
+                }
+                
                 wsAuthToken           = data.wsAuthToken;
                 wsAuthTimestamp       = data.wsAuthTimestamp;  
 
@@ -129,12 +137,12 @@ function WSWorkerSingleThread()
                 resetCounterSM();
                 break;
             }
-				
-			case 'uploadStart':
-			{
-				uploadSM();
-				break;
-			}
+                
+            case 'uploadStart':
+            {
+                uploadSM();
+                break;
+            }
 
             case 'close':
             {   
@@ -182,10 +190,10 @@ function WSWorkerSingleThread()
         try 
         {
             var wsProtocols = [wsProtocol, wsAuthToken, wsAuthTimestamp];
-			if (wsTestCase === 'download')
-			{
-				wsProtocols.push(wsFrameSize);
-			}
+            if (wsTestCase === 'download')
+            {
+                wsProtocols.push(wsFrameSize);
+            }
             webSocket = new WebSocket(target, wsProtocols);
         }
         catch (error)
@@ -285,31 +293,31 @@ function WSWorkerSingleThread()
             reportToControlSM('info', 'start upload'); 
             ulStarted = true;
         }
-		
-		if (typeof require !== 'undefined')
+        
+        if (typeof require !== 'undefined')
         {
-			ulIntervalTiming = 1;
-		}
+            ulIntervalTiming = 1;
+        }
 
         ulInterval = setInterval(function ()
         {
-			if (wsCompleted)
+            if (wsCompleted)
             {
                 clearInterval(ulInterval);
             }
-			
-            if (webSocket.bufferedAmount <= ulBufferSize)
-            {
-                var ulPayload = ulData.slice(ulDataPointer, ulDataPointer + wsFrameSize);
-                ulDataPointer += wsFrameSize;
-                if (ulDataPointer > ulDataSize)
-                {
-                    ulDataPointer = ulDataPointer - ulDataSize;
-                    ulPayload = ulPayload + ulData.slice(0, ulDataPointer);
-                }
 
-                if (webSocket.readyState === wsStateOpen) 
+            if (webSocket.bufferedAmount <= ulBufferSize && webSocket.readyState === wsStateOpen)
+            {       
+                for (var i=0;i<uploadFramesPerCall;i++)
                 {
+                    var ulPayload = ulData.slice(ulDataPointer, ulDataPointer + wsFrameSize);
+                    ulDataPointer += wsFrameSize;
+                    if (ulDataPointer > ulDataSize)
+                    {
+                        ulDataPointer = ulDataPointer - ulDataSize;
+                        ulPayload = ulPayload + ulData.slice(0, ulDataPointer);
+                    }
+
                     webSocket.send(ulPayload);
                 }
             }

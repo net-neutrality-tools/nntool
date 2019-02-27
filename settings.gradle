@@ -7,10 +7,51 @@ include 'statistic-service'
 
 include 'qos-service'
 
-include 'android-demo'
-include 'android-common'
-include 'android-speed'
-
-include 'qos-client-android'
 include 'qos-client-java'
 
+////
+
+// include Android projects only if Android SDK is present
+def skipAndroid = false
+def skipMsg = ''
+def sdkDir = null
+
+def localProperties = new File("local.properties")
+if (localProperties.exists()) {
+    Properties properties = new Properties()
+    localProperties.withInputStream { instr ->
+        properties.load(instr)
+    }
+    sdkDir = properties.getProperty('sdk.dir')
+    println "Found 'sdk.dir' in local.properties: " + sdkDir
+}
+
+// skip if Android SDK could not be found
+if (System.env.ANDROID_HOME == null && sdkDir == null) {
+  	skipMsg = 'ANDROID_HOME environment variable and sdk.dir in local.properties are missing (either ANDROID_HOME or local.properties are is required)'
+  	skipAndroid = true
+}
+
+// skip when using eclipse
+if (System.getProperty('eclipse.application') != null) {
+  	skipMsg = 'Eclipse IDE is used'
+  	skipAndroid = true
+}
+
+// skip with -Dskip-android
+if (System.getProperty('skip-android') != null) {
+ 	skipMsg = '"skip-android" is set'
+ 	skipAndroid = true
+}
+
+if (skipAndroid) {
+	println '*) Skipping Android projects because: ' + skipMsg
+} else {
+	println '*) Including Android apps'
+
+	include 'android-demo'
+	include 'android-common'
+	include 'android-speed'
+
+	include 'qos-client-android'
+}

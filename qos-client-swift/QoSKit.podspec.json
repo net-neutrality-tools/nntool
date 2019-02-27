@@ -1,0 +1,43 @@
+{
+    "name": "QoSKit",
+    "version": "0.0.1",
+    "summary": "QoS client libary written in swift",
+    "homepage": "https://alladin.at",
+    "license": {
+        "type": "TODO: Apache v2"
+    },
+    "source": {
+        "git": "https://github.com/alladin-it/...",
+        "tag": "0.0.1"
+    },
+    "authors": "alladin-IT GmbH",
+    "platforms": {
+        "ios": "10.0"
+    },
+    "source_files": [
+        "Sources/**/*.swift",
+        "Sources/NSString+IPAddress.{h,m}",
+        "Sources/PingUtil.{h,m}"
+    ],
+    "dependencies": {
+        "Alamofire": ["~> 4.8.1"],
+        "AlamofireObjectMapper": ["~> 5.2.0"],
+        "CocoaAsyncSocket": ["~> 7.6.3"],
+        "XCGLogger": ["~> 6.1.0"]
+    },
+    "frameworks": [
+       "Foundation",
+       "CoreLocation",
+       "SystemConfiguration"
+    ],
+    "libraries": [
+        "resolv"
+    ],
+    "requires_arc": true,
+    "xcconfig": {
+        "SWIFT_INCLUDE_PATHS[sdk=iphoneos*]": "$(SRCROOT)/../../qos-client-swift/Modules/QoSKitPrivate/iphoneos",
+        "SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]": "$(SRCROOT)/../../qos-client-swift/Modules/QoSKitPrivate/iphonesimulator"
+    },
+    "preserve_paths": [ "Modules/*" ],
+    "prepare_command": "Modules/QoSKitPrivate/injectXcodePath.sh"
+}
