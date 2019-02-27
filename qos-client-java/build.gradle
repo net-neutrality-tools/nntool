@@ -12,6 +12,12 @@ dependencies {
     compile group: 'com.j256.ormlite', name: 'ormlite-core', version: ormlite_version
 
 	compile group: 'org.yaml', name: 'snakeyaml', version: snakeyaml_version
+
+	testCompile group: 'junit', name: 'junit', version: junit_version
+	testCompile group: 'org.jmockit', name: 'jmockit', version: '1.45'
+
+	compile fileTree(dir: 'libs', include: ['*.jar'])
+
 }
 
 def revisionPropertiesFile = file("${buildDir}/resources/main/revision.properties")
@@ -26,4 +32,8 @@ processResources {
     	revisionProperties = revisionProperties + "build.time=" + System.currentTimeMillis() + "\n"
     	revisionPropertiesFile.write(revisionProperties, 'UTF-8')
 	}
+}
+
+test {
+	jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
 }

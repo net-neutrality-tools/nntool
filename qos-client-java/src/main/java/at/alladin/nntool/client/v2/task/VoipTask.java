@@ -220,7 +220,7 @@ public class VoipTask extends AbstractQoSTask {
 								
 								final UdpStreamCallback receiveCallback = new UdpStreamCallback() {
 									
-									public boolean onSend(DataOutputStream dataOut, int packetNumber)
+									public boolean onSend(DataOutputStream dataOut, int packetNumber, byte[] receivedPayload)
 											throws IOException {
 										//nothing to do here
 										return true;

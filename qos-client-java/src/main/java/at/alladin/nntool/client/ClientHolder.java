@@ -174,31 +174,35 @@ public class ClientHolder
         if (echoServiceHost != null) {
             int echoUuid = 400;
 
-            for (int port : echoServiceTcpPorts) {
-                final Map<String, Object> params = new HashMap<>();
-                params.put("concurrency_group", "301");
-                params.put("qos_test_uid", Integer.toString(echoUuid++));
-                params.put("timeout", "5000000000");
-                params.put("qostest", "echo_protocol");
-                params.put(AbstractEchoProtocolTask.RESULT_PROTOCOL, "tcp");
-                params.put(AbstractEchoProtocolTask.PARAM_PAYLOAD, "TCP payload!");
-                final TaskDesc task = new TaskDesc(echoServiceHost, port, false, fakeToken,
-                        0, 1, 0, System.nanoTime(), params, "echo_protocol");
-                taskDescList.add(task);
+            if (echoServiceTcpPorts != null) {
+                for (int port : echoServiceTcpPorts) {
+                    final Map<String, Object> params = new HashMap<>();
+                    params.put("concurrency_group", "301");
+                    params.put("qos_test_uid", Integer.toString(echoUuid++));
+                    params.put("timeout", "5000000000");
+                    params.put("qostest", "echo_protocol");
+                    params.put(AbstractEchoProtocolTask.RESULT_PROTOCOL, "tcp");
+                    params.put(AbstractEchoProtocolTask.PARAM_PAYLOAD, "TCP payload!");
+                    final TaskDesc task = new TaskDesc(echoServiceHost, port, false, fakeToken,
+                            0, 1, 0, System.nanoTime(), params, "echo_protocol");
+                    taskDescList.add(task);
+                }
             }
 
-            for (int port : echoServiceUdpPorts) {
+            if (echoServiceUdpPorts != null) {
+                for (int port : echoServiceUdpPorts) {
 
-                final Map<String, Object> params = new HashMap<>();
-                params.put("concurrency_group", "301");
-                params.put("qos_test_uid", Integer.toString(echoUuid++));
-                params.put("timeout", "5000000000");
-                params.put("qostest", "echo_protocol");
-                params.put(AbstractEchoProtocolTask.RESULT_PROTOCOL, "udp");
-                params.put(AbstractEchoProtocolTask.PARAM_PAYLOAD, "UDP payload!");
-                final TaskDesc task = new TaskDesc(echoServiceHost, port, false, fakeToken,
-                        0, 1, 0, System.nanoTime(), params, "echo_protocol");
-                taskDescList.add(task);
+                    final Map<String, Object> params = new HashMap<>();
+                    params.put("concurrency_group", "301");
+                    params.put("qos_test_uid", Integer.toString(echoUuid++));
+                    params.put("timeout", "5000000000");
+                    params.put("qostest", "echo_protocol");
+                    params.put(AbstractEchoProtocolTask.RESULT_PROTOCOL, "udp");
+                    params.put(AbstractEchoProtocolTask.PARAM_PAYLOAD, "UDP payload!");
+                    final TaskDesc task = new TaskDesc(echoServiceHost, port, false, fakeToken,
+                            0, 1, 0, System.nanoTime(), params, "echo_protocol");
+                    taskDescList.add(task);
+                }
             }
 
         }

@@ -32,11 +32,11 @@ import javax.net.ssl.SSLSocket;
 
 import at.alladin.nntool.client.helper.Config;
 
-public abstract class AbstractRMBTTest {
+public abstract class AbstractTest {
     protected static final String EXPECT_GREETING = Config.VERSION_STRING;
 	
     protected final ClientHolder client;
-    protected final RMBTTestParameter params;
+    protected final TestParameter params;
     protected final int threadId;
 
     protected InputStreamCounter in;
@@ -55,7 +55,7 @@ public abstract class AbstractRMBTTest {
      * @param params
      * @param threadId
      */
-    public AbstractRMBTTest(ClientHolder client, RMBTTestParameter params, int threadId) {
+    public AbstractTest(ClientHolder client, TestParameter params, int threadId) {
     	this.threadId = threadId;
     	this.client = client;
     	this.params = params;
@@ -150,8 +150,7 @@ public abstract class AbstractRMBTTest {
         }
         
         line = reader.readLine();
-        final Scanner scanner = new Scanner(line);
-        try
+        try (final Scanner scanner = new Scanner(line))
         {
         	if (response.equals("CHUNKSIZE")) {
                 if (!response.equals(scanner.next()))
@@ -182,10 +181,6 @@ public abstract class AbstractRMBTTest {
         	}
 
         }
-        finally
-        {
-            scanner.close();
-        }    	
     }
     
     protected Socket connect(final TestResult testResult) throws IOException

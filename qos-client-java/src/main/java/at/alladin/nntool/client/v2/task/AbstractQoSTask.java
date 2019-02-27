@@ -25,7 +25,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Locale;
 
-import at.alladin.nntool.client.AbstractRMBTTest;
+import at.alladin.nntool.client.AbstractTest;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
 import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
@@ -37,7 +37,7 @@ import at.alladin.nntool.client.v2.task.service.TestProgressListener.TestProgres
  * @author lb
  *
  */
-public abstract class AbstractQoSTask extends AbstractRMBTTest implements QoSTask {
+public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 	/**
 	 * timeout to establish a control connection for a test
 	 */
