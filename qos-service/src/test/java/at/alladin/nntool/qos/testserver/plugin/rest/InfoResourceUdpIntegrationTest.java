@@ -40,7 +40,7 @@ import mockit.Mocked;
  * @author Lukasz Budryk (lb@alladin.at)
  *
  */
-public class InfoResourceIntegrationTest {
+public class InfoResourceUdpIntegrationTest {
 
 	InfoResource ir;
 	
@@ -81,29 +81,6 @@ public class InfoResourceIntegrationTest {
 	}
 
 	@Test
-	public void testRequestTcp() throws Exception {		
-		new MockUp<ServerResource>() {
-			@Mock
-			public String getAttribute(String name) {
-				return "tcp";
-			}
-		};
-		
-		final TcpMultiClientServer s = new TcpMultiClientServer(1000, InetAddress.getByName("1.2.3.4"));
-		s.refreshTtl(4321);
-		s.setServerSocket(serverSocket);
-		final List<TcpMultiClientServer> tcpList = new ArrayList<>();
-		tcpList.add(s);
-		TestServer.getInstance().tcpServerMap.put(1000, tcpList);
-		
-		final JsonObject json = (JsonObject) new Gson().fromJson(ir.request(), JsonObject.class);
-		assertNotNull(json);
-		assertEquals("'protocol_type' != 'tcp'", "tcp", json.get("protocol_type").getAsString());
-		assertEquals("Amount of TCP servers != 1", 1, json.get("servers").getAsJsonArray().size());
-		assertEquals("TCP server [0] port != 1000", 1000, json.get("servers").getAsJsonArray().get(0).getAsJsonObject().get("port").getAsInt());
-	}
-
-	@Test
 	public void testRequestUdp() throws Exception {		
 		new MockUp<ServerResource>() {
 			@Mock
@@ -137,19 +114,4 @@ public class InfoResourceIntegrationTest {
 		}
 		return set;
 	}
-	
-	@Test
-	public void testRequestUnknownProtocol() throws Exception {		
-		new MockUp<ServerResource>() {
-			@Mock
-			public String getAttribute(String name) {
-				return "unknown_protocol_xyz";
-			}
-		};
-		
-		final JsonObject json = (JsonObject) new Gson().fromJson(ir.request(), JsonObject.class);
-		assertNotNull(json);
-		assertEquals("'protocol_type' != 'unknown'", "unknown", json.get("protocol_type").getAsString());
-	}
-
 }
