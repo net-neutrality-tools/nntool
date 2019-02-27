@@ -1,10 +1,11 @@
-package at.alladin.nettest.service.collector.web.api.v1;
+package at.alladin.nettest.service.result.web.api.v1;
 
 import java.util.Arrays;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -24,6 +25,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.disassoc
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeneralMeasurementTypeDto;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
+import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import io.swagger.annotations.ApiParam;
 
 /**
@@ -38,6 +40,9 @@ public class MeasurementAgentResultResource {
 
 	private final Logger logger = LoggerFactory.getLogger(MeasurementAgentResultResource.class);
 
+	@Autowired
+	private StorageService storageService;
+	
 	/**
 	 * Retrieve a (paginated) list of measurements made by this measurement agent.
 	 * This resource returns brief information of each measurement from the requesting measurement agent.

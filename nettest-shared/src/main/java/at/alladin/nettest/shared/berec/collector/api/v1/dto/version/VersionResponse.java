@@ -44,6 +44,16 @@ public class VersionResponse extends BasicResponse {
 	private String collectorServiceVersion;
 	
 	/**
+	 * Result service version number.
+	 */
+	@io.swagger.annotations.ApiModelProperty("Result service version number.")
+	@JsonPropertyDescription("Result service version number.")
+	@Expose
+	@SerializedName("result_service_version")
+	@JsonProperty("result_service_version")
+	private String resultServiceVersion;
+	
+	/**
 	 * Map service version number.
 	 */
 	@io.swagger.annotations.ApiModelProperty("Map service version number.")
@@ -94,7 +104,23 @@ public class VersionResponse extends BasicResponse {
 	public void setCollectorServiceVersion(String collectorServiceVersion) {
 		this.collectorServiceVersion = collectorServiceVersion;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getResultServiceVersion() {
+		return resultServiceVersion;
+	}
 
+	/**
+	 * 
+	 * @param resultServiceVersion
+	 */
+	public void setResultServiceVersion(String resultServiceVersion) {
+		this.resultServiceVersion = resultServiceVersion;
+	}
+	
 	/**
 	 * 
 	 * @return

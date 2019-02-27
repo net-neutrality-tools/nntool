@@ -10,6 +10,8 @@ include 'nettest-shared-server-storage-couchdb'
 
 include 'controller-service'
 include 'collector-service'
+include 'result-service'
+
 include 'statistic-service'
 
 include 'qos-service'

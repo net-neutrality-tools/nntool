@@ -180,3 +180,8 @@ The statistic-service can be started as standalone Java application as well as d
 
 Swagger-UI will then be available via `http://localhost:<port>/swagger-ui.html`.
 
+== Development
+
+For development with Eclipse make sure to run `./gradlew eclipse` task to generate eclipse project files to make annotation processing work.
+
+

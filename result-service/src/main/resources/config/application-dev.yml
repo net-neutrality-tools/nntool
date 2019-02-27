@@ -1,0 +1,27 @@
+spring:
+  profiles:
+    active: dev
+
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: false
+
+  couchdb:
+    connection:
+      url: http://localhost:5984
+      #username:
+      #password:
+    databases:
+      - name: measurement
+        create-if-not-exists: true
+        entities:
+          - Measurement
+
+server:
+  port: 8081
+
+logging:
+  level:
+    at.alladin.nettest: DEBUG
