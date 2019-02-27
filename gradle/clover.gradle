@@ -1,0 +1,49 @@
+apply plugin: 'com.bmuschko.clover'
+
+dependencies {
+    clover 'org.openclover:clover:4.2.0'
+}
+
+// https://github.com/bmuschko/gradle-clover-plugin
+clover {
+	// if targetPercentage is defined the build will fail if the percentage isn't reached.
+	//targetPercentage = '50%'
+	
+    compiler {
+        encoding = 'UTF-8'
+        
+        // used to add debug information for Spring applications
+        debug = true
+    }
+    
+    contexts {
+        statement {
+            name = 'log'
+            regexp = 'logger\\..*'
+        }
+
+        method {
+            name = 'main'
+            regexp = 'public static void main\\(String args\\[\\]\\).*'
+        }
+        
+        method {
+            name = 'getters'
+            regexp = 'public [^\\s]+ (get|is)[A-Z][^\\s]+\\(\\)'
+            maxStatements = 1
+        }
+
+        method {
+            name = 'setters'
+            regexp = 'public void set[A-Z][^\\s]+\\(.+\\)'
+            maxStatements = 1
+        }
+    }
+	
+	report {
+        html = true
+        pdf = true
+        
+        filter = 'log,main,getters,setters'
+    }
+}

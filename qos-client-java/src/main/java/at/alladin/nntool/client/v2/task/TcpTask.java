@@ -107,10 +107,8 @@ public class TcpTask extends AbstractQoSTask {
 						public void onResponse(final String response, final String request) {
 				    		if (response != null && response.startsWith("OK")) {
 				    			System.out.println("got response: " + response);
-				    			Socket socketOut = null;
-				    			
-				    			try {
-					    			socketOut = getSocket(getTestServerAddr(), testPortOut, false, (int)(timeout/1000000));
+
+				    			try (Socket socketOut = getSocket(getTestServerAddr(), testPortOut, false, (int)(timeout/1000000))){
 					    			socketOut.setSoTimeout((int)(timeout/1000000));
 					    			sendMessage(socketOut, "PING\n");
 					    			final String testResponse = readLine(socketOut);
@@ -129,15 +127,12 @@ public class TcpTask extends AbstractQoSTask {
 				    			}
 				    			finally {
 					    			latch.countDown();
-				    				if (socketOut != null && !socketOut.isClosed()) {
-				    					try {
-											socketOut.close();
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
-				    				}
 				    			}
-				    		}
+				    		} else {
+				    			// we don't need to await the timeout on wrong response (and it shouldn't be a timeout)
+								result.getResultMap().put(RESULT_OUT, "ERROR");
+								latch.countDown();
+							}
 						}
 					};	    				
 		    		
@@ -148,9 +143,7 @@ public class TcpTask extends AbstractQoSTask {
 		    	}
 				
 		    	if (this.testPortIn != null) {
-		    		ServerSocket serverSocket = null;
-		    		try {
-						serverSocket = new ServerSocket(testPortIn);
+		    		try (ServerSocket serverSocket = new ServerSocket(testPortIn)) {
 						sendCommand("TCPTEST IN " + testPortIn, null);
 
 						serverSocket.setSoTimeout((int)(timeout/1000000));
@@ -162,11 +155,12 @@ public class TcpTask extends AbstractQoSTask {
 						socketIn.close();
 						result.getResultMap().put(RESULT_IN, "OK");	    				    			
 		    		}
-		    		finally {
-		    			if (serverSocket != null) {
-		    				serverSocket.close();
-		    			}
-		    		}
+					catch (SocketTimeoutException e) {
+						result.getResultMap().put(RESULT_IN, "TIMEOUT");
+					}
+					catch (Exception e) {
+						result.getResultMap().put(RESULT_IN, "ERROR");
+					}
 		    	}
 				
 			}

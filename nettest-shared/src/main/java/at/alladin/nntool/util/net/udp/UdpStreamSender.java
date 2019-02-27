@@ -95,9 +95,9 @@ public class UdpStreamSender implements StreamSender<DatagramSocket> {
 	    	
 	    	try {
 
-	    		if (callback != null && callback.onSend(dataOut, packetsSent)) {
-    		    	data = byteOut.toByteArray();
-    		    	
+	    		if (callback != null && callback.onSend(dataOut, packetsSent, null)) {
+					data = byteOut.toByteArray();
+
     		    	DatagramPacket packet = null;
     		    	if (!settings.socket.isConnected()) {
     				    packet = new DatagramPacket(data, data.length, settings.targetHost, settings.targetPort);		    		

@@ -3,9 +3,14 @@ apply from: "${project.rootDir}/gradle/java8.gradle"
 dependencies {
     implementation project(path: ':nettest-shared', configuration: 'default')
 
-	// maybe migrate to slf4j
+	  // maybe migrate to slf4j
     implementation group: 'log4j', name: 'apache-log4j-extras', version: log4j_extras_version
     implementation group: 'org.apache.camel', name: 'camel-restlet', version: camel_restlet_version
+	
+    ////
+
+    testImplementation group: 'junit', name: 'junit', version: junit_version
+    testImplementation group: 'org.jmockit', name: 'jmockit', version: jmockit_version
 }
 
 jar {
@@ -18,4 +23,14 @@ jar {
     manifest {
         attributes 'Main-Class': 'at.alladin.nntool.qos.testserver.TestServer'
     }
+}
+
+
+test {
+    //println "\n\nPATH: ${classpath.find { it.name.contains("jmockit") }.absolutePath}\n\n"
+    jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
+    
+    /*testLogging {
+        showStandardStreams = true
+    }*/
 }

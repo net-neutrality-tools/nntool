@@ -16,8 +16,6 @@
 
 package at.alladin.nntool.qos.testserver;
 
-import com.google.gson.Gson;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -41,6 +39,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.gson.Gson;
+
+import at.alladin.nettest.shared.nntool.Helperfunctions;
 import at.alladin.nettest.shared.qos.UdpPayload;
 import at.alladin.nettest.shared.qos.util.UdpPayloadUtil;
 import at.alladin.nntool.qos.testserver.ServerPreferences.TestServerServiceEnum;
@@ -56,8 +57,6 @@ import at.alladin.nntool.util.net.rtp.RealtimeTransportProtocol.RtpException;
 import at.alladin.nntool.util.net.rtp.RtpPacket;
 import at.alladin.nntool.util.net.rtp.RtpUtil;
 import at.alladin.nntool.util.net.rtp.RtpUtil.RtpQoSResult;
-
-import at.alladin.nettest.shared.nntool.*;
 
 /**
  * handles all client requests
@@ -143,7 +142,7 @@ public class ClientHandler implements Runnable {
 			
 			boolean quit = false;
 			
-			TestServer.clientHandlerSet.add(this);
+			TestServer.getInstance().clientHandlerSet.add(this);
 			
 			while(!quit) {
 				try {
@@ -169,7 +168,7 @@ public class ClientHandler implements Runnable {
 							runVoipTest(command, token);
 						}
 						else if (command.startsWith(QoSServiceProtocol.REQUEST_UDP_PORT_RANGE)) {
-							sendCommand(TestServer.serverPreferences.getUdpPortMin() +  " " + TestServer.serverPreferences.getUdpPortMax(), command);
+							sendCommand(TestServer.getInstance().serverPreferences.getUdpPortMin() +  " " + TestServer.getInstance().serverPreferences.getUdpPortMax(), command);
 						}
 						else if (command.startsWith(QoSServiceProtocol.REQUEST_UDP_PORT)) {
 							sendRandomUdpPort(command);
@@ -216,7 +215,7 @@ public class ClientHandler implements Runnable {
 			TestServerConsole.error(name, e, 0, TestServerServiceEnum.TEST_SERVER);		
 		}
 		finally {
-			TestServer.clientHandlerSet.remove(this);
+			TestServer.getInstance().clientHandlerSet.remove(this);
 			if (socket != null && !socket.isClosed()) {
 				try {
 					socket.close();
@@ -263,7 +262,7 @@ public class ClientHandler implements Runnable {
 	 * @return
 	 * @throws IOException
 	 */
-	private ClientToken checkToken(String token) throws IOException {
+	protected ClientToken checkToken(String token) throws IOException {
 		ClientToken clientToken;
 		
 		try {
@@ -280,7 +279,7 @@ public class ClientHandler implements Runnable {
 				String hmac = m.group(3);
 
 				if (CHECK_TOKEN) {
-					String controlHmac = Helperfunctions.calculateHMAC(TestServer.serverPreferences.getSecretKey(), uuid + "_" + timeStamp);
+					String controlHmac = Helperfunctions.calculateHMAC(TestServer.getInstance().serverPreferences.getSecretKey(), uuid + "_" + timeStamp);
 					if (controlHmac.equals(hmac) && (timeStamp + QoSServiceProtocol.TOKEN_LEGAL_TIME >= System.currentTimeMillis())) {
 						clientToken = new ClientToken(uuid, timeStamp, hmac);	
 						return clientToken;
@@ -309,12 +308,12 @@ public class ClientHandler implements Runnable {
      * @param token
      * @throws IOException 
      */
-    private void sendRandomUdpPort(final String command) throws IOException {
+    protected void sendRandomUdpPort(final String command) throws IOException {
     	int randomPort = 0;
 		Random rand = new Random();
-		if ((TestServer.serverPreferences.getUdpPortMax() > 0) && (TestServer.serverPreferences.getUdpPortMin() <= TestServer.serverPreferences.getUdpPortMax())) {
-			randomPort = rand.nextInt(TestServer.serverPreferences.getUdpPortMax() - TestServer.serverPreferences.getUdpPortMin()) + 
-					TestServer.serverPreferences.getUdpPortMin();			
+		if ((TestServer.getInstance().serverPreferences.getUdpPortMax() > 0) && (TestServer.getInstance().serverPreferences.getUdpPortMin() <= TestServer.getInstance().serverPreferences.getUdpPortMax())) {
+			randomPort = rand.nextInt(TestServer.getInstance().serverPreferences.getUdpPortMax() - TestServer.getInstance().serverPreferences.getUdpPortMin()) + 
+					TestServer.getInstance().serverPreferences.getUdpPortMin();			
 			
 		}
 		TestServerConsole.log("Requested UDP Port. Picked random port number: " + randomPort, 0, TestServerServiceEnum.TEST_SERVER);
@@ -327,7 +326,7 @@ public class ClientHandler implements Runnable {
      * @param token
      * @throws IOException
      */
-    private void runIncomingTcpTest(String command, ClientToken token) throws IOException {
+    protected void runIncomingTcpTest(String command, ClientToken token) throws IOException {
     	final int port;
     	
 		Pattern p = Pattern.compile(QoSServiceProtocol.CMD_TCP_TEST_IN + " ([\\d]*)");
@@ -367,7 +366,7 @@ public class ClientHandler implements Runnable {
 			}
 		};
 		
-		TestServer.getCommonThreadPool().execute(tcpInRunnable);
+		TestServer.getInstance().getCommonThreadPool().execute(tcpInRunnable);
     }
     
     /**
@@ -377,7 +376,7 @@ public class ClientHandler implements Runnable {
      * @throws IOException 
      * @throws InterruptedException 
      */
-    private void runOutgoingTcpTest(String command, ClientToken token) throws Exception {
+    protected void runOutgoingTcpTest(String command, ClientToken token) throws Exception {
     	int port;
     	
 		Pattern p = Pattern.compile(QoSServiceProtocol.CMD_TCP_TEST_OUT + " ([\\d]*)");
@@ -391,7 +390,7 @@ public class ClientHandler implements Runnable {
 		}
 		
 		try {
-			TestServer.registerTcpCandidate(port, socket);
+			TestServer.getInstance().registerTcpCandidate(port, socket);
 						
 			sendCommand(QoSServiceProtocol.RESPONSE_OK, command);
 		}
@@ -412,7 +411,7 @@ public class ClientHandler implements Runnable {
      * @throws IOException
      * @throws InterruptedException 
      */
-    private void runIncomingUdpTest(final String command, final ClientToken token) throws IOException, InterruptedException {
+    protected void runIncomingUdpTest(final String command, final ClientToken token) throws IOException, InterruptedException {
     	final int port;
     	final int timeout = 5000;
 		final int numPackets;
@@ -443,7 +442,7 @@ public class ClientHandler implements Runnable {
 			}
 		};
 		
-		TestServer.getCommonThreadPool().execute(sendUdpPacketsRunnable);
+		TestServer.getInstance().getCommonThreadPool().execute(sendUdpPacketsRunnable);
 		
 		final Matcher idMatcher = ID_REGEX_PATTERN.matcher(command);
 		if (!idMatcher.find()) {
@@ -464,7 +463,7 @@ public class ClientHandler implements Runnable {
      * @param token
      * @return
      */
-    private UdpTestCandidate sendUdpPackets(InetAddress targetHost, DatagramSocket sock, int port, int timeOut, 
+    protected UdpTestCandidate sendUdpPackets(InetAddress targetHost, DatagramSocket sock, int port, int timeOut, 
     		int numPackets, boolean awaitResponse, int delay, ClientToken token, final UdpTestCandidate clientData) {
     	clientUdpInDataMap.put(port, clientData);
     	
@@ -588,7 +587,7 @@ public class ClientHandler implements Runnable {
      * @throws IOException 
      * @throws InterruptedException 
      */
-    private void runOutgoingUdpTest(final String command, final ClientToken token) throws IOException, InterruptedException {
+    protected void runOutgoingUdpTest(final String command, final ClientToken token) throws IOException, InterruptedException {
     	final long timeout = 5000;
 		final Pattern p = Pattern.compile(QoSServiceProtocol.CMD_UDP_TEST_OUT + " ([\\d]*) ([\\d]*)");
 		final Matcher m = p.matcher(command);
@@ -696,7 +695,7 @@ public class ClientHandler implements Runnable {
 		udpData.setOnUdpTestCompleteCallback(finishCallback);
 		
 		//register udp client data
-		TestServer.registerUdpCandidate(socket.getLocalAddress(), port, token.getUuid(), udpData);
+		TestServer.getInstance().registerUdpCandidate(socket.getLocalAddress(), port, token.getUuid(), udpData);
 
 		//tell the client that we are ready
 		try {
@@ -719,7 +718,7 @@ public class ClientHandler implements Runnable {
      * @throws IOException
      * @throws InterruptedException
      */
-    private void runVoipTest(final String command, final ClientToken token) throws IOException, InterruptedException { 
+    protected void runVoipTest(final String command, final ClientToken token) throws IOException, InterruptedException { 
     	/*
     	 * syntax: VOIPTEST 0 1 2 3 4 5 6 7 
     	 * 	0 = outgoing port (server port)
@@ -753,7 +752,7 @@ public class ClientHandler implements Runnable {
     	final int callDuration = Integer.parseInt(m.group(6));
     	final long sequenceNumber = Integer.parseInt(m.group(7));
     	final int payloadTypeValue = Integer.parseInt(m.group(8));
-    	final int ssrc = TestServer.randomizer.next();
+    	final int ssrc = TestServer.getInstance().randomizer.next();
 
 		TestServerConsole.log("Starting VOIP TEST (sample rate: " + sampleRate + ", bps: " + bps + ", delay: " + delay 
 				+ ", call duration: " + callDuration + ", ssrc: " + ssrc + ", seq number: " + sequenceNumber 
@@ -792,7 +791,7 @@ public class ClientHandler implements Runnable {
 							}
 						};
 
-						TestServer.getCommonThreadPool().execute(rtpStreamSendRunnable);
+						TestServer.getInstance().getCommonThreadPool().execute(rtpStreamSendRunnable);
 					}
 					
 					RtpPacket rtpPacket = new RtpPacket(data);
@@ -813,7 +812,7 @@ public class ClientHandler implements Runnable {
 		voipData.setOnUdpPacketReceivedCallback(receiveCallback);
 		
 		//register udp client data
-		TestServer.registerUdpCandidate(socket.getLocalAddress(), portOut, "VOIP_" + String.valueOf(ssrc), voipData);
+		TestServer.getInstance().registerUdpCandidate(socket.getLocalAddress(), portOut, "VOIP_" + String.valueOf(ssrc), voipData);
 
 		//tell the client that we are ready
 		try {
@@ -829,7 +828,7 @@ public class ClientHandler implements Runnable {
      * @param token
      * @throws IOException
      */
-    private void runRcvCommand(String command, ClientToken token, boolean isIncoming) throws IOException {
+    protected void runRcvCommand(String command, ClientToken token, boolean isIncoming) throws IOException {
 		Pattern p = Pattern.compile((isIncoming ? QoSServiceProtocol.REQUEST_UDP_RESULT_IN : QoSServiceProtocol.REQUEST_UDP_RESULT_OUT) + " ([\\d]*)");
 		Matcher m = p.matcher(command);
 		m.find();
@@ -844,7 +843,7 @@ public class ClientHandler implements Runnable {
     }
 
     
-    private void sendRcvResult(final UdpTestCandidate result, final int port, final String command) throws IOException {
+    protected void sendRcvResult(final UdpTestCandidate result, final int port, final String command) throws IOException {
 		if (result != null && result.getPacketsReceived() != null && !result.isError()) {
 			TestServerConsole.log("RESULT OK, RCV PACKETS: " + result.getPacketsReceived().size() + ", DUP: " + result.getPacketDuplicates().size(), 1, TestServerServiceEnum.UDP_SERVICE);
 
@@ -865,7 +864,7 @@ public class ClientHandler implements Runnable {
      * @param token
      * @throws IOException
      */
-    private void runVoipResultCommand(String command, ClientToken token) throws IOException {
+    protected void runVoipResultCommand(String command, ClientToken token) throws IOException {
 		Pattern p = Pattern.compile(QoSServiceProtocol.REQUEST_VOIP_RESULT + " ([\\d]*)");
 		Matcher m = p.matcher(command);
 		m.find();
@@ -879,7 +878,7 @@ public class ClientHandler implements Runnable {
 		}
     }
     
-    private void sendVoipResult(String command, ClientToken token, int ssrc) throws IOException {
+    protected void sendVoipResult(String command, ClientToken token, int ssrc) throws IOException {
 		final VoipTestCandidate voipTc = clientVoipDataMap.get(ssrc);
 		if (voipTc != null) {
 			try {
@@ -915,7 +914,7 @@ public class ClientHandler implements Runnable {
      * @throws IOException 
      * @throws InterruptedException 
      */
-    private void runNonTransparentProxyTest(String command) throws Exception {
+    protected void runNonTransparentProxyTest(String command) throws Exception {
 		int echoPort;
 		
 		Pattern p = Pattern.compile(QoSServiceProtocol.CMD_NON_TRANSPARENT_PROXY_TEXT + " ([\\d]*)");
@@ -929,7 +928,7 @@ public class ClientHandler implements Runnable {
 		}
 		
 		try {
-			TestServer.registerTcpCandidate(echoPort, socket);
+			TestServer.getInstance().registerTcpCandidate(echoPort, socket);
 			
 			sendCommand(QoSServiceProtocol.RESPONSE_OK, command);
 			TestServerConsole.log("NTP: sendind OK. waiting for request...", 1, TestServerServiceEnum.TCP_SERVICE);

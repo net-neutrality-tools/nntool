@@ -68,7 +68,7 @@ public class TcpClientHandler implements Runnable {
 			
 			boolean validCandidate = false;
 	
-			if (TestServer.serverPreferences.isIpCheck()) {
+			if (TestServer.getInstance().serverPreferences.isIpCheck()) {
 				//check for test candidate if ip check is enabled
 				if (!tcpServer.get().getCandidateMap().containsKey(clientSocket.getInetAddress())) {
 					if (clientSocket != null && !clientSocket.isClosed()) {
@@ -91,7 +91,7 @@ public class TcpClientHandler implements Runnable {
 				tcpServer.get().refreshTtl(TcpMultiClientServer.TTL);
 				
 				//remove test candidate if ip check is enabled
-				if (TestServer.serverPreferences.isIpCheck()) {
+				if (TestServer.getInstance().serverPreferences.isIpCheck()) {
 					tcpServer.get().removeCandidate(clientSocket.getInetAddress());
 				}
 				

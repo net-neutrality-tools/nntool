@@ -18,14 +18,14 @@ package at.alladin.nntool.client.v2.task;
 
 import java.util.Map;
 
-import at.alladin.nntool.client.RMBTTestParameter;
+import at.alladin.nntool.client.TestParameter;
 
 /**
  * 
  * @author lb
  *
  */
-public class TaskDesc extends RMBTTestParameter {
+public class TaskDesc extends TestParameter {
 	
 	public final static String QOS_TEST_IDENTIFIER_KEY = "qostest";
 

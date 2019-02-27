@@ -9,6 +9,11 @@ dependencies {
 	implementation group: 'com.squareup.retrofit2', name: 'converter-gson', version: retrofit_version
     implementation group: 'com.j256.ormlite', name: 'ormlite-core', version: ormlite_version
 	implementation group: 'org.yaml', name: 'snakeyaml', version: snakeyaml_version
+
+	//implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+	testImplementation group: 'junit', name: 'junit', version: junit_version
+	testImplementation group: 'org.jmockit', name: 'jmockit', version: jmockit_version
 }
 
 def revisionPropertiesFile = file("${buildDir}/resources/main/revision.properties")
@@ -23,4 +28,8 @@ processResources {
     	revisionProperties = revisionProperties + "build.time=" + System.currentTimeMillis() + "\n"
     	revisionPropertiesFile.write(revisionProperties, 'UTF-8')
 	}
+}
+
+test {
+	jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
 }
