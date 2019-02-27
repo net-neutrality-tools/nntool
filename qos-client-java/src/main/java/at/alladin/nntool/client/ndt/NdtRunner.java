@@ -16,7 +16,5 @@ public interface NdtRunner {
 
     void run();
 
-    void setUiServices(final BaseNdtRunner.UiServices uiServices);
-
     void setNdtNetworkType(final String ndtNetworkType);
 }

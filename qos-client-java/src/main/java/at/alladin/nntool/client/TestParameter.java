@@ -16,7 +16,7 @@
 
 package at.alladin.nntool.client;
 
-public class RMBTTestParameter
+public class TestParameter
 {
     
     // immutable! (accessed by multiple threads!)
@@ -31,8 +31,8 @@ public class RMBTTestParameter
     private final int numPings;
     private final long startTime;
     
-    public RMBTTestParameter(final String host, final int port, final boolean encryption, final String token,
-            final int duration, final int numThreads, final int numPings, final long startTime)
+    public TestParameter(final String host, final int port, final boolean encryption, final String token,
+                         final int duration, final int numThreads, final int numPings, final long startTime)
     {
         super();
         this.host = host;
@@ -45,8 +45,8 @@ public class RMBTTestParameter
         this.startTime = startTime;
     }
     
-    public RMBTTestParameter(final String host, final int port, final boolean encryption,
-            final int duration, final int numThreads, final int numPings)
+    public TestParameter(final String host, final int port, final boolean encryption,
+                         final int duration, final int numThreads, final int numPings)
     {
         super();
         this.host = host;

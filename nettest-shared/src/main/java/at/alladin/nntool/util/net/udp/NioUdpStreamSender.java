@@ -148,7 +148,7 @@ public class NioUdpStreamSender implements StreamSender<DatagramChannel> {
 								buffer.clear();
 						    	try {
 						    		if (callback != null) {
-						    			if (callback.onSend(dataOut, packetsSent)) {
+						    			if (callback.onSend(dataOut, packetsSent, null)) {
 									    	final byte[] data = byteOut.toByteArray();
 									    	buffer.put(data);
 									    	buffer.flip();

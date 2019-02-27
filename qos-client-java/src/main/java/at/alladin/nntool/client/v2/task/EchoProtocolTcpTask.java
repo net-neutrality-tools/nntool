@@ -57,11 +57,7 @@ public class EchoProtocolTcpTask extends AbstractEchoProtocolTask {
 		final QoSTestResult result = initQoSTestResult(QoSTestResultEnum.ECHO_PROTOCOL);
 		try {
 			onStart(result);
-			
-			if (this.testPort != null) {
-				result.getResultMap().put(RESULT_STATUS, "ERROR");
-			}
-			
+
 			try {
 				System.out.println("ECHO_PROTOCOL_TCP_TASK: " + getTestServerAddr() + ":" + getTestServerPort());
 		    	
@@ -88,11 +84,14 @@ public class EchoProtocolTcpTask extends AbstractEchoProtocolTask {
 					catch (Exception e) {
 						result.getResultMap().put(RESULT_STATUS, "ERROR");
 					}
-		    	}
+		    	} else {
+		    		result.getResultMap().put(RESULT_STATUS, "ERROR");
+				}
 				
 			}
 			catch (Exception e) {
 				e.printStackTrace();
+				result.getResultMap().put(RESULT_STATUS, "ERROR");
 			}
 			
 			return result;

@@ -12,8 +12,16 @@ buildscript {
 
     dependencies {
         classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: spring_boot_version
+
+        classpath 'com.bmuschko:gradle-clover-plugin:2.2.1'
     }
 }
+
+task clean {
+    delete "${project.rootDir}/build"
+    delete "${project.rootDir}/.clover"
+}
+
 
 String eclipseProjectPrefix = 'nntool'
 
@@ -30,9 +38,16 @@ allprojects { p ->
         maven { url 'http://maven.restlet.com' }
     }
 
-    apply plugin: 'eclipse' 
+    apply plugin: 'eclipse'
     eclipse.project.name = "${eclipseProjectPrefix}-${p.name}"
+
+    apply from: "${project.rootDir}/gradle/clover.gradle"
+}
+
+subprojects {
+	clean.doLast {
+			delete ".clover"
+	}
 }
 
 defaultTasks 'build'
-
