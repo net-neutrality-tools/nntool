@@ -80,7 +80,7 @@ public class InfoResourceUdpIntegrationTest {
 		//TestServer.newInstance();
 	}
 
-	@Test
+	//@Test
 	public void testRequestUdp() throws Exception {		
 		new MockUp<ServerResource>() {
 			@Mock

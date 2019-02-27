@@ -112,7 +112,7 @@ public class TestServerImplClientConnectionIntegrationTest {
 		assertFalse("QoSService is running", ts.getQoSService().isRunning());
 	}
 
-	@Test
+	//@Test
 	public void testClientConnectingToTestServerAndProvidingInvalidToken() throws Exception {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 
