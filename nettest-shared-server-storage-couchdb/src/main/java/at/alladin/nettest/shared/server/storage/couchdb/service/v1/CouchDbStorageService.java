@@ -1,9 +1,12 @@
 package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
@@ -28,9 +31,19 @@ public class CouchDbStorageService implements StorageService {
 	 * @see at.alladin.nettest.shared.server.service.storage.v1.StorageService#save(at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto)
 	 */
 	@Override
-	public void save(LmapReportDto lmapReportDto) { // TODO
+	public MeasurementResultResponse save(LmapReportDto lmapReportDto) { // TODO
 		final Measurement measurement = lmapReportModelMapper.map(lmapReportDto);
 		
-		measurementRepository.save(measurement);
+		measurement.setUuid(UUID.randomUUID().toString());
+		measurement.setOpenDataUuid(UUID.randomUUID().toString());
+		
+		measurementRepository.save(measurement); // TODO: exception handling
+		
+		final MeasurementResultResponse resultResponse = new MeasurementResultResponse();
+		
+		resultResponse.setUuid(measurement.getUuid());
+		resultResponse.setOpenDataUuid(measurement.getOpenDataUuid());
+		
+		return resultResponse;
 	}
 }

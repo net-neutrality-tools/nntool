@@ -47,11 +47,8 @@ public class MeasurementResultResource {
 	})
 	@PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ApiResponse<MeasurementResultResponse>> postMeasurement(@ApiParam("Measurement result") @RequestBody LmapReportDto lmapReportDto) {
+		final MeasurementResultResponse resultResponse = storageService.save(lmapReportDto);
 		
-		storageService.save(lmapReportDto);
-		
-		// TODO: response
-		
-		return ResponseHelper.ok(new MeasurementResultResponse());
+		return ResponseHelper.ok(resultResponse);
 	}
 }
