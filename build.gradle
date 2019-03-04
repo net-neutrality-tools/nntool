@@ -16,7 +16,7 @@ buildscript {
     dependencies {
         classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: spring_boot_version
 
-        //classpath 'com.bmuschko:gradle-clover-plugin:2.2.1'
+        classpath 'com.bmuschko:gradle-clover-plugin:2.2.1'
     }
 }
 
@@ -26,6 +26,16 @@ plugins {
 	id 'net.ltgt.apt-idea' version '0.21'
 	
 	id 'com.adarshr.test-logger' version '1.6.0' // https://github.com/radarsh/gradle-test-logger-plugin
+}
+
+if (System.getProperty('include-code-coverage') != null) {
+	apply from: "${project.rootDir}/gradle/clover_aggregate.gradle"
+}
+
+// define a top-level clean task to delete top-level build directory and clover database
+task clean {
+    delete "${project.rootDir}/build"
+    delete "${project.rootDir}/.clover"
 }
 
 allprojects { p ->
@@ -49,17 +59,21 @@ allprojects { p ->
     apply plugin: 'net.ltgt.apt-idea'
     
     apply plugin: 'com.adarshr.test-logger'
-
-    //apply from: "${project.rootDir}/gradle/clover.gradle"
 }
 
-/*task clean {
-    delete "${project.rootDir}/build"
-    delete "${project.rootDir}/.clover"
-}*/
-
-/*subprojects {
-	clean.doLast {
-			delete ".clover"
+subprojects { p ->
+	if (p.name.toLowerCase().contains('android')) {
+		return
 	}
-}*/
+
+	if (System.getProperty('include-code-coverage') != null) {
+		apply from: "${project.rootDir}/gradle/clover.gradle"
+	}
+    
+    // make root project clean task depend on (= execute) subproject clean tasks
+	rootProject.clean.dependsOn tasks.matching { it.name == "clean" }
+    
+    clean.doLast {
+		delete ".clover"
+	}
+}

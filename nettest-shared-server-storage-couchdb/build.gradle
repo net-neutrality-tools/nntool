@@ -1,5 +1,4 @@
 apply from: "${project.rootDir}/gradle/java8.gradle"
-//apply from: "${project.rootDir}/gradle/lombok.gradle"
 
 dependencies {
 	implementation project(path: ':nettest-shared-server', configuration: 'default')
@@ -16,3 +15,4 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: spring_boot_version
     testImplementation group: 'junit', name: 'junit', version: junit_version
 }
+

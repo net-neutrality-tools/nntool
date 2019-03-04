@@ -1,7 +1,17 @@
 apply plugin: 'com.bmuschko.clover'
+apply plugin: 'java'
 
 dependencies {
     clover 'org.openclover:clover:4.2.0'
+}
+
+sourceSets {
+    main {
+        java {
+        	// add annotationProcessor sources to main->java->srcDirs to make Clover work with Mapstruct
+            srcDirs += file("${buildDir}/generated/sources/annotationProcessor/java/main/")
+        }
+    }
 }
 
 // https://github.com/bmuschko/gradle-clover-plugin
