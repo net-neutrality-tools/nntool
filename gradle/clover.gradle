@@ -5,19 +5,15 @@ dependencies {
     clover 'org.openclover:clover:4.2.0'
 }
 
-sourceSets {
-    main {
-        java {
-        	// add annotationProcessor sources to main->java->srcDirs to make Clover work with Mapstruct
-            srcDirs += file("${buildDir}/generated/sources/annotationProcessor/java/main/")
-        }
-    }
-}
-
 // https://github.com/bmuschko/gradle-clover-plugin
 clover {
 	// if targetPercentage is defined the build will fail if the percentage isn't reached.
 	//targetPercentage = '50%'
+	
+	additionalSourceSet {
+        srcDirs = [compileJava.options.annotationProcessorGeneratedSourcesDirectory]
+        classesDir = sourceSets.main.java.outputDir
+    }
 	
     compiler {
         encoding = 'UTF-8'
