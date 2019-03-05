@@ -57,7 +57,7 @@ public class ExportResource {
 		@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ApiResponse.class),
 		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
 	})
-	@GetMapping("/{year}/{month:\\d*}.{extension:[^\\.]+}")
+	@GetMapping("/{year}/{month:\\d+}.{extension:[^\\.]+}")
     public void exportMonthlyData(@PathVariable Integer year, @PathVariable Integer month, @PathVariable String extension, HttpServletResponse response) throws BadRequestException {
 		final ExportExtension ext = ExportExtension.getByName(extension);
 		if (ext == null) {
@@ -79,7 +79,7 @@ public class ExportResource {
 		@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ApiResponse.class),
 		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
 	})
-	@GetMapping("/{year}/{month:\\d*}.{extension:[^\\.]+}.zip")
+	@GetMapping("/{year}/{month:\\d+}.{extension:[^\\.]+}.zip")
     public void exportMonthlyZippedData(@PathVariable Integer year, @PathVariable Integer month, @PathVariable String extension, HttpServletResponse response) throws BadRequestException {
 		final ExportExtension ext = ExportExtension.getByName(extension);
 		if (ext == null) {
@@ -101,7 +101,7 @@ public class ExportResource {
 		@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ApiResponse.class),
 		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
 	})
-	@GetMapping("/{year}/{month}/{day:\\d*}")
+	@GetMapping("/{year}/{month}/{day:\\d+}")
     public void exportDailyData(@PathVariable Integer year, @PathVariable Integer month, @PathVariable Integer day, HttpServletResponse response) {
 		exportDailyMeasurement(day, month, year, ExportExtension.CSV, response, false);
 	}
@@ -119,7 +119,7 @@ public class ExportResource {
 		@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ApiResponse.class),
 		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
 	})
-	@GetMapping("/{year}/{month}/{day:\\d*}.{extension:[^\\.]+}")
+	@GetMapping("/{year}/{month}/{day:\\d+}.{extension:[^\\.]+}")
     public void exportDailyData(@PathVariable Integer year, @PathVariable Integer month, @PathVariable Integer day, @PathVariable String extension, HttpServletResponse response) throws BadRequestException {
 		final ExportExtension ext = ExportExtension.getByName(extension);
 		if (ext == null) {
@@ -141,7 +141,7 @@ public class ExportResource {
 		@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ApiResponse.class),
 		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
 	})
-	@GetMapping("/{year}/{month}/{day:\\d*}.{extension:[^\\.]+}.zip")
+	@GetMapping("/{year}/{month}/{day:\\d+}.{extension:[^\\.]+}.zip")
     public void exportZippedDailyData(@PathVariable Integer year, @PathVariable Integer month, @PathVariable Integer day, @PathVariable String extension, HttpServletResponse response) throws BadRequestException {
 		final ExportExtension ext = ExportExtension.getByName(extension);
 		if (ext == null) {

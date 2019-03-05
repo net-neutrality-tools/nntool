@@ -45,8 +45,6 @@ import at.alladin.nettest.service.statistic.domain.model.RawExportData;
 @Service
 public class DataExportService {
 	
-	//private final Logger logger = LoggerFactory.getLogger(DataExportService.class);
-	
 	private static final String FILENAME_EXTENSION = "nntool-%YEAR%-%MONTH%.%EXTENSION%";
     private static final String FILENAME_ZIP = "nntool-%YEAR%-%MONTH%.zip";
     private static final String FILENAME_DAILY_EXTENSION = "nntool-%YEAR%-%MONTH%-%DAY%.%EXTENSION%";
@@ -318,7 +316,9 @@ public class DataExportService {
 		 sb.append("WHERE ").append(dataExportConfiguration.getWhereClause()).append(" ");
 		 sb.append(dataExportConfiguration.getWhereMonthClause()).append(")\n");
 		 sb.append(dataExportConfiguration.getWhereYearClause()).append(")\n");
-		 sb.append(" ORDER BY ").append(dataExportConfiguration.getOrderBy());
+		 if (dataExportConfiguration.getOrderBy() != null) {
+	 		sb.append(" ORDER BY ").append(dataExportConfiguration.getOrderBy());
+		 }
 		 return sb.toString();
 	}
 	
@@ -330,7 +330,9 @@ public class DataExportService {
 		 sb.append(dataExportConfiguration.getWhereDayClause()).append(")\n");
 		 sb.append(dataExportConfiguration.getWhereMonthClause()).append(")\n");
 		 sb.append(dataExportConfiguration.getWhereYearClause()).append(")\n");
-		 sb.append(" ORDER BY ").append(dataExportConfiguration.getOrderBy());
+		 if (dataExportConfiguration.getOrderBy() != null) {
+			 sb.append(" ORDER BY ").append(dataExportConfiguration.getOrderBy());
+		 }
 		 return sb.toString();
 	}
 
