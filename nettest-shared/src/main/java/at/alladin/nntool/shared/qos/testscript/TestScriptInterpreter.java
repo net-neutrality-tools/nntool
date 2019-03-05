@@ -1,7 +1,6 @@
 /*******************************************************************************
  * Copyright 2013-2019 alladin-IT GmbH
- * Copyright 2014-2016 SPECURE GmbH
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-
+// based on: https://raw.githubusercontent.com/alladin-IT/open-rmbt/master/RMBTControlServer/src/at/alladin/rmbt/qos/testscript/TestScriptInterpreter.java
 package at.alladin.nntool.shared.qos.testscript;
 
 import java.lang.reflect.Method;

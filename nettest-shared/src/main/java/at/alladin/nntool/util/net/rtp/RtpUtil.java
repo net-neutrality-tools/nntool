@@ -1,20 +1,19 @@
 /*******************************************************************************
- * Copyright 2013-2019 alladin-IT GmbH
- * Copyright 2014-2017 SPECURE GmbH
- * 
+ * Copyright 2015-2019 alladin-IT GmbH
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-
+// based on: https://raw.githubusercontent.com/alladin-IT/open-rmbt/master/RMBTUtil/src/main/java/at/alladin/rmbt/util/net/rtp/RtpUtil.java
 package at.alladin.nntool.util.net.rtp;
 
 import java.io.Closeable;
@@ -39,21 +38,21 @@ import at.alladin.nntool.util.net.udp.StreamSender.UdpStreamSenderSettings;
 import at.alladin.nntool.util.net.udp.UdpStreamSender;
 
 /**
- * 
+ *
  * @author lb
  *
  */
 public class RtpUtil {
 
-	
-	public static <T extends Closeable> T runVoipStream(T socket, final boolean closeOnFinish, InetAddress targetHost, int targetPort, int sampleRate, 
-			int bps, RealtimeTransportProtocol.PayloadType payloadType, long sequenceNumber, int ssrc, 
+
+	public static <T extends Closeable> T runVoipStream(T socket, final boolean closeOnFinish, InetAddress targetHost, int targetPort, int sampleRate,
+			int bps, RealtimeTransportProtocol.PayloadType payloadType, long sequenceNumber, int ssrc,
 			long callDuration, final long delay, final long timeout, final boolean useNio, final UdpStreamCallback receiveCallback) throws InterruptedException, TimeoutException, IOException {
 		return RtpUtil.runVoipStream(socket, closeOnFinish, targetHost, targetPort, null, sampleRate, bps, payloadType, sequenceNumber, ssrc, callDuration, delay, timeout, useNio, receiveCallback);
 	}
 
-		
-	
+
+
 	/**
 	 * runs an rtp/voip stream (incoming and outgoing)
 	 * @param socket
@@ -71,27 +70,27 @@ public class RtpUtil {
 	 * @param receiveCallback
 	 * @throws InterruptedException
 	 * @throws TimeoutException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Closeable> T runVoipStream(T socket, final boolean closeOnFinish, InetAddress targetHost, int targetPort, final Integer incomingPort, int sampleRate, 
-			int bps, RealtimeTransportProtocol.PayloadType payloadType, long sequenceNumber, int ssrc, 
+	public static <T extends Closeable> T runVoipStream(T socket, final boolean closeOnFinish, InetAddress targetHost, int targetPort, final Integer incomingPort, int sampleRate,
+			int bps, RealtimeTransportProtocol.PayloadType payloadType, long sequenceNumber, int ssrc,
 			long callDuration, final long delay, final long timeout, final boolean useNio, final UdpStreamCallback receiveCallback) throws InterruptedException, TimeoutException, IOException {
-		
+
 		final int payloadSize = (int) (sampleRate / (1000 / delay) * (bps / 8));
 		final Random r = new Random();
 		final int payloadTimestamp = (int) (sampleRate / (1000 / delay));
 		final RtpPacket initialRtpPacket = new RtpPacket(payloadType, 0, new long[] {}, (int) sequenceNumber, 0, ssrc);
 		final int numPackets = (int) (callDuration / delay);
-		final UdpStreamSenderSettings<T> settings = new UdpStreamSenderSettings<T>(socket, closeOnFinish, targetHost, targetPort, numPackets, delay, timeout, TimeUnit.MILLISECONDS, false, 0);
+		final UdpStreamSenderSettings<T> settings = new UdpStreamSenderSettings<>(socket, closeOnFinish, targetHost, targetPort, numPackets, delay, timeout, TimeUnit.MILLISECONDS, false, 0);
 		settings.setIncomingPort(incomingPort);
-		
+
 		if (receiveCallback == null) {
 			settings.setWriteOnly(true);
 		}
 
 		final UdpStreamCallback callback = new UdpStreamCallback() {
-			
+
 			@Override
 			public boolean onSend(DataOutputStream dataOut, int packetNumber, byte[] receivedPayload)
 					throws IOException {
@@ -103,16 +102,16 @@ public class RtpUtil {
 				else {
 					initialRtpPacket.setHasMarker(true);
 				}
-				
+
 				final byte[] payload = new byte[payloadSize];
 				r.nextBytes(payload);
 				initialRtpPacket.setPayload(payload);
-				
+
 				final byte[] data = initialRtpPacket.getBytes();
 				dataOut.write(data);
 				return true;
 			}
-			
+
 			@Override
 			public void onReceive(DatagramPacket dp) throws IOException {
 				if (receiveCallback != null) {
@@ -125,34 +124,34 @@ public class RtpUtil {
 				receiveCallback.onBind(incomingPort);
 			}
 		};
-		
+
 		if (!useNio) {
 			final UdpStreamSender udpStreamSender = new UdpStreamSender((UdpStreamSenderSettings<DatagramSocket>) settings, callback);
 			return (T) udpStreamSender.send();
 		}
 		else {
 			final NioUdpStreamSender udpStreamSender = new NioUdpStreamSender((UdpStreamSenderSettings<DatagramChannel>) settings, callback);
-			return (T) udpStreamSender.send();			
+			return (T) udpStreamSender.send();
 		}
 	}
 
 	/**
-	 * extract the rtp version from the first header byte 
+	 * extract the rtp version from the first header byte
 	 * @param firstHeaderByte
 	 * @return
 	 */
 	public static RealtimeTransportProtocol.RtpVersion getVersion(byte firstHeaderByte) {
-		return RealtimeTransportProtocol.RtpVersion.getByVersion((firstHeaderByte >> 6) & 0x03);	
+		return RealtimeTransportProtocol.RtpVersion.getByVersion((firstHeaderByte >> 6) & 0x03);
 	}
-	
+
 	/**
 	 * get the synchronization source identifier
 	 * @param data
-	 * @return rtp packet ssrc or -1 if packet data is invalid 
+	 * @return rtp packet ssrc or -1 if packet data is invalid
 	 */
 	public static long getSsrc(byte[] data) {
 		if (data != null && data.length >= 11) {
-			return ByteUtil.getLong(data, 8, 11, ByteOrder.BIG_ENDIAN);	
+			return ByteUtil.getLong(data, 8, 11, ByteOrder.BIG_ENDIAN);
 		}
 		else {
 			return -1;
@@ -160,21 +159,21 @@ public class RtpUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rtpControlDataMap
 	 */
 	public static RtpQoSResult calculateQoS(Map<Integer, RtpControlData> rtpControlDataMap, long initialSequenceNumber, int sampleRate) {
-		TreeSet<Integer> sequenceNumberSet = new TreeSet<Integer>(rtpControlDataMap.keySet());
-		
-		Map<Integer, Float> jitterMap = new HashMap<Integer, Float>();
-		TreeSet<RtpSequence> sequenceSet = new TreeSet<RtpUtil.RtpSequence>();
-		
+		TreeSet<Integer> sequenceNumberSet = new TreeSet<>(rtpControlDataMap.keySet());
+
+		Map<Integer, Float> jitterMap = new HashMap<>();
+		TreeSet<RtpSequence> sequenceSet = new TreeSet<>();
+
 		long maxJitter = 0;
 		long meanJitter = 0;
 		long skew = 0;
 		long maxDelta = 0;
 		long tsDiff = 0;
-		
+
 		int prevSeqNr = -1;
 		for (int x : sequenceNumberSet) {
 			RtpControlData i = rtpControlDataMap.get(prevSeqNr);
@@ -214,60 +213,60 @@ public class RtpUtil {
 			else {
 				curSequential++;
 			}
-			
+
 			nextSeq++;
 		}
-		
+
 		maxSequential = Math.max(curSequential, maxSequential);
 		if (curSequential > 1) {
 			minSequential = curSequential < minSequential ? curSequential : (minSequential == 0 ? curSequential : minSequential);
 		}
-		
+
 		if (minSequential == 0 && maxSequential > 0) {
 			minSequential = maxSequential;
 		}
-		
+
 		return new RtpQoSResult(maxJitter, meanJitter / jitterMap.size(), skew, maxDelta, packetsOutOfOrder, minSequential, maxSequential, jitterMap);
 	}
-	
+
 	private static long calculateDelta(RtpControlData i, RtpControlData j, int sampleRate) {
 		final long msDiff = j.receivedNs - i.receivedNs;
 		final long tsDiff = TimeUnit.NANOSECONDS.convert((long) (((float)(j.rtpPacket.getTimestamp() - i.rtpPacket.getTimestamp()) / (float)sampleRate) * 1000f), TimeUnit.MILLISECONDS);
 		return msDiff - tsDiff;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @author lb
 	 *
 	 */
 	public final static class RtpControlData {
 		RtpPacket rtpPacket;
 		long receivedNs;
-		
+
 		public RtpControlData(RtpPacket rtpPacket, long receivedNs) {
 			this.rtpPacket = rtpPacket;
 			this.receivedNs = receivedNs;
 		}
 	}
-	
+
 	private final static class RtpSequence implements Comparable<RtpSequence> {
 		long timestampNs;
 		int seq;
-		
+
 		public RtpSequence(long timestampNs, int seq) {
 			this.timestampNs = timestampNs;
 			this.seq = seq;
 		}
-		
+
 		@Override
 		public int compareTo(RtpSequence o) {
-			return Long.valueOf(timestampNs).compareTo(o.timestampNs); 
+			return Long.valueOf(timestampNs).compareTo(o.timestampNs);
 		}
-		
-		
+
+
 	}
-	
+
 	public final static class RtpQoSResult {
 		final Map<Integer, Float> jitterMap;
 		final int receivedPackets;
@@ -278,7 +277,7 @@ public class RtpUtil {
 		final int outOfOrder;
 		final int minSequential;
 		final int maxSequencial;
-		
+
 		public RtpQoSResult(long maxJitter, long meanJitter, long skew, long maxDelta, int outOfOrder, int minSequential, int maxSequential, Map<Integer, Float> jitterMap) {
 			this.jitterMap = jitterMap;
 			this.maxJitter = maxJitter;
@@ -314,11 +313,11 @@ public class RtpUtil {
 		public long getMaxDelta() {
 			return maxDelta;
 		}
-		
+
 		public int getOutOfOrder() {
 			return outOfOrder;
 		}
-		
+
 		public int getMinSequential() {
 			return minSequential;
 		}
@@ -330,9 +329,9 @@ public class RtpUtil {
 		@Override
 		public String toString() {
 			return "RtpQoSResult [jitterMap=" + jitterMap
-					+ ", receivedPackets=" + receivedPackets 
-					+ ", outOfOrder=" + outOfOrder + ", minSequential=" + minSequential + ", maxSequencial=" + maxSequencial  
-					+ ", maxJitter=" + ((float)maxJitter / 1000000f) 
+					+ ", receivedPackets=" + receivedPackets
+					+ ", outOfOrder=" + outOfOrder + ", minSequential=" + minSequential + ", maxSequencial=" + maxSequencial
+					+ ", maxJitter=" + ((float)maxJitter / 1000000f)
 					+ ", meanJitter=" + ((float) meanJitter / 1000000f) + ", skew="
 					+ ((float)skew / 1000000f) + ", maxDelta=" + ((float) maxDelta / 1000000) + "]";
 		}
