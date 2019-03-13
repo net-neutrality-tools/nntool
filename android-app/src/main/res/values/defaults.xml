@@ -1,0 +1,24 @@
+<resources>
+    <string translatable="false" name="default_qos_control_host">10.9.8.36</string>
+    <integer name="default_qos_control_port">5233</integer>
+    <integer-array name="qos_tcp_test_port_list">
+        <item>5333</item>
+        <item>5335</item>
+        <item>15333</item>
+        <item>25333</item>
+        <item>35333</item>
+        <item>45333</item>
+    </integer-array>
+    <integer-array name="qos_udp_test_port_list">
+        <item>4500</item>
+        <item>5004</item>
+        <item>5060</item>
+    </integer-array>
+    <string translatable="false" name="qos_echo_service_host">ENTER_YOUR_ECHO_SERVICE_HOST_HERE</string>
+    <integer-array name="qos_echo_service_tcp_ports">
+        <item>7</item>
+    </integer-array>
+    <integer-array name="qos_echo_service_udp_ports">
+        <item>7</item>
+    </integer-array>
+</resources>

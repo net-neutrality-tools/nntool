@@ -52,6 +52,7 @@ if (skipAndroid) {
 	include 'android-demo'
 	include 'android-common'
 	include 'android-speed'
+    include 'android-app'
 
 	include 'qos-client-android'
 }
