@@ -24,6 +24,8 @@ public abstract class AbstractEchoProtocolTask extends AbstractQoSTask {
 
     protected final static String RESULT_STATUS = "echo_protocol_status";
 
+    protected final static String RESULT_RTT_NS = "echo_protocol_result_rtt_ns";
+
     protected final static String PARAM_TIMEOUT = "timeout";
 
     protected final static long DEFAULT_TIMEOUT = 3000000000L;
