@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setElevation(0f);
     }
 
-    private void registerMeasurementAgent() {
+    public void registerMeasurementAgent() {
         RegisterMeasurementAgentTask task = new RegisterMeasurementAgentTask(this, null);
         task.execute();
     }

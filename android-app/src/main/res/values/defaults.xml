@@ -1,5 +1,12 @@
 <resources>
+    <string translatable="false" name="default_agent_group_name"></string>
+    <string translatable="false" name="default_controller_host">10.9.8.39</string>
+    <string translatable="false" name="default_controller_path_prefix">/</string>
+    <integer translatable="false" name="default_controller_port">8080</integer>
+    <bool translatable="false" name="default_controller_connection_is_encrypted">false</bool>
+
     <string translatable="false" name="default_qos_control_host">10.9.8.36</string>
+
     <integer name="default_qos_control_port">5233</integer>
     <integer-array name="qos_tcp_test_port_list">
         <item>5333</item>

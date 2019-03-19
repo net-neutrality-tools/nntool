@@ -1,4 +1,4 @@
-package at.alladin.nettest.nntool.android.app.util;
+package at.alladin.nettest.nntool.android.app.util.connection;
 
 import java.io.IOException;
 import java.util.Locale;

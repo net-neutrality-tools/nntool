@@ -1,13 +1,14 @@
 package at.alladin.nettest.nntool.android.app.async;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.dialog.BlockingProgressDialog;
-import at.alladin.nettest.nntool.android.app.util.ControllerConnection;
-import at.alladin.nettest.nntool.android.app.util.ControllerService;
+import at.alladin.nettest.nntool.android.app.util.ConnectionUtil;
+import at.alladin.nettest.nntool.android.app.util.connection.ControllerConnection;
+import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
+import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
 
 /**
@@ -37,21 +38,16 @@ public class RegisterMeasurementAgentTask extends AsyncTask<Void, Void, Registra
 
     @Override
     protected RegistrationResponse doInBackground(Void... voids) {
-        final ControllerConnection cc = new ControllerConnection(false, "10.9.8.36", null, 8080, "/");
-        final RegistrationResponse response = cc.registerMeasurementAgent();
-        try {
-            Thread.sleep(2000);
-        }
-        catch (final Exception e) {
-            e.printStackTrace();
-        }
+        final ControllerConnection controllerConnection = ConnectionUtil.createControllerConnection(context);
+        final RegistrationResponse response = controllerConnection.registerMeasurementAgent(
+                RequestUtil.prepareApiRegistrationRequest(context));
         return response;
     }
 
     @Override
     protected void onPostExecute(RegistrationResponse result) {
         if (result != null) {
-
+            PreferencesUtil.setAgentUuid(context, result.getAgentUuid());
         }
 
         if (callback != null) {

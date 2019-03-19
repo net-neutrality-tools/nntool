@@ -16,6 +16,10 @@ public class PreferencesUtil {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    public static int getTermsAndConditionsAcceptedVersion(final Context context) {
+        return getDefaultPreferences(context).getInt(SETTING_TC_VERSION_ACCEPTED, -1);
+    }
+
     public static boolean isTermsAndConditionsAccepted(final Context context, final int version) {
         return getDefaultPreferences(context).getInt(SETTING_TC_VERSION_ACCEPTED, -1) >= version;
     }

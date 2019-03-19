@@ -1,4 +1,4 @@
-package at.alladin.nettest.nntool.android.app.util;
+package at.alladin.nettest.nntool.android.app.util.connection;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;

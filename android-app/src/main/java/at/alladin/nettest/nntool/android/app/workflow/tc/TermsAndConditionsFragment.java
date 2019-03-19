@@ -1,5 +1,6 @@
 package at.alladin.nettest.nntool.android.app.workflow.tc;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 
+import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 
@@ -48,8 +50,15 @@ public class TermsAndConditionsFragment extends DialogFragment {
         toolbar.setTitle("Terms & Conditions");
 
         final Button b = v.findViewById(R.id.button_confirm_tc);
+        final Activity activity = getActivity();
         b.setOnClickListener(view -> {
             PreferencesUtil.setTermsAndConditionsAccepted(getContext(), TERMS_AND_CONDITIONS_VERSION);
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((MainActivity) activity).registerMeasurementAgent();
+                }
+            });
             dismiss();
         });
 
