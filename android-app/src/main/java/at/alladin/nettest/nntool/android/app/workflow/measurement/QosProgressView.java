@@ -22,7 +22,7 @@ import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 
 /**
- * @author Lukasz Budryk (lb@lume.at)
+ * @author Lukasz Budryk (lb@alladin.at)
  */
 public class QosProgressView extends LinearLayout {
 

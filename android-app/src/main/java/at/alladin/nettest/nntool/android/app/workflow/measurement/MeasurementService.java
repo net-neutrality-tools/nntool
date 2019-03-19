@@ -69,10 +69,6 @@ public class MeasurementService extends Service {
         return qosMeasurementClient;
     }
 
-    public void updateUi(final String text) {
-        System.out.println(text);
-    }
-
     public void startMeasurement() {
         //TODO: speed measurement
     }
