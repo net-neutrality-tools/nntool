@@ -39,7 +39,13 @@ public class MeasurementInitiationResource {
 	@PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> requestMeasurement(@ApiParam("Initiation request") @RequestBody LmapControlDto measurementInitiationRequest) {
-		return ResponseEntity.ok(new LmapControlDto());
+		
+		// TODO: load balancing
+		
+		//measurementInitiationRequest.getAgent().getAgentId();
+		
+		final LmapControlDto lmapControlDto = new LmapControlDto();
+		
+		return ResponseEntity.ok(lmapControlDto);
 	}
-	
 }

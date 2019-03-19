@@ -1,7 +1,6 @@
 apply from: "${project.rootDir}/gradle/spring_boot_project.gradle"
 
 dependencies {
-	//implementation project(path: ':nettest-shared-server', configuration: 'default')
 	implementation project(path: ':nettest-shared-server-storage-couchdb', configuration: 'default')
 
     // Server

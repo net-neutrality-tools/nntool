@@ -2,6 +2,7 @@ package at.alladin.nettest.service.controller.web.api.v1;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.R
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsResponse;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
+import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import io.swagger.annotations.ApiParam;
 
 /**
@@ -35,6 +37,9 @@ public class MeasurementAgentResource {
 	@SuppressWarnings("unused")
 	private final Logger logger = LoggerFactory.getLogger(MeasurementAgentResource.class);
 
+	@Autowired
+	private StorageService storageService;
+	
 	/**
 	 * Registers a new  measurement agent.
 	 * This resource is used to register new measurement agents. Measurement agents will be assigned a UUID. Terms and conditions must be accepted in the request object.
@@ -51,7 +56,13 @@ public class MeasurementAgentResource {
 	@PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<ApiResponse<RegistrationResponse>> registerClient(@ApiParam("Registration request") @RequestBody ApiRequest<RegistrationRequest> registrationApiRequest) {
-		return ResponseHelper.ok(new RegistrationResponse());
+		// check terms and conditions:
+		//registrationApiRequest.getData().isTermsAndConditionsAccepted()
+		//throw new MeasurementAgentRegistrationTermsAndConditionsNotAcceptedException();
+		
+		final RegistrationResponse registrationResponse = storageService.registerMeasurementAgent(registrationApiRequest);
+		
+		return ResponseHelper.ok(registrationResponse);
 	}
 
 	/**

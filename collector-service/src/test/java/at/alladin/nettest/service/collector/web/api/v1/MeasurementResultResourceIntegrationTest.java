@@ -30,6 +30,11 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapRepo
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 
+/**
+ * 
+ * @author alladin-IT GmbH (bp@alladin.at)
+ *
+ */
 @RunWith(SpringRunner.class)
 @AutoConfigureJsonTesters
 public class MeasurementResultResourceIntegrationTest {
