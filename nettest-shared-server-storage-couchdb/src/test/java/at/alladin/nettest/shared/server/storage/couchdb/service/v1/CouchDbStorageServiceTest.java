@@ -32,6 +32,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.M
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportModelMapperImpl;
 
 /**
@@ -55,6 +56,9 @@ public class CouchDbStorageServiceTest {
 	
 	@MockBean
 	private MeasurementRepository measurementRepository;
+	
+	@MockBean
+	private SettingsRepository settingsRepository;
 	
 	@Autowired
 	private StorageService storageService;
