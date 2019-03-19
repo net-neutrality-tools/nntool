@@ -3,10 +3,16 @@ package at.alladin.nettest.shared.server.storage.couchdb.domain.model;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import at.alladin.nettest.spring.data.couchdb.core.mapping.DocTypeHelper;
+import at.alladin.nettest.spring.data.couchdb.core.mapping.Document;
 
 /**
  * Settings for server functionality and clients.
@@ -15,7 +21,27 @@ import com.google.gson.annotations.SerializedName;
  *
  */
 @JsonClassDescription("Settings for server functionality and clients.")
+@Document("Settings")
 public class Settings {
+	
+	@Expose
+	@SerializedName("_id")
+	@JsonProperty("_id")
+	private String id;
+	
+	@Expose
+	@SerializedName("_rev")
+	@JsonProperty("_rev")
+	private String rev;
+	
+	@JsonProperty("docType")
+	@Expose
+	@SerializedName("docType") // TODO: rename to @docType
+	private String docType;
+	
+	public Settings() {
+		docType = DocTypeHelper.getDocType(getClass());
+	}
 
 	/**
 	 * A UUID which serves as primary key.
@@ -45,6 +71,30 @@ public class Settings {
 	@JsonProperty("measurements")
 	private Map<String, SubMeasurementSettings> measurements;
 	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getRev() {
+		return rev;
+	}
+
+	public void setRev(String rev) {
+		this.rev = rev;
+	}
+
+	public String getDocType() {
+		return docType;
+	}
+
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
+
 	public String getUuid() {
 		return uuid;
 	}

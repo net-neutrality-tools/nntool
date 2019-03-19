@@ -19,6 +19,8 @@ public interface CouchDbDatabase {
 
 	CouchDbResponse save(Object object);
 	
+	CouchDbResponse update(Object object);
+	
 	<T> CouchDbQueryResult<T> query(String query, final Class<T> classType);
 
 	CouchDbResponse remove(Object object);

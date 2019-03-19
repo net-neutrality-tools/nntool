@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import at.alladin.nettest.service.controller.config.ControllerServiceProperties;
+import at.alladin.nettest.service.controller.exception.MeasurementAgentRegistrationTermsAndConditionsNotAcceptedException;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
@@ -40,6 +42,9 @@ public class MeasurementAgentResource {
 	@Autowired
 	private StorageService storageService;
 	
+	@Autowired
+	private ControllerServiceProperties controllerServiceProperties;
+	
 	/**
 	 * Registers a new  measurement agent.
 	 * This resource is used to register new measurement agents. Measurement agents will be assigned a UUID. Terms and conditions must be accepted in the request object.
@@ -55,12 +60,18 @@ public class MeasurementAgentResource {
 	})
 	@PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<ApiResponse<RegistrationResponse>> registerClient(@ApiParam("Registration request") @RequestBody ApiRequest<RegistrationRequest> registrationApiRequest) {
-		// check terms and conditions:
-		//registrationApiRequest.getData().isTermsAndConditionsAccepted()
-		//throw new MeasurementAgentRegistrationTermsAndConditionsNotAcceptedException();
+	public ResponseEntity<ApiResponse<RegistrationResponse>> registerMeasurementAgent(@ApiParam("Registration request") @RequestBody ApiRequest<RegistrationRequest> registrationApiRequest) {		
+		logger.debug("Incoming registration request: " + registrationApiRequest.toString());
+		final RegistrationRequest request = registrationApiRequest.getData();
+		if (!request.isTermsAndConditionsAccepted()) {
+			throw new MeasurementAgentRegistrationTermsAndConditionsNotAcceptedException();
+		}
 		
 		final RegistrationResponse registrationResponse = storageService.registerMeasurementAgent(registrationApiRequest);
+		
+		registrationResponse.setSettings(storageService.getSettings(controllerServiceProperties.getSettingsUuid()));
+		
+		logger.debug("returned response: " + registrationResponse.toString());
 		
 		return ResponseHelper.ok(registrationResponse);
 	}
@@ -83,6 +94,7 @@ public class MeasurementAgentResource {
 	public ResponseEntity<ApiResponse<SettingsResponse>> getSettings(
 		@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid,
 		@ApiParam(required = true) ApiRequest<SettingsRequest> settingsApiRequest) {
-		return ResponseHelper.ok(new SettingsResponse());
+		//TODO: shall we check if the agent exists?
+		return ResponseHelper.ok(storageService.getSettings(controllerServiceProperties.getSettingsUuid()));
 	}
 }

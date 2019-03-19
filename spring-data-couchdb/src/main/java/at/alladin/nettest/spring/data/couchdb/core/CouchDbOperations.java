@@ -26,7 +26,7 @@ public interface CouchDbOperations {
 	
 	
 	//<T, S extends T> S insert(S entity, CouchDbEntityInformation<T, String> entityInformation);
-	//<T, S extends T> S update(S entity, CouchDbEntityInformation<T, String> entityInformation);
+	<T, S extends T> S update(S entity, CouchDbEntityInformation<T, String> entityInformation);
 	<T, S extends T> S save(S entity, CouchDbEntityInformation<T, String> entityInformation);
 	
 	<T, S extends T> Iterable<S> saveAll(Iterable<S> entities, CouchDbEntityInformation<T, String> entityInformation);

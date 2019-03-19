@@ -57,6 +57,15 @@ public class CloudantCouchDbDatabase implements CouchDbDatabase {
 	public CouchDbResponse save(Object object) {
 		return new CloudantCouchDbResponse(cloudantDatabase.save(object));
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see at.alladin.nettest.couchdb.client.CouchDbDatabase#update(java.lang.Object)
+	 */
+	@Override
+	public CouchDbResponse update(Object object) {
+		return new CloudantCouchDbResponse(cloudantDatabase.update(object));
+	}
 
 	/*
 	 * (non-Javadoc)

@@ -1,12 +1,15 @@
 package at.alladin.nettest.shared.server.storage.couchdb.domain.model;
 
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import at.alladin.nettest.spring.data.couchdb.core.mapping.DocTypeHelper;
+import at.alladin.nettest.spring.data.couchdb.core.mapping.Document;
 
 /**
  * This class represents an agent in the database.
@@ -15,8 +18,28 @@ import com.google.gson.annotations.SerializedName;
  *
  */
 @JsonClassDescription("This class represents an agent in the database.")
+@Document("MeasurementAgent")
 public class MeasurementAgent {
 
+	@Expose
+	@SerializedName("_id")
+	@JsonProperty("_id")
+	private String id;
+	
+	@Expose
+	@SerializedName("_rev")
+	@JsonProperty("_rev")
+	private String rev;
+	
+	@JsonProperty("docType")
+	@Expose
+	@SerializedName("docType") // TODO: rename to @docType
+	private String docType;
+	
+	public MeasurementAgent() {
+		docType = DocTypeHelper.getDocType(getClass());
+	}
+	
 	/**
 	 * The agent UUID (also serves as primary key).
 	 */
@@ -79,6 +102,30 @@ public class MeasurementAgent {
     @SerializedName("tc_accepted_time")
 	@JsonProperty("tc_accepted_time")
     private LocalDateTime termsAndConditionsAcceptedTime;
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getRev() {
+		return rev;
+	}
+
+	public void setRev(String rev) {
+		this.rev = rev;
+	}
+
+	public String getDocType() {
+		return docType;
+	}
+
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
 
 	public String getUuid() {
 		return uuid;
@@ -135,4 +182,5 @@ public class MeasurementAgent {
 	public void setTermsAndConditionsAcceptedTime(LocalDateTime termsAndConditionsAcceptedTime) {
 		this.termsAndConditionsAcceptedTime = termsAndConditionsAcceptedTime;
 	}
+	
 }

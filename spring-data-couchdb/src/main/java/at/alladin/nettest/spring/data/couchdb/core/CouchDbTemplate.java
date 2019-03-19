@@ -61,13 +61,13 @@ public class CouchDbTemplate implements CouchDbOperations {
 //		handleCouchDbResponse(response, entityInformation, entity);
 //		return entity;
 //	}
-//
-//	@Override
-//	public <T, S extends T> S update(S entity, CouchDbEntityInformation<T, String> entityInformation) {
-//		final CouchDbResponse response = database.update(entity);
-//		handleCouchDbResponse(response, entityInformation, entity);
-//		return entity;
-//	}
+
+	@Override
+	public <T, S extends T> S update(S entity, CouchDbEntityInformation<T, String> entityInformation) {
+		final CouchDbResponse response = database.update(entity);
+		handleCouchDbResponse(response, entityInformation, entity);
+		return entity;
+	}
 	
 	@Override
 	public <T, S extends T> Iterable<S> saveAll(Iterable<S> entities, CouchDbEntityInformation<T, String> entityInformation) {

@@ -34,13 +34,13 @@ public class SimpleCouchDbRepository<T> implements CouchDbRepository<T> {
 	public <S extends T> S save(S entity) {
 		Assert.notNull(entity, "Entity must not be null!");
 		
-		return couchDbOperations.save(entity, entityInformation);
+//		return couchDbOperations.save(entity, entityInformation);
 		
-//		if (entityInformation.isNew(entity)) {
-//			return couchDbOperations.insert(entity, entityInformation);
-//		}
-//		
-//		return couchDbOperations.update(entity, entityInformation);
+		if (entityInformation.isNew(entity)) {
+			return couchDbOperations.save(entity, entityInformation);
+		}
+		
+		return couchDbOperations.update(entity, entityInformation);
 	}
 
 	/*
