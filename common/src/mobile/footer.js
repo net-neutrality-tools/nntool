@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-25
+ *      \date Last update: 2019-03-20
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -23,16 +23,16 @@ global.measurementStart = function(measurementParameters)
 {
     console.log('Measurement Parameters: \n' + JSON.stringify(measurementParameters));
 
-    delete wsMeasurement;
-    wsMeasurement = null;
-    wsMeasurement = new WSMeasurement();
-    wsMeasurement.measurementControl(JSON.stringify(measurementParameters));
-}
+    delete ias;
+    ias = null;
+    ias = new Ias();
+    ias.measurementStart(JSON.stringify(measurementParameters));
+};
 
 global.measurementStop = function()
 {
-    wsMeasurement.measurementControl(JSON.stringify({cmd:'stop'}));
-}
+    ias.measurementStop();
+};
 
 global.console.log = function(message)
 {

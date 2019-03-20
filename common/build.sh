@@ -14,7 +14,7 @@
 
 #/*!
 # *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2019-02-21
+# *      \date Last update: 2019-03-20
 # *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
 # */
 
@@ -113,6 +113,7 @@ cat plain/core/ControlSingleThread.js   >> plain/mobile/ias.mobile.js
 cat plain/core/Ias.js                   >> plain/mobile/ias.mobile.js
 cat plain/core/Worker.js                >> plain/mobile/ias.mobile.js
 cat plain/core/WorkerSingleThread.js    >> plain/mobile/ias.mobile.js
+cat plain/mobile/footer.js              >> plain/mobile/ias.mobile.js
 
 if [ -z $1 ]; then
     uglifyjs -c drop_console=true -m --comments /^!/ plain/mobile/ias.mobile.js > uglified/mobile/ias.mobile.js
