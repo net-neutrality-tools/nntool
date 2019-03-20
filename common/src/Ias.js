@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-02-21
+ *      \date Last update: 2019-03-19
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -51,6 +51,12 @@ function Ias()
 
     var wsMeasurementParameters         = {};
 
+    var classChangesLimit               = 2;
+    var classIndexCurrent               = -1;
+    var classIndexUsed                  = [];
+    var classMatched                    = false;
+    var classChangePerforming           = false;
+
     //KPIs
     var globalKPIs                      = {};
     var rttKPIs                         = {};
@@ -70,6 +76,9 @@ function Ias()
     var gcTimer;
     var gcTimerInterval                 = 10;
 
+    var waitTime                        = 3000;
+    var waitTimeShort                   = 1000;
+
 
 
 
@@ -77,7 +86,7 @@ function Ias()
 
     /**
      * @function measurementStart
-     * @description API Function to stop a measurement
+     * @description API Function to start a measurement
      * @public
      * @param {string} measurementParameters JSON coded measurement Parameters
      */
@@ -89,7 +98,7 @@ function Ias()
 
         console.log("The browser developer console should only be used for debugging purposes, as an active developer console can cause performance issues");
 
-        resetWsControl();
+        wsControlReset();
 
         if (typeof wsMeasurementParameters.platform !== 'undefined') platform = String(wsMeasurementParameters.platform);
 
@@ -147,13 +156,7 @@ function Ias()
             return;
         }
 
-        if (typeof require !== 'undefined' && platformModule.isIOS)
-        {
-            gcTimer = setInterval(function ()
-            {
-                utils.GC();
-            }, gcTimerInterval);
-        }
+        startGcTimer();
 
         if (typeof wsMeasurementParameters.singleThread !== 'undefined')
         {
@@ -238,7 +241,7 @@ function Ias()
         clearTimeout(wsDownloadTimer);
         clearTimeout(wsUploadTimer);
 
-        if (wsControl)      wsControl.measurementStop(JSON.stringify(wsMeasurementParameters));
+        if (wsControl) wsControl.measurementStop(JSON.stringify(wsMeasurementParameters));
     }
 
     /**
@@ -248,6 +251,11 @@ function Ias()
      */
     this.controlCallback = function(data)
     {
+        if (classChangePerforming)
+        {
+            return;
+        }
+
         data = JSON.parse(data);
 
         globalKPIs.cmd                  = data.cmd;
@@ -262,54 +270,112 @@ function Ias()
             routeKPIs.server_client_hops  = data.server_client_route_hops;
         }
 
+        if ((data.test_case === 'download' || data.test_case === 'upload') && typeof data.throughput_avg_bps !== 'undefined' && classIndexCurrent !== -1)
+        {
+            //check, if current class matches the class bounds
+            if (wsMeasurementParameters[data.test_case].classes[classIndexCurrent].bounds.lower * 1000 * 1000 > data.throughput_avg_bps || wsMeasurementParameters[data.test_case].classes[classIndexCurrent].bounds.upper * 1000 * 1000 < data.throughput_avg_bps)
+            {
+                data.out_of_bounds = true;
+                if (!classMatched)
+                {
+                    console.log('Current class is out of bounds');
+                }
+            }
+            else
+            {
+                if (!classMatched)
+                {
+                    console.log('Current class is in bounds');
+                }
+                classMatched = true;
+                data.out_of_bounds = false;
+            }
+
+            classChangePerforming = false;
+            if (data.out_of_bounds  && !classMatched)
+            {
+                if (classIndexUsed.length <= classChangesLimit)
+                {
+                    var newClassSelected = false;
+                    wsMeasurementParameters[data.test_case].classes.forEach(function(element, index)
+                    {
+                        if (element.bounds.lower * 1000 * 1000 < data.throughput_avg_bps && element.bounds.upper * 1000 * 1000 > data.throughput_avg_bps)
+                        {
+                            if (index === classIndexCurrent || classIndexUsed.includes(index))
+                            {
+                                console.log('Class #' + index + ' was already used');
+                            }
+                            else
+                            {
+                                classIndexCurrent = index;
+                                classIndexUsed.push(classIndexCurrent);
+                                classChangePerforming = true;
+                                newClassSelected = true;
+                                return;
+                            }
+                        }
+                    });
+                    if (!newClassSelected)
+                    {
+                        console.log('Class can not be changed, resuming measurement');
+                        classMatched = true;
+                    }
+                }
+                else
+                {
+                    console.log('Class can not be changed: class change limit reached');
+                    classMatched = true;
+                }
+            }
+
+            if (classChangePerforming)
+            {
+                console.log('Changing Class');
+                wsControl.measurementStop(JSON.stringify(wsMeasurementParameters));
+                setTimeout(wsControlReset, 200);
+                setTimeout(startGcTimer, 500);
+                clearTimeout(wsDownloadTimer);
+                clearTimeout(wsUploadTimer);
+
+                if (data.test_case === 'download')
+                {
+                    wsDownloadTimer = setTimeout(startDownload, waitTime);
+                }
+
+                if (data.test_case === 'upload')
+                {
+                    wsDownloadTimer = setTimeout(startUpload, waitTime);
+                }
+                
+                globalKPIs.cmd = 'report';
+                globalKPIs.msg = 'changing class';
+            }
+        }
+
+        var cleanedData = jsTool.extend(data);
+        delete cleanedData.cmd;
+        delete cleanedData.msg;
+        delete cleanedData.test_case;
+
         if (data.test_case === 'rtt')
         {
-            rttKPIs             = data;
+            rttKPIs = cleanedData;
         }
 
-        if (data.test_case === 'download')
+        if (data.test_case === 'download' && typeof data.throughput_avg_bps !== 'undefined')
         {
-            downloadKPIs        = data;
+            downloadKPIs = cleanedData;
         }
 
-        if (data.test_case === 'upload')
+        if (data.test_case === 'upload' && typeof data.throughput_avg_bps !== 'undefined')
         {
-            uploadKPIs          = data;
+            uploadKPIs = cleanedData;
         }
-
-        /*
-        if (data.test_case === 'download' || data.test_case === 'upload')
-        {
-        /*
-            TODO:
-            - check bounds
-            - if bounds are overflown on first callback, restart campaign with appr. class
-                - do this at least n=2 times, i.e., default and two switches
-            - add out_of_bounds flag:
-                if (typeof downloadThroughputLowerBoundMbps !== 'undefined' && downloadThroughputLowerBoundMbps * 1000 * 1000 > data.throughput_avg_bps)
-                {
-                    data.out_of_bounds = true;
-                }
-                else if (typeof downloadThroughputUpperBoundMbps !== 'undefined' && downloadThroughputUpperBoundMbps * 1000 * 1000 < data.throughput_avg_bps)
-                {
-                    data.out_of_bounds = true;
-                }
-
-                if (typeof uploadThroughputLowerBoundMbps !== 'undefined' && uploadThroughputLowerBoundMbps * 1000 * 1000 > data.throughput_avg_bps)
-                {
-                    data.out_of_bounds = true;
-                }
-                else if (typeof uploadThroughputUpperBoundMbps !== 'undefined' && uploadThroughputUpperBoundMbps * 1000 * 1000 < data.throughput_avg_bps)
-                {
-                    data.out_of_bounds = true;
-                }
-        }
-        */
 
         if (data.cmd === 'error')
         {
             setEndTimestamps(data.test_case);
-            setTimeout(resetWsControl, 200);
+            setTimeout(wsControlReset, 200);
         }
 
         if (data.cmd === 'finish')
@@ -342,9 +408,7 @@ function Ias()
             setTimeout(controlCallbackToPlatform, 50, kpisCompleted);
         }
 
-        kpis = JSON.stringify(kpis);
-
-        controlCallbackToPlatform(kpis);
+        controlCallbackToPlatform(JSON.stringify(kpis));
     };
 
     /**
@@ -376,30 +440,13 @@ function Ias()
             return;
         }
 
-        delete wsControl;
-        wsControl = null;
-
-        if (typeof wsMeasurementParameters.singleThread !== 'undefined')
-        {
-            wsControl   = new WSControlSingleThread();
-        }
-        else
-        {
-            wsControl   = new WSControl();
-        }
-        wsControl.wsMeasurement = this;
-        wsControl.callback      = 'wsMeasurement';
-
-        var waitTime            = 3000;
-        var waitTimeShort       = 1000;
-
         if (performRttMeasurement && !performedRttMeasurement)
         {
             setEndTimestamps();
 
             if (!timestampKPIs.rtt_start) timestampKPIs.rtt_start = (jsTool.getTimestamp() + waitTimeShort) * 1000 * 1000;
             wsMeasurementParameters.testCase = 'rtt';
-            wsRttTimer = setTimeout(wsControl.measurementStart, waitTimeShort, JSON.stringify(wsMeasurementParameters));
+            wsRttTimer = setTimeout(startRtt, waitTimeShort);
 
             return;
         }
@@ -413,6 +460,12 @@ function Ias()
         if (performDownloadMeasurement && !performedDownloadMeasurement)
         {
             setEndTimestamps();
+
+            classIndexCurrent       = -1;
+            classIndexUsed          = []
+            classMatched            = false;
+            classChangePerforming   = false;
+
             wsDownloadTimer = setTimeout(startDownload, waitTimeShort);
 
             return;
@@ -421,11 +474,17 @@ function Ias()
         if (performUploadMeasurement && !performedUploadMeasurement)
         {
             setEndTimestamps();
+
+            classIndexCurrent       = -1;
+            classIndexUsed          = []
+            classMatched            = false;
+            classChangePerforming   = false;
+
             wsUploadTimer = setTimeout(startUpload, waitTime);
 
             return;
         }
-        else setTimeout(resetWsControl, 200);
+        else setTimeout(wsControlReset, 200);
 
         setEndTimestamps();
     }
@@ -452,12 +511,16 @@ function Ias()
         }
     }
 
+    function startRtt()
+    {
+        wsControlInstantiate();
+
+        wsControl.measurementStart(JSON.stringify(wsMeasurementParameters));
+    }
+
     function startDownload()
     {
-        /*
-        TODO:
-        - handle speed classes if parameterized or default parameters if not
-        */
+        handleClasses('download');
 
         if (!timestampKPIs.download_start)
         {
@@ -482,10 +545,7 @@ function Ias()
 
     function startUpload()
     {
-        /*
-        TODO:
-        - handle speed classes if parameterized or default parameters if not
-        */
+        handleClasses('upload');
 
         if (!timestampKPIs.upload_start)
         {
@@ -493,6 +553,53 @@ function Ias()
         }
         wsMeasurementParameters.testCase = 'upload';
         wsControl.measurementStart(JSON.stringify(wsMeasurementParameters));
+    }
+
+    function handleClasses(measurementType)
+    {
+        wsControlInstantiate();
+
+        classChangePerforming = false;
+        if (typeof wsMeasurementParameters[measurementType].classes !== 'undefined' && wsMeasurementParameters[measurementType].classes.length > 0)
+        {
+            if (classIndexCurrent !== -1)
+            {
+                console.log("Class selected: " + JSON.stringify(wsMeasurementParameters[measurementType].classes[classIndexCurrent]));
+            }
+            else
+            {
+                if (classIndexCurrent === -1)
+                {
+                    //get default class
+                    wsMeasurementParameters[measurementType].classes.forEach(function(element, index)
+                    {
+                        if (element.default === true)
+                        {
+                            classIndexCurrent = index;
+                            console.log("Default Class selected: " + JSON.stringify(element));
+                            return;
+                        }
+                    });
+
+                }
+
+                if (classIndexCurrent === -1)
+                {
+                    //select first class if no default was set
+                    classIndexCurrent = 0;
+                    console.log("No Default Class set, using first class: " + JSON.stringify(wsMeasurementParameters[measurementType].classes[classIndexCurrent]));
+                }
+            }
+
+            classIndexUsed.push(classIndexCurrent);
+
+            wsMeasurementParameters[measurementType].streams    = wsMeasurementParameters[measurementType].classes[classIndexCurrent].streams;
+            wsMeasurementParameters[measurementType].frameSize  = wsMeasurementParameters[measurementType].classes[classIndexCurrent].frameSize;
+        }
+        else
+        {
+            console.log('No Classes set, using parameters');
+        }
     }
 
     /**
@@ -503,23 +610,51 @@ function Ias()
     {
         var kpis = {};
         kpis = jsTool.extend(globalKPIs);
-        if (!jsTool.isEmpty(rttKPIs))         kpis.rtt_info         = rttKPIs;
-        if (!jsTool.isEmpty(downloadKPIs))     kpis.download_info    = downloadKPIs;
-        if (!jsTool.isEmpty(uploadKPIs))     kpis.upload_info     = uploadKPIs;
-        if (!jsTool.isEmpty(timestampKPIs))    kpis.time_info         = timestampKPIs;
+        if (!jsTool.isEmpty(rttKPIs))       kpis.rtt_info       = rttKPIs;
+        if (!jsTool.isEmpty(downloadKPIs))  kpis.download_info  = downloadKPIs;
+        if (!jsTool.isEmpty(uploadKPIs))    kpis.upload_info    = uploadKPIs;
+        if (!jsTool.isEmpty(timestampKPIs)) kpis.time_info      = timestampKPIs;
         if (!jsTool.isEmpty(clientKPIs))    kpis.client_info    = clientKPIs;
         if (!jsTool.isEmpty(deviceKPIs))    kpis.device_info    = deviceKPIs;
-        if (!jsTool.isEmpty(routeKPIs))        kpis.route_info        = routeKPIs;
+        if (!jsTool.isEmpty(routeKPIs))     kpis.route_info     = routeKPIs;
 
         return kpis;
     }
 
+    function startGcTimer()
+    {
+        if (typeof require !== 'undefined' && platformModule.isIOS)
+        {
+            gcTimer = setInterval(function ()
+            {
+                utils.GC();
+            }, gcTimerInterval);
+        }
+    }
+
+    function wsControlInstantiate()
+    {
+        delete wsControl;
+        wsControl = null;
+
+        if (typeof wsMeasurementParameters.singleThread !== 'undefined')
+        {
+            wsControl   = new WSControlSingleThread();
+        }
+        else
+        {
+            wsControl   = new WSControl();
+        }
+        wsControl.wsMeasurement = this;
+        wsControl.callback      = 'wsMeasurement';
+    }
+
     /**
-     * @function resetWsControl
+     * @function wsControlReset
      * @description Reset the wsControl object
      * @private
      */
-    function resetWsControl()
+    function wsControlReset()
     {
         clearInterval(gcTimer);
         wsControl = null;
