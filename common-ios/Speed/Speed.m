@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-02-05
+ *      \date Last update: 2019-03-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -83,6 +83,9 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
 @property (nonatomic) bool performedRouteToClientLookup;
 @property (nonatomic, strong) NSURL *routeToClientLookupUrl;
 
+@property (nonatomic, strong) NSMutableDictionary *rttParameters;
+@property (nonatomic, strong) NSMutableDictionary *downloadParameters;
+@property (nonatomic, strong) NSMutableDictionary *uploadParameters;
 
 @end
 
@@ -146,6 +149,13 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
     self.downloadRunning                            = false;
     self.uploadRunning                              = false;
     self.measurementSuccessful                      = false;
+    
+    self.rttParameters                              = [NSMutableDictionary new];
+    self.downloadParameters                         = [NSMutableDictionary new];
+    self.uploadParameters                           = [NSMutableDictionary new];
+    
+    self.downloadClasses                            = [NSMutableArray new];
+    self.uploadClasses                              = [NSMutableArray new];
     
     NSMutableDictionary *versions = [NSMutableDictionary new];
     [versions setObject:[Speed version] forKey:@"speed"];
@@ -229,29 +239,45 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
     [measurementParametersDict setObject:@"placeholderToken"                                            forKey:@"wsAuthToken"];
     [measurementParametersDict setObject:@"placeholderTimestamp"                                        forKey:@"wsAuthTimestamp"];
     
-    [measurementParametersDict setObject:[NSNumber numberWithBool:self.performRttMeasurement]           forKey:@"performRttMeasurement"];
-    [measurementParametersDict setObject:[NSNumber numberWithBool:self.performDownloadMeasurement]      forKey:@"performDownloadMeasurement"];
-    [measurementParametersDict setObject:[NSNumber numberWithBool:self.performUploadMeasurement]        forKey:@"performUploadMeasurement"];
-    
     [measurementParametersDict setObject:[NSNumber numberWithBool:false]                                forKey:@"cookieId"];
     
     if (self.startupTime) [measurementParametersDict setObject:self.startupTime                         forKey:@"wsStartupTime"];
     if (self.measureTime) [measurementParametersDict setObject:self.measureTime                         forKey:@"wsMeasureTime"];
     
-    if (self.parallelStreamsDownload) [measurementParametersDict setObject:self.parallelStreamsDownload forKey:@"wsParallelStreamsDownload"];
-    if (self.parallelStreamsUpload) [measurementParametersDict setObject:self.parallelStreamsUpload     forKey:@"wsParallelStreamsUpload"];
-    if (self.frameSizeDownload) [measurementParametersDict setObject:self.frameSizeDownload             forKey:@"wsFrameSizeDownload"];
-    if (self.frameSizeUpload) [measurementParametersDict setObject:self.frameSizeUpload                 forKey:@"wsFrameSizeUpload"];
+    [self.rttParameters setObject:[NSNumber numberWithBool:self.performRttMeasurement] forKey:@"performMeasurement"];
+    [self.downloadParameters setObject:[NSNumber numberWithBool:self.performDownloadMeasurement] forKey:@"performMeasurement"];
+    [self.uploadParameters setObject:[NSNumber numberWithBool:self.performUploadMeasurement] forKey:@"performMeasurement"];
+
+    if (self.parallelStreamsDownload)
+    {
+        [self.downloadParameters setObject:self.parallelStreamsDownload forKey:@"streams"];
+    }
+    if (self.parallelStreamsUpload)
+    {
+        [self.uploadParameters setObject:self.parallelStreamsUpload forKey:@"streams"];
+    }
+    if (self.frameSizeDownload)
+    {
+        [self.downloadParameters setObject:self.frameSizeDownload forKey:@"frameSize"];
+    }
+    if (self.frameSizeUpload)
+    {
+        [self.uploadParameters setObject:self.frameSizeUpload forKey:@"frameSize"];
+    }
+
+    [self.downloadParameters setObject:self.downloadClasses forKey:@"classes"];
+    [self.uploadParameters setObject:self.uploadClasses forKey:@"classes"];
     
-    if (self.downloadThroughputLowerBoundMbps) [measurementParametersDict setObject:self.downloadThroughputLowerBoundMbps forKey:@"downloadThroughputLowerBoundMbps"];
-    if (self.downloadThroughputUpperBoundMbps) [measurementParametersDict setObject:self.downloadThroughputUpperBoundMbps forKey:@"downloadThroughputUpperBoundMbps"];
-    if (self.uploadThroughputLowerBoundMbps) [measurementParametersDict setObject:self.uploadThroughputLowerBoundMbps forKey:@"uploadThroughputLowerBoundMbps"];
-    if (self.uploadThroughputUpperBoundMbps) [measurementParametersDict setObject:self.uploadThroughputUpperBoundMbps forKey:@"uploadThroughputUpperBoundMbps"];
     
+    [measurementParametersDict setObject:self.rttParameters forKey:@"rtt"];
+    [measurementParametersDict setObject:self.downloadParameters forKey:@"download"];
+    [measurementParametersDict setObject:self.uploadParameters forKey:@"upload"];
+
     NSData *measurementParametersJson = [NSJSONSerialization dataWithJSONObject:measurementParametersDict options:0 error:nil];
     NSString *measurementParameters = [[NSString alloc] initWithData:measurementParametersJson encoding:NSUTF8StringEncoding];
     
-    NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true) objectAtIndex:0] stringByAppendingPathComponent:@"common-mobile.js"];
+    NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true) objectAtIndex:0] stringByAppendingPathComponent:@"ias.mobile.js"];
+    DDLogDebug(filePath);
     
     [self tnsRunScript:[NSString stringWithFormat:@"global.require('%@'); global.measurementStart(%@);", filePath, measurementParameters] inContext:@"tnsSpeedtest"];
 }
@@ -276,7 +302,7 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
     [UIApplication sharedApplication].idleTimerDisabled = true;
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true) objectAtIndex:0] stringByAppendingPathComponent:@"common-mobile.js"];
+    NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true) objectAtIndex:0] stringByAppendingPathComponent:@"ias.mobile.js"];
     
     [fileManager removeItemAtPath:filePath error:nil];
     
@@ -309,11 +335,11 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
     
     [self tnsRuntimeInit];
     
-    NSURL *filePathBundled = [[NSBundle mainBundle] URLForResource:@"common-mobile" withExtension:@"js"];
+    NSURL *filePathBundled = [[NSBundle mainBundle] URLForResource:@"ias.mobile" withExtension:@"js"];
     NSData *indexDataBundled = [NSData dataWithContentsOfURL:filePathBundled];
-    [indexDataBundled writeToFile:[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true) objectAtIndex:0] stringByAppendingPathComponent:@"common-mobile.js"] atomically:true];
+    [indexDataBundled writeToFile:[[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true) objectAtIndex:0] stringByAppendingPathComponent:@"ias.mobile.js"] atomically:true];
     
-    NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true) objectAtIndex:0] stringByAppendingPathComponent:@"common-mobile.js"];
+    NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true) objectAtIndex:0] stringByAppendingPathComponent:@"ias.mobile.js"];
     NSData *indexData = [[NSData alloc] initWithContentsOfFile:filePath];
 
     if (!indexData)
@@ -653,7 +679,7 @@ void handler(JSContextRef ctx, JSValueRef error)
         }
         else
         {
-            NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true) objectAtIndex:0] stringByAppendingPathComponent:@"common-mobile.js"];
+            NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true) objectAtIndex:0] stringByAppendingPathComponent:@"ias.mobile.js"];
             
             [data writeToFile:filePath atomically:false];
             
