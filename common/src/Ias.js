@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-03-19
+ *      \date Last update: 2019-03-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -60,8 +60,8 @@ function Ias()
     //KPIs
     var globalKPIs                      = {};
     var rttKPIs                         = {};
-    var downloadKPIs                    = {};
-    var uploadKPIs                      = {};
+    var downloadKPIs                    = [];
+    var uploadKPIs                      = [];
     var timestampKPIs                   = {};
     var clientKPIs                      = {};
     var deviceKPIs                      = {};
@@ -364,12 +364,12 @@ function Ias()
 
         if (data.test_case === 'download' && typeof data.throughput_avg_bps !== 'undefined')
         {
-            downloadKPIs = cleanedData;
+            downloadKPIs.push(cleanedData);
         }
 
         if (data.test_case === 'upload' && typeof data.throughput_avg_bps !== 'undefined')
         {
-            uploadKPIs = cleanedData;
+            uploadKPIs.push(cleanedData);
         }
 
         if (data.cmd === 'error')

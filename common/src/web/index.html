@@ -104,7 +104,7 @@
 
         /*!
          *      \author zafaco GmbH <info@zafaco.de>
-         *      \date Last update: 2019-02-21
+         *      \date Last update: 2019-03-20
          *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
          */
 
@@ -419,13 +419,13 @@
                     {
                         outputToHtml(data.rtt_info.average_ns, 'rtt');
                     }
-                    if (data.test_case === 'download' && data.download_info.throughput_avg_bps !== 0)
+                    if (data.test_case === 'download' && data.download_info[data.download_info.length-1].throughput_avg_bps !== 0)
                     {
-                        outputToHtml((data.download_info.throughput_avg_bps / 1000 / 1000).toFixed(2), 'download');
+                        outputToHtml((data.download_info[data.download_info.length-1].throughput_avg_bps / 1000 / 1000).toFixed(2), 'download');
                     }
-                    if (data.test_case === 'upload' && data.upload_info.throughput_avg_bps !== 0)
+                    if (data.test_case === 'upload' && data.upload_info[data.upload_info.length-1].throughput_avg_bps !== 0)
                     {
-                        outputToHtml((data.upload_info.throughput_avg_bps / 1000 / 1000).toFixed(2), 'upload');
+                        outputToHtml((data.upload_info[data.upload_info.length-1].throughput_avg_bps / 1000 / 1000).toFixed(2), 'upload');
                     }
                     if (data.test_case === 'port_blocking' && data.port_blocking.results.length !== 0)
                     {
