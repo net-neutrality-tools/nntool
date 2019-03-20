@@ -1,38 +1,22 @@
 <!DOCTYPE html>
 <head>
     <meta charset='utf-8'/>
-    <title>common</title>
+    <title>ias</title>
     <meta name='viewport' content='width=device-width'/>
     <meta content='yes' name='apple-mobile-web-app-capable'/>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <script language='JavaScript' type='text/javascript' src='common.js'></script>
+    <script language='JavaScript' type='text/javascript' src='ias.web.js'></script>
 </head>
 
 <body onload="setButtons()">
     <div style="width: 100%; overflow: hidden;">
 
         <div style="width: 500px; float: left;">
-            <h1 style="padding-left:50px;">common 1.0.0</h1>
+            <h1 style="padding-left:50px;">ias 1.0.0</h1>
 
                 <div style="padding-left:50px;border-spacing:100px;">
 
                 <table>
-                    <tr>
-                        <td>Download</td>
-                        <td><input type='radio' name='downloadParameters' value='{"streams":4, "frameSize":2048, "lowerBound":0.01, "upperBound":1.05}'         >low</td>
-                        <td><input type='radio' name='downloadParameters' value='{"streams":4, "frameSize":32768, "lowerBound":0.95, "upperBound":525}' checked >default</td>
-                        <td><input type='radio' name='downloadParameters' value='{"streams":4, "frameSize":524288, "lowerBound":475, "upperBound":1050}'        >high</td>
-                        <td><input type='radio' name='downloadParameters' value='{"streams":8, "frameSize":524288, "lowerBound":950, "upperBound":9000}'        >very high</td>
-                    </tr>
-
-                    <tr>
-                        <td>Upload</td>
-                        <td><input type='radio' name='uploadParameters' value='{"streams":4, "frameSize":2048, "framesPerCall":1, "lowerBound":0.01, "upperBound":1.05}'         >low</td>
-                        <td><input type='radio' name='uploadParameters' value='{"streams":4, "frameSize":65535, "framesPerCall":1, "lowerBound":0.95, "upperBound":525}' checked >default</td>
-                        <td><input type='radio' name='uploadParameters' value='{"streams":4, "frameSize":65535, "framesPerCall":4, "lowerBound":475, "upperBound":1050}'         >high</td>
-                        <td><input type='radio' name='uploadParameters' value='{"streams":4, "frameSize":65535, "framesPerCall":20, "lowerBound":950, "upperBound":9000}'        >very high</td>
-                    </tr>
-
                     <tr>
                         <td>IP Version</td>
                         <td><input type='radio' name='ipVersion' checked    >auto</td>
@@ -51,15 +35,15 @@
                 </table>
 
                 <br>
-                <button id='loadButton' onclick='load()' disabled='disabled'        >Load</button>
-                <button id='stopButton' onclick='speedStop()' disabled='disabled'   >Stop</button>
+                <button id='loadButton' onclick='load()' disabled='disabled'      >Load</button>
+                <button id='stopButton' onclick='iasStop()' disabled='disabled'   >Stop</button>
                 <br>
                 <br>
 
-                <button id='speedStartButton' onclick='speedStart("all")'       >Start</button>
-                <button id='rttButton' onclick='speedStart("rtt")'              >RTT</button>
-                <button id='downloadButton' onclick='speedStart("download")'    >Download</button>
-                <button id='uploadButton' onclick='speedStart("upload")'        >Upload</button>
+                <button id='iasStartButton' onclick='iasStart("all")'         >Start</button>
+                <button id='rttButton' onclick='iasStart("rtt")'              >RTT</button>
+                <button id='downloadButton' onclick='iasStart("download")'    >Download</button>
+                <button id='uploadButton' onclick='iasStart("upload")'        >Upload</button>
             </div>
             <br><br>
             <h1 style="padding-left:50px;">port blocking 1.0.0</h1>
@@ -75,7 +59,7 @@
             <table>
                 <tr>
                     <td><div style="padding-left:40px;border-spacing:20px;">Status: </div></td>
-                    <td><div style="padding-left:20px;border-spacing:20px;" id="status">common loading</div></td>
+                    <td><div style="padding-left:20px;border-spacing:20px;" id="status">ias loading</div></td>
                 </tr>
 
                 <tr>
@@ -120,28 +104,27 @@
 
         /*!
          *      \author zafaco GmbH <info@zafaco.de>
-         *      \date Last update: 2019-02-15
+         *      \date Last update: 2019-03-20
          *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
          */
 
-        var speed;
-        var speedParameters = {};
+        var ias;
+        var iasParameters = {};
 
         var portBlocking;
         var portBlockingParameters = {};
 
-        function speedStart(testCase)
+        function iasStart(testCase)
         {
             outputPrepare();
 
-            speedParameters.cmd                               = 'start';
-            speedParameters.platform                          = 'web';
+            iasParameters.platform                          = 'web';
 
-            speedParameters.wsTargets                         = [];
-            speedParameters.wsTargets.push('peer-ias-de-01');
+            iasParameters.wsTargets                         = [];
+            iasParameters.wsTargets.push('peer-ias-de-01');
 
-            speedParameters.wsTargetsRtt                      = [];
-            speedParameters.wsTargetsRtt.push('peer-ias-de-01');
+            iasParameters.wsTargetsRtt                      = [];
+            iasParameters.wsTargetsRtt.push('peer-ias-de-01');
 
             var ipVersion = document.getElementsByName('ipVersion');
             if (ipVersion[1].checked || ipVersion[2].checked)
@@ -156,109 +139,182 @@
                     targetIpVersion = '-ipv6';
                 }
 
-                speedParameters.wsTargets.forEach(function(element, index)
+                iasParameters.wsTargets.forEach(function(element, index)
                 {
-                    speedParameters.wsTargets[index] = speedParameters.wsTargets[index] + targetIpVersion;
+                    iasParameters.wsTargets[index] = iasParameters.wsTargets[index] + targetIpVersion;
                 });
 
-                speedParameters.wsTargetsRtt.forEach(function(element, index)
+                iasParameters.wsTargetsRtt.forEach(function(element, index)
                 {
-                    speedParameters.wsTargetsRtt[index] = speedParameters.wsTargetsRtt[index] + targetIpVersion;
+                    iasParameters.wsTargetsRtt[index] = iasParameters.wsTargetsRtt[index] + targetIpVersion;
                 });
             }
 
-            speedParameters.wsTLD                             = 'net-neutrality.tools';
-            speedParameters.wsTargetPort                      = '80';
-            speedParameters.wsWss                             = 0;
+            iasParameters.wsTLD                         = 'net-neutrality.tools';
+            iasParameters.wsTargetPort                  = '80';
+            iasParameters.wsWss                         = 0;
 
-            speedParameters.wsAuthToken                       = 'placeholderToken';
-            speedParameters.wsAuthTimestamp                   = 'placeholderTimestamp';
+            iasParameters.wsAuthToken                   = 'placeholderToken';
+            iasParameters.wsAuthTimestamp               = 'placeholderTimestamp';
 
-            speedParameters.wsWorkerPath                      = 'Worker.js';
-            speedParameters.performRouteToClientLookup        = false;
+            iasParameters.wsWorkerPath                  = 'Worker.js';
+            iasParameters.performRouteToClientLookup    = false;
+
+            iasParameters.download  = {};
+            iasParameters.upload    = {};
+            iasParameters.rtt       = {};
+
+
+            //dl/ul parameters if no speed classes are used or singleStream is active
+            var singleStream = document.getElementsByName('singleStream')[1].checked;
+
+            iasParameters.download.streams      = 4;
+            iasParameters.download.frameSize    = 32768;
+            if (singleStream)
+            {
+                iasParameters.download.frameSize    *= iasParameters.download.streams;
+                iasParameters.download.streams      = 1;
+            }
+
+            iasParameters.upload.streams        = 4
+            iasParameters.upload.frameSize      = 65535;
+            iasParameters.upload.framesPerCall  = 1;
+            if (singleStream)
+            {
+                iasParameters.upload.frameSize  *= iasParameters.upload.streams;
+                iasParameters.upload.streams    = 1;
+
+                if (iasParameters.upload.frameSize > 65535)
+                {
+                    iasParameters.upload.frameSize  = 65535;
+                }
+            }
+
+
+            if (!singleStream)
+            {
+                //dl/ul speed classes
+                iasParameters.download.classes      = [];
+                iasParameters.upload.classes        = [];
+
+                var downloadClassLow                = {};
+                downloadClassLow.default            = false;
+                downloadClassLow.streams            = 4;
+                downloadClassLow.frameSize          = 2048;
+                downloadClassLow.bounds             = {};
+                downloadClassLow.bounds.lower       = 0.01;
+                downloadClassLow.bounds.upper       = 1.05;
+
+                var downloadClassDefault            = {};
+                downloadClassDefault.default        = true;
+                downloadClassDefault.streams        = 4;
+                downloadClassDefault.frameSize      = 32768;
+                downloadClassDefault.bounds         = {};
+                downloadClassDefault.bounds.lower   = 0.95;
+                downloadClassDefault.bounds.upper   = 525;
+
+                var downloadClassHigh               = {};
+                downloadClassHigh.default           = false;
+                downloadClassHigh.streams           = 4;
+                downloadClassHigh.frameSize         = 524288;
+                downloadClassHigh.bounds            = {};
+                downloadClassHigh.bounds.lower      = 475;
+                downloadClassHigh.bounds.upper      = 1050;
+
+                var downloadClassVeryHigh           = {};
+                downloadClassVeryHigh.default       = false;
+                downloadClassVeryHigh.streams       = 8;
+                downloadClassVeryHigh.frameSize     = 524288;
+                downloadClassVeryHigh.bounds        = {};
+                downloadClassVeryHigh.bounds.lower  = 950;
+                downloadClassVeryHigh.bounds.upper  = 9000;
+
+                iasParameters.download.classes.push(downloadClassLow);
+                iasParameters.download.classes.push(downloadClassDefault);
+                iasParameters.download.classes.push(downloadClassHigh);
+                iasParameters.download.classes.push(downloadClassVeryHigh);
+
+                var uploadClassLow                  = {};
+                uploadClassLow.default              = false;
+                uploadClassLow.streams              = 4;
+                uploadClassLow.frameSize            = 2048;
+                uploadClassLow.bounds               = {};
+                uploadClassLow.bounds.lower         = 0.01;
+                uploadClassLow.bounds.upper         = 1.05;
+                uploadClassLow.framesPerCall        = 1;
+
+                var uploadClassDefault              = {};
+                uploadClassDefault.default          = true;
+                uploadClassDefault.streams          = 4;
+                uploadClassDefault.frameSize        = 65535;
+                uploadClassDefault.bounds           = {};
+                uploadClassDefault.bounds.lower     = 0.95;
+                uploadClassDefault.bounds.upper     = 525;
+                uploadClassDefault.framesPerCall    = 1;
+
+                var uploadClassHigh                 = {};
+                uploadClassHigh.default             = false;
+                uploadClassHigh.streams             = 4;
+                uploadClassHigh.frameSize           = 65535;
+                uploadClassHigh.bounds              = {};
+                uploadClassHigh.bounds.lower        = 475;
+                uploadClassHigh.bounds.upper        = 1050;
+                uploadClassHigh.framesPerCall       = 4;
+
+                var uploadClassVeryHigh             = {};
+                uploadClassVeryHigh.default         = false;
+                uploadClassVeryHigh.streams         = 8;
+                uploadClassVeryHigh.frameSize       = 65535;
+                uploadClassVeryHigh.bounds          = {};
+                uploadClassVeryHigh.bounds.lower    = 950;
+                uploadClassVeryHigh.bounds.upper    = 9000;
+                uploadClassVeryHigh.framesPerCall   = 20;
+
+                iasParameters.upload.classes.push(uploadClassLow);
+                iasParameters.upload.classes.push(uploadClassDefault);
+                iasParameters.upload.classes.push(uploadClassHigh);
+                iasParameters.upload.classes.push(uploadClassVeryHigh);
+            }
+
 
             if (testCase === 'all')
             {
-                speedParameters.performRttMeasurement         = true;
-                speedParameters.performDownloadMeasurement    = true;
-                speedParameters.performUploadMeasurement      = true;
+                iasParameters.rtt.performMeasurement        = true;
+                iasParameters.download.performMeasurement   = true;
+                iasParameters.upload.performMeasurement     = true;
             }
             if (testCase === 'rtt')
             {
-                speedParameters.performRttMeasurement         = true;
-                speedParameters.performDownloadMeasurement    = false;
-                speedParameters.performUploadMeasurement      = false;
+                iasParameters.rtt.performMeasurement        = true;
+                iasParameters.download.performMeasurement   = false;
+                iasParameters.upload.performMeasurement     = false;
             }
             if (testCase === 'download')
             {
-                speedParameters.performRttMeasurement         = false;
-                speedParameters.performDownloadMeasurement    = true;
-                speedParameters.performUploadMeasurement      = false;
+                iasParameters.rtt.performMeasurement        = false;
+                iasParameters.download.performMeasurement   = true;
+                iasParameters.upload.performMeasurement     = false;
             }
             if (testCase === 'upload')
             {
-                speedParameters.performRttMeasurement         = false;
-                speedParameters.performDownloadMeasurement    = false;
-                speedParameters.performUploadMeasurement      = true;
+                iasParameters.rtt.performMeasurement        = false;
+                iasParameters.download.performMeasurement   = false;
+                iasParameters.upload.performMeasurement     = true;
             }
 
+            delete ias;
+            ias = null;
+            ias = new Ias();
 
-            var downloadParameters = document.getElementsByName('downloadParameters');
-            for (var i=0; i<downloadParameters.length; i++)
-            {
-                if (downloadParameters[i].checked)
-                {
-                    var parsedDownloadParameters                        = JSON.parse(downloadParameters[i].value);
-                    speedParameters.wsParallelStreamsDownload           = parsedDownloadParameters.streams;
-                    speedParameters.wsFrameSizeDownload                 = parsedDownloadParameters.frameSize;
-                    speedParameters.downloadThroughputLowerBoundMbps    = parsedDownloadParameters.lowerBound;
-                    speedParameters.downloadThroughputUpperBoundMbps    = parsedDownloadParameters.upperBound;
-                }
-            }
-
-            var uploadParameters = document.getElementsByName('uploadParameters');
-            for (var i=0; i<uploadParameters.length; i++)
-            {
-                if (uploadParameters[i].checked)
-                {
-                    var parsedUploadParameters                          = JSON.parse(uploadParameters[i].value);
-                    speedParameters.wsParallelStreamsUpload             = parsedUploadParameters.streams;
-                    speedParameters.wsFrameSizeUpload                   = parsedUploadParameters.frameSize;
-                    speedParameters.uploadThroughputLowerBoundMbps      = parsedUploadParameters.lowerBound;
-                    speedParameters.uploadThroughputUpperBoundMbps      = parsedUploadParameters.upperBound;
-                    speedParameters.uploadFramesPerCall                 = parsedUploadParameters.framesPerCall;
-                }
-            }
-
-            var singleStream = document.getElementsByName('singleStream');
-            if (singleStream[1].checked)
-            {
-                speedParameters.wsFrameSizeDownload         *= speedParameters.wsParallelStreamsDownload;
-                speedParameters.wsParallelStreamsDownload   = 1;
-
-                speedParameters.wsFrameSizeUpload           *= speedParameters.wsParallelStreamsUpload;
-                speedParameters.uploadFramesPerCall         *= speedParameters.wsParallelStreamsUpload;
-                speedParameters.wsParallelStreamsUpload     = 1;
-
-
-                if (speedParameters.wsFrameSizeUpload > 65535)
-                {
-                    speedParameters.wsFrameSizeUpload = 65535;
-                }
-            }
-
-            delete speed;
-            speed = null;
-            speed = new Speed();
-
-            speed.measurementStart(speedParameters);
+            ias.measurementStart(JSON.stringify(iasParameters));
         }
 
-        function speedStop()
+        function iasStop()
         {
-            wsMeasurement.measurementControl(JSON.stringify({cmd:'stop'}));
+            ias.measurementStop();
 
-            toggleButtons(true);
+            document.getElementById('stopButton').disabled = true;
+            document.getElementById('loadButton').disabled = false;
         }
 
         function portBlockingStart()
@@ -293,7 +349,7 @@
 
         function toggleButtons(enable)
         {
-            document.getElementById('speedStartButton').disabled          = !enable;
+            document.getElementById('iasStartButton').disabled            = !enable;
             document.getElementById('rttButton').disabled                 = !enable;
             document.getElementById('downloadButton').disabled            = !enable;
             document.getElementById('uploadButton').disabled              = !enable;
@@ -303,6 +359,11 @@
         }
 
         function measurementCallback(data)
+        {
+            outputData(data);
+        }
+
+        function iasCallback(data)
         {
             outputData(data);
         }
@@ -358,13 +419,13 @@
                     {
                         outputToHtml(data.rtt_info.average_ns, 'rtt');
                     }
-                    if (data.test_case === 'download' && data.download_info.throughput_avg_bps !== 0)
+                    if (data.test_case === 'download' && data.download_info[data.download_info.length-1].throughput_avg_bps !== 0)
                     {
-                        outputToHtml((data.download_info.throughput_avg_bps / 1000 / 1000).toFixed(2), 'download');
+                        outputToHtml((data.download_info[data.download_info.length-1].throughput_avg_bps / 1000 / 1000).toFixed(2), 'download');
                     }
-                    if (data.test_case === 'upload' && data.upload_info.throughput_avg_bps !== 0)
+                    if (data.test_case === 'upload' && data.upload_info[data.upload_info.length-1].throughput_avg_bps !== 0)
                     {
-                        outputToHtml((data.upload_info.throughput_avg_bps / 1000 / 1000).toFixed(2), 'upload');
+                        outputToHtml((data.upload_info[data.upload_info.length-1].throughput_avg_bps / 1000 / 1000).toFixed(2), 'upload');
                     }
                     if (data.test_case === 'port_blocking' && data.port_blocking.results.length !== 0)
                     {
