@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-03-19
+ *      \date Last update: 2019-03-20
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -980,7 +980,7 @@ function WSControl()
      */
     function getKPIsRtt(report)
     {
-        report.duration_ns                = wsRttValues.duration;
+        report.duration_ns              = wsRttValues.duration;
         report.average_ns               = wsRttValues.avg;
         report.median_ms                = wsRttValues.med;
         report.min_ns                   = wsRttValues.min;
