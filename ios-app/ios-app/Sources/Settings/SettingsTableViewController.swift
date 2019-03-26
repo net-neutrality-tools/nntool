@@ -1,4 +1,4 @@
-// ios-app: HistoryViewController.swift, created on 19.03.19
+// ios-app: SettingsTableViewController.swift, created on 19.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -18,6 +18,14 @@
 import Foundation
 import UIKit
 
-class HistoryViewController: UIViewController {
-    
+///
+class SettingsTableViewController: UITableViewController {
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        
+        cell.accessoryView = UISwitch()
+        
+        return cell
+    }
 }

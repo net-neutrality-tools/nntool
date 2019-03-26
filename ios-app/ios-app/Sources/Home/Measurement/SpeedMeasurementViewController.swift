@@ -1,4 +1,4 @@
-// ios-app: InfoViewController.swift, created on 19.03.19
+// ios-app: SpeedMeasurementViewController.swift, created on 25.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -18,6 +18,7 @@
 import Foundation
 import UIKit
 
-class InfoViewController: UIViewController {
+///
+class SpeedMeasurementViewController: UIViewController {
     
 }

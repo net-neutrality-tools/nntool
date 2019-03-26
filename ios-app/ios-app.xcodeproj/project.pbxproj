@@ -11,16 +11,19 @@
 		E026A5892241271700BACDB5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E026A5872241271700BACDB5 /* Main.storyboard */; };
 		E026A58B2241271900BACDB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E026A58A2241271900BACDB5 /* Assets.xcassets */; };
 		E026A58E2241271900BACDB5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E026A58C2241271900BACDB5 /* LaunchScreen.storyboard */; };
-		E026A5992241271A00BACDB5 /* ios_appTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E026A5982241271A00BACDB5 /* ios_appTests.swift */; };
-		E026A5A42241271A00BACDB5 /* ios_appUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E026A5A32241271A00BACDB5 /* ios_appUITests.swift */; };
+		E026A5992241271A00BACDB5 /* iosAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E026A5982241271A00BACDB5 /* iosAppTests.swift */; };
+		E026A5A42241271A00BACDB5 /* iosAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E026A5A32241271A00BACDB5 /* iosAppUITests.swift */; };
 		E0AF3DE922413B7C00FDBFD1 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DE822413B7C00FDBFD1 /* MapViewController.swift */; };
 		E0AF3DEB22413B9800FDBFD1 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DEA22413B9800FDBFD1 /* HomeViewController.swift */; };
-		E0AF3DF122413BF200FDBFD1 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF022413BF200FDBFD1 /* SettingsViewController.swift */; };
-		E0AF3DF322413C1100FDBFD1 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF222413C1100FDBFD1 /* InfoViewController.swift */; };
+		E0AF3DF122413BF200FDBFD1 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF022413BF200FDBFD1 /* SettingsTableViewController.swift */; };
+		E0AF3DF322413C1100FDBFD1 /* InfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF222413C1100FDBFD1 /* InfoTableViewController.swift */; };
 		E0AF3DF522413C2B00FDBFD1 /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF422413C2B00FDBFD1 /* StatisticsViewController.swift */; };
 		E0AF3DF822413C7200FDBFD1 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF722413C7200FDBFD1 /* HelpViewController.swift */; };
-		E0AF3DFA22413C9500FDBFD1 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF922413C9500FDBFD1 /* HistoryViewController.swift */; };
+		E0AF3DFA22413C9500FDBFD1 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF922413C9500FDBFD1 /* HistoryTableViewController.swift */; };
 		E0AF3DFD2241520A00FDBFD1 /* TermsAndConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DFC2241520A00FDBFD1 /* TermsAndConditionsViewController.swift */; };
+		E0B9A33522498127002AB640 /* SpeedMeasurementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A33422498127002AB640 /* SpeedMeasurementViewController.swift */; };
+		E0B9A3372249818D002AB640 /* QoSMeasurementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3362249818D002AB640 /* QoSMeasurementViewController.swift */; };
+		E0B9A3392249826E002AB640 /* SpeedMeasurementGaugeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A3382249826E002AB640 /* SpeedMeasurementGaugeView.xib */; };
 		E860F5CA7C59FD468EEE2892 /* Pods_All_ios_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91316B94C5B307833124DBA0 /* Pods_All_ios_app.framework */; };
 /* End PBXBuildFile section */
 
@@ -52,19 +55,22 @@
 		E026A58D2241271900BACDB5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E026A58F2241271900BACDB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E026A5942241271A00BACDB5 /* ios-appTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ios-appTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E026A5982241271A00BACDB5 /* ios_appTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ios_appTests.swift; sourceTree = "<group>"; };
+		E026A5982241271A00BACDB5 /* iosAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosAppTests.swift; sourceTree = "<group>"; };
 		E026A59A2241271A00BACDB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E026A59F2241271A00BACDB5 /* ios-appUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ios-appUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E026A5A32241271A00BACDB5 /* ios_appUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ios_appUITests.swift; sourceTree = "<group>"; };
+		E026A5A32241271A00BACDB5 /* iosAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosAppUITests.swift; sourceTree = "<group>"; };
 		E026A5A52241271A00BACDB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E0AF3DE822413B7C00FDBFD1 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		E0AF3DEA22413B9800FDBFD1 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
-		E0AF3DF022413BF200FDBFD1 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		E0AF3DF222413C1100FDBFD1 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
+		E0AF3DF022413BF200FDBFD1 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		E0AF3DF222413C1100FDBFD1 /* InfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTableViewController.swift; sourceTree = "<group>"; };
 		E0AF3DF422413C2B00FDBFD1 /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		E0AF3DF722413C7200FDBFD1 /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
-		E0AF3DF922413C9500FDBFD1 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
+		E0AF3DF922413C9500FDBFD1 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
 		E0AF3DFC2241520A00FDBFD1 /* TermsAndConditionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndConditionsViewController.swift; sourceTree = "<group>"; };
+		E0B9A33422498127002AB640 /* SpeedMeasurementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedMeasurementViewController.swift; sourceTree = "<group>"; };
+		E0B9A3362249818D002AB640 /* QoSMeasurementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSMeasurementViewController.swift; sourceTree = "<group>"; };
+		E0B9A3382249826E002AB640 /* SpeedMeasurementGaugeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SpeedMeasurementGaugeView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,8 +141,8 @@
 		E026A5802241271700BACDB5 /* ios-app */ = {
 			isa = PBXGroup;
 			children = (
-				E026A5B42241339900BACDB5 /* Resources */,
 				E026A5B32241338800BACDB5 /* Sources */,
+				E026A5B42241339900BACDB5 /* Resources */,
 				E026A58F2241271900BACDB5 /* Info.plist */,
 			);
 			path = "ios-app";
@@ -145,7 +151,7 @@
 		E026A5972241271A00BACDB5 /* ios-appTests */ = {
 			isa = PBXGroup;
 			children = (
-				E026A5982241271A00BACDB5 /* ios_appTests.swift */,
+				E026A5982241271A00BACDB5 /* iosAppTests.swift */,
 				E026A59A2241271A00BACDB5 /* Info.plist */,
 			);
 			path = "ios-appTests";
@@ -154,17 +160,10 @@
 		E026A5A22241271A00BACDB5 /* ios-appUITests */ = {
 			isa = PBXGroup;
 			children = (
-				E026A5A32241271A00BACDB5 /* ios_appUITests.swift */,
+				E026A5A32241271A00BACDB5 /* iosAppUITests.swift */,
 				E026A5A52241271A00BACDB5 /* Info.plist */,
 			);
 			path = "ios-appUITests";
-			sourceTree = "<group>";
-		};
-		E026A5B1224132A800BACDB5 /* Measurement */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Measurement;
 			sourceTree = "<group>";
 		};
 		E026A5B2224132B100BACDB5 /* Map */ = {
@@ -195,6 +194,7 @@
 				E026A5872241271700BACDB5 /* Main.storyboard */,
 				E026A58A2241271900BACDB5 /* Assets.xcassets */,
 				E026A58C2241271900BACDB5 /* LaunchScreen.storyboard */,
+				E0B9A3382249826E002AB640 /* SpeedMeasurementGaugeView.xib */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -203,8 +203,8 @@
 			isa = PBXGroup;
 			children = (
 				E0AF3DEA22413B9800FDBFD1 /* HomeViewController.swift */,
+				E0B9A33322498110002AB640 /* Measurement */,
 				E0AF3DFB224151EE00FDBFD1 /* TermsAndConditions */,
-				E026A5B1224132A800BACDB5 /* Measurement */,
 				E0AF3DF622413C5100FDBFD1 /* Help */,
 			);
 			path = Home;
@@ -213,7 +213,7 @@
 		E0AF3DEC22413BB900FDBFD1 /* History */ = {
 			isa = PBXGroup;
 			children = (
-				E0AF3DF922413C9500FDBFD1 /* HistoryViewController.swift */,
+				E0AF3DF922413C9500FDBFD1 /* HistoryTableViewController.swift */,
 			);
 			path = History;
 			sourceTree = "<group>";
@@ -229,7 +229,7 @@
 		E0AF3DEE22413BC800FDBFD1 /* Info */ = {
 			isa = PBXGroup;
 			children = (
-				E0AF3DF222413C1100FDBFD1 /* InfoViewController.swift */,
+				E0AF3DF222413C1100FDBFD1 /* InfoTableViewController.swift */,
 			);
 			path = Info;
 			sourceTree = "<group>";
@@ -237,7 +237,7 @@
 		E0AF3DEF22413BCD00FDBFD1 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				E0AF3DF022413BF200FDBFD1 /* SettingsViewController.swift */,
+				E0AF3DF022413BF200FDBFD1 /* SettingsTableViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -258,6 +258,15 @@
 			path = TermsAndConditions;
 			sourceTree = "<group>";
 		};
+		E0B9A33322498110002AB640 /* Measurement */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A33422498127002AB640 /* SpeedMeasurementViewController.swift */,
+				E0B9A3362249818D002AB640 /* QoSMeasurementViewController.swift */,
+			);
+			path = Measurement;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -269,6 +278,7 @@
 				E026A57A2241271700BACDB5 /* Sources */,
 				E026A57B2241271700BACDB5 /* Frameworks */,
 				E026A57C2241271700BACDB5 /* Resources */,
+				E0B9A33222495BBB002AB640 /* Run swiftlint */,
 			);
 			buildRules = (
 			);
@@ -364,6 +374,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E026A58E2241271900BACDB5 /* LaunchScreen.storyboard in Resources */,
+				E0B9A3392249826E002AB640 /* SpeedMeasurementGaugeView.xib in Resources */,
 				E026A58B2241271900BACDB5 /* Assets.xcassets in Resources */,
 				E026A5892241271700BACDB5 /* Main.storyboard in Resources */,
 			);
@@ -408,6 +419,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		E0B9A33222495BBB002AB640 /* Run swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run swiftlint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which ${PODS_ROOT}/SwiftLint/swiftlint >/dev/null; then\n    ${PODS_ROOT}/SwiftLint/swiftlint\nelse\n    echo \"warning: SwiftLint is not installed, run pod install.\"\nfi\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -415,15 +444,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E0B9A3372249818D002AB640 /* QoSMeasurementViewController.swift in Sources */,
 				E0AF3DEB22413B9800FDBFD1 /* HomeViewController.swift in Sources */,
 				E026A5822241271700BACDB5 /* AppDelegate.swift in Sources */,
-				E0AF3DFA22413C9500FDBFD1 /* HistoryViewController.swift in Sources */,
+				E0AF3DFA22413C9500FDBFD1 /* HistoryTableViewController.swift in Sources */,
 				E0AF3DF522413C2B00FDBFD1 /* StatisticsViewController.swift in Sources */,
 				E0AF3DF822413C7200FDBFD1 /* HelpViewController.swift in Sources */,
 				E0AF3DFD2241520A00FDBFD1 /* TermsAndConditionsViewController.swift in Sources */,
-				E0AF3DF322413C1100FDBFD1 /* InfoViewController.swift in Sources */,
+				E0AF3DF322413C1100FDBFD1 /* InfoTableViewController.swift in Sources */,
+				E0B9A33522498127002AB640 /* SpeedMeasurementViewController.swift in Sources */,
 				E0AF3DE922413B7C00FDBFD1 /* MapViewController.swift in Sources */,
-				E0AF3DF122413BF200FDBFD1 /* SettingsViewController.swift in Sources */,
+				E0AF3DF122413BF200FDBFD1 /* SettingsTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,7 +462,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E026A5992241271A00BACDB5 /* ios_appTests.swift in Sources */,
+				E026A5992241271A00BACDB5 /* iosAppTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -439,7 +470,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E026A5A42241271A00BACDB5 /* ios_appUITests.swift in Sources */,
+				E026A5A42241271A00BACDB5 /* iosAppUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -513,6 +544,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -574,6 +606,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;

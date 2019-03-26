@@ -1,4 +1,4 @@
-// ios-app: StatisticsViewController.swift, created on 19.03.19
+// ios-app: HistoryTableViewController.swift, created on 19.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -19,6 +19,6 @@ import Foundation
 import UIKit
 
 ///
-class StatisticsViewController: UIViewController {
-
+class HistoryTableViewController: UITableViewController {
+    
 }

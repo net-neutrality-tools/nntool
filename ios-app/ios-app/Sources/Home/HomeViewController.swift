@@ -20,11 +20,19 @@ import UIKit
 
 ///
 class HomeViewController: UIViewController {
-   
+
     ///
     override func viewDidLoad() {
+        super.viewDidLoad()
+
         // view controllers in tabBar should not be customizable
         tabBarController?.customizableViewControllers = []
     }
-    
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        // TODO: show terms and conditions on first launch
+        //performSegue(withIdentifier: "present_modally_terms_and_conditions", sender: self)
+    }
 }
