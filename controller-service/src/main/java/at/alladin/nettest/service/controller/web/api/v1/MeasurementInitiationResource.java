@@ -78,7 +78,9 @@ public class MeasurementInitiationResource {
 		// TODO: load balancing
 		
 		final LmapControlDto lmapControlDto = measurementConfigurationService.getLmapControlDtoForCapabilities(measurementInitiationRequest.getCapabilities());
-		
+		lmapControlDto.setAdditionalRequestInfo(measurementInitiationRequest.getAdditionalRequestInfo());
+		lmapControlDto.setAgent(measurementInitiationRequest.getAgent());
+		lmapControlDto.setCapabilities(measurementInitiationRequest.getCapabilities());
 		
 		//measurementInitiationRequest.getAgent().getAgentId();
 		
