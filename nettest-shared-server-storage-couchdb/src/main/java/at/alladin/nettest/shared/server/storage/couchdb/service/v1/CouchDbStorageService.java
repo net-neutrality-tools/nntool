@@ -11,17 +11,23 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgent;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.TaskConfiguration;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationQoSRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationSpeedRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportModelMapper;
+import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.MeasurementAgentMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsResponseMapper;
 
@@ -43,6 +49,12 @@ public class CouchDbStorageService implements StorageService {
 	private MeasurementAgentRepository measurementAgentRepository;
 	
 	@Autowired
+	private TaskConfigurationSpeedRepository taskConfigurationSpeedRepository;
+	
+	@Autowired
+	private TaskConfigurationQoSRepository taskConfigurationQoSRepository;
+	
+	@Autowired
 	private LmapReportModelMapper lmapReportModelMapper;
 	
 	@Autowired
@@ -50,6 +62,9 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private SettingsResponseMapper settingsResponseMapper;
+	
+	@Autowired
+	private LmapTaskMapper lmapTaskMapper;
 	
 	/*
 	 * (non-Javadoc)
@@ -116,13 +131,53 @@ public class CouchDbStorageService implements StorageService {
 		
 		return ret;
 	}
+	
+	@Override
+	public boolean isValidMeasurementAgentUuid(String measurementUuid) throws StorageServiceException {
+		final MeasurementAgent agent;
+		try {
+			agent = measurementAgentRepository.findByUuid(measurementUuid);
+		} catch (Exception ex) {
+			throw new StorageServiceException(ex);
+		}
+		if (agent == null || !agent.isTermsAndConditionsAccepted()) {
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public LmapTaskDto getTaskDto(MeasurementTypeDto type, String version) {
+		TaskConfiguration taskConfig = null;
+		try {
+			switch (type) {
+			case SPEED:
+				taskConfig = taskConfigurationSpeedRepository.findByNameAndVersion(type.toString(), version);
+				break;
+			case QOS:
+				taskConfig = taskConfigurationQoSRepository.findByNameAndVersion(type.toString(), version);
+				break;
+			}
+			
+		} catch (Exception ex) {
+			throw new StorageServiceException(ex);
+		}
+		if (taskConfig == null) {
+			return null;
+		}
+		return lmapTaskMapper.map(taskConfig);
+	}
 
 	@Override
 	public SettingsResponse getSettings(String settingsUuid) throws StorageServiceException {
-		final Settings settings = settingsRepository.findByUuid(settingsUuid);
+		final Settings settings;
+		try {
+			settings = settingsRepository.findByUuid(settingsUuid);
+		} catch (Exception ex) {
+			throw new StorageServiceException(ex);
+		}
 		
-		final SettingsResponse settingsResponse = settingsResponseMapper.map(settings);
+		return settingsResponseMapper.map(settings);
 		
-		return settingsResponse;
 	}
 }

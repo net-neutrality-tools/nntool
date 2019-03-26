@@ -24,6 +24,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.Setti
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsResponse;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
+import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import io.swagger.annotations.ApiParam;
 
 /**
@@ -69,7 +70,12 @@ public class MeasurementAgentResource {
 		
 		final RegistrationResponse registrationResponse = storageService.registerMeasurementAgent(registrationApiRequest);
 		
-		registrationResponse.setSettings(storageService.getSettings(controllerServiceProperties.getSettingsUuid()));
+		try {
+			registrationResponse.setSettings(storageService.getSettings(controllerServiceProperties.getSettingsUuid()));
+		} catch (StorageServiceException ex) {
+			//we let them register even if the settings have issues
+			ex.printStackTrace();
+		}
 		
 		logger.debug("returned response: " + registrationResponse.toString());
 		
