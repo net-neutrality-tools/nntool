@@ -5,6 +5,9 @@
     <integer translatable="false" name="default_controller_port">8080</integer>
     <bool translatable="false" name="default_controller_connection_is_encrypted">false</bool>
 
+    <string translatable="false" name="default_speed_configuration_version">1.0.0</string>
+    <string translatable="false" name="default_qos_configuration_version">1.0.0</string>
+
     <string translatable="false" name="default_qos_control_host">10.9.8.36</string>
 
     <integer name="default_qos_control_port">5233</integer>

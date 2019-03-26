@@ -6,6 +6,7 @@ import java.util.List;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import retrofit2.Retrofit;
@@ -60,4 +61,15 @@ public class ControllerConnection {
 
         return null;
     }
+
+    public LmapControlDto requestMeasurement (final LmapControlDto request) {
+
+        try {
+            return controllerService.postMeasurementRequest(request).execute().body();
+        } catch (final Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
 }

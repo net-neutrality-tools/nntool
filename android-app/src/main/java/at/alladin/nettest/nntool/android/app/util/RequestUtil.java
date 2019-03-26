@@ -5,6 +5,8 @@ import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.text.TextUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -14,6 +16,11 @@ import at.alladin.nettest.nntool.android.app.workflow.tc.TermsAndConditionsFragm
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequestInfo;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapAgentDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityTaskDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
 import okhttp3.Request;
 
@@ -63,5 +70,30 @@ public class RequestUtil {
         apiRequest.setData(prepareRegistrationRequest(context));
         apiRequest.setRequestInfo(prepareApiRequestInfo(context));
         return apiRequest;
+    }
+
+    public static LmapControlDto prepareMeasurementInitiationRequest (final Context context) {
+        final LmapControlDto request = new LmapControlDto();
+        final LmapAgentDto agentDto = new LmapAgentDto();
+        agentDto.setAgentId(PreferencesUtil.getAgentUuid(context));
+        request.setAgent(agentDto);
+        request.setAdditionalRequestInfo(prepareApiRequestInfo(context));
+
+        final LmapCapabilityDto capabilities = new LmapCapabilityDto();
+        request.setCapabilities(capabilities);
+        final List<LmapCapabilityTaskDto> capabilityTaskDtoList = new ArrayList<>();
+        capabilities.setTasks(capabilityTaskDtoList);
+
+        LmapCapabilityTaskDto capabilityTask = new LmapCapabilityTaskDto();
+        capabilityTask.setVersion(context.getResources().getString(R.string.default_speed_configuration_version));
+        capabilityTask.setTaskName(MeasurementTypeDto.SPEED.toString());
+        capabilityTaskDtoList.add(capabilityTask);
+
+        capabilityTask = new LmapCapabilityTaskDto();
+        capabilityTask.setVersion(context.getResources().getString(R.string.default_qos_configuration_version));
+        capabilityTask.setTaskName(MeasurementTypeDto.QOS.toString());
+        capabilityTaskDtoList.add(capabilityTask);
+
+        return request;
     }
 }

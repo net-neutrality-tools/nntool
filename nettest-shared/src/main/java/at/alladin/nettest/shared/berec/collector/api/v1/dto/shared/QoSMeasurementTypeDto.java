@@ -20,6 +20,7 @@ public enum QoSMeasurementTypeDto {
     TRACEROUTE,
     WEBSITE,
     AUDIO,
+    ECHO_PROTOCOL,
 
     MKIT_DASH,
     MKIT_WEB_CONNECTIVITY;
