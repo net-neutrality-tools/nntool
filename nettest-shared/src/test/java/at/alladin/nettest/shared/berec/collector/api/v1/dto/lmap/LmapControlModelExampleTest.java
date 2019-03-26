@@ -189,7 +189,7 @@ public class LmapControlModelExampleTest extends AbstractLmapExampleTest {
         dur.setDownloadSlowStart(3);
         dur.setUpload(10);
         dur.setUploadSlowStart(3);
-        speedParams.setDurations(dur);
+        //speedParams.setDurations(dur);
 
         final SpeedMeasurementTypeParameters.Flows flows = new SpeedMeasurementTypeParameters.Flows();
         flows.setDownload(3);
@@ -197,7 +197,7 @@ public class LmapControlModelExampleTest extends AbstractLmapExampleTest {
         flows.setUpload(3);
         flows.setUploadSlowStart(3);
         flows.setRtt(3);
-        speedParams.setFlows(flows);
+        //speedParams.setFlows(flows);
         speedParams.setRttCount(10);
         speedParams.setJavascriptMeasurementCodeUrl("measurement.berec.eu");
 
