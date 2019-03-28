@@ -1,0 +1,20 @@
+#jazzy --clean --author "alladin-IT GmbH" --author-url "https://alladin.at" --module-version 0.0.1 --xcodebuild-arguments -scheme,MeasurementAgentKit_iOS --module MeasurementAgentKit --output docs
+output: docs
+clean: true
+#source_directory: MeasurementAgentKit/Sources
+author: alladin-IT GmbH
+author_url: https://alladin.at
+copyright: 2019 alladin-IT GmbH
+module: MeasurementAgentKit
+module_version: 0.0.1
+#swift_version: 4.2
+#podspec: MeasurementAgentKit/MeasurementAgentKit.podspec.json
+min_acl: private
+xcodebuild_arguments:
+#  - "-project"
+#  - "MeasurementAgentKit.xcodeproj"
+  - "-workspace"
+  - "MeasurementAgentKit.xcworkspace"
+  - "-scheme"
+  - "MeasurementAgentKit_iOS"
+#  - "-UseModernBuildSystem=NO"
