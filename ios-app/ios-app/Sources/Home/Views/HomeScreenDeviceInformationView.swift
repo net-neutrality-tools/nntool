@@ -1,4 +1,4 @@
-// ios-app: StatisticsViewController.swift, created on 19.03.19
+// ios-app: HomeScreenDeviceInformationView.swift, created on 26.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -19,9 +19,18 @@ import Foundation
 import UIKit
 
 ///
-class StatisticsViewController: UIViewController {
+@IBDesignable class HomeScreenDeviceInformationView: NibView {
 
-    override func viewDidLoad() {
-        embeddWebBrowserWithUrlString("https://net-neutrality.tools")
-    }
+    @IBOutlet private var cpuValueLabel: UILabel?
+    @IBOutlet private var memValueLabel: UILabel?
+
+    @IBOutlet private var ipv4ValueLabel: UILabel?
+    @IBOutlet private var ipv6ValueLabel: UILabel?
+
+    @IBOutlet private var trafficInValueLabel: UILabel?
+    @IBOutlet private var trafficOutValueLabel: UILabel?
+
+    @IBOutlet private var locationLabel: UILabel?
+    @IBOutlet private var locationInfoLabel: UILabel?
+
 }

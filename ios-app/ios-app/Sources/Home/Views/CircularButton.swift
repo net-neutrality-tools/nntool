@@ -1,4 +1,4 @@
-// ios-app: StatisticsViewController.swift, created on 19.03.19
+// ios-app: CircularButton.swift, created on 26.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -19,9 +19,36 @@ import Foundation
 import UIKit
 
 ///
-class StatisticsViewController: UIViewController {
+@IBDesignable class CircularButton: UIButton {
 
-    override func viewDidLoad() {
-        embeddWebBrowserWithUrlString("https://net-neutrality.tools")
+/*    ///
+    @IBInspectable var circular: Bool = true {
+        didSet {
+            layoutSubviews()
+        }
+    }
+
+    ///
+    @IBInspectable var cornerRadius: CGFloat = 0 {
+        didSet {
+            layoutSubviews()
+        }
+    }
+*/
+    ///
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        //if circular {
+            //layer.cornerRadius = max(bounds.height, bounds.width) / 2
+            layer.cornerRadius = bounds.height / 2
+        //} else {
+        //    layer.cornerRadius = cornerRadius
+        //}
+    }
+
+    ///
+    override func prepareForInterfaceBuilder() {
+        layoutSubviews()
     }
 }

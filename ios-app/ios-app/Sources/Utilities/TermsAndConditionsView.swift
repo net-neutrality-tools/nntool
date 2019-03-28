@@ -1,4 +1,4 @@
-// ios-app: StatisticsViewController.swift, created on 19.03.19
+// ios-app: TermsAndConditionsView.swift, created on 27.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -17,11 +17,30 @@
 
 import Foundation
 import UIKit
+import WebKit
 
 ///
-class StatisticsViewController: UIViewController {
+class TermsAndConditionsView: UIView {
 
-    override func viewDidLoad() {
-        embeddWebBrowserWithUrlString("https://net-neutrality.tools")
+    ///
+    private let webView = WKWebView()
+
+    ///
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    ///
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+
+    ///
+    private func setup() {
+        webView.loadHTMLString("<html><body>TODO: terms and conditions<body></html>", baseURL: nil)
+
+        insertContentView(content: webView)
     }
 }

@@ -1,6 +1,5 @@
-// ios-app: HomeViewController.swift, created on 19.03.19
 /*******************************************************************************
- * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
+ * Copyright 2017-2019 Benjamin Pucher (alladin-IT GmbH)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,22 +18,53 @@ import Foundation
 import UIKit
 
 ///
-class HomeViewController: CustomNavigationBarViewController {
+public enum GaugePhase: Int {
+    case initialize = 0
+    case ping
+    case down
+    case up
+}
+
+///
+protocol GaugeProtocol {
 
     ///
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    var currentPhase: GaugePhase { get set }
 
-        // view controllers in tabBar should not be customizable
-        tabBarController?.customizableViewControllers = []
-    }
+    ///
+    var progress: Double { get set }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    ///
+    var value: Double { get set }
 
-        // TODO: show terms and conditions on first launch
-        //performSegue(withIdentifier: "present_modally_terms_and_conditions", sender: self)
+    ///
+    var baseColor: UIColor { get set }
 
-        //performSegue(withIdentifier: "show_speed_measurement_view_controller", sender: self)
-    }
+    ///
+    var progressColor: UIColor { get set }
+
+    ///
+    var valueColor: UIColor { get set }
+
+    ///
+    var textColor: UIColor { get set }
+
+    ///
+    func initGauge()
+
+    ///
+    func update()
+}
+
+///
+protocol TwoArcGaugeProtocol: GaugeProtocol {
+
+    ///
+    var arcWidth: CGFloat { get set }
+
+    ///
+    var arcSpace: CGFloat { get set }
+
+    ///
+    var angle: CGFloat { get set }
 }

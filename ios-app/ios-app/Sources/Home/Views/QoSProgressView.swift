@@ -1,4 +1,4 @@
-// ios-app: StatisticsViewController.swift, created on 19.03.19
+// ios-app: QoSProgressView.swift, created on 27.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -19,9 +19,13 @@ import Foundation
 import UIKit
 
 ///
-class StatisticsViewController: UIViewController {
+@IBDesignable class QoSProgressView: UIProgressView {
 
-    override func viewDidLoad() {
-        embeddWebBrowserWithUrlString("https://net-neutrality.tools")
+    ///
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        clipsToBounds = true
+        layer.cornerRadius = frame.height / 2
     }
 }

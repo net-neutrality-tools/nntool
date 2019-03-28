@@ -21,6 +21,12 @@ import UIKit
 ///
 class InfoTableViewController: UITableViewController {
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
+
     ///
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)

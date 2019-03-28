@@ -1,4 +1,4 @@
-// ios-app: StatisticsViewController.swift, created on 19.03.19
+// ios-app: SpeedMeasurementBasicResultView.swift, created on 26.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -19,9 +19,6 @@ import Foundation
 import UIKit
 
 ///
-class StatisticsViewController: UIViewController {
+@IBDesignable class SpeedMeasurementBasicResultView: NibView {
 
-    override func viewDidLoad() {
-        embeddWebBrowserWithUrlString("https://net-neutrality.tools")
-    }
 }

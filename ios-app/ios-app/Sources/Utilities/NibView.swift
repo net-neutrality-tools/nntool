@@ -1,4 +1,4 @@
-// ios-app: StatisticsViewController.swift, created on 19.03.19
+// ios-app: NibView.swift, created on 26.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -19,9 +19,30 @@ import Foundation
 import UIKit
 
 ///
-class StatisticsViewController: UIViewController {
+class NibView: UIView {
 
-    override func viewDidLoad() {
-        embeddWebBrowserWithUrlString("https://net-neutrality.tools")
+    ///
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    ///
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+
+    ///
+    private func setup() {
+        guard let nibName = type(of: self).description().components(separatedBy: ".").last else {
+            return
+        }
+
+        let nib = UINib(nibName: nibName, bundle: Bundle(for: type(of: self)))
+
+        if let view = nib.instantiate(withOwner: self, options: nil).first as? UIView {
+            insertContentView(content: view)
+        }
     }
 }

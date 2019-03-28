@@ -1,4 +1,4 @@
-// ios-app: SpeedMeasurementViewController.swift, created on 25.03.19
+// ios-app: ProgressInfoBar.swift, created on 26.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -19,6 +19,12 @@ import Foundation
 import UIKit
 
 ///
-class SpeedMeasurementViewController: UIViewController {
-    
+@IBDesignable class ProgressInfoBar: NibView {
+
+    @IBOutlet private var leftIconLabel: UILabel?
+    @IBOutlet private var leftTextLabel: UILabel?
+
+    @IBOutlet private var rightIconLabel: UILabel?
+    @IBOutlet private var rightTextLabel: UILabel?
+
 }

@@ -1,4 +1,4 @@
-// ios-app: QoSMeasurementViewController.swift, created on 25.03.19
+// ios-app: QoSMeasurementViewController.swift, created on 27.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -18,6 +18,28 @@
 import Foundation
 import UIKit
 
-class QoSMeasurementViewController: UIViewController {
-    
+///
+class QoSMeasurementViewController: UITableViewController {
+
+    ///
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    ///
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 5
+    }
+
+    ///
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "qos_group_progress_cell", for: indexPath)
+
+        if let qosCell = cell as? QoSGroupProgressCell {
+            qosCell.progress = 0.2 * Float(indexPath.row)
+            qosCell.groupName = "Group \(indexPath.row)"
+        }
+
+        return cell
+    }
 }

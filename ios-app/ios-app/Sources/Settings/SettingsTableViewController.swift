@@ -23,9 +23,9 @@ class SettingsTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        
+
         cell.accessoryView = UISwitch()
-        
+
         return cell
     }
 }

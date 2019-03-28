@@ -23,27 +23,50 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
+        applyAppearance()
+
         return true
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        
+
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-        
+
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        
+
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        
+
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
-        
+
+    }
+
+    func applyAppearance() {
+        let tintColor = UIColor(rgb: 0x4D515D)
+
+        UINavigationBar.appearance().tintColor = tintColor
+        UITabBar.appearance().tintColor = tintColor
+
+        // Text color
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: tintColor]
+
+        let iconFontAttributes = [
+            NSAttributedString.Key.font: UIFont(name: "berec-icons", size: 32)!,
+            NSAttributedString.Key.foregroundColor: tintColor
+        ]
+
+        UIBarButtonItem.appearance().setTitleTextAttributes(iconFontAttributes, for: .normal)
+        //UIBarButtonItem.appearance().setTitleTextAttributes(iconFontAttributes, for: .selected)
+        UIBarButtonItem.appearance().setTitleTextAttributes(iconFontAttributes, for: .highlighted)
+        UIBarButtonItem.appearance().setTitleTextAttributes(iconFontAttributes, for: .disabled)
+        UIBarButtonItem.appearance().setTitleTextAttributes(iconFontAttributes, for: .focused)
+        //UIBarButtonItem.appearance().setTitleTextAttributes(iconFontAttributes, for: .application)
     }
 }

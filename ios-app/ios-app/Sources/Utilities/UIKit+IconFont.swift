@@ -1,6 +1,5 @@
-// ios-app: StatisticsViewController.swift, created on 19.03.19
 /*******************************************************************************
- * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
+ * Copyright 2017-2019 Benjamin Pucher (alladin-IT GmbH)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +18,46 @@ import Foundation
 import UIKit
 
 ///
-class StatisticsViewController: UIViewController {
+extension UILabel {
 
-    override func viewDidLoad() {
-        embeddWebBrowserWithUrlString("https://net-neutrality.tools")
+    ///
+    var icon: IconFont? {
+        get {
+            guard let t = text else {
+                return nil
+            }
+
+            return IconFont(rawValue: t)
+        }
+        set {
+            text = newValue?.rawValue
+        }
+    }
+}
+
+///
+extension UIButton {
+
+    ///
+    func setIcon(_ icon: IconFont, for state: UIControl.State) {
+        setTitle(icon.rawValue, for: state)
+    }
+}
+
+///
+extension UIBarButtonItem {
+
+    ///
+    var icon: IconFont? {
+        get {
+            guard let t = title else {
+                return nil
+            }
+
+            return IconFont(rawValue: t)
+        }
+        set {
+            title = newValue?.rawValue
+        }
     }
 }

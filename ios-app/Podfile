@@ -5,17 +5,14 @@ platform :ios, '10.0'
 use_frameworks!
 inhibit_all_warnings!
 
-# workaround for Xcode 10 bug (requires CocoaPods 1.6, see https://www.ralfebert.de/ios/blog/cocoapods-clean-input-output-files/)
-#install! 'cocoapods', :disable_input_output_paths => true
-
 abstract_target 'All' do
   pod 'SwiftGen', '~> 6.1.0'
   pod 'SwiftLint', '~> 0.31.0'
   pod 'BartyCrouch', '~> 3.13.0'
 
+  pod 'WebBrowser', '~> 0.1.4'
+  
   target 'ios-app' do
 
   end
-
 end
-

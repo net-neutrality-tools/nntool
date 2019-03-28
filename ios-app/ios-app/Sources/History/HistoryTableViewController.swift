@@ -20,5 +20,5 @@ import UIKit
 
 ///
 class HistoryTableViewController: UITableViewController {
-    
+
 }

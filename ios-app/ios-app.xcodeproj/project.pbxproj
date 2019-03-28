@@ -18,12 +18,38 @@
 		E0AF3DF122413BF200FDBFD1 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF022413BF200FDBFD1 /* SettingsTableViewController.swift */; };
 		E0AF3DF322413C1100FDBFD1 /* InfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF222413C1100FDBFD1 /* InfoTableViewController.swift */; };
 		E0AF3DF522413C2B00FDBFD1 /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF422413C2B00FDBFD1 /* StatisticsViewController.swift */; };
-		E0AF3DF822413C7200FDBFD1 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF722413C7200FDBFD1 /* HelpViewController.swift */; };
 		E0AF3DFA22413C9500FDBFD1 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF922413C9500FDBFD1 /* HistoryTableViewController.swift */; };
 		E0AF3DFD2241520A00FDBFD1 /* TermsAndConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DFC2241520A00FDBFD1 /* TermsAndConditionsViewController.swift */; };
-		E0B9A33522498127002AB640 /* SpeedMeasurementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A33422498127002AB640 /* SpeedMeasurementViewController.swift */; };
-		E0B9A3372249818D002AB640 /* QoSMeasurementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3362249818D002AB640 /* QoSMeasurementViewController.swift */; };
+		E0B9A33522498127002AB640 /* MeasurementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A33422498127002AB640 /* MeasurementViewController.swift */; };
 		E0B9A3392249826E002AB640 /* SpeedMeasurementGaugeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A3382249826E002AB640 /* SpeedMeasurementGaugeView.xib */; };
+		E0B9A33B224A5BCA002AB640 /* ProgressInfoBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A33A224A5BCA002AB640 /* ProgressInfoBar.xib */; };
+		E0B9A33E224A5C24002AB640 /* ProgressInfoBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A33D224A5C24002AB640 /* ProgressInfoBar.swift */; };
+		E0B9A341224A5F85002AB640 /* GaugeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A340224A5F85002AB640 /* GaugeProtocol.swift */; };
+		E0B9A343224A6017002AB640 /* AbstractTwoArcGaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A342224A6017002AB640 /* AbstractTwoArcGaugeView.swift */; };
+		E0B9A345224A61DB002AB640 /* SpeedMeasurementGauge.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A344224A61DB002AB640 /* SpeedMeasurementGauge.swift */; };
+		E0B9A347224A62A3002AB640 /* CoreGraphicsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A346224A62A3002AB640 /* CoreGraphicsHelper.swift */; };
+		E0B9A34A224A81CE002AB640 /* UIColor+RGB.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A349224A81CE002AB640 /* UIColor+RGB.swift */; };
+		E0B9A34C224A866C002AB640 /* CoreGraphicsHelper+DrawCenteredTextOnArc.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A34B224A866C002AB640 /* CoreGraphicsHelper+DrawCenteredTextOnArc.swift */; };
+		E0B9A34E224A8938002AB640 /* SpeedMeasurementGaugeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A34D224A8938002AB640 /* SpeedMeasurementGaugeView.swift */; };
+		E0B9A351224A8F65002AB640 /* NibView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A350224A8F65002AB640 /* NibView.swift */; };
+		E0B9A353224A906E002AB640 /* CircularButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A352224A906E002AB640 /* CircularButton.swift */; };
+		E0B9A355224AAC09002AB640 /* CustomNavigationBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A354224AAC09002AB640 /* CustomNavigationBarViewController.swift */; };
+		E0B9A357224AAD62002AB640 /* HomeScreenDeviceInformationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A356224AAD62002AB640 /* HomeScreenDeviceInformationView.xib */; };
+		E0B9A359224AB092002AB640 /* HomeScreenDeviceInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A358224AB092002AB640 /* HomeScreenDeviceInformationView.swift */; };
+		E0B9A35B224AB2FE002AB640 /* HomeScreenMeasurementPeerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A35A224AB2FE002AB640 /* HomeScreenMeasurementPeerSelectionView.swift */; };
+		E0B9A35D224AB335002AB640 /* HomeScreenMeasurementPeerSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A35C224AB335002AB640 /* HomeScreenMeasurementPeerSelectionView.xib */; };
+		E0B9A35F224AB835002AB640 /* SpeedMeasurementBasicResultView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A35E224AB835002AB640 /* SpeedMeasurementBasicResultView.xib */; };
+		E0B9A361224AB850002AB640 /* SpeedMeasurementBasicResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A360224AB850002AB640 /* SpeedMeasurementBasicResultView.swift */; };
+		E0B9A367224ABD25002AB640 /* QoSGroupProgressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A366224ABD25002AB640 /* QoSGroupProgressCell.swift */; };
+		E0B9A36B224B812A002AB640 /* TermsAndConditionsInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A36A224B812A002AB640 /* TermsAndConditionsInfoViewController.swift */; };
+		E0B9A36D224B9603002AB640 /* TermsAndConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A36C224B9603002AB640 /* TermsAndConditionsView.swift */; };
+		E0B9A36F224B96EF002AB640 /* UIView+InsertContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A36E224B96EF002AB640 /* UIView+InsertContentView.swift */; };
+		E0B9A371224B9A66002AB640 /* QoSMeasurementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A370224B9A66002AB640 /* QoSMeasurementViewController.swift */; };
+		E0B9A373224B9CD0002AB640 /* QoSProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A372224B9CD0002AB640 /* QoSProgressView.swift */; };
+		E0B9A375224C01FD002AB640 /* berec-icons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A374224C01FD002AB640 /* berec-icons.ttf */; };
+		E0B9A377224C06A9002AB640 /* IconFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A376224C06A9002AB640 /* IconFont.swift */; };
+		E0B9A379224C0802002AB640 /* UIKit+IconFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A378224C0802002AB640 /* UIKit+IconFont.swift */; };
+		E0B9A37D224C1349002AB640 /* UIViewController+WebBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A37C224C1349002AB640 /* UIViewController+WebBrowser.swift */; };
 		E860F5CA7C59FD468EEE2892 /* Pods_All_ios_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91316B94C5B307833124DBA0 /* Pods_All_ios_app.framework */; };
 /* End PBXBuildFile section */
 
@@ -65,12 +91,38 @@
 		E0AF3DF022413BF200FDBFD1 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		E0AF3DF222413C1100FDBFD1 /* InfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTableViewController.swift; sourceTree = "<group>"; };
 		E0AF3DF422413C2B00FDBFD1 /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
-		E0AF3DF722413C7200FDBFD1 /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		E0AF3DF922413C9500FDBFD1 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
 		E0AF3DFC2241520A00FDBFD1 /* TermsAndConditionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndConditionsViewController.swift; sourceTree = "<group>"; };
-		E0B9A33422498127002AB640 /* SpeedMeasurementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedMeasurementViewController.swift; sourceTree = "<group>"; };
-		E0B9A3362249818D002AB640 /* QoSMeasurementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSMeasurementViewController.swift; sourceTree = "<group>"; };
+		E0B9A33422498127002AB640 /* MeasurementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementViewController.swift; sourceTree = "<group>"; };
 		E0B9A3382249826E002AB640 /* SpeedMeasurementGaugeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SpeedMeasurementGaugeView.xib; sourceTree = "<group>"; };
+		E0B9A33A224A5BCA002AB640 /* ProgressInfoBar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProgressInfoBar.xib; sourceTree = "<group>"; };
+		E0B9A33D224A5C24002AB640 /* ProgressInfoBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressInfoBar.swift; sourceTree = "<group>"; };
+		E0B9A340224A5F85002AB640 /* GaugeProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GaugeProtocol.swift; sourceTree = "<group>"; };
+		E0B9A342224A6017002AB640 /* AbstractTwoArcGaugeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbstractTwoArcGaugeView.swift; sourceTree = "<group>"; };
+		E0B9A344224A61DB002AB640 /* SpeedMeasurementGauge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedMeasurementGauge.swift; sourceTree = "<group>"; };
+		E0B9A346224A62A3002AB640 /* CoreGraphicsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreGraphicsHelper.swift; sourceTree = "<group>"; };
+		E0B9A349224A81CE002AB640 /* UIColor+RGB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+RGB.swift"; sourceTree = "<group>"; };
+		E0B9A34B224A866C002AB640 /* CoreGraphicsHelper+DrawCenteredTextOnArc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreGraphicsHelper+DrawCenteredTextOnArc.swift"; sourceTree = "<group>"; };
+		E0B9A34D224A8938002AB640 /* SpeedMeasurementGaugeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedMeasurementGaugeView.swift; sourceTree = "<group>"; };
+		E0B9A350224A8F65002AB640 /* NibView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibView.swift; sourceTree = "<group>"; };
+		E0B9A352224A906E002AB640 /* CircularButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularButton.swift; sourceTree = "<group>"; };
+		E0B9A354224AAC09002AB640 /* CustomNavigationBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBarViewController.swift; sourceTree = "<group>"; };
+		E0B9A356224AAD62002AB640 /* HomeScreenDeviceInformationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeScreenDeviceInformationView.xib; sourceTree = "<group>"; };
+		E0B9A358224AB092002AB640 /* HomeScreenDeviceInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenDeviceInformationView.swift; sourceTree = "<group>"; };
+		E0B9A35A224AB2FE002AB640 /* HomeScreenMeasurementPeerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenMeasurementPeerSelectionView.swift; sourceTree = "<group>"; };
+		E0B9A35C224AB335002AB640 /* HomeScreenMeasurementPeerSelectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeScreenMeasurementPeerSelectionView.xib; sourceTree = "<group>"; };
+		E0B9A35E224AB835002AB640 /* SpeedMeasurementBasicResultView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SpeedMeasurementBasicResultView.xib; sourceTree = "<group>"; };
+		E0B9A360224AB850002AB640 /* SpeedMeasurementBasicResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedMeasurementBasicResultView.swift; sourceTree = "<group>"; };
+		E0B9A366224ABD25002AB640 /* QoSGroupProgressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSGroupProgressCell.swift; sourceTree = "<group>"; };
+		E0B9A36A224B812A002AB640 /* TermsAndConditionsInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndConditionsInfoViewController.swift; sourceTree = "<group>"; };
+		E0B9A36C224B9603002AB640 /* TermsAndConditionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndConditionsView.swift; sourceTree = "<group>"; };
+		E0B9A36E224B96EF002AB640 /* UIView+InsertContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+InsertContentView.swift"; sourceTree = "<group>"; };
+		E0B9A370224B9A66002AB640 /* QoSMeasurementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSMeasurementViewController.swift; sourceTree = "<group>"; };
+		E0B9A372224B9CD0002AB640 /* QoSProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSProgressView.swift; sourceTree = "<group>"; };
+		E0B9A374224C01FD002AB640 /* berec-icons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "berec-icons.ttf"; sourceTree = "<group>"; };
+		E0B9A376224C06A9002AB640 /* IconFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconFont.swift; sourceTree = "<group>"; };
+		E0B9A378224C0802002AB640 /* UIKit+IconFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+IconFont.swift"; sourceTree = "<group>"; };
+		E0B9A37C224C1349002AB640 /* UIViewController+WebBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+WebBrowser.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,9 +193,9 @@
 		E026A5802241271700BACDB5 /* ios-app */ = {
 			isa = PBXGroup;
 			children = (
+				E0B9A369224AD6E8002AB640 /* Configuration */,
 				E026A5B32241338800BACDB5 /* Sources */,
 				E026A5B42241339900BACDB5 /* Resources */,
-				E026A58F2241271900BACDB5 /* Info.plist */,
 			);
 			path = "ios-app";
 			sourceTree = "<group>";
@@ -178,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				E026A5812241271700BACDB5 /* AppDelegate.swift */,
+				E0B9A348224A81BB002AB640 /* Utilities */,
 				E026A5B72241347B00BACDB5 /* Home */,
 				E0AF3DEC22413BB900FDBFD1 /* History */,
 				E026A5B2224132B100BACDB5 /* Map */,
@@ -191,10 +244,15 @@
 		E026A5B42241339900BACDB5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				E026A5872241271700BACDB5 /* Main.storyboard */,
+				E0B9A374224C01FD002AB640 /* berec-icons.ttf */,
 				E026A58A2241271900BACDB5 /* Assets.xcassets */,
+				E026A5872241271700BACDB5 /* Main.storyboard */,
 				E026A58C2241271900BACDB5 /* LaunchScreen.storyboard */,
+				E0B9A33A224A5BCA002AB640 /* ProgressInfoBar.xib */,
 				E0B9A3382249826E002AB640 /* SpeedMeasurementGaugeView.xib */,
+				E0B9A356224AAD62002AB640 /* HomeScreenDeviceInformationView.xib */,
+				E0B9A35C224AB335002AB640 /* HomeScreenMeasurementPeerSelectionView.xib */,
+				E0B9A35E224AB835002AB640 /* SpeedMeasurementBasicResultView.xib */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -202,10 +260,11 @@
 		E026A5B72241347B00BACDB5 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				E0B9A354224AAC09002AB640 /* CustomNavigationBarViewController.swift */,
 				E0AF3DEA22413B9800FDBFD1 /* HomeViewController.swift */,
+				E0B9A33C224A5C16002AB640 /* Views */,
 				E0B9A33322498110002AB640 /* Measurement */,
 				E0AF3DFB224151EE00FDBFD1 /* TermsAndConditions */,
-				E0AF3DF622413C5100FDBFD1 /* Help */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -230,6 +289,7 @@
 			isa = PBXGroup;
 			children = (
 				E0AF3DF222413C1100FDBFD1 /* InfoTableViewController.swift */,
+				E0B9A36A224B812A002AB640 /* TermsAndConditionsInfoViewController.swift */,
 			);
 			path = Info;
 			sourceTree = "<group>";
@@ -240,14 +300,6 @@
 				E0AF3DF022413BF200FDBFD1 /* SettingsTableViewController.swift */,
 			);
 			path = Settings;
-			sourceTree = "<group>";
-		};
-		E0AF3DF622413C5100FDBFD1 /* Help */ = {
-			isa = PBXGroup;
-			children = (
-				E0AF3DF722413C7200FDBFD1 /* HelpViewController.swift */,
-			);
-			path = Help;
 			sourceTree = "<group>";
 		};
 		E0AF3DFB224151EE00FDBFD1 /* TermsAndConditions */ = {
@@ -261,10 +313,60 @@
 		E0B9A33322498110002AB640 /* Measurement */ = {
 			isa = PBXGroup;
 			children = (
-				E0B9A33422498127002AB640 /* SpeedMeasurementViewController.swift */,
-				E0B9A3362249818D002AB640 /* QoSMeasurementViewController.swift */,
+				E0B9A33422498127002AB640 /* MeasurementViewController.swift */,
+				E0B9A370224B9A66002AB640 /* QoSMeasurementViewController.swift */,
 			);
 			path = Measurement;
+			sourceTree = "<group>";
+		};
+		E0B9A33C224A5C16002AB640 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A33F224A5F5E002AB640 /* Gauge */,
+				E0B9A33D224A5C24002AB640 /* ProgressInfoBar.swift */,
+				E0B9A34D224A8938002AB640 /* SpeedMeasurementGaugeView.swift */,
+				E0B9A352224A906E002AB640 /* CircularButton.swift */,
+				E0B9A358224AB092002AB640 /* HomeScreenDeviceInformationView.swift */,
+				E0B9A35A224AB2FE002AB640 /* HomeScreenMeasurementPeerSelectionView.swift */,
+				E0B9A360224AB850002AB640 /* SpeedMeasurementBasicResultView.swift */,
+				E0B9A372224B9CD0002AB640 /* QoSProgressView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E0B9A33F224A5F5E002AB640 /* Gauge */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A340224A5F85002AB640 /* GaugeProtocol.swift */,
+				E0B9A342224A6017002AB640 /* AbstractTwoArcGaugeView.swift */,
+				E0B9A344224A61DB002AB640 /* SpeedMeasurementGauge.swift */,
+				E0B9A346224A62A3002AB640 /* CoreGraphicsHelper.swift */,
+				E0B9A34B224A866C002AB640 /* CoreGraphicsHelper+DrawCenteredTextOnArc.swift */,
+				E0B9A366224ABD25002AB640 /* QoSGroupProgressCell.swift */,
+			);
+			path = Gauge;
+			sourceTree = "<group>";
+		};
+		E0B9A348224A81BB002AB640 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A349224A81CE002AB640 /* UIColor+RGB.swift */,
+				E0B9A350224A8F65002AB640 /* NibView.swift */,
+				E0B9A36C224B9603002AB640 /* TermsAndConditionsView.swift */,
+				E0B9A36E224B96EF002AB640 /* UIView+InsertContentView.swift */,
+				E0B9A376224C06A9002AB640 /* IconFont.swift */,
+				E0B9A378224C0802002AB640 /* UIKit+IconFont.swift */,
+				E0B9A37C224C1349002AB640 /* UIViewController+WebBrowser.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		E0B9A369224AD6E8002AB640 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				E026A58F2241271900BACDB5 /* Info.plist */,
+			);
+			path = Configuration;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -279,6 +381,7 @@
 				E026A57B2241271700BACDB5 /* Frameworks */,
 				E026A57C2241271700BACDB5 /* Resources */,
 				E0B9A33222495BBB002AB640 /* Run swiftlint */,
+				4FCF19EEF58E6B3991550D89 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -373,10 +476,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E0B9A357224AAD62002AB640 /* HomeScreenDeviceInformationView.xib in Resources */,
 				E026A58E2241271900BACDB5 /* LaunchScreen.storyboard in Resources */,
+				E0B9A35D224AB335002AB640 /* HomeScreenMeasurementPeerSelectionView.xib in Resources */,
+				E0B9A33B224A5BCA002AB640 /* ProgressInfoBar.xib in Resources */,
 				E0B9A3392249826E002AB640 /* SpeedMeasurementGaugeView.xib in Resources */,
 				E026A58B2241271900BACDB5 /* Assets.xcassets in Resources */,
 				E026A5892241271700BACDB5 /* Main.storyboard in Resources */,
+				E0B9A35F224AB835002AB640 /* SpeedMeasurementBasicResultView.xib in Resources */,
+				E0B9A375224C01FD002AB640 /* berec-icons.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,6 +527,28 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		4FCF19EEF58E6B3991550D89 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-All-ios-app/Pods-All-ios-app-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/WebBrowser/WebBrowser.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WebBrowser.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-All-ios-app/Pods-All-ios-app-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		E0B9A33222495BBB002AB640 /* Run swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -444,16 +574,37 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E0B9A3372249818D002AB640 /* QoSMeasurementViewController.swift in Sources */,
+				E0B9A379224C0802002AB640 /* UIKit+IconFont.swift in Sources */,
 				E0AF3DEB22413B9800FDBFD1 /* HomeViewController.swift in Sources */,
+				E0B9A373224B9CD0002AB640 /* QoSProgressView.swift in Sources */,
+				E0B9A345224A61DB002AB640 /* SpeedMeasurementGauge.swift in Sources */,
+				E0B9A359224AB092002AB640 /* HomeScreenDeviceInformationView.swift in Sources */,
+				E0B9A343224A6017002AB640 /* AbstractTwoArcGaugeView.swift in Sources */,
+				E0B9A351224A8F65002AB640 /* NibView.swift in Sources */,
 				E026A5822241271700BACDB5 /* AppDelegate.swift in Sources */,
+				E0B9A36B224B812A002AB640 /* TermsAndConditionsInfoViewController.swift in Sources */,
+				E0B9A371224B9A66002AB640 /* QoSMeasurementViewController.swift in Sources */,
 				E0AF3DFA22413C9500FDBFD1 /* HistoryTableViewController.swift in Sources */,
+				E0B9A35B224AB2FE002AB640 /* HomeScreenMeasurementPeerSelectionView.swift in Sources */,
+				E0B9A34A224A81CE002AB640 /* UIColor+RGB.swift in Sources */,
 				E0AF3DF522413C2B00FDBFD1 /* StatisticsViewController.swift in Sources */,
-				E0AF3DF822413C7200FDBFD1 /* HelpViewController.swift in Sources */,
+				E0B9A36D224B9603002AB640 /* TermsAndConditionsView.swift in Sources */,
+				E0B9A353224A906E002AB640 /* CircularButton.swift in Sources */,
+				E0B9A361224AB850002AB640 /* SpeedMeasurementBasicResultView.swift in Sources */,
+				E0B9A34E224A8938002AB640 /* SpeedMeasurementGaugeView.swift in Sources */,
+				E0B9A36F224B96EF002AB640 /* UIView+InsertContentView.swift in Sources */,
 				E0AF3DFD2241520A00FDBFD1 /* TermsAndConditionsViewController.swift in Sources */,
+				E0B9A341224A5F85002AB640 /* GaugeProtocol.swift in Sources */,
 				E0AF3DF322413C1100FDBFD1 /* InfoTableViewController.swift in Sources */,
-				E0B9A33522498127002AB640 /* SpeedMeasurementViewController.swift in Sources */,
+				E0B9A367224ABD25002AB640 /* QoSGroupProgressCell.swift in Sources */,
+				E0B9A37D224C1349002AB640 /* UIViewController+WebBrowser.swift in Sources */,
+				E0B9A34C224A866C002AB640 /* CoreGraphicsHelper+DrawCenteredTextOnArc.swift in Sources */,
+				E0B9A33522498127002AB640 /* MeasurementViewController.swift in Sources */,
 				E0AF3DE922413B7C00FDBFD1 /* MapViewController.swift in Sources */,
+				E0B9A347224A62A3002AB640 /* CoreGraphicsHelper.swift in Sources */,
+				E0B9A377224C06A9002AB640 /* IconFont.swift in Sources */,
+				E0B9A355224AAC09002AB640 /* CustomNavigationBarViewController.swift in Sources */,
+				E0B9A33E224A5C24002AB640 /* ProgressInfoBar.swift in Sources */,
 				E0AF3DF122413BF200FDBFD1 /* SettingsTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -633,7 +784,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = "ios-app/Info.plist";
+				INFOPLIST_FILE = "ios-app/Configuration/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -651,7 +802,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = "ios-app/Info.plist";
+				INFOPLIST_FILE = "ios-app/Configuration/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

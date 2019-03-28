@@ -1,4 +1,4 @@
-// ios-app: StatisticsViewController.swift, created on 19.03.19
+// ios-app: UIView+InsertContentView.swift, created on 27.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -19,9 +19,20 @@ import Foundation
 import UIKit
 
 ///
-class StatisticsViewController: UIViewController {
+extension UIView {
 
-    override func viewDidLoad() {
-        embeddWebBrowserWithUrlString("https://net-neutrality.tools")
+    ///
+    func insertContentView(content: UIView) {
+        content.frame = bounds
+        content.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(content)
+
+        NSLayoutConstraint.activate([
+            content.topAnchor.constraint(equalTo: self.topAnchor),
+            content.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            content.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            content.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+        ])
     }
 }

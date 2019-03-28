@@ -23,17 +23,18 @@ import WebKit
 class TermsAndConditionsViewController: UIViewController {
 
     ///
-    @IBOutlet private var webView: UIWebView?
-
     override func viewDidLoad() {
+        super.viewDidLoad()
+
         // TODO: wait until webview did finish loading to make decline/agree touchable
-        webView?.loadHTMLString("<html><body>TODO: terms and conditions<body></html>", baseURL: nil)
     }
-    
+
+    ///
     @IBAction func agree() {
         dismiss(animated: true, completion: nil)
     }
-    
+
+    ///
     @IBAction func decline() {
         exit(EXIT_FAILURE)
     }

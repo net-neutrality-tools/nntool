@@ -2,23 +2,27 @@ PODS:
   - BartyCrouch (3.13.0)
   - SwiftGen (6.1.0)
   - SwiftLint (0.31.0)
+  - WebBrowser (0.1.4)
 
 DEPENDENCIES:
   - BartyCrouch (~> 3.13.0)
   - SwiftGen (~> 6.1.0)
   - SwiftLint (~> 0.31.0)
+  - WebBrowser (~> 0.1.4)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - BartyCrouch
     - SwiftGen
     - SwiftLint
+    - WebBrowser
 
 SPEC CHECKSUMS:
   BartyCrouch: 69e5e6ec67e77951dc1c22aa48abbf05d175b81c
   SwiftGen: f872ca75cbd17bf7103c17f13dcfa0d9a15667b0
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
+  WebBrowser: 72ae8c342cc399d0cde0299ea297652d7e108336
 
-PODFILE CHECKSUM: e502ee3da2473dda564d73651aa62af8b79128f4
+PODFILE CHECKSUM: 47c55ef115008f7eebdcb3bdcf2589f629d492c3
 
 COCOAPODS: 1.6.1

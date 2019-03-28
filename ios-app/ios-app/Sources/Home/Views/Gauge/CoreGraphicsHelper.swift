@@ -1,4 +1,4 @@
-// ios-app: StatisticsViewController.swift, created on 19.03.19
+// ios-app: CoreGraphicsHelper.swift, created on 26.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -19,9 +19,18 @@ import Foundation
 import UIKit
 
 ///
-class StatisticsViewController: UIViewController {
+class CoreGraphicsHelper {
 
-    override func viewDidLoad() {
-        embeddWebBrowserWithUrlString("https://net-neutrality.tools")
+    ///
+    class func getPointOnCircle(radius: CGFloat, center: CGPoint, phi: CGFloat) -> CGPoint {
+        let x = radius * cos(phi) + center.x
+        let y = radius * sin(phi) + center.y
+
+        return CGPoint(x: x, y: y)
+    }
+
+    ///
+    class func deg2rad(_ value: CGFloat) -> CGFloat {
+        return value * .pi / 180.0
     }
 }

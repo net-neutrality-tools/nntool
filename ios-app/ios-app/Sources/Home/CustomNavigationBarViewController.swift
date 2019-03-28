@@ -1,4 +1,4 @@
-// ios-app: HomeViewController.swift, created on 19.03.19
+// ios-app: CustomNavigationBarViewController.swift, created on 26.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -19,22 +19,33 @@ import Foundation
 import UIKit
 
 ///
-class HomeViewController: CustomNavigationBarViewController {
+class CustomNavigationBarViewController: UIViewController {
+
+    ///
+    @IBOutlet var leftBarItem: UIBarButtonItem?
+
+    ///
+    @IBOutlet var rightBarItem: UIBarButtonItem?
 
     ///
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // view controllers in tabBar should not be customizable
-        tabBarController?.customizableViewControllers = []
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    ///
+    func hideNavigationItems() {
+        navigationItem.setLeftBarButton(nil, animated: true)
+        navigationItem.setRightBarButton(nil, animated: true)
+        navigationItem.setHidesBackButton(true, animated: false)
+    }
 
-        // TODO: show terms and conditions on first launch
-        //performSegue(withIdentifier: "present_modally_terms_and_conditions", sender: self)
-
-        //performSegue(withIdentifier: "show_speed_measurement_view_controller", sender: self)
+    ///
+    func showNavigationItems() {
+        navigationItem.setLeftBarButton(leftBarItem, animated: true)
+        navigationItem.setRightBarButton(rightBarItem, animated: true)
+        navigationItem.setHidesBackButton(false, animated: false)
     }
 }

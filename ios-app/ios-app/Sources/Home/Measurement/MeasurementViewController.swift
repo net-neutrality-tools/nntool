@@ -1,4 +1,4 @@
-// ios-app: StatisticsViewController.swift, created on 19.03.19
+// ios-app: MeasurementViewController.swift, created on 25.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -19,9 +19,19 @@ import Foundation
 import UIKit
 
 ///
-class StatisticsViewController: UIViewController {
+class MeasurementViewController: CustomNavigationBarViewController {
 
+    // TODO: QoS view controller is a child view controller
+
+    @IBOutlet private var qosMeasurementViewController: QoSMeasurementViewController?
+
+    ///
     override func viewDidLoad() {
-        embeddWebBrowserWithUrlString("https://net-neutrality.tools")
+        super.viewDidLoad()
+
+        hideNavigationItems()
+
+        // TODO: disable naviation during measurement
+        //tabBarController?.tabBar.items?.forEach { $0.isEnabled = false }
     }
 }

@@ -1,4 +1,4 @@
-// ios-app: HelpViewController.swift, created on 19.03.19
+// ios-app: QoSGroupProgressCell.swift, created on 26.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -18,6 +18,32 @@
 import Foundation
 import UIKit
 
-class HelpViewController: UIViewController {
-    
+///
+class QoSGroupProgressCell: UITableViewCell {
+
+    ///
+    @IBOutlet private var progressView: QoSProgressView?
+
+    ///
+    @IBOutlet private var groupNameLabel: UILabel?
+
+    ///
+    var progress: Float {
+        get {
+            return progressView?.progress ?? 0
+        }
+        set {
+            progressView?.progress = newValue
+        }
+    }
+
+    ///
+    var groupName: String? {
+        get {
+            return groupNameLabel?.text
+        }
+        set {
+            groupNameLabel?.text = newValue
+        }
+    }
 }
