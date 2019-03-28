@@ -2,6 +2,8 @@ package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.Setti
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
@@ -26,6 +29,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.Measur
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationQoSRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationSpeedRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportModelMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.MeasurementAgentMapper;
@@ -62,6 +66,9 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private SettingsResponseMapper settingsResponseMapper;
+	
+	@Autowired
+	private FullMeasurementResponseMapper fullMeasurementResponseMapper;
 	
 	@Autowired
 	private LmapTaskMapper lmapTaskMapper;
@@ -133,10 +140,10 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	@Override
-	public boolean isValidMeasurementAgentUuid(String measurementUuid) throws StorageServiceException {
+	public boolean isValidMeasurementAgentUuid(String measurementAgentUuid) throws StorageServiceException {
 		final MeasurementAgent agent;
 		try {
-			agent = measurementAgentRepository.findByUuid(measurementUuid);
+			agent = measurementAgentRepository.findByUuid(measurementAgentUuid);
 		} catch (Exception ex) {
 			throw new StorageServiceException(ex);
 		}
@@ -148,6 +155,7 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Override
 	public LmapTaskDto getTaskDto(MeasurementTypeDto type, String version) {
+		//TODO: pass client information here to grab settings for android, ios, ...
 		TaskConfiguration taskConfig = null;
 		try {
 			switch (type) {
@@ -179,5 +187,22 @@ public class CouchDbStorageService implements StorageService {
 		
 		return settingsResponseMapper.map(settings);
 		
+	}
+	
+	@Override
+	public FullMeasurementResponse getMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid,
+			String measurementUuid) throws StorageServiceException {
+		final Measurement measurement;
+		try {
+			measurement = measurementRepository.findByUuid(measurementUuid);
+		} catch (Exception ex) {
+			throw new StorageServiceException(ex);
+		}
+		if (measurement == null || measurement.getAgentInfo() == null || measurementAgentUuid == null
+				|| !measurementAgentUuid.equals(measurement.getAgentInfo().getUuid())) {
+			throw new StorageServiceException("No measurement for agent and uuid found.");
+		}
+		
+		return fullMeasurementResponseMapper.map(measurement);
 	}
 }

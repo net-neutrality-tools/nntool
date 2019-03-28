@@ -1,11 +1,29 @@
 package at.alladin.nettest.shared.server.storage.couchdb.mapper.v1;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.common.LmapOptionDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapResultDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.QoSMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.TaskConfiguration;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.TaskConfiguration.Option;
 
 /**
  * 
@@ -107,8 +125,46 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		@Mapping(target = "networkInfo.networkPointsInTime", ignore = true), // TODO
 		
 		@Mapping(source = "timeBasedResult.cellLocations", target = "networkInfo.cellLocationInfo.cellLocations"),
-		@Mapping(source = "timeBasedResult.signals", target = "networkInfo.signalInfo.signals")
+		@Mapping(source = "timeBasedResult.signals", target = "networkInfo.signalInfo.signals"),
+		@Mapping(expression = "java(parseMeasurements(lmapReportDto))", target = "measurements"),
 	})
 	Measurement map(LmapReportDto lmapReportDto);
+	
+	@Mappings ({
+		@Mapping(source="relativeStartTimeNs", target="measurementTime.relativeStartTimeNs"),
+		@Mapping(source="relativeEndTimeNs", target="measurementTime.relativeEndTimeNs"),
+		@Mapping(source="downloadRawData", target="speedRawData.download"),
+		@Mapping(source="uploadRawData", target="speedRawData.upload"),
+		@Mapping(source="status", target="statusInfo")
+	})
+	SpeedMeasurement map (SpeedMeasurementResult subMeasurementResult);
+	
+	@Mappings ({
+		@Mapping(source="relativeStartTimeNs", target="measurementTime.relativeStartTimeNs"),
+		@Mapping(source="relativeEndTimeNs", target="measurementTime.relativeEndTimeNs"),
+		@Mapping(source="status", target="statusInfo"),
+		@Mapping(source="objectiveResults", target="results")
+	})
+	QoSMeasurement map (QoSMeasurementResult subMeasurementResult);
+	
+	default Map<MeasurementTypeDto, SubMeasurement> parseMeasurements (LmapReportDto lmapReportDto) {
+		Map<MeasurementTypeDto, SubMeasurement> ret = new HashMap<>();
+		
+		for (LmapResultDto<? extends SubMeasurementResult> resList : lmapReportDto.getResults()) {
+			for (SubMeasurementResult res : resList.getResults()) {
+				if (res instanceof SpeedMeasurementResult) {
+					ret.put(MeasurementTypeDto.SPEED, this.map((SpeedMeasurementResult) res));
+				} else if (res instanceof QoSMeasurementResult) {
+					ret.put(MeasurementTypeDto.QOS, this.map((QoSMeasurementResult) res));
+				}
+			}
+		}
+		
+		return ret;
+	}
+	
+	default QoSResult parseQoSResult (Map<String, Object> resultMap) {
+		return null;
+	}
 	
 }

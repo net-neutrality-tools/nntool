@@ -100,11 +100,11 @@ public class MeasurementAgentResultResource {
 	public ResponseEntity<ApiResponse<FullMeasurementResponse>> getMeasurement(
 		@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid,
 		@ApiParam(value = "The measurement UUID", required = true) @PathVariable String uuid,
-		@ApiParam(value = "Set of included measurement types (e.g. SPEED, TCP_PORT, VOIP, ...). If nothing is provided all measurement types are returned") @RequestParam(name = "include") Set<GeneralMeasurementTypeDto> includedMeasurementTypes) {
+		@ApiParam(value = "Set of included measurement types (e.g. SPEED, TCP_PORT, VOIP, ...). If nothing is provided all measurement types are returned") @RequestParam(required = false, name = "include") Set<GeneralMeasurementTypeDto> includedMeasurementTypes) {
 
 		logger.debug("{}", includedMeasurementTypes);
-
-		return ResponseEntity.ok(null);
+		
+		return ResponseHelper.ok(storageService.getMeasurementByAgentAndMeasurementUuid(agentUuid, uuid));
 	}
 
 	/**

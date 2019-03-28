@@ -1,8 +1,5 @@
 package at.alladin.nettest.service.controller.web.api.v1;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,9 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import at.alladin.nettest.service.controller.service.MeasurementConfigurationService;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapEventDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapEventTypeDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapEventTypeDto.EventTypeEnum;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import io.swagger.annotations.ApiParam;
@@ -76,7 +70,6 @@ public class MeasurementInitiationResource {
 		}
 		
 		// TODO: load balancing
-		
 		final LmapControlDto lmapControlDto = measurementConfigurationService.getLmapControlDtoForCapabilities(measurementInitiationRequest.getCapabilities());
 		lmapControlDto.setAdditionalRequestInfo(measurementInitiationRequest.getAdditionalRequestInfo());
 		lmapControlDto.setAgent(measurementInitiationRequest.getAgent());
