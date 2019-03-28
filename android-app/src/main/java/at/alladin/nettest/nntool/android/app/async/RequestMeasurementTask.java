@@ -21,11 +21,11 @@ public class RequestMeasurementTask extends AsyncTask<Void, Void, LmapControlDto
 
     private final Context context;
 
-    private final OnTaskFinishedCallback<List<TaskDesc>> callback;
+    private final OnTaskFinishedCallback<LmapUtil.LmapTaskDescWrapper> callback;
 
     private BlockingProgressDialog progressDialog;
 
-    public RequestMeasurementTask (final Context context, final OnTaskFinishedCallback<List<TaskDesc>> callback) {
+    public RequestMeasurementTask (final Context context, final OnTaskFinishedCallback<LmapUtil.LmapTaskDescWrapper> callback) {
         this.context = context;
         this.callback = callback;
     }
@@ -48,9 +48,9 @@ public class RequestMeasurementTask extends AsyncTask<Void, Void, LmapControlDto
 
     @Override
     protected void onPostExecute(LmapControlDto result) {
-        final List<TaskDesc> taskDescList = LmapUtil.extractQosTaskDescList(result);
+        final LmapUtil.LmapTaskDescWrapper taskDescWrapper = LmapUtil.extractQosTaskDescList(result);
         if (callback != null) {
-            callback.onTaskFinished(taskDescList);
+            callback.onTaskFinished(taskDescWrapper);
         }
 
         if (progressDialog != null) {

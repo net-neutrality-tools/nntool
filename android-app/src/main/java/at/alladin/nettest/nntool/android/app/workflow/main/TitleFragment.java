@@ -15,6 +15,7 @@ import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
+import at.alladin.nettest.nntool.android.app.util.LmapUtil;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
 import at.alladin.nntool.client.v2.task.TaskDesc;
@@ -43,12 +44,15 @@ public class TitleFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 final RequestMeasurementTask task = new RequestMeasurementTask(getContext(),
-                        new OnTaskFinishedCallback<List<TaskDesc>>() {
+                        new OnTaskFinishedCallback<LmapUtil.LmapTaskDescWrapper>() {
                             @Override
-                            public void onTaskFinished(List<TaskDesc> result) {
-                                if (result != null && result.size() > 0) {
+                            public void onTaskFinished(LmapUtil.LmapTaskDescWrapper result) {
+                                if (result != null && result.getTaskDescList() != null && result.getTaskDescList().size() > 0) {
                                     final Bundle bundle = new Bundle();
-                                    bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_DESK_LIST, (Serializable) result);
+                                    bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_DESK_LIST,
+                                            (Serializable) result.getTaskDescList());
+                                    bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_COLLECTOR_URL,
+                                            result.getCollectorUrl());
                                     ((MainActivity) getActivity()).startMeasurement(MeasurementType.QOS, bundle);
                                 }
                             }

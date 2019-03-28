@@ -5,6 +5,8 @@ import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.text.TextUtils;
 
+import org.joda.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -20,8 +22,13 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapAge
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapResultDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.QoSMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
+import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
+import at.alladin.nntool.client.v2.task.result.QoSTestResult;
 import okhttp3.Request;
 
 /**
@@ -95,5 +102,24 @@ public class RequestUtil {
         capabilityTaskDtoList.add(capabilityTask);
 
         return request;
+    }
+
+    public static LmapReportDto prepareLmapReportForQosMeasurement(final QoSResultCollector qoSResultCollector, final Context context) {
+        final LmapReportDto report = new LmapReportDto();
+
+        report.setAdditionalRequestInfo(prepareApiRequestInfo(context));
+        report.setAgentId(report.getAdditionalRequestInfo().getAgentId());
+        if (qoSResultCollector.getResults() != null) {
+            final QoSMeasurementResult qoSMeasurementResult = new QoSMeasurementResult();
+            final LmapResultDto<QoSMeasurementResult> lmapResult = new LmapResultDto<>();
+            report.setResults(new ArrayList<>());
+            report.getResults().add(lmapResult);
+            qoSMeasurementResult.setObjectiveResults(new ArrayList<>());
+            for (final QoSTestResult qosResult : qoSResultCollector.getResults()) {
+                qoSMeasurementResult.getObjectiveResults().add(qosResult.getResultMap());
+            }
+        }
+
+        return report;
     }
 }

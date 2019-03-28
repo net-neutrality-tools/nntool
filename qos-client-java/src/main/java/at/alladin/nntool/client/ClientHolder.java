@@ -112,6 +112,8 @@ public class ClientHolder
     private TrafficService trafficService;
     
     private InformationCollectorTool informationCollectorTool;
+
+    private String collectorUrl;
     
     public static ExecutorService getCommonThreadPool()
     {
@@ -126,12 +128,13 @@ public class ClientHolder
         return new ClientHolder(host, controlConnectionPort, tcpTestPorts, udpTestPorts, echoServiceHost, echoServiceTcpPorts, echoServiceUdpPorts);
     }
 
-    public static ClientHolder getInstance(final List<TaskDesc> taskDescList) {
-        return new ClientHolder(taskDescList);
+    public static ClientHolder getInstance(final List<TaskDesc> taskDescList, final String collectorUrl) {
+        return new ClientHolder(taskDescList, collectorUrl);
     }
 
-    private ClientHolder(final List<TaskDesc> taskDescList) {
+    private ClientHolder(final List<TaskDesc> taskDescList, final String collectorUrl) {
         this.taskDescList = taskDescList;
+        this.collectorUrl = collectorUrl;
     }
 
     private ClientHolder(final String host, final String controlConnectionPort, final int[] tcpTestPorts, final int[] udpTestPorts,
@@ -213,7 +216,15 @@ public class ClientHolder
 
         }
     }
-    
+
+    public String getCollectorUrl() {
+        return collectorUrl;
+    }
+
+    public void setCollectorUrl(String collectorUrl) {
+        this.collectorUrl = collectorUrl;
+    }
+
     public void setTrafficService(TrafficService trafficService) {
     	this.trafficService = trafficService;
     }

@@ -33,6 +33,8 @@ public class MeasurementService extends Service {
 
     public static String EXTRAS_KEY_QOS_TASK_DESK_LIST = "qos_task_desk_list";
 
+    public static String EXTRAS_KEY_QOS_TASK_COLLECTOR_URL = "qos_task_collector_url";
+
     final MeasurementServiceBinder binder = new MeasurementServiceBinder();
 
     final AtomicBoolean isBound = new AtomicBoolean(false);
@@ -79,7 +81,7 @@ public class MeasurementService extends Service {
         //TODO: speed measurement
     }
 
-    public void startQosMeasurement(final List<TaskDesc> taskDescList) {
+    public void startQosMeasurement(final Bundle options) {
         //TODO: remove & replace
         /*
         ClientHolder client = ClientHolder.getInstance(getResources().getString(R.string.default_qos_control_host),
@@ -91,7 +93,9 @@ public class MeasurementService extends Service {
                 getResources().getIntArray(R.array.qos_echo_service_udp_ports));
                 */
 
-        final ClientHolder client = ClientHolder.getInstance(taskDescList);
+        final List<TaskDesc> taskDescList = (List<TaskDesc>) options.getSerializable(EXTRAS_KEY_QOS_TASK_DESK_LIST);
+        final String collectorUrl = options.getString(EXTRAS_KEY_QOS_TASK_COLLECTOR_URL);
+        final ClientHolder client = ClientHolder.getInstance(taskDescList, collectorUrl);
         qosMeasurementClient = new QoSMeasurementClientAndroid(client, getApplicationContext());
         qosMeasurementClient.start();
     }
@@ -108,9 +112,7 @@ public class MeasurementService extends Service {
                 return START_STICKY;
             }
             else if (ACTION_START_QOS_MEASUREMENT.equals(intent.getAction())) {
-                final Bundle options = intent.getExtras();
-                final List<TaskDesc> taskDescList = (List<TaskDesc>) options.getSerializable(EXTRAS_KEY_QOS_TASK_DESK_LIST);
-                startQosMeasurement(taskDescList);
+                startQosMeasurement(intent.getExtras());
                 return START_STICKY;
             }
         }

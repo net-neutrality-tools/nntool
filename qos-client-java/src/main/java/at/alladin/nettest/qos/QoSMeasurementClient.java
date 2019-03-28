@@ -48,6 +48,10 @@ public class QoSMeasurementClient {
         enabledTypes = new ArrayList<>(Arrays.asList(QosMeasurementType.values()));
     }
 
+    public QoSResultCollector getQosResult() {
+        return qosResult;
+    }
+
     /**
      * Start execution of the QosMeasurement Client
      * Will execute all tests that were previously set via setEnabledTypes

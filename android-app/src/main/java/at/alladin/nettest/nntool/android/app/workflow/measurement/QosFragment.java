@@ -20,11 +20,14 @@ import java.util.Map;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.async.SendReportTask;
+import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.view.TopProgressBarView;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.QoSTestEnum;
+import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
@@ -138,7 +141,15 @@ public class QosFragment extends Fragment implements ServiceConnection {
     final Runnable showResultsRunnable = new Runnable() {
         @Override
         public void run() {
-            ((MainActivity) getActivity()).navigateTo(WorkflowTarget.TITLE);
+            final QoSResultCollector qoSResultCollector = measurementService.getQosMeasurementClient().getQosResult();
+            final String collectorUrl = measurementService.getQosMeasurementClient().getCollectorUrl();
+            final SendReportTask task = new SendReportTask(getContext(),
+                    RequestUtil.prepareLmapReportForQosMeasurement(qoSResultCollector, getContext()),
+                    collectorUrl, result -> {
+                        System.out.println(result);
+                        ((MainActivity) getActivity()).navigateTo(WorkflowTarget.TITLE);
+                    });
+            task.execute();
         }
     };
 

@@ -1,5 +1,7 @@
 package at.alladin.nettest.nntool.android.app.util;
 
+import android.content.Context;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -11,13 +13,16 @@ import java.util.Map;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.common.LmapOptionDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.QoSMeasurementTypeParameters;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.v2.task.TaskDesc;
+import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 
 /**
+ * TODO: move this class to somewhere else (nettest-shared?)
  * @author Lukasz Budryk (lb@alladin.at)
  */
 public class LmapUtil {
@@ -25,16 +30,40 @@ public class LmapUtil {
     public enum LmapQosOption {
         SERVER_ADDR,
         SERVER_PORT,
-        ENCRYPTION
+        ENCRYPTION,
+        RESULT_COLLECTOR_BASE_URL
     }
 
-    //TODO: remove
+    //TODO: remove (-> controller)
     private final static String fakeToken = "bbd1ee96-0779-4619-b993-bb4bf7089754_1528136454_3gr2gw9lVhtVONV0XO62Vamu/uw=";
 
-    public static List<TaskDesc> extractQosTaskDescList(final LmapControlDto controlDto) {
+    public static class LmapTaskDescWrapper {
+        private List<TaskDesc> taskDescList;
+
+        private String collectorUrl;
+
+        public List<TaskDesc> getTaskDescList() {
+            return taskDescList;
+        }
+
+        public void setTaskDescList(List<TaskDesc> taskDescList) {
+            this.taskDescList = taskDescList;
+        }
+
+        public String getCollectorUrl() {
+            return collectorUrl;
+        }
+
+        public void setCollectorUrl(String collectorUrl) {
+            this.collectorUrl = collectorUrl;
+        }
+    }
+
+    public static LmapTaskDescWrapper extractQosTaskDescList(final LmapControlDto controlDto) {
         final List<TaskDesc> taskDescList = new ArrayList<>();
 
         String serverAddr = null;
+        String collectorUrl = null;
         Integer serverPort = null;
         Boolean encryption = false;
 
@@ -73,6 +102,9 @@ public class LmapUtil {
                                 case ENCRYPTION:
                                     encryption = Boolean.valueOf(option.getValue());
                                     break;
+                                case RESULT_COLLECTOR_BASE_URL:
+                                    collectorUrl = option.getValue();
+                                    break;
                             }
                         }
                         catch (Exception e) {
@@ -108,6 +140,10 @@ public class LmapUtil {
             }
         }
 
-        return taskDescList;
+        final LmapTaskDescWrapper wrapper = new LmapTaskDescWrapper();
+        wrapper.setTaskDescList(taskDescList);
+        wrapper.setCollectorUrl(collectorUrl);
+
+        return wrapper;
     }
 }

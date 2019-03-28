@@ -3,6 +3,7 @@ package at.alladin.nettest.nntool.android.app.util;
 import android.content.Context;
 
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.util.connection.CollectorConnection;
 import at.alladin.nettest.nntool.android.app.util.connection.ControllerConnection;
 
 /**
@@ -22,5 +23,9 @@ public class ConnectionUtil {
         final boolean isEncypted = context.getResources().getBoolean(R.bool.default_controller_connection_is_encrypted);
 
         return new ControllerConnection(isEncypted, host, null, port, pathPrefix);
+    }
+
+    public static CollectorConnection createCollectorConnection(final String collectorUrl) {
+        return new CollectorConnection(collectorUrl);
     }
 }

@@ -26,6 +26,7 @@ import at.alladin.nntool.client.helper.Config;
 import at.alladin.nntool.client.helper.TestStatus;
 import at.alladin.nntool.client.v2.task.QoSTestEnum;
 import at.alladin.nntool.client.v2.task.TaskDesc;
+import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 import at.alladin.nntool.client.v2.task.service.TestSettings;
 
 import static at.alladin.nntool.client.v2.task.AbstractQoSTask.PARAM_QOS_CONCURRENCY_GROUP;
@@ -188,6 +189,10 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
         }
 
         running.set(false);
+    }
+
+    public String getCollectorUrl() {
+        return client != null ? client.getCollectorUrl() : null;
     }
 
     public void setContext(final Context context) {
