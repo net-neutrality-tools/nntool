@@ -109,11 +109,15 @@ public class RequestUtil {
 
         report.setAdditionalRequestInfo(prepareApiRequestInfo(context));
         report.setAgentId(report.getAdditionalRequestInfo().getAgentId());
-        if (qoSResultCollector.getResults() != null) {
+        if (qoSResultCollector != null && qoSResultCollector.getResults() != null) {
             final QoSMeasurementResult qoSMeasurementResult = new QoSMeasurementResult();
             final LmapResultDto<QoSMeasurementResult> lmapResult = new LmapResultDto<>();
+
             report.setResults(new ArrayList<>());
             report.getResults().add(lmapResult);
+
+            lmapResult.setResults(new ArrayList<>());
+            lmapResult.getResults().add(qoSMeasurementResult);
             qoSMeasurementResult.setObjectiveResults(new ArrayList<>());
             for (final QoSTestResult qosResult : qoSResultCollector.getResults()) {
                 qoSMeasurementResult.getObjectiveResults().add(qosResult.getResultMap());

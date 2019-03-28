@@ -169,7 +169,7 @@ public class LmapResultDto<T extends SubMeasurementResult> {
 	@Expose
 	@SerializedName("results")
 	@JsonProperty(required = true, value = "results")
-	private List<T> results = new ArrayList<>();
+	private List<SubMeasurementResult> results = new ArrayList<>();
 
 	public String getSchedule() {
 		return schedule;
@@ -267,11 +267,11 @@ public class LmapResultDto<T extends SubMeasurementResult> {
 		this.conflict = conflict;
 	}
 
-	public List<T> getResults() {
+	public List<SubMeasurementResult> getResults() {
 		return results;
 	}
 
-	public void setResults(List<T> results) {
+	public void setResults(List<SubMeasurementResult> results) {
 		this.results = results;
 	}
 }
