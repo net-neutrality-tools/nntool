@@ -75,6 +75,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="speedMeasurementGaugeView" destination="sus-O4-eXm" id="diK-TR-UWX"/>
                         <segue destination="t4f-Xg-rdd" kind="presentation" identifier="present_modally_terms_and_conditions" id="tY1-um-iz5"/>
                         <segue destination="l2h-VI-UHi" kind="show" identifier="show_speed_measurement_view_controller" animates="NO" id="LFm-Ye-88T"/>
                     </connections>

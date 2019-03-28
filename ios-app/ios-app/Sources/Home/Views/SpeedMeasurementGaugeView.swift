@@ -26,4 +26,11 @@ import UIKit
 
     @IBOutlet private var networkTypeLabel: UILabel?
     @IBOutlet private var networkDetailLabel: UILabel?
+    
+    var startButtonActionCallback: (() -> ())?
+    
+    ///
+    @IBAction func startButtonPrimaryActionTriggered() {
+        startButtonActionCallback?()
+    }
 }

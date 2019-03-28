@@ -21,14 +21,21 @@ import UIKit
 ///
 class HomeViewController: CustomNavigationBarViewController {
 
+    @IBOutlet private var speedMeasurementGaugeView: SpeedMeasurementGaugeView?
+    
     ///
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // view controllers in tabBar should not be customizable
         tabBarController?.customizableViewControllers = []
+        
+        speedMeasurementGaugeView?.startButtonActionCallback = {
+            self.performSegue(withIdentifier: "show_speed_measurement_view_controller", sender: self)
+        }
     }
 
+    ///
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 

@@ -24,6 +24,8 @@ class MeasurementViewController: CustomNavigationBarViewController {
     // TODO: QoS view controller is a child view controller
 
     @IBOutlet private var qosMeasurementViewController: QoSMeasurementViewController?
+    
+    @IBOutlet private var speedMeasurementGaugeView: SpeedMeasurementGaugeView?
 
     ///
     override func viewDidLoad() {
@@ -33,5 +35,14 @@ class MeasurementViewController: CustomNavigationBarViewController {
 
         // TODO: disable naviation during measurement
         //tabBarController?.tabBar.items?.forEach { $0.isEnabled = false }
+        
+        startMeasurement()
+    }
+    
+    ///
+    private func startMeasurement() {
+        //resetUI()
+        
+        
     }
 }

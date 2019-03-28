@@ -40,6 +40,9 @@
                     <state key="normal" title="GO">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
+                    <connections>
+                        <action selector="startButtonPrimaryActionTriggered" destination="-1" eventType="primaryActionTriggered" id="B0e-Jd-MoQ"/>
+                    </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Network" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kBi-UX-95n">
                     <rect key="frame" x="150.5" y="283.5" width="74" height="24"/>
