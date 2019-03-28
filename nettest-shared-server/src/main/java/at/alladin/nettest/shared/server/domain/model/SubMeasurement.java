@@ -3,8 +3,13 @@ package at.alladin.nettest.shared.server.domain.model;
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.QoSMeasurementTypeParameters;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.SpeedMeasurementTypeParameters;
 
 /**
  * SubMeasurement class that is extended by specific measurements.
@@ -14,6 +19,14 @@ import com.google.gson.annotations.SerializedName;
  * 
  */
 @JsonClassDescription("SubMeasurement class that is extended by specific measurements.")
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "deserialize_type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = SpeedMeasurement.class, name = "speed_measurement"),
+        @JsonSubTypes.Type(value = QoSMeasurement.class, name = "qos_measurement")
+})
 public class SubMeasurement {
 	
 	/**
