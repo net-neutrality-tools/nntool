@@ -19,7 +19,7 @@
         <TextView
             style="@style/Nettest.TopProgressBar.Text.Left"
             android:layout_marginLeft="3dp"
-            android:text="50%"
+            android:text="0%"
             android:id="@+id/top_progress_bar_view_left_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -34,7 +34,7 @@
             style="@style/Nettest.TopProgressBar.Text.Right"
             android:layout_marginRight="3dp"
             android:id="@+id/top_progress_bar_view_right_text"
-            android:text="50%"
+            android:text="0%"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <at.alladin.nettest.nntool.android.app.view.AlladinTextView

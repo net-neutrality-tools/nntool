@@ -118,6 +118,11 @@ public class QosFragment extends Fragment implements ServiceConnection {
                         }
                     }
                 }
+                else if (qosTest == null) {
+                    topProgressBarView.setLeftText("100%");
+                    topProgressBarView.setRightText("100%");
+                    postResultRunnable = true;
+                }
 
             }
 

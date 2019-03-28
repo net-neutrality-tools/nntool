@@ -112,7 +112,7 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
 //            if (client != null && client.getControlConnection() != null) {
 //                qosTestSettings.setStartTimeNs(client.getControlConnection().getStartTimeNs());
 //            }
-            qosTestSettings.setUseSsl(Config.QOS_SSL);
+            //qosTestSettings.setUseSsl(Config.QOS_SSL);
 
             //If the sdk version of the currently operating android device is larger than LOLLIPOP, we provide the DNS servers ourselves, as the DNS library fails for some devices
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -147,6 +147,9 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
                     }
                 }
             }
+
+            //TODO: probably any other method is better than this:
+            qosTestSettings.setUseSsl(client.getTaskDescList().get(0).isEncryption());
 
             qosTest = new QualityOfServiceTest(client, testSettings, progressListeners);
 

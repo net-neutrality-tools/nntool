@@ -46,7 +46,7 @@ public class TitleFragment extends Fragment {
                         new OnTaskFinishedCallback<List<TaskDesc>>() {
                             @Override
                             public void onTaskFinished(List<TaskDesc> result) {
-                                if (result != null) {
+                                if (result != null && result.size() > 0) {
                                     final Bundle bundle = new Bundle();
                                     bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_DESK_LIST, (Serializable) result);
                                     ((MainActivity) getActivity()).startMeasurement(MeasurementType.QOS, bundle);

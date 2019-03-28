@@ -18,31 +18,20 @@ package at.alladin.nntool.client;
 
 import java.io.Serializable;
 
-public class RMBTTestParameter
+public class RMBTTestParameter implements Serializable
 {
     
-    // immutable! (accessed by multiple threads!)
-    
-    private final String host;
-    private final int port;
-    private final boolean encryption;
-    private final String token;
-    private final int pretestDuration = 2;
-    private final int duration;
-    private final int numThreads;
-    private final int numPings;
-    private final long startTime;
+    private String host;
+    private int port;
+    private boolean encryption;
+    private String token;
+    private int pretestDuration = 2;
+    private int duration;
+    private int numThreads;
+    private int numPings;
+    private long startTime;
 
-    public RMBTTestParameter() {
-        host = null;
-        port = 0;
-        encryption = false;
-        token = null;
-        duration = 0;
-        numThreads = 0;
-        numPings = 0;
-        startTime = 0;
-    }
+    public RMBTTestParameter() { }
 
     public RMBTTestParameter(final String host, final int port, final boolean encryption, final String token,
             final int duration, final int numThreads, final int numPings, final long startTime)
@@ -71,7 +60,43 @@ public class RMBTTestParameter
         this.token = null;
         this.startTime = 0;
     }
-    
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public void setEncryption(boolean encryption) {
+        this.encryption = encryption;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void setPretestDuration(int pretestDuration) {
+        this.pretestDuration = pretestDuration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public void setNumThreads(int numThreads) {
+        this.numThreads = numThreads;
+    }
+
+    public void setNumPings(int numPings) {
+        this.numPings = numPings;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
     public String getHost()
     {
         return host;

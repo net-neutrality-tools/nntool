@@ -28,6 +28,9 @@ public class LmapUtil {
         ENCRYPTION
     }
 
+    //TODO: remove
+    private final static String fakeToken = "bbd1ee96-0779-4619-b993-bb4bf7089754_1528136454_3gr2gw9lVhtVONV0XO62Vamu/uw=";
+
     public static List<TaskDesc> extractQosTaskDescList(final LmapControlDto controlDto) {
         final List<TaskDesc> taskDescList = new ArrayList<>();
 
@@ -84,8 +87,13 @@ public class LmapUtil {
                         try {
                             final QosMeasurementType qosType = QosMeasurementType.fromQosTypeDto(e.getKey());
                             for (final Map<String, Object> qosTestParams : e.getValue()) {
+                                if (!qosTestParams.containsKey("server_addr")) {
+                                    qosTestParams.put("server_port", serverPort);
+                                    qosTestParams.put("server_addr", serverAddr);
+                                }
+
                                 final TaskDesc taskDesc = new TaskDesc(serverAddr, serverPort, encryption,
-                                        controlDto.getAgent().getAgentId(), 0, 1, 0,
+                                        fakeToken, 0, 1, 0,
                                         System.nanoTime(), qosTestParams, qosType.getValue());
 
                                 taskDescList.add(taskDesc);

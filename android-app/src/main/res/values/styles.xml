@@ -62,10 +62,12 @@
 
     <style name="Nettest.TopProgressBar.Text.Left" parent="Nettest.TopProgressBar.Text">
         <item name="android:textColor">@color/top_progress_bar_left_fg</item>
+        <item name="android:textSize">24sp</item>
     </style>
 
     <style name="Nettest.TopProgressBar.Text.Right" parent="Nettest.TopProgressBar.Text">
         <item name="android:textColor">@color/top_progress_bar_right_fg</item>
+        <item name="android:textSize">24sp</item>
     </style>
 
     <!-- QOS PROGRESS -->
