@@ -18,6 +18,7 @@ public enum QoSMeasurementType {
     VOIP,
     TRACEROUTE,
     WEBSITE,
+    ECHO_PROTOCOL,
     AUDIO,
 
     MKIT_DASH,

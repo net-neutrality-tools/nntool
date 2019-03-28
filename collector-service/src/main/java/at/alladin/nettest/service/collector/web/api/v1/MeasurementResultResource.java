@@ -48,7 +48,7 @@ public class MeasurementResultResource {
 	@PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ApiResponse<MeasurementResultResponse>> postMeasurement(@ApiParam("Measurement result") @RequestBody LmapReportDto lmapReportDto) {
 		final MeasurementResultResponse resultResponse = storageService.save(lmapReportDto);
-		
+		logger.info(String.format("Saved result with uuid: %s and open-data uuid: %s", resultResponse.getUuid(), resultResponse.getOpenDataUuid()));
 		return ResponseHelper.ok(resultResponse);
 	}
 }

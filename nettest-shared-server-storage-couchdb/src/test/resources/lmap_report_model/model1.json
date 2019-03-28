@@ -10,6 +10,7 @@
     "option" : [ {
       "name" : "SPEED",
       "measurement-parameters" : {
+      "deserialize_type": "speed_params",
         "durations" : {
           "download_slow_start" : 3,
           "download" : 10,
@@ -35,6 +36,7 @@
     "end" : "2018-11-08T12:19:51.950",
     "status" : 0,
     "results" : [ {
+    "deserialize_type": "speed_result",
       "relative_start_time_ns" : 1234,
       "relative_end_time_ns" : 46000000010,
       "status" : "FINISHED",
@@ -136,6 +138,7 @@
     "option" : [ {
       "name" : "QOS",
       "measurement-parameters" : {
+      "deserialize_type": "qos_params",
         "objectives" : { }
       }
     } ],
@@ -144,6 +147,7 @@
     "end" : "2018-11-08T12:19:51.952",
     "status" : 1,
     "results" : [ {
+    	"deserialize_type": "qos_result",
       "relative_start_time_ns" : 46000000010,
       "relative_end_time_ns" : 117000000010,
       "status" : "FAILED",

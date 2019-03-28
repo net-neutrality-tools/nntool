@@ -19,6 +19,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.S
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
@@ -143,7 +144,7 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		@Mapping(source="relativeStartTimeNs", target="measurementTime.relativeStartTimeNs"),
 		@Mapping(source="relativeEndTimeNs", target="measurementTime.relativeEndTimeNs"),
 		@Mapping(source="status", target="statusInfo"),
-		@Mapping(source="objectiveResults", target="results")
+		@Mapping(expression="java(parseQoSResult(subMeasurementResult))", target="results")
 	})
 	QoSMeasurement map (QoSMeasurementResult subMeasurementResult);
 	
@@ -163,8 +164,28 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		return ret;
 	}
 	
-	default QoSResult parseQoSResult (Map<String, Object> resultMap) {
-		return null;
+	default List<QoSResult> parseQoSResult (QoSMeasurementResult qosMeasurement) {
+		List<QoSResult> ret = new ArrayList<>();
+		
+		List<Map<String, Object>> mapList = qosMeasurement.getObjectiveResults();
+		if (mapList == null) {
+			return ret;
+		}
+		for (Map<String, Object> map : mapList) {
+			final QoSResult res = new QoSResult();
+			Object val = map.get("test_type");
+			if (val != null) {
+				try {
+					res.setType(QoSMeasurementType.valueOf(val.toString().toUpperCase()));
+				} catch (IllegalArgumentException ex) {
+					ex.printStackTrace();
+				}
+			}
+			res.setResults(map);
+			ret.add(res);
+		}
+		
+		return ret;
 	}
 	
 }

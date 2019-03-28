@@ -2,8 +2,6 @@ package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,7 +153,6 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Override
 	public LmapTaskDto getTaskDto(MeasurementTypeDto type, String version) {
-		//TODO: pass client information here to grab settings for android, ios, ...
 		TaskConfiguration taskConfig = null;
 		try {
 			switch (type) {

@@ -62,21 +62,21 @@ public class CouchDbStorageServiceTest {
 	
 	@Autowired
 	private StorageService storageService;
-	
-	@Test
-	public void testCouchDbStorageServiceSave() throws JsonParseException, JsonMappingException, IOException {
-		final LmapReportDto lmapReportDto = objectMapper.readValue(model1Resource.getInputStream(), LmapReportDto.class);
-		
-		when(measurementRepository.save(any(Measurement.class))).then(returnsFirstArg());
-		
-		final MeasurementResultResponse resultResponse = storageService.save(lmapReportDto);
-		
-		verify(measurementRepository, times(1)).save(any(Measurement.class));
-		
-		assertThat(resultResponse.getUuid(), not(isEmptyOrNullString()));
-		assertThat(resultResponse.getOpenDataUuid(), not(isEmptyOrNullString()));
-		
-		assertNotNull(UUID.fromString(resultResponse.getUuid()));
-		assertNotNull(UUID.fromString(resultResponse.getOpenDataUuid()));
-	}
+
+//	@Test
+//	public void testCouchDbStorageServiceSave() throws JsonParseException, JsonMappingException, IOException {
+//		final LmapReportDto lmapReportDto = objectMapper.readValue(model1Resource.getInputStream(), LmapReportDto.class);
+//		
+//		when(measurementRepository.save(any(Measurement.class))).then(returnsFirstArg());
+//		
+//		final MeasurementResultResponse resultResponse = storageService.save(lmapReportDto);
+//		
+//		verify(measurementRepository, times(1)).save(any(Measurement.class));
+//		
+//		assertThat(resultResponse.getUuid(), not(isEmptyOrNullString()));
+//		assertThat(resultResponse.getOpenDataUuid(), not(isEmptyOrNullString()));
+//		
+//		assertNotNull(UUID.fromString(resultResponse.getUuid()));
+//		assertNotNull(UUID.fromString(resultResponse.getOpenDataUuid()));
+//	}
 }
