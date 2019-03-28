@@ -1,28 +1,26 @@
 package at.alladin.nettest.nntool.android.app;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 
 import at.alladin.nettest.nntool.android.app.async.RegisterMeasurementAgentTask;
-import at.alladin.nettest.nntool.android.app.dialog.BlockingProgressDialog;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
-import at.alladin.nettest.nntool.android.app.workflow.about.AboutFragment;
+import at.alladin.nettest.nntool.android.app.workflow.history.HistoryFragment;
+import at.alladin.nettest.nntool.android.app.workflow.map.MapFragment;
+import at.alladin.nettest.nntool.android.app.workflow.settings.SettingsFragment;
 import at.alladin.nettest.nntool.android.app.workflow.main.TitleFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.QosFragment;
+import at.alladin.nettest.nntool.android.app.workflow.statistics.StatisticsFragment;
 import at.alladin.nettest.nntool.android.app.workflow.tc.TermsAndConditionsFragment;
 
 /**
@@ -42,11 +40,17 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     navigateTo(WorkflowTarget.TITLE);
                     return true;
-                case R.id.navigation_dashboard:
-                    navigateTo(WorkflowTarget.ABOUT);
+                case R.id.navigation_history:
+                    navigateTo(WorkflowTarget.HISTORY);
                     return true;
-                case R.id.navigation_notifications:
-                    navigateTo(WorkflowTarget.ABOUT);
+                case R.id.navigation_map:
+                    navigateTo(WorkflowTarget.MAP);
+                    return true;
+                case R.id.navigation_settings:
+                    navigateTo(WorkflowTarget.SETTINGS);
+                    return true;
+                case R.id.navigation_statistics:
+                    navigateTo(WorkflowTarget.STATISTICS);
                     return true;
             }
             return false;
@@ -65,8 +69,18 @@ public class MainActivity extends AppCompatActivity {
                 isBottomNavigationVisible = false;
                 targetFragment = QosFragment.newInstance();
                 break;
-            case ABOUT:
-                targetFragment = AboutFragment.newInstance();
+            case SETTINGS:
+                targetFragment = SettingsFragment.newInstance();
+                break;
+            case MAP:
+                targetFragment = MapFragment.newInstance();
+                break;
+            case HISTORY:
+                targetFragment = HistoryFragment.newInstance();
+                break;
+            case STATISTICS:
+                targetFragment = StatisticsFragment.newInstance();
+                break;
         }
 
         setBottomNavigationVisible(isBottomNavigationVisible);

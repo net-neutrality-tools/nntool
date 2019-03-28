@@ -7,5 +7,8 @@ public enum WorkflowTarget {
     TITLE,
     MEASUREMENT_SPEED,
     MEASUREMENT_QOS,
-    ABOUT
+    HISTORY,
+    MAP,
+    STATISTICS,
+    SETTINGS
 }

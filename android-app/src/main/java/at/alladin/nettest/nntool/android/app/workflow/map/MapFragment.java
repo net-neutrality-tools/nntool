@@ -1,4 +1,4 @@
-package at.alladin.nettest.nntool.android.app.workflow.about;
+package at.alladin.nettest.nntool.android.app.workflow.map;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,17 +13,17 @@ import at.alladin.nettest.nntool.android.app.R;
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
  */
-public class AboutFragment extends Fragment {
+public class MapFragment extends Fragment {
 
-    public static AboutFragment newInstance() {
-        final AboutFragment fragment = new AboutFragment();
+    public static MapFragment newInstance() {
+        final MapFragment fragment = new MapFragment();
         return fragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.about_fragment, container, false);
+        final View v = inflater.inflate(R.layout.map_fragment, container, false);
         return v;
     }
 }
