@@ -18,18 +18,18 @@ import Foundation
 
 ///
 public class AbstractControlConnectionTaskConfigurationBuilder<C: AbstractControlConnectionTaskConfiguration>: AbstractTaskConfigurationBuilder<C> {
-    
+
     @discardableResult
     public func serverAddress(_ serverAddress: String) -> Self {
         obj.serverAddress = serverAddress
-        
+
         return self
     }
-    
+
     @discardableResult
     public func serverPort(_ serverPort: UInt16) -> Self {
         obj.serverPort = serverPort
-        
+
         return self
     }
 }

@@ -19,30 +19,30 @@ import ObjectMapper
 
 ///
 public class AbstractTaskConfiguration: Mappable {
-    
+
     var timeoutNs: UInt64 = 10 * NSEC_PER_SEC // TODO: config file
-    
+
     // deprecated
     var concurrencyGroup: Int?
     var qosTestUid: Int?
-    
+
     ////
-    
+
     var timeoutS: Double {
         return Double(timeoutNs) / Double(NSEC_PER_SEC)
     }
-    
+
     public required init() {
-        
+
     }
-    
+
     public required init?(map: Map) {
-        
+
     }
-    
+
     public func mapping(map: Map) {
         timeoutNs        <- map["timeout"]
-        
+
         concurrencyGroup <- map["concurrency_group"]
         qosTestUid       <- map["qos_test_uid"]
     }

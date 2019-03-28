@@ -18,5 +18,5 @@ import Foundation
 
 ///
 public class AbstractBidirectionalIpTaskExecutor<C: AbstractBidirectionalIpTaskConfiguration, R: AbstractBidirectionalIpTaskResult>: AbstractControlConnectionTaskExecutor<C, R> {
-    
+
 }

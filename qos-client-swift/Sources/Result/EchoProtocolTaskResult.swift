@@ -18,7 +18,7 @@ import Foundation
 import ObjectMapper
 
 public class EchoProtocolTaskResult: AbstractTaskResult {
- 
+
     var objectiveHost: String?
     var objectivePort: UInt16?
     var objectiveProtocolType: EchoProtocolTaskConfiguration.ProtocolType?
@@ -26,19 +26,19 @@ public class EchoProtocolTaskResult: AbstractTaskResult {
 
     // TODO
     var result: String?
-    
+
     // TODO:
-    
+
     public override func mapping(map: Map) {
         super.mapping(map: map)
-        
+
         objectiveTimeoutNs <- map["echo_protocol_objective_timeout"]
-        
+
         objectiveHost <- map["echo_protocol_objective_host"]
         objectivePort <- map["echo_protocol_objective_port"]
         objectiveProtocolType <- (map["echo_protocol_objective_protocol"], EchoProtocolTaskConfiguration.ProtocolTypeTransformOf)
         objectivePayload <- map["echo_protocol_objective_payload"]
-        
+
         status <- (map["echo_protocol_status"], EnumTransform<Status>())
         result <- map["echo_protocol_result"]
     }

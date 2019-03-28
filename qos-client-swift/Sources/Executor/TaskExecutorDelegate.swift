@@ -18,7 +18,7 @@ import Foundation
 
 ///
 public protocol TaskExecutorDelegate {
-    
+
     // TODO: internal progress
-    
+
 }

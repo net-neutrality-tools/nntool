@@ -19,8 +19,8 @@ import Foundation
 ///
 protocol BuilderProtocol {
     associatedtype Result
-   
+
     ///
     func build() -> Result
-    
+
 }

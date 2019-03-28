@@ -19,27 +19,27 @@ import ObjectMapper
 
 ///
 public class EchoProtocolTaskConfiguration: AbstractTaskConfiguration {
-    
+
     static let ProtocolTypeTransformOf = TransformOf<ProtocolType, String>(
         fromJSON: { ProtocolType(rawValue: $0 ?? "") },
         toJSON: { $0?.rawValue }
     )
-    
+
     public enum ProtocolType: String {
         case tcp
         case udp
     }
-    
+
     var host: String?
     var port: UInt16? = 7
     var protocolType: ProtocolType? = .udp
     var payload: String?
-    
+
     // packetCount?
-    
+
     public override func mapping(map: Map) {
         super.mapping(map: map)
-        
+
         host <- map["host"]
         port <- map["port"]
         protocolType <- (map["protocol"], EchoProtocolTaskConfiguration.ProtocolTypeTransformOf)

@@ -19,29 +19,29 @@ import CocoaAsyncSocket
 
 ///
 public class EchoProtocolTaskExecutor: AbstractTaskExecutor<EchoProtocolTaskConfiguration, EchoProtocolTaskResult>, GCDAsyncSocketDelegate {
-    
+
     ///
     private var resultResponse: String?
-    
+
     ///
     override var taskType: TaskType? {
         return .echoProtocol
     }
-    
+
     ///
     public override var result: EchoProtocolTaskResult {
         let r = super.result
-        
+
         r.objectiveHost = internalConfig.host
         r.objectivePort = internalConfig.port
         r.objectiveProtocolType = internalConfig.protocolType
         r.objectivePayload = internalConfig.payload
-        
+
         r.result = resultResponse
-        
+
         return r
     }
-    
+
     ///
     override public func main() {
         guard
@@ -53,7 +53,7 @@ public class EchoProtocolTaskExecutor: AbstractTaskExecutor<EchoProtocolTaskConf
             self.status = .error
             return
         }
-        
+
         switch protocolType {
         case .tcp:
             let tcpStreamUtilConfig = TcpStreamUtilConfiguration(
@@ -72,15 +72,15 @@ public class EchoProtocolTaskExecutor: AbstractTaskExecutor<EchoProtocolTaskConf
                 port: port,
                 outgoing: true,
                 timeoutNs: internalConfig.timeoutNs,
-                delayNs: /*internalConfig.delayNs!*/1 * NSEC_PER_SEC, // TODO: config
+                delayNs: 1 * NSEC_PER_SEC, // TODO: config
                 packetCount: 1/*packetCount*/, // TODO: config (echo protocol test currently only works with one packet)
                 uuid: nil,
                 payload: payload
             )
-            
+
             let udpStreamUtil = UdpStreamUtil(config: udpStreamUtilConfig)
             let (streamUtilStatus, result) = udpStreamUtil.runStream()
-            
+
             status = streamUtilStatus
             resultResponse = result?.receivedPayload
         }

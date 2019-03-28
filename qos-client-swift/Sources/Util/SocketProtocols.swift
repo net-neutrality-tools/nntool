@@ -19,22 +19,22 @@ import CocoaAsyncSocket
 
 ///
 public protocol GCDAsyncSocketProtocol {
-    
+
     var delegate: GCDAsyncSocketDelegate? { get set }
     var delegateQueue: DispatchQueue? { get set }
-    
+
     var isConnected: Bool { get }
-    
+
     func connect(toHost host: String, onPort port: UInt16, withTimeout timeout: Double) throws
-    
+
     func accept(onPort port: UInt16) throws
-    
+
     func write(_ data: Data, withTimeout timeout: Double, tag: Int)
-    
+
     func readData(to: Data, withTimeout timeout: Double, tag: Int)
-    
+
     func disconnect()
-    
+
 }
 
 extension GCDAsyncSocket: GCDAsyncSocketProtocol {

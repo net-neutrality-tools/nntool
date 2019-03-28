@@ -19,16 +19,16 @@ import ObjectMapper
 
 ///
 public class AbstractControlConnectionTaskConfiguration: AbstractTaskConfiguration {
-   
+
     ///
     var serverAddress: String?
-    
+
     ///
     var serverPort: UInt16?
-    
+
     public override func mapping(map: Map) {
         super.mapping(map: map)
-        
+
         serverAddress <- map["server_addr"]
         serverPort    <- map["server_port"]
     }

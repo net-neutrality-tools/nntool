@@ -19,36 +19,36 @@ import ObjectMapper
 
 ///
 public class AbstractBidirectionalIpTaskConfiguration: AbstractControlConnectionTaskConfiguration {
-   
+
     ///
     enum Direction: String {
         case unknown = "UNKNOWN"
         case outgoing = "OUT"
         case incoming = "IN"
     }
-    
+
     ///
     var portOut: UInt16?
-    
+
     //
     var portIn: UInt16?
-    
+
     ///
     var direction: Direction {
         if let p = portOut, p > 0 {
             return .outgoing
         }
-        
+
         if let p = portIn, p > 0 {
             return .incoming
         }
-        
+
         return .unknown
     }
-    
+
     public override func mapping(map: Map) {
         super.mapping(map: map)
-        
+
         portOut <- map["out_port"]
         portIn <- map["in_port"]
     }

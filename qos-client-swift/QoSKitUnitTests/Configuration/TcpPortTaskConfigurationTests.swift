@@ -23,19 +23,19 @@ class TcpPortTaskConfigurationTests: XCTestCase {
     override func setUp() {
         continueAfterFailure = false
     }
-    
+
     func testValidJsonObjectMapping() {
         let serverAddress = "test.host"
         let serverPort: UInt16 = 443
-        
+
         let timeoutNs: UInt64 = 30 * 1_000_000_000
-        
+
         let concurrencyGroup = 10
         let qosTestUid = 1
-        
+
         let portOut: UInt16 = 8080
         let portIn: UInt16 = 8444
-        
+
         let jsonString = """
         {
             "server_addr": "\(serverAddress)",
@@ -47,11 +47,11 @@ class TcpPortTaskConfigurationTests: XCTestCase {
             "in_port": \(portIn),
         }
         """
-        
+
         let config = TcpPortTaskConfiguration(JSONString: jsonString)
-        
+
         expect(config).notTo(beNil())
-        
+
         expect(config?.serverAddress).notTo(beNil())
         expect(config?.serverPort).notTo(beNil())
         expect(config?.timeoutNs).notTo(beNil())
@@ -59,9 +59,9 @@ class TcpPortTaskConfigurationTests: XCTestCase {
         expect(config?.qosTestUid).notTo(beNil())
         expect(config?.portOut).notTo(beNil())
         //XCTAssertNotNil(config!.portIn)
-        
+
         ////
-        
+
         expect(config?.serverAddress).to(equal(serverAddress))
         expect(config?.serverPort).to(equal(serverPort))
         expect(config?.timeoutNs).to(equal(timeoutNs))
@@ -70,30 +70,30 @@ class TcpPortTaskConfigurationTests: XCTestCase {
         expect(config?.portOut).to(equal(portOut))
         //XCTAssertEqual(portIn, config?.portIn)
     }
-    
+
     func testInvalidPortJsonObjectMapping() {
         let jsonString = """
         {
             "out_port": 1000000
         }
         """
-        
+
         let config = TcpPortTaskConfiguration(JSONString: jsonString)
-        
+
         expect(config).notTo(beNil())
-        
+
         expect(config?.portOut).to(beNil())
     }
-    
+
     func testMalformedJsonObjectMapping() {
         let jsonString = """
         {
             "server_addr": invalid_string
         }
         """
-        
+
         let config = TcpPortTaskConfiguration(JSONString: jsonString)
-        
+
         expect(config).to(beNil())
     }
 }

@@ -18,13 +18,13 @@ import Foundation
 
 ///
 enum TaskType: String {
-    
+
     ///
     case tcpPort = "tcp"
-    
+
     ///
     case udpPort = "udp"
-    
+
     ///
     case echoProtocol = "echo_protocol"
 }

@@ -19,18 +19,18 @@ import ObjectMapper
 
 ///
 public class UdpPortTaskConfiguration: AbstractBidirectionalIpTaskConfiguration {
-    
+
     var packetCountOut: Int?
     var packetCountIn: Int?
-    
+
     var delayNs: UInt64? // TODO: default?
-    
+
     public override func mapping(map: Map) {
         super.mapping(map: map)
-        
+
         packetCountOut <- map["out_num_packets"]
         packetCountIn <- map["in_num_packets"]
-            
+
         delayNs <- map["delay"]
     }
 }

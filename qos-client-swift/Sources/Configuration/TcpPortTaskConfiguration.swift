@@ -19,5 +19,5 @@ import ObjectMapper
 
 ///
 public class TcpPortTaskConfiguration: AbstractBidirectionalIpTaskConfiguration {
-    
+
 }

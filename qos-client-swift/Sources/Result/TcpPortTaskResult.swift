@@ -22,27 +22,27 @@ public class TcpPortTaskResult: AbstractBidirectionalIpTaskResult {
 
     var resultOut: Status?
     var resultIn: Status?
-    
+
     var resultOutResponse: String?
     var resultInResponse: String?
 
     var resultErrorDetails: String?
-    
+
     ///
     public override func mapping(map: Map) {
         super.mapping(map: map)
-        
+
         objectiveTimeoutNs   <- map["tcp_objective_timeout"] // TODO: use generic "objective_timeout"...
-        
+
         objectivePortOut   <- map["tcp_objective_out_port"]
         objectivePortIn    <- map["tcp_objective_in_port"]
 
         resultOut          <- (map["tcp_result_out"], EnumTransform<Status>())
         resultIn           <- (map["tcp_result_in"], EnumTransform<Status>())
-        
+
         resultOutResponse  <- map["tcp_result_out_response"]
         resultInResponse   <- map["tcp_result_in_response"]
-        
+
         resultErrorDetails <- map["tcp_result_error_details"]
     }
 }

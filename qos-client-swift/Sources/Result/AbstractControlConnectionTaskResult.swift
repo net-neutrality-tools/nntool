@@ -19,7 +19,7 @@ import ObjectMapper
 
 ///
 public class AbstractControlConnectionTaskResult: AbstractTaskResult {
-    
+
     //var server: String?
 
 }

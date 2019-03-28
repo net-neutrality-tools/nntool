@@ -18,32 +18,32 @@ import Foundation
 
 ///
 public class EchoProtocolTaskConfigurationBuilder: AbstractTaskConfigurationBuilder<EchoProtocolTaskConfiguration> {
-    
+
     @discardableResult
     public func host(_ host: String) -> Self {
         obj.host = host
-        
+
         return self
     }
-    
+
     @discardableResult
     public func port(_ port: UInt16) -> Self {
         obj.port = port
-        
+
         return self
     }
-    
+
     @discardableResult
     public func protocolType(_ protocolType: EchoProtocolTaskConfiguration.ProtocolType) -> Self {
         obj.protocolType = protocolType
-        
+
         return self
     }
-    
+
     @discardableResult
     public func payload(_ payload: String) -> Self {
         obj.payload = payload
-        
+
         return self
     }
 }

@@ -20,18 +20,18 @@ import Foundation
 public protocol TaskExecutorProtocol {
     associatedtype Configuration
     associatedtype Result
-    
-    typealias TaskExecutorSuccessCallback = (_ result: Result) -> ()
-    
+
+    typealias TaskExecutorSuccessCallback = (_ result: Result) -> Void
+
     var config: Configuration { get }
-    
+
     var result: Result { get }
-    
+
     var delegate: TaskExecutorDelegate? { get set }
-    
+
     // async method
     func runTask(success successCallback: @escaping TaskExecutorSuccessCallback)
-    
+
     // sync method
     func runTask() throws -> Result
 }
