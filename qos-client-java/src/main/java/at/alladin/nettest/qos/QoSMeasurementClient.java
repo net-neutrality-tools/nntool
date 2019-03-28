@@ -3,6 +3,7 @@ package at.alladin.nettest.qos;
 import static at.alladin.nntool.client.v2.task.AbstractQoSTask.PARAM_QOS_CONCURRENCY_GROUP;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -31,8 +32,6 @@ public class QoSMeasurementClient {
 
     protected AtomicBoolean cancelled;
 
-    private final List<QosMeasurementType> availableTypes;
-
     protected List<QosMeasurementType> enabledTypes;
 
     protected QualityOfServiceTest qosTest;
@@ -46,16 +45,7 @@ public class QoSMeasurementClient {
     public QoSMeasurementClient() {
         running = new AtomicBoolean(false);
         cancelled = new AtomicBoolean(false);
-
-        availableTypes = new ArrayList<>();
-        for (QosMeasurementType type : QosMeasurementType.values()) {
-            //remove all types that are unique to the browser or the ndt test suite
-            if (type.getValue().endsWith("_browser")) {
-                continue;
-            }
-            availableTypes.add(type);
-        }
-        enabledTypes = new ArrayList<>(availableTypes);
+        enabledTypes = new ArrayList<>(Arrays.asList(QosMeasurementType.values()));
     }
 
     /**
@@ -72,10 +62,6 @@ public class QoSMeasurementClient {
 
         final List<String> toExecute = new ArrayList<>();
         for (QosMeasurementType t : enabledTypes) {
-            if (!availableTypes.contains(t)) {
-                //a type that is not made available has been selected for execution (do we throw an exception here?)
-                continue;
-            }
             toExecute.add(t.getValue());
         }
 
@@ -178,14 +164,6 @@ public class QoSMeasurementClient {
     }
 
     /**
-     * Returns a list of all QosMeasurementTypes supported by the QosMeasurementClient
-     * @return
-     */
-    public List<QosMeasurementType> getAvailableTypes() {
-        return availableTypes;
-    }
-
-    /**
      * Sets the types of QoS tests that shall be executed when start() is called
      * If no call to setEnabledTypes was made, ALL tests are considered enabled
      * @param enabledTypes
@@ -234,5 +212,9 @@ public class QoSMeasurementClient {
 
     public void setTestSettings(final TestSettings settings) {
         this.testSettings = settings;
+    }
+
+    public QualityOfServiceTest getQosTest() {
+        return qosTest;
     }
 }

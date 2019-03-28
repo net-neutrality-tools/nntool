@@ -16,6 +16,8 @@
 
 package at.alladin.nntool.client;
 
+import java.io.Serializable;
+
 public class RMBTTestParameter
 {
     
@@ -30,7 +32,18 @@ public class RMBTTestParameter
     private final int numThreads;
     private final int numPings;
     private final long startTime;
-    
+
+    public RMBTTestParameter() {
+        host = null;
+        port = 0;
+        encryption = false;
+        token = null;
+        duration = 0;
+        numThreads = 0;
+        numPings = 0;
+        startTime = 0;
+    }
+
     public RMBTTestParameter(final String host, final int port, final boolean encryption, final String token,
             final int duration, final int numThreads, final int numPings, final long startTime)
     {

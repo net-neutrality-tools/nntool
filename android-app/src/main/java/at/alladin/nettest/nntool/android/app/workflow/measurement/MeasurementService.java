@@ -7,14 +7,18 @@ package at.alladin.nettest.nntool.android.app.workflow.measurement;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.qos.android.QoSMeasurementClientAndroid;
 import at.alladin.nntool.client.ClientHolder;
+import at.alladin.nntool.client.v2.task.TaskDesc;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -26,6 +30,8 @@ public class MeasurementService extends Service {
     public static String ACTION_START_SPEED_MEASUREMENT = "at.alladin.nettest.nntool.android.app.startSpeedMeasurement";
 
     public static String ACTION_START_QOS_MEASUREMENT = "at.alladin.nettest.nntool.android.app.startQosMeasurement";
+
+    public static String EXTRAS_KEY_QOS_TASK_DESK_LIST = "qos_task_desk_list";
 
     final MeasurementServiceBinder binder = new MeasurementServiceBinder();
 
@@ -73,8 +79,9 @@ public class MeasurementService extends Service {
         //TODO: speed measurement
     }
 
-    public void startQosMeasurement() {
+    public void startQosMeasurement(final List<TaskDesc> taskDescList) {
         //TODO: remove & replace
+        /*
         ClientHolder client = ClientHolder.getInstance(getResources().getString(R.string.default_qos_control_host),
                 Integer.toString(getResources().getInteger(R.integer.default_qos_control_port)),
                 getResources().getIntArray(R.array.qos_tcp_test_port_list),
@@ -82,7 +89,9 @@ public class MeasurementService extends Service {
                 getResources().getString(R.string.qos_echo_service_host),
                 getResources().getIntArray(R.array.qos_echo_service_tcp_ports),
                 getResources().getIntArray(R.array.qos_echo_service_udp_ports));
+                */
 
+        final ClientHolder client = ClientHolder.getInstance(taskDescList);
         qosMeasurementClient = new QoSMeasurementClientAndroid(client, getApplicationContext());
         qosMeasurementClient.start();
     }
@@ -99,7 +108,9 @@ public class MeasurementService extends Service {
                 return START_STICKY;
             }
             else if (ACTION_START_QOS_MEASUREMENT.equals(intent.getAction())) {
-                startQosMeasurement();
+                final Bundle options = intent.getExtras();
+                final List<TaskDesc> taskDescList = (List<TaskDesc>) options.getSerializable(EXTRAS_KEY_QOS_TASK_DESK_LIST);
+                startQosMeasurement(taskDescList);
                 return START_STICKY;
             }
         }

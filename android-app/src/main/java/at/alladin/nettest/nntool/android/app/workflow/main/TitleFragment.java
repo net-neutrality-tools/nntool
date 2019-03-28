@@ -8,9 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.Serializable;
+import java.util.List;
+
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
+import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
+import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
+import at.alladin.nntool.client.v2.task.TaskDesc;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -32,7 +39,24 @@ public class TitleFragment extends Fragment {
         final View v = inflater.inflate(R.layout.fragment_title, container, false);
 
         final View startButton = v.findViewById(R.id.title_page_start_button);
-        startButton.setOnClickListener(l -> ((MainActivity) getActivity()).startMeasurement(MeasurementType.QOS));
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final RequestMeasurementTask task = new RequestMeasurementTask(getContext(),
+                        new OnTaskFinishedCallback<List<TaskDesc>>() {
+                            @Override
+                            public void onTaskFinished(List<TaskDesc> result) {
+                                if (result != null) {
+                                    final Bundle bundle = new Bundle();
+                                    bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_DESK_LIST, (Serializable) result);
+                                    ((MainActivity) getActivity()).startMeasurement(MeasurementType.QOS, bundle);
+                                }
+                            }
+                        });
+
+                task.execute();
+            }
+        });
 
         return v;
     }

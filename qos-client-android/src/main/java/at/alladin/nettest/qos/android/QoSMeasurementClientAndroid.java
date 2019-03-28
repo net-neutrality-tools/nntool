@@ -42,17 +42,13 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
 
     private String latestTestUuid;
 
+    public QoSMeasurementClientAndroid(final Context context) {
+        this(null, context);
+    }
+
     public QoSMeasurementClientAndroid(final ClientHolder client, final Context context) {
         this.client = client;
         this.context = context;
-    }
-
-    public QoSMeasurementClientAndroid(final QoSMeasurementContext qoSMeasurementContext, final Context context) {
-        this.context = context;
-        this.measurementContext = qoSMeasurementContext;
-        if ("".equals(HelperFunctions.getUuid(context.getApplicationContext()))) {
-            new ObtainQoSSettingsTask(measurementContext, context.getApplicationContext()).execute();
-        }
     }
 
     /**
@@ -75,13 +71,6 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
         if (context == null) {
             //This should be an impossibility by now, so we should be able to remove this check
             throw new NoContextProvidedException();
-        }
-
-        if (client == null) { // && "".equals(HelperFunctions.getUuid(context.getApplicationContext()))) { //TODO: we temporarily do not require a user uuid, as the control-service is currently under maintenance (readd && later)
-            new ObtainQoSSettingsTask(measurementContext, context.getApplicationContext()).execute();
-            Log.i(TAG, "Client not yet registered. Need registration before starting a measurement. " +
-                    "\nRegistration process has just started. Call start again after the registration finished.");
-            throw new ClientNotYetRegisteredException("Client was not registered before the measurement was started. Registration just started. You don't need to do a thing.");
         }
 
         threadRunner = new Thread(this);
@@ -134,15 +123,10 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
 
             // Only execute the desired tasks
             final List<String> toExecute = new ArrayList<>();
-            final List<QosMeasurementType> availableTypes = getAvailableTypes();
             for (QosMeasurementType t : enabledTypes) {
-                if (t.getValue().endsWith("_browser") || !availableTypes.contains(t)) {
-                    continue;
-                }
                 toExecute.add(t.getValue());
             }
 
-            Log.i(TAG, "Available test types: " + availableTypes.toString());
             Log.i(TAG, "Tests about to be executed " + toExecute.toString());
 
             //remove QOS tests that are not enabled

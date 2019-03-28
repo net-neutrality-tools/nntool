@@ -41,10 +41,12 @@ import javax.net.ssl.TrustManager;
 
 import org.json.JSONObject;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.helper.Config;
 import at.alladin.nntool.client.helper.RMBTOutputCallback;
 import at.alladin.nntool.client.helper.TestStatus;
 import at.alladin.nntool.client.v2.task.AbstractEchoProtocolTask;
+import at.alladin.nntool.client.v2.task.QoSTestEnum;
 import at.alladin.nntool.client.v2.task.TaskDesc;
 import at.alladin.nntool.client.v2.task.service.TestMeasurement;
 import at.alladin.nntool.client.v2.task.service.TrafficService;
@@ -122,6 +124,14 @@ public class ClientHolder
                                            final String echoServiceHost, final int[] echoServiceTcpPorts, final int[] echoServiceUdpPorts)
     {
         return new ClientHolder(host, controlConnectionPort, tcpTestPorts, udpTestPorts, echoServiceHost, echoServiceTcpPorts, echoServiceUdpPorts);
+    }
+
+    public static ClientHolder getInstance(final List<TaskDesc> taskDescList) {
+        return new ClientHolder(taskDescList);
+    }
+
+    private ClientHolder(final List<TaskDesc> taskDescList) {
+        this.taskDescList = taskDescList;
     }
 
     private ClientHolder(final String host, final String controlConnectionPort, final int[] tcpTestPorts, final int[] udpTestPorts,

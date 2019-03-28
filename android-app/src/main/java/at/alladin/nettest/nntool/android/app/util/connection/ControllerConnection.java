@@ -19,6 +19,7 @@ public class ControllerConnection {
 
     ControllerService controllerService;
 
+    //will be used for IPv6 only requests
     ControllerService controllerService6;
 
     public ControllerConnection(final boolean isEncrypted, final String hostname, final String hostname6, final int port, final String pathPrefix) {
@@ -50,8 +51,6 @@ public class ControllerConnection {
     }
 
     public RegistrationResponse registerMeasurementAgent(final ApiRequest<RegistrationRequest> request) {
-        request.getData().setGroupName("WasIsDirEgal?");
-
         try {
             return controllerService.postRegisterClient(request).execute().body().getData();
         }

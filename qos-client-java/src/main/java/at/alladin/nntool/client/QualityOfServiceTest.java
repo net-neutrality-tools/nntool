@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -64,6 +66,16 @@ import at.alladin.nntool.client.v2.task.service.TrafficService;
  */
 public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 
+    public final static String TASK_UDP = "udp";
+    public final static String TASK_TCP = "tcp";
+    public final static String TASK_DNS = "dns";
+    public final static String TASK_VOIP = "voip";
+    public final static String TASK_NON_TRANSPARENT_PROXY = "non_transparent_proxy";
+    public final static String TASK_HTTP = "http_proxy";
+    public final static String TASK_WEBSITE = "website";
+    public final static String TASK_TRACEROUTE = "traceroute";
+    public final static String TASK_ECHO_PROTOCOL = "echo_protocol";
+
     private final ClientHolder client;
     
     private final AtomicInteger progress = new AtomicInteger(); 
@@ -85,8 +97,8 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 
     private final List<QoSMeasurementClientProgressListener> progressListeners = new ArrayList<>();
 
-    private final Map<QosMeasurementType, Integer> qosTypeToTaskCount = new HashMap<>();
-    private final Map<QosMeasurementType, Integer> qosTypeDoneCount = new HashMap<>();
+    private final ConcurrentMap<QosMeasurementType, Integer> qosTypeTaskCountMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<QosMeasurementType, Integer> qosTypeDoneCountMap = new ConcurrentHashMap<>();
 
 	//provide a list of the test ids to the listeners out there
     private final List<String> taskIdList = new ArrayList<>();
@@ -126,22 +138,22 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 			//for progress by qosType, count the # of tests in each group
 			try {
 				final QosMeasurementType t = QosMeasurementType.fromValue(taskId);
-				if (!qosTypeToTaskCount.containsKey(t)) {
-					qosTypeToTaskCount.put(t, 1);
+				if (!qosTypeTaskCountMap.containsKey(t)) {
+					qosTypeTaskCountMap.put(t, 1);
 				} else {
-					qosTypeToTaskCount.put(t, qosTypeToTaskCount.get(t) + 1);
+					qosTypeTaskCountMap.put(t, qosTypeTaskCountMap.get(t) + 1);
 				}
 			} catch (IllegalArgumentException ex) {
 				ex.printStackTrace();
 			}
 			
-			if (ClientHolder.TASK_HTTP.equals(taskId)) {
+			if (TASK_HTTP.equals(taskId)) {
 	        	test = new HttpProxyTask(this, taskDesc, threadCounter++);
 			}
-			else if (ClientHolder.TASK_NON_TRANSPARENT_PROXY.equals(taskId)) {
+			else if (TASK_NON_TRANSPARENT_PROXY.equals(taskId)) {
 	        	test = new NonTransparentProxyTask(this, taskDesc, threadCounter++);
 			}
-			else if (ClientHolder.TASK_DNS.equals(taskId)) {
+			else if (TASK_DNS.equals(taskId)) {
 			    /*  if there is a provided dnsserveraddress from the settings, use it! (unless a dns resolver was already specified in the taskDescription)
                     Necessary for android devices with SDK > 26, as the usual way of obtaining the DNS server (via the dns library) doesn't work for them
                 */
@@ -150,16 +162,16 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 				}
 	        	test = new DnsTask(this, taskDesc, threadCounter++);
 			}
-			else if (ClientHolder.TASK_TCP.equals(taskId)) {
+			else if (TASK_TCP.equals(taskId)) {
 	        	test = new TcpTask(this, taskDesc, threadCounter++);
 			}
-			else if (ClientHolder.TASK_UDP.equals(taskId)) {
+			else if (TASK_UDP.equals(taskId)) {
 	        	test = new UdpTask(this, taskDesc, threadCounter++);
 			}
-			else if (ClientHolder.TASK_VOIP.equals(taskId)) {
+			else if (TASK_VOIP.equals(taskId)) {
 				test = new VoipTask(this, taskDesc, threadCounter++);
 			}
-			else if (ClientHolder.TASK_TRACEROUTE.equals(taskId)) {
+			else if (TASK_TRACEROUTE.equals(taskId)) {
 				if (nnTestSettings != null && nnTestSettings.getTracerouteServiceClazz() != null) {
 					test = new TracerouteTask(this, taskDesc, threadCounter++);	
 				}
@@ -167,14 +179,14 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 					System.out.println("No TracerouteService implementation: Skipping TracerouteTask: " + taskDesc);
 				}
 			}
-			else if (ClientHolder.TASK_WEBSITE.equals(taskId)) {
+			else if (TASK_WEBSITE.equals(taskId)) {
 				if (nnTestSettings != null && nnTestSettings.getWebsiteTestService() != null) {
 					test = new WebsiteTask(this, taskDesc, threadCounter++);	
 				}
 				else {
 					System.out.println("No WebsiteTestService implementation: Skipping WebsiteTask: " + taskDesc);
 				}
-			} else if (ClientHolder.TASK_ECHO_PROTOCOL.equals(taskId)) {
+			} else if (TASK_ECHO_PROTOCOL.equals(taskId)) {
 				if (taskDesc.getParams().get(AbstractEchoProtocolTask.RESULT_PROTOCOL) != null) {
 					final String protocol = (String) taskDesc.getParams().get(AbstractEchoProtocolTask.RESULT_PROTOCOL);
 					if (AbstractEchoProtocolTask.PROTOCOL_TCP.equals(protocol)) {
@@ -269,7 +281,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 		while (groupIterator.hasNext() && !status.get().equals(QoSTestEnum.ERROR)) {			
 			final int groupId = groupIterator.next();			
 			concurrentGroupCount.set(groupId);
-			
+
 			//check if a qos control server connection needs to be initialized:
 			openControlConnections(groupId);
 			
@@ -284,8 +296,8 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 				if (typeString != null) {
 					try {
 						QosMeasurementType type = QosMeasurementType.fromValue(typeString);
-						if (!qosTypeDoneCount.containsKey(type)) {
-							qosTypeDoneCount.put(type, 0);
+						if (!qosTypeDoneCountMap.containsKey(type)) {
+							qosTypeDoneCountMap.put(type, 0);
 							for (QoSMeasurementClientProgressListener l : progressListeners) {
 								l.onQoSTypeStarted(type);
 							}
@@ -324,8 +336,8 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 	            		//Provide progress info to listeners
 	            		try {
 	            			final QosMeasurementType type = QosMeasurementType.fromValue(curResult.getTestType().toString().toLowerCase());
-							qosTypeDoneCount.put(type, qosTypeDoneCount.get(type) + 1);	//this is safe, as we previously init map w/0 on the first test of each type
-							final float prog = qosTypeDoneCount.get(type) / (float) qosTypeToTaskCount.get(type);
+							qosTypeDoneCountMap.put(type, qosTypeDoneCountMap.get(type) + 1);	//this is safe, as we previously init map w/0 on the first test of each type
+							final float prog = qosTypeDoneCountMap.get(type) / (float) qosTypeTaskCountMap.get(type);
 							for (QoSMeasurementClientProgressListener l : progressListeners) {
 								l.onQoSTypeProgress(type, prog);
 							}
@@ -409,7 +421,23 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
     	final int progress = this.progress.get();
     	return progress;
     }
-    
+
+	/**
+	 *
+	 * @return
+	 */
+	public int getTestCount() {
+    	return testCount.get();
+	}
+
+	/**
+	 *
+	 * @return total progress (0..1) of this qos test
+	 */
+	public float getTotalProgress() {
+		return (float) progress.get() / (float) testCount.get();
+	}
+
     /**
      * 
      * @return
@@ -486,8 +514,24 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
     public ClientHolder getRMBTClient() {
     	return client;
     }
-    
-    /**
+
+	/**
+	 *
+	 * @return
+	 */
+	public Map<QosMeasurementType, Integer> getQosTypeTaskCountMap() {
+		return qosTypeTaskCountMap;
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public Map<QosMeasurementType, Integer> getQosTypeDoneCountMap() {
+		return qosTypeDoneCountMap;
+	}
+
+	/**
      * 
      * @return
      */

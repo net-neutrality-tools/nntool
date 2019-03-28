@@ -79,12 +79,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void startMeasurement(final MeasurementType measurementType) {
+    public void startMeasurement(final MeasurementType measurementType, final Bundle options) {
         switch (measurementType) {
             case QOS:
                 navigateTo(WorkflowTarget.MEASUREMENT_QOS);
                 final Intent intent = new Intent(MeasurementService.ACTION_START_QOS_MEASUREMENT,
                         null, this, MeasurementService.class);
+                intent.putExtras(options);
                 startService(intent);
                 break;
         }

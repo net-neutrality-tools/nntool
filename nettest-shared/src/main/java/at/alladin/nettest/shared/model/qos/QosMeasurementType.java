@@ -21,6 +21,7 @@ import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
 
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nntool.shared.qos.AbstractResult;
 import at.alladin.nntool.shared.qos.DnsResult;
 import at.alladin.nntool.shared.qos.EchoProtocolResult;
@@ -188,6 +189,31 @@ public enum QosMeasurementType {
             throw new IllegalArgumentException(value);
         } else {
             return constant;
+        }
+    }
+
+    public static QosMeasurementType fromQosTypeDto(final QoSMeasurementTypeDto dto) {
+        switch(dto) {
+            case DNS:
+                return DNS;
+            case TCP:
+                return TCP;
+            case UDP:
+                return UDP;
+            case VOIP:
+                return VOIP;
+            case WEBSITE:
+                return WEBSITE;
+            case HTTP_PROXY:
+                return HTTP_PROXY;
+            case ECHO_PROTOCOL:
+                return ECHO_PROTOCOL;
+            case NON_TRANSPARENT_PROXY:
+                return NON_TRANSPARENT_PROXY;
+            case TRACEROUTE:
+                return TRACEROUTE;
+            default:
+                return null;
         }
     }
 }
