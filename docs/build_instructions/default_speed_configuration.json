@@ -1,0 +1,121 @@
+{
+  "_id": "9091201f465f852120d5cc250b000c09",
+  "docType": "TaskConfiguration",
+  "name": "SPEED",
+  "version": "1.0.0",
+  "option_list": [
+    {
+      "name": "result_collector_base_url",
+      "value": "ENTER_COLLECTOR_BASE_URL"
+    }
+  ],
+  "measurement_parameters": {
+    "rtt_count": 5,
+    "javascript_measurement_code_url": "",
+    "measurement_server": {
+      "base_url": "ENTER_MEASUREMENT_SERVER_URL"
+    },
+    "measurement_configuration_map": {
+      "SINGLE_STREAM": {
+        "durations": {
+          "download_slow_start": 5000,
+          "download": 60000,
+          "upload_slow_start": 5000,
+          "upload": 60000
+        },
+        "flows": {
+          "download_slow_start": 1,
+          "download": 1,
+          "upload_slow_start": 1,
+          "upload": 1
+        },
+        "frame_sizes": {
+          "download_slow_start": 2048,
+          "download": 2048,
+          "upload_slow_start": 2048,
+          "upload": 2048
+        }
+      },
+      "LOW": {
+        "durations": {
+          "download_slow_start": 5000,
+          "download": 60000,
+          "upload_slow_start": 5000,
+          "upload": 60000
+        },
+        "flows": {
+          "download_slow_start": 4,
+          "download": 4,
+          "upload_slow_start": 4,
+          "upload": 4
+        },
+        "frame_sizes": {
+          "download_slow_start": 2048,
+          "download": 2048,
+          "upload_slow_start": 2048,
+          "upload": 2048
+        }
+      },
+      "MIDDLE": {
+        "durations": {
+          "download_slow_start": 5000,
+          "download": 60000,
+          "upload_slow_start": 5000,
+          "upload": 60000
+        },
+        "flows": {
+          "download_slow_start": 4,
+          "download": 4,
+          "upload_slow_start": 4,
+          "upload": 4
+        },
+        "frame_sizes": {
+          "download_slow_start": 32768,
+          "download": 32768,
+          "upload_slow_start": 32768,
+          "upload": 32768
+        }
+      },
+      "HIGH": {
+        "durations": {
+          "download_slow_start": 5000,
+          "download": 60000,
+          "upload_slow_start": 5000,
+          "upload": 60000
+        },
+        "flows": {
+          "download_slow_start": 4,
+          "download": 4,
+          "upload_slow_start": 4,
+          "upload": 4
+        },
+        "frame_sizes": {
+          "download_slow_start": 524288,
+          "download": 524288,
+          "upload_slow_start": 65535,
+          "upload": 65535
+        }
+      },
+      "VERY_HIGH": {
+        "durations": {
+          "download_slow_start": 5000,
+          "download": 60000,
+          "upload_slow_start": 5000,
+          "upload": 60000
+        },
+        "flows": {
+          "download_slow_start": 8,
+          "download": 8,
+          "upload_slow_start": 8,
+          "upload": 8
+        },
+        "frame_sizes": {
+          "download_slow_start": 524288,
+          "download": 524288,
+          "upload_slow_start": 65535,
+          "upload": 65535
+        }
+      }
+    }
+  }
+}
