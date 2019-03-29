@@ -106,7 +106,12 @@ public class CouchDbStorageService implements StorageService {
 		final MeasurementAgent agent = measurementAgentMapper.map(registrationRequest);
 		
 		if (agent.getUuid() != null) {
-			final MeasurementAgent dbAgent = measurementAgentRepository.findByUuid(agent.getUuid());
+			final MeasurementAgent dbAgent;
+			try {
+				dbAgent = measurementAgentRepository.findByUuid(agent.getUuid());
+			} catch (Exception ex) {
+				throw new StorageServiceException(ex);
+			}
 			if (dbAgent == null) {
 				throw new StorageServiceException("invalid uuid");
 			}
