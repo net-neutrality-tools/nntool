@@ -30,6 +30,7 @@ import at.alladin.nettest.shared.model.qos.QosMeasurementType;
  * @author bp
  *
  */
+@Deprecated
 public class MeasurementQosResult { // rename: QoSResult
 
 	/**

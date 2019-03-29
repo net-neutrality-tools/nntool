@@ -2,10 +2,13 @@ spring:
   application:
     name: statistic-service
     
-  profiles:
-    # This gets set during Gradle build.
-    # It can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`.
-    active: #spring.profiles.active#
+  jackson:
+    serialization:
+      indent-output: true
+      write-dates-as-timestamps: false
+
+server:
+  port: 8083
 
   #messages:
   #  basename: i18n/messages
@@ -15,7 +18,7 @@ data-export:
   compress: false
   suffix: FROM measurements m LEFT JOIN network_types n ON m.initial_network_type_id = n.id LEFT JOIN speed_measurements sm ON m.uuid = sm.measurement_uuid
   where-clause: status = 'FINISHED'
-  
+
   where-open-test-uuid-clause: AND open_data_uuid = ?::uuid
   where-day-clause: AND (EXTRACT (day FROM m.start_time AT TIME ZONE 'UTC') = ?
   where-month-clause: AND (EXTRACT (month FROM m.start_time AT TIME ZONE 'UTC') = ?

@@ -75,6 +75,4 @@ public class LmapCapabilityDto {
 	public void setTasks(List<LmapCapabilityTaskDto> tasks) {
 		this.tasks = tasks;
 	}
-	
-	
 }

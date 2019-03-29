@@ -102,4 +102,67 @@ public class EvaluatedQoSResult {
 	@JsonProperty("evaluation_keys")
 	private Map<String, String> evaluationKeyMap;
 
+	public QoSMeasurementTypeDto getType() {
+		return type;
+	}
+
+	public void setType(QoSMeasurementTypeDto type) {
+		this.type = type;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Integer getEvaluationCount() {
+		return evaluationCount;
+	}
+
+	public void setEvaluationCount(Integer evaluationCount) {
+		this.evaluationCount = evaluationCount;
+	}
+
+	public Integer getSuccessCount() {
+		return successCount;
+	}
+
+	public void setSuccessCount(Integer successCount) {
+		this.successCount = successCount;
+	}
+
+	public Integer getFailureCount() {
+		return failureCount;
+	}
+
+	public void setFailureCount(Integer failureCount) {
+		this.failureCount = failureCount;
+	}
+
+	public boolean isImplausible() {
+		return implausible;
+	}
+
+	public void setImplausible(boolean implausible) {
+		this.implausible = implausible;
+	}
+
+	public Map<String, String> getEvaluationKeyMap() {
+		return evaluationKeyMap;
+	}
+
+	public void setEvaluationKeyMap(Map<String, String> evaluationKeyMap) {
+		this.evaluationKeyMap = evaluationKeyMap;
+	}
 }

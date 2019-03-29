@@ -150,5 +150,4 @@ public class LmapControlDto {
 	public void setTasks(List<LmapTaskDto> tasks) {
 		this.tasks = tasks;
 	}
-	
 }

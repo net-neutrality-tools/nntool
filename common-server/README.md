@@ -22,3 +22,12 @@ With fullfilled prerequisites perform the following steps:
 
 ## Execution ##
 Run *build/common-server*. Add the *-d* option for daemon mode.
+
+## Docker container ##
+
+```bash
+cd <nntool_eu_directory>
+docker build -f common-server.Dockerfile -t common-server . 
+docker run --rm -it common-server
+```
+

@@ -47,7 +47,7 @@ public class ResultComparer {
 	 * @throws IllegalAccessException 
 	 * @throws IllegalArgumentException 
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	public static <T extends AbstractResult> ResultDesc compare(AbstractResult result1, AbstractResult result2, Hstore hstore, ResultOptions options) throws IllegalArgumentException, IllegalAccessException {
 		HstoreParser<T> parser = (HstoreParser<T>) hstore.getParser(result1.getClass());
 		
@@ -93,7 +93,6 @@ public class ResultComparer {
 	 * @param options
 	 * @return
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static ResultDesc getResultDescription(AbstractResult result1, AbstractResult result2, Hstore hstore, ResultOptions options) {
 		if ("true".equals(result1.getSuccessCondition()) || "1".equals(result1.getSuccessCondition())) {
 			ResultDesc resultDesc = (runCompare(result2, result1) == RESULT_SUCCESS ? 

@@ -115,6 +115,4 @@ public class LmapTaskDto {
 	public void setTagList(List<String> tagList) {
 		this.tagList = tagList;
 	}
-	
-	
 }

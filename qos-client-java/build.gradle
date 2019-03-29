@@ -1,23 +1,19 @@
 apply from: "${project.rootDir}/gradle/java7.gradle"
 
 dependencies {
-	compile project(':nettest-shared')
+	implementation project(path: ':nettest-shared', configuration: 'default')
 
-    compile group: 'dnsjava', name: 'dnsjava', version: dnsjava_version
-    compile group: 'net.sf.jopt-simple', name: 'jopt-simple', version: jopt_simple_version
-    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: httpclient_version
-    compile group: 'com.fatboyindustrial.gson-jodatime-serialisers', name: 'gson-jodatime-serialisers', version: gson_jodatime_serialisers_version
-    compile group: 'com.squareup.retrofit2', name: 'retrofit', version: retrofit_version
-	compile group: 'com.squareup.retrofit2', name: 'converter-gson', version: retrofit_version
-    compile group: 'com.j256.ormlite', name: 'ormlite-core', version: ormlite_version
+    implementation group: 'net.sf.jopt-simple', name: 'jopt-simple', version: jopt_simple_version
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: httpclient_version
+    implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: retrofit_version
+	implementation group: 'com.squareup.retrofit2', name: 'converter-gson', version: retrofit_version
+    implementation group: 'com.j256.ormlite', name: 'ormlite-core', version: ormlite_version
+	implementation group: 'org.yaml', name: 'snakeyaml', version: snakeyaml_version
 
-	compile group: 'org.yaml', name: 'snakeyaml', version: snakeyaml_version
+	//implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-	testCompile group: 'junit', name: 'junit', version: junit_version
-	testCompile group: 'org.jmockit', name: 'jmockit', version: '1.45'
-
-	compile fileTree(dir: 'libs', include: ['*.jar'])
-
+	testImplementation group: 'junit', name: 'junit', version: junit_version
+	testImplementation group: 'org.jmockit', name: 'jmockit', version: jmockit_version
 }
 
 def revisionPropertiesFile = file("${buildDir}/resources/main/revision.properties")

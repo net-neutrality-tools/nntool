@@ -1,5 +1,7 @@
 package at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,36 +20,6 @@ import com.google.gson.annotations.SerializedName;
 @JsonClassDescription("This DTO contains speed measurement instructions for the measurement agent.")
 @JsonInclude(Include.NON_EMPTY)
 public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
-
-	/**
-	 * @see Durations
-	 */
-	@io.swagger.annotations.ApiModelProperty(required = true, value = "Durations for each phase of the measurement.")
-	@JsonPropertyDescription("Durations for each phase of the measurement.")
-	@Expose
-	@SerializedName("durations")
-	@JsonProperty(required = true, value = "durations")
-	private Durations durations;
-	
-	/**
-	 * @see Flows
-	 */
-	@io.swagger.annotations.ApiModelProperty(required = true, value = "Number of (TCP) flows for each phase of the measurement.")
-	@JsonPropertyDescription("Number of (TCP) flows for each phase of the measurement.")
-	@Expose
-	@SerializedName("flows")
-	@JsonProperty(required = true, value = "flows")
-	private Flows flows;
-	
-	/**
-	 * Number of RTT packets that should be send in the RTT measurement.
-	 */
-	@io.swagger.annotations.ApiModelProperty(required = true, value = "Number of RTT packets that should be send in the RTT measurement.")
-	@JsonPropertyDescription("Number of RTT packets that should be send in the RTT measurement.")
-	@Expose
-	@SerializedName("rtt_count")
-	@JsonProperty(required = true, value = "rtt_count")
-	private Integer rttCount;
 	
 	/**
 	 * URL to the measurement code. Overrides the measurement agent's implementation if set.
@@ -69,6 +41,83 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 	@SerializedName("measurement_server")
 	@JsonProperty(required = true, value = "measurement_server")
 	private MeasurementServerConfig measurementServerConfig;
+	
+	/**
+	 * Number of RTT packets that should be send in the RTT measurement.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "Number of RTT packets that should be send in the RTT measurement.")
+	@JsonPropertyDescription("Number of RTT packets that should be send in the RTT measurement.")
+	@Expose
+	@SerializedName("rtt_count")
+	@JsonProperty(required = true, value = "rtt_count")
+	private Integer rttCount;
+	
+	@Expose
+	@SerializedName("measurement_configuration_map")
+	@JsonProperty(required = true, value = "measurement_configuration_map")
+	private Map<SpeedMeasurementClass, SpeedMeasurementConfiguration> measurementConfigurationMap;
+	
+	public static enum SpeedMeasurementClass {
+		SINGLE_STREAM,
+		LOW,
+		MIDDLE,
+		HIGH,
+		VERY_HIGH
+	}
+	
+	public static class SpeedMeasurementConfiguration {
+		/**
+		 * @see Durations
+		 */
+		@io.swagger.annotations.ApiModelProperty(required = true, value = "Durations for each phase of the measurement.")
+		@JsonPropertyDescription("Durations for each phase of the measurement.")
+		@Expose
+		@SerializedName("durations")
+		@JsonProperty(required = true, value = "durations")
+		private Durations durations;
+		
+		/**
+		 * @see Flows
+		 */
+		@io.swagger.annotations.ApiModelProperty(required = true, value = "Number of (TCP) flows for each phase of the measurement.")
+		@JsonPropertyDescription("Number of (TCP) flows for each phase of the measurement.")
+		@Expose
+		@SerializedName("flows")
+		@JsonProperty(required = true, value = "flows")
+		private Flows flows;
+		
+		@io.swagger.annotations.ApiModelProperty(required = true, value = "The frame sizes for each phase of the measurement.")
+		@JsonPropertyDescription("The frame sizes for each phase of the measurement.")
+		@Expose
+		@SerializedName("frame_sizes")
+		@JsonProperty(required = true, value = "frame_sizes")
+		private FrameSizes frameSizes;
+
+		public Durations getDurations() {
+			return durations;
+		}
+
+		public void setDurations(Durations durations) {
+			this.durations = durations;
+		}
+
+		public Flows getFlows() {
+			return flows;
+		}
+
+		public void setFlows(Flows flows) {
+			this.flows = flows;
+		}
+
+		public FrameSizes getFrameSizes() {
+			return frameSizes;
+		}
+
+		public void setFrameSizes(FrameSizes frameSizes) {
+			this.frameSizes = frameSizes;
+		}
+		
+	}
 
 	/**
 	 * Durations for each phase of the measurement.
@@ -91,6 +140,18 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 	@io.swagger.annotations.ApiModel(description = "Number of (TCP) flows for each phase of the measurement.")
 	@JsonClassDescription("Number of (TCP) flows for each phase of the measurement.")
 	public static class Flows extends PhaseCountOptions {
+		
+	}
+	
+	/**
+	 * The frame sizes for each phase of the measurement
+	 * 
+	 * @author fk
+	 *
+	 */
+	@io.swagger.annotations.ApiModel(description = "The frame sizes for each phase of the measurement.")
+	@JsonClassDescription("The frame sizes for each phase of the measurement.")
+	public static class FrameSizes extends PhaseCountOptions {
 		
 	}
 	
@@ -224,28 +285,13 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 		}
 	}
 
-	public Durations getDurations() {
-		return durations;
+	public Map<SpeedMeasurementClass, SpeedMeasurementConfiguration> getMeasurementConfigurationMap() {
+		return measurementConfigurationMap;
 	}
 
-	public void setDurations(Durations durations) {
-		this.durations = durations;
-	}
-
-	public Flows getFlows() {
-		return flows;
-	}
-
-	public void setFlows(Flows flows) {
-		this.flows = flows;
-	}
-
-	public Integer getRttCount() {
-		return rttCount;
-	}
-
-	public void setRttCount(Integer rttCount) {
-		this.rttCount = rttCount;
+	public void setMeasurementConfigurationMap(
+			Map<SpeedMeasurementClass, SpeedMeasurementConfiguration> measurementConfigurationMap) {
+		this.measurementConfigurationMap = measurementConfigurationMap;
 	}
 
 	public String getJavascriptMeasurementCodeUrl() {
@@ -263,4 +309,13 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 	public void setMeasurementServerConfig(MeasurementServerConfig measurementServerConfig) {
 		this.measurementServerConfig = measurementServerConfig;
 	}
+
+	public Integer getRttCount() {
+		return rttCount;
+	}
+
+	public void setRttCount(Integer rttCount) {
+		this.rttCount = rttCount;
+	}
+	
 }

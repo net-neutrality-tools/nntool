@@ -1,6 +1,9 @@
 package at.alladin.nettest.shared.berec.collector.api.v1.dto.version;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
@@ -16,6 +19,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.BasicResponse;
  */
 @io.swagger.annotations.ApiModel(description = "Class for all kind of versions that the server reveals.")
 @JsonClassDescription("Class for all kind of versions that the server reveals.")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
 public class VersionResponse extends BasicResponse {
 
 	/**
@@ -37,6 +42,16 @@ public class VersionResponse extends BasicResponse {
 	@SerializedName("collector_service_version")
 	@JsonProperty("collector_service_version")
 	private String collectorServiceVersion;
+	
+	/**
+	 * Result service version number.
+	 */
+	@io.swagger.annotations.ApiModelProperty("Result service version number.")
+	@JsonPropertyDescription("Result service version number.")
+	@Expose
+	@SerializedName("result_service_version")
+	@JsonProperty("result_service_version")
+	private String resultServiceVersion;
 	
 	/**
 	 * Map service version number.
@@ -89,7 +104,23 @@ public class VersionResponse extends BasicResponse {
 	public void setCollectorServiceVersion(String collectorServiceVersion) {
 		this.collectorServiceVersion = collectorServiceVersion;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getResultServiceVersion() {
+		return resultServiceVersion;
+	}
 
+	/**
+	 * 
+	 * @param resultServiceVersion
+	 */
+	public void setResultServiceVersion(String resultServiceVersion) {
+		this.resultServiceVersion = resultServiceVersion;
+	}
+	
 	/**
 	 * 
 	 * @return
