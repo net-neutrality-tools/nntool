@@ -1,0 +1,11 @@
+{
+  "_id": "9091201f465f852120d5cc250b001feb",
+  "docType": "Settings",
+  "uuid": "4e7567ef-175b-44f4-8436-8fd6d22dab48",
+  "urls": {
+    "controller_service": "ENTER_CONTROLLER_URL",
+    "controller_service_ipv4": "ipv4",
+    "controller_service_ipv6": "ipv6",
+    "collector_service": "ENTER_COLLECTOR_URL"
+  }
+}
