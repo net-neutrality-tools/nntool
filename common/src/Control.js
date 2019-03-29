@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-02-15
+ *      \date Last update: 2019-03-20
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -40,8 +40,6 @@ function WSControl()
     var wsFrames;
     var wsFramesTotal;
     var wsSpeedAvgBitS;
-    var wsSpeedMinBitS;
-    var wsSpeedMaxBitS;
     var wsOverhead;
     var wsOverheadTotal;
     var wsStartTime;
@@ -115,7 +113,7 @@ function WSControl()
     var dlMeasurementRunningTime    = 10000;
     var dlParallelStreams           = 4;
     var dlTimeout                   = 10000;
-    var dlFrameSize                    = 32768;
+    var dlFrameSize                 = 32768;
 
     var ulStartupTime               = 3000;
     var ulMeasurementRunningTime    = 10000;
@@ -198,12 +196,12 @@ function WSControl()
     /*-------------------------public functions------------------------*/
 
     /**
-     * @function measurementSetup
+     * @function measurementStart
      * @description Function to Start test cases
      * @public
      * @param {string} measurementParameters JSON coded measurement Parameters
      */
-    this.measurementSetup = function(measurementParameters)
+    this.measurementStart = function(measurementParameters)
     {
         resetValues();
 
@@ -211,27 +209,58 @@ function WSControl()
         measurementParameters   = JSON.parse(measurementParameters);
         wsTestCase              = measurementParameters.testCase;
 
-        if (typeof measurementParameters.wsParallelStreamsDownload  !== 'undefined' && wsTestCase === 'download')     dlParallelStreams    = Number(measurementParameters.wsParallelStreamsDownload);
-        if (typeof measurementParameters.wsParallelStreamsUpload  !== 'undefined' && wsTestCase === 'upload')         ulParallelStreams    = Number(measurementParameters.wsParallelStreamsUpload);
+        if (typeof measurementParameters.download.streams !== 'undefined' && wsTestCase === 'download')
+        {
+            dlParallelStreams   = Number(measurementParameters.download.streams );
+        }
+        if (typeof measurementParameters.upload.streams !== 'undefined' && wsTestCase === 'upload')
+        {
+            ulParallelStreams   = Number(measurementParameters.upload.streams );
+        }
 
-        if (typeof measurementParameters.wsFrameSizeDownload  !== 'undefined' && wsTestCase === 'download')         dlFrameSize            = Number(measurementParameters.wsFrameSizeDownload);
-        if (typeof measurementParameters.wsFrameSizeUpload  !== 'undefined' && wsTestCase === 'upload')             ulFrameSize            = Number(measurementParameters.wsFrameSizeUpload);
-        if (typeof measurementParameters.uploadFramesPerCall  !== 'undefined' && wsTestCase === 'upload')             uploadFramesPerCall        = Number(measurementParameters.uploadFramesPerCall);
+        if (typeof measurementParameters.download.frameSize !== 'undefined' && wsTestCase === 'download')
+        {
+            dlFrameSize         = Number(measurementParameters.download.frameSize);
+        }
+        if (typeof measurementParameters.upload.frameSize !== 'undefined' && wsTestCase === 'upload')
+        {
+            ulFrameSize         = Number(measurementParameters.upload.frameSize);
+        }
+        if (typeof measurementParameters.upload.framesPerCall !== 'undefined' && wsTestCase === 'upload')
+        {
+            uploadFramesPerCall = Number(measurementParameters.upload.framesPerCall);
+        }
 
         switch (wsTestCase)
         {
             case 'rtt':
             {
-                if (typeof measurementParameters.wsRttRequests !== 'undefined')             rttRequests             = Number(measurementParameters.wsRttRequests);
-                if (typeof measurementParameters.wsRttRequestTimeout !== 'undefined')       rttRequestTimeout       = Number(measurementParameters.wsRttRequestTimeout);
-                if (typeof measurementParameters.wsRttRequestWait !== 'undefined')          rttRequestWait          = Number(measurementParameters.wsRttRequestWait);
-                if (typeof measurementParameters.wsRttTimeout !== 'undefined')              rttTimeout              = Number(measurementParameters.wsRttTimeout);
-                if (typeof measurementParameters.wsRttPayloadSize !== 'undefined')          rttPayloadSize          = Number(measurementParameters.wsRttPayloadSize);
-                wsParallelStreams                                                   = 1;
-                wsMeasurementRunningTime                                            = rttTimeout;
-                wsReportInterval                                                    = rttReportInterval;
-                wsProtocol                                                          = rttProtocol;
-                wsTimeout                                                           = dlTimeout;
+                if (typeof measurementParameters.rttRequests !== 'undefined')
+                {
+                    rttRequests         = Number(measurementParameters.rttRequests);
+                }
+                if (typeof measurementParameters.rttRequestTimeout !== 'undefined')
+                {
+                    rttRequestTimeout   = Number(measurementParameters.rttRequestTimeout);
+                }
+                if (typeof measurementParameters.rttRequestWait !== 'undefined')
+                {
+                    rttRequestWait      = Number(measurementParameters.rttRequestWait);
+                }
+                if (typeof measurementParameters.rttTimeout !== 'undefined')
+                {
+                    rttTimeout          = Number(measurementParameters.rttTimeout);
+                }
+                if (typeof measurementParameters.rttPayloadSize !== 'undefined')
+                {
+                    rttPayloadSize      = Number(measurementParameters.rttPayloadSize);
+                }
+                wsParallelStreams           = 1;
+                wsMeasurementRunningTime    = rttTimeout;
+                wsReportInterval            = rttReportInterval;
+                wsProtocol                  = rttProtocol;
+                wsTimeout                   = rttTimeout;
+
                 break;
             }
             case 'download':
@@ -284,17 +313,43 @@ function WSControl()
             }
         }
 
-        if (typeof measurementParameters.wsTargets !== 'undefined')            wsTargets                   = measurementParameters.wsTargets;
-        if (typeof measurementParameters.wsTargetsRtt !== 'undefined')         wsTargetsRtt                = measurementParameters.wsTargetsRtt;
-        if (typeof measurementParameters.wsTLD !== 'undefined')                wsTLD                       = String(measurementParameters.wsTLD);
-        if (typeof measurementParameters.wsTargetPort !== 'undefined')         wsTargetPort                = String(measurementParameters.wsTargetPort);
-        if (typeof measurementParameters.wsWss !== 'undefined')                wsWss                       = String(measurementParameters.wsWss);
-        if (typeof measurementParameters.wsStartupTime !== 'undefined')        wsStartupTime               = Number(measurementParameters.wsStartupTime);
-        if (typeof measurementParameters.wsTimeout !== 'undefined')            wsTimeout                   = Number(measurementParameters.wsTimeout);
-        if (typeof measurementParameters.wsMeasureTime      !== 'undefined' && (wsTestCase === 'download' || wsTestCase === 'upload')) wsMeasurementRunningTime    = Number(measurementParameters.wsMeasureTime);
+        if (typeof measurementParameters.wsTargets !== 'undefined')
+        {
+            wsTargets                   = measurementParameters.wsTargets;
+        }
+        if (typeof measurementParameters.wsTargetsRtt !== 'undefined')
+        {
+            wsTargetsRtt                = measurementParameters.wsTargetsRtt;
+        }
+        if (typeof measurementParameters.wsTLD !== 'undefined')
+        {
+            wsTLD                       = String(measurementParameters.wsTLD);
+        }
+        if (typeof measurementParameters.wsTargetPort !== 'undefined')
+        {
+            wsTargetPort                = String(measurementParameters.wsTargetPort);
+        }
+        if (typeof measurementParameters.wsWss !== 'undefined')
+        {
+            wsWss                       = String(measurementParameters.wsWss);
+        }
+        if (typeof measurementParameters.wsStartupTime !== 'undefined')
+        {
+            wsStartupTime               = Number(measurementParameters.wsStartupTime);
+        }
+        if (typeof measurementParameters.wsTimeout !== 'undefined')
+        {
+            wsTimeout                   = Number(measurementParameters.wsTimeout);
+        }
+        if (typeof measurementParameters.wsMeasureTime      !== 'undefined' && (wsTestCase === 'download' || wsTestCase === 'upload'))
+        {
+            wsMeasurementRunningTime    = Number(measurementParameters.wsMeasureTime);
+        }
 
-        if (typeof measurementParameters.wsWorkerPath !== 'undefined')          wsWorkerPath               = String(measurementParameters.wsWorkerPath);
-
+        if (typeof measurementParameters.wsWorkerPath !== 'undefined')
+        {
+            wsWorkerPath               = String(measurementParameters.wsWorkerPath);
+        }
 
         wsAuthToken         = String(measurementParameters.wsAuthToken);
         wsAuthTimestamp     = String(measurementParameters.wsAuthTimestamp);
@@ -393,9 +448,8 @@ function WSControl()
      * @function measurementStop
      * @description Function to Stop test cases
      * @public
-     * @param {string} data JSON coded measurement Parameters
      */
-    this.measurementStop = function(data)
+    this.measurementStop = function()
     {
         clearInterval(wsTimeoutTimer);
         clearInterval(wsInterval);
@@ -823,14 +877,6 @@ function WSControl()
             wsOverhead           = (wsFrames * wsOverheadPerFrame);
             wsOverheadTotal      = (wsFramesTotal * wsOverheadPerFrame);
             wsSpeedAvgBitS       = (((wsData * 8) + (wsOverhead * 8)) / (Math.round(wsMeasurementTime) / 1000));
-
-            //set min/max rates
-            if (wsSpeedAvgBitS < wsSpeedMinBitS)
-                wsSpeedMinBitS = wsSpeedAvgBitS;
-            else if (wsSpeedMinBitS === 0)
-                wsSpeedMinBitS = wsSpeedAvgBitS;
-            if (wsSpeedAvgBitS > wsSpeedMaxBitS)
-                wsSpeedMaxBitS = wsSpeedAvgBitS;
         }
 
         var finishString     = '';
@@ -923,7 +969,7 @@ function WSControl()
         if (wsTestCase === 'upload')    report = getKPIsUpload(report);
         report = getKPIsAvailability(report);
 
-        if (wsControl !== null && wsControl.callback !== null && wsControl.callback === 'wsMeasurement')  this.wsMeasurement.controlCallback(JSON.stringify(report));
+        if (wsControl !== null && wsControl.callback !== null && wsControl.callback === 'wsMeasurement' && typeof this.wsMeasurement !== 'undefined')  this.wsMeasurement.controlCallback(JSON.stringify(report));
     }
 
     /**
@@ -934,7 +980,7 @@ function WSControl()
      */
     function getKPIsRtt(report)
     {
-        report.duration_ns                = wsRttValues.duration;
+        report.duration_ns              = wsRttValues.duration;
         report.average_ns               = wsRttValues.avg;
         report.median_ms                = wsRttValues.med;
         report.min_ns                   = wsRttValues.min;
@@ -1070,8 +1116,6 @@ function WSControl()
         wsFrames                    = 0;
         wsFramesTotal               = 0;
         wsSpeedAvgBitS              = 0;
-        wsSpeedMinBitS              = 0;
-        wsSpeedMaxBitS              = 0;
         wsOverhead                  = 0;
         wsOverheadTotal             = 0;
         wsStartTime                 = performance.now();

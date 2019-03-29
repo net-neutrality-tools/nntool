@@ -64,7 +64,7 @@ public class UdpMultiClientServer extends AbstractUdpServer<DatagramSocket> impl
 		super(DatagramSocket.class);
 		TestServerConsole.log("Initializing " + TAG + " on " + address + ":" + port, 1, TestServerServiceEnum.TEST_SERVER);
 		//this.socket = new DatagramSocket(port, TestServer.serverPreferences.getInetAddrBindTo());
-		this.socket = TestServer.createDatagramSocket(port, address);
+		this.socket = TestServer.getInstance().createDatagramSocket(port, address);
 		this.port = port;
 		this.isRunning = new AtomicBoolean(false);
 		this.address = address;
@@ -105,11 +105,12 @@ public class UdpMultiClientServer extends AbstractUdpServer<DatagramSocket> impl
 			
 				final byte[] data = dp.getData();
 				
-				final RtpVersion rtpVersion = RtpUtil.getVersion(data[0]);
+				final RtpVersion rtpVersion = 
+						(data != null && data.length > 0) ? RtpUtil.getVersion(data[0]) : RtpVersion.UNKNOWN;
 				
 				String clientUuid = null;
 				
-				if (!RtpVersion.VER2.equals(rtpVersion)) {
+				if (!RtpVersion.VER2.equals(rtpVersion) && data.length > 1) {
 					//Non RTP packet:
 					final int packetNumber = data[1];
 					
@@ -139,7 +140,7 @@ public class UdpMultiClientServer extends AbstractUdpServer<DatagramSocket> impl
 							+ " (on local port :" + socket.getLocalPort() + ") , #" + packetNumber + " TimeStamp: " + timeStamp + ", containing: " + clientUuid, 1, TestServerServiceEnum.UDP_SERVICE);
 					
 				}
-				else {
+				else if (data.length > 1) {
 					//RtpPacket received:
 					clientUuid = "VOIP_" + RtpUtil.getSsrc(data);
 				}
@@ -171,7 +172,7 @@ public class UdpMultiClientServer extends AbstractUdpServer<DatagramSocket> impl
 								}
 							};
 							
-							TestServer.getCommonThreadPool().submit(onReceiveRunnable);
+							TestServer.getInstance().getCommonThreadPool().submit(onReceiveRunnable);
 						}						
 					}
 				}

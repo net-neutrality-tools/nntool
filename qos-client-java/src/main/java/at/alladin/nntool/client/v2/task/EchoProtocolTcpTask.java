@@ -57,11 +57,7 @@ public class EchoProtocolTcpTask extends AbstractEchoProtocolTask {
 		final QoSTestResult result = initQoSTestResult(QoSTestResultEnum.ECHO_PROTOCOL);
 		try {
 			onStart(result);
-			
-			if (this.testPort != null) {
-				result.getResultMap().put(RESULT_STATUS, "ERROR");
-			}
-			
+
 			try {
 				System.out.println("ECHO_PROTOCOL_TCP_TASK: " + getTestServerAddr() + ":" + getTestServerPort());
 		    	
@@ -69,10 +65,11 @@ public class EchoProtocolTcpTask extends AbstractEchoProtocolTask {
 		    	if (this.testPort != null && this.testHost != null) {
 					try (Socket socket = getSocket(testHost, testPort, false, (int)(timeout/1000000))){
 						socket.setSoTimeout((int)(timeout/1000000));
+						
+						final long startTime = System.nanoTime();
 						sendMessage(socket, this.payload + "\n");
 						final String testResponse = readLine(socket);
-
-						System.out.println("Echo Protocol TCP TEST response: " + testResponse);
+						final long duration = System.nanoTime() - startTime;
 
 						result.getResultMap().put(RESULT, testResponse);
 						socket.close();
@@ -81,6 +78,7 @@ public class EchoProtocolTcpTask extends AbstractEchoProtocolTask {
 						} else {
 							result.getResultMap().put(RESULT_STATUS, "ERROR");
 						}
+						result.getResultMap().put(RESULT_RTT_NS, Long.toString(duration));
 					}
 					catch (SocketTimeoutException e) {
 						result.getResultMap().put(RESULT_STATUS, "TIMEOUT");
@@ -88,11 +86,14 @@ public class EchoProtocolTcpTask extends AbstractEchoProtocolTask {
 					catch (Exception e) {
 						result.getResultMap().put(RESULT_STATUS, "ERROR");
 					}
-		    	}
+		    	} else {
+		    		result.getResultMap().put(RESULT_STATUS, "ERROR");
+				}
 				
 			}
 			catch (Exception e) {
 				e.printStackTrace();
+				result.getResultMap().put(RESULT_STATUS, "ERROR");
 			}
 			
 			return result;

@@ -1,7 +1,6 @@
 /*******************************************************************************
  * Copyright 2013-2019 alladin-IT GmbH
- * Copyright 2014-2016 SPECURE GmbH
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-
+// based on: https://raw.githubusercontent.com/alladin-IT/open-rmbt/master/RMBTClient/src/at/alladin/rmbt/client/QualityOfServiceTest.java
 package at.alladin.nntool.client;
 
 import java.util.ArrayList;
@@ -206,7 +205,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 				List<AbstractQoSTask> testList = null;
 				testList = testMap.get(test.getTestType());
 				if (testList == null) {
-					testList = new ArrayList<AbstractQoSTask>();
+					testList = new ArrayList<>();
 					testMap.put(test.getTestType(), testList);
 				}
 				testList.add(test);
@@ -238,7 +237,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 				}
 				
 				if (!controlConnectionMap.containsKey(test.getTestServerAddr())) {
-					RMBTTestParameter params = new RMBTTestParameter(test.getTestServerAddr(), test.getTestServerPort(), 
+					TestParameter params = new TestParameter(test.getTestServerAddr(), test.getTestServerPort(),
 									nnTestSettings.isUseSsl(), test.getTaskDesc().getToken(), 
 									test.getTaskDesc().getDuration(), test.getTaskDesc().getNumThreads(),
 									test.getTaskDesc().getNumPings(), test.getTaskDesc().getStartTime());

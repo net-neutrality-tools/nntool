@@ -448,8 +448,8 @@ public class UdpTask extends AbstractQoSTask {
 			final TreeSet<Integer> duplicatePackets = new TreeSet<Integer>();
 			final TreeMap<Integer, Long> rttMap = new TreeMap<>();
 
-			public boolean onSend(DataOutputStream dataOut, int packetNumber) throws IOException {
-				System.out.println("UDP OUT Test: seinding packet #" + packetNumber);
+			public boolean onSend(DataOutputStream dataOut, int packetNumber, byte[] receivedPayload) throws IOException {
+				System.out.println("UDP OUT Test: sending packet #" + packetNumber);
 //	    		dataOut.writeByte(UDP_TEST_AWAIT_RESPONSE_IDENTIFIER);
 //	    		dataOut.writeByte(packetNumber);
 //    			dataOut.write(params.getUUID().getBytes());
@@ -528,22 +528,15 @@ public class UdpTask extends AbstractQoSTask {
 
 			final UdpStreamReceiver udpStreamReceiver = new UdpStreamReceiver(settings, new UdpStreamCallback() {
 
-				public boolean onSend(DataOutputStream dataOut, int packetNumber)
+				public boolean onSend(DataOutputStream dataOut, int packetNumber, byte[] receivedPayload)
 						throws IOException {
 					System.out.println("UDP IN SEND #" + (packetNumber-1) + " -> " + rttMap);
-					final UdpPayload udpPayload = new UdpPayload();
+
+					// only update the previously received payload
+					final UdpPayload udpPayload = UdpPayloadUtil.toUdpPayload(receivedPayload);
 					udpPayload.setCommunicationFlag(UDP_TEST_RESPONSE);
-					udpPayload.setPacketNumber(packetNumber-1);
-					udpPayload.setTimestamp(rttMap.get(packetNumber-1));
-					udpPayload.setUuid(params.getUUID());
 					dataOut.write(UdpPayloadUtil.toBytes(udpPayload));
 
-					/*
-		    		dataOut.writeByte(UDP_TEST_RESPONSE);
-		    		dataOut.writeByte(packetNumber);
-	    			dataOut.write(params.getUUID().getBytes());
-	    			dataOut.write(String.valueOf(System.currentTimeMillis()).getBytes());
-	    			*/
 					return true;
 				}
 

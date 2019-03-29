@@ -20,14 +20,14 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import at.alladin.nntool.client.RMBTTestParameter;
+import at.alladin.nntool.client.TestParameter;
 
 /**
  * 
  * @author lb
  *
  */
-public class TaskDesc extends RMBTTestParameter implements Serializable {
+public class TaskDesc extends TestParameter implements Serializable {
 	
 	public final static String QOS_TEST_IDENTIFIER_KEY = "qostest";
 

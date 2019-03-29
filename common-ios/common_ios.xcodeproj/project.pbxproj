@@ -17,6 +17,7 @@
 		273C63DC2118A09500235BC3 /* LogFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 273C63DA2118A09500235BC3 /* LogFormatter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		273C63DD2118A39900235BC3 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2782F72521188E2300C9E246 /* Common.framework */; };
 		273C63DF2118A3F700235BC3 /* Speed.m in Sources */ = {isa = PBXBuildFile; fileRef = 273C63DE2118A3F700235BC3 /* Speed.m */; };
+		277CE1EB224267BA0018EA06 /* ias.mobile.js in Resources */ = {isa = PBXBuildFile; fileRef = 277CE1EA224267BA0018EA06 /* ias.mobile.js */; };
 		2782F70C21188D6200C9E246 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2782F70B21188D6200C9E246 /* AppDelegate.m */; };
 		2782F70F21188D6200C9E246 /* SpeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2782F70E21188D6200C9E246 /* SpeedViewController.m */; };
 		2782F71221188D6200C9E246 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2782F71021188D6200C9E246 /* Main.storyboard */; };
@@ -38,7 +39,6 @@
 		27C8340B211895B3008C603B /* Database.m in Sources */ = {isa = PBXBuildFile; fileRef = 27C83407211895B3008C603B /* Database.m */; };
 		27FFE2BB21DD129F00C04717 /* TNSWidgets.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 27A5A1B721DD097600EA6F0B /* TNSWidgets.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		27FFE2BC21DD12A400C04717 /* NativeScript.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 27A5A1B421DD096700EA6F0B /* NativeScript.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		27FFE2C021DD1B8300C04717 /* common-mobile.js in Resources */ = {isa = PBXBuildFile; fileRef = 27FFE2BF21DD1B8300C04717 /* common-mobile.js */; };
 		E02ECDC321FE2FC500B80A57 /* QoSViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02ECDC221FE2FC500B80A57 /* QoSViewController.swift */; };
 		E50532B73C84099D2CAD406F /* Pods_Speed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDF1DCA5453F4B8ACD59FD62 /* Pods_Speed.framework */; };
 /* End PBXBuildFile section */
@@ -94,6 +94,7 @@
 		273C63D92118A09500235BC3 /* LogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogFormatter.m; sourceTree = "<group>"; };
 		273C63DA2118A09500235BC3 /* LogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogFormatter.h; sourceTree = "<group>"; };
 		273C63DE2118A3F700235BC3 /* Speed.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Speed.m; sourceTree = "<group>"; };
+		277CE1EA224267BA0018EA06 /* ias.mobile.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = ias.mobile.js; path = ../common/build/uglified/mobile/ias.mobile.js; sourceTree = "<group>"; };
 		2782F70721188D6200C9E246 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2782F70A21188D6200C9E246 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		2782F70B21188D6200C9E246 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -119,7 +120,6 @@
 		27C83405211895B3008C603B /* Http.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Http.m; sourceTree = "<group>"; };
 		27C83406211895B3008C603B /* Http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Http.h; sourceTree = "<group>"; };
 		27C83407211895B3008C603B /* Database.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Database.m; sourceTree = "<group>"; };
-		27FFE2BF21DD1B8300C04717 /* common-mobile.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "common-mobile.js"; path = "../common/build/uglified/common-mobile/common-mobile.js"; sourceTree = "<group>"; };
 		28EE0C32DE3E7DBF0DFCCE8A /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DF27A735AE0C029A8B935DD /* Pods_Demo_Release.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo_Release.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DAA87F7713FF1CC259046A3 /* Pods-Demo Release.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo Release.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo Release/Pods-Demo Release.debug.xcconfig"; sourceTree = "<group>"; };
@@ -188,7 +188,7 @@
 		2782F6FE21188D6200C9E246 = {
 			isa = PBXGroup;
 			children = (
-				27FFE2BF21DD1B8300C04717 /* common-mobile.js */,
+				277CE1EA224267BA0018EA06 /* ias.mobile.js */,
 				2782F72621188E2300C9E246 /* Common */,
 				273C63CE21189F6B00235BC3 /* Speed */,
 				2782F70921188D6200C9E246 /* Demo */,
@@ -459,7 +459,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27FFE2C021DD1B8300C04717 /* common-mobile.js in Resources */,
+				277CE1EB224267BA0018EA06 /* ias.mobile.js in Resources */,
 				2782F71721188D6300C9E246 /* LaunchScreen.storyboard in Resources */,
 				2782F71421188D6300C9E246 /* Assets.xcassets in Resources */,
 				2782F71221188D6200C9E246 /* Main.storyboard in Resources */,
@@ -564,7 +564,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/AlamofireObjectMapper/AlamofireObjectMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
@@ -591,7 +591,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -891,7 +891,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 499LGG5WHR;
 				INFOPLIST_FILE = "$(SRCROOT)/demo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -900,7 +900,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zafaco.Demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = wildcard;
 				SWIFT_OBJC_BRIDGING_HEADER = "Demo/Demo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
@@ -915,7 +915,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 499LGG5WHR;
 				INFOPLIST_FILE = "$(SRCROOT)/demo/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -924,7 +924,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zafaco.Demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = wildcard;
 				SWIFT_OBJC_BRIDGING_HEADER = "Demo/Demo-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
