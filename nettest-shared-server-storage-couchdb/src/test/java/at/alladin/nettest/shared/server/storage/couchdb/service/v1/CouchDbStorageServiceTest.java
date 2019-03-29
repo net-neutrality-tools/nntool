@@ -21,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -31,9 +32,18 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapRepo
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.TaskConfigurationQoS;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.TaskConfigurationSpeed;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationQoSRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationSpeedRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapperImpl;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportModelMapperImpl;
+import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapperImpl;
+import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.MeasurementAgentMapperImpl;
+import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsResponseMapperImpl;
 
 /**
  * 
@@ -42,6 +52,11 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportMode
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
+	MeasurementAgentMapperImpl.class, 
+	FullMeasurementResponseMapperImpl.class,
+	LmapReportModelMapperImpl.class, 
+	LmapTaskMapperImpl.class, 
+	SettingsResponseMapperImpl.class,
 	LmapReportModelMapperImpl.class,
 	CouchDbStorageService.class
 })
@@ -60,23 +75,32 @@ public class CouchDbStorageServiceTest {
 	@MockBean
 	private SettingsRepository settingsRepository;
 	
+	@MockBean
+	private MeasurementAgentRepository measurementAgentRepository;
+	
+	@MockBean
+	private TaskConfigurationSpeedRepository taskConfigurationSpeedRepository;
+
+	@MockBean
+	private TaskConfigurationQoSRepository taskConfigurationQoSRepository;
+	
 	@Autowired
 	private StorageService storageService;
 
-//	@Test
-//	public void testCouchDbStorageServiceSave() throws JsonParseException, JsonMappingException, IOException {
-//		final LmapReportDto lmapReportDto = objectMapper.readValue(model1Resource.getInputStream(), LmapReportDto.class);
-//		
-//		when(measurementRepository.save(any(Measurement.class))).then(returnsFirstArg());
-//		
-//		final MeasurementResultResponse resultResponse = storageService.save(lmapReportDto);
-//		
-//		verify(measurementRepository, times(1)).save(any(Measurement.class));
-//		
-//		assertThat(resultResponse.getUuid(), not(isEmptyOrNullString()));
-//		assertThat(resultResponse.getOpenDataUuid(), not(isEmptyOrNullString()));
-//		
-//		assertNotNull(UUID.fromString(resultResponse.getUuid()));
-//		assertNotNull(UUID.fromString(resultResponse.getOpenDataUuid()));
-//	}
+	@Test
+	public void testCouchDbStorageServiceSave() throws JsonParseException, JsonMappingException, IOException {
+		final LmapReportDto lmapReportDto = objectMapper.readValue(model1Resource.getInputStream(), LmapReportDto.class);
+		
+		when(measurementRepository.save(any(Measurement.class))).then(returnsFirstArg());
+		
+		final MeasurementResultResponse resultResponse = storageService.save(lmapReportDto);
+		
+		verify(measurementRepository, times(1)).save(any(Measurement.class));
+		
+		assertThat(resultResponse.getUuid(), not(isEmptyOrNullString()));
+		assertThat(resultResponse.getOpenDataUuid(), not(isEmptyOrNullString()));
+		
+		assertNotNull(UUID.fromString(resultResponse.getUuid()));
+		assertNotNull(UUID.fromString(resultResponse.getOpenDataUuid()));
+	}
 }
