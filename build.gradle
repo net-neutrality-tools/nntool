@@ -1,4 +1,7 @@
 buildscript {
+	ext {
+		eclipse_project_prefix = 'nntool'
+	}
     repositories {
         google()
 
@@ -17,13 +20,23 @@ buildscript {
     }
 }
 
+plugins {
+	id 'net.ltgt.apt' version '0.21'
+	id 'net.ltgt.apt-eclipse' version '0.21'
+	id 'net.ltgt.apt-idea' version '0.21'
+	
+	id 'com.adarshr.test-logger' version '1.6.0' // https://github.com/radarsh/gradle-test-logger-plugin
+}
+
+if (System.getProperty('include-code-coverage') != null) {
+	apply from: "${project.rootDir}/gradle/clover_aggregate.gradle"
+}
+
+// define a top-level clean task to delete top-level build directory and clover database
 task clean {
     delete "${project.rootDir}/build"
     delete "${project.rootDir}/.clover"
 }
-
-
-String eclipseProjectPrefix = 'nntool'
 
 allprojects { p ->
     group = 'at.alladin.nettest'
@@ -38,16 +51,29 @@ allprojects { p ->
         maven { url 'http://maven.restlet.com' }
     }
 
-    apply plugin: 'eclipse'
-    eclipse.project.name = "${eclipseProjectPrefix}-${p.name}"
-
-    apply from: "${project.rootDir}/gradle/clover.gradle"
+    apply plugin: 'eclipse' 
+    eclipse.project.name = "${eclipse_project_prefix}-${p.name}"
+    
+    apply plugin: 'net.ltgt.apt'
+    apply plugin: 'net.ltgt.apt-eclipse'
+    apply plugin: 'net.ltgt.apt-idea'
+    
+    apply plugin: 'com.adarshr.test-logger'
 }
 
-subprojects {
-	clean.doLast {
-			delete ".clover"
+subprojects { p ->
+	if (p.name.toLowerCase().contains('android')) {
+		return
+	}
+
+	if (System.getProperty('include-code-coverage') != null) {
+		apply from: "${project.rootDir}/gradle/clover.gradle"
+	}
+    
+    // make root project clean task depend on (= execute) subproject clean tasks
+	rootProject.clean.dependsOn tasks.matching { it.name == "clean" }
+    
+    clean.doLast {
+		delete ".clover"
 	}
 }
-
-defaultTasks 'build'

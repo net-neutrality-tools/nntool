@@ -155,7 +155,6 @@ public class QoSTestObjective implements Serializable {
 				+ ", testSummary=" + testSummary + "]";
 	}
 	
-	@SuppressWarnings("unchecked")
 	public String toHtml() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<h3>QoS-Test (uid: " + getUid() + ", test_class: " + getTestClass() + ")</h3>");

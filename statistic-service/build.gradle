@@ -3,7 +3,7 @@ apply from: "${project.rootDir}/gradle/spring_boot_project.gradle"
 // https://github.com/springfox/springfox-demos/tree/master/boot-static-docs
 
 dependencies {
-    compile project(':nettest-shared-server')
+    implementation project(path: ':nettest-shared-server', configuration: 'default')
 
     // javax.
     compile group: 'javax.transaction', name: 'javax.transaction-api'
@@ -12,7 +12,7 @@ dependencies {
     // Spring Framework
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: spring_boot_version
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: spring_boot_version
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: spring_boot_version
+//    compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: spring_boot_version
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: spring_boot_version
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: spring_boot_version
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-undertow', version: spring_boot_version
@@ -28,14 +28,14 @@ dependencies {
 	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: springfox_version
     compile group: 'io.springfox', name: 'springfox-swagger2', version: springfox_version
 
-    compile group: 'org.apache.poi', name: 'poi', version: apache_poi_version
-    compile group: 'org.apache.poi', name: 'poi-ooxml', version: apache_poi_version
-    compile group: 'org.apache.commons', name: 'commons-csv', version: commons_csv_version
+//    compile group: 'org.apache.poi', name: 'poi', version: apache_poi_version
+//    compile group: 'org.apache.poi', name: 'poi-ooxml', version: apache_poi_version
+//    compile group: 'org.apache.commons', name: 'commons-csv', version: commons_csv_version
 	compile group: 'commons-io', name: 'commons-io', version: commons_io_version
 
   // Postgresql connector
   	compile group: 'org.postgresql', name: 'postgresql', version: postgresql_version
-	
+
 	// JDBC connection pool, H2 DB
 	compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.8'
 	compile group: 'com.h2database', name: 'h2', version: '1.4.197'
@@ -43,8 +43,9 @@ dependencies {
 	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: jackson_version
 	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-csv', version: jackson_version
 
-    // Testing
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: spring_boot_version
+    ////
+
+    // TODO: exclude libraries that aren't needed (jackson, etc.)
 
     ///////////
 
@@ -61,4 +62,3 @@ dependencies {
 test {
     jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
 }
-

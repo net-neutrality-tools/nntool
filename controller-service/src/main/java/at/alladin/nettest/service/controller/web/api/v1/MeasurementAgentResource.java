@@ -2,6 +2,7 @@ package at.alladin.nettest.service.controller.web.api.v1;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import at.alladin.nettest.service.controller.config.ControllerServiceProperties;
+import at.alladin.nettest.service.controller.exception.MeasurementAgentRegistrationTermsAndConditionsNotAcceptedException;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
@@ -20,6 +23,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.R
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsResponse;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
+import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
+import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import io.swagger.annotations.ApiParam;
 
 /**
@@ -35,6 +40,12 @@ public class MeasurementAgentResource {
 	@SuppressWarnings("unused")
 	private final Logger logger = LoggerFactory.getLogger(MeasurementAgentResource.class);
 
+	@Autowired
+	private StorageService storageService;
+	
+	@Autowired
+	private ControllerServiceProperties controllerServiceProperties;
+	
 	/**
 	 * Registers a new  measurement agent.
 	 * This resource is used to register new measurement agents. Measurement agents will be assigned a UUID. Terms and conditions must be accepted in the request object.
@@ -50,8 +61,25 @@ public class MeasurementAgentResource {
 	})
 	@PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<ApiResponse<RegistrationResponse>> registerClient(@ApiParam("Registration request") @RequestBody ApiRequest<RegistrationRequest> registrationApiRequest) {
-		return ResponseHelper.ok(new RegistrationResponse());
+	public ResponseEntity<ApiResponse<RegistrationResponse>> registerMeasurementAgent(@ApiParam("Registration request") @RequestBody ApiRequest<RegistrationRequest> registrationApiRequest) {		
+		logger.debug("Incoming registration request: " + registrationApiRequest.toString());
+		final RegistrationRequest request = registrationApiRequest.getData();
+		if (!request.isTermsAndConditionsAccepted()) {
+			throw new MeasurementAgentRegistrationTermsAndConditionsNotAcceptedException();
+		}
+		
+		final RegistrationResponse registrationResponse = storageService.registerMeasurementAgent(registrationApiRequest);
+		
+		try {
+			registrationResponse.setSettings(storageService.getSettings(controllerServiceProperties.getSettingsUuid()));
+		} catch (StorageServiceException ex) {
+			//we let them register even if the settings have issues
+			ex.printStackTrace();
+		}
+		
+		logger.debug("returned response: " + registrationResponse.toString());
+		
+		return ResponseHelper.ok(registrationResponse);
 	}
 
 	/**
@@ -72,6 +100,7 @@ public class MeasurementAgentResource {
 	public ResponseEntity<ApiResponse<SettingsResponse>> getSettings(
 		@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid,
 		@ApiParam(required = true) ApiRequest<SettingsRequest> settingsApiRequest) {
-		return ResponseHelper.ok(new SettingsResponse());
+		//TODO: shall we check if the agent exists?
+		return ResponseHelper.ok(storageService.getSettings(controllerServiceProperties.getSettingsUuid()));
 	}
 }

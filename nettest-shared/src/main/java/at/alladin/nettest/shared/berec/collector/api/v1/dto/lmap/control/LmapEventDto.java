@@ -94,5 +94,4 @@ public class LmapEventDto {
 	public void setEvent(LmapEventTypeDto event) {
 		this.event = event;
 	}
-	
 }

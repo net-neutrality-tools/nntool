@@ -1,0 +1,24 @@
+apply from: "${project.rootDir}/gradle/java8.gradle"
+
+dependencies {
+	// Usually, Spring Boot Autoconfiguration projects have optional dependencies on the actual third-party software.
+	// Unfortunately, optional dependencies don't work with Gradle (https://github.com/gradle/gradle/issues/867), 
+	// even not if using the nebula.optional-base plugin 
+	// (related issue: https://github.com/nebula-plugins/gradle-extra-configurations-plugin/issues/41).
+	// As a consequence, we are using compileOnly here.
+	compileOnly project(path: ':couchdb-client', configuration: 'default')
+
+
+	implementation group: 'org.springframework.boot', name: 'spring-boot', version: spring_boot_version
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: spring_boot_version
+	implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: spring_boot_version
+
+    ////
+    
+    annotationProcessor group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: spring_boot_version
+
+	////
+
+    testImplementation group: 'org.springframework', name: 'spring-test', version: spring_framework_version
+    testImplementation group: 'junit', name: 'junit', version: junit_version
+}

@@ -3,6 +3,8 @@ package at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result;
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -17,6 +19,14 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
  */
 @io.swagger.annotations.ApiModel(description = "This DTO serves as the base class for specific sub measurement results.")
 @JsonClassDescription("This DTO serves as the base class for specific sub measurement results.")
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "deserialize_type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = SpeedMeasurementResult.class, name = "speed_result"),
+        @JsonSubTypes.Type(value = QoSMeasurementResult.class, name = "qos_result")
+})
 public abstract class SubMeasurementResult {
 
 // SubMeasurementTime

@@ -37,4 +37,20 @@ public class BriefSubMeasurement {
 	@SerializedName("duration_ns")
 	@JsonProperty(required = true, value = "duration_ns")
 	private Long durationNs;
+	
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
+	
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
+	}
+	
+	public Long getDurationNs() {
+		return durationNs;
+	}
+	
+	public void setDurationNs(Long durationNs) {
+		this.durationNs = durationNs;
+	}
 }

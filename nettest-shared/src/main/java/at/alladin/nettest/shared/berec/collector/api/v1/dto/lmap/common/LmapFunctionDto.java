@@ -53,5 +53,4 @@ public class LmapFunctionDto {
 	public void setRoleList(List<String> roleList) {
 		this.roleList = roleList;
 	}
-	
 }

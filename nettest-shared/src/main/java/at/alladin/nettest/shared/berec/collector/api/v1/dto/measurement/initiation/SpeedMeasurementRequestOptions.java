@@ -13,5 +13,4 @@ import com.fasterxml.jackson.annotation.JsonClassDescription;
 @JsonClassDescription("Speed measurement request options sent by the measurement agent. For example, these could contain demands from the measurement agent (e.g. extended duration, streams, etc.).")
 public class SpeedMeasurementRequestOptions extends MeasurementTypeRequestOptions {
 
-
 }

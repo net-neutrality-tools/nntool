@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * This immediate Event object triggers immediately when it is configured.
+ * 
  * @author fk
  */
 @io.swagger.annotations.ApiModel(description = "This immediate Event object triggers immediately when it is configured.")

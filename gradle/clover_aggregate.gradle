@@ -1,0 +1,11 @@
+apply plugin: 'com.bmuschko.clover'
+
+// https://github.com/bmuschko/gradle-clover-plugin
+clover {
+	report {
+        html = true
+        pdf = true
+        
+        filter = 'log,main,getters,setters'
+    }
+}

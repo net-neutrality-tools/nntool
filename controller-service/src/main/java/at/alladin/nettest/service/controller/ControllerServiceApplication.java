@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 import at.alladin.nettest.service.controller.config.ControllerServiceProperties;
 import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
+import at.alladin.nettest.shared.server.storage.couchdb.config.EnableCouchDbStorage;
 
 /**
  * The controller's main class which allows the controller to be started as stand-alone Java application or inside a servlet container.
@@ -23,6 +24,7 @@ import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
 	"at.alladin.nettest.service.controller", 
 	"at.alladin.nettest.shared.server.web.api.v1"
 })
+@EnableCouchDbStorage
 public class ControllerServiceApplication extends SpringBootServletInitializer {
 
 	/**

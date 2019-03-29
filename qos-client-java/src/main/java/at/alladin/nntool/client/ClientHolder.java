@@ -41,10 +41,12 @@ import javax.net.ssl.TrustManager;
 
 import org.json.JSONObject;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.helper.Config;
 import at.alladin.nntool.client.helper.RMBTOutputCallback;
 import at.alladin.nntool.client.helper.TestStatus;
 import at.alladin.nntool.client.v2.task.AbstractEchoProtocolTask;
+import at.alladin.nntool.client.v2.task.QoSTestEnum;
 import at.alladin.nntool.client.v2.task.TaskDesc;
 import at.alladin.nntool.client.v2.task.service.TestMeasurement;
 import at.alladin.nntool.client.v2.task.service.TrafficService;
@@ -110,6 +112,8 @@ public class ClientHolder
     private TrafficService trafficService;
     
     private InformationCollectorTool informationCollectorTool;
+
+    private String collectorUrl;
     
     public static ExecutorService getCommonThreadPool()
     {
@@ -122,6 +126,15 @@ public class ClientHolder
                                            final String echoServiceHost, final int[] echoServiceTcpPorts, final int[] echoServiceUdpPorts)
     {
         return new ClientHolder(host, controlConnectionPort, tcpTestPorts, udpTestPorts, echoServiceHost, echoServiceTcpPorts, echoServiceUdpPorts);
+    }
+
+    public static ClientHolder getInstance(final List<TaskDesc> taskDescList, final String collectorUrl) {
+        return new ClientHolder(taskDescList, collectorUrl);
+    }
+
+    private ClientHolder(final List<TaskDesc> taskDescList, final String collectorUrl) {
+        this.taskDescList = taskDescList;
+        this.collectorUrl = collectorUrl;
     }
 
     private ClientHolder(final String host, final String controlConnectionPort, final int[] tcpTestPorts, final int[] udpTestPorts,
@@ -207,7 +220,15 @@ public class ClientHolder
 
         }
     }
-    
+
+    public String getCollectorUrl() {
+        return collectorUrl;
+    }
+
+    public void setCollectorUrl(String collectorUrl) {
+        this.collectorUrl = collectorUrl;
+    }
+
     public void setTrafficService(TrafficService trafficService) {
     	this.trafficService = trafficService;
     }

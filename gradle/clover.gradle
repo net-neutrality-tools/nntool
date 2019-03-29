@@ -1,4 +1,5 @@
 apply plugin: 'com.bmuschko.clover'
+apply plugin: 'java'
 
 dependencies {
     clover 'org.openclover:clover:4.2.0'
@@ -8,6 +9,11 @@ dependencies {
 clover {
 	// if targetPercentage is defined the build will fail if the percentage isn't reached.
 	//targetPercentage = '50%'
+	
+	additionalSourceSet {
+        srcDirs = [compileJava.options.annotationProcessorGeneratedSourcesDirectory]
+        classesDir = sourceSets.main.java.outputDir
+    }
 	
     compiler {
         encoding = 'UTF-8'

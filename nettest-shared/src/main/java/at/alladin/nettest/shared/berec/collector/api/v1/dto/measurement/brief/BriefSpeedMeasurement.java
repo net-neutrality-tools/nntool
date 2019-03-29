@@ -56,4 +56,35 @@ public class BriefSpeedMeasurement extends BriefSubMeasurement {
 	@JsonProperty(required = true, value = "rtt_median_ns")
 	private Long rttMedianNs;
 
+	public Long getThroughputAvgDownloadBps() {
+		return throughputAvgDownloadBps;
+	}
+
+	public void setThroughputAvgDownloadBps(Long throughputAvgDownloadBps) {
+		this.throughputAvgDownloadBps = throughputAvgDownloadBps;
+	}
+
+	public Long getThroughputAvgUploadBps() {
+		return throughputAvgUploadBps;
+	}
+
+	public void setThroughputAvgUploadBps(Long throughputAvgUploadBps) {
+		this.throughputAvgUploadBps = throughputAvgUploadBps;
+	}
+
+	public Long getRttAverageNs() {
+		return rttAverageNs;
+	}
+
+	public void setRttAverageNs(Long rttAverageNs) {
+		this.rttAverageNs = rttAverageNs;
+	}
+
+	public Long getRttMedianNs() {
+		return rttMedianNs;
+	}
+
+	public void setRttMedianNs(Long rttMedianNs) {
+		this.rttMedianNs = rttMedianNs;
+	}
 }

@@ -16,8 +16,6 @@
 
 package at.alladin.nettest.shared.model;
 
-import javax.annotation.Generated;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -26,7 +24,8 @@ import com.google.gson.annotations.SerializedName;
  * @author lb
  *
  */
-@Generated("org.jsonschema2pojo")
+@Deprecated
+//@Generated("org.jsonschema2pojo")
 public class Ping {
 
     /**

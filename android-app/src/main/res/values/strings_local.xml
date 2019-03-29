@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ifont_watch" translatable="false">b</string>
+    <string name="ifont_history" translatable="false">i</string>
+    <string name="ifont_map" translatable="false">j</string>
+    <string name="ifont_statistics" translatable="false">l</string>
+    <string name="ifont_help" translatable="false">m</string>
+    <string name="ifont_about" translatable="false">o</string>
+    <string name="ifont_settings" translatable="false">p</string>
+    <string name="ifont_ping" translatable="false">q</string>
+    <string name="ifont_down" translatable="false">r</string>
+    <string name="ifont_up" translatable="false">s</string>
+    <string name="ifont_check" translatable="false">v</string>
+    <string name="ifont_close" translatable="false">w</string>
+    <string name="ifont_location" translatable="false">x</string>
+    <string name="ifont_voip" translatable="false">à</string>
+    <string name="ifont_dns" translatable="false">á</string>
+    <string name="ifont_arrow_average" translatable="false">ä</string>
+    <string name="ifont_web_rendering" translatable="false">è</string>
+    <string name="ifont_http_proxy" translatable="false">é</string>
+    <string name="ifont_qos" translatable="false">ë</string>
+    <string name="ifont_udp" translatable="false">ì</string>
+    <string name="ifont_non_transparent" translatable="false">í</string>
+    <string name="ifont_adjustment" translatable="false">ò</string>
+    <string name="ifont_tcp" translatable="false">ó</string>
+    <string name="ifont_filter" translatable="false">ù</string>
+    <string name="ifont_traceroute" translatable="false">ú</string>
+    <string name="ifont_watch_inverse" translatable="false">B</string>
+    <string name="ifont_traffic_in" translatable="false">I</string>
+    <string name="ifont_traffic_out" translatable="false">J</string>
+    <string name="ifont_hourglass" translatable="false">O</string>
+</resources>
