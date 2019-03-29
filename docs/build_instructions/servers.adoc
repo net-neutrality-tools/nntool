@@ -1,0 +1,42 @@
+= Servers
+:toc: left
+:toc-title: Table of Content
+
+== General
+
+All servers can be built using the ./gradlew build command.
+The config/application-dev.yml and config/application-prod.yml files of the servers allow binding them to a desired port (the server.port setting).
+
+=== CouchDB setup
+
+Most servers need a functioning CouchDB to work. This is where the collector stores its results, the controller fetches current settings and stores user data. The easiest way to get a runnable CouchDB is to start one in a docker container. A useful command for that is `sudo docker run -it -p DESIRED_PORT:5984 couchdb:2`, where DESIRED_PORT is the port used to connect to the CouchDB. If the container should be cleaned up after stopping it, add `--rm` to the command above.
+
+The CouchDB can then be inspected from the webbrowser by connecting to `localhost:DESIRED_PORT/_utils`. Note that the CouchDB databases will be constructed on startup of one of the servers (starting a server will create the measurement and/or settings database depending on the server's needs).
+
+Note: While not tested, setting up the docker contained CouchDB under Windows should work exactly the same way by using the Windows Subsystem for Linux.
+
+==== CouchDB server integration
+
+Servers that need a CouchDB to work have a corresponding setting in their `src/main/resources/config/application-dev.yml` and `src/main/resources/config/application-prod.yml`.  Under couchdb.connection.url the path to the  used CouchDB needs be entered (e.g. http://localhost:5984).
+
+=== PostgreSQL
+
+The export data service extracts the measurement data from a PostgreSQL for performance reasons. To setup the PostgreSQL database, execute the secondary_db_postgresql_schema.sql, provided under docs/project_management/milestones/1/deliverables/.
+
+==== PostgreSQL server integration
+
+Servers that need a PostgreSQL to work have a corresponding setting in their `src/main/resources/config/application-dev.yml` and `src/main/resources/config/application-prod.yml`.  Under datasource.url the path to the  used PostgreSQL needs be entered (e.g. http://localhost:5432/db).
+
+== Controller
+
+The controller uses both the measurement and the settings database. The settings database needs be setup correctly in order to build a running system. Default settings for the different aspects of the system are in the files: `default_base_settings`,  `default_speed_configuration` and `default_qos_configuration`. These can be added into the CouchDB's settings database, to make creating a working configuration easier.
+
+Note that the settings file to be used by the controller is set in the controller-services config.yml (under controller.settings_uuid).  If a settings file with a different uuid should be used by the controller, this setting needs to be updated (the current default setting matches the uuid from `default_base_settings`).
+
+== Collector
+
+The collector needs no specific setup, apart from the general CouchDB setup.
+
+== Export
+
+The open data export service needs a functioning PostgreSQL database to work. The configuration which fields are exported is located in the config/application.yml under data-export.fields.
