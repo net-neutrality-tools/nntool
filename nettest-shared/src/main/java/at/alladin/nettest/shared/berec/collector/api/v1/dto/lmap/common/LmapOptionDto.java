@@ -94,5 +94,4 @@ public class LmapOptionDto {
 	public void setMeasurementParameters(MeasurementTypeParameters measurementParameters) {
 		this.measurementParameters = measurementParameters;
 	}
-
 }

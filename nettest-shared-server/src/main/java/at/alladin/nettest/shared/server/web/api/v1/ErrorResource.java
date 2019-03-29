@@ -6,15 +6,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,13 +41,13 @@ public class ErrorResource implements ErrorController {
 	/**
 	 *
 	 */
-	@Inject
+	@Autowired
 	private ErrorAttributes errorAttributes;
 
 	/**
 	 *
 	 */
-	@Inject
+	@Autowired
 	private Environment env;
 
 	/**
@@ -57,7 +58,7 @@ public class ErrorResource implements ErrorController {
 	 */
 	@RequestMapping(value = "/error")
 	public ResponseEntity<ApiResponse<?>> error(WebRequest webRequest, HttpServletResponse response) {
-		final boolean includeStackTrace = env.acceptsProfiles("dev");
+		final boolean includeStackTrace = env.acceptsProfiles(Profiles.of("dev"));
 
 		final HttpStatus status = HttpStatus.valueOf(response.getStatus());
 

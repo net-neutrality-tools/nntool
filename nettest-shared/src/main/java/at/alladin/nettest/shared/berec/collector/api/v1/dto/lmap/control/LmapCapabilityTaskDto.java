@@ -97,5 +97,4 @@ public class LmapCapabilityTaskDto {
 	public void setVersion(String version) {
 		this.version = version;
 	}
-	
 }

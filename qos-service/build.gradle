@@ -1,20 +1,16 @@
 apply from: "${project.rootDir}/gradle/java8.gradle"
 
 dependencies {
-    compile project(':nettest-shared')
+    implementation project(path: ':nettest-shared', configuration: 'default')
 
-    compile group: 'log4j', name: 'apache-log4j-extras', version: log4j_extras_version
-    compile group: 'org.apache.camel', name: 'camel-restlet', version: camel_restlet_version
-    
-    // https://mvnrepository.com/artifact/junit/junit
-	testCompile group: 'junit', name: 'junit', version: junit_version
+	  // maybe migrate to slf4j
+    implementation group: 'log4j', name: 'apache-log4j-extras', version: log4j_extras_version
+    implementation group: 'org.apache.camel', name: 'camel-restlet', version: camel_restlet_version
 	
-	// https://mvnrepository.com/artifact/org.mockito/mockito-core
-	//testCompile group: 'org.mockito', name: 'mockito-core', version: '2.23.4'
-	
-	// https://mvnrepository.com/artifact/org.jmockit/jmockit
-	testCompile group: 'org.jmockit', name: 'jmockit', version: '1.45'
-	
+    ////
+
+    testImplementation group: 'junit', name: 'junit', version: junit_version
+    testImplementation group: 'org.jmockit', name: 'jmockit', version: jmockit_version
 }
 
 jar {
@@ -31,6 +27,10 @@ jar {
 
 
 test {
-	println "\n\nPATH: ${classpath.find { it.name.contains("jmockit") }.absolutePath}\n\n"
+    //println "\n\nPATH: ${classpath.find { it.name.contains("jmockit") }.absolutePath}\n\n"
     jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
+    
+    /*testLogging {
+        showStandardStreams = true
+    }*/
 }

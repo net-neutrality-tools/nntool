@@ -11,6 +11,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.TestParameter;
@@ -179,12 +181,15 @@ public class QoSControlConnectionTest {
         assertTrue("Unexpected sent token", testOutputStream.toString().startsWith("TOKEN token\n"));
         assertFalse("Message already contained a quit", testOutputStream.toString().contains("QUIT"));
 
+        final CountDownLatch latch = new CountDownLatch(1);
+
         final ControlConnectionResponseCallback tcpCallback = new ControlConnectionResponseCallback() {
             @Override
             public void onResponse(String response, String request) {
                 tcpCallbackCount++;
                 tcpCallbackResponse = response;
                 tcpCallbackRequest = request;
+                latch.countDown();
             }
         };
 
@@ -213,6 +218,8 @@ public class QoSControlConnectionTest {
 
         // the run loops until the tcp callback was called
         controlConnection.run();
+
+        latch.await(10, TimeUnit.SECONDS);
 
         assertEquals("TCP callback executed too many times", 1, tcpCallbackCount);
         assertEquals("Wrong callback response", "TCP TASK +ID2", tcpCallbackResponse);

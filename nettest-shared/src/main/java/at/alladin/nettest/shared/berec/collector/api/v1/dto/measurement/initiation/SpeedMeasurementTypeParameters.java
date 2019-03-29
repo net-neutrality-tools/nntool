@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * This DTO contains speed measurement instructions for the measurement agent.
- *
+ * 
  * @author alladin-IT GmbH (bp@alladin.at)
  *
  */
@@ -30,7 +30,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 	@SerializedName("javascript_measurement_code_url")
 	@JsonProperty("javascript_measurement_code_url")
 	private String javascriptMeasurementCodeUrl;
-
+	
 	/**
 	 * The measurement server that should be used, or the first measurement server that should be requested when load balancing.
 	 * @see MeasurementServerConfig
@@ -121,26 +121,26 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 
 	/**
 	 * Durations for each phase of the measurement.
-	 *
+	 * 
 	 * @author alladin-IT GmbH (bp@alladin.at)
 	 *
 	 */
 	@io.swagger.annotations.ApiModel(description = "Durations for each phase of the measurement.")
 	@JsonClassDescription("Durations for each phase of the measurement.")
 	public static class Durations extends PhaseCountOptions {
-
+		
 	}
-
+	
 	/**
 	 * Number of (TCP) flows for each phase of the measurement.
-	 *
+	 * 
 	 * @author alladin-IT GmbH (bp@alladin.at)
 	 *
 	 */
 	@io.swagger.annotations.ApiModel(description = "Number of (TCP) flows for each phase of the measurement.")
 	@JsonClassDescription("Number of (TCP) flows for each phase of the measurement.")
 	public static class Flows extends PhaseCountOptions {
-
+		
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 
 	/**
 	 * Object that stores an integer value for each speed measurement phase.
-	 *
+	 * 
 	 * @author alladin-IT GmbH (bp@alladin.at)
 	 *
 	 */
@@ -165,7 +165,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 	@JsonClassDescription("Object that stores an integer value for each speed measurement phase.")
 	@JsonInclude(Include.NON_EMPTY)
 	public static class PhaseCountOptions {
-
+		
 		/**
 		 * Value for the download slow-start phase.
 		 */
@@ -175,7 +175,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 		@SerializedName("download_slow_start")
 		@JsonProperty("download_slow_start")
 		private Integer downloadSlowStart;
-
+		
 		/**
 		 * Value for the download phase.
 		 */
@@ -185,7 +185,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 		@SerializedName("download")
 		@JsonProperty("download")
 		private Integer download;
-
+		
 		/**
 		 * Value for the upload slow-start phase.
 		 */
@@ -195,7 +195,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 		@SerializedName("upload_slow_start")
 		@JsonProperty("upload_slow_start")
 		private Integer uploadSlowStart;
-
+		
 		/**
 		 * Value for the upload phase.
 		 */
@@ -205,7 +205,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 		@SerializedName("upload")
 		@JsonProperty("upload")
 		private Integer upload;
-
+		
 		/**
 		 * Value for the RTT phase.
 		 */
@@ -256,16 +256,16 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 			this.rtt = rtt;
 		}
 	}
-
+	
 	/**
 	 * Configuration object that holds the measurement server information.
-	 *
+	 * 
 	 * @author alladin-IT GmbH (bp@alladin.at)
 	 *
 	 */
 	@JsonClassDescription("Configuration object that holds the measurement server information.")
 	public static class MeasurementServerConfig {
-
+		
 		/**
 		 * Measurement server base URL.
 		 */

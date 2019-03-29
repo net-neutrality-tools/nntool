@@ -1,61 +1,19 @@
 apply from: "${project.rootDir}/gradle/spring_boot_project.gradle"
 
-// https://github.com/springfox/springfox-demos/tree/master/boot-static-docs
-
-repositories {
-    maven { url 'https://maven.twttr.com/' }
-}
-
 dependencies {
-    compile project(':nettest-shared-server')
+	implementation project(path: ':nettest-shared-server-storage-couchdb', configuration: 'default')
 
-    compile group: 'javax.inject', name: 'javax.inject', version: javax_inject_version
+    // Server
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-undertow', version: spring_boot_version
 
-    // Spring boot devtools
-    compile("org.springframework.boot:spring-boot-devtools")
+    ////
 
-    // Import Spring Boot’s default logging framework (Logback).
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: spring_boot_version
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: spring_boot_version
 
-    // Support for aspect-oriented programming including spring-aop and AspectJ.
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: spring_boot_version
-
-    // Support for full-stack web development, including Tomcat and spring-webmvc.
-    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: spring_boot_version) {
-        exclude module: 'spring-boot-starter-tomcat'
-    }
-
-	// Swagger
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: springfox_version
-	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: springfox_version
-    compile group: 'io.springfox', name: 'springfox-bean-validators', version: springfox_version
-
-    // Servers
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-undertow', version: spring_boot_version
-
-    // jackson java8 support
-	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: jackson_version
-	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: jackson_version
-
-    // jsonschema generation
-    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jsonSchema', version: jackson_version
-
-    ///////////
-
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: spring_boot_version
-
-    testCompile group: 'junit', name: 'junit', version: junit_version
-    testCompile group: 'org.mockito', name: 'mockito-core'
-    testCompile group: 'org.hamcrest', name: 'hamcrest-library'
-    testCompile group: 'com.jayway.jsonpath', name: 'json-path'
-    testCompile group: 'com.jayway.awaitility', name: 'awaitility', version: awaility_version
-    testCompile group: 'org.assertj', name: 'assertj-core', version: assertj_core_version
-
-    ///////////
-
-    //optional group: 'org.springframework.boot', name:'spring-boot-configuration-processor', version: spring_boot_version
-}
-
-clean {
-	delete "target"
+    testImplementation group: 'junit', name: 'junit', version: junit_version
+    //testImplementation group: 'org.mockito', name: 'mockito-core'
+    //testImplementation group: 'org.hamcrest', name: 'hamcrest-library'
+    //testImplementation group: 'com.jayway.jsonpath', name: 'json-path'
+    //testImplementation group: 'com.jayway.awaitility', name: 'awaitility', version: awaility_version
+    //testImplementation group: 'org.assertj', name: 'assertj-core', version: assertj_core_version
 }

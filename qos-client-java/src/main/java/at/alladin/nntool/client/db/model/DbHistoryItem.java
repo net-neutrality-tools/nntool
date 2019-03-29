@@ -20,7 +20,6 @@ package at.alladin.nntool.client.db.model;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import at.alladin.nettest.shared.model.HistoryItem;
 /**
  * Created by lb on 12.09.16.
  */

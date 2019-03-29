@@ -27,8 +27,15 @@ public abstract class LmapEventTypeDto {
 		this.type = type;
 	}
 	
+	public EventTypeEnum getType() {
+		return type;
+	}
+	
+	public void setType(EventTypeEnum type) {
+		this.type = type;
+	}
+	
 	public static enum EventTypeEnum {
 		IMMEDIATE
 	}
-
 }

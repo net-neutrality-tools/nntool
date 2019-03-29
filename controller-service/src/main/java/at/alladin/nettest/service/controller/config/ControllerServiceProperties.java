@@ -10,5 +10,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "controller", ignoreUnknownFields = true)
 public class ControllerServiceProperties {
+	
+	private String settingsUuid;
 
+	public String getSettingsUuid() {
+		return settingsUuid;
+	}
+
+	public void setSettingsUuid(String settingsUuid) {
+		this.settingsUuid = settingsUuid;
+	}
+	
 }

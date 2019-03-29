@@ -21,6 +21,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = SpeedMeasurementTypeParameters.class, name = "speed_params"),
         @JsonSubTypes.Type(value = QoSMeasurementTypeParameters.class, name = "qos_params")
 })
-public class MeasurementTypeParameters {
+public abstract class MeasurementTypeParameters {
 
 }

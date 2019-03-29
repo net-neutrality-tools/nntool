@@ -26,4 +26,11 @@ public class BriefQoSMeasurement extends BriefSubMeasurement {
 	@JsonProperty("objective_count")
 	private Integer objectiveCount;
 
+	public Integer getObjectiveCount() {
+		return objectiveCount;
+	}
+	
+	public void setObjectiveCount(Integer objectiveCount) {
+		this.objectiveCount = objectiveCount;
+	}
 }

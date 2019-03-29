@@ -1,0 +1,187 @@
+package at.alladin.nettest.shared.server.storage.couchdb.domain.model;
+
+import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * Measurement server configuration.
+ * 
+ * @author alladin-IT GmbH (lb@alladin.at)
+ *
+ */
+@JsonClassDescription("Measurement server configuration.")
+public class MeasurementServer {
+	
+	/**
+	 * A UUID which serves as primary key.
+	 */
+	@JsonPropertyDescription("A UUID which serves as primary key.")
+	@Expose
+	@SerializedName("uuid")
+	@JsonProperty("uuid")
+	private String uuid;
+	
+	/**
+	 * @see MeasurementServerType
+	 */
+	@JsonPropertyDescription("Measurement server type.")
+	@Expose
+	@SerializedName("type")
+	@JsonProperty("type")
+	private MeasurementServerType type;
+
+	/**
+	 * Name (label) of this measurement server.
+	 */
+	@JsonPropertyDescription("Name (label) of this measurement server.")
+	@Expose
+	@SerializedName("name")
+	@JsonProperty("name")
+	private String name;
+	
+	/**
+	 * Port used for non-encrypted communication.
+	 */
+	@JsonPropertyDescription("Port used for non-encrypted communication.")
+	@Expose
+	@SerializedName("port")
+	@JsonProperty("port")
+	private Integer port;
+	
+	/**
+	 * Port used for encrypted communication.
+	 */
+	@JsonPropertyDescription("Port used for encrypted communication.")
+	@Expose
+	@SerializedName("port_tls")
+	@JsonProperty("port_tls")
+	private Integer portTls;
+
+	/**
+	 * @see MeasurementServerInfo
+	 */
+	@JsonPropertyDescription("Contains additional detail information about a measurement server.")
+	@Expose
+	@SerializedName("info")
+	@JsonProperty("info")
+	private MeasurementServerInfo info;
+
+	/**
+	 * The measurement server's IPv4 address or name.
+	 */
+	@JsonPropertyDescription("The measurement server's IPv4 address or name.")
+	@Expose
+	@SerializedName("address_ipv4")
+	@JsonProperty("address_ipv4")
+	private String addressIpv4;
+
+	/**
+	 * The measurement server's IPv6 address or name.
+	 */
+	@JsonPropertyDescription("The measurement server's IPv6 address or name.")
+	@Expose
+	@SerializedName("address_ipv6")
+	@JsonProperty("address_ipv6")
+	private String addressIpv6;
+
+	/**
+	 * Flag that indicates if this measurement server is enabled.
+	 */
+	@JsonPropertyDescription("Flag that indicates if this measurement server is enabled.")
+	@Expose
+	@SerializedName("enabled")
+	@JsonProperty("enabled")
+	private boolean enabled;
+
+	/**
+	 * The measurement server's secret key used to generate measurement tokens.
+	 */
+	@JsonPropertyDescription("The measurement server's secret key used to generate measurement tokens.")
+	@Expose
+	@SerializedName("secret_key")
+	@JsonProperty("secret_key")
+	private String secretKey;
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public MeasurementServerType getType() {
+		return type;
+	}
+
+	public void setType(MeasurementServerType type) {
+		this.type = type;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getPort() {
+		return port;
+	}
+
+	public void setPort(Integer port) {
+		this.port = port;
+	}
+
+	public Integer getPortTls() {
+		return portTls;
+	}
+
+	public void setPortTls(Integer portTls) {
+		this.portTls = portTls;
+	}
+
+	public MeasurementServerInfo getInfo() {
+		return info;
+	}
+
+	public void setInfo(MeasurementServerInfo info) {
+		this.info = info;
+	}
+
+	public String getAddressIpv4() {
+		return addressIpv4;
+	}
+
+	public void setAddressIpv4(String addressIpv4) {
+		this.addressIpv4 = addressIpv4;
+	}
+
+	public String getAddressIpv6() {
+		return addressIpv6;
+	}
+
+	public void setAddressIpv6(String addressIpv6) {
+		this.addressIpv6 = addressIpv6;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public String getSecretKey() {
+		return secretKey;
+	}
+
+	public void setSecretKey(String secretKey) {
+		this.secretKey = secretKey;
+	}
+}

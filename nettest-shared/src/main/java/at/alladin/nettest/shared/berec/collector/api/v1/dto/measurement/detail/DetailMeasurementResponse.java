@@ -30,4 +30,11 @@ public class DetailMeasurementResponse extends BasicResponse {
 	@JsonProperty(required = true, value = "groups")
 	private List<DetailMeasurementGroup> groups;
 	
+	public List<DetailMeasurementGroup> getGroups() {
+		return groups;
+	}
+	
+	public void setGroups(List<DetailMeasurementGroup> groups) {
+		this.groups = groups;
+	}
 }
