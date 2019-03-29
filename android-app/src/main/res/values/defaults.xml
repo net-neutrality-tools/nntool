@@ -1,10 +1,4 @@
 <resources>
-    <string translatable="false" name="default_agent_group_name"></string>
-    <string translatable="false" name="default_controller_host">10.9.8.39</string>
-    <string translatable="false" name="default_controller_path_prefix">/</string>
-    <integer translatable="false" name="default_controller_port">8080</integer>
-    <bool translatable="false" name="default_controller_connection_is_encrypted">false</bool>
-
     <string translatable="false" name="default_speed_configuration_version">1.0.0</string>
     <string translatable="false" name="default_qos_configuration_version">1.0.0</string>
 

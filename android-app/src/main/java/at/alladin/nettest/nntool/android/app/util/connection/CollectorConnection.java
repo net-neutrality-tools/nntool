@@ -14,13 +14,12 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.M
  */
 public class CollectorConnection extends AbstractConnection<CollectorService> {
 
-    private final static int DEFAULT_COLLECTOR_PORT = 8081;
+    public CollectorConnection(final String url) {
+        super(url, null, CollectorService.class);
+    }
 
-    private final static boolean DEFAULT_COLLECTOR_HAS_ENCRYPTION = false;
-
-    public CollectorConnection(final String hostname) {
-        super(DEFAULT_COLLECTOR_HAS_ENCRYPTION, hostname, null,
-                DEFAULT_COLLECTOR_PORT, "/", CollectorService.class);
+    public CollectorConnection(final boolean isEncrypted, final String hostname, final int port, final String pathPrefix) {
+        super(isEncrypted, hostname, null, port, pathPrefix, CollectorService.class);
     }
 
     public MeasurementResultResponse sendMeasurementReport(final LmapReportDto reportDto) {

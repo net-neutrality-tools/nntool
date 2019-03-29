@@ -28,6 +28,11 @@ public abstract class AbstractConnection<T> {
     public AbstractConnection(final boolean isEncrypted, final String hostname,
                               final String hostname6, final int port, final String pathPrefix,
                               final Class<T> serviceClazz) {
+        this ((isEncrypted ? "https://" : "http://") + hostname + ":" + port + pathPrefix,
+                (isEncrypted ? "https://" : "http://") + hostname6 + ":" + port + pathPrefix, serviceClazz);
+    }
+
+    public AbstractConnection(final String url, final String url6, final Class<T> serviceClazz) {
         final List<Protocol> protocols = new ArrayList<>();
         protocols.add(Protocol.HTTP_1_1);
         OkHttpClient httpClient = new OkHttpClient.Builder()
@@ -37,7 +42,7 @@ public abstract class AbstractConnection<T> {
                 .build();
 
         Retrofit r = new Retrofit.Builder()
-                .baseUrl((isEncrypted ? "https://" : "http://") + hostname + ":" + port + pathPrefix)
+                .baseUrl(url)
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(httpClient)
                 .build();
@@ -47,7 +52,7 @@ public abstract class AbstractConnection<T> {
 
 
         Retrofit r6 = new Retrofit.Builder()
-                .baseUrl((isEncrypted ? "https://" : "http://") + hostname6 + ":" + port + pathPrefix)
+                .baseUrl(url6 == null ? url : url6)
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(httpClient)
                 .build();

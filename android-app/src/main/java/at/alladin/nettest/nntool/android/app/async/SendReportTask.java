@@ -49,7 +49,7 @@ public class SendReportTask extends AsyncTask<Void, Void, MeasurementResultRespo
 
     @Override
     protected MeasurementResultResponse doInBackground(Void... voids) {
-        final CollectorConnection collectorConnection = ConnectionUtil.createCollectorConnection(collectorUrl);
+        final CollectorConnection collectorConnection = ConnectionUtil.createCollectorConnection(context, collectorUrl);
         return collectorConnection.sendMeasurementReport(reportDto);
     }
 

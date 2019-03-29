@@ -1,7 +1,5 @@
 package at.alladin.nettest.nntool.android.app.util;
 
-import android.content.Context;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -13,13 +11,11 @@ import java.util.Map;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.common.LmapOptionDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.QoSMeasurementTypeParameters;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.v2.task.TaskDesc;
-import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 
 /**
  * TODO: move this class to somewhere else (nettest-shared?)
