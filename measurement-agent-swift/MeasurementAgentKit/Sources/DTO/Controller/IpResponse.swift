@@ -1,4 +1,4 @@
-// MeasurementAgentKit: LmapOptionDto.swift, created on 28.03.19
+// MeasurementAgentKit: IpResponse.swift, created on 29.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -17,28 +17,28 @@
 
 import Foundation
 
-/// Options may be used to identify the role of a Task or to pass a Channel name to a Task.
-class LmapOptionDto: Codable {
+/// Response object sent to the measurement agent after a successful IP request.
+class IpResponse: Codable {
 
-    /// An identifier uniquely identifying an option.
-    /// This identifier is required by YANG to uniquely identify a name/value pair,
-    /// but it otherwise has no semantic value.
-    var id: String?
+    /// The measurement agent's public IP address.
+    var ipAddress: String?
 
-    /// The name of the option.
-    var name: String?
-
-    /// The value of the option.
-    var value: String?
-
-    /// The additional measurement parameters of the option.
-    var measurementParameters: MeasurementTypeParametersDto? // TODO: should be moved to LmapResultDto
+    /// The measurement agent's public IP version (IPv4 or IPv6).
+    var ipVersion: IpVersion?
 
     ///
     enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case value
-        case measurementParameters = "measurement-parameters"
+        case ipAddress = "ip_address"
+        case ipVersion = "ip_version"
     }
+}
+
+/// IP version (IPv4 or IPv6).
+enum IpVersion: String, Codable {
+
+    ///
+    case ipv4 = "IPv4"
+
+    ///
+    case ipv6 = "IPv6"
 }

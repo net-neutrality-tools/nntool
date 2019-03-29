@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// This module defines a data model for a single reporting result, which is a part of a Large-Scale Measurement Platform (LMAP).
-class LmapResultDto<T>: Mappable {
+class LmapResultDto<T: Codable>: Codable {
 
     /// The name of the Schedule that produced the result.
     var schedule: String?
@@ -31,7 +30,7 @@ class LmapResultDto<T>: Mappable {
     var task: String?
 
     /// This container is a placeholder for runtime parameters defined in Task-specific data models augmenting the base LMAP report data model.
-    var parameters: Any?
+    var parameters: String? //Any?
 
     /// The list of options there were in use when the measurement was performed.
     /// This list must include both the Task-specific options as well as the Action-specific options.
@@ -75,24 +74,19 @@ class LmapResultDto<T>: Mappable {
     var results: [T]?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        schedule    <- map["schedule"]
-        action      <- map["action"]
-        task        <- map["task"]
-        parameters  <- map["parameters"]
-        options     <- map["option"]
-        tags        <- map["tag"]
-        event       <- map["event"]
-        start       <- map["start"]
-        end         <- map["end"]
-        cycleNumber <- map["cycle-number"]
-        status      <- map["status"]
-        conflict    <- map["conflict"]
-        results     <- map["results"]
+    enum CodingKeys: String, CodingKey {
+        case schedule
+        case action
+        case task
+        case parameters
+        case options     = "option"
+        case tags        = "tag"
+        case event
+        case start
+        case end
+        case cycleNumber = "cycle-number"
+        case status
+        case conflict
+        case results
     }
 }

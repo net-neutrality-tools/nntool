@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// Contains signal information from a point in time on the measurement agent.
-class SignalDto: Mappable {
+class SignalDto: Codable {
 
     /// Network type id as it gets returned by the Android API.
     var networkTypeId: Int?
@@ -37,19 +36,19 @@ class SignalDto: Mappable {
     var wifiRssiDbm: Int?
 
     /// The received signal strength of 2G or 3G connections, in dBm (If available).
-    //var signalStrength2g3gDbm: Int?
+    var signalStrength2g3gDbm: Int?
 
     /// The LTE reference signal received power, in dBm (If available).
-    //var lteRsrpDbm: Int?
+    var lteRsrpDbm: Int?
 
     /// The LTE reference signal received quality, in dB (If available).
-    //var lteRsrqDb: Int?
+    var lteRsrqDb: Int?
 
     /// The LTE reference signal signal-to-noise ratio, in dB (If available).
-    //var lteRssnrDb: Int?
+    var lteRssnrDb: Int?
 
     /// The LTE channel quality indicator (If available).
-    //var lteCqi: Int?
+    var lteCqi: Int?
 
     /// SSID of the network.
     var wifiSsid: String?
@@ -58,23 +57,18 @@ class SignalDto: Mappable {
     var wifiBss: String?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        networkTypeId         <- map["network_type_id"]
-        time                  <- map["time"]
-        relativeTimeNs        <- map["relative_time_ns"]
-        wifiLinkSpeedBps      <- map["wifi_link_speed_bps"]
-        wifiRssiDbm           <- map["wifi_rssi_dbm"]
-        //signalStrength2g3gDbm <- map["signal_strength_2g3g_dbm"]
-        //lteRsrpDbm            <- map["lte_rsrp_dbm"]
-        //lteRsrqDb             <- map["lte_rsrp_db"]
-        //lteRssnrDb            <- map["lte_rssnr_db"]
-        //lteCqi                <- map["lte_cqi"]
-        wifiSsid              <- map["wifi_ssid"]
-        wifiBss               <- map["wifi_bssid"]
+    enum CodingKeys: String, CodingKey {
+        case networkTypeId         = "network_type_id"
+        case time
+        case relativeTimeNs        = "relative_time_ns"
+        case wifiLinkSpeedBps      = "wifi_link_speed_bps"
+        case wifiRssiDbm           = "wifi_rssi_dbm"
+        case signalStrength2g3gDbm = "signal_strength_2g3g_dbm"
+        case lteRsrpDbm            = "lte_rsrp_dbm"
+        case lteRsrqDb             = "lte_rsrp_db"
+        case lteRssnrDb            = "lte_rssnr_db"
+        case lteCqi                = "lte_cqi"
+        case wifiSsid              = "wifi_ssid"
+        case wifiBss               = "wifi_bssid"
     }
 }

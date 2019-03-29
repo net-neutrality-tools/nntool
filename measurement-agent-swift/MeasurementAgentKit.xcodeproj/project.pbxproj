@@ -41,6 +41,17 @@
 		E0B9A401224D6313002AB640 /* LmapSuppressionDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A400224D6313002AB640 /* LmapSuppressionDto.swift */; };
 		E0B9A403224D6426002AB640 /* SuppressionStateDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A402224D6426002AB640 /* SuppressionStateDto.swift */; };
 		E0B9A405224D648D002AB640 /* LmapEventDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A404224D648D002AB640 /* LmapEventDto.swift */; };
+		E0B9A40A224E634D002AB640 /* ControlService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A409224E634D002AB640 /* ControlService.swift */; };
+		E0B9A40C224E6373002AB640 /* CollectorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A40B224E6373002AB640 /* CollectorService.swift */; };
+		E0B9A40E224E638B002AB640 /* ResultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A40D224E638B002AB640 /* ResultService.swift */; };
+		E0B9A410224E645B002AB640 /* RestApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A40F224E645B002AB640 /* RestApiService.swift */; };
+		E0B9A413224E65BF002AB640 /* IpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A412224E65BF002AB640 /* IpResponse.swift */; };
+		E0B9A416224E66B7002AB640 /* RegistrationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A415224E66B7002AB640 /* RegistrationResponse.swift */; };
+		E0B9A418224E66FB002AB640 /* SettingsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A417224E66FB002AB640 /* SettingsResponse.swift */; };
+		E0B9A41A224E67E4002AB640 /* ApiBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A419224E67E4002AB640 /* ApiBase.swift */; };
+		E0B9A41C224E6860002AB640 /* ApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A41B224E6860002AB640 /* ApiResponse.swift */; };
+		E0B9A41E224E6910002AB640 /* VersionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A41D224E6910002AB640 /* VersionResponse.swift */; };
+		E0B9A421224EB2ED002AB640 /* VersionResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A420224EB2ED002AB640 /* VersionResponseTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +105,17 @@
 		E0B9A400224D6313002AB640 /* LmapSuppressionDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LmapSuppressionDto.swift; sourceTree = "<group>"; };
 		E0B9A402224D6426002AB640 /* SuppressionStateDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuppressionStateDto.swift; sourceTree = "<group>"; };
 		E0B9A404224D648D002AB640 /* LmapEventDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LmapEventDto.swift; sourceTree = "<group>"; };
+		E0B9A409224E634D002AB640 /* ControlService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlService.swift; sourceTree = "<group>"; };
+		E0B9A40B224E6373002AB640 /* CollectorService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectorService.swift; sourceTree = "<group>"; };
+		E0B9A40D224E638B002AB640 /* ResultService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultService.swift; sourceTree = "<group>"; };
+		E0B9A40F224E645B002AB640 /* RestApiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestApiService.swift; sourceTree = "<group>"; };
+		E0B9A412224E65BF002AB640 /* IpResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IpResponse.swift; sourceTree = "<group>"; };
+		E0B9A415224E66B7002AB640 /* RegistrationResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationResponse.swift; sourceTree = "<group>"; };
+		E0B9A417224E66FB002AB640 /* SettingsResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsResponse.swift; sourceTree = "<group>"; };
+		E0B9A419224E67E4002AB640 /* ApiBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiBase.swift; sourceTree = "<group>"; };
+		E0B9A41B224E6860002AB640 /* ApiResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiResponse.swift; sourceTree = "<group>"; };
+		E0B9A41D224E6910002AB640 /* VersionResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersionResponse.swift; sourceTree = "<group>"; };
+		E0B9A420224EB2ED002AB640 /* VersionResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionResponseTests.swift; sourceTree = "<group>"; };
 		F5899225AFC5FD7CB8A7B061 /* Pods-All-MeasurementAgentKitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-MeasurementAgentKitTests.release.xcconfig"; path = "Target Support Files/Pods-All-MeasurementAgentKitTests/Pods-All-MeasurementAgentKitTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -172,6 +194,7 @@
 		E0B9A3B9224D3EAB002AB640 /* MeasurementAgentKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				E0B9A41F224EB2D8002AB640 /* DTO */,
 				E0B9A3BA224D3EAB002AB640 /* MeasurementAgentKitTests.swift */,
 				E0B9A3BC224D3EAB002AB640 /* Info.plist */,
 			);
@@ -182,6 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				E0B9A3CA224D4113002AB640 /* MeasurementAgent.swift */,
+				E0B9A408224E6321002AB640 /* Servers */,
 				E0B9A3E9224D574A002AB640 /* DTO */,
 			);
 			path = Sources;
@@ -239,8 +263,10 @@
 		E0B9A3E9224D574A002AB640 /* DTO */ = {
 			isa = PBXGroup;
 			children = (
-				E0B9A3D1224D4426002AB640 /* ApiRequestInfo.swift */,
+				E0B9A414224E65CA002AB640 /* Shared */,
+				E0B9A411224E65AA002AB640 /* Controller */,
 				E0B9A3D5224D46FC002AB640 /* GeoLocationDto.swift */,
+				E0B9A41D224E6910002AB640 /* VersionResponse.swift */,
 				E0B9A3D3224D4661002AB640 /* MeasurementAgentTypeDto.swift */,
 				E0B9A3D7224D4872002AB640 /* TimeBasedResultDto.swift */,
 				E0B9A3D9224D4B65002AB640 /* SignalDto.swift */,
@@ -249,6 +275,45 @@
 				E0B9A3DF224D4FC8002AB640 /* PointInTimeValueDto.swift */,
 				E0B9A3E5224D544B002AB640 /* MeasurementTypeParametersDto.swift */,
 				E0B9A3CC224D4131002AB640 /* Lmap */,
+			);
+			path = DTO;
+			sourceTree = "<group>";
+		};
+		E0B9A408224E6321002AB640 /* Servers */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A409224E634D002AB640 /* ControlService.swift */,
+				E0B9A40B224E6373002AB640 /* CollectorService.swift */,
+				E0B9A40D224E638B002AB640 /* ResultService.swift */,
+				E0B9A40F224E645B002AB640 /* RestApiService.swift */,
+			);
+			path = Servers;
+			sourceTree = "<group>";
+		};
+		E0B9A411224E65AA002AB640 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A412224E65BF002AB640 /* IpResponse.swift */,
+				E0B9A417224E66FB002AB640 /* SettingsResponse.swift */,
+				E0B9A415224E66B7002AB640 /* RegistrationResponse.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		E0B9A414224E65CA002AB640 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A3D1224D4426002AB640 /* ApiRequestInfo.swift */,
+				E0B9A419224E67E4002AB640 /* ApiBase.swift */,
+				E0B9A41B224E6860002AB640 /* ApiResponse.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		E0B9A41F224EB2D8002AB640 /* DTO */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A420224EB2ED002AB640 /* VersionResponseTests.swift */,
 			);
 			path = DTO;
 			sourceTree = "<group>";
@@ -400,6 +465,7 @@
 				"${BUILT_PRODUCTS_DIR}/ObjcExceptionBridging/ObjcExceptionBridging.framework",
 				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/QoSKit/QoSKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Siesta/Siesta.framework",
 				"${BUILT_PRODUCTS_DIR}/XCGLogger/XCGLogger.framework",
 				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
 			);
@@ -413,6 +479,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjcExceptionBridging.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/QoSKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Siesta.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XCGLogger.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
 			);
@@ -469,31 +536,41 @@
 			buildActionMask = 2147483647;
 			files = (
 				E0B9A3F3224D5B28002AB640 /* LmapAgentDto.swift in Sources */,
+				E0B9A41E224E6910002AB640 /* VersionResponse.swift in Sources */,
 				E0B9A3DE224D4E79002AB640 /* MeasurementResultNetworkPointInTimeDto.swift in Sources */,
 				E0B9A3DC224D4CF8002AB640 /* CellLocationDto.swift in Sources */,
 				E0B9A3F9224D5F5C002AB640 /* LmapStopDto.swift in Sources */,
+				E0B9A41C224E6860002AB640 /* ApiResponse.swift in Sources */,
 				E0B9A3D6224D46FC002AB640 /* GeoLocationDto.swift in Sources */,
 				E0B9A3D8224D4872002AB640 /* TimeBasedResultDto.swift in Sources */,
 				E0B9A3E4224D52CE002AB640 /* LmapOptionDto.swift in Sources */,
 				E0B9A3F1224D5A93002AB640 /* LmapFunctionDto.swift in Sources */,
 				E0B9A3ED224D5900002AB640 /* LmapCapabilityDto.swift in Sources */,
+				E0B9A40C224E6373002AB640 /* CollectorService.swift in Sources */,
 				E0B9A3F5224D5C4D002AB640 /* LmapTaskDto.swift in Sources */,
 				E0B9A3EF224D59A3002AB640 /* LmapCapabilityTaskDto.swift in Sources */,
 				E0B9A3EB224D5780002AB640 /* LmapControlDto.swift in Sources */,
 				E0B9A3CB224D4113002AB640 /* MeasurementAgent.swift in Sources */,
 				E0B9A3DA224D4B65002AB640 /* SignalDto.swift in Sources */,
+				E0B9A413224E65BF002AB640 /* IpResponse.swift in Sources */,
 				E0B9A403224D6426002AB640 /* SuppressionStateDto.swift in Sources */,
+				E0B9A41A224E67E4002AB640 /* ApiBase.swift in Sources */,
 				E0B9A3E0224D4FC8002AB640 /* PointInTimeValueDto.swift in Sources */,
 				E0B9A3FD224D602C002AB640 /* LmapStateDto.swift in Sources */,
+				E0B9A416224E66B7002AB640 /* RegistrationResponse.swift in Sources */,
 				E0B9A3F7224D5D5E002AB640 /* LmapScheduleDto.swift in Sources */,
 				E0B9A3E2224D50E1002AB640 /* LmapResultDto.swift in Sources */,
 				E0B9A3E8224D5497002AB640 /* LmapConflictDto.swift in Sources */,
 				E0B9A3FB224D5FA9002AB640 /* ExecutionModeDto.swift in Sources */,
 				E0B9A3FF224D60B0002AB640 /* LmapActionDto.swift in Sources */,
 				E0B9A401224D6313002AB640 /* LmapSuppressionDto.swift in Sources */,
+				E0B9A410224E645B002AB640 /* RestApiService.swift in Sources */,
+				E0B9A40E224E638B002AB640 /* ResultService.swift in Sources */,
 				E0B9A3D0224D428D002AB640 /* LmapReportDto.swift in Sources */,
 				E0B9A405224D648D002AB640 /* LmapEventDto.swift in Sources */,
 				E0B9A3E6224D544B002AB640 /* MeasurementTypeParametersDto.swift in Sources */,
+				E0B9A418224E66FB002AB640 /* SettingsResponse.swift in Sources */,
+				E0B9A40A224E634D002AB640 /* ControlService.swift in Sources */,
 				E0B9A3D4224D4661002AB640 /* MeasurementAgentTypeDto.swift in Sources */,
 				E0B9A3D2224D4426002AB640 /* ApiRequestInfo.swift in Sources */,
 			);
@@ -504,6 +581,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E0B9A3BB224D3EAB002AB640 /* MeasurementAgentKitTests.swift in Sources */,
+				E0B9A421224EB2ED002AB640 /* VersionResponseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

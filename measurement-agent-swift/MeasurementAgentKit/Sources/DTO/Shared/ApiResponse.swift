@@ -1,4 +1,4 @@
-// MeasurementAgentKit: MeasurementTypeParametersDto.swift, created on 28.03.19
+// MeasurementAgentKit: ApiResponse.swift, created on 29.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -17,8 +17,14 @@
 
 import Foundation
 
-/// Base class for sub measurement parameters that are sent to the measurement agent.
-/// These can contain special measurement instructions (e.g. stream count, duration, timeouts, ...).
-class MeasurementTypeParametersDto: Codable {
+/// Object that is used as wrapper for every response.
+class ApiResponse<T: Codable>: ApiBase<T> {
 
+    /// Optional list of errors that occurred during request processing.
+    var errors: [String]?
+
+    ///
+    /*enum CodingKeys: String, CodingKey {
+        case errors
+    }*/
 }

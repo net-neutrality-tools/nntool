@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// A list of Tasks that the Measurement Agent supports.
-class LmapCapabilityTaskDto: Mappable {
+class LmapCapabilityTaskDto: Codable {
 
     /// The unique name of a Task capability.
     /// Refers to the LmapTaskDto.name and needs be the exact same in order to match.
@@ -37,15 +36,10 @@ class LmapCapabilityTaskDto: Mappable {
     var version: String?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        taskName  <- map["name"]
-        functions <- map["function"]
-        program   <- map["program"]
-        version   <- map["version"]
+    enum CodingKeys: String, CodingKey {
+        case taskName  = "name"
+        case functions = "function"
+        case program
+        case version
     }
 }

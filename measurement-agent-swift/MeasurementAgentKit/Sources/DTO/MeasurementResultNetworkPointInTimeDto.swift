@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// This DTO contains all relevant network information of a single point in time.
-class MeasurementResultNetworkPointInTimeDto: Mappable {
+class MeasurementResultNetworkPointInTimeDto: Codable {
 
     /// Time and date the signal information was captured (UTC).
     var time: Date?
@@ -55,22 +54,17 @@ class MeasurementResultNetworkPointInTimeDto: Mappable {
     var simOperatorName: String?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        time                  <- map["time"]
-        relativeTimeNs        <- map["relative_time_ns"]
-        networkTypeId         <- map["network_type_id"]
-        ssid                  <- map["ssid"]
-        bssid                 <- map["bssid"]
-        networkCountry        <- map["network_country"]
-        networkOperatorMccMnc <- map["network_operator_mcc_mnc"]
-        networkOperatorName   <- map["network_operator_name"]
-        simCountry            <- map["sim_country"]
-        simOperatorMccMnc     <- map["sim_operator_mcc_mnc"]
-        simOperatorName       <- map["sim_operator_name"]
+    enum CodingKeys: String, CodingKey {
+        case time
+        case relativeTimeNs        = "relative_time_ns"
+        case networkTypeId         = "network_type_id"
+        case ssid
+        case bssid
+        case networkCountry        = "network_country"
+        case networkOperatorMccMnc = "network_operator_mcc_mnc"
+        case networkOperatorName   = "network_operator_name"
+        case simCountry            = "sim_country"
+        case simOperatorMccMnc     = "sim_operator_mcc_mnc"
+        case simOperatorName       = "sim_operator_name"
     }
 }

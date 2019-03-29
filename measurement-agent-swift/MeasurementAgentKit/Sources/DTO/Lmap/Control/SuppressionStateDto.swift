@@ -18,8 +18,14 @@
 import Foundation
 
 /// TODO
-enum SuppressionStateDto: String {
+enum SuppressionStateDto: String, Codable {
+
+    ///
     case enabled = "ENABLED"
+
+    ///
     case disabled = "DISABLED"
+
+    ///
     case active = "ACTIVE"
 }

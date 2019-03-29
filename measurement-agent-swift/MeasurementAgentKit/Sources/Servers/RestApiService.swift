@@ -1,4 +1,4 @@
-// MeasurementAgentKit: MeasurementTypeParametersDto.swift, created on 28.03.19
+// MeasurementAgentKit: RestApiService.swift, created on 29.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,9 +16,10 @@
  ******************************************************************************/
 
 import Foundation
+import Alamofire
+import Siesta
 
-/// Base class for sub measurement parameters that are sent to the measurement agent.
-/// These can contain special measurement instructions (e.g. stream count, duration, timeouts, ...).
-class MeasurementTypeParametersDto: Codable {
+///
+class RestApiService {
 
 }

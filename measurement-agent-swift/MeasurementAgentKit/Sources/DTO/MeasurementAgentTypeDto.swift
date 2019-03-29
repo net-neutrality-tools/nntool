@@ -18,7 +18,7 @@
 import Foundation
 
 /// The type of measurement agent.
-enum MeasurementAgentTypeDto: String {
+enum MeasurementAgentTypeDto: String, Codable {
 
     ///
     case mobile = "MOBILE"

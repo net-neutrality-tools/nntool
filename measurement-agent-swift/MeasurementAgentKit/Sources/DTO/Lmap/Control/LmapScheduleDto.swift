@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// Configuration of a particular Schedule.
-class LmapScheduleDto: Mappable {
+class LmapScheduleDto: Codable {
 
     /// The locally unique, administratively assigned name for this Schedule.
     var name: String?
@@ -75,25 +74,20 @@ class LmapScheduleDto: Mappable {
     var actions: [LmapActionDto]?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        name            <- map["name"]
-        start           <- map["start"]
-        stop            <- map["stop"]
-        executionMode   <- map["execution-mode"]
-        tags            <- map["tag"]
-        suppressionTags <- map["suppression-tag"]
-        state           <- map["state"]
-        storage         <- map["storage"]
-        invocations     <- map["invocations"]
-        suppressions    <- map["suppressions"]
-        overlaps        <- map["overlaps"]
-        failures        <- map["failures"]
-        lastInvocation  <- map["last-invocation"]
-        actions         <- map["action"]
+    enum CodingKeys: String, CodingKey {
+        case name
+        case start
+        case stop
+        case executionMode   = "execution-mode"
+        case tags            = "tag"
+        case suppressionTags = "suppression-tag"
+        case state
+        case storage
+        case invocations
+        case suppressions
+        case overlaps
+        case failures
+        case lastInvocation  = "last-invocation"
+        case actions         = "action"
     }
 }

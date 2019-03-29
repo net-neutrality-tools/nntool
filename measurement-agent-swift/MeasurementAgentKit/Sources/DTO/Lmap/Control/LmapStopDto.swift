@@ -16,18 +16,8 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// 
-class LmapStopDto: Mappable {
+class LmapStopDto: Codable {
 
-    ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-
-    }
 }

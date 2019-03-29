@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// Configuration of LMAP Tasks.
-class LmapTaskDto: Mappable {
+class LmapTaskDto: Codable {
 
     /// The unique name of a Task.
     var name: String?
@@ -39,16 +38,11 @@ class LmapTaskDto: Mappable {
     var tags: [String]?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        name      <- map["name"]
-        functions <- map["function"]
-        program   <- map["program"]
-        options   <- map["option"]
-        tags      <- map["tag"]
+    enum CodingKeys: String, CodingKey {
+        case name
+        case functions = "function"
+        case program
+        case options   = "option"
+        case tags      = "tag"
     }
 }

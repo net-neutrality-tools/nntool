@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// Configuration and control of a Measurement Agent.
-class LmapControlDto: Mappable {
+class LmapControlDto: Codable {
 
     /// Agent capabilities including a list of supported Tasks.
     var capabilities: LmapCapabilityDto?
@@ -45,19 +44,14 @@ class LmapControlDto: Mappable {
     var additionalRequestInfo: ApiRequestInfo?
 
     ///
-    public required init?(map: Map) {
+    enum CodingKeys: String, CodingKey {
+        case capabilities
+        case agent
+        case tasks
+        case schedules
+        case suppressions
+        case events
 
-    }
-
-    ///
-    public func mapping(map: Map) {
-        capabilities <- map["capabilities"]
-        agent        <- map["agent"]
-        tasks        <- map["tasks"]
-        schedules    <- map["schedules"]
-        suppressions <- map["suppressions"]
-        events       <- map["events"]
-
-        additionalRequestInfo <- map["additional-request-info"]
+        case additionalRequestInfo = "additional-request-info"
     }
 }

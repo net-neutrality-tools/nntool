@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// Agent capabilities including a list of supported Tasks.
-class LmapCapabilityDto: Mappable {
+class LmapCapabilityDto: Codable {
 
     /// A short description of the software implementing the Measurement Agent.
     /// This should include the version number of the Measurement Agent software.
@@ -32,14 +31,9 @@ class LmapCapabilityDto: Mappable {
     var tasks: [LmapCapabilityTaskDto]?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        version <- map["version"]
-        tags    <- map["tag"]
-        tasks   <- map["tasks"]
+    enum CodingKeys: String, CodingKey {
+        case version
+        case tags = "tag"
+        case tasks
     }
 }

@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// The names of Tasks overlapping with the execution of the Task that has produced this result.
-class LmapConflictDto: Mappable {
+class LmapConflictDto: Codable {
 
     /// The names of Tasks overlapping with the execution of the Task that has produced this result.
     var scheduleName: String?
@@ -33,14 +32,9 @@ class LmapConflictDto: Mappable {
     var taskName: String?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        scheduleName <- map["scheduleName"]
-        actionName   <- map["actionName"]
-        taskName     <- map["taskName"]
+    enum CodingKeys: String, CodingKey {
+        case scheduleName = "schedule-name"
+        case actionName   = "action-name"
+        case taskName     = "task-name"
     }
 }

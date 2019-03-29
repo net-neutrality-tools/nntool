@@ -16,49 +16,43 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// Cell location information from a point in time on the measurement agent.
-/*class CellLocationDto: Mappable {
-    
+class CellLocationDto: Codable {
+
     /// Contains the cell-ID, if available.
     var cellId: Int?
-    
+
     /// Contains the area code (e.g. location area code (GSM), tracking area code (LTE)), if available.
     var areaCode: Int?
-    
+
     /// Time and date the signal information was captured (UTC).
     var time: Date?
-    
+
     /// Contains the primary scrambling code, if available.
     var primaryScramblingCode: Int?
-    
+
     /// Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN), if available.
     var arfcn: Int?
-    
+
     /// Relative time in nanoseconds (to test begin).
     var relativeTimeNs: UInt64?
-    
+
     /// Geographic location latitude of this cell.
     var latitude: Double?
-    
+
     /// Geographic location longitude of this cell.
     var longitude: Double?
-    
+
     ///
-    public required init?(map: Map) {
-        
+    enum CodingKeys: String, CodingKey {
+        case cellId                = "cell_id"
+        case areaCode              = "area_code"
+        case time
+        case primaryScramblingCode = "primary_scrambling_code"
+        case arfcn
+        case relativeTimeNs        = "relative_time_ns"
+        case latitude
+        case longitude
     }
-    
-    ///
-    public func mapping(map: Map) {
-        cellId                <- map["cell_id"]
-        areaCode              <- map["area_code"]
-        time                  <- map["time"]
-        primaryScramblingCode <- map["primary_scrambling_code"]
-        arfcn                 <- map["arfcn"]
-        relativeTimeNs        <- map["relative_time_ns"]
-        latitude              <- map["latitude"]
-        longitude             <- map["longitude"]
-    }
-}*/
+}

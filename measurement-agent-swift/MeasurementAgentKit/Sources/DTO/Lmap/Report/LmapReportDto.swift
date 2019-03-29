@@ -16,11 +16,10 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// This module defines a data model for reporting results from Measurement Agents,
 /// which are part of a Large-Scale Measurement Platform (LMAP), to result data Collectors.
-class LmapReportDto: Mappable {
+class LmapReportDto: Codable {
 
     /// The date and time when this result report was sent to a Collector.
     var date: Date?
@@ -44,20 +43,13 @@ class LmapReportDto: Mappable {
     var timeBasedResult: TimeBasedResultDto?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        date <- map["date"]
-
-        agentId <- map["agent-id"]
-        groupId <- map["group-id"]
-        measurementPoint <- map["measurement-point"]
-
-        //results <- map["results"]
-        additionalRequestInfo <- map["additional_request_info-point"]
-        timeBasedResult <- map["time_based_result-point"]
+    enum CodingKeys: String, CodingKey {
+        case date
+        case agentId = "agent-id"
+        case groupId = "group-id"
+        case measurementPoint = "measurement-point"
+        //case results
+        case additionalRequestInfo = "additional_request_info-point"
+        case timeBasedResult = "time_based_result-point"
     }
 }

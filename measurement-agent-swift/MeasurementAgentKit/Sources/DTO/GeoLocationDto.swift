@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 ///
-class GeoLocationDto: Mappable {
+class GeoLocationDto: Codable {
 
     /// Time and date the geographic location information was captured (UTC).
     var time: Date?
@@ -49,21 +48,15 @@ class GeoLocationDto: Mappable {
     var relativeTimeNs: UInt64?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        time      <- map["time"]
-        accuracy  <- map["accuracy"]
-        altitude  <- map["altitude"]
-        heading   <- map["heading"]
-        speed     <- map["speed"]
-        provider  <- map["provider"]
-        latitude  <- map["latitude"]
-        longitude <- map["longitude"]
-
-        relativeTimeNs <- map["relative_time_ns"]
+    enum CodingKeys: String, CodingKey {
+        case time
+        case accuracy
+        case altitude
+        case heading
+        case speed
+        case provider
+        case latitude
+        case longitude
+        case relativeTimeNs = "relative_time_ns"
     }
 }

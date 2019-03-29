@@ -1,4 +1,4 @@
-// MeasurementAgentKit: LmapOptionDto.swift, created on 28.03.19
+// MeasurementAgentKit: RegistrationResponse.swift, created on 29.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -17,28 +17,19 @@
 
 import Foundation
 
-/// Options may be used to identify the role of a Task or to pass a Channel name to a Task.
-class LmapOptionDto: Codable {
+/// Measurement agent registration response object which is returned to the measurement agent after successful registration.
+/// For convenience this response also contains the current settings.
+class RegistrationResponse: Codable {
 
-    /// An identifier uniquely identifying an option.
-    /// This identifier is required by YANG to uniquely identify a name/value pair,
-    /// but it otherwise has no semantic value.
-    var id: String?
+    /// The generated measurement agent UUID.
+    var agentUuid: String?
 
-    /// The name of the option.
-    var name: String?
-
-    /// The value of the option.
-    var value: String?
-
-    /// The additional measurement parameters of the option.
-    var measurementParameters: MeasurementTypeParametersDto? // TODO: should be moved to LmapResultDto
+    /// The settings response object sent to the measurement agent.
+    var settings: SettingsResponse?
 
     ///
     enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case value
-        case measurementParameters = "measurement-parameters"
+        case agentUuid = "agent_uuid"
+        case settings
     }
 }

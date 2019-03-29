@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// This module defines a data model for reporting time based results from Measurement Agents.
-class TimeBasedResultDto: Mappable {
+class TimeBasedResultDto: Codable {
 
     /// Start date and time for this measurement. Date and time is always stored as UTC.
     var startTime: Date?
@@ -43,26 +42,21 @@ class TimeBasedResultDto: Mappable {
     var networkPointsInTime: [MeasurementResultNetworkPointInTimeDto]?
 
     /// List of captured cell information.
-    //var cellLocations: [CellLocationDto]?
+    var cellLocations: [CellLocationDto]?
 
     /// List of captured signal information.
     var signals: [SignalDto]?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        startTime           <- map["start_time"]
-        endTime             <- map["end_time"]
-        durationNs          <- map["duration_ns"]
-        geoLocations        <- map["geo_locations"]
-        cpuUsage            <- map["cpu_usage"]
-        memUsage            <- map["mem_usage"]
-        networkPointsInTime <- map["network_points_in_time"]
-        //cellLocations       <- map["cell_locations"]
-        signals             <- map["signals"]
+    enum CodingKeys: String, CodingKey {
+        case startTime           = "start_time"
+        case endTime             = "end_time"
+        case durationNs          = "duration_ns"
+        case geoLocations        = "geo_locations"
+        case cpuUsage            = "cpu_usage"
+        case memUsage            = "mem_usage"
+        case networkPointsInTime = "network_points_in_time"
+        case cellLocations       = "cell_locations"
+        case signals
     }
 }

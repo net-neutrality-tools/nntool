@@ -16,11 +16,10 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// An Action describes a Task that is invoked by the Schedule.
 /// Multiple Actions are invoked according to the execution-mode of the Schedule.
-class LmapActionDto: Mappable {
+class LmapActionDto: Codable {
 
     /// The unique identifier for this Action.
     var name: String?
@@ -30,7 +29,7 @@ class LmapActionDto: Mappable {
 
     /// This container is a placeholder for runtime parameters
     /// defined in Task-specific data models augmenting the base LMAP report data model.
-    var parameters: Any?
+    var parameters: String? //Any?
 
     /// The list of Action-specific options that are appended to the list of Task-specific options.
     var options: [LmapOptionDto]?
@@ -90,32 +89,26 @@ class LmapActionDto: Mappable {
     var lastFailedMessage: String?
 
     ///
-    public required init?(map: Map) {
+    enum CodingKeys: String, CodingKey {
+        case name
+        case parameters
+        case options         = "option"
+        case destinations    = "destination"
+        case tags            = "tag"
+        case suppressionTags = "suppression-tag"
+        case state
+        case storage
+        case invocations
+        case suppressions
+        case overlaps
+        case failures
 
-    }
-
-    ///
-    public func mapping(map: Map) {
-        name            <- map["name"]
-        parameters      <- map["parameters"]
-        options         <- map["option"]
-        destinations    <- map["destination"]
-        tags            <- map["tag"]
-        name            <- map["suppression-tag"]
-        suppressionTags <- map["name"]
-        state           <- map["state"]
-        storage         <- map["storage"]
-        invocations     <- map["invocations"]
-        suppressions    <- map["suppressions"]
-        overlaps        <- map["overlaps"]
-        failures        <- map["failures"]
-
-        lastInvocation       <- map["last-invocation"]
-        lastCompletion       <- map["last-completion"]
-        lastStatus           <- map["last-status"]
-        lastMessage          <- map["last-message"]
-        lastFailedCompletion <- map["last-failed-completion"]
-        lastFailedStatus     <- map["last-failed-status"]
-        lastFailedMessage    <- map["last-failed-message"]
+        case lastInvocation       = "last-invocation"
+        case lastCompletion       = "last-completion"
+        case lastStatus           = "last-status"
+        case lastMessage          = "last-message"
+        case lastFailedCompletion = "last-failed-completion"
+        case lastFailedStatus     = "last-failed-status"
+        case lastFailedMessage    = "last-failed-message"
     }
 }

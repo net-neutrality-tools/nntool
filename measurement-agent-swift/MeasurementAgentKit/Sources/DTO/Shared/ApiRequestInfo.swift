@@ -1,6 +1,6 @@
 // MeasurementAgentKit: ApiRequestInfo.swift, created on 28.03.19
 /*******************************************************************************
- * Copyright 2019 bp (alladin-IT GmbH)
+ * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,10 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// Additional information that is sent by measurement agent alongside the request.
 /// This contains most information from measurement agentInfo.
-class ApiRequestInfo: Mappable {
+class ApiRequestInfo: Codable {
 
     /// Language specified by the measurement agent.
     var language: String?
@@ -63,24 +62,19 @@ class ApiRequestInfo: Mappable {
     var geoLocation: GeoLocationDto?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        language <- map["language"]
-        timezone <- map["timezone"]
-        agentType <- map["agent_type"]
-        agentId <- map["agent_uuid"]
-        osName <- map["os_name"]
-        osVersion <- map["os_version"]
-        apiLevel <- map["api_level"]
-        codeName <- map["code_name"]
-        model <- map["model"]
-        appVersionName <- map["app_version_name"]
-        appVersionCode <- map["app_version_code"]
-        appGitRevision <- map["app_git_revision"]
-        geoLocation <- map["geo_location"]
+    enum CodingKeys: String, CodingKey {
+        case language
+        case timezone
+        case agentType = "agent_type"
+        case agentId   = "agent_uuid"
+        case osName    = "os_name"
+        case osVersion = "os_version"
+        case apiLevel  = "api_level"
+        case codeName  = "code_name"
+        case model
+        case appVersionName = "app_version_name"
+        case appVersionCode = "app_version_code"
+        case appGitRevision = "app_git_revision"
+        case geoLocation    = "geo_location"
     }
 }

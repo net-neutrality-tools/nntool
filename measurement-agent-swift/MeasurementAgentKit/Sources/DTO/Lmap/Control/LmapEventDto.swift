@@ -16,11 +16,10 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// Implementations may be forced to delay acting upon the occurrence of events in the face of local constraints.
 /// An Action triggered by an event therefore should not rely on the accuracy provided by the scheduler implementation.
-class LmapEventDto: Mappable {
+class LmapEventDto: Codable {
 
     /// The unique name of an event source, used when referencing this event.
     var name: String?
@@ -39,15 +38,10 @@ class LmapEventDto: Mappable {
     //var event: LmapEventTypeDto? // TODO
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        name <- map["name"]
-        randomSpread <- map["random-spread"]
-        cycleInterval <- map["cycle-interval"]
+    enum CodingKeys: String, CodingKey {
+        case name
+        case randomSpread = "random-spread"
+        case cycleInterval = "cycle-interval"
         //event <- map["event-type"]
     }
 }

@@ -18,7 +18,7 @@
 import Foundation
 
 /// TODO
-enum ExecutionModeDto: String {
+enum ExecutionModeDto: String, Codable {
 
     /// The Actions of the Schedule are executed sequentially.
     case sequential = "SEQUENTIAL"

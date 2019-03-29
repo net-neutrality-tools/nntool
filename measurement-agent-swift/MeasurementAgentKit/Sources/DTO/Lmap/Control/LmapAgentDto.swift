@@ -16,11 +16,10 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// Configuration of parameters affecting the whole Measurement Agent.
 /// Corresponds to the Agent in the LMAP standard
-class LmapAgentDto: Mappable {
+class LmapAgentDto: Codable {
 
     /// The agent-id identifies a Measurement Agent with a very low probability of collision (i.e. a UUID v4).
     /// In certain deployments, the agent-id may be considered sensitive, and hence this object is optional.
@@ -52,19 +51,14 @@ class LmapAgentDto: Mappable {
     var lastStarted: Date?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        agentId                <- map["agent-id"]
-        groupId                <- map["group-id"]
-        measurementPoint       <- map["measurement-point"]
-        reportAgentId          <- map["report-agent-id"]
-        reportGroupId          <- map["report-group-id"]
-        reportMeasurementPoint <- map["report-measurement-point"]
-        controllerTimeout      <- map["controller-timeout"]
-        lastStarted            <- map["last-started"]
+    enum CodingKeys: String, CodingKey {
+        case agentId                = "agent-id"
+        case groupId                = "group-id"
+        case measurementPoint       = "measurement-point"
+        case reportAgentId          = "report-agent-id"
+        case reportGroupId          = "report-group-id"
+        case reportMeasurementPoint = "report-measurement-point"
+        case controllerTimeout      = "controller-timeout"
+        case lastStarted            = "last-started"
     }
 }

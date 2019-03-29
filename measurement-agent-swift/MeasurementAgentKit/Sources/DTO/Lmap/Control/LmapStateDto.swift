@@ -18,7 +18,7 @@
 import Foundation
 
 /// TODO
-enum LmapStateDto: String {
+enum LmapStateDto: String, Codable {
 
     /// The value 'enabled' indicates that the Action/Schedule is currently enabled.
     case enabled = "ENABLED"

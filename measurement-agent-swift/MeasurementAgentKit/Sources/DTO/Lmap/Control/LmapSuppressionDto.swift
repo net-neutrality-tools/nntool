@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// Suppression information to prevent Schedules or certain Actions from starting.
-class LmapSuppressionDto: Mappable {
+class LmapSuppressionDto: Codable {
 
     /// The locally unique, administratively assigned name for this Suppression.
     var name: String?
@@ -49,17 +48,12 @@ class LmapSuppressionDto: Mappable {
     var state: SuppressionStateDto?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        name        <- map["name"]
-        startEvent  <- map["start"]
-        endEvent    <- map["end"]
-        matches     <- map["match"]
-        stopRunning <- map["stop-running"]
-        state       <- map["state"]
+    enum CodingKeys: String, CodingKey {
+        case name
+        case startEvent  = "start"
+        case endEvent    = "end"
+        case matches     = "match"
+        case stopRunning = "stop-running"
+        case state
     }
 }

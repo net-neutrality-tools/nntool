@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// Holds a value from a point in time.
-class PointInTimeValueDto<T>: Mappable {
+class PointInTimeValueDto<T: Codable>: Codable {
 
     /// Relative time in nanoseconds (to test begin).
     var relativeTimeNs: UInt64?
@@ -28,13 +27,8 @@ class PointInTimeValueDto<T>: Mappable {
     var value: T?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        relativeTimeNs <- map["relative_time_ns"]
-        value <- map["value"]
+    enum CodingKeys: String, CodingKey {
+        case relativeTimeNs = "relative_time_ns"
+        case value
     }
 }

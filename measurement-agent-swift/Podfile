@@ -8,9 +8,9 @@ inhibit_all_warnings!
 abstract_target 'All' do
   pod 'SwiftLint', '~> 0.31.0'
 
-  pod 'Alamofire', '~> 4.8.1'
-  pod 'AlamofireObjectMapper', '~> 5.2.0'
-
+  #pod 'Alamofire', '~> 4.8.1'
+  pod 'Siesta', '~> 1.4.3'
+  
   pod 'XCGLogger', '~> 6.1.0'
 
   pod 'QoSKit', :path => '../qos-client-swift'

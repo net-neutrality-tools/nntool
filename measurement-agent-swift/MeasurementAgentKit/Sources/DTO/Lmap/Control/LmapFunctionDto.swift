@@ -16,10 +16,9 @@
  ******************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 /// This grouping models a list of entries in a registry that identify functions of a Task.
-class LmapFunctionDto: Mappable {
+class LmapFunctionDto: Codable {
 
     /// The unique name of a Task.
     var uri: String?
@@ -28,13 +27,8 @@ class LmapFunctionDto: Mappable {
     var roles: [LmapFunctionDto]?
 
     ///
-    public required init?(map: Map) {
-
-    }
-
-    ///
-    public func mapping(map: Map) {
-        uri   <- map["uri"]
-        roles <- map["role"]
+    enum CodingKeys: String, CodingKey {
+        case uri
+        case roles = "role"
     }
 }
