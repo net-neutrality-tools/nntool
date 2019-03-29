@@ -20,7 +20,7 @@ import com.google.gson.annotations.SerializedName;
 @JsonClassDescription("This DTO contains speed measurement instructions for the measurement agent.")
 @JsonInclude(Include.NON_EMPTY)
 public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
-	
+
 	/**
 	 * URL to the measurement code. Overrides the measurement agent's implementation if set.
 	 */
@@ -41,7 +41,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 	@SerializedName("measurement_server")
 	@JsonProperty(required = true, value = "measurement_server")
 	private MeasurementServerConfig measurementServerConfig;
-	
+
 	/**
 	 * Number of RTT packets that should be send in the RTT measurement.
 	 */
@@ -51,12 +51,12 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 	@SerializedName("rtt_count")
 	@JsonProperty(required = true, value = "rtt_count")
 	private Integer rttCount;
-	
+
 	@Expose
 	@SerializedName("measurement_configuration_map")
 	@JsonProperty(required = true, value = "measurement_configuration_map")
 	private Map<SpeedMeasurementClass, SpeedMeasurementConfiguration> measurementConfigurationMap;
-	
+
 	public static enum SpeedMeasurementClass {
 		SINGLE_STREAM,
 		LOW,
@@ -64,7 +64,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 		HIGH,
 		VERY_HIGH
 	}
-	
+
 	public static class SpeedMeasurementConfiguration {
 		/**
 		 * @see Durations
@@ -75,7 +75,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 		@SerializedName("durations")
 		@JsonProperty(required = true, value = "durations")
 		private Durations durations;
-		
+
 		/**
 		 * @see Flows
 		 */
@@ -85,7 +85,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 		@SerializedName("flows")
 		@JsonProperty(required = true, value = "flows")
 		private Flows flows;
-		
+
 		@io.swagger.annotations.ApiModelProperty(required = true, value = "The frame sizes for each phase of the measurement.")
 		@JsonPropertyDescription("The frame sizes for each phase of the measurement.")
 		@Expose
@@ -116,7 +116,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 		public void setFrameSizes(FrameSizes frameSizes) {
 			this.frameSizes = frameSizes;
 		}
-		
+
 	}
 
 	/**
@@ -142,19 +142,19 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 	public static class Flows extends PhaseCountOptions {
 		
 	}
-	
+
 	/**
 	 * The frame sizes for each phase of the measurement
-	 * 
+	 *
 	 * @author fk
 	 *
 	 */
 	@io.swagger.annotations.ApiModel(description = "The frame sizes for each phase of the measurement.")
 	@JsonClassDescription("The frame sizes for each phase of the measurement.")
 	public static class FrameSizes extends PhaseCountOptions {
-		
+
 	}
-	
+
 	/**
 	 * Object that stores an integer value for each speed measurement phase.
 	 * 
@@ -317,5 +317,5 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 	public void setRttCount(Integer rttCount) {
 		this.rttCount = rttCount;
 	}
-	
+
 }

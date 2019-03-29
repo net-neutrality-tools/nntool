@@ -16,6 +16,8 @@
 
 package at.alladin.nntool.client.v2.task;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 import at.alladin.nntool.client.TestParameter;
@@ -25,15 +27,20 @@ import at.alladin.nntool.client.TestParameter;
  * @author lb
  *
  */
-public class TaskDesc extends TestParameter {
+public class TaskDesc extends TestParameter implements Serializable {
 	
 	public final static String QOS_TEST_IDENTIFIER_KEY = "qostest";
 
 	/**
 	 * 
 	 */
-	private final Map<String, Object> params;	
-	
+	private final Map<String, Object> params;
+
+	public TaskDesc() {
+		super();
+		params = new HashMap<>();
+	}
+
 	/**
 	 * 
 	 * @param host

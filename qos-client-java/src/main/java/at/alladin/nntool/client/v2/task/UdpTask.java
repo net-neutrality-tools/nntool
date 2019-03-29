@@ -26,6 +26,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.channels.DatagramChannel;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -350,12 +351,12 @@ public class UdpTask extends AbstractQoSTask {
 				result.getResultMap().put(RESULT_OUTGOING_PACKETS, outgoingPacketData != null ? outgoingPacketData.rcvServerResponse : 0);
 				result.getResultMap().put(RESULT_NUM_PACKETS_OUTGOING_RESPONSE, outgoingPacketData != null ? outgoingPacketData.numPackets : 0);
 
-				final JSONObject rtts = new JSONObject();
+				final Map<String, Long> rtts = new HashMap<>();
 				long rttAvg = 0L;
 
 				if (outgoingPacketData.rtts.size() > 0) {
 					for (Entry<Integer, Long> e : outgoingPacketData.rtts.entrySet()) {
-						rtts.putOpt(String.valueOf(e.getKey()), e.getValue());
+						rtts.put(String.valueOf(e.getKey()), e.getValue());
 						rttAvg += e.getValue();
 					}
 
@@ -385,12 +386,12 @@ public class UdpTask extends AbstractQoSTask {
 				result.getResultMap().put(RESULT_INCOMING_PACKETS, incomingPacketData != null ? incomingPacketData.numPackets : 0);
 				result.getResultMap().put(RESULT_NUM_PACKETS_INCOMING_RESPONSE, incomingPackets);
 
-				final JSONObject rtts = new JSONObject();
+				final Map<String, Long> rtts = new HashMap<>();
 				long rttAvg = 0L;
 
 				if (incomingPacketData.rtts.size() > 0) {
 					for (Entry<Integer, Long> e : incomingPacketData.rtts.entrySet()) {
-						rtts.putOpt(String.valueOf(e.getKey()), e.getValue());
+						rtts.put(String.valueOf(e.getKey()), e.getValue());
 						rttAvg += e.getValue();
 					}
 

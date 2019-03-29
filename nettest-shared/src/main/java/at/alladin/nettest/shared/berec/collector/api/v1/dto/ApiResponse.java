@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
@@ -42,7 +43,8 @@ public class ApiResponse<T> extends ApiBase<T> {
 	 * @param data
 	 * @param errors
 	 */
-	public ApiResponse(T data, List<ApiError> errors) {
+	@JsonCreator
+	public ApiResponse(@JsonProperty("data") T data, @JsonProperty("errors") List<ApiError> errors) {
 		super(data);
 
 		this.errors = errors != null ? new ArrayList<>(errors) : null;
@@ -54,5 +56,12 @@ public class ApiResponse<T> extends ApiBase<T> {
 	 */
 	public List<ApiError> getErrors() {
 		return errors;
+	}
+
+	@Override
+	public String toString() {
+		return "ApiResponse{" +
+				"errors=" + errors +
+				"} " + super.toString();
 	}
 }

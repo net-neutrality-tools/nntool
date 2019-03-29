@@ -26,6 +26,7 @@ import at.alladin.nntool.client.helper.Config;
 import at.alladin.nntool.client.helper.TestStatus;
 import at.alladin.nntool.client.v2.task.QoSTestEnum;
 import at.alladin.nntool.client.v2.task.TaskDesc;
+import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 import at.alladin.nntool.client.v2.task.service.TestSettings;
 
 import static at.alladin.nntool.client.v2.task.AbstractQoSTask.PARAM_QOS_CONCURRENCY_GROUP;
@@ -42,17 +43,13 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
 
     private String latestTestUuid;
 
+    public QoSMeasurementClientAndroid(final Context context) {
+        this(null, context);
+    }
+
     public QoSMeasurementClientAndroid(final ClientHolder client, final Context context) {
         this.client = client;
         this.context = context;
-    }
-
-    public QoSMeasurementClientAndroid(final QoSMeasurementContext qoSMeasurementContext, final Context context) {
-        this.context = context;
-        this.measurementContext = qoSMeasurementContext;
-        if ("".equals(HelperFunctions.getUuid(context.getApplicationContext()))) {
-            new ObtainQoSSettingsTask(measurementContext, context.getApplicationContext()).execute();
-        }
     }
 
     /**
@@ -75,13 +72,6 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
         if (context == null) {
             //This should be an impossibility by now, so we should be able to remove this check
             throw new NoContextProvidedException();
-        }
-
-        if (client == null) { // && "".equals(HelperFunctions.getUuid(context.getApplicationContext()))) { //TODO: we temporarily do not require a user uuid, as the control-service is currently under maintenance (readd && later)
-            new ObtainQoSSettingsTask(measurementContext, context.getApplicationContext()).execute();
-            Log.i(TAG, "Client not yet registered. Need registration before starting a measurement. " +
-                    "\nRegistration process has just started. Call start again after the registration finished.");
-            throw new ClientNotYetRegisteredException("Client was not registered before the measurement was started. Registration just started. You don't need to do a thing.");
         }
 
         threadRunner = new Thread(this);
@@ -123,7 +113,7 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
 //            if (client != null && client.getControlConnection() != null) {
 //                qosTestSettings.setStartTimeNs(client.getControlConnection().getStartTimeNs());
 //            }
-            qosTestSettings.setUseSsl(Config.QOS_SSL);
+            //qosTestSettings.setUseSsl(Config.QOS_SSL);
 
             //If the sdk version of the currently operating android device is larger than LOLLIPOP, we provide the DNS servers ourselves, as the DNS library fails for some devices
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -134,15 +124,10 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
 
             // Only execute the desired tasks
             final List<String> toExecute = new ArrayList<>();
-            final List<QosMeasurementType> availableTypes = getAvailableTypes();
             for (QosMeasurementType t : enabledTypes) {
-                if (t.getValue().endsWith("_browser") || !availableTypes.contains(t)) {
-                    continue;
-                }
                 toExecute.add(t.getValue());
             }
 
-            Log.i(TAG, "Available test types: " + availableTypes.toString());
             Log.i(TAG, "Tests about to be executed " + toExecute.toString());
 
             //remove QOS tests that are not enabled
@@ -163,6 +148,9 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
                     }
                 }
             }
+
+            //TODO: probably any other method is better than this:
+            qosTestSettings.setUseSsl(client.getTaskDescList().get(0).isEncryption());
 
             qosTest = new QualityOfServiceTest(client, testSettings, progressListeners);
 
@@ -201,6 +189,10 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
         }
 
         running.set(false);
+    }
+
+    public String getCollectorUrl() {
+        return client != null ? client.getCollectorUrl() : null;
     }
 
     public void setContext(final Context context) {

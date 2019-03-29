@@ -1,0 +1,79 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionBarStyle">@style/Nettest.ActionBar</item>
+    </style>
+
+    <style name="Nettest.ActionBar" parent="Base.Widget.AppCompat.ActionBar">
+        <item name="background">@color/theme_action_bar_bg</item>
+        <item name="titleTextStyle">@style/Nettest.ActionBar.Title</item>
+    </style>
+
+    <style name="Nettest.ActionBar.Title" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+    </style>
+
+    <!--
+    <style name="SplashTheme" parent="@android:style/Theme.Holo.NoActionBar">
+
+    </style>
+    -->
+
+    <style name="FullScreenDialogStyle" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+
+        <!-- Set this to true if you want Full Screen without status bar -->
+        <item name="android:windowFullscreen">false</item>
+
+        <item name="android:windowIsFloating">false</item>
+
+        <!-- This is important! Don't forget to set window background -->
+        <item name="android:windowBackground">@android:color/white</item>
+
+        <!-- Additionally if you want animations when dialog opening -->
+        <!-- <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item> -->
+    </style>
+
+    <style name="Nettest.Title.StartButton.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/title_page_start_button_fg</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">48sp</item>
+    </style>
+
+    <!-- TOP PROGRESS BAR -->
+    <style name="Nettest.TopProgressBar.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Nettest.TopProgressBar.Text.Left" parent="Nettest.TopProgressBar.Text">
+        <item name="android:textColor">@color/top_progress_bar_left_fg</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="Nettest.TopProgressBar.Text.Right" parent="Nettest.TopProgressBar.Text">
+        <item name="android:textColor">@color/top_progress_bar_right_fg</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <!-- QOS PROGRESS -->
+    <style name="Nettest.Measurement.Qos.Progress.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/qos_measurement_progress_item_text_fg</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+</resources>
