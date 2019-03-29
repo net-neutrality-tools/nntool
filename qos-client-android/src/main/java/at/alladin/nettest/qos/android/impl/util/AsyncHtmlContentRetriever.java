@@ -1,6 +1,5 @@
 /*******************************************************************************
  * Copyright 2013-2019 alladin-IT GmbH
- * Copyright 2014-2016 SPECURE GmbH
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-
+// based on: https://raw.githubusercontent.com/SPECURE/specure-nettest-V1/master/RMBTAndroid/src/at/alladin/rmbt/android/util/AsyncHtmlContentRetriever.java
 package at.alladin.nettest.qos.android.impl.util;
 
 import android.os.AsyncTask;

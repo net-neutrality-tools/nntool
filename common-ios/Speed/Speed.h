@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-02-05
+ *      \date Last update: 2019-03-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -86,10 +86,8 @@ FOUNDATION_EXPORT const unsigned char SpeedVersionString[];
 @property (nonatomic, strong) NSNumber *frameSizeDownload;              /**< DL: WebSocket Frame Size */
 @property (nonatomic, strong) NSNumber *frameSizeUpload;                /**< UL: WebSocket Frame Size */
 
-@property (nonatomic, strong) NSNumber *downloadThroughputLowerBoundMbps;   /**< DL: Lower Bound for current Measurement configuration */
-@property (nonatomic, strong) NSNumber *downloadThroughputUpperBoundMbps;   /**< DL: Upper Bound for current Measurement configuration */
-@property (nonatomic, strong) NSNumber *uploadThroughputLowerBoundMbps;     /**< UL: Lower Bound for current Measurement configuration */
-@property (nonatomic, strong) NSNumber *uploadThroughputUpperBoundMbps;     /**< UL: Upper Bound for current Measurement configuration */
+@property (nonatomic, strong) NSMutableArray *downloadClasses;          /**< DL: class configuration */
+@property (nonatomic, strong) NSMutableArray *uploadClasses;            /**< UL: class configuration */
 
 /**************************** Public Delegate Functions Speed ****************************/
 

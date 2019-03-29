@@ -71,8 +71,10 @@ public class EchoProtocolUdpTask extends AbstractEchoProtocolTask {
 					//increase the payload size to check for potentially added characters
 					final DatagramPacket receivePacket = new DatagramPacket(new byte[payloadBytes.length + 1], payloadBytes.length + 1);
 
+					final long startTime = System.nanoTime();
 					socket.send(sendPacket);
 					socket.receive(receivePacket);
+					final long duration = System.nanoTime() - startTime;
 
 					final String testResponse = new String(receivePacket.getData(), 0, receivePacket.getLength());
 					if (sendPacket.getLength() == receivePacket.getLength() && payload.equals(testResponse)) {
@@ -81,7 +83,7 @@ public class EchoProtocolUdpTask extends AbstractEchoProtocolTask {
                         result.getResultMap().put(RESULT_STATUS, "ERROR");
                     }
 
-					System.out.println("Echo Protocol TCP TEST response: " + testResponse);
+					result.getResultMap().put(RESULT_RTT_NS, Long.toString(duration));
 
 					result.getResultMap().put(RESULT, testResponse);
 

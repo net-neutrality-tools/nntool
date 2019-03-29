@@ -65,10 +65,11 @@ public class EchoProtocolTcpTask extends AbstractEchoProtocolTask {
 		    	if (this.testPort != null && this.testHost != null) {
 					try (Socket socket = getSocket(testHost, testPort, false, (int)(timeout/1000000))){
 						socket.setSoTimeout((int)(timeout/1000000));
+						
+						final long startTime = System.nanoTime();
 						sendMessage(socket, this.payload + "\n");
 						final String testResponse = readLine(socket);
-
-						System.out.println("Echo Protocol TCP TEST response: " + testResponse);
+						final long duration = System.nanoTime() - startTime;
 
 						result.getResultMap().put(RESULT, testResponse);
 						socket.close();
@@ -77,6 +78,7 @@ public class EchoProtocolTcpTask extends AbstractEchoProtocolTask {
 						} else {
 							result.getResultMap().put(RESULT_STATUS, "ERROR");
 						}
+						result.getResultMap().put(RESULT_RTT_NS, Long.toString(duration));
 					}
 					catch (SocketTimeoutException e) {
 						result.getResultMap().put(RESULT_STATUS, "TIMEOUT");

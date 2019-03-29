@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-02-05
+ *      \date Last update: 2019-03-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -144,13 +144,14 @@
         }
         if ([[response objectForKey:@"test_case"] isEqualToString:@"download"])
         {
-            self.downloadLabel.text = [NSString stringWithFormat:@"%@ Mbit/s", [self.tool formatNumberToCommaSeperatedString:[NSNumber numberWithDouble:([[[response objectForKey:@"download_info"] objectForKey:@"throughput_avg_bps"] doubleValue] /1000.0 / 1000.0)] withMinDecimalPlaces:2 withMaxDecimalPlace:2]];
+            self.downloadLabel.text = [NSString stringWithFormat:@"%@ Mbit/s", [self.tool formatNumberToCommaSeperatedString:[NSNumber numberWithDouble:([[[[response objectForKey:@"download_info"] lastObject] objectForKey:@"throughput_avg_bps"] doubleValue] /1000.0 / 1000.0)] withMinDecimalPlaces:2 withMaxDecimalPlace:2]];
         }
         if ([[response objectForKey:@"test_case"] isEqualToString:@"upload"])
         {
-            self.uploadLabel.text = [NSString stringWithFormat:@"%@ Mbit/s", [self.tool formatNumberToCommaSeperatedString:[NSNumber numberWithDouble:([[[response objectForKey:@"upload_info"] objectForKey:@"throughput_avg_bps"] doubleValue] /1000.0 / 1000.0)] withMinDecimalPlaces:2 withMaxDecimalPlace:2]];
+            self.uploadLabel.text = [NSString stringWithFormat:@"%@ Mbit/s", [self.tool formatNumberToCommaSeperatedString:[NSNumber numberWithDouble:([[[[response objectForKey:@"upload_info"] lastObject] objectForKey:@"throughput_avg_bps"] doubleValue] /1000.0 / 1000.0)] withMinDecimalPlaces:2 withMaxDecimalPlace:2]];
         }
         
+        //copy to clipboard
         UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
         pasteboard.string = self.kpisTextView.text;
     }
@@ -226,90 +227,140 @@
     self.speed.performRouteToClientLookup         = true;
     self.speed.performGeolocationLookup           = true;
     
-    switch([self.downloadParameters selectedSegmentIndex])
-    {
-        case 0:
-        {
-            self.speed.parallelStreamsDownload = [NSNumber numberWithInt:4];
-            self.speed.frameSizeDownload = [NSNumber numberWithInt:2048];
-            self.speed.downloadThroughputLowerBoundMbps = [NSNumber numberWithDouble:0.01];
-            self.speed.downloadThroughputUpperBoundMbps = [NSNumber numberWithDouble:1.05];
-            break;
-        }
-        case 1:
-        {
-            self.speed.parallelStreamsDownload = [NSNumber numberWithInt:4];
-            self.speed.frameSizeDownload = [NSNumber numberWithInt:32768];
-            self.speed.downloadThroughputLowerBoundMbps = [NSNumber numberWithDouble:0.95];
-            self.speed.downloadThroughputUpperBoundMbps = [NSNumber numberWithInt:525];
-            break;
-        }
-        case 2:
-        {
-            self.speed.parallelStreamsDownload = [NSNumber numberWithInt:4];
-            self.speed.frameSizeDownload = [NSNumber numberWithInt:524288];
-            self.speed.downloadThroughputLowerBoundMbps = [NSNumber numberWithInt:475];
-            self.speed.downloadThroughputUpperBoundMbps = [NSNumber numberWithInt:1050];
-            break;
-        }
-        case 3:
-        {
-            self.speed.parallelStreamsDownload = [NSNumber numberWithInt:8];
-            self.speed.frameSizeDownload = [NSNumber numberWithInt:524288];
-            self.speed.downloadThroughputLowerBoundMbps = [NSNumber numberWithInt:950];
-            self.speed.downloadThroughputUpperBoundMbps = [NSNumber numberWithInt:9000];
-            break;
-        }
-    }
     
-    switch([self.uploadParameters selectedSegmentIndex])
-    {
-        case 0:
-        {
-            self.speed.parallelStreamsUpload = [NSNumber numberWithInt:4];
-            self.speed.frameSizeUpload = [NSNumber numberWithInt:2048];
-            self.speed.uploadThroughputLowerBoundMbps = [NSNumber numberWithDouble:0.01];
-            self.speed.uploadThroughputUpperBoundMbps = [NSNumber numberWithDouble:1.05];
-            break;
-        }
-        case 1:
-        {
-            self.speed.parallelStreamsUpload = [NSNumber numberWithInt:4];
-            self.speed.frameSizeUpload = [NSNumber numberWithInt:32768];
-            self.speed.uploadThroughputLowerBoundMbps = [NSNumber numberWithDouble:0.95];
-            self.speed.uploadThroughputUpperBoundMbps = [NSNumber numberWithInt:525];
-            break;
-        }
-        case 2:
-        {
-            self.speed.parallelStreamsUpload = [NSNumber numberWithInt:4];
-            self.speed.frameSizeUpload = [NSNumber numberWithInt:65535];
-            self.speed.uploadThroughputLowerBoundMbps = [NSNumber numberWithInt:475];
-            self.speed.uploadThroughputUpperBoundMbps = [NSNumber numberWithInt:1050];
-            break;
-        }
-        case 3:
-        {
-            self.speed.parallelStreamsUpload = [NSNumber numberWithInt:20];
-            self.speed.frameSizeUpload = [NSNumber numberWithInt:65535];
-            self.speed.uploadThroughputLowerBoundMbps = [NSNumber numberWithInt:950];
-            self.speed.uploadThroughputUpperBoundMbps = [NSNumber numberWithInt:9000];
-            break;
-        }
-    }
-    
+    //dl/ul parameters if no speed classes are used or singleStream is active
+    self.speed.parallelStreamsDownload  = [NSNumber numberWithInt:4];
+    self.speed.frameSizeDownload        = [NSNumber numberWithInt:32768];
     if ([self.singleStreamParameters selectedSegmentIndex] == 1)
     {
         self.speed.frameSizeDownload        = [NSNumber numberWithInt: [self.speed.frameSizeDownload intValue] * [self.speed.parallelStreamsDownload intValue]];
         self.speed.parallelStreamsDownload  = [NSNumber numberWithInt:1];
-       
+    }
+    
+    self.speed.parallelStreamsUpload    = [NSNumber numberWithInt:4];
+    self.speed.frameSizeUpload          = [NSNumber numberWithInt:32768];
+    if ([self.singleStreamParameters selectedSegmentIndex] == 1)
+    {
         self.speed.frameSizeUpload          = [NSNumber numberWithInt: [self.speed.frameSizeUpload intValue] * [self.speed.parallelStreamsUpload intValue]];
         self.speed.parallelStreamsUpload    = [NSNumber numberWithInt:1];
-        
+    
         if ([self.speed.frameSizeUpload intValue] > 65535)
         {
             self.speed.frameSizeUpload      = [NSNumber numberWithInt:65535];
         }
+    }
+    
+    if ([self.singleStreamParameters selectedSegmentIndex] != 1)
+    {
+        //dl/ul speed classes
+        NSMutableDictionary *class = [NSMutableDictionary new];
+        NSMutableDictionary *classBounds = [NSMutableDictionary new];
+        
+        
+        //dl low
+        [class setObject:[NSNumber numberWithBool:false] forKey:@"default"];
+        [class setObject:[NSNumber numberWithInt:4] forKey:@"streams"];
+        [class setObject:[NSNumber numberWithInt:2048] forKey:@"frameSize"];
+        [classBounds setObject:[NSNumber numberWithDouble:0.01] forKey:@"lower"];
+        [classBounds setObject:[NSNumber numberWithDouble:1.05] forKey:@"upper"];
+        [class setObject:classBounds forKey:@"bounds"];
+        [self.speed.downloadClasses addObject:class];
+        
+        //dl default
+        class = [NSMutableDictionary new];
+        classBounds = [NSMutableDictionary new];
+        [class setObject:[NSNumber numberWithBool:true] forKey:@"default"];
+        [class setObject:[NSNumber numberWithInt:4] forKey:@"streams"];
+        [class setObject:[NSNumber numberWithInt:32768] forKey:@"frameSize"];
+        [classBounds setObject:[NSNumber numberWithDouble:0.95] forKey:@"lower"];
+        [classBounds setObject:[NSNumber numberWithDouble:525] forKey:@"upper"];
+        [class setObject:classBounds forKey:@"bounds"];
+        [self.speed.downloadClasses addObject:class];
+        
+        //dl high
+        class = [NSMutableDictionary new];
+        classBounds = [NSMutableDictionary new];
+        [class setObject:[NSNumber numberWithBool:false] forKey:@"default"];
+        [class setObject:[NSNumber numberWithInt:4] forKey:@"streams"];
+        [class setObject:[NSNumber numberWithInt:524288] forKey:@"frameSize"];
+        [classBounds setObject:[NSNumber numberWithDouble:475] forKey:@"lower"];
+        [classBounds setObject:[NSNumber numberWithDouble:1050] forKey:@"upper"];
+        [class setObject:classBounds forKey:@"bounds"];
+        [self.speed.downloadClasses addObject:class];
+        
+        //dl very high
+        class = [NSMutableDictionary new];
+        classBounds = [NSMutableDictionary new];
+        [class setObject:[NSNumber numberWithBool:false] forKey:@"default"];
+        [class setObject:[NSNumber numberWithInt:8] forKey:@"streams"];
+        [class setObject:[NSNumber numberWithInt:524288] forKey:@"frameSize"];
+        [classBounds setObject:[NSNumber numberWithDouble:950] forKey:@"lower"];
+        [classBounds setObject:[NSNumber numberWithDouble:9000] forKey:@"upper"];
+        [class setObject:classBounds forKey:@"bounds"];
+        [self.speed.downloadClasses addObject:class];
+        
+        
+        //ul low
+        [class setObject:[NSNumber numberWithBool:false] forKey:@"default"];
+        [class setObject:[NSNumber numberWithInt:4] forKey:@"streams"];
+        [class setObject:[NSNumber numberWithInt:2048] forKey:@"frameSize"];
+        [classBounds setObject:[NSNumber numberWithDouble:0.01] forKey:@"lower"];
+        [classBounds setObject:[NSNumber numberWithDouble:1.05] forKey:@"upper"];
+        [class setObject:classBounds forKey:@"bounds"];
+        [self.speed.uploadClasses addObject:class];
+        
+        //ul default
+        class = [NSMutableDictionary new];
+        classBounds = [NSMutableDictionary new];
+        [class setObject:[NSNumber numberWithBool:true] forKey:@"default"];
+        [class setObject:[NSNumber numberWithInt:4] forKey:@"streams"];
+        [class setObject:[NSNumber numberWithInt:32768] forKey:@"frameSize"];
+        [classBounds setObject:[NSNumber numberWithDouble:0.95] forKey:@"lower"];
+        [classBounds setObject:[NSNumber numberWithDouble:525] forKey:@"upper"];
+        [class setObject:classBounds forKey:@"bounds"];
+        [self.speed.uploadClasses addObject:class];
+        
+        //ul high
+        class = [NSMutableDictionary new];
+        classBounds = [NSMutableDictionary new];
+        [class setObject:[NSNumber numberWithBool:false] forKey:@"default"];
+        [class setObject:[NSNumber numberWithInt:4] forKey:@"streams"];
+        [class setObject:[NSNumber numberWithInt:65535] forKey:@"frameSize"];
+        [classBounds setObject:[NSNumber numberWithDouble:475] forKey:@"lower"];
+        [classBounds setObject:[NSNumber numberWithDouble:1050] forKey:@"upper"];
+        [class setObject:classBounds forKey:@"bounds"];
+        [self.speed.uploadClasses addObject:class];
+        
+        //ul very high
+        class = [NSMutableDictionary new];
+        classBounds = [NSMutableDictionary new];
+        [class setObject:[NSNumber numberWithBool:false] forKey:@"default"];
+        [class setObject:[NSNumber numberWithInt:20] forKey:@"streams"];
+        [class setObject:[NSNumber numberWithInt:65535] forKey:@"frameSize"];
+        [classBounds setObject:[NSNumber numberWithDouble:950] forKey:@"lower"];
+        [classBounds setObject:[NSNumber numberWithDouble:9000] forKey:@"upper"];
+        [class setObject:classBounds forKey:@"bounds"];
+        [self.speed.uploadClasses addObject:class];
+        
+        
+        /*
+         case 1:
+         {
+         self.speed.parallelStreamsUpload = [NSNumber numberWithInt:4];
+         self.speed.frameSizeUpload = [NSNumber numberWithInt:32768];
+         self.speed.uploadThroughputLowerBoundMbps = [NSNumber numberWithDouble:0.95];
+         self.speed.uploadThroughputUpperBoundMbps = [NSNumber numberWithInt:525];
+         break;
+         }
+         case 2:
+         {
+         self.speed.parallelStreamsUpload = [NSNumber numberWithInt:4];
+         self.speed.frameSizeUpload = [NSNumber numberWithInt:65535];
+         self.speed.uploadThroughputLowerBoundMbps = [NSNumber numberWithInt:475];
+         self.speed.uploadThroughputUpperBoundMbps = [NSNumber numberWithInt:1050];
+         break;
+         }
+         */
     }
     
     [self.speed measurementStart];
