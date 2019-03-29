@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
@@ -40,6 +41,8 @@ public class QosFragment extends Fragment implements ServiceConnection {
     private QosProgressView qosProgressView;
 
     private TopProgressBarView topProgressBarView;
+
+    private AtomicBoolean sendingResults = new AtomicBoolean(false);
 
     public static QosFragment newInstance() {
         final QosFragment fragment = new QosFragment();
@@ -83,7 +86,11 @@ public class QosFragment extends Fragment implements ServiceConnection {
 
         final Intent serviceIntent = new Intent(getContext(), MeasurementService.class);
         getContext().bindService(serviceIntent, this, Context.BIND_AUTO_CREATE);
-        handler.post(updateUiRunnable);
+
+        if (!sendingResults.get()) {
+            //only if we are not currently sending any results
+            handler.post(updateUiRunnable);
+        }
     }
 
     @Override
@@ -143,13 +150,17 @@ public class QosFragment extends Fragment implements ServiceConnection {
         public void run() {
             final QoSResultCollector qoSResultCollector = measurementService.getQosMeasurementClient().getQosResult();
             final String collectorUrl = measurementService.getQosMeasurementClient().getCollectorUrl();
+            final MainActivity activity = (MainActivity) getActivity();
             final SendReportTask task = new SendReportTask(getContext(),
                     RequestUtil.prepareLmapReportForQosMeasurement(qoSResultCollector, getContext()),
                     collectorUrl, result -> {
                         System.out.println(result);
-                        ((MainActivity) getActivity()).navigateTo(WorkflowTarget.TITLE);
+                        activity.navigateTo(WorkflowTarget.TITLE);
                     });
-            task.execute();
+
+            if (!sendingResults.getAndSet(true)) {
+                task.execute();
+            }
         }
     };
 
