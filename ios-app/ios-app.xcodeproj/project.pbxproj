@@ -440,13 +440,16 @@
 				TargetAttributes = {
 					E026A57D2241271700BACDB5 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 					};
 					E026A5932241271A00BACDB5 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 						TestTargetID = E026A57D2241271700BACDB5;
 					};
 					E026A59E2241271A00BACDB5 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 						TestTargetID = E026A57D2241271700BACDB5;
 					};
 				};
@@ -793,7 +796,8 @@
 			baseConfigurationReference = 9A7B01F143D9A74599DAC596 /* Pods-All-ios-app.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "ios-app/Configuration/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -801,7 +805,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "at.alladin.nettest.berec.ios-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -811,7 +816,8 @@
 			baseConfigurationReference = D329819C8E115D34CA521957 /* Pods-All-ios-app.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "ios-app/Configuration/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -819,7 +825,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "at.alladin.nettest.berec.ios-app";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -838,7 +845,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "at.alladin.nettest.berec.ios-appTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ios-app.app/ios-app";
 			};
@@ -858,7 +865,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "at.alladin.nettest.berec.ios-appTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ios-app.app/ios-app";
 			};
@@ -877,7 +884,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "at.alladin.nettest.berec.ios-appUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = "ios-app";
 			};
@@ -896,7 +903,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "at.alladin.nettest.berec.ios-appUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = "ios-app";
 			};

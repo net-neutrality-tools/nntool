@@ -23,7 +23,7 @@
         "Alamofire": ["~> 4.8.1"],
         "AlamofireObjectMapper": ["~> 5.2.0"],
         "CocoaAsyncSocket": ["~> 7.6.3"],
-        "XCGLogger": ["~> 6.1.0"]
+        "XCGLogger": ["~> 7.0.0"]
     },
     "frameworks": [
        "Foundation",

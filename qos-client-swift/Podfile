@@ -13,7 +13,7 @@ abstract_target 'All' do
   pod 'Alamofire', '~> 4.8.1'
   pod 'AlamofireObjectMapper', '~> 5.2.0'
 
-  pod 'XCGLogger', '~> 6.1.0'
+  pod 'XCGLogger', '~> 7.0.0'
 
   target 'QoSKit_iOS' do
     platform :ios, '10.0'
@@ -21,8 +21,8 @@ abstract_target 'All' do
 
   target 'QoSKitUnitTests' do
       platform :ios, '10.0'
-      
-      pod 'Nimble', '~> 7.3.4'
+
+      pod 'Nimble', '~> 8.0.1'
   end
 end
 

@@ -13,7 +13,7 @@ abstract_target 'All' do
   pod 'WebBrowser', '~> 0.1.4'
 
   pod 'MeasurementAgentKit', :path => '../measurement-agent-swift'
-  
+
   target 'ios-app' do
 
   end

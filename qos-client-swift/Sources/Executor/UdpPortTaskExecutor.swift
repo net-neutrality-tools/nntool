@@ -160,7 +160,7 @@ public class UdpPortTaskExecutor: AbstractBidirectionalIpTaskExecutor<UdpPortTas
                 if internalConfig.direction == .incoming && components.count > 3 {
                     // we got rtts from qos-service as JSON
                     if let jsonData = components[3].data(using: .utf8) {
-                        if let jsonDict = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: UInt64] {
+                        if let jsonDict = ((try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: UInt64]) as [String : UInt64]??) {
                             rttsNs = jsonDict
                         }
                     }

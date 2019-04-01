@@ -69,9 +69,9 @@ class VersionResponseTests: XCTestCase {
 
         do {
             let vr = try JSONDecoder().decode(VersionResponse.self, from: jsonString.data(using: .utf8)!)
-        
+
             expect(vr).notTo(beNil())
-            
+
             expect(vr.controllerServiceVersion).to(equal(controllerServiceVersion))
             expect(vr.collectorServiceVersion).to(equal(collectorServiceVersion))
             expect(vr.resultServiceVersion).to(equal(resultServiceVersion))

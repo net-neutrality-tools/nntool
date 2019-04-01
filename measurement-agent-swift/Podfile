@@ -10,19 +10,29 @@ abstract_target 'All' do
 
   #pod 'Alamofire', '~> 4.8.1'
   pod 'Siesta', '~> 1.4.3'
-  
-  pod 'XCGLogger', '~> 6.1.0'
+
+  pod 'XCGLogger', '~> 7.0.0'
 
   pod 'QoSKit', :path => '../qos-client-swift'
-  
+
   target 'MeasurementAgentKit_iOS' do
     platform :ios, '10.0'
   end
 
   target 'MeasurementAgentKitTests' do
       platform :ios, '10.0'
-      
-      pod 'Nimble', '~> 7.3.4'
+
+      pod 'Nimble', '~> 8.0.1'
+  end
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if ['Siesta'].include? "#{target}"
+      target.build_configurations.each do |config|
+        config.build_settings['SWIFT_VERSION'] = '4.2'
+      end
+    end
   end
 end
 
