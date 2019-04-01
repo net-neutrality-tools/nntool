@@ -15,7 +15,6 @@
  ***************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 ///
 public class TcpPortTaskResult: AbstractBidirectionalIpTaskResult {
@@ -29,20 +28,18 @@ public class TcpPortTaskResult: AbstractBidirectionalIpTaskResult {
     var resultErrorDetails: String?
 
     ///
-    public override func mapping(map: Map) {
-        super.mapping(map: map)
+    enum CodingKeys: String, CodingKey {
+        case objectiveTimeoutNs = "tcp_objective_timeout" // TODO: use generic "objective_timeout"...
 
-        objectiveTimeoutNs   <- map["tcp_objective_timeout"] // TODO: use generic "objective_timeout"...
+        case objectivePortOut   = "tcp_objective_out_port"
+        case objectivePortIn    = "tcp_objective_in_port"
 
-        objectivePortOut   <- map["tcp_objective_out_port"]
-        objectivePortIn    <- map["tcp_objective_in_port"]
+        case resultOut          = "tcp_result_out"
+        case resultIn           = "tcp_result_in"
 
-        resultOut          <- (map["tcp_result_out"], EnumTransform<Status>())
-        resultIn           <- (map["tcp_result_in"], EnumTransform<Status>())
+        case resultOutResponse  = "tcp_result_out_response"
+        case resultInResponse   = "tcp_result_in_response"
 
-        resultOutResponse  <- map["tcp_result_out_response"]
-        resultInResponse   <- map["tcp_result_in_response"]
-
-        resultErrorDetails <- map["tcp_result_error_details"]
+        case resultErrorDetails = "tcp_result_error_details"
     }
 }

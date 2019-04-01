@@ -21,7 +21,7 @@ import Nimble
 class TcpPortTaskConfigurationTests: XCTestCase {
 
     override func setUp() {
-        continueAfterFailure = false
+
     }
 
     func testValidJsonObjectMapping() {
@@ -48,27 +48,19 @@ class TcpPortTaskConfigurationTests: XCTestCase {
         }
         """
 
-        let config = TcpPortTaskConfiguration(JSONString: jsonString)
+        do {
+            let config = try JSONDecoder().decode(TcpPortTaskConfiguration.self, from: jsonString.data(using: .utf8)!)
 
-        expect(config).notTo(beNil())
-
-        expect(config?.serverAddress).notTo(beNil())
-        expect(config?.serverPort).notTo(beNil())
-        expect(config?.timeoutNs).notTo(beNil())
-        expect(config?.concurrencyGroup).notTo(beNil())
-        expect(config?.qosTestUid).notTo(beNil())
-        expect(config?.portOut).notTo(beNil())
-        //XCTAssertNotNil(config!.portIn)
-
-        ////
-
-        expect(config?.serverAddress).to(equal(serverAddress))
-        expect(config?.serverPort).to(equal(serverPort))
-        expect(config?.timeoutNs).to(equal(timeoutNs))
-        expect(config?.concurrencyGroup).to(equal(concurrencyGroup))
-        expect(config?.qosTestUid).to(equal(qosTestUid))
-        expect(config?.portOut).to(equal(portOut))
-        //XCTAssertEqual(portIn, config?.portIn)
+            expect(config.serverAddress).to(equal(serverAddress))
+            expect(config.serverPort).to(equal(serverPort))
+            expect(config.timeoutNs).to(equal(timeoutNs))
+            expect(config.concurrencyGroup).to(equal(concurrencyGroup))
+            expect(config.qosTestUid).to(equal(qosTestUid))
+            expect(config.portOut).to(equal(portOut))
+            //XCTAssertEqual(portIn, config?.portIn)
+        } catch {
+            XCTFail("json could not be decoded")
+        }
     }
 
     func testInvalidPortJsonObjectMapping() {
@@ -78,11 +70,13 @@ class TcpPortTaskConfigurationTests: XCTestCase {
         }
         """
 
-        let config = TcpPortTaskConfiguration(JSONString: jsonString)
+        do {
+            let config = try JSONDecoder().decode(TcpPortTaskConfiguration.self, from: jsonString.data(using: .utf8)!)
 
-        expect(config).notTo(beNil())
-
-        expect(config?.portOut).to(beNil())
+            XCTFail("invalid json has been decoded")
+        } catch {
+            return // success
+        }
     }
 
     func testMalformedJsonObjectMapping() {
@@ -92,8 +86,12 @@ class TcpPortTaskConfigurationTests: XCTestCase {
         }
         """
 
-        let config = TcpPortTaskConfiguration(JSONString: jsonString)
+        do {
+            try JSONDecoder().decode(TcpPortTaskConfiguration.self, from: jsonString.data(using: .utf8)!)
 
-        expect(config).to(beNil())
+            XCTFail("invalid json has been decoded")
+        } catch {
+            return // success
+        }
     }
 }

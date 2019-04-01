@@ -11,7 +11,6 @@ abstract_target 'All' do
   pod 'CocoaAsyncSocket', '~> 7.6.3'
 
   pod 'Alamofire', '~> 4.8.1'
-  pod 'AlamofireObjectMapper', '~> 5.2.0'
 
   pod 'XCGLogger', '~> 7.0.0'
 

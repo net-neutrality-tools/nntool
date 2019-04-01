@@ -16,7 +16,6 @@
 
 import XCTest
 @testable import QoSKit
-import ObjectMapper
 
 ///
 class EchoProtocolTaskExecutorTests: XCTestCase {
@@ -38,7 +37,7 @@ class EchoProtocolTaskExecutorTests: XCTestCase {
 
         let result = executor.runTask()
 
-        print(result.toJSONString(prettyPrint: true)!)
+        //print(result.toJSONString(prettyPrint: true)!)
     }
 
     func testUdp() {
@@ -54,7 +53,7 @@ class EchoProtocolTaskExecutorTests: XCTestCase {
 
         let result = executor.runTask()
 
-        print(result.toJSONString(prettyPrint: true)!)
+        //print(result.toJSONString(prettyPrint: true)!)
     }
 
     func testAsync() {
@@ -70,8 +69,8 @@ class EchoProtocolTaskExecutorTests: XCTestCase {
 
         let executor = EchoProtocolTaskExecutor(config: config)
 
-        executor.runTask(success: { result in
-            print(result.toJSONString(prettyPrint: true)!)
+        executor.runTask(success: { _ in
+            //print(result.toJSONString(prettyPrint: true)!)
 
             expectation.fulfill()
         })

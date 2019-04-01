@@ -15,7 +15,6 @@
  ***************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 ///
 public class AbstractBidirectionalIpTaskResult: AbstractControlConnectionTaskResult {

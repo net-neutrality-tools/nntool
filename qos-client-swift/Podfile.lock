@@ -1,14 +1,10 @@
 PODS:
   - Alamofire (4.8.1)
-  - AlamofireObjectMapper (5.2.0):
-    - Alamofire (~> 4.7)
-    - ObjectMapper (~> 3.4)
   - CocoaAsyncSocket (7.6.3)
   - Nimble (8.0.1)
   - ObjcExceptionBridging (1.0.1):
     - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
   - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
-  - ObjectMapper (3.4.2)
   - SwiftLint (0.31.0)
   - XCGLogger (7.0.0):
     - XCGLogger/Core (= 7.0.0)
@@ -17,7 +13,6 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (~> 4.8.1)
-  - AlamofireObjectMapper (~> 5.2.0)
   - CocoaAsyncSocket (~> 7.6.3)
   - Nimble (~> 8.0.1)
   - SwiftLint (~> 0.31.0)
@@ -26,24 +21,20 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
-    - AlamofireObjectMapper
     - CocoaAsyncSocket
     - Nimble
     - ObjcExceptionBridging
-    - ObjectMapper
     - SwiftLint
     - XCGLogger
 
 SPEC CHECKSUMS:
   Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
-  AlamofireObjectMapper: 92b6ce2423a9d159e686f6a1d514a009bf903ddc
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   Nimble: 45f786ae66faa9a709624227fae502db55a8bdd0
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
-  ObjectMapper: 0d4402610f4e468903ae64629eec4784531e5c51
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: 663498111c1de889ac6adb8661b766990d306b47
+PODFILE CHECKSUM: 2460ebf1f029a743a3817451f006d63e6ff725c2
 
 COCOAPODS: 1.6.0

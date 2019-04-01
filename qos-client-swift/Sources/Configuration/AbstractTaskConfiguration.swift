@@ -15,10 +15,9 @@
  ***************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 ///
-public class AbstractTaskConfiguration: Mappable {
+public class AbstractTaskConfiguration: Codable {
 
     var timeoutNs: UInt64 = 10 * NSEC_PER_SEC // TODO: config file
 
@@ -36,14 +35,11 @@ public class AbstractTaskConfiguration: Mappable {
 
     }
 
-    public required init?(map: Map) {
+    ///
+    enum CodingKeys: String, CodingKey {
+        case timeoutNs = "timeout"
 
-    }
-
-    public func mapping(map: Map) {
-        timeoutNs        <- map["timeout"]
-
-        concurrencyGroup <- map["concurrency_group"]
-        qosTestUid       <- map["qos_test_uid"]
+        case concurrencyGroup = "concurrency_group"
+        case qosTestUid       = "qos_test_uid"
     }
 }

@@ -15,13 +15,12 @@
  ***************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 ///
 public class AbstractBidirectionalIpTaskConfiguration: AbstractControlConnectionTaskConfiguration {
 
     ///
-    enum Direction: String {
+    enum Direction: String, Codable {
         case unknown = "UNKNOWN"
         case outgoing = "OUT"
         case incoming = "IN"
@@ -46,10 +45,29 @@ public class AbstractBidirectionalIpTaskConfiguration: AbstractControlConnection
         return .unknown
     }
 
-    public override func mapping(map: Map) {
-        super.mapping(map: map)
+    public required init() {
+        super.init()
+    }
 
-        portOut <- map["out_port"]
-        portIn <- map["in_port"]
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+
+        let container = try decoder.container(keyedBy: CodingKeysTest2.self)
+        portOut = try container.decode(UInt16.self, forKey: .portOut)
+        portIn = try container.decode(UInt16.self, forKey: .portIn)
+    }
+
+    public override func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+
+        var container = encoder.container(keyedBy: CodingKeysTest.self)
+        try container.encode(serverAddress, forKey: .serverAddress)
+        try container.encode(serverPort, forKey: .serverPort)
+    }
+
+    ///
+    enum CodingKeysTest2: String, CodingKey { // had to rename from CodingKeys (see https://bugs.swift.org/browse/SR-6747)
+        case portOut = "out_port"
+        case portIn = "in_port"
     }
 }

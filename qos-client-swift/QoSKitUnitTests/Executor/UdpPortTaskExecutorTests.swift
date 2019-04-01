@@ -16,12 +16,11 @@
 
 import XCTest
 @testable import QoSKit
-import ObjectMapper
 
 class UdpPortQoSTaskExecutorTests: XCTestCase {
 
     override func setUp() {
-        continueAfterFailure = false
+        //continueAfterFailure = false
     }
 
     func testOutgoing() {
@@ -51,7 +50,7 @@ class UdpPortQoSTaskExecutorTests: XCTestCase {
 
         controlConnection.disconnect()
 
-        print(result.toJSONString(prettyPrint: true)!)
+        //print(result.toJSONString(prettyPrint: true)!)
     }
 
     func testIncoming() {
@@ -81,6 +80,6 @@ class UdpPortQoSTaskExecutorTests: XCTestCase {
 
         controlConnection.disconnect()
 
-        print(result.toJSONString(prettyPrint: true)!)
+        //print(result.toJSONString(prettyPrint: true)!)
     }
 }

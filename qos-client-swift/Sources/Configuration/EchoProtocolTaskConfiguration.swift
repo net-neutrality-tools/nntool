@@ -15,19 +15,13 @@
  ***************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 ///
 public class EchoProtocolTaskConfiguration: AbstractTaskConfiguration {
 
-    static let ProtocolTypeTransformOf = TransformOf<ProtocolType, String>(
-        fromJSON: { ProtocolType(rawValue: $0 ?? "") },
-        toJSON: { $0?.rawValue }
-    )
-
-    public enum ProtocolType: String {
-        case tcp
-        case udp
+    public enum ProtocolType: String, Codable {
+        case tcp = "tcp"
+        case udp = "udp"
     }
 
     var host: String?
@@ -37,12 +31,11 @@ public class EchoProtocolTaskConfiguration: AbstractTaskConfiguration {
 
     // packetCount?
 
-    public override func mapping(map: Map) {
-        super.mapping(map: map)
-
-        host <- map["host"]
-        port <- map["port"]
-        protocolType <- (map["protocol"], EchoProtocolTaskConfiguration.ProtocolTypeTransformOf)
-        payload <- map["payload"]
+    ///
+    enum CodingKeys: String, CodingKey {
+        case host
+        case port
+        case protocolType = "protocol"
+        case payload
     }
 }

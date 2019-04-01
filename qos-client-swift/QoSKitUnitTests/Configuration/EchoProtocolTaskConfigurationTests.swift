@@ -20,6 +20,6 @@ import XCTest
 class EchoProtocolTaskConfigurationTests: XCTestCase {
 
     override func setUp() {
-        continueAfterFailure = false
+        //continueAfterFailure = false
     }
 }

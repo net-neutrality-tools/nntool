@@ -17,7 +17,7 @@
 import Foundation
 
 ///
-enum TaskType: String {
+enum TaskType: String, Codable {
 
     ///
     case tcpPort = "tcp"
