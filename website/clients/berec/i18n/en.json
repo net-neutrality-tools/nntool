@@ -1,0 +1,30 @@
+{
+  "WEBSITE": {
+    "TITLE": "nntool.eu Website"
+  },
+  "HOME": {
+    "HEADER": "nntool.eu Website",
+    "DESCRIPTION_BADGES": "<a href=\"\" class=\"app-store-badge en hide-text\">Download on the App Store</a><a href=\"\" class=\"google-play-badge en hide-text\">Get it on Google Play</a>",
+    "MORE": ""
+  },
+  "STATISTICS": {
+    "HEADER": "nntool.eu Website<br />Measurement Statistics"
+  },
+  "NETTEST": {
+    "INTRO": {
+      "MESSAGE": "WARNING! Todo",
+      "AGREE": "I agree with BERECs Privacy Policy and Terms of Use for nntool."
+    }
+  },
+  "OPENDATA": {
+    "EXTERNAL": {
+      "TEXT": "",
+      "RTR": "",
+      "HAKOM": "",
+      "AKOS": "",
+      "CZNIC": "",
+      "MERACINTERNETU": ""
+    }
+  },
+  "FOOTER": "<div class=\"wrapper h-card\">\n            <div class=\"section-columns\">\n                <div class=\"column\">\n                    <header>\n                        <h2 class=\"p-org\">BEREC</h2>\n                    </header>\n                    <p>\n                        <span class=\"p-street-address\">Lorem</span><br/>\n                        <span class=\"p-postal-code\">0000</span> <span class=\"p-locality\">ipsum</span>, <span class=\"p-country-name\">dolor</span>\n                    </p>\n                    <p>\n                        <a class=\"u-url website\" href=\"\">nntool.eu</a>\n                    </p>\n                </div>\n                <div class=\"column\">\n                    <header>\n                        <h2>Contact</h2>\n                    </header>\n                    <p>\n                        <a class=\"p-tel\" href=\"\">+11 1 111 11 11</a><br />\n                        <a class=\"p-mail\" href=\"\">.@.</a>\n                    </p>\n                    <p>\n                                            </p>\n                </div>\n            </div>\n        </div>"
+}
