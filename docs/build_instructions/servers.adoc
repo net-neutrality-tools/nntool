@@ -39,4 +39,4 @@ The collector needs no specific setup, apart from the general CouchDB setup.
 
 == Export
 
-The open data export service needs a functioning PostgreSQL database to work. The configuration which fields are exported is located in the config/application.yml under data-export.fields.
+The open data export service needs a functioning PostgreSQL database to work. The configuration which fields are exported is located in the config/application.yml under data-export.fields. In the `docs/project_management/milestones/1/deliverables/secondary_db_postgresql_schema.sql` file, sql statements to create the PostgreSQL database are given. After executing these statements, debug data for testing is available in the `default_postgresql_data.sql` file, which contains a few insert statements to test the PostgreSQL database with.

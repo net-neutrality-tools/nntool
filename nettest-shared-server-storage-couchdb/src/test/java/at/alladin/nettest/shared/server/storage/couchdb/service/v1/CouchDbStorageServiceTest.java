@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
+import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.TaskConfigurationQoS;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.TaskConfigurationSpeed;
@@ -87,20 +88,13 @@ public class CouchDbStorageServiceTest {
 	@Autowired
 	private StorageService storageService;
 
-	@Test
-	public void testCouchDbStorageServiceSave() throws JsonParseException, JsonMappingException, IOException {
+	@Test(expected=StorageServiceException.class)
+	public void testCouchDbStorageServiceSaveWithoutValidAgentIdThrowsException() throws JsonParseException, JsonMappingException, IOException {
 		final LmapReportDto lmapReportDto = objectMapper.readValue(model1Resource.getInputStream(), LmapReportDto.class);
 		
 		when(measurementRepository.save(any(Measurement.class))).then(returnsFirstArg());
 		
 		final MeasurementResultResponse resultResponse = storageService.save(lmapReportDto);
 		
-		verify(measurementRepository, times(1)).save(any(Measurement.class));
-		
-		assertThat(resultResponse.getUuid(), not(isEmptyOrNullString()));
-		assertThat(resultResponse.getOpenDataUuid(), not(isEmptyOrNullString()));
-		
-		assertNotNull(UUID.fromString(resultResponse.getUuid()));
-		assertNotNull(UUID.fromString(resultResponse.getOpenDataUuid()));
 	}
 }
