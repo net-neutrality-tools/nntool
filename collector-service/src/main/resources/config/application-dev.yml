@@ -18,6 +18,7 @@ spring:
         create-if-not-exists: true
         entities:
           - Measurement
+          - MeasurementAgent
 
 server:
   port: 8081
