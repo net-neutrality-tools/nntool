@@ -1,0 +1,92 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "network",
+        "scope": null,
+        "escapedName": "network",
+        "name": "network",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/Users/mike/ownCloud/projects/svn/wsCore"
+    ]
+  ],
+  "_from": "network@latest",
+  "_id": "network@0.3.0",
+  "_inCache": true,
+  "_location": "/network",
+  "_nodeVersion": "4.4.7",
+  "_npmOperationalInternal": {
+    "host": "packages-16-east.internal.npmjs.com",
+    "tmp": "tmp/network-0.3.0.tgz_1474656482004_0.8902162823360413"
+  },
+  "_npmUser": {
+    "name": "tomas",
+    "email": "tomas@forkhq.com"
+  },
+  "_npmVersion": "2.15.8",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "network",
+    "scope": null,
+    "escapedName": "network",
+    "name": "network",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/network/-/network-0.3.0.tgz",
+  "_shasum": "6dbd3ba780d367386bf88d2e2e29959a8a98df31",
+  "_shrinkwrap": null,
+  "_spec": "network",
+  "_where": "/Users/mike/ownCloud/projects/svn/wsCore",
+  "author": {
+    "name": "Tomas Pollak",
+    "email": "tomas@forkhq.com"
+  },
+  "bin": {
+    "network": "./bin/network"
+  },
+  "bugs": {
+    "url": "https://github.com/tomas/network/issues"
+  },
+  "dependencies": {
+    "async": "^1.5.2",
+    "needle": "1.1.2",
+    "wmic": "^0.1.0"
+  },
+  "description": "Cross platform network utilities for Node.js (gateway_ip, MAC address, etc)",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "6dbd3ba780d367386bf88d2e2e29959a8a98df31",
+    "tarball": "https://registry.npmjs.org/network/-/network-0.3.0.tgz"
+  },
+  "gitHead": "3a39f1b655f03d1f7d86432fdb6011aea364caeb",
+  "homepage": "https://github.com/tomas/network#readme",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "maintainers": [
+    {
+      "name": "tomas",
+      "email": "tomas@forkhq.com"
+    }
+  ],
+  "name": "network",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomas/network.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.3.0"
+}
