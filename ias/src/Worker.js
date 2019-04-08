@@ -273,7 +273,7 @@ function connect()
 
     try 
     {
-        if (typeof require !== 'undefined' && wsTestCase === 'download')
+        if (typeof require !== 'undefined' && typeof platformModule === 'undefined')
         {
             var logDebug = false;
             var WebSocketNode = require('ws');
@@ -328,6 +328,12 @@ function connect()
         }
         else if (wsTestCase === 'upload')
         {
+            if (!singleThread && typeof require !== 'undefined')
+            {
+                importScripts('modules/JSTool.js');
+                jsTool = new JSTool();
+            }
+
             wsCompleted = false;
             ulData = jsTool.generateRandomData(ulDataSize, true, false);
         }
@@ -353,7 +359,6 @@ function connect()
         if (wsTestCase === 'download')
         {
             wsData      += event.data.size;
-            //wsFrameSize = event.data.size;
             wsFrames++;
         }
         else
