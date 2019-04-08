@@ -122,6 +122,8 @@
         var portBlocking;
         var portBlockingParameters = {};
 
+        var cliOptions;
+
         if (typeof require !== "undefined")
         {
             document.getElementById("header").innerHTML = "<h1 style=\"padding-left:50px;\">ias desktop 1.0.0</h1>";
@@ -319,6 +321,26 @@
                 iasParameters.upload.performMeasurement     = true;
             }
 
+            if (typeof cliOptions !== 'undefined')
+            {
+                iasParameters.rtt.performMeasurement        = false;
+                iasParameters.download.performMeasurement   = false;
+                iasParameters.upload.performMeasurement     = false;
+
+                if (typeof cliOptions.rtt !== 'undefined')
+                {
+                    iasParameters.rtt.performMeasurement = cliOptions.rtt.performMeasurement;
+                }
+                if (typeof cliOptions.download !== 'undefined')
+                {
+                    iasParameters.download.performMeasurement = cliOptions.download.performMeasurement;
+                }
+                if (typeof cliOptions.upload !== 'undefined')
+                {
+                    iasParameters.upload.performMeasurement = cliOptions.upload.performMeasurement;
+                }
+            }
+
             if (typeof require === "undefined")
             {
                 delete ias;
@@ -340,6 +362,7 @@
             {
                 ias.measurementStop();
 
+                document.getElementById('status').innerHTML = 'Measurement stopped';
                 document.getElementById('stopButton').disabled = true;
                 document.getElementById('loadButton').disabled = false;
             }
@@ -583,6 +606,7 @@
             
             function iasDidStop()
             {
+                document.getElementById('status').innerHTML = 'Measurement stopped';
                 document.getElementById('stopButton').disabled = true;
                 document.getElementById('loadButton').disabled = false;
             }
@@ -621,9 +645,12 @@
 
             ipcRendererUi.on('cli', function(event, cmd, data)
             {
-                console.log("UI: cli received");
                 if (cmd === 'start')
                 {
+                    if (typeof data !== 'undefined')
+                    {
+                        cliOptions = JSON.parse(data);
+                    }
                     iasStart('all');
                 }
             });
