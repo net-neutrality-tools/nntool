@@ -1,16 +1,23 @@
 package at.alladin.nettest.nntool.android.app.workflow.main;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.internal.GsonBuildConfig;
+
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.List;
 
+import at.alladin.nettest.nntool.android.app.BuildConfig;
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
@@ -24,6 +31,8 @@ import at.alladin.nntool.client.v2.task.TaskDesc;
  * @author Lukasz Budryk (alladin-IT GmbH)
  */
 public class TitleFragment extends Fragment {
+
+    private final static String TAG = TitleFragment.class.getSimpleName();
 
     /**
      *
@@ -43,25 +52,44 @@ public class TitleFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final RequestMeasurementTask task = new RequestMeasurementTask(getContext(),
-                        new OnTaskFinishedCallback<LmapUtil.LmapTaskDescWrapper>() {
-                            @Override
-                            public void onTaskFinished(LmapUtil.LmapTaskDescWrapper result) {
-                                if (result != null && result.getTaskDescList() != null && result.getTaskDescList().size() > 0) {
-                                    final Bundle bundle = new Bundle();
-                                    bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_DESK_LIST,
-                                            (Serializable) result.getTaskDescList());
-                                    bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_COLLECTOR_URL,
-                                            result.getCollectorUrl());
-                                    ((MainActivity) getActivity()).startMeasurement(MeasurementType.QOS, bundle);
-                                }
-                            }
-                        });
+                if (BuildConfig.MEASUREMENT_SHOW_DATA_CONSUMPTION_WARNING) {
+                    final String message = getResources().getString(R.string.measurement_data_consumption_warning);
+                    AlertDialog alert = new AlertDialog.Builder(getActivity())
+                            .setPositiveButton(android.R.string.ok,
+                                    (dialog, w) -> startMeasurement())
+                            .setNegativeButton(android.R.string.cancel,
+                                    (dialog, w) -> Log.d(TAG, "Data consumption warning declined"))
+                            .setMessage(message)
+                            .setCancelable(false)
+                            .create();
 
-                task.execute();
+                    alert.show();
+                }
+                else {
+                    startMeasurement();
+                }
             }
         });
 
         return v;
+    }
+
+    private void startMeasurement() {
+        final RequestMeasurementTask task = new RequestMeasurementTask(getContext(),
+                new OnTaskFinishedCallback<LmapUtil.LmapTaskDescWrapper>() {
+                    @Override
+                    public void onTaskFinished(LmapUtil.LmapTaskDescWrapper result) {
+                        if (result != null && result.getTaskDescList() != null && result.getTaskDescList().size() > 0) {
+                            final Bundle bundle = new Bundle();
+                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_DESK_LIST,
+                                    (Serializable) result.getTaskDescList());
+                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_COLLECTOR_URL,
+                                    result.getCollectorUrl());
+                            ((MainActivity) getActivity()).startMeasurement(MeasurementType.QOS, bundle);
+                        }
+                    }
+                });
+
+        task.execute();
     }
 }

@@ -25,6 +25,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField "boolean", "MEASUREMENT_SHOW_DATA_CONSUMPTION_WARNING", "true"
+        }
+        debug {
+            buildConfigField "boolean", "MEASUREMENT_SHOW_DATA_CONSUMPTION_WARNING", "true"
         }
     }
     compileOptions {
