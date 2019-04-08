@@ -18,7 +18,7 @@ For the UDP port blocking module, a specified set of ports is tested against a d
 ---------------
 
 ## Execution ##
-Open *index.html* from *build/{plain|uglfied}/common/* in a Browser of your choice and choose a test case. The browser developer console should only be used for debugging purposes, as an active developer console can cause performance issues.
+Open *index.html* from *build/{plain|uglfied}/ias/* in a Browser of your choice and choose a test case. The browser developer console should only be used for debugging purposes, as an active developer console can cause performance issues.
 
-To perform rtt, download, or upload measurements, the *common-server* module has to be deployed on the measurement peer.
+To perform rtt, download, or upload measurements, the *ias-server* module has to be deployed on the measurement peer.
 To perform port blocking measurements, the *coturn TURN server (https://github.com/coturn/coturn)* has to be deployed on the measurement peer.
