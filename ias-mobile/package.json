@@ -1,12 +1,12 @@
 {
-	"description": "nativescript mobile library",
+	"description": "ias mobile library",
 	"version": "1.0.0",
 	"nativescript": {
-		"id": "com.zafaco.commonmobile",
-		"tns-ios": {
+		"id": "com.zafaco.iasmobile",
+		"tns-android": {
 			"version": "5.2.0"
 		},
-		"tns-android": {
+		"tns-ios": {
 			"version": "5.2.0"
 		}
 	},

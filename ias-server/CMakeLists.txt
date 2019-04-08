@@ -12,14 +12,14 @@
 
 #/*!
 # *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2019-01-02
+# *      \date Last update: 2019-04-08
 # *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
 # */
 
 
 cmake_minimum_required(VERSION 2.6)
 
-project(common-server)
+project(ias-server)
 
 #---------------------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ add_definitions("$$(pkg-config nopoll --libs)")
 
 add_subdirectory (src)
 
-INSTALL(PROGRAMS build/common-server DESTINATION bin )
+INSTALL(PROGRAMS build/ias-server DESTINATION bin )
 
 INCLUDE (InstallRequiredSystemLibraries)
 SET (CPACK_COMPONENTS_ALL Libraries ApplicationData)
@@ -74,8 +74,8 @@ SET (CPACK_DEBIAN_PACKAGE_SECTION "measurement")
 SET (CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
 set (CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
-SET (CPACK_PACKAGE_DESCRIPTION "WebSocket Measurement Server (common-server)")
-SET (CPACK_PACKAGE_DESCRIPTION_SUMMARY "WebSocket Measurement Server (common-server)")
+SET (CPACK_PACKAGE_DESCRIPTION "WebSocket Measurement Server (ias-server)")
+SET (CPACK_PACKAGE_DESCRIPTION_SUMMARY "WebSocket Measurement Server (ias-server)")
 SET (CPACK_DEBIAN_PACKAGE_MAINTAINER "zafaco GmbH")
 SET (CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}_${CPACK_DEBIAN_ARCHITECTURE}")
 

@@ -12,14 +12,14 @@
 
 #/*!
 # *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2019-01-16
+# *      \date Last update: 2019-04-08
 # *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
 # */
 
 
 cmake_minimum_required(VERSION 2.6)
 
-project(common-server)
+project(ias-server)
 
 #---------------------------------------------------------------------------------
 
@@ -29,7 +29,7 @@ set(CMAKE_BUILD_TYPE Release)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-add_executable(common-server
+add_executable(ias-server
     basisthread.cpp
     trace.cpp
     connection.cpp
@@ -43,7 +43,7 @@ add_executable(common-server
     htlistener.cpp
 )
 
-TARGET_LINK_LIBRARIES(common-server
+TARGET_LINK_LIBRARIES(ias-server
     ${CMAKE_THREAD_LIBS_INIT}
     -llog4cpp
     -lssl
