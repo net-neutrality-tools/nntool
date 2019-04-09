@@ -1,0 +1,71 @@
+= Android App
+:toc: left
+:toc-title: Table of Content
+
+The android application module can be found in the `android-app` directory.
+
+== Prerequisites
+
+Before running the application, it is recommended to set up both the controller and the collector service.
+
+== Controller service settings
+
+Providing information about the controller service - needed to establish a communication between the application and the service - can be done in the Android resource file: `res/values/defaults_controller.xml`
+
+Following options are available:
+
+[cols=3*,options=header]
+|===
+|Option name
+|Value type
+|Purpose
+
+|`default_controller_host`
+|string
+|Controller service host name (e.g. `127.0.0.1`, `localhost`)
+
+|`default_controller_port`
+|integer
+|The port the controller service is listening on (e.g. `8080`)
+
+|`default_controller_connection_is_encrypted`
+|bool
+|If set to true, the connection to the controller will be encrypted (HTTPS), otherwise it will be a plain-text connection (HTTP)
+
+|`default_controller_path_prefix`
+|string
+|Path prefix used to generate different controller service URLs (default: `/`)
+|===
+
+== Collector service settings
+
+Usually all measurements initiated with the LMAP protocol should/will contain information on how to reach a specific collector service. The settings provided by the controller can be overriden by editing the Android resource file: `res/values/defaults_collector.xml`. Additionally default values are also provided using this configuration file.
+
+Following options are available:
+
+[cols=3*,options=header]
+|===
+|Option name
+|Value type
+|Purpose
+
+|`default_collector_settings_override`
+|bool
+|If this flag is set to `true`, provided collector service URLs will be overriden by the settings inside this file.
+
+|`default_collector_host`
+|string
+|Collector service host name (e.g. `127.0.0.1`, `localhost`)
+
+|`default_collector_port`
+|integer
+|The port the collector service is listening on (e.g. `8080`)
+
+|`default_collector_connection_is_encrypted`
+|bool
+|If set to true, the connection to the collector will be encrypted (HTTPS), otherwise it will be a plain-text connection (HTTP)
+
+|`default_collector_path_prefix`
+|string
+|Path prefix used to generate different collector service URLs (default: `/`)
+|===

@@ -24,7 +24,7 @@ data-export:
   where-month-clause: AND (EXTRACT (month FROM m.start_time AT TIME ZONE 'UTC') = ?
   where-year-clause: AND (EXTRACT (year FROM m.start_time AT TIME ZONE 'UTC') = ?
 
-  order-by: m.start_tme
+  order-by: m.start_time
   fields:
     open_test_uuid: ('O' || (open_data_uuid)::text)
     time_utc: to_char(m.start_time AT TIME ZONE 'UTC', 'YYYY-MM-DD HH24:MI:SS')
@@ -40,7 +40,7 @@ data-export:
     test_duration: m.duration_ns
     platform: m.os_name
     model: COALESCE(m.device_fullname, m.device_model)
-    client_version: m.client_app_version_code
+    client_version: m.agent_app_version_code
     network_mcc_mnc: mobile_network_operator_mcc || '-' || mobile_network_operator_mnc
     network_name: mobile_network_operator_name
     sim_mcc_mnc: mobile_sim_operator_mcc || '-' || mobile_sim_operator_mnc

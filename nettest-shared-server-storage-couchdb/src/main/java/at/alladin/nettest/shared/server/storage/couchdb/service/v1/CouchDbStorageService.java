@@ -77,6 +77,11 @@ public class CouchDbStorageService implements StorageService {
 	 */
 	@Override
 	public MeasurementResultResponse save(LmapReportDto lmapReportDto) throws StorageServiceException {
+		final String agentUuid = lmapReportDto.getAgentId();
+		if (agentUuid == null || !isValidMeasurementAgentUuid(agentUuid)) {
+			throw new StorageServiceException("Invalid user agent id");
+		}
+		
 		final Measurement measurement = lmapReportModelMapper.map(lmapReportDto);
 		
 		measurement.setUuid(UUID.randomUUID().toString());
@@ -110,7 +115,7 @@ public class CouchDbStorageService implements StorageService {
 			try {
 				dbAgent = measurementAgentRepository.findByUuid(agent.getUuid());
 			} catch (Exception ex) {
-				throw new StorageServiceException(ex);
+				throw new StorageServiceException("invalid uuid");
 			}
 			if (dbAgent == null) {
 				throw new StorageServiceException("invalid uuid");

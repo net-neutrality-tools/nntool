@@ -1,0 +1,78 @@
+{
+  "_id": "9091201f465f852120d5cc250b005a1d",
+  "docType": "TaskConfiguration",
+  "name": "QOS",
+  "version": "1.0.0",
+  "option_list": [
+    {
+      "name": "server_addr",
+      "value": "ENTER_QOS_SERVER_ADDRESS"
+    },
+    {
+      "name": "server_port",
+      "value": 5233
+    },
+    {
+      "name": "encryption",
+      "value": "false"
+    },
+    {
+      "name": "result_collector_base_url",
+      "value": "ENTER_COLLECTOR_URL"
+    }
+  ],
+  "measurement_parameters": {
+    "objectives": {
+      "TCP": [
+        {
+          "concurrency_group": "200",
+          "qos_test_uid": "200",
+          "out_port": "5542",
+          "qostest": "tcp"
+        },
+        {
+          "concurrency_group": "200",
+          "qos_test_uid": "201",
+          "out_port": "5545",
+          "qostest": "tcp"
+        }
+      ],
+      "UDP": [
+        {
+          "concurrency_group": "201",
+          "out_num_packets": "1",
+          "qos_test_uid": "250",
+          "out_port": "5004",
+          "qostest": "udp"
+        },
+        {
+          "concurrency_group": "201",
+          "out_num_packets": "1",
+          "qos_test_uid": "251",
+          "out_port": "5005",
+          "qostest": "udp"
+        }
+      ],
+      "ECHO_PROTOCOL": [
+        {
+          "concurrency_group": "301",
+          "qos_test_uid": "301",
+          "qostest": "echo_protocol",
+          "echo_protocol_objective_protocol": "udp",
+          "echo_protocol_objective_payload": "UPD payload",
+          "server_addr": "10.9.8.39",
+          "server_port": "7"
+        },
+        {
+          "concurrency_group": "302",
+          "qos_test_uid": "302",
+          "qostest": "echo_protocol",
+          "echo_protocol_objective_protocol": "tcp",
+          "echo_protocol_objective_payload": "TCP payload",
+          "server_addr": "10.9.8.39",
+          "server_port": "7"
+        }
+      ]
+    }
+  }
+}
