@@ -34,7 +34,6 @@ public class ControllerConnection extends AbstractConnection<ControllerService> 
     }
 
     public LmapControlDto requestMeasurement (final LmapControlDto request) {
-
         try {
             return getControllerService().postMeasurementRequest(request).execute().body();
         } catch (final Exception ex) {

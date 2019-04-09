@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -21,10 +22,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.SendReportTask;
 import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.view.TopProgressBarView;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.QoSTestEnum;
@@ -153,9 +156,18 @@ public class QosFragment extends Fragment implements ServiceConnection {
             final MainActivity activity = (MainActivity) getActivity();
             final SendReportTask task = new SendReportTask(getContext(),
                     RequestUtil.prepareLmapReportForQosMeasurement(qoSResultCollector, getContext()),
-                    collectorUrl, result -> {
-                        System.out.println(result);
-                        activity.navigateTo(WorkflowTarget.TITLE);
+                    collectorUrl, new OnTaskFinishedCallback<MeasurementResultResponse>() {
+                        @Override
+                        public void onTaskFinished(MeasurementResultResponse result) {
+                            if (result == null) {
+                                new AlertDialog.Builder(activity)
+                                        .setTitle(R.string.alert_send_measurement_result_title)
+                                        .setMessage(R.string.alert_send_measurement_results_error)
+                                        .setPositiveButton(android.R.string.ok, null)
+                                        .show();
+                            }
+                            activity.navigateTo(WorkflowTarget.TITLE);
+                        }
                     });
 
             if (!sendingResults.getAndSet(true)) {
