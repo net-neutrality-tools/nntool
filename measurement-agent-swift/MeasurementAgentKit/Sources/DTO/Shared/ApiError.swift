@@ -1,4 +1,4 @@
-// ios-app: SpeedMeasurementGaugeView.swift, created on 26.03.19
+// MeasurementAgentKit: ApiError.swift, created on 02.04.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,21 +16,29 @@
  ******************************************************************************/
 
 import Foundation
-import UIKit
 
-///
-@IBDesignable class SpeedMeasurementGaugeView: NibView {
+/// DTO that wraps server errors and/or exceptions.
+/// The Java stack-trace is only added if the service runs in development mode.
+class ApiError: Codable {
 
-    @IBOutlet private var startButton: UIButton?
-    @IBOutlet private var speedMeasurementGauge: SpeedMeasurementGauge?
+    /// Date and time at which the error occurred.
+    var time: Date?
 
-    @IBOutlet private var networkTypeLabel: UILabel?
-    @IBOutlet private var networkDetailLabel: UILabel?
+    /// URI path/resource that caused the error.
+    var path: String?
 
-    var startButtonActionCallback: (() -> Void)?
+    /// Status code for the error. Example: 400, 404, 500, ...
+    var status: Int?
 
-    ///
-    @IBAction func startButtonPrimaryActionTriggered() {
-        startButtonActionCallback?()
-    }
+    /// String representation of the status. Example: "Internal Server Error, "Not Found", ...
+    var error: String?
+
+    /// The error or exception message. Example: "java.lang.RuntimeException".
+    var message: String?
+
+    /// Exception class name.
+    var exception: String?
+
+    /// Exception stack trace.
+    var trace: String?
 }

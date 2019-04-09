@@ -20,14 +20,14 @@ import Foundation
 ///
 class CollectorService: RestApiService {
 
-    ///
-    func storeMeasurement(reportDto: LmapReportDto) {
-        /*api.resource("/versions").request(.post, text: "a").onSuccess { e in
-            e.content
-        }*/
+    init() {
+        super.init(baseURL: "http://localhost:8081/api/v1")
+
+        configureTransformer("/measurements", forType: ApiResponse<MeasurementResultResponse>.self)
     }
 
-    func getVersion() {
-
+    ///
+    func storeMeasurement(reportDto: LmapReportDto, onSuccess: SuccessCallback<MeasurementResultResponse>?, onFailure: FailureCallback?) {
+        request("/measurements", method: .post, requestEntity: reportDto, wrapInApiRequest: false, responseEntityType: MeasurementResultResponse.self, onSuccess: onSuccess, onFailure: onFailure)
     }
 }

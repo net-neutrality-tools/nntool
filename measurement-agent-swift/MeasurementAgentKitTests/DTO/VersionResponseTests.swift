@@ -43,11 +43,11 @@ class VersionResponseTests: XCTestCase {
             return
         }
 
-        expect(jsonObject?["controller_service_version"]).to(equal(vr.controllerServiceVersion!))
-        expect(jsonObject?["collector_service_version"]).to(equal(vr.collectorServiceVersion!))
-        expect(jsonObject?["result_service_version"]).to(equal(vr.resultServiceVersion!))
-        expect(jsonObject?["map_service_version"]).to(equal(vr.mapServiceVersion!))
-        expect(jsonObject?["statistic_service_version"]).to(equal(vr.statisticServiceVersion!))
+        expect(jsonObject["controller_service_version"]).to(equal(vr.controllerServiceVersion!))
+        expect(jsonObject["collector_service_version"]).to(equal(vr.collectorServiceVersion!))
+        expect(jsonObject["result_service_version"]).to(equal(vr.resultServiceVersion!))
+        expect(jsonObject["map_service_version"]).to(equal(vr.mapServiceVersion!))
+        expect(jsonObject["statistic_service_version"]).to(equal(vr.statisticServiceVersion!))
     }
 
     func testDeserialize() {

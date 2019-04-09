@@ -1,4 +1,4 @@
-// ios-app: SpeedMeasurementGaugeView.swift, created on 26.03.19
+// MeasurementAgentKit: ApiResponse.swift, created on 02.04.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,21 +16,22 @@
  ******************************************************************************/
 
 import Foundation
-import UIKit
 
-///
-@IBDesignable class SpeedMeasurementGaugeView: NibView {
+// Decoding of errors does not work if this extends from ApiBase.
+// Because of that the data property from ApiBase was moved into here.
 
-    @IBOutlet private var startButton: UIButton?
-    @IBOutlet private var speedMeasurementGauge: SpeedMeasurementGauge?
+/// Object that is used as wrapper for every request.
+class ApiRequest<T: Codable>: Codable /*: ApiBase<T>*/ {
 
-    @IBOutlet private var networkTypeLabel: UILabel?
-    @IBOutlet private var networkDetailLabel: UILabel?
+    /// Actual data that is returned for the request/response.
+    var data: T?
 
-    var startButtonActionCallback: (() -> Void)?
+    /// Additional information that is sent by measurement agent alongside the request.
+    var requestInfo: ApiRequestInfo?
 
     ///
-    @IBAction func startButtonPrimaryActionTriggered() {
-        startButtonActionCallback?()
+    enum CodingKeys: String, CodingKey {
+        case data
+        case requestInfo = "request_info"
     }
 }

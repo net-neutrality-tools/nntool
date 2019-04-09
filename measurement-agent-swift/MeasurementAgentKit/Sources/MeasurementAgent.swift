@@ -20,4 +20,20 @@ import Foundation
 ///
 class MeasurementAgent {
 
+    private let standardUserDefaults = UserDefaults.standard
+
+    var uuid: String? {
+        get {
+            return standardUserDefaults.string(forKey: "measurement_agent_uuid")
+        }
+        set {
+            standardUserDefaults.set(newValue, forKey: "measurement_agent_uuid")
+        }
+    }
+
+    var settings = Settings()
+
+    class Settings {
+
+    }
 }

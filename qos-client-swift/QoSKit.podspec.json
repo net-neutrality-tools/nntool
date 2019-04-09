@@ -20,8 +20,7 @@
         "Sources/PingUtil.{h,m}"
     ],
     "dependencies": {
-        "Alamofire": ["~> 4.8.1"],
-        "AlamofireObjectMapper": ["~> 5.2.0"],
+        "Alamofire": ["~> 4.8.2"],
         "CocoaAsyncSocket": ["~> 7.6.3"],
         "XCGLogger": ["~> 7.0.0"]
     },

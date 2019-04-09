@@ -18,6 +18,7 @@
 import Foundation
 
 /// Abstract wrapper for every request and response.
+@available(*, deprecated, message: "Property data was moved to ApiResponse to make JSON decoding work...")
 class ApiBase<T: Codable>: Codable {
 
     /// Actual data that is returned for the request/response.

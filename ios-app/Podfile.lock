@@ -1,23 +1,20 @@
 PODS:
-  - Alamofire (4.8.1)
-  - AlamofireObjectMapper (5.2.0):
-    - Alamofire (~> 4.7)
-    - ObjectMapper (~> 3.4)
   - BartyCrouch (3.13.0)
   - MeasurementAgentKit (0.0.1):
-    - Alamofire (~> 4.8.1)
-    - AlamofireObjectMapper (~> 5.2.0)
-    - XCGLogger (~> 6.1.0)
+    - Siesta (~> 1.4.3)
+    - XCGLogger (~> 7.0.0)
   - ObjcExceptionBridging (1.0.1):
     - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
   - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
-  - ObjectMapper (3.4.2)
+  - Siesta (1.4.3):
+    - Siesta/Core (= 1.4.3)
+  - Siesta/Core (1.4.3)
   - SwiftGen (6.1.0)
   - SwiftLint (0.31.0)
-  - WebBrowser (0.1.4)
-  - XCGLogger (6.1.0):
-    - XCGLogger/Core (= 6.1.0)
-  - XCGLogger/Core (6.1.0):
+  - WebBrowser (0.1.5)
+  - XCGLogger (7.0.0):
+    - XCGLogger/Core (= 7.0.0)
+  - XCGLogger/Core (7.0.0):
     - ObjcExceptionBridging
 
 DEPENDENCIES:
@@ -29,11 +26,9 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
-    - Alamofire
-    - AlamofireObjectMapper
     - BartyCrouch
     - ObjcExceptionBridging
-    - ObjectMapper
+    - Siesta
     - SwiftGen
     - SwiftLint
     - WebBrowser
@@ -44,16 +39,14 @@ EXTERNAL SOURCES:
     :path: "../measurement-agent-swift"
 
 SPEC CHECKSUMS:
-  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
-  AlamofireObjectMapper: 92b6ce2423a9d159e686f6a1d514a009bf903ddc
   BartyCrouch: 69e5e6ec67e77951dc1c22aa48abbf05d175b81c
-  MeasurementAgentKit: 78f4a7a9d2097c02f9f4e5711495f1ab8e453352
+  MeasurementAgentKit: 006232c95f023adc4a402bb945a47ab433c1e65c
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
-  ObjectMapper: 0d4402610f4e468903ae64629eec4784531e5c51
+  Siesta: 83795fdf6a43232d1d2909e1a3dfb92ab5916d26
   SwiftGen: f872ca75cbd17bf7103c17f13dcfa0d9a15667b0
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
-  WebBrowser: 72ae8c342cc399d0cde0299ea297652d7e108336
-  XCGLogger: 7f7f43f15dfe3a305fa1342b7dc29af656289abd
+  WebBrowser: 0248873c77f54e2ac504ece7c2bc8eeb710b5a4f
+  XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
 PODFILE CHECKSUM: 069238402e37e99023840b29d08cbb5f7dab7fbd
 

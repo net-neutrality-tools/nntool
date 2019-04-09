@@ -17,14 +17,15 @@
 
 import Foundation
 
+// Decoding of errors does not work if this extends from ApiBase.
+// Because of that the data property from ApiBase was moved into here.
+
 /// Object that is used as wrapper for every response.
-class ApiResponse<T: Codable>: ApiBase<T> {
+class ApiResponse<T: Codable>: Codable /*: ApiBase<T>*/ {
+
+    /// Actual data that is returned for the request/response.
+    var data: T?
 
     /// Optional list of errors that occurred during request processing.
-    var errors: [String]?
-
-    ///
-    /*enum CodingKeys: String, CodingKey {
-        case errors
-    }*/
+    var errors: [ApiError]?
 }

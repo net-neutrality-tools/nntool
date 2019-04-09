@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (4.8.1)
+  - Alamofire (4.8.2)
   - CocoaAsyncSocket (7.6.3)
   - Nimble (8.0.1)
   - ObjcExceptionBridging (1.0.1):
@@ -12,7 +12,7 @@ PODS:
     - ObjcExceptionBridging
 
 DEPENDENCIES:
-  - Alamofire (~> 4.8.1)
+  - Alamofire (~> 4.8.2)
   - CocoaAsyncSocket (~> 7.6.3)
   - Nimble (~> 8.0.1)
   - SwiftLint (~> 0.31.0)
@@ -28,13 +28,13 @@ SPEC REPOS:
     - XCGLogger
 
 SPEC CHECKSUMS:
-  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
+  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   Nimble: 45f786ae66faa9a709624227fae502db55a8bdd0
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: 2460ebf1f029a743a3817451f006d63e6ff725c2
+PODFILE CHECKSUM: ea9e5ac12b67e3980c8a6a6e19449dde8ddf615d
 
 COCOAPODS: 1.6.0

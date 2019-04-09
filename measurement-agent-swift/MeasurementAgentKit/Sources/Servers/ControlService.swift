@@ -16,18 +16,34 @@
  ******************************************************************************/
 
 import Foundation
-import Alamofire
 
 ///
-class ControlService {
+class ControlService: RestApiService {
 
-    ///
-    func registerAgent() {
+    init() {
+        super.init(baseURL: "http://localhost:8080/api/v1")
 
+        configureTransformer("/measurement-agents", forType: ApiResponse<RegistrationResponse>.self)
+        configureTransformer("/measurement-agents/**/settings", forType: ApiResponse<SettingsResponse>.self)
+        configureTransformer("/measurements", forType: LmapControlDto.self)
+        configureTransformer("/ip", forType: ApiResponse<IpResponse>.self)
     }
 
     ///
-    func getSettings() {
+    func registerAgent(/*registrationRequest: RegistrationRequest,*/ onSuccess: SuccessCallback<RegistrationResponse>?, onFailure: FailureCallback?) {
+        // TODO
+    }
 
+    ///
+    func getSettings(agentUuid: String/*, settingsRequest: SettingsRequest*/, onSuccess: SuccessCallback<SettingsResponse>?, onFailure: FailureCallback?) {
+        //request("/measurement-agents/\(agentUuid)/settings", method: .get, responseEntityType: SettingsResponse.self, onSuccess: onSuccess, onFailure: onFailure)
+    }
+
+    func initiateMeasurement(controlDto: LmapControlDto, onSuccess: SuccessCallback<LmapControlDto>?, onFailure: FailureCallback?) {
+        request("/measurements", method: .post, requestEntity: controlDto, wrapInApiRequest: false, responseEntityType: LmapControlDto.self, onSuccess: onSuccess, onFailure: onFailure)
+    }
+
+    func getIp(onSuccess: SuccessCallback<IpResponse>?, onFailure: FailureCallback?) {
+        request("/ip", method: .get, responseEntityType: IpResponse.self, onSuccess: onSuccess, onFailure: onFailure)
     }
 }

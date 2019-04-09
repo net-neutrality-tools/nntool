@@ -1,4 +1,4 @@
-// ios-app: SpeedMeasurementGaugeView.swift, created on 26.03.19
+// MeasurementAgentKit: MeasurementResultResponse.swift, created on 02.04.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,21 +16,19 @@
  ******************************************************************************/
 
 import Foundation
-import UIKit
 
-///
-@IBDesignable class SpeedMeasurementGaugeView: NibView {
+/// This DTO is returned after the measurement agent successfully submitted it's test result to the server.
+class MeasurementResultResponse: Codable {
 
-    @IBOutlet private var startButton: UIButton?
-    @IBOutlet private var speedMeasurementGauge: SpeedMeasurementGauge?
+    /// The UUIDv4 identifier of the measurement.
+    var uuid: String?
 
-    @IBOutlet private var networkTypeLabel: UILabel?
-    @IBOutlet private var networkDetailLabel: UILabel?
-
-    var startButtonActionCallback: (() -> Void)?
+    /// An UUIDv4 identifier that is used to find this measurement in an open-data context.
+    var openDataUuid: String?
 
     ///
-    @IBAction func startButtonPrimaryActionTriggered() {
-        startButtonActionCallback?()
+    enum CodingKeys: String, CodingKey {
+        case uuid
+        case openDataUuid = "open_data_uuid"
     }
 }
