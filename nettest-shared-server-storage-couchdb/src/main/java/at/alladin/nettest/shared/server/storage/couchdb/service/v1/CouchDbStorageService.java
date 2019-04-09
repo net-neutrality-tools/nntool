@@ -2,6 +2,7 @@ package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,12 @@ import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgent;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.TaskConfiguration;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationQoSRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationSpeedRepository;
@@ -55,6 +58,9 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private TaskConfigurationQoSRepository taskConfigurationQoSRepository;
+	
+	@Autowired
+	private QoSMeasurementObjectiveRepository qosMeasurementObjectiveRepository;
 	
 	@Autowired
 	private LmapReportModelMapper lmapReportModelMapper;
@@ -168,21 +174,20 @@ public class CouchDbStorageService implements StorageService {
 			switch (type) {
 			case SPEED:
 				taskConfig = taskConfigurationSpeedRepository.findByNameAndVersion(type.toString(), version);
-				break;
+				return lmapTaskMapper.map(taskConfig);
 			case QOS:
+				final List<QoSMeasurementObjective> qosObjectiveList = qosMeasurementObjectiveRepository.findAllByEnabled(true);
 				taskConfig = taskConfigurationQoSRepository.findByNameAndVersion(type.toString(), version);
-				break;
+				return lmapTaskMapper.map(taskConfig, qosObjectiveList);
+			default:
+				return null;
 			}
 			
 		} catch (Exception ex) {
 			throw new StorageServiceException(ex);
 		}
-		if (taskConfig == null) {
-			return null;
-		}
-		return lmapTaskMapper.map(taskConfig);
 	}
-
+	
 	@Override
 	public SettingsResponse getSettings(String settingsUuid) throws StorageServiceException {
 		final Settings settings;

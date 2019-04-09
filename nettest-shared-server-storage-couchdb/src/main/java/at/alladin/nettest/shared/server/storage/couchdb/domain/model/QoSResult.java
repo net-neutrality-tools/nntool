@@ -119,4 +119,11 @@ public class QoSResult {
 	public void setImplausible(boolean implausible) {
 		this.implausible = implausible;
 	}
+
+	@Override
+	public String toString() {
+		return "QoSResult [objectiveId=" + objectiveId + ", type=" + type + ", results=" + results + ", succesCount="
+				+ succesCount + ", failureCount=" + failureCount + ", implausible=" + implausible + "]";
+	}
+	
 }

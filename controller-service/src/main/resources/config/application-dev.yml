@@ -25,6 +25,7 @@ spring:
           - Settings
           - TaskConfigurationSpeed
           - TaskConfigurationQoS
+          - QoSMeasurementObjective
 
 server:
   port: 8080
