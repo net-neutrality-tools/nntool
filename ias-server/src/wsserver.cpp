@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-16
+ *      \date Last update: 2019-04-08
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -114,12 +114,12 @@ int main(int argc, char** argv)
     //Signal Handler
     signal(SIGINT, signal_handler);
 
-    write_pidfile("/var/run/common-server.pid");
+    write_pidfile("/var/run/ias-server.pid");
 
     CTrace *pTrace = CTrace::getInstance(); 
-    pTrace->init("/etc/common-server/trace.ini","common-server");
+    pTrace->init("/etc/ias-server/trace.ini","ias-server");
 
-    TRC_INFO("Status: common-server started");
+    TRC_INFO("Status: ias-server started");
     
     CWsListener *pWsListener = new CWsListener(mPort, false);
     if (mPort != 0)
@@ -159,7 +159,7 @@ int main(int argc, char** argv)
     delete(pWsTlsListener);
     delete(pWsListener);
     
-    TRC_INFO("Status: common-server stopped");
+    TRC_INFO("Status: ias-server stopped");
     
     delete(pTrace);
 

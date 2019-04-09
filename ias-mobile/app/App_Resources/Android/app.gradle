@@ -8,7 +8,7 @@
 android {  
   defaultConfig {  
     generatedDensities = []
-    applicationId = "com.zafaco.commonmobile" 
+    applicationId = "com.zafaco.iasmobile" 
     
     //override supported platforms
     // ndk {
