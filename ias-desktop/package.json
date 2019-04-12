@@ -111,7 +111,7 @@
   },
   "scripts": {
     "copy:ias:build": "cp -R ../ias/build/uglified/desktop/ias.desktop.js ./modules/ && cp -R ../ias/build/uglified/desktop/Worker.js ./modules/ && cp -R ../ias/build/uglified/desktop/JSTool.js ./modules/",
-    "copy:ias:win": "xcopy ..\\ias\\build\\uglified\\desktop\\ modules\\ /s/h/e/k/f/c/y",
+    "copy:ias:win": "xcopy ..\\ias\\build\\uglified\\desktop modules /s/h/e/k/f/c/y",
     "copy:ias:unix": "cp -R ../ias/build/uglified/desktop/ ./modules/",
     "copy:node_modules:win": "xcopy modules\\node_checkin\\network node_modules\\network\\ /s/h/e/k/f/c/y && xcopy modules\\node_checkin\\ws node_modules\\ws\\ /s/h/e/k/f/c/y",
     "copy:node_modules:unix": "cp -R ./modules/node_checkin/network/ ./node_modules/network/ && cp -R ./modules/node_checkin/ws/ ./node_modules/ws/",
