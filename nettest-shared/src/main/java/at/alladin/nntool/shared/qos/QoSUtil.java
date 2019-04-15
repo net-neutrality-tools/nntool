@@ -88,7 +88,7 @@ public class QoSUtil {
 			final Map<TestType,TreeSet<ResultDesc>> resultKeys, final TestType testType, final ResultOptions resultOptions) throws HstoreParseException, IllegalArgumentException, IllegalAccessException {
 
     	//if expected resuls not null, compare them to the test results
-    	if (testResult.getExpectedResults()!=null) {    		
+    	if (testResult.getExpectedResults()!=null) { 		
     		final Class<? extends AbstractResult> clazz = testType.getClazz();
     		
     		//create a parsed abstract result set sorted by priority
@@ -117,7 +117,7 @@ public class QoSUtil {
     		
     		for (final AbstractResult expResult : expResultSet) {
     			//compare expected result to test result and save the returned id
-    			ResultDesc resultDesc = ResultComparer.compare(result, expResult, QoSUtil.HSTORE_PARSER, resultOptions);
+    			ResultDesc resultDesc = ResultComparer.compare(result, expResult, null/*QoSUtil.HSTORE_PARSER*/, resultOptions);
     			if (resultDesc != null) {
         			resultDesc.addTestResultUid(testResult.getUid());
         			resultDesc.setTestType(testType);

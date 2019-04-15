@@ -19,9 +19,8 @@ package at.alladin.nntool.shared.qos;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.Map;
 
-import at.alladin.nntool.shared.hstoreparser.Hstore;
-import at.alladin.nntool.shared.hstoreparser.HstoreParser;
 import at.alladin.nntool.shared.qos.annotations.NonComparableField;
 import at.alladin.nntool.shared.qos.testscript.TestScriptInterpreter;
 import at.alladin.nntool.shared.qos.testscript.TestScriptInterpreter.EvalResult;
@@ -48,37 +47,33 @@ public class ResultComparer {
 	 * @throws IllegalArgumentException 
 	 */
 	@SuppressWarnings({ "unchecked" })
-	public static <T extends AbstractResult> ResultDesc compare(AbstractResult result1, AbstractResult result2, Hstore hstore, ResultOptions options) throws IllegalArgumentException, IllegalAccessException {
-		HstoreParser<T> parser = (HstoreParser<T>) hstore.getParser(result1.getClass());
-		
+	public static <T extends AbstractResult> ResultDesc compare(AbstractResult result1, AbstractResult result2, Map<String, Field> fieldNameToFieldMap, ResultOptions options) throws IllegalArgumentException, IllegalAccessException {
 		if (!result1.getClass().equals(result2.getClass())) {
 			System.out.println("could not compare: " + result1.getClass() + " <-> " + result2.getClass());
 			return null;
 		}
 
 		if ((result1.getOperator()!=null || result1.getEvaluate()!=null) && result2.getOperator()==null) {
-			for (Field f : parser.getAnnotatedFields()) {
+			for (Field f : fieldNameToFieldMap.values()) {
 				f.setAccessible(true);
 				if (!f.isAnnotationPresent(NonComparableField.class) && f.get(result1) != null && !Collection.class.isAssignableFrom(f.getType())) {
-					Object r = TestScriptInterpreter.interprete(String.valueOf(f.get(result1)), hstore, result2, false, options);
+					Object r = TestScriptInterpreter.interprete(String.valueOf(f.get(result1)), fieldNameToFieldMap, result2, false, options);
 					f.set(result2, (r instanceof EvalResult) ? r : String.valueOf(r));
 				}
 			}
 
-			//System.out.println("EXP RESULT/RESULT");
-			return getResultDescription(result1, result2, hstore, options);			
+			return getResultDescription(result1, result2, fieldNameToFieldMap, options);			
 		}
 		else if ((result2.getOperator()!=null || result2.getEvaluate()!=null) && result1.getOperator()==null) {
-			for (Field f : parser.getAnnotatedFields()) {
+			for (Field f : fieldNameToFieldMap.values()) {
 				f.setAccessible(true);
 				if (!f.isAnnotationPresent(NonComparableField.class) && f.get(result2) != null && !Collection.class.isAssignableFrom(f.getType())) {
-					Object r = TestScriptInterpreter.interprete(String.valueOf(f.get(result2)), hstore, result1, false, options);
+					Object r = TestScriptInterpreter.interprete(String.valueOf(f.get(result2)), fieldNameToFieldMap, result1, false, options);
 					f.set(result2, (r instanceof EvalResult) ? r : String.valueOf(r));	
 				}
 			}
 
-			//System.out.println("RESULT/EXP RESULT");
-			return getResultDescription(result2, result1, hstore, options);
+			return getResultDescription(result2, result1, fieldNameToFieldMap, options);
 		}
 
 		System.out.println("Could not compare: Both comparators either set or not set or evaluate missing");
@@ -93,18 +88,18 @@ public class ResultComparer {
 	 * @param options
 	 * @return
 	 */
-	private static ResultDesc getResultDescription(AbstractResult result1, AbstractResult result2, Hstore hstore, ResultOptions options) {
+	private static ResultDesc getResultDescription(AbstractResult result1, AbstractResult result2, Map<String, Field> fieldNameToFieldMap, ResultOptions options) {
 		if ("true".equals(result1.getSuccessCondition()) || "1".equals(result1.getSuccessCondition())) {
 			ResultDesc resultDesc = (runCompare(result2, result1) == RESULT_SUCCESS ? 
-					new ResultDesc(ResultDesc.STATUS_CODE_SUCCESS, result1.getOnSuccess(), result2, hstore, options) : 
-					new ResultDesc(ResultDesc.STATUS_CODE_FAILURE, result1.getOnFailure(), result2, hstore, options));
+					new ResultDesc(ResultDesc.STATUS_CODE_SUCCESS, result1.getOnSuccess(), result2, fieldNameToFieldMap, options) : 
+					new ResultDesc(ResultDesc.STATUS_CODE_FAILURE, result1.getOnFailure(), result2, fieldNameToFieldMap, options));
 			
 			return resultDesc;
 		}
 		else {
 			ResultDesc resultDesc = (runCompare(result2, result1) == RESULT_FAILURE ? 
-					new ResultDesc(ResultDesc.STATUS_CODE_SUCCESS, result1.getOnSuccess(), result2, hstore, options) : 
-					new ResultDesc(ResultDesc.STATUS_CODE_FAILURE, result1.getOnFailure(), result2, hstore, options));
+					new ResultDesc(ResultDesc.STATUS_CODE_SUCCESS, result1.getOnSuccess(), result2, fieldNameToFieldMap, options) : 
+					new ResultDesc(ResultDesc.STATUS_CODE_FAILURE, result1.getOnFailure(), result2, fieldNameToFieldMap, options));
 			
 			return resultDesc;			
 		}

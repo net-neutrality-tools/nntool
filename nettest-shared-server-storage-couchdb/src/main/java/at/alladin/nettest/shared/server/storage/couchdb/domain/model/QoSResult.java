@@ -52,7 +52,7 @@ public class QoSResult {
 	@Expose
 	@SerializedName("success_count")
 	@JsonProperty("success_count")
-	private Integer succesCount;
+	private Integer successCount;
 
 	/**
 	 * The count of negative evaluations (failures).
@@ -96,12 +96,12 @@ public class QoSResult {
 		this.results = results;
 	}
 
-	public Integer getSuccesCount() {
-		return succesCount;
+	public Integer getSuccessCount() {
+		return successCount;
 	}
 
-	public void setSuccesCount(Integer succesCount) {
-		this.succesCount = succesCount;
+	public void setSuccessCount(Integer succesCount) {
+		this.successCount = succesCount;
 	}
 
 	public Integer getFailureCount() {
@@ -123,7 +123,7 @@ public class QoSResult {
 	@Override
 	public String toString() {
 		return "QoSResult [objectiveId=" + objectiveId + ", type=" + type + ", results=" + results + ", succesCount="
-				+ succesCount + ", failureCount=" + failureCount + ", implausible=" + implausible + "]";
+				+ successCount + ", failureCount=" + failureCount + ", implausible=" + implausible + "]";
 	}
 	
 }

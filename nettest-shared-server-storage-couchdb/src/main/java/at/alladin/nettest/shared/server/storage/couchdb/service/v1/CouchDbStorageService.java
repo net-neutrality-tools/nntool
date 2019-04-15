@@ -16,11 +16,13 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTas
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgent;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.TaskConfiguration;
@@ -61,6 +63,9 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private QoSMeasurementObjectiveRepository qosMeasurementObjectiveRepository;
+	
+	@Autowired
+	private QoSEvaluationService qosEvaluationService;
 	
 	@Autowired
 	private LmapReportModelMapper lmapReportModelMapper;
@@ -215,6 +220,16 @@ public class CouchDbStorageService implements StorageService {
 			throw new StorageServiceException("No measurement for agent and uuid found.");
 		}
 		
-		return fullMeasurementResponseMapper.map(measurement);
+		final FullMeasurementResponse ret = fullMeasurementResponseMapper.map(measurement);
+		
+		//evaluate the qos stuff 
+		final QoSMeasurement qosMeasurement = (QoSMeasurement) measurement.getMeasurements().get(MeasurementTypeDto.QOS);
+		if (qosMeasurement != null) {
+			//TODO: forward qosMeasurement to mapper
+			final FullQoSMeasurement fullQosMeasurement = qosEvaluationService.evaluateQoSMeasurement(qosMeasurement);
+			ret.getMeasurements().put(MeasurementTypeDto.QOS, fullQosMeasurement);
+		}
+		
+		return ret;
 	}
 }
