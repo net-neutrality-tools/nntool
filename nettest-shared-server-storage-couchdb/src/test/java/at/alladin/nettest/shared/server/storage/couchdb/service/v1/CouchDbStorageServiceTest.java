@@ -49,7 +49,8 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsRespon
 	LmapTaskMapperImpl.class, 
 	SettingsResponseMapperImpl.class,
 	LmapReportModelMapperImpl.class,
-	CouchDbStorageService.class
+	CouchDbStorageService.class,
+	QoSEvaluationService.class
 })
 @AutoConfigureJsonTesters
 public class CouchDbStorageServiceTest {
