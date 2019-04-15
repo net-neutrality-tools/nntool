@@ -1,0 +1,174 @@
+= QoSMeasurementObjective
+
+Every json inside a block is a single QoS definition, which must be added to the couchDB as document (if that test shall work). 
+The default test configurations are grouped by their test type.
+
+== TCP
+
+....
+{
+  "docType": "QoSMeasurementObjective",
+  "objective_id": 200,
+  "enabled": true,
+  "type": "TCP",
+  "concurrency_group": 200,
+  "measurement_server_uuid": "mServer",
+  "translation_keys": {
+    "summary": "TCP_summary",
+    "description": "TCP_description"
+  },
+  "parameters": {
+    "out_port": "5542"
+  },
+  "evaluations": [
+    {
+      "operator": "eq",
+      "on_failure": "tcp.failure",
+      "tcp_result_out": "OK",
+      "on_success": "tcp.success"
+    }
+  ]
+}
+....
+
+....
+{
+  "docType": "QoSMeasurementObjective",
+  "objective_id": 201,
+  "enabled": true,
+  "type": "TCP",
+  "concurrency_group": 200,
+  "measurement_server_uuid": "mServer",
+  "translation_keys": {
+    "summary": "TCP_summary",
+    "description": "TCP_description"
+  },
+  "parameters": {
+    "out_port": "5545"
+  },
+  "evaluations": [
+    {
+      "operator": "eq",
+      "on_failure": "tcp.failure",
+      "tcp_result_out": "OK",
+      "on_success": "tcp.success"
+    }
+  ]
+}
+....
+
+== UDP
+
+....
+{
+  "docType": "QoSMeasurementObjective",
+  "objective_id": 250,
+  "enabled": true,
+  "type": "UDP",
+  "concurrency_group": 201,
+  "measurement_server_uuid": "mServer",
+  "translation_keys": {
+    "summary": "UDP_summary",
+    "description": "UDP_description"
+  },
+  "parameters": {
+    "out_port": "5004",
+    "out_num_packets": "1"
+  },
+  "evaluations": [
+    {
+      "operator": "eq",
+      "on_failure": "udp.failure",
+      "udp_result_out_num_packets": "1",
+      "on_success": "udp.success"
+    }
+  ]
+}
+....
+
+....
+{
+  "docType": "QoSMeasurementObjective",
+  "objective_id": 251,
+  "enabled": true,
+  "type": "UDP",
+  "concurrency_group": 201,
+  "measurement_server_uuid": "mServer",
+  "translation_keys": {
+    "summary": "UDP_summary",
+    "description": "UDP_description"
+  },
+  "parameters": {
+    "out_port": "5005",
+    "out_num_packets": "1"
+  },
+  "evaluations": [
+    {
+      "operator": "eq",
+      "on_failure": "udp.failure",
+      "udp_result_out_num_packets": "1",
+      "on_success": "udp.success"
+    }
+  ]
+}
+....
+
+== ECHO_PROTOCOL
+
+....
+{
+  "docType": "QoSMeasurementObjective",
+  "objective_id": 301,
+  "enabled": true,
+  "type": "ECHO_PROTOCOL",
+  "concurrency_group": 301,
+  "measurement_server_uuid": "mServer",
+  "translation_keys": {
+    "summary": "ECHO_PROTOCOL_summary",
+    "description": "ECHO_PROTOCOL_description"
+  },
+  "parameters": {
+    "echo_protocol_objective_protocol": "udp",
+    "echo_protocol_objective_payload": "UPD payload",
+    "server_addr": "10.9.8.39",
+    "server_port": "7"
+  },
+  "evaluations": [
+    {
+      "operator": "eq",
+      "on_failure": "echo_protocol.failure",
+      "echo_protocl_result": "OK",
+      "on_success": "echo_protocol.success"
+    }
+  ]
+}
+....
+
+....
+{
+  "docType": "QoSMeasurementObjective",
+  "objective_id": 302,
+  "enabled": true,
+  "type": "ECHO_PROTOCOL",
+  "concurrency_group": 302,
+  "measurement_server_uuid": "mServer",
+  "translation_keys": {
+    "summary": "ECHO_PROTOCOL_summary",
+    "description": "ECHO_PROTOCOL_description"
+  },
+  "parameters": {
+    "echo_protocol_objective_protocol": "tcp",
+    "echo_protocol_objective_payload": "TCP payload",
+    "server_addr": "10.9.8.39",
+    "server_port": "7"
+  },
+  "evaluations": [
+    {
+      "operator": "eq",
+      "on_failure": "echo_protocol.failure",
+      "echo_protocl_result": "OK",
+      "on_success": "echo_protocol.success"
+    }
+  ]
+}
+....

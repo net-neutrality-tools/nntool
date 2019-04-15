@@ -29,9 +29,13 @@ Servers that need a PostgreSQL to work have a corresponding setting in their `sr
 
 == Controller
 
-The controller uses both the measurement and the settings database. The settings database needs be setup correctly in order to build a running system. Default settings for the different aspects of the system are in the files: `default_base_settings`,  `default_speed_configuration` and `default_qos_configuration`. These can be added into the CouchDB's settings database, to make creating a working configuration easier.
+The controller uses both the measurement and the settings database. The settings database needs be setup correctly in order to build a running system. Default settings for the different aspects of the system are in the files: `default_base_settings`,  `default_speed_configuration`, `default_qos_configuration` and `default_qos_objectives`. These can be added into the CouchDB's settings database, to make creating a working configuration easier.
 
 Note that the settings file to be used by the controller is set in the controller-services config.yml (under controller.settings_uuid).  If a settings file with a different uuid should be used by the controller, this setting needs to be updated (the current default setting matches the uuid from `default_base_settings`).
+
+== Result service
+
+The result service uses both the measurement and the settings database. It needs the same configuration as the `Controller`, please refer to the `Controller` section for details on which settigns files need be added to the couchDB.
 
 == Collector
 
