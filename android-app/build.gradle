@@ -36,6 +36,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    lintOptions {
+        abortOnError false
+    }
 
     //Excluding the META-INF/DEPENDENCIES prevents a gradle error of "multiple META-INF/DEPENDENCIES
     packagingOptions {
