@@ -62,6 +62,10 @@ public class MeasurementAgentResultResource {
 		@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid,
 		Pageable pageable) {
 
+		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
+			return ResponseEntity.badRequest().build();
+		}
+		
 		final List<BriefMeasurementResponse> responseList = storageService.getPagedBriefMeasurementResponseByAgentUuid(agentUuid, pageable);
 		
 		return ResponseHelper.ok(new PageImpl<>(responseList, pageable, 1));
@@ -83,7 +87,11 @@ public class MeasurementAgentResultResource {
 	})
 	@DeleteMapping(value = "/{agentUuid}/measurements", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<ApiResponse<DisassociateResponse>> disassociateAllMeasurements(@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid) {
-		return ResponseEntity.ok(null);
+		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
+			return ResponseEntity.badRequest().build();
+		}
+		
+		return ResponseHelper.ok(storageService.disassociateAllMeasurements(agentUuid));
 	}
 
 	/**
@@ -106,6 +114,10 @@ public class MeasurementAgentResultResource {
 		@ApiParam(value = "The measurement UUID", required = true) @PathVariable String uuid,
 		@ApiParam(value = "Set of included measurement types (e.g. SPEED, TCP_PORT, VOIP, ...). If nothing is provided all measurement types are returned") @RequestParam(required = false, name = "include") Set<GeneralMeasurementTypeDto> includedMeasurementTypes) {
 
+		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
+			return ResponseEntity.badRequest().build();
+		}
+		
 		logger.debug("{}", includedMeasurementTypes);
 		
 		return ResponseHelper.ok(storageService.getMeasurementByAgentAndMeasurementUuid(agentUuid, uuid));
@@ -130,6 +142,10 @@ public class MeasurementAgentResultResource {
 		@ApiParam(value = "The measurement UUID", required = true) @PathVariable String uuid,
 		@ApiParam(value = "Flag that indicates if the details should be grouped") @RequestParam(value = "grouped", defaultValue = "false") boolean grouped) {
 
+		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
+			return ResponseEntity.badRequest().build();
+		}
+		
 		return ResponseEntity.ok(null);
 	}
 
@@ -153,6 +169,10 @@ public class MeasurementAgentResultResource {
 		@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid,
 		@ApiParam(value = "The measurement UUID", required = true) @PathVariable String uuid) {
 
-		return ResponseEntity.ok(null);
+		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
+			return ResponseEntity.badRequest().build();
+		}
+		
+		return ResponseHelper.ok(storageService.disassociateMeasurement(agentUuid, uuid));
 	}
 }

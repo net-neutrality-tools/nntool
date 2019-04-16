@@ -17,6 +17,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTas
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.disassociate.DisassociateResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
@@ -244,5 +245,47 @@ public class CouchDbStorageService implements StorageService {
 		}
 		
 		return ret;
+	}
+	
+	@Override
+	public DisassociateResponse disassociateMeasurement(final String agentUuid, final String measurementUuid) throws StorageServiceException {
+		final Measurement measurement;
+		try {
+			measurement = measurementRepository.findByUuid(measurementUuid);
+		} catch (Exception ex) {
+			throw new StorageServiceException("Unknown measurement");
+		}
+		if (measurement.getAgentInfo().getUuid() == null) {
+			throw new StorageServiceException("Measurement already disassociated");
+		}
+		if (!agentUuid.equals(measurement.getAgentInfo().getUuid())) {
+			throw new StorageServiceException("Invalid agent/measurement uuid pair");
+		}
+		anonymizeMeasurement(measurement);
+		try {
+			measurementRepository.save(measurement);
+		} catch (Exception ex) {
+			throw new StorageServiceException(ex);
+		}
+		return new DisassociateResponse();
+	}
+	
+	@Override
+	public DisassociateResponse disassociateAllMeasurements(final String agentUuid) throws StorageServiceException {
+		try {
+			final List<Measurement> measurementList = measurementRepository.findByAgentInfoUuid(agentUuid);
+			measurementList.forEach(m -> anonymizeMeasurement(m));
+			measurementRepository.saveAll(measurementList);
+		} catch (Exception ex) {
+			throw new StorageServiceException(ex);
+		}
+		return new DisassociateResponse();
+	}
+	
+	private void anonymizeMeasurement (final Measurement toAnonymize) {
+		//TODO: do we anonymize anything else?
+		if (toAnonymize.getAgentInfo() != null) {
+			toAnonymize.getAgentInfo().setUuid(null);
+		}
 	}
 }

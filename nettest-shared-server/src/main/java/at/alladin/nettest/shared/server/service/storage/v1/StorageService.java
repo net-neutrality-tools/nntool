@@ -12,6 +12,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTas
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.disassociate.DisassociateResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
@@ -35,7 +36,11 @@ public interface StorageService {
 
 	FullMeasurementResponse getMeasurementByAgentAndMeasurementUuid (String measurementAgentUuid, String measurementUuid) throws StorageServiceException;
 	
-	public List<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid (final String measurementAgentUuid, 
-			final Pageable pageable) throws StorageServiceException;
+	List<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid (String measurementAgentUuid, 
+			Pageable pageable) throws StorageServiceException;
+	
+	DisassociateResponse disassociateMeasurement (String agentUuid, String measurementUuid) throws StorageServiceException;
+	
+	DisassociateResponse disassociateAllMeasurements (String agentUuid) throws StorageServiceException;
 	
 }
