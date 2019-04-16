@@ -120,7 +120,7 @@ public class MeasurementAgentResultResource {
 		
 		logger.debug("{}", includedMeasurementTypes);
 		
-		return ResponseHelper.ok(storageService.getMeasurementByAgentAndMeasurementUuid(agentUuid, uuid));
+		return ResponseHelper.ok(storageService.getFullMeasurementByAgentAndMeasurementUuid(agentUuid, uuid));
 	}
 
 	/**

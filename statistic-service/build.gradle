@@ -56,7 +56,7 @@ dependencies {
     testCompile group: 'com.jayway.jsonpath', name: 'json-path'
     testCompile group: 'com.jayway.awaitility', name: 'awaitility', version: awaility_version
     testCompile group: 'org.assertj', name: 'assertj-core', version: assertj_core_version
-    testCompile group: 'org.jmockit', name: 'jmockit', version: '1.45'
+    testCompile group: 'org.jmockit', name: 'jmockit', version: jmockit_version
 }
 
 test {

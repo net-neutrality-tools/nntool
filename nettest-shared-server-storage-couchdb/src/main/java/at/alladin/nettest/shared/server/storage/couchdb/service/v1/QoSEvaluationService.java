@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.EvaluatedQoSResult;
@@ -29,13 +28,9 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurem
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
-import at.alladin.nntool.shared.db.QoSTestResult;
 import at.alladin.nntool.shared.db.QoSTestResult.TestType;
 import at.alladin.nntool.shared.hstoreparser.HstoreParseException;
-import at.alladin.nntool.shared.hstoreparser.annotation.HstoreCollection;
-import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
 import at.alladin.nntool.shared.qos.AbstractResult;
-import at.alladin.nntool.shared.qos.QoSUtil;
 import at.alladin.nntool.shared.qos.ResultComparer;
 import at.alladin.nntool.shared.qos.ResultDesc;
 import at.alladin.nntool.shared.qos.ResultOptions;
@@ -47,7 +42,7 @@ public class QoSEvaluationService {
 	private static final String QOS_TEST_UID_KEY = "qos_test_uid";
 	
 	@Autowired
-	private QoSMeasurementObjectiveRepository qosMeasurementObjectiveRepository;
+	public QoSMeasurementObjectiveRepository qosMeasurementObjectiveRepository;
 
 	private Gson gson = new Gson();
 	
@@ -64,14 +59,13 @@ public class QoSEvaluationService {
 		final Map<QoSMeasurementType, TreeSet<ResultDesc>> resultKeys = new HashMap<>();
 		
 		for (QoSResult qosResult : measurement.getResults()) {
-			//TODO: REMOVE CAST!!!
-			final QoSMeasurementObjective objective = objectiveIdToMeasurementObjectiveMap.get( ((Double)qosResult.getResults().get(QOS_TEST_UID_KEY)).longValue());
+			final QoSMeasurementObjective objective = objectiveIdToMeasurementObjectiveMap.get(qosResult.getObjectiveId());
 			if (objective == null) {
 				continue;
 			}
 			
 			//this.compareTestResults(testResult, result, resultKeys, testType, resultOptions);
-			ret.getResults().add(this.compareTestResults(qosResult, objective, resultKeys));
+			ret.getResults().add(compareTestResults(qosResult, objective, resultKeys));
 			
 		}
 		
@@ -180,8 +174,7 @@ public class QoSEvaluationService {
 			ret.setEvaluationKeyMap(evaluationKeyMap);
 			return ret;
 		}
-		//QoSUtil.compareTestResults(testResult, result, resultKeys, testType, resultOptions);
-//		ResultComparer.compare
+		
 		return null;
 	}
 	

@@ -17,6 +17,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTas
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.disassociate.DisassociateResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
@@ -36,6 +37,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.Settin
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationQoSRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationSpeedRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.BriefMeasurementResponseMapper;
+import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.DetailMeasurementResponseMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportModelMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapper;
@@ -85,6 +87,9 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private BriefMeasurementResponseMapper briefMeasurementResponseMapper;
+	
+	@Autowired
+	private DetailMeasurementResponseMapper detailMeasurementResponseMapper;
 	
 	@Autowired
 	private LmapTaskMapper lmapTaskMapper;
@@ -221,18 +226,9 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	@Override
-	public FullMeasurementResponse getMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid,
+	public FullMeasurementResponse getFullMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid,
 			String measurementUuid) throws StorageServiceException {
-		final Measurement measurement;
-		try {
-			measurement = measurementRepository.findByUuid(measurementUuid);
-		} catch (Exception ex) {
-			throw new StorageServiceException(ex);
-		}
-		if (measurement == null || measurement.getAgentInfo() == null || measurementAgentUuid == null
-				|| !measurementAgentUuid.equals(measurement.getAgentInfo().getUuid())) {
-			throw new StorageServiceException("No measurement for agent and uuid found.");
-		}
+		final Measurement measurement = obtainMeasurement(measurementAgentUuid, measurementUuid);
 		
 		final FullMeasurementResponse ret = fullMeasurementResponseMapper.map(measurement);
 		
@@ -245,6 +241,13 @@ public class CouchDbStorageService implements StorageService {
 		}
 		
 		return ret;
+	}
+	
+	@Override
+	public DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid (String measurementAgentUuid, String measurementUuid) throws StorageServiceException {
+		final Measurement measurement = obtainMeasurement(measurementAgentUuid, measurementUuid);
+		
+		return detailMeasurementResponseMapper.map(measurement);
 	}
 	
 	@Override
@@ -287,5 +290,19 @@ public class CouchDbStorageService implements StorageService {
 		if (toAnonymize.getAgentInfo() != null) {
 			toAnonymize.getAgentInfo().setUuid(null);
 		}
+	}
+	
+	private Measurement obtainMeasurement (final String measurementAgentUuid, final String measurementUuid) throws StorageServiceException {
+		final Measurement measurement;
+		try {
+			measurement = measurementRepository.findByUuid(measurementUuid);
+		} catch (Exception ex) {
+			throw new StorageServiceException(ex);
+		}
+		if (measurement == null || measurement.getAgentInfo() == null || measurementAgentUuid == null
+				|| !measurementAgentUuid.equals(measurement.getAgentInfo().getUuid())) {
+			throw new StorageServiceException("No measurement for agent and uuid found.");
+		}
+		return measurement;
 	}
 }
