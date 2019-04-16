@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
@@ -15,6 +16,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.Setti
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
@@ -32,6 +34,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMea
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationQoSRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationSpeedRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.BriefMeasurementResponseMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportModelMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapper;
@@ -78,6 +81,9 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private FullMeasurementResponseMapper fullMeasurementResponseMapper;
+	
+	@Autowired
+	private BriefMeasurementResponseMapper briefMeasurementResponseMapper;
 	
 	@Autowired
 	private LmapTaskMapper lmapTaskMapper;
@@ -204,6 +210,13 @@ public class CouchDbStorageService implements StorageService {
 		
 		return settingsResponseMapper.map(settings);
 		
+	}
+	
+	@Override
+	public List<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid (final String measurementAgentUuid, 
+			final Pageable pageable) {
+		final List<Measurement> measurementList = measurementRepository.findByAgentInfoUuid(measurementAgentUuid, pageable);
+		return briefMeasurementResponseMapper.map(measurementList);
 	}
 	
 	@Override

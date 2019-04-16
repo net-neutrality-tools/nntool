@@ -1,5 +1,9 @@
 package at.alladin.nettest.shared.server.service.storage.v1;
 
+import java.util.List;
+
+import org.springframework.data.domain.Pageable;
+
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
@@ -7,6 +11,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.Setti
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
@@ -29,5 +34,8 @@ public interface StorageService {
 	LmapTaskDto getTaskDto (MeasurementTypeDto type, String version) throws StorageServiceException; // TODO: add client info to fetch personalized settings 
 
 	FullMeasurementResponse getMeasurementByAgentAndMeasurementUuid (String measurementAgentUuid, String measurementUuid) throws StorageServiceException;
+	
+	public List<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid (final String measurementAgentUuid, 
+			final Pageable pageable) throws StorageServiceException;
 	
 }

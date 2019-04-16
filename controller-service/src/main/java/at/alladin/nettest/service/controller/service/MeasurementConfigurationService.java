@@ -8,14 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.common.LmapFunctionDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.common.LmapOptionDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapActionDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapEventDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapEventTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapScheduleDto.ExecutionMode;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapImmediateEventDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapScheduleDto;

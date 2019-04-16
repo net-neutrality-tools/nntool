@@ -1,11 +1,13 @@
 package at.alladin.nettest.service.result.web.api.v1;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -60,7 +62,9 @@ public class MeasurementAgentResultResource {
 		@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid,
 		Pageable pageable) {
 
-		return ResponseHelper.ok(new PageImpl<>(Arrays.asList(new BriefMeasurementResponse()), pageable, 1));
+		final List<BriefMeasurementResponse> responseList = storageService.getPagedBriefMeasurementResponseByAgentUuid(agentUuid, pageable);
+		
+		return ResponseHelper.ok(new PageImpl<>(responseList, pageable, 1));
 	}
 
 	/**
