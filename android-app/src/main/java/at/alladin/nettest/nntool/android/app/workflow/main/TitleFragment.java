@@ -1,8 +1,13 @@
 package at.alladin.nettest.nntool.android.app.workflow.main;
 
 import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,6 +28,9 @@ import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
+import at.alladin.nettest.nntool.android.app.util.info.InformationService;
+import at.alladin.nettest.nntool.android.app.util.info.NetworkGatherer;
+import at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
 import at.alladin.nntool.client.v2.task.TaskDesc;
@@ -30,9 +38,13 @@ import at.alladin.nntool.client.v2.task.TaskDesc;
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
  */
-public class TitleFragment extends Fragment {
+public class TitleFragment extends Fragment implements ServiceConnection {
 
     private final static String TAG = TitleFragment.class.getSimpleName();
+
+    private InformationService informationService;
+
+    private ProviderAndSignalView providerSignalView;
 
     /**
      *
@@ -71,6 +83,9 @@ public class TitleFragment extends Fragment {
             }
         });
 
+
+        providerSignalView = v.findViewById(R.id.view_provider_signal);
+
         return v;
     }
 
@@ -91,5 +106,38 @@ public class TitleFragment extends Fragment {
                 });
 
         task.execute();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final Intent serviceIntent = new Intent(getContext(), InformationService.class);
+        getContext().bindService(serviceIntent, this, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void onPause() {
+        getContext().unbindService(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        informationService = ((InformationService.InformationServiceBinder) service).getService();
+        final NetworkGatherer networkGatherer = informationService.getInformationProvider().getGatherer(NetworkGatherer.class);
+        if (networkGatherer != null && providerSignalView != null) {
+            networkGatherer.addNetworkChangeListener(providerSignalView);
+        }
+        Log.d(TAG, "InformationService connected");
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        final NetworkGatherer networkGatherer = informationService.getInformationProvider().getGatherer(NetworkGatherer.class);
+        if (networkGatherer != null && providerSignalView != null) {
+            networkGatherer.removeNetworkCHangeListener(providerSignalView);
+        }
+        informationService = null;
+        Log.d(TAG, "InformationService disconnected");
     }
 }

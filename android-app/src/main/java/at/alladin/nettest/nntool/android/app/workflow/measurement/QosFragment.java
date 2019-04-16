@@ -24,6 +24,7 @@ import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.SendReportTask;
+import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
 import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.view.TopProgressBarView;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
@@ -160,11 +161,9 @@ public class QosFragment extends Fragment implements ServiceConnection {
                         @Override
                         public void onTaskFinished(MeasurementResultResponse result) {
                             if (result == null) {
-                                new AlertDialog.Builder(activity)
-                                        .setTitle(R.string.alert_send_measurement_result_title)
-                                        .setMessage(R.string.alert_send_measurement_results_error)
-                                        .setPositiveButton(android.R.string.ok, null)
-                                        .show();
+                                AlertDialogUtil.showAlertDialog(activity,
+                                        R.string.alert_send_measurement_result_title,
+                                        R.string.alert_send_measurement_results_error);
                             }
                             activity.navigateTo(WorkflowTarget.TITLE);
                         }

@@ -46,12 +46,25 @@
         <item name="android:windowExitAnimation">@anim/slide_down</item> -->
     </style>
 
+    <!-- TITLE -->
+
     <style name="Nettest.Title.StartButton.Text" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/title_page_start_button_fg</item>
         <item name="android:typeface">sans</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">48sp</item>
     </style>
+
+    <style name="Nettest.Title.Provider.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Nettest.Title.Signal.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 
     <!-- TOP PROGRESS BAR -->
     <style name="Nettest.TopProgressBar.Text" parent="TextAppearance.AppCompat.Medium">

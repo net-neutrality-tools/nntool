@@ -12,6 +12,7 @@ import android.view.View;
 
 import at.alladin.nettest.nntool.android.app.async.RegisterMeasurementAgentTask;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
+import at.alladin.nettest.nntool.android.app.util.info.InformationService;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.app.workflow.history.HistoryFragment;
 import at.alladin.nettest.nntool.android.app.workflow.map.MapFragment;
@@ -105,6 +106,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void startInformationService() {
+        final Intent intent = new Intent(InformationService.ACTION_START_INFORMATION_SERVICE,
+                null, this, InformationService.class);
+        startService(intent);
+    }
+
+    public void stopInformationService() {
+        final Intent intent = new Intent(this, InformationService.class);
+        stopService(intent);
+    }
+
     public void setBottomNavigationVisible(final boolean isVisible) {
         final boolean wasVisible = navigation.getVisibility() == View.VISIBLE;
         if (navigation != null && isVisible != wasVisible) {
@@ -133,6 +145,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         getSupportActionBar().setElevation(0f);
+    }
+
+    @Override
+    protected void onPause() {
+        stopInformationService();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startInformationService();
     }
 
     public void registerMeasurementAgent() {
