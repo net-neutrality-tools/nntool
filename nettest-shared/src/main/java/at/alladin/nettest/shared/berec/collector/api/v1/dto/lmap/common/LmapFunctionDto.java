@@ -31,12 +31,15 @@ public class LmapFunctionDto {
 	@JsonProperty(required = true, value = "uri")
 	private String uri;
 	
+	/**
+	 * A set of roles for the identified registry entry.
+	 */
 	@io.swagger.annotations.ApiModelProperty(required = true, value = "A set of roles for the identified registry entry.")
 	@JsonPropertyDescription("A set of roles for the identified registry entry.")
 	@Expose
 	@SerializedName("role")
 	@JsonProperty(required = true, value = "role")
-	private List<String> roleList = new ArrayList<>();
+	private List<String> roleList = new ArrayList<>(); // TODO: rename roles
 
 	public String getUri() {
 		return uri;

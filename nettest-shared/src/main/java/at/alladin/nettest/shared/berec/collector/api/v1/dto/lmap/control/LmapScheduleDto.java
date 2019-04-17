@@ -67,7 +67,7 @@ public class LmapScheduleDto {
 	@Expose
 	@SerializedName("execution-mode")
 	@JsonProperty(required = false, value = "execution-mode")
-	private ExecutionMode executionMode;
+	private ExecutionMode executionMode; // TODO: rename ...Dto
 	
 	/**
 	 * A set of Schedule-specific tags that are reported together with the measurement results to a Collector.
@@ -286,6 +286,11 @@ public class LmapScheduleDto {
 		this.actions = actions;
 	}
 
+	/**
+	 * 
+	 * TODO
+	 *
+	 */
 	public static enum ExecutionMode {
 		SEQUENTIAL,	// The Actions of the Schedule are executed sequentially.
 		PARALLEL, // The Actions of the Schedule are executed concurrently.

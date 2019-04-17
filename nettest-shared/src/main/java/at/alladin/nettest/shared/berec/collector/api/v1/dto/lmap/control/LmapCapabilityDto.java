@@ -40,7 +40,7 @@ public class LmapCapabilityDto {
 	@Expose
 	@SerializedName("tag")
 	@JsonProperty(required = true, value = "tag")
-	private List<String> tag = new ArrayList<>();
+	private List<String> tag = new ArrayList<>(); // TODO: rename tags
 	
 	/**
 	 * A list of Tasks that the Measurement Agent supports.

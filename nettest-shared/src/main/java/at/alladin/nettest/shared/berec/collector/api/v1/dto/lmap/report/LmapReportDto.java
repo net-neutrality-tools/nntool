@@ -78,10 +78,10 @@ public class LmapReportDto {
 	private List<LmapResultDto<?>> results = new ArrayList<>();
 	
 	/**
-	 * Additional information that is sent by client alongside the request. This contains most information from ClientInfo.
+	 * Additional information that is sent by agent alongside the request.
 	 */
-	@io.swagger.annotations.ApiModelProperty(required = true, value = "Additional information that is sent by client alongside the request. This contains most information from ClientInfo.")
-	@JsonPropertyDescription("Additional information that is sent by client alongside the request. This contains most information from ClientInfo.")
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "Additional information that is sent by agent alongside the request.")
+	@JsonPropertyDescription("Additional information that is sent by agent alongside the request.")
 	@Expose
 	@SerializedName("additional_request_info")
 	@JsonProperty(required = true, value = "additional_request_info")	

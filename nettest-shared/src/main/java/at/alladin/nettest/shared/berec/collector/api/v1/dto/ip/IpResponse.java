@@ -38,7 +38,7 @@ public class IpResponse {
 	@Expose
 	@SerializedName("ip_version")
 	@JsonProperty(required = true, value = "ip_version")
-	private IpVersion version;
+	private IpVersion version; // TODO: rename ipVersion
 
 	/**
 	 * 

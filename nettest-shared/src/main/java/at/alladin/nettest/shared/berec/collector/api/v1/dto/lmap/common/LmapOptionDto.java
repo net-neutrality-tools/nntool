@@ -61,7 +61,7 @@ public class LmapOptionDto {
 	@Expose
 	@SerializedName("measurement-parameters")
 	@JsonProperty(required = false, value = "measurement-parameters")
-	private MeasurementTypeParameters measurementParameters;
+	private MeasurementTypeParameters measurementParameters; // TODO: rename class name to ...Dto; should this object be moved to lmapresultdto as sibling to optiondto?
 
 	public String getId() {
 		return id;

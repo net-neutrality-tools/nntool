@@ -74,7 +74,7 @@ public class LmapTaskDto {
 	@Expose
 	@SerializedName("tag")
 	@JsonProperty(required = true, value = "tag")
-	private List<String> tagList = new ArrayList<>();
+	private List<String> tagList = new ArrayList<>(); // TODO: rename tags
 
 	public String getName() {
 		return name;
