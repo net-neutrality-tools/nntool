@@ -19,22 +19,69 @@ import Foundation
 import UIKit
 import WebKit
 
-///
+/// This view controller displays the Terms and Conditions.
 class TermsAndConditionsViewController: UIViewController {
+
+    @IBOutlet var declineButtonItem: UIBarButtonItem?
+    @IBOutlet var agreeButtonItem: UIBarButtonItem?
 
     ///
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let font = UIFont.systemFont(ofSize: UIFont.buttonFontSize)
+
+        declineButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .normal)
+        declineButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .selected)
+        declineButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .disabled)
+
+        agreeButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .normal)
+        agreeButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .selected)
+        agreeButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .disabled)
+
         // TODO: wait until webview did finish loading to make decline/agree touchable
     }
 
-    ///
-    @IBAction func agree() {
-        dismiss(animated: true, completion: nil)
+    /// Show a popup with an error message and options to retry or close the App.
+    func showErrorPopup() {
+        let alert = UIAlertController(title: "Registration error", message: "Agent could not be registered, TODO: message", preferredStyle: .alert)
+
+        // TODO: nslocalizedstring
+
+        alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { _ in
+            self.agree()
+        }))
+
+        alert.addAction(UIAlertAction(title: "Close App", style: .destructive, handler: { _ in
+            self.decline()
+        }))
+
+        self.present(alert, animated: true, completion: nil)
     }
 
-    ///
+    /// Try to register Measurement Agent against control service.
+    /// If successful, dismiss this screen to go to the start page.
+    /// If there was an error, e.g. control service could not be reached, display an alert view asking the user to retry or close the App.
+    @IBAction func agree() {
+        let progressAlert = UIAlertController.createLoadingAlert(title: "Registering agent")
+        self.present(progressAlert, animated: true, completion: nil)
+
+        MEASUREMENT_AGENT.register(success: {
+            DispatchQueue.main.async {
+                progressAlert.dismiss(animated: true) {
+                    self.dismiss(animated: true, completion: nil)
+                }
+            }
+        }, failure: {
+            DispatchQueue.main.async {
+                progressAlert.dismiss(animated: false) {
+                    self.showErrorPopup()
+                }
+            }
+        })
+    }
+
+    /// Close the App if Terms and Conditions aren't accepted by the user.
     @IBAction func decline() {
         exit(EXIT_FAILURE)
     }

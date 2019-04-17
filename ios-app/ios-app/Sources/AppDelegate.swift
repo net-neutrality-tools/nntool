@@ -25,6 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         applyAppearance()
 
+        afterStart(isNewlyLaunched: true)
+
         return true
     }
 
@@ -37,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-
+        afterStart(isNewlyLaunched: false)
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -49,24 +51,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applyAppearance() {
-        let tintColor = UIColor(rgb: 0x4D515D)
+        UINavigationBar.appearance().tintColor = APP_TINT_COLOR
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: APP_TINT_COLOR]
+    }
 
-        UINavigationBar.appearance().tintColor = tintColor
-        UITabBar.appearance().tintColor = tintColor
+    ///
+    func afterStart(isNewlyLaunched: Bool) {
 
-        // Text color
-        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: tintColor]
-
-        let iconFontAttributes = [
-            NSAttributedString.Key.font: UIFont(name: "berec-icons", size: 32)!,
-            NSAttributedString.Key.foregroundColor: tintColor
-        ]
-
-        UIBarButtonItem.appearance().setTitleTextAttributes(iconFontAttributes, for: .normal)
-        //UIBarButtonItem.appearance().setTitleTextAttributes(iconFontAttributes, for: .selected)
-        UIBarButtonItem.appearance().setTitleTextAttributes(iconFontAttributes, for: .highlighted)
-        UIBarButtonItem.appearance().setTitleTextAttributes(iconFontAttributes, for: .disabled)
-        UIBarButtonItem.appearance().setTitleTextAttributes(iconFontAttributes, for: .focused)
-        //UIBarButtonItem.appearance().setTitleTextAttributes(iconFontAttributes, for: .application)
+        // Refresh MeasurementAgent settings after App launch
+        if MEASUREMENT_AGENT.isRegistered() {
+            print("reloading settings (newlyLaunched: \(isNewlyLaunched))")
+            MEASUREMENT_AGENT.updateSettings()
+        }
     }
 }

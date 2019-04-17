@@ -9,6 +9,17 @@
 /* Begin PBXBuildFile section */
 		53BD18F682BE646F2DFBC336 /* Pods_All_MeasurementAgentKitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C682F72910A176E058DDC7C1 /* Pods_All_MeasurementAgentKitTests.framework */; };
 		5FF324BB37BAC3DF4012226C /* Pods_All_MeasurementAgentKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DFE748A7D3CD3A25F24E12E /* Pods_All_MeasurementAgentKit_iOS.framework */; };
+		E00F48C7225F340000EAD0C0 /* RegistrationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48C6225F340000EAD0C0 /* RegistrationRequest.swift */; };
+		E00F48C9225F3BDF00EAD0C0 /* MeasurementTypeDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48C8225F3BDF00EAD0C0 /* MeasurementTypeDto.swift */; };
+		E00F48CC225F72B300EAD0C0 /* ProgramProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48CB225F72B300EAD0C0 /* ProgramProtocol.swift */; };
+		E00F48CE225F735500EAD0C0 /* ProgramDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48CD225F735500EAD0C0 /* ProgramDelegate.swift */; };
+		E00F4AEF2264B41C00EAD0C0 /* MeasurementAgentConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AEE2264B41C00EAD0C0 /* MeasurementAgentConfiguration.swift */; };
+		E00F4AF12264B51300EAD0C0 /* MeasurementRunnerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AF02264B51300EAD0C0 /* MeasurementRunnerDelegate.swift */; };
+		E00F4AF52265DC3E00EAD0C0 /* ProgramConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AF42265DC3E00EAD0C0 /* ProgramConfiguration.swift */; };
+		E00F4AF72265F24200EAD0C0 /* MeasurementAgentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AF62265F24200EAD0C0 /* MeasurementAgentBuilder.swift */; };
+		E00F4AFB22660B2B00EAD0C0 /* MeasurementRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AFA22660B2B00EAD0C0 /* MeasurementRunner.swift */; };
+		E00F4AFD2266218400EAD0C0 /* AnyProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AFC2266218400EAD0C0 /* AnyProgram.swift */; };
+		E00F4B0522676BD100EAD0C0 /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4B0422676BCF00EAD0C0 /* Program.swift */; };
 		E01DEE832253B5AC00983B1C /* MeasurementResultResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01DEE822253B5AC00983B1C /* MeasurementResultResponse.swift */; };
 		E0B9A3B6224D3EAB002AB640 /* MeasurementAgentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0B9A3AC224D3EAB002AB640 /* MeasurementAgentKit.framework */; };
 		E0B9A3BB224D3EAB002AB640 /* MeasurementAgentKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3BA224D3EAB002AB640 /* MeasurementAgentKitTests.swift */; };
@@ -73,6 +84,17 @@
 		5DFE748A7D3CD3A25F24E12E /* Pods_All_MeasurementAgentKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_MeasurementAgentKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C785EEC28EAFE68CB3B6981 /* Pods-All-MeasurementAgentKit_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-MeasurementAgentKit_iOS.debug.xcconfig"; path = "Target Support Files/Pods-All-MeasurementAgentKit_iOS/Pods-All-MeasurementAgentKit_iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		C682F72910A176E058DDC7C1 /* Pods_All_MeasurementAgentKitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_MeasurementAgentKitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E00F48C6225F340000EAD0C0 /* RegistrationRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationRequest.swift; sourceTree = "<group>"; };
+		E00F48C8225F3BDF00EAD0C0 /* MeasurementTypeDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementTypeDto.swift; sourceTree = "<group>"; };
+		E00F48CB225F72B300EAD0C0 /* ProgramProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramProtocol.swift; sourceTree = "<group>"; };
+		E00F48CD225F735500EAD0C0 /* ProgramDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramDelegate.swift; sourceTree = "<group>"; };
+		E00F4AEE2264B41C00EAD0C0 /* MeasurementAgentConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementAgentConfiguration.swift; sourceTree = "<group>"; };
+		E00F4AF02264B51300EAD0C0 /* MeasurementRunnerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementRunnerDelegate.swift; sourceTree = "<group>"; };
+		E00F4AF42265DC3E00EAD0C0 /* ProgramConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramConfiguration.swift; sourceTree = "<group>"; };
+		E00F4AF62265F24200EAD0C0 /* MeasurementAgentBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementAgentBuilder.swift; sourceTree = "<group>"; };
+		E00F4AFA22660B2B00EAD0C0 /* MeasurementRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementRunner.swift; sourceTree = "<group>"; };
+		E00F4AFC2266218400EAD0C0 /* AnyProgram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyProgram.swift; sourceTree = "<group>"; };
+		E00F4B0422676BCF00EAD0C0 /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
 		E01DEE822253B5AC00983B1C /* MeasurementResultResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasurementResultResponse.swift; sourceTree = "<group>"; };
 		E0692792225CA1F600E028CA /* MeasurementAgentKit.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeasurementAgentKit.podspec; sourceTree = "<group>"; };
 		E0B9A3AC224D3EAB002AB640 /* MeasurementAgentKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MeasurementAgentKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -167,6 +189,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E00F48CA225F71E400EAD0C0 /* Program */ = {
+			isa = PBXGroup;
+			children = (
+				E00F48CB225F72B300EAD0C0 /* ProgramProtocol.swift */,
+				E00F48CD225F735500EAD0C0 /* ProgramDelegate.swift */,
+				E00F4AF42265DC3E00EAD0C0 /* ProgramConfiguration.swift */,
+				E00F4AFC2266218400EAD0C0 /* AnyProgram.swift */,
+				E00F4B0422676BCF00EAD0C0 /* Program.swift */,
+			);
+			path = Program;
+			sourceTree = "<group>";
+		};
 		E01DEE812253B58A00983B1C /* Collector */ = {
 			isa = PBXGroup;
 			children = (
@@ -219,7 +253,12 @@
 		E0B9A3C6224D4076002AB640 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				E00F48CA225F71E400EAD0C0 /* Program */,
 				E0B9A3CA224D4113002AB640 /* MeasurementAgent.swift */,
+				E00F4AF62265F24200EAD0C0 /* MeasurementAgentBuilder.swift */,
+				E00F4AEE2264B41C00EAD0C0 /* MeasurementAgentConfiguration.swift */,
+				E00F4AFA22660B2B00EAD0C0 /* MeasurementRunner.swift */,
+				E00F4AF02264B51300EAD0C0 /* MeasurementRunnerDelegate.swift */,
 				E0CE899F2253E17E009C1E25 /* JsonHelper.swift */,
 				E0B9A408224E6321002AB640 /* Servers */,
 				E0B9A3E9224D574A002AB640 /* DTO */,
@@ -291,6 +330,7 @@
 				E0B9A3DD224D4E79002AB640 /* MeasurementResultNetworkPointInTimeDto.swift */,
 				E0B9A3DF224D4FC8002AB640 /* PointInTimeValueDto.swift */,
 				E0B9A3E5224D544B002AB640 /* MeasurementTypeParametersDto.swift */,
+				E00F48C8225F3BDF00EAD0C0 /* MeasurementTypeDto.swift */,
 				E0B9A3CC224D4131002AB640 /* Lmap */,
 			);
 			path = DTO;
@@ -313,6 +353,7 @@
 				E0B9A412224E65BF002AB640 /* IpResponse.swift */,
 				E0B9A417224E66FB002AB640 /* SettingsResponse.swift */,
 				E0B9A415224E66B7002AB640 /* RegistrationResponse.swift */,
+				E00F48C6225F340000EAD0C0 /* RegistrationRequest.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -479,10 +520,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-All-MeasurementAgentKitTests/Pods-All-MeasurementAgentKitTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/ObjcExceptionBridging/ObjcExceptionBridging.framework",
-				"${BUILT_PRODUCTS_DIR}/QoSKit/QoSKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Siesta/Siesta.framework",
 				"${BUILT_PRODUCTS_DIR}/XCGLogger/XCGLogger.framework",
 				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
@@ -491,10 +529,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjcExceptionBridging.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/QoSKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Siesta.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XCGLogger.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
@@ -551,12 +586,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E00F4B0522676BD100EAD0C0 /* Program.swift in Sources */,
 				E0B9A3F3224D5B28002AB640 /* LmapAgentDto.swift in Sources */,
+				E00F4AFD2266218400EAD0C0 /* AnyProgram.swift in Sources */,
 				E0B9A41E224E6910002AB640 /* VersionResponse.swift in Sources */,
 				E0B9A3DE224D4E79002AB640 /* MeasurementResultNetworkPointInTimeDto.swift in Sources */,
+				E00F4AEF2264B41C00EAD0C0 /* MeasurementAgentConfiguration.swift in Sources */,
+				E00F4AFB22660B2B00EAD0C0 /* MeasurementRunner.swift in Sources */,
 				E0B9A3DC224D4CF8002AB640 /* CellLocationDto.swift in Sources */,
 				E0B9A3F9224D5F5C002AB640 /* LmapStopDto.swift in Sources */,
 				E0B9A41C224E6860002AB640 /* ApiResponse.swift in Sources */,
+				E00F48CC225F72B300EAD0C0 /* ProgramProtocol.swift in Sources */,
 				E0CE89A02253E17E009C1E25 /* JsonHelper.swift in Sources */,
 				E0B9A3D6224D46FC002AB640 /* GeoLocationDto.swift in Sources */,
 				E0B9A3D8224D4872002AB640 /* TimeBasedResultDto.swift in Sources */,
@@ -571,10 +611,12 @@
 				E0B9A3CB224D4113002AB640 /* MeasurementAgent.swift in Sources */,
 				E01DEE832253B5AC00983B1C /* MeasurementResultResponse.swift in Sources */,
 				E0B9A3DA224D4B65002AB640 /* SignalDto.swift in Sources */,
+				E00F4AF72265F24200EAD0C0 /* MeasurementAgentBuilder.swift in Sources */,
 				E0B9A413224E65BF002AB640 /* IpResponse.swift in Sources */,
 				E0B9A403224D6426002AB640 /* SuppressionStateDto.swift in Sources */,
 				E0B9A41A224E67E4002AB640 /* ApiBase.swift in Sources */,
 				E0B9A3E0224D4FC8002AB640 /* PointInTimeValueDto.swift in Sources */,
+				E00F48CE225F735500EAD0C0 /* ProgramDelegate.swift in Sources */,
 				E0B9A3FD224D602C002AB640 /* LmapStateDto.swift in Sources */,
 				E0B9A416224E66B7002AB640 /* RegistrationResponse.swift in Sources */,
 				E0CE89A22253FC31009C1E25 /* ApiRequest.swift in Sources */,
@@ -585,12 +627,16 @@
 				E0B9A3FF224D60B0002AB640 /* LmapActionDto.swift in Sources */,
 				E0B9A401224D6313002AB640 /* LmapSuppressionDto.swift in Sources */,
 				E0B9A410224E645B002AB640 /* RestApiService.swift in Sources */,
+				E00F48C9225F3BDF00EAD0C0 /* MeasurementTypeDto.swift in Sources */,
 				E0B9A40E224E638B002AB640 /* ResultService.swift in Sources */,
 				E0B9A3D0224D428D002AB640 /* LmapReportDto.swift in Sources */,
 				E0B9A405224D648D002AB640 /* LmapEventDto.swift in Sources */,
+				E00F4AF52265DC3E00EAD0C0 /* ProgramConfiguration.swift in Sources */,
+				E00F4AF12264B51300EAD0C0 /* MeasurementRunnerDelegate.swift in Sources */,
 				E0B9A3E6224D544B002AB640 /* MeasurementTypeParametersDto.swift in Sources */,
 				E0B9A418224E66FB002AB640 /* SettingsResponse.swift in Sources */,
 				E0B9A40A224E634D002AB640 /* ControlService.swift in Sources */,
+				E00F48C7225F340000EAD0C0 /* RegistrationRequest.swift in Sources */,
 				E0B9A3D4224D4661002AB640 /* MeasurementAgentTypeDto.swift in Sources */,
 				E0B9A3D2224D4426002AB640 /* ApiRequestInfo.swift in Sources */,
 			);

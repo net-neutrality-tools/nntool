@@ -12,8 +12,6 @@ abstract_target 'All' do
 
   pod 'XCGLogger', '~> 7.0.0'
 
-  pod 'QoSKit', :path => '../qos-client-swift'
-
   target 'MeasurementAgentKit_iOS' do
     platform :ios, '10.0'
   end

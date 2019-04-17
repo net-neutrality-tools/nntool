@@ -21,4 +21,9 @@ import UIKit
 ///
 class HistoryTableViewController: UITableViewController {
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        navigationItem.applyIconFontAttributes()
+    }
 }

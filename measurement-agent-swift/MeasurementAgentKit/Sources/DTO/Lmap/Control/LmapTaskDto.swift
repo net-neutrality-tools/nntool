@@ -18,7 +18,7 @@
 import Foundation
 
 /// Configuration of LMAP Tasks.
-class LmapTaskDto: Codable {
+public class LmapTaskDto: Codable {
 
     /// The unique name of a Task.
     var name: String?

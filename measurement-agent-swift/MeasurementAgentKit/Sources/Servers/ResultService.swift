@@ -16,3 +16,19 @@
  ******************************************************************************/
 
 import Foundation
+import Siesta
+
+///
+class ResultService: RestApiService {
+
+    init(baseURL: URLConvertible = "http://localhost:8082/api/v1") {
+        super.init(baseURL: baseURL)
+
+        configureTransformer("/measurements", forType: ApiResponse<MeasurementResultResponse>.self)
+    }
+
+    ///
+    func storeMeasurement(reportDto: LmapReportDto, onSuccess: SuccessCallback<MeasurementResultResponse>?, onFailure: FailureCallback?) {
+        request("/measurements", method: .post, requestEntity: reportDto, wrapInApiRequest: false, responseEntityType: MeasurementResultResponse.self, onSuccess: onSuccess, onFailure: onFailure)
+    }
+}

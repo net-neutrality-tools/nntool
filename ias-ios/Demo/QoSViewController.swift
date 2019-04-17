@@ -174,17 +174,17 @@ class QoSViewController: UIViewController {
     
     private func runTcpPortTest(config: TcpPortTaskConfiguration, controlConnection: ControlConnection) -> String {
         let tcpPortTaskExecutor = TcpPortTaskExecutor(config: config, controlConnection: controlConnection)
-        return tcpPortTaskExecutor.runTask().toJSONString(prettyPrint: true) ?? "{}"
+        return /*tcpPortTaskExecutor.runTask().toJSONString(prettyPrint: true) ??*/ "{}"
     }
     
     private func runUdpPortTest(config: UdpPortTaskConfiguration, controlConnection: ControlConnection) -> String {
         let udpPortTaskExecutor = UdpPortTaskExecutor(config: config, controlConnection: controlConnection)
-        return udpPortTaskExecutor.runTask().toJSONString(prettyPrint: true) ?? "{}"
+        return /*udpPortTaskExecutor.runTask().toJSONString(prettyPrint: true) ??*/ "{}"
     }
     
     private func runEchoProtocolTest(config: EchoProtocolTaskConfiguration) -> String {
         let echoProtocolTaskExecutor = EchoProtocolTaskExecutor(config: config)
-        return echoProtocolTaskExecutor.runTask().toJSONString(prettyPrint: true) ?? "{}"
+        return /*echoProtocolTaskExecutor.runTask().toJSONString(prettyPrint: true) ??*/ "{}"
     }
     
     @IBAction func stopButtonTouched(sender: AnyObject?) {

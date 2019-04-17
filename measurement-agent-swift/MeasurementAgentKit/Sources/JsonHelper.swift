@@ -41,7 +41,7 @@ class JsonHelper {
 
         encoder.dateEncodingStrategy = .formatted(getIso8601DateFormatter())
 
-        //encoder.outputFormatting = .prettyPrinted
+        encoder.outputFormatting = .prettyPrinted
 
         return encoder
     }

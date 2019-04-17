@@ -22,6 +22,10 @@ import UIKit
 class StatisticsViewController: UIViewController {
 
     override func viewDidLoad() {
+        super.viewDidLoad()
+
+        navigationItem.applyIconFontAttributes()
+
         embeddWebBrowserWithUrlString("https://net-neutrality.tools")
     }
 }

@@ -22,10 +22,16 @@ import UIKit
 class CustomNavigationBarViewController: UIViewController {
 
     ///
-    @IBOutlet var leftBarItem: UIBarButtonItem?
+    private var savedLeftBarItem: UIBarButtonItem?
 
     ///
-    @IBOutlet var rightBarItem: UIBarButtonItem?
+    private var savedRightBarItem: UIBarButtonItem?
+
+    /*var tabBarEnabled: Bool = true {
+        didSet(enabled) {
+            tabBarController?.tabBar.items?.forEach { $0.isEnabled = enabled }
+        }
+    }*/
 
     ///
     override func viewDidLoad() {
@@ -33,19 +39,30 @@ class CustomNavigationBarViewController: UIViewController {
 
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 
     ///
     func hideNavigationItems() {
+        savedLeftBarItem = navigationItem.leftBarButtonItem
+        savedRightBarItem = navigationItem.rightBarButtonItem
+        
         navigationItem.setLeftBarButton(nil, animated: true)
         navigationItem.setRightBarButton(nil, animated: true)
         navigationItem.setHidesBackButton(true, animated: false)
+
+        tabBarController?.tabBar.isUserInteractionEnabled = false
+        //tabBarEnabled = false
     }
 
     ///
     func showNavigationItems() {
-        navigationItem.setLeftBarButton(leftBarItem, animated: true)
-        navigationItem.setRightBarButton(rightBarItem, animated: true)
+        navigationItem.setLeftBarButton(savedLeftBarItem, animated: true)
+        navigationItem.setRightBarButton(savedRightBarItem, animated: true)
         navigationItem.setHidesBackButton(false, animated: false)
+
+        tabBarController?.tabBar.isUserInteractionEnabled = true
+        //tabBarEnabled = true
     }
 }

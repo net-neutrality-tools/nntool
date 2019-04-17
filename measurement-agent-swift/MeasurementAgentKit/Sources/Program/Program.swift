@@ -1,4 +1,4 @@
-// ios-app: SettingsTableViewController.swift, created on 19.03.19
+// MeasurementAgentKit: Program.swift, created on 17.04.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,16 +16,18 @@
  ******************************************************************************/
 
 import Foundation
-import UIKit
 
-///
-class SettingsTableViewController: UITableViewController {
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = super.tableView(tableView, cellForRowAt: indexPath)
-
-        cell.accessoryView = UISwitch()
-
-        return cell
+/*open class Program: ProgramProtocol {
+    public var result: [String : Any]?
+    
+    //var delegate: D?
+    
+    public var delegate: Any?
+    
+    public override init() {
+        //fatalError("Program class must be overriden")
     }
-}
+    
+    open override func run() {
+    }
+}*/

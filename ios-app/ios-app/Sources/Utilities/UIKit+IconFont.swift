@@ -47,6 +47,11 @@ extension UIButton {
 ///
 extension UIBarButtonItem {
 
+    private static let iconFontAttributes: [NSAttributedString.Key: Any] = [
+        NSAttributedString.Key.font: UIFont(name: "berec-icons", size: 32)!,
+        NSAttributedString.Key.foregroundColor: UINavigationBar.appearance().tintColor ?? UIColor.black
+    ]
+
     ///
     var icon: IconFont? {
         get {
@@ -59,5 +64,26 @@ extension UIBarButtonItem {
         set {
             title = newValue?.rawValue
         }
+    }
+
+    func applyIconFontAttributes() {
+        setTitleTextAttributes(UIBarButtonItem.iconFontAttributes, for: .normal)
+        setTitleTextAttributes(UIBarButtonItem.iconFontAttributes, for: .highlighted)
+        setTitleTextAttributes(UIBarButtonItem.iconFontAttributes, for: .disabled)
+        setTitleTextAttributes(UIBarButtonItem.iconFontAttributes, for: .focused)
+    }
+}
+
+extension UINavigationBar {
+
+    func applyIconFontAttributes() {
+        items?.forEach { $0.rightBarButtonItems?.forEach { $0.applyIconFontAttributes() } }
+    }
+}
+
+extension UINavigationItem {
+
+    func applyIconFontAttributes() {
+        rightBarButtonItems?.forEach { $0.applyIconFontAttributes() }
     }
 }

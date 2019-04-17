@@ -30,6 +30,8 @@ class HomeViewController: CustomNavigationBarViewController {
         // view controllers in tabBar should not be customizable
         tabBarController?.customizableViewControllers = []
 
+        navigationItem.applyIconFontAttributes()
+
         speedMeasurementGaugeView?.startButtonActionCallback = {
             self.performSegue(withIdentifier: "show_speed_measurement_view_controller", sender: self)
         }
@@ -39,9 +41,8 @@ class HomeViewController: CustomNavigationBarViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        // TODO: show terms and conditions on first launch
-        //performSegue(withIdentifier: "present_modally_terms_and_conditions", sender: self)
-
-        //performSegue(withIdentifier: "show_speed_measurement_view_controller", sender: self)
+        if !MEASUREMENT_AGENT.isRegistered() {
+            performSegue(withIdentifier: "present_modally_terms_and_conditions", sender: self)
+        }
     }
 }

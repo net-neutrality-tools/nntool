@@ -24,18 +24,35 @@ class RestApiService {
 
     typealias SuccessCallback<R> = (_ entity: R) -> Void
     typealias FailureCallback = (_ error: RequestError) -> Void
-    
+
     enum ApiError: Error {
         case emptyData
         case requestEntityDecodeFailed
     }
-    
+
     struct AnyCodable: Codable { }
-    
+
+    struct ResponseLogExtractor: ResponseTransformer {
+
+        func process(_ response: Response) -> Response {
+            switch response {
+            case .success(let entity):
+
+                print("--- RESPONSE ---")
+                print(String(data: entity.content as? Data ?? Data(), encoding: .utf8)!)
+                print("--- /RESPONSE ---")
+
+                return response
+            default:
+                return response
+            }
+        }
+    }
+
     struct ErrorMessageExtractor: ResponseTransformer {
-        
+
         let decoder: JSONDecoder
-        
+
         func process(_ response: Response) -> Response {
             switch response {
             case .success:
@@ -44,9 +61,9 @@ class RestApiService {
                 if let errorData = error.entity?.content as? Data {
                     if let apiResponse = try? decoder.decode(ApiResponse<AnyCodable>.self, from: errorData) {
                         let firstError = apiResponse.errors?.first
-                        
+
                         // debug print (TODO)
-                        XCGLogger.default.debugExec() {
+                        XCGLogger.default.debugExec {
                             XCGLogger.default.debug("--- REST API error ---")
                             XCGLogger.default.debug(String(describing: firstError?.path))
                             XCGLogger.default.debug(String(describing: firstError?.error))
@@ -55,21 +72,29 @@ class RestApiService {
                             XCGLogger.default.debug(String(describing: firstError?.trace))
                             XCGLogger.default.debug("--- / REST API error ---")
                         }
-                        
+
+                        print("--- REST API error ---")
+                        print(String(describing: firstError?.path))
+                        print(String(describing: firstError?.error))
+                        print(String(describing: firstError?.message))
+                        print(String(describing: firstError?.exception))
+                        print(String(describing: firstError?.trace))
+                        print("--- / REST API error ---")
+
                         if let firstMessage = firstError?.message {
                             error.userMessage = firstMessage
                         }
                     }
                 }
-                
+
                 //return logTransformation(.failure(error))
                 return .failure(error)
             }
         }
     }
-    
+
     ////
-    
+
     let service: Service
 
     let jsonDecoder = JsonHelper.getPreconfiguredJSONDecoder()
@@ -81,6 +106,7 @@ class RestApiService {
         configureTransformer("/versions", forType: ApiResponse<VersionResponse>.self)
 
         service.configure {
+            $0.pipeline[.rawData].add(ResponseLogExtractor())
             $0.pipeline[.cleanup].add(ErrorMessageExtractor(decoder: self.jsonDecoder))
         }
     }
@@ -90,28 +116,32 @@ class RestApiService {
             try self.jsonDecoder.decode(type, from: $0.content)
         }
     }
-    
+
     ////
-    
+
     func request<R: Decodable, W: ApiResponse<R>>(_ path: String, method: RequestMethod, responseEntityType: R.Type, onSuccess: SuccessCallback<R>?, onFailure: FailureCallback?) {
-        
+
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+
         let request = service
             .resource(path)
             //.addObserver(ResourceObserver, owner: AnyObject)
             .request(method)
-        
+
             handleRequest(request: request, responseEntityType: responseEntityType, onSuccess: onSuccess, onFailure: onFailure)
     }
-    
+
     func request<T: Codable, R: Decodable, W: ApiResponse<R>>(_ path: String, method: RequestMethod, requestEntity: T, wrapInApiRequest: Bool = true, responseEntityType: R.Type, onSuccess: SuccessCallback<R>?, onFailure: FailureCallback?) {
-        
+
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+
         let requestData: Data
         do {
             if wrapInApiRequest {
                 let apiRequest = ApiRequest<T>()
                 apiRequest.data = requestEntity
                 //apiRequest.requestInfo = ApiRequestInfo() // TODO: fill ApiRequestInfo
-                
+
                 requestData = try jsonEncoder.encode(apiRequest)
             } else {
                 requestData = try jsonEncoder.encode(requestEntity)
@@ -120,35 +150,43 @@ class RestApiService {
             onFailure?(RequestError(userMessage: "could not encode request entity", cause: ApiError.requestEntityDecodeFailed))
             return
         }
-        
+
+        print("--- REQUEST BODY ---")
+        print(String(data: requestData, encoding: .utf8)!) // debug print
+        print("--- /REQUEST BODY ---")
+
         let request = service
             .resource(path)
             //.addObserver(ResourceObserver, owner: AnyObject)
             .request(method, data: requestData, contentType: "application/json")
-            
+
         handleRequest(request: request, responseEntityType: responseEntityType, onSuccess: onSuccess, onFailure: onFailure)
     }
-    
+
     private func handleRequest<R: Decodable, W: ApiResponse<R>>(request: Request, responseEntityType: R.Type, onSuccess: SuccessCallback<R>?, onFailure: FailureCallback?) {
         request.onSuccess({ responseEntity in
             if let r = responseEntity.content as? W { // Extract data if enclosed in ApiResponse
                 if let d = r.data {
                     onSuccess?(d)
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
                     return
                 }
             } else if let r = responseEntity.content as? R { // Use entity directly
                 onSuccess?(r)
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 return
             }
-            
+
             onFailure?(RequestError(userMessage: "no data from server (TODO: better description)", cause: ApiError.emptyData))
         }).onFailure { requestError in
             onFailure?(requestError)
         }
+
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
-    
+
     ////
-    
+
     func getVersion(onSuccess: @escaping SuccessCallback<VersionResponse>, onFailure: @escaping FailureCallback) {
         request("/versions", method: .get, responseEntityType: VersionResponse.self, onSuccess: onSuccess, onFailure: onFailure)
     }

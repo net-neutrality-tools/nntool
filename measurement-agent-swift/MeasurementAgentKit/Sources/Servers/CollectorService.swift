@@ -16,12 +16,13 @@
  ******************************************************************************/
 
 import Foundation
+import Siesta
 
 ///
 class CollectorService: RestApiService {
 
-    init() {
-        super.init(baseURL: "http://localhost:8081/api/v1")
+    init(baseURL: URLConvertible = "http://localhost:8081/api/v1") {
+        super.init(baseURL: baseURL)
 
         configureTransformer("/measurements", forType: ApiResponse<MeasurementResultResponse>.self)
     }

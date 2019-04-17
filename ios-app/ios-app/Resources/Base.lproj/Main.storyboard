@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,7 +14,7 @@
         <scene sceneID="eKh-1J-9An">
             <objects>
                 <navigationController id="mDy-gn-MZy" userLabel="Home Navigation Controller" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Home" image="first" id="Yym-ll-ifY" userLabel="Home">
+                    <tabBarItem key="tabBarItem" title="Home" image="tabbar_icon_home" id="Yym-ll-ifY" userLabel="Home">
                         <color key="badgeColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBarItem>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="JE8-JQ-erV">
@@ -165,7 +165,7 @@
                                 <rect key="frame" x="19" y="467" width="337.5" height="71"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ade-vS-2jV" customClass="CircularButton" customModule="ios_app" customModuleProvider="target">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ade-vS-2jV" customClass="CircularButton" customModule="ios_app" customModuleProvider="target">
                                 <rect key="frame" x="19" y="558" width="337.5" height="40"/>
                                 <color key="backgroundColor" red="0.57254901960000004" green="0.1215686275" blue="0.33725490200000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -174,6 +174,9 @@
                                 <state key="normal" title="View Your Measurement Report">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="measurementResultButtonTapped" destination="l2h-VI-UHi" eventType="primaryActionTriggered" id="cP0-W2-5hv"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -198,10 +201,24 @@
                             <constraint firstItem="Ovj-et-Dag" firstAttribute="top" secondItem="ZCO-kG-2qz" secondAttribute="top" id="x56-hu-8nd"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ZCO-kG-2qz"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="BIg-mJ-d2h" appends="YES" id="bfI-3x-hMO"/>
+                        </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="BEREC nntool" id="hp5-mn-BBe"/>
+                    <navigationItem key="navigationItem" title="BEREC nntool" id="hp5-mn-BBe">
+                        <barButtonItem key="rightBarButtonItem" title="m" id="QGO-Yk-GtN">
+                            <connections>
+                                <action selector="presentHelp" destination="l2h-VI-UHi" id="IxH-jb-LRh"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vl1-bK-3IW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="BIg-mJ-d2h">
+                    <connections>
+                        <action selector="viewTapped" destination="l2h-VI-UHi" id="QgD-k0-0je"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-815" y="2258"/>
         </scene>
@@ -331,6 +348,10 @@
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" title="Terms and Conditions" id="dJR-Fk-BlD"/>
+                    <connections>
+                        <outlet property="agreeButtonItem" destination="6eY-vG-cH0" id="IMf-W8-AbU"/>
+                        <outlet property="declineButtonItem" destination="STj-LP-kRl" id="1Lv-Gy-oDr"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qFD-57-kB5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -380,7 +401,7 @@
         <scene sceneID="QlO-KF-u2D">
             <objects>
                 <navigationController id="nkm-Tg-XME" userLabel="History Navigation Controller" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="History" image="first" id="L6X-xT-IeA">
+                    <tabBarItem key="tabBarItem" title="History" image="tabbar_icon_history" id="L6X-xT-IeA">
                         <color key="badgeColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBarItem>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="WKx-3U-nHG">
@@ -399,7 +420,7 @@
         <scene sceneID="WEx-Zh-TSm">
             <objects>
                 <navigationController id="9iw-tY-oIC" userLabel="Map Naviation Controller" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Map" image="first" id="ZQ4-Xk-nVb">
+                    <tabBarItem key="tabBarItem" title="Map" image="tabbar_icon_map" id="ZQ4-Xk-nVb">
                         <color key="badgeColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBarItem>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="A9B-bU-FVB">
@@ -716,7 +737,12 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="tintColor" red="0.5490196078431373" green="0.58039215686274503" blue="0.66274509803921566" alpha="1" colorSpace="calibratedRGB"/>
-                        <color key="selectedImageTintColor" red="0.54901960780000003" green="0.58039215690000001" blue="0.66274509800000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="selectedImageTintColor" red="0.5725490196078431" green="0.12156862745098039" blue="0.33725490196078434" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="unselectedItemTintColor">
+                                <color key="value" red="0.30196078431372547" green="0.31764705882352939" blue="0.36470588235294116" alpha="1" colorSpace="calibratedRGB"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                     </tabBar>
                     <connections>
                         <segue destination="mDy-gn-MZy" kind="relationship" relationship="viewControllers" id="i5f-M6-Lb7"/>
@@ -734,7 +760,7 @@
         <scene sceneID="Rou-44-KSC">
             <objects>
                 <navigationController id="7tL-gZ-TSQ" userLabel="Statistics Navigation Controller" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Statistics" image="second" id="gyp-Ux-1u3">
+                    <tabBarItem key="tabBarItem" title="Statistics" image="tabbar_icon_statistics" id="gyp-Ux-1u3">
                         <color key="badgeColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBarItem>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="DPf-Nb-Vk8">
@@ -753,7 +779,7 @@
         <scene sceneID="Tck-5j-vOr">
             <objects>
                 <navigationController id="02S-Pi-Hwj" userLabel="Info Navigation Controller" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Info/Settings" image="second" id="Mn3-gT-0AI">
+                    <tabBarItem key="tabBarItem" title="Info/Settings" image="tabbar_icon_info" id="Mn3-gT-0AI">
                         <color key="badgeColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBarItem>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="aYf-wl-FMc">
@@ -770,8 +796,11 @@
         </scene>
     </scenes>
     <resources>
-        <image name="InfoIcon" width="651" height="220"/>
-        <image name="first" width="30" height="30"/>
-        <image name="second" width="30" height="30"/>
+        <image name="InfoIcon" width="325.5" height="110"/>
+        <image name="tabbar_icon_history" width="25" height="25"/>
+        <image name="tabbar_icon_home" width="25" height="25"/>
+        <image name="tabbar_icon_info" width="25" height="25"/>
+        <image name="tabbar_icon_map" width="25" height="25"/>
+        <image name="tabbar_icon_statistics" width="25" height="25"/>
     </resources>
 </document>

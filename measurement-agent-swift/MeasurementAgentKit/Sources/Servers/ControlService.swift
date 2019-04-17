@@ -16,12 +16,13 @@
  ******************************************************************************/
 
 import Foundation
+import Siesta
 
 ///
 class ControlService: RestApiService {
 
-    init() {
-        super.init(baseURL: "http://localhost:8080/api/v1")
+    init(baseURL: URLConvertible = "http://localhost:8080/api/v1") {
+        super.init(baseURL: baseURL)
 
         configureTransformer("/measurement-agents", forType: ApiResponse<RegistrationResponse>.self)
         configureTransformer("/measurement-agents/**/settings", forType: ApiResponse<SettingsResponse>.self)
@@ -30,8 +31,8 @@ class ControlService: RestApiService {
     }
 
     ///
-    func registerAgent(/*registrationRequest: RegistrationRequest,*/ onSuccess: SuccessCallback<RegistrationResponse>?, onFailure: FailureCallback?) {
-        // TODO
+    func registerAgent(registrationRequest: RegistrationRequest, onSuccess: SuccessCallback<RegistrationResponse>?, onFailure: FailureCallback?) {
+        request("/measurement-agents", method: .post, requestEntity: registrationRequest, wrapInApiRequest: true, responseEntityType: RegistrationResponse.self, onSuccess: onSuccess, onFailure: onFailure)
     }
 
     ///

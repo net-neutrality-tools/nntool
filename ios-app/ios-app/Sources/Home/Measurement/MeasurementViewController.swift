@@ -17,6 +17,7 @@
 
 import Foundation
 import UIKit
+import MeasurementAgentKit
 
 ///
 class MeasurementViewController: CustomNavigationBarViewController {
@@ -27,21 +28,158 @@ class MeasurementViewController: CustomNavigationBarViewController {
 
     @IBOutlet private var speedMeasurementGaugeView: SpeedMeasurementGaugeView?
 
+    private var measurementRunner: MeasurementRunner?
+
+    private var progressAlert: UIAlertController?
+
+    // MARK: - UI Code
+
     ///
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        hideNavigationItems()
-
-        // TODO: disable naviation during measurement
-        //tabBarController?.tabBar.items?.forEach { $0.isEnabled = false }
-
+        navigationItem.applyIconFontAttributes()
+        
         startMeasurement()
     }
 
+    @IBAction func viewTapped() {
+        let alert = UIAlertController(title: "Abort Measurement?", message: "Do you really want to abort the current measurement?", preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: nil))
+
+        alert.addAction(UIAlertAction(title: "Abort Measurement", style: .destructive, handler: { _ in
+            self.stopMeasurement()
+        }))
+
+        present(alert, animated: true, completion: nil)
+    }
+
+    @IBAction func measurementResultButtonTapped() {
+        performSegue(withIdentifier: "TODO_measurement_result_view", sender: nil)
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else {
+            return
+        }
+
+        switch identifier {
+            // TODO: populate measurement result view controller
+
+        default: break
+        }
+    }
+
+    // MARK: - Measurement Code
+
     ///
     private func startMeasurement() {
-        //resetUI()
+        hideNavigationItems()
 
+        measurementRunner = MEASUREMENT_AGENT.newMeasurementRunner()
+        // TODO: fail measurement if runner is nil (could be because agent is not registered)
+
+        measurementRunner?.delegate = self
+        measurementRunner?.startMeasurement()
+    }
+
+    private func stopMeasurement() {
+        measurementRunner?.stopMeasurement()
+        returnToHomeScreen()
+    }
+
+    private func returnToHomeScreen() {
+        navigationController?.popToRootViewController(animated: false)
+    }
+
+    private func showMeasurementFailureAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { _ in
+            self.startMeasurement()
+        }))
+
+        alert.addAction(UIAlertAction(title: "Abort Measurement", style: .destructive, handler: { _ in
+            self.returnToHomeScreen()
+        }))
+
+        present(alert, animated: true, completion: nil)
     }
 }
+
+extension MeasurementViewController: MeasurementRunnerDelegate {
+
+    func measurementWillStartRequestingControlModel(_ runner: MeasurementRunner) {
+        print("!^! measurementWillStartRequestingControlModel")
+
+        DispatchQueue.main.async {
+            self.progressAlert = UIAlertController.createLoadingAlert(title: "Initiating measurement")
+            self.present(self.progressAlert!, animated: true, completion: nil)
+        }
+    }
+
+    func measurementDidReceiveControlModel(_ runner: MeasurementRunner) {
+        print("!^! measurementDidReceiveControlModel")
+
+        DispatchQueue.main.async {
+            self.progressAlert?.dismiss(animated: true) {
+                self.progressAlert = nil
+            }
+        }
+    }
+
+    func measurementDidStart(_ runner: MeasurementRunner) {
+        print("!^! did start")
+    }
+
+    func measurementDidStop(_ runner: MeasurementRunner) {
+        self.progressAlert?.dismiss(animated: true) {
+            self.progressAlert = nil
+            self.returnToHomeScreen()
+        }
+    }
+
+    func measurementDidFinish(_ runner: MeasurementRunner) {
+        print("!^! did finish")
+        
+        DispatchQueue.main.async {
+            self.showNavigationItems()
+        }
+    }
+
+    func measurementDidFail(_ runner: MeasurementRunner) {
+        print("!^! did fail")
+
+        let presentFailureAlert = {
+            self.showMeasurementFailureAlert(title: "Error", message: "TODO: Measurement Error")
+        }
+
+        DispatchQueue.main.async {
+            if self.progressAlert != nil {
+                self.progressAlert?.dismiss(animated: false) {
+                    self.progressAlert = nil
+                    presentFailureAlert()
+                }
+            } else {
+                presentFailureAlert()
+            }
+        }
+    }
+
+    func measurementRunner(_ runner: MeasurementRunner, willStartProgramWithName name: String, implementation: /*AnyProgram<Any>*/ProgramProtocol) {
+        print("!^! willStart program \(name)")
+
+        //implementation.delegate = self
+    }
+
+    func measurementRunner(_ runner: MeasurementRunner, didFinishProgramWithName name: String, implementation: /*AnyProgram<Any>*/ProgramProtocol) {
+        print("!^! didFinish program \(name)")
+
+        //implementation.delegate = nil
+    }
+}
+
+/*extension MeasurementViewController: IASProgramDelegate {
+    
+}*/

@@ -13,9 +13,8 @@ Pod::Spec.new do |s|
 
     s.swift_version = '5.0'
 
-    s.source_files = 'Source/**/*.swift'
+    s.source_files = 'MeasurementAgentKit/Sources/**/*.swift'
 
     s.dependency 'Siesta', '~> 1.4.3'
     s.dependency 'XCGLogger', '~> 7.0.0'
-
 end

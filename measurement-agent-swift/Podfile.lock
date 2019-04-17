@@ -1,14 +1,8 @@
 PODS:
-  - Alamofire (4.8.2)
-  - CocoaAsyncSocket (7.6.3)
   - Nimble (8.0.1)
   - ObjcExceptionBridging (1.0.1):
     - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
   - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
-  - QoSKit (0.0.1):
-    - Alamofire (~> 4.8.2)
-    - CocoaAsyncSocket (~> 7.6.3)
-    - XCGLogger (~> 7.0.0)
   - Siesta (1.4.3):
     - Siesta/Core (= 1.4.3)
   - Siesta/Core (1.4.3)
@@ -20,35 +14,25 @@ PODS:
 
 DEPENDENCIES:
   - Nimble (~> 8.0.1)
-  - QoSKit (from `../qos-client-swift`)
   - Siesta (~> 1.4.3)
   - SwiftLint (~> 0.31.0)
   - XCGLogger (~> 7.0.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
-    - Alamofire
-    - CocoaAsyncSocket
     - Nimble
     - ObjcExceptionBridging
     - Siesta
     - SwiftLint
     - XCGLogger
 
-EXTERNAL SOURCES:
-  QoSKit:
-    :path: "../qos-client-swift"
-
 SPEC CHECKSUMS:
-  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
-  CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   Nimble: 45f786ae66faa9a709624227fae502db55a8bdd0
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
-  QoSKit: 08c162a7212e936aa9017f057550dde425faeb3f
   Siesta: 83795fdf6a43232d1d2909e1a3dfb92ab5916d26
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: 4a11d608409fc645405c70451d0d7ede3bf50084
+PODFILE CHECKSUM: fb6c4bc60703916ee7e128fca62fbb7d24620690
 
 COCOAPODS: 1.6.1

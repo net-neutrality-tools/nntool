@@ -6,15 +6,26 @@ use_frameworks!
 inhibit_all_warnings!
 
 abstract_target 'All' do
-  pod 'SwiftGen', '~> 6.1.0'
-  pod 'SwiftLint', '~> 0.31.0'
-  pod 'BartyCrouch', '~> 3.13.0'
-
-  pod 'WebBrowser', '~> 0.1.4'
-
-  pod 'MeasurementAgentKit', :path => '../measurement-agent-swift'
-
+  
   target 'ios-app' do
-
+    pod 'SwiftGen', '~> 6.1.0'
+    pod 'SwiftLint', '~> 0.31.0'
+    pod 'BartyCrouch', '~> 3.13.0'
+    
+    pod 'WebBrowser', '~> 0.1.4'
+    
+    pod 'MeasurementAgentKit', :path => '../measurement-agent-swift'
+    pod 'QoSKit', :path => '../qos-client-swift'
+  end
+  
+  target 'Common' do
+    pod 'FMDB', '>= 2.7.2'
+    pod 'CocoaLumberjack', '>= 3.4.2'
+  end
+  
+  target 'Speed' do
+    pod 'FMDB', '>= 2.7.2'
+    pod 'CocoaLumberjack', '>= 3.4.2'
+    pod 'PocketSocket', :path => '../PocketSocket'
   end
 end

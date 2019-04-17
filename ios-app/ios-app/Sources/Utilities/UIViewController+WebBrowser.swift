@@ -36,7 +36,7 @@ extension UIViewController {
         let navigationWebBrowser = WebBrowserViewController.rootNavigationWebBrowser(webBrowser: webBrowserViewController)
 
         // Change "done" text to x icon
-        navigationWebBrowser.navigationBar.items?.forEach { $0.rightBarButtonItems?.forEach { $0.icon = .cross } }
+        //navigationWebBrowser.navigationBar.items?.forEach { $0.rightBarButtonItems?.forEach { $0.icon = .cross } }
 
         present(navigationWebBrowser, animated: true, completion: nil)
     }
