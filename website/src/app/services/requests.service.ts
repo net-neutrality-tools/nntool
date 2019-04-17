@@ -89,15 +89,14 @@ export class RequestsService {
 
     postJson<T> (uri: string, data: any, params?: {[key: string]: any}, headers?: {[key: string]: any}): Observable<T> {
         RequestsService.logger.debug('postJson', 'uri', uri, 'params', params, 'data', data);
-
         return this.http.post<T>(
-                uri,
-                JSON.stringify(data),
+            uri,
+            JSON.stringify(data),
             {
-                    headers: this.prepareHeaders(headers),
-                    params: this.prepareParams(params),
-                }
-            )
+                headers: this.prepareHeaders(headers),
+                params: this.prepareParams(params),
+            }
+        )
             .pipe<T>( first() );
     }
 

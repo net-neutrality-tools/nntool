@@ -25,6 +25,7 @@ export abstract class BarUI<T extends TestImplementation<TS>, TS extends TestSta
     private barWidth: number;
     private barLength: number;
     private drawing: boolean = false;
+    private active: boolean;
 
     private translations: {[key: string]: any};
     private barColors: {[key: string]: string};
@@ -75,6 +76,15 @@ export abstract class BarUI<T extends TestImplementation<TS>, TS extends TestSta
     private handleState = (state: BarUIState) => {
         this.currentState = state;
         this.draw(this.currentState);
+    }
+
+    public setActive = (active: boolean) => {
+        this.active = active;
+        if (this.active && this.canvas) {
+            setTimeout(() => {
+                this.resizeEvent();
+            }, 0);
+        }
     }
 
     private draw = (state: BarUIState) => {

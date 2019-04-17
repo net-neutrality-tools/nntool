@@ -6,8 +6,6 @@ import {BarUIState} from "../tests-ui/bar/bar-ui-state";
 import {PortBlockingTestImplementation} from "../tests-implementation/port-blocking/port-blocking-test-implementation";
 import {PortBlockingTestState} from "../tests-implementation/port-blocking/port-blocking-test-state";
 import {PortBlockingTestTypeEnum} from "../tests-implementation/port-blocking/enums/port-blocking-test-type";
-import {GaugeUIStateEnum} from "../tests-ui/gauge/enums/gauge-ui-state.enum";
-import {SpeedTestStateEnum} from "../tests-implementation/speed/enums/speed-test-state.enum";
 import {BarUIShowableTestTypeEnum} from "../tests-ui/bar/enums/bar-ui-showable-test-type.enum";
 
 @Component({

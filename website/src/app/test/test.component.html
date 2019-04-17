@@ -1,42 +1,33 @@
 <!-- #section-intro -->
 <section class="section" id="section-intro">
     <div id="nettest-container">
-        <test-series [autostart]="false" (currentTestIndex)="setCurrentIndex($event)">
-            <speed-test-gauge
-                    [hidden]="!(user && user.acceptTC && screenNr === 1)"
-                    [visible]="user && user.acceptTC && screenNr === 1"
-                    [autostart]="false"
-                    (errorMsgChange)="errorMsg = $event"
-                    (measurementLinkChange)="measurementLink = $event"
-                    (testInProgressChange)="testInProgress = $event"
-                    *ngIf="currentIndex === 1"
-            >
-            </speed-test-gauge>
-            <port-blocking-test-bar
-                    [hidden]="!(user && user.acceptTC && screenNr === 1)"
-                    [visible]="user && user.acceptTC && screenNr === 1"
-                    [autostart]="false"
-                    (errorMsgChange)="errorMsg = $event"
-                    (measurementLinkChange)="measurementLink = $event"
-                    (testInProgressChange)="testInProgress = $event"
-                    *ngIf="currentIndex === 2"
-            >
-            </port-blocking-test-bar>
-        </test-series>
-        <!--<speed-test-gauge
-                [hidden]="!(user && user.acceptTC && screenNr === 1)"
-                [visible]="user && user.acceptTC && screenNr === 1"
-                [autostart]="autostart"
-                (errorMsgChange)="errorMsg = $event"
-                (measurementLinkChange)="measurementLink = $event"
-                (testInProgressChange)="testInProgress = $event"
-        >
-        </speed-test-gauge>-->
         <div class="screen-start"
              *ngIf="user && user.acceptTC && screenNr === 0"
              [_screenNr]="screenNr"
              (_screenNrChange)="screenNr = $event"
         ></div>
+        <test-series *ngIf="user && user.acceptTC && measurementRequested"
+                     [autostart]="autostart"
+                     [hidden]="!(user && user.acceptTC && screenNr === 1)"
+                     [visible]="user && user.acceptTC && screenNr === 1"
+        >
+            <speed-test-gauge #startableTest
+                              [autostart]="false"
+                              (finished)="speedTestFinished($event)"
+                              (errorMsgChange)="errorMsg = $event"
+                              (measurementLinkChange)="measurementLink = $event"
+                              (testInProgressChange)="testInProgress = $event"
+            >
+            </speed-test-gauge>
+            <port-blocking-test-bar #startableTest
+                                    [autostart]="false"
+                                    (finished)="portBlockingTestFinished($event)"
+                                    (errorMsgChange)="errorMsg = $event"
+                                    (measurementLinkChange)="measurementLink = $event"
+                                    (testInProgressChange)="testInProgress = $event"
+            >
+            </port-blocking-test-bar>
+        </test-series>
         <div
                 class="screen-tc" id="nettest-tc"
                 *ngIf="user && !user.acceptTC"

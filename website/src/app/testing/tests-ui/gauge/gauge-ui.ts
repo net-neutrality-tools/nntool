@@ -18,6 +18,8 @@ export abstract class GaugeUI<T extends TestImplementation<TS>, TS extends TestS
     extends Test<GaugeUIState, T, TS>
     implements AfterViewInit {
 
+    private active: boolean;
+
     private config: WebsiteSettings;
     protected testGauge: BaseMeasurementGauge;
 
@@ -29,6 +31,15 @@ export abstract class GaugeUI<T extends TestImplementation<TS>, TS extends TestS
 
     private handleState = (state: GaugeUIState) => {
         this.testGauge.onStateChange(state);
+    }
+
+    public setActive = (active: boolean) => {
+        this.active = active;
+        if (this.active && this.testGauge) {
+            setTimeout(() => {
+                this.testGauge.resizeEvent();
+            }, 0);
+        }
     }
 
     ngAfterViewInit () {

@@ -10,6 +10,7 @@ import {UserInfo, UserService} from "../services/user.service";
 import {ActivatedRoute, ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot} from "@angular/router";
 import {Observable} from "rxjs";
 import {AppService} from "../services/app.service";
+import {TestService} from "../services/test/test.service";
 
 @Injectable()
 export class TestGuard implements CanDeactivate<BaseNetTestComponent> {
@@ -34,6 +35,7 @@ export abstract class BaseNetTestComponent implements OnInit, OnDestroy {
     errorMsg: string = null;
     measurementLink: string = null;
     protected _screenNr: number = 0;
+    protected measurementRequested: boolean = false;
     private _testInProgress: boolean = false;
 
     format: (value: any, setting: any) => any = formatUtils;
@@ -65,12 +67,13 @@ export abstract class BaseNetTestComponent implements OnInit, OnDestroy {
     }
 
     get autostart (): boolean {
+        const test = typeof this.activatedRoute.snapshot.queryParams['start'];
         return typeof this.activatedRoute.snapshot.queryParams['start'] !== "undefined" && this.screenNr === 1;
     }
 
     constructor (
-        protected configService: ConfigService, protected userService: UserService,
-        protected translateService: TranslateService,
+        protected testService: TestService, protected configService: ConfigService,
+        protected userService: UserService, protected translateService: TranslateService,
         protected requests: RequestsService, protected elementRef: ElementRef,
         protected zone: NgZone, protected activatedRoute: ActivatedRoute, protected appService: AppService,
     ) {
@@ -79,6 +82,9 @@ export abstract class BaseNetTestComponent implements OnInit, OnDestroy {
     ngOnInit () {
         this.config = this.configService.getConfig();
         this.screenNr = 0;
+        if (this.user.acceptTC) {
+            this.requestMeasurement();
+        }
     }
 
     ngOnDestroy (): void {
@@ -92,5 +98,12 @@ export abstract class BaseNetTestComponent implements OnInit, OnDestroy {
     agree (): void {
         this.user.acceptTC = true;
         this.userService.save();
+        this.requestMeasurement();
+    }
+
+    private requestMeasurement (): void {
+        this.testService.newMeasurement().subscribe(response => {
+            this.measurementRequested = true;
+        });
     }
 }
