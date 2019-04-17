@@ -46,7 +46,7 @@ public class IpResource {
 	})*/
 	@GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ApiResponse<IpResponse>> getIp(HttpServletRequest request) throws UnknownHostException {
-
+		// TODO: read other header fields to get forwarded ip from reverse proxy
 		final IpResponse r = new IpResponse(InetAddress.getByName(request.getRemoteAddr()));
 		return ResponseHelper.ok(r);
 	}

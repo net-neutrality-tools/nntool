@@ -8,17 +8,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.common.LmapFunctionDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.common.LmapOptionDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapActionDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapEventDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapEventTypeDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapScheduleDto.ExecutionMode;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapImmediateEventDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapScheduleDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapScheduleDto.ExecutionMode;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapStopDurationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
@@ -27,25 +24,29 @@ import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 @Service
 public class MeasurementConfigurationService {
 	
-	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(MeasurementConfigurationService.class);
 	
 	@Autowired
 	private StorageService storageService;
 	
-	public LmapControlDto getLmapControlDtoForCapabilities (final LmapCapabilityDto capabilities) {
+	public LmapControlDto getLmapControlDtoForCapabilities(final LmapCapabilityDto capabilities) {
 		final LmapControlDto ret = new LmapControlDto();
 		
+		ret.setCapabilities(capabilities);
 		ret.setTasks(getTaskListForCapabilities(capabilities));
 		ret.setEvents(getImmediateEventList());
 		ret.setSchedules(getLmapScheduleList(ret.getEvents().get(0).getName(), ret.getTasks()));
+		
 		return ret;
 	}
 	
-	/*
-	 * Fetches the matching task configurations for the given capabilities
+	/**
+	 * Fetches the matching task configurations for the given capabilities.
+	 * 
+	 * @param capabilities
+	 * @return
 	 */
-	private List<LmapTaskDto> getTaskListForCapabilities (final LmapCapabilityDto capabilities) {
+	private List<LmapTaskDto> getTaskListForCapabilities(final LmapCapabilityDto capabilities) {
 		final List<LmapTaskDto> ret = new ArrayList<>();
 		
 		for (LmapCapabilityTaskDto capability : capabilities.getTasks()) {
@@ -74,7 +75,7 @@ public class MeasurementConfigurationService {
 		return ret;
 	}
 	
-	private List<LmapScheduleDto> getLmapScheduleList (final String eventName, final List<LmapTaskDto> taskList) {
+	private List<LmapScheduleDto> getLmapScheduleList(final String eventName, final List<LmapTaskDto> taskList) {
 		final List<LmapScheduleDto> ret = new ArrayList<>();
 		
 		final LmapScheduleDto schedule = new LmapScheduleDto();
@@ -101,15 +102,19 @@ public class MeasurementConfigurationService {
 		return ret;
 	}
 	
-	private LmapTaskDto getMeasurementTaskConfiguration (final MeasurementTypeDto name, final String version) {
+	private LmapTaskDto getMeasurementTaskConfiguration(final MeasurementTypeDto name, final String version) {
 		if (name == null || version == null) {
 			return null;
 		}
-		final LmapTaskDto ret = storageService.getTaskDto(name, version);
+		
 		final List<String> tagList = new ArrayList<String>();
-		ret.setTagList(tagList);
 		tagList.add(version);
 		
+		final LmapTaskDto ret = storageService.getTaskDto(name, version);
+		
+		if (ret != null) {
+			ret.setTagList(tagList);
+		}
 
 		return ret;
 	}
