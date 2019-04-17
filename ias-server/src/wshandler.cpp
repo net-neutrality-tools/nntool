@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-16
+ *      \date Last update: 2019-04-08
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -140,7 +140,7 @@ CWsHandler::CWsHandler(sockaddr_in6 *pClient, int nSocket, string nClientIp, boo
     showStopped                 = true;
     showRttStart                = true;
     
-    certDir                     = "/var/opt/common-server/certs/";
+    certDir                     = "/var/opt/ias-server/certs/";
 }
 
 

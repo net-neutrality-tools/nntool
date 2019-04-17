@@ -14,6 +14,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
+import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import io.swagger.annotations.ApiParam;
 
@@ -47,7 +48,12 @@ public class MeasurementResultResource {
 	})
 	@PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ApiResponse<MeasurementResultResponse>> postMeasurement(@ApiParam("Measurement result") @RequestBody LmapReportDto lmapReportDto) {
-		final MeasurementResultResponse resultResponse = storageService.save(lmapReportDto);
+		final MeasurementResultResponse resultResponse;
+		try {
+			resultResponse = storageService.save(lmapReportDto);
+		} catch (Exception ex) {
+			throw new StorageServiceException(ex);
+		}
 		logger.info(String.format("Saved result with uuid: %s and open-data uuid: %s", resultResponse.getUuid(), resultResponse.getOpenDataUuid()));
 		return ResponseHelper.ok(resultResponse);
 	}

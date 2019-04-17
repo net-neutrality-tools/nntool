@@ -67,7 +67,7 @@ dependencies
 
 task copyNativeScript(type:Exec) {
     environment "PROJECT_DIR", projectDir.getPath()
-    workingDir projectDir.getPath()+'/../common-mobile'
+    workingDir projectDir.getPath()+'/../ias-mobile'
     commandLine './copy_app_android.sh'
 }
 

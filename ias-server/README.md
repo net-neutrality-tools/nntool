@@ -13,21 +13,21 @@ Linux (any Version)
 ### Build ###
 With fullfilled prerequisites perform the following steps:
 1. Compile and deploy customized version of *libnopoll* in dir *libnopoll* via *autogen.sh*, *make* and *make install*
-2. Compile *common-server* via *INSTALL*
-3. Create dir */etc/common-server/*
-4. Copy trace.ini to */etc/common-server/*
-5. Create dir */var/log/commons-server/*
+2. Compile *ias-server* via *INSTALL*
+3. Create dir */etc/ias-server/*
+4. Copy trace.ini to */etc/ias-server/*
+5. Create dir */var/log/ias-server/*
 
 ---------------
 
 ## Execution ##
-Run *build/common-server*. Add the *-d* option for daemon mode.
+Run *build/ias-server*. Add the *-d* option for daemon mode.
 
 ## Docker container ##
 
 ```bash
 cd <nntool_eu_directory>
-docker build -f common-server.Dockerfile -t common-server . 
-docker run --rm -it common-server
+docker build -f ias-server.Dockerfile -t ias-server . 
+docker run --rm -it ias-server
 ```
 
