@@ -51,6 +51,10 @@ public class PartTreeMangoBasedCouchDbQuery extends AbstractCouchDbRepositoryQue
 			return docs.stream();
 		}
 		
-		return docs.get(0); // TODO: check if there's at least one element
+		if (docs.size() > 0) {
+			return docs.get(0);
+		}
+		
+		return null;
 	}
 }
