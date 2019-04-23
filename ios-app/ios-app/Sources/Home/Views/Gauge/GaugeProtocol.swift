@@ -20,7 +20,7 @@ import UIKit
 ///
 public enum GaugePhase: Int {
     case initialize = 0
-    case ping
+    case rtt
     case down
     case up
 }

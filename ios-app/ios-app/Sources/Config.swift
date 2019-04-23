@@ -34,4 +34,15 @@ let MEASUREMENT_AGENT =
 
 ////
 
-let APP_TINT_COLOR = UIColor(rgb: 0x4D515D)
+let BEREC_WHITE      = UIColor.white
+let BEREC_LIGHT_GRAY = UIColor(rgb: 0xEFEFEF)
+let BEREC_GRAY       = UIColor(rgb: 0xD0D0D0)
+let BEREC_BLUE       = UIColor(rgb: 0x8C94A9)
+let BEREC_DARK_GRAY  = UIColor(rgb: 0x4D515D)
+let BEREC_DARK_BLUE  = UIColor(rgb: 0x29348A)
+let BEREC_RED        = UIColor(rgb: 0x921F56)
+
+////
+
+let APP_TINT_COLOR = BEREC_DARK_GRAY
+

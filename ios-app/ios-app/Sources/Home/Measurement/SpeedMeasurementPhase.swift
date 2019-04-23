@@ -1,4 +1,4 @@
-// ios-app: QoSProgram.swift, created on 11.04.19
+// ios-app: SpeedMeasurementPhase.swift, created on 23.04.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,20 +16,27 @@
  ******************************************************************************/
 
 import Foundation
-import MeasurementAgentKit
-import QoSKit
 
-///
-class QoSProgram: ProgramProtocol {
-    //typealias Delegate = QoSProgramDelegate
-
-    var delegate: QoSProgramDelegate?
-
-    func run() throws -> [AnyHashable: Any] {
-        print("----\nRUN QOS PROGRAM\n----")
-        sleep(5)
-        print("----\nQOS PROGRAM finished\n----")
-        
-        return [:]
+enum SpeedMeasurementPhase: String {
+    case initialize = "init"
+    case rtt        = "rtt"
+    case download   = "download"
+    case upload     = "upload"
+    
+    var icon: IconFont {
+        get {
+            switch self {
+                case .initialize: return .hourglass // TODO
+                case .rtt:        return .rtt
+                case .download:   return .down
+                case .upload:     return .up
+            }
+        }
+    }
+    
+    var localizedString: String {
+        get {
+            return NSLocalizedString("measurement.speed.phase.\(self.rawValue)", comment: "Translation of speed measurement phase '\(self.rawValue)'")
+        }
     }
 }

@@ -83,6 +83,7 @@
 		E0B9A377224C06A9002AB640 /* IconFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A376224C06A9002AB640 /* IconFont.swift */; };
 		E0B9A379224C0802002AB640 /* UIKit+IconFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A378224C0802002AB640 /* UIKit+IconFont.swift */; };
 		E0B9A37D224C1349002AB640 /* UIViewController+WebBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A37C224C1349002AB640 /* UIViewController+WebBrowser.swift */; };
+		E0E9BB10226F57DA00146699 /* SpeedMeasurementPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E9BB0F226F57DA00146699 /* SpeedMeasurementPhase.swift */; };
 		E860F5CA7C59FD468EEE2892 /* Pods_All_ios_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91316B94C5B307833124DBA0 /* Pods_All_ios_app.framework */; };
 /* End PBXBuildFile section */
 
@@ -229,6 +230,7 @@
 		E0B9A376224C06A9002AB640 /* IconFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconFont.swift; sourceTree = "<group>"; };
 		E0B9A378224C0802002AB640 /* UIKit+IconFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+IconFont.swift"; sourceTree = "<group>"; };
 		E0B9A37C224C1349002AB640 /* UIViewController+WebBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+WebBrowser.swift"; sourceTree = "<group>"; };
+		E0E9BB0F226F57DA00146699 /* SpeedMeasurementPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedMeasurementPhase.swift; sourceTree = "<group>"; };
 		FAC9DAE7413ECAE8092FFC80 /* Pods_All_Speed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_Speed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -521,6 +523,7 @@
 			children = (
 				E0B9A33422498127002AB640 /* MeasurementViewController.swift */,
 				E0B9A370224B9A66002AB640 /* QoSMeasurementViewController.swift */,
+				E0E9BB0F226F57DA00146699 /* SpeedMeasurementPhase.swift */,
 			);
 			path = Measurement;
 			sourceTree = "<group>";
@@ -1001,6 +1004,7 @@
 				E0B9A373224B9CD0002AB640 /* QoSProgressView.swift in Sources */,
 				E0B9A345224A61DB002AB640 /* SpeedMeasurementGauge.swift in Sources */,
 				E0B9A359224AB092002AB640 /* HomeScreenDeviceInformationView.swift in Sources */,
+				E0E9BB10226F57DA00146699 /* SpeedMeasurementPhase.swift in Sources */,
 				E0B9A343224A6017002AB640 /* AbstractTwoArcGaugeView.swift in Sources */,
 				E0B9A351224A8F65002AB640 /* NibView.swift in Sources */,
 				E026A5822241271700BACDB5 /* AppDelegate.swift in Sources */,

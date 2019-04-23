@@ -22,9 +22,32 @@ import UIKit
 @IBDesignable class ProgressInfoBar: NibView {
 
     @IBOutlet private var leftIconLabel: UILabel?
-    @IBOutlet private var leftTextLabel: UILabel?
+    @IBOutlet private var leftValueLabel: UILabel?
 
     @IBOutlet private var rightIconLabel: UILabel?
-    @IBOutlet private var rightTextLabel: UILabel?
+    @IBOutlet private var rightValueLabel: UILabel?
 
+    func setLeftValue(value: String, newIcon: IconFont? = nil) {
+        if let icon = newIcon {
+            leftIconLabel?.icon = icon
+        }
+        
+        leftValueLabel?.text = value
+    }
+    
+    func setRightValue(value: String, newIcon: IconFont? = nil) {
+        if let icon = newIcon {
+            rightIconLabel?.icon = icon
+        }
+        
+        rightValueLabel?.text = value
+    }
+    
+    func reset() {
+        leftIconLabel?.icon = nil
+        leftValueLabel?.text = nil
+        
+        rightIconLabel?.icon = nil
+        rightValueLabel?.text = nil
+    }
 }

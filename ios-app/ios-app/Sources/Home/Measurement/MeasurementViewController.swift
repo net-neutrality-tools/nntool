@@ -26,8 +26,10 @@ class MeasurementViewController: CustomNavigationBarViewController {
 
     @IBOutlet private var qosMeasurementViewController: QoSMeasurementViewController?
 
+    @IBOutlet private var progressInfoBar: ProgressInfoBar?
     @IBOutlet private var speedMeasurementGaugeView: SpeedMeasurementGaugeView?
-
+    @IBOutlet private var speedMeasurementBasicResultView: SpeedMeasurementBasicResultView?
+    
     private var measurementRunner: MeasurementRunner?
 
     private var progressAlert: UIAlertController?
@@ -39,7 +41,7 @@ class MeasurementViewController: CustomNavigationBarViewController {
         super.viewDidLoad()
 
         navigationItem.applyIconFontAttributes()
-        
+
         startMeasurement()
     }
 
@@ -77,6 +79,10 @@ class MeasurementViewController: CustomNavigationBarViewController {
     private func startMeasurement() {
         hideNavigationItems()
 
+        progressInfoBar?.reset()
+        speedMeasurementGaugeView?.reset()
+        speedMeasurementBasicResultView?.reset()
+        
         measurementRunner = MEASUREMENT_AGENT.newMeasurementRunner()
         // TODO: fail measurement if runner is nil (could be because agent is not registered)
 
@@ -170,16 +176,51 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
     func measurementRunner(_ runner: MeasurementRunner, willStartProgramWithName name: String, implementation: /*AnyProgram<Any>*/ProgramProtocol) {
         print("!^! willStart program \(name)")
 
-        //implementation.delegate = self
+        (implementation as? IASProgram)?.delegate = self
+        (implementation as? QoSProgram)?.delegate = self
     }
 
     func measurementRunner(_ runner: MeasurementRunner, didFinishProgramWithName name: String, implementation: /*AnyProgram<Any>*/ProgramProtocol) {
         print("!^! didFinish program \(name)")
 
-        //implementation.delegate = nil
+        (implementation as? IASProgram)?.delegate = nil
+        (implementation as? QoSProgram)?.delegate = nil
     }
 }
 
-/*extension MeasurementViewController: IASProgramDelegate {
+extension MeasurementViewController: IASProgramDelegate {
     
-}*/
+    func iasMeasurement(_ ias: IASProgram, didStartPhase phase: SpeedMeasurementPhase) {
+        print("did start phase: \(phase)")
+        
+        DispatchQueue.main.async {
+            self.progressInfoBar?.setRightValue(value: "", newIcon: phase.icon)
+            self.speedMeasurementGaugeView?.setActivePhase(phase: phase)
+        }
+    }
+    
+    func iasMeasurement(_ ias: IASProgram, didMeasurePrimaryValue value: Double, inPhase phase: SpeedMeasurementPhase) {
+        DispatchQueue.main.async {
+            
+            switch phase {
+            case .rtt:
+                let msValue = value / Double(NSEC_PER_MSEC)
+                let msString = String(format: "%.3f", msValue)
+            
+                self.progressInfoBar?.setRightValue(value: "\(msString) ms") // TODO: translation, unit from phase enum?
+                self.speedMeasurementBasicResultView?.setText(msString, forPhase: phase)
+            case .download, .upload:
+                let mbpsValue = value / 1_000_000.0
+                let mbpsString = String(format: "%.3f", mbpsValue)
+                
+                self.progressInfoBar?.setRightValue(value: "\(mbpsString) Mbit/s") // TODO: translation, unit from phase enum?
+                self.speedMeasurementBasicResultView?.setText(mbpsString, forPhase: phase)
+            default: break//reset()
+            }
+        }
+    }
+}
+
+extension MeasurementViewController: QoSProgramDelegate {
+    
+}

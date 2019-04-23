@@ -24,15 +24,14 @@ class IASProgram: NSObject, ProgramProtocol {
     //typealias Delegate = IASProgramDelegate
 
     //var delegate: /*IASProgramDelegate*/Any?
+    
+    var delegate: IASProgramDelegate?
 
     let speed = Speed()
+    
+    let measurementFinishedSemaphore = DispatchSemaphore(value: 0)
 
     func run() throws -> [AnyHashable: Any] {
-        print("----\nRUN IAS PROGRAM\n----")
-        sleep(5)
-        print("----\nIAS PROGRAM finished\n----")
-        return [:]
-
         speed.speedDelegate = self
 
         //let tool = Tool()
@@ -148,28 +147,58 @@ class IASProgram: NSObject, ProgramProtocol {
             ]
         ])
 
+        _ = measurementFinishedSemaphore.wait(timeout: DispatchTime.distantFuture) // TODO: result; timeout
+        
+        return [:]
     }
+    
+    private var currentPhase = SpeedMeasurementPhase.initialize
 }
 
 extension IASProgram: SpeedDelegate {
-
+    
     func showKpisFromResponse(response: [AnyHashable: Any]!) {
         //print(response.description)
 
+        print("showKpisFromResponse (delegate: \(delegate))")
+        
+        let newPhase = SpeedMeasurementPhase(rawValue: response["test_case"] as? String ?? "init") ?? currentPhase
+        if newPhase != currentPhase {
+            currentPhase = newPhase
+            delegate?.iasMeasurement(self, didStartPhase: currentPhase)
+        }
+        
         print(response["cmd"])
         print(response["test_case"])
         print(response["msg"])
+        
+        if let primaryValue: Double = {
+            switch currentPhase {
+            case .rtt: return (response["rtt_info"] as? [AnyHashable: Any])?["min_ns"] as? Double
+            case .download: return (response["download_info"] as? [[AnyHashable: Any]])?.last?["throughput_avg_bps"] as? Double
+            case .upload: return (response["upload_info"] as? [[AnyHashable: Any]])?.last?["throughput_avg_bps"] as? Double
+            default:
+                return nil
+            }
+        }() {
+            delegate?.iasMeasurement(self, didMeasurePrimaryValue: primaryValue, inPhase: currentPhase)
+        }
     }
 
     func measurementDidLoad(withResponse response: [AnyHashable: Any]!, withError error: Error!) {
         //print(response)
         //print(error)
 
+        print("measurementDidLoad")
+        
         speed.measurementStart()
+        delegate?.iasMeasurement(self, didStartPhase: .initialize)
     }
 
     func measurementCallback(withResponse response: [AnyHashable: Any]!) {
         showKpisFromResponse(response: response)
+        
+        print("measurementCallback")
     }
 
     func measurementDidComplete(withResponse response: [AnyHashable: Any]!, withError error: Error!) {
@@ -177,10 +206,14 @@ extension IASProgram: SpeedDelegate {
         print(error)
 
         print("FIN")
+        
+        measurementFinishedSemaphore.signal()
     }
 
     func measurementDidStop() {
         print("STOP")
+        
+        measurementFinishedSemaphore.signal()
     }
 
     func measurementDidClearCache() {

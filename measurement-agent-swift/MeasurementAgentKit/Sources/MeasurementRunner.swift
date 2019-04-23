@@ -112,11 +112,16 @@ public class MeasurementRunner {
                 
                 let programInstance = programConfiguration.newInstance(task)
                 
+                delegate?.measurementRunner(self, willStartProgramWithName: task.name!, implementation: programInstance) // TODO: !
+                
                 do {
+                    // TODO: how to cancel measurement?
                     let result = try programInstance.run()
                 } catch {
                     // TODO
                 }
+                
+                delegate?.measurementRunner(self, didFinishProgramWithName: task.name!, implementation: programInstance) // !
             }
             
             print("-- all finished")

@@ -67,28 +67,28 @@ import UIKit
     }
 
     ///
-    @IBInspectable var baseColor: UIColor = UIColor(rgb: 0xEFEFEF) {
+    @IBInspectable var baseColor: UIColor = BEREC_LIGHT_GRAY {
         didSet {
             update()
         }
     }
 
     ///
-    @IBInspectable var progressColor: UIColor = UIColor(rgb: 0x29348A) {
+    @IBInspectable var progressColor: UIColor = BEREC_DARK_BLUE {
         didSet {
             update()
         }
     }
 
     ///
-    @IBInspectable var valueColor: UIColor = UIColor(rgb: 0x921F56) {
+    @IBInspectable var valueColor: UIColor = BEREC_RED {
         didSet {
             update()
         }
     }
 
     ///
-    @IBInspectable var textColor: UIColor = UIColor.white {
+    @IBInspectable var textColor: UIColor = BEREC_WHITE {
         didSet {
             update()
         }
@@ -115,7 +115,12 @@ import UIKit
 
     ///
     func update() {
-
+        setNeedsDisplay()
+    }
+    
+    func reset() {
+        progress = 0
+        value = 0
     }
 
     ///

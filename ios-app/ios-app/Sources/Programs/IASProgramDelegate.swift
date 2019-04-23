@@ -20,4 +20,7 @@ import Foundation
 ///
 protocol IASProgramDelegate {
 
+    func iasMeasurement(_ ias: IASProgram, didStartPhase phase: SpeedMeasurementPhase)
+    
+    func iasMeasurement(_ ias: IASProgram, didMeasurePrimaryValue value: Double, inPhase phase: SpeedMeasurementPhase)
 }

@@ -48,7 +48,7 @@ extension UIViewController {
         webBrowserViewController.delegate = delegate
 
         //webBrowserViewController.language = .english
-        webBrowserViewController.tintColor = UIColor(rgb: 0x4D515D)
+        webBrowserViewController.tintColor = APP_TINT_COLOR
         //webBrowserViewController.barTintColor = ...
         webBrowserViewController.isToolbarHidden = true
         //webBrowserViewController.isShowActionBarButton = true

@@ -20,11 +20,11 @@ import UIKit
 ///
 @IBDesignable class SpeedMeasurementGauge: AbstractTwoArcGaugeView {
 
-    var phases = [ // TODO: make translatable
-        "Init",
-        "Ping",
-        "Download",
-        "Upload"
+    var phases: [SpeedMeasurementPhase] = [
+        .initialize,
+        .rtt,
+        .download,
+        .upload
     ]
 
     let speedUnits = [ // TODO: make translatable
@@ -36,16 +36,6 @@ import UIKit
     ]
 
     ///
-    override func initGauge() {
-
-    }
-
-    ///
-    override func update() {
-        setNeedsDisplay()
-    }
-
-    ///
     override func draw(_ rect: CGRect) {
         super.draw(rect)
 
@@ -53,12 +43,14 @@ import UIKit
             return
         }
 
-        let centerPoint = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
+        let centerPoint = CGPoint(x: bounds.midX, y: bounds.midY)
 
         let angleRad = CoreGraphicsHelper.deg2rad(angle)
         let fixedProgress = CGFloat(min(1, max(0, progress)))
         let fixedValue = CGFloat(min(1, max(0, value)))
 
+        let anglePerPhase = CGFloat(angle/CGFloat(phases.count))
+        
         context.saveGState()
 
         //
@@ -86,7 +78,7 @@ import UIKit
 
         let z = CGFloat(currentPhase.rawValue)
 
-        let progressAngle = (z * angle/CGFloat(phases.count)) + (angle/CGFloat(phases.count)) * fixedProgress
+        let progressAngle = (z * anglePerPhase) + anglePerPhase * fixedProgress
 
         context.addArc(center: centerPoint, radius: outerArcRadius, startAngle: 0, endAngle: CoreGraphicsHelper.deg2rad(progressAngle), clockwise: false)
         context.strokePath()
@@ -102,7 +94,7 @@ import UIKit
         context.setStrokeColor(textColor.cgColor)
         context.setLineWidth(2)
 
-        for i: CGFloat in stride(from: CGFloat(angle/CGFloat(phases.count)), to: CGFloat(angle), by: CGFloat(angle/CGFloat(phases.count))) {
+        for i: CGFloat in stride(from: anglePerPhase, to: CGFloat(angle), by: anglePerPhase) {
             let phi = CoreGraphicsHelper.deg2rad(i)
 
             let p1 = CoreGraphicsHelper.getPointOnCircle(radius: outerArcRadius + arcWidth/2, center: centerPoint, phi: phi)
@@ -130,10 +122,18 @@ import UIKit
         context.scaleBy(x: 1, y: -1)
 
         var c = 0
-        for i in stride(from: 0, to: angle, by: angle/CGFloat(phases.count)) {
-            let a = CoreGraphicsHelper.deg2rad(-CGFloat(i + (angle/CGFloat(phases.count))/2))
+        for i in stride(from: 0, to: angle, by: anglePerPhase) {
+            let a = CoreGraphicsHelper.deg2rad(-CGFloat(i + (anglePerPhase)/2))
 
-            CoreGraphicsHelper.centreArcPerpendicular(text: phases[c], context: context, radius: outerArcRadius, angle: a, colour: textColor, font: UIFont.systemFont(ofSize: 16), clockwise: true)
+            CoreGraphicsHelper.centreArcPerpendicular(
+                text: phases[c].localizedString,
+                context: context,
+                radius: outerArcRadius,
+                angle: a,
+                colour: textColor,
+                font: UIFont.systemFont(ofSize: 16),
+                clockwise: true
+            )
 
             c += 1
         }
@@ -143,7 +143,15 @@ import UIKit
         for i in stride(from: 0, to: an, by: an/CGFloat(speedUnits.count)) {
             let a = CoreGraphicsHelper.deg2rad(+(CGFloat((an-angle)/2))-CGFloat(i + (an/CGFloat(speedUnits.count))/2))
 
-            CoreGraphicsHelper.centreArcPerpendicular(text: speedUnits[c], context: context, radius: innerArcRadius + 2, angle: a, colour: textColor, font: UIFont.systemFont(ofSize: 10), clockwise: true)
+            CoreGraphicsHelper.centreArcPerpendicular(
+                text: speedUnits[c],
+                context: context,
+                radius: innerArcRadius + 2,
+                angle: a,
+                colour: textColor,
+                font: UIFont.systemFont(ofSize: 10),
+                clockwise: true
+            )
 
             c += 1
         }

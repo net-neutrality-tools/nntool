@@ -47,7 +47,7 @@ class CustomNavigationBarViewController: UIViewController {
     func hideNavigationItems() {
         savedLeftBarItem = navigationItem.leftBarButtonItem
         savedRightBarItem = navigationItem.rightBarButtonItem
-        
+
         navigationItem.setLeftBarButton(nil, animated: true)
         navigationItem.setRightBarButton(nil, animated: true)
         navigationItem.setHidesBackButton(true, animated: false)

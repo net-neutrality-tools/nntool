@@ -212,6 +212,11 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="progressInfoBar" destination="Ovj-et-Dag" id="SkF-EB-GR4"/>
+                        <outlet property="speedMeasurementBasicResultView" destination="MM6-Ex-lJm" id="wDV-Gu-rOY"/>
+                        <outlet property="speedMeasurementGaugeView" destination="43k-dR-OY1" id="VMQ-oe-A0r"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vl1-bK-3IW" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="BIg-mJ-d2h">

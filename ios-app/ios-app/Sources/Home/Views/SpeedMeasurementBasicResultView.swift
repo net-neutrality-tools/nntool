@@ -21,4 +21,22 @@ import UIKit
 ///
 @IBDesignable class SpeedMeasurementBasicResultView: NibView {
 
+    @IBOutlet private var rttValueLabel: UILabel?
+    @IBOutlet private var downloadValueLabel: UILabel?
+    @IBOutlet private var uploadValueLabel: UILabel?
+    
+    func setText(_ text: String, forPhase phase: SpeedMeasurementPhase) {
+        switch phase {
+        case .rtt: rttValueLabel?.text = text
+        case .download: downloadValueLabel?.text = text
+        case .upload: uploadValueLabel?.text = text
+        default: break
+        }
+    }
+    
+    func reset() {
+        rttValueLabel?.text = " " // empty string or nil causes stack view to collapse
+        downloadValueLabel?.text = " "
+        uploadValueLabel?.text = " "
+    }
 }
