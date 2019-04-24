@@ -6,6 +6,9 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
+
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  */

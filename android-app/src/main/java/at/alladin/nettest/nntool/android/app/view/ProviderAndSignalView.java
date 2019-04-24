@@ -7,8 +7,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import at.alladin.nettest.nntool.android.app.R;
-import at.alladin.nettest.nntool.android.app.util.info.NetworkGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.NetworkTypeAware;
+import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
@@ -46,19 +45,7 @@ public class ProviderAndSignalView extends RelativeLayout implements NetworkGath
         Log.i(TAG, event.toString());
 
         if (event != null) {
-            if (event.getNetworkType() == NetworkTypeAware.NETWORK_WIFI
-                    && event.getWifiOperator() != null) {
-                providerText.setText(event.getWifiOperator().getOperatorName());
-            }
-            else if (event.getNetworkType() == NetworkTypeAware.NETWORK_ETHERNET) {
-                providerText.setText("Ethernet");
-            }
-            else if (event.getNetworkType() == NetworkTypeAware.NETWORK_BLUETOOTH) {
-                providerText.setText("Bluetooth");
-            }
-            else if (event.getMobileOperator() != null) {
-                providerText.setText(event.getMobileOperator().getOperatorName());
-            }
+            providerText.setText(event.getOperatorName());
         }
     }
 }

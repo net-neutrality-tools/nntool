@@ -1,4 +1,4 @@
-package at.alladin.nettest.nntool.android.app.util.info;
+package at.alladin.nettest.nntool.android.app.util.info.network;
 
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
@@ -9,7 +9,6 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
-import android.net.NetworkRequest;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -21,6 +20,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import at.alladin.nettest.nntool.android.app.util.info.Gatherer;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
@@ -189,22 +190,25 @@ public class NetworkGatherer extends Gatherer<NetworkGatherer.NetworkChangeEvent
         }
     }
 
-    public final static class NetworkChangeEvent {
+    public final static class NetworkChangeEvent implements OperatorInfo {
 
         /**
          * System.nanoTime()
          */
-        private long timestampNs;
-
-        private Integer networkType;
-
         private WifiOperator wifiOperator;
 
         private MobileOperator mobileOperator;
 
-        public NetworkChangeEvent(final Integer networkType) {
+        private final boolean isConnected;
+
+        private final long timestampNs;
+
+        private final Integer networkType;
+
+        public NetworkChangeEvent(final Integer networkType, final boolean isConnected) {
             this.networkType = networkType;
             this.timestampNs = System.nanoTime();
+            this.isConnected = isConnected;
         }
 
         public WifiOperator getWifiOperator() {
@@ -227,26 +231,41 @@ public class NetworkGatherer extends Gatherer<NetworkGatherer.NetworkChangeEvent
             return timestampNs;
         }
 
-        public void setTimestampNs(long timestampNs) {
-            this.timestampNs = timestampNs;
-        }
-
         public Integer getNetworkType() {
             return networkType;
         }
 
-        public void setNetworkType(Integer networkType) {
-            this.networkType = networkType;
+        public boolean isConnected() {
+            return isConnected;
         }
 
         @Override
         public String toString() {
             return "NetworkChangeEvent{" +
-                    "timestampNs=" + timestampNs +
-                    ", networkType=" + networkType +
-                    ", wifiOperator=" + wifiOperator +
+                    "wifiOperator=" + wifiOperator +
                     ", mobileOperator=" + mobileOperator +
+                    ", isConnected=" + isConnected +
+                    ", timestampNs=" + timestampNs +
+                    ", networkType=" + networkType +
                     '}';
+        }
+
+        @Override
+        public String getOperatorName() {
+            if (getNetworkType() == NetworkTypeAware.NETWORK_WIFI && getWifiOperator() != null) {
+                return getWifiOperator().getOperatorName();
+            }
+            else if (getNetworkType() == NetworkTypeAware.NETWORK_ETHERNET) {
+                return "Ethernet";
+            }
+            else if (getNetworkType() == NetworkTypeAware.NETWORK_BLUETOOTH) {
+                return "Bluetooth";
+            }
+            else if (getMobileOperator() != null) {
+                return getMobileOperator().getOperatorName();
+            }
+
+            return "-";
         }
     }
 
@@ -357,6 +376,11 @@ public class NetworkGatherer extends Gatherer<NetworkGatherer.NetworkChangeEvent
         return result;
     }
 
+    private boolean isConnected() {
+        final NetworkInfo networkInfo = getConnectivityManager().getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
+    }
+
     @TargetApi(Build.VERSION_CODES.M)
     private int getNetworkTypeApi23() {
         int result = TelephonyManager.NETWORK_TYPE_UNKNOWN;
@@ -395,7 +419,7 @@ public class NetworkGatherer extends Gatherer<NetworkGatherer.NetworkChangeEvent
 
         final NetworkChangeEvent event = getCurrentValue();
         if (event == null || lastNetworkType.get() != result) {
-            final NetworkChangeEvent networkChangeEvent = new NetworkChangeEvent(result);
+            final NetworkChangeEvent networkChangeEvent = new NetworkChangeEvent(result, isConnected());
             if (getWifiManager() != null) {
                 final WifiInfo wifiInfo = getWifiManager().getConnectionInfo();
                 if (wifiInfo != null) {

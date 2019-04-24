@@ -3,7 +3,6 @@ package at.alladin.nettest.nntool.android.app.workflow.main;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -16,11 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.internal.GsonBuildConfig;
-
 import java.io.Serializable;
-import java.text.MessageFormat;
-import java.util.List;
 
 import at.alladin.nettest.nntool.android.app.BuildConfig;
 import at.alladin.nettest.nntool.android.app.MainActivity;
@@ -29,11 +24,10 @@ import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
-import at.alladin.nettest.nntool.android.app.util.info.NetworkGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 import at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
-import at.alladin.nntool.client.v2.task.TaskDesc;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
