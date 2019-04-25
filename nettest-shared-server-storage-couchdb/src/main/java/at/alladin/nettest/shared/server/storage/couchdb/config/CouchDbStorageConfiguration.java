@@ -21,6 +21,7 @@ import com.google.gson.JsonParseException;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
 import at.alladin.nettest.spring.couchdb.config.CouchDbConfiguration;
@@ -52,12 +53,50 @@ public class CouchDbStorageConfiguration extends CouchDbConfiguration {
 		final GsonBuilder gsonBuilder = super.couchDbGsonBuilder();
 		
 		gsonBuilder.registerTypeAdapter(Measurement.class, new MeasurementConverter());
+		gsonBuilder.registerTypeAdapter(Settings.class, new SettingsConverter());
 		
 		logger.info("registered measurement enabled gsonBuilder");
 		
 		return gsonBuilder;
 	}
-	
+
+	public static class SettingsConverter implements JsonDeserializer<Settings> {
+
+		private static Gson gson = new Gson();
+
+		@Override
+		public Settings deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+			final Settings ret = gson.fromJson(json, Settings.class);
+
+			final JsonElement measurementsJson = json.getAsJsonObject().get("measurements");
+			if (measurementsJson != null && measurementsJson.isJsonObject()) {
+				for (Entry<String, JsonElement> entry : measurementsJson.getAsJsonObject().entrySet()) {
+					final MeasurementTypeDto type;
+					try {
+						type = MeasurementTypeDto.valueOf(entry.getKey());
+					} catch (IllegalArgumentException ex) {
+						ex.printStackTrace();
+						continue;
+					}
+					Class<? extends Settings.SubMeasurementSettings> subMeasurementClass =
+							Settings.SubMeasurementSettings.class;
+					switch (type) {
+						case QOS:
+							subMeasurementClass = Settings.QoSMeasurementSettings.class;
+							break;
+						case SPEED:
+							subMeasurementClass = Settings.SpeedMeasurementSettings.class;
+							break;
+					}
+
+					ret.getMeasurements().put(type, gson.fromJson(entry.getValue(), subMeasurementClass));
+				}
+			}
+
+			return ret;
+		}
+	}
+
 	public static class MeasurementConverter implements JsonDeserializer<Measurement> {
 		
 		private static Gson gson = new Gson();
