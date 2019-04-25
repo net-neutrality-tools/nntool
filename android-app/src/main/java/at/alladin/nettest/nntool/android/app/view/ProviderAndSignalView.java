@@ -7,12 +7,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import at.alladin.nettest.nntool.android.app.R;
-import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.network.NetworkChangeEvent;
+import at.alladin.nettest.nntool.android.app.util.info.network.NetworkChangeListener;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  */
-public class ProviderAndSignalView extends RelativeLayout implements NetworkGatherer.NetworkChangeListener {
+public class ProviderAndSignalView extends RelativeLayout implements NetworkChangeListener {
 
     private final static String TAG = ProviderAndSignalView.class.getSimpleName();
 
@@ -41,7 +42,7 @@ public class ProviderAndSignalView extends RelativeLayout implements NetworkGath
     }
 
     @Override
-    public void onNetworkChange(NetworkGatherer.NetworkChangeEvent event) {
+    public void onNetworkChange(NetworkChangeEvent event) {
         Log.i(TAG, event.toString());
 
         if (event != null) {
