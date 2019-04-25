@@ -31,7 +31,6 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.Settin
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationQoSRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationSpeedRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.BriefMeasurementResponseMapperImpl;
-import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.DetailMeasurementResponseMapperImpl;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapperImpl;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportModelMapperImpl;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapperImpl;
@@ -54,7 +53,6 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsRespon
 	CouchDbStorageService.class,
 	QoSEvaluationService.class,
 	BriefMeasurementResponseMapperImpl.class,
-	DetailMeasurementResponseMapperImpl.class
 })
 @AutoConfigureJsonTesters
 public class CouchDbStorageServiceTest {
