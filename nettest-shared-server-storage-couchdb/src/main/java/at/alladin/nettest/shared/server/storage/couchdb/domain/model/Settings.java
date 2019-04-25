@@ -72,7 +72,7 @@ public class Settings {
 	@Expose
 	@SerializedName("measurements")
 	@JsonProperty("measurements")
-	private Map<String, SubMeasurementSettings> measurements;
+	private Map<MeasurementTypeDto, SubMeasurementSettings> measurements;
 	
 	public String getId() {
 		return id;
@@ -118,7 +118,7 @@ public class Settings {
 		return measurements;
 	}
 
-	public void setMeasurements(Map<String, SubMeasurementSettings> measurements) {
+	public void setMeasurements(Map<MeasurementTypeDto, SubMeasurementSettings> measurements) {
 		this.measurements = measurements;
 	}
 
