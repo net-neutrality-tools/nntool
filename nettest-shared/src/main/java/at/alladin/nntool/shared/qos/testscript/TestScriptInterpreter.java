@@ -112,8 +112,8 @@ public class TestScriptInterpreter {
 	 * @param command
 	 * @return
 	 */
-	public static Object interprete(String command, ResultOptions resultOptions) {
-		return interprete(command, null, null, false, resultOptions);
+	public static Object interpret(String command, ResultOptions resultOptions) {
+		return interpret(command, null, null, false, resultOptions);
 	}
 		
 	/**
@@ -121,7 +121,7 @@ public class TestScriptInterpreter {
 	 * @param command
 	 * @return
 	 */
-	public synchronized static Object interprete(String command, Map<String, Field> fieldNameToFieldMap, AbstractResult object, boolean useRecursion, ResultOptions resultOptions) {
+	public synchronized static Object interpret(String command, Map<String, Field> fieldNameToFieldMap, AbstractResult object, boolean useRecursion, ResultOptions resultOptions) {
 
 		if (jsEngine == null) {
 			ScriptEngineManager sem = new ScriptEngineManager();
@@ -143,11 +143,11 @@ public class TestScriptInterpreter {
 				//System.out.println("found control command: " + controlCommand + ", clause: " + mc.group(2));
 				if ("IF".equals(controlCommand)) {
 					if (controlIf(mc.group(2), object)) {
-						toReplace = String.valueOf(interprete(mc.group(3), fieldNameToFieldMap, object, true, resultOptions));
+						toReplace = String.valueOf(interpret(mc.group(3), fieldNameToFieldMap, object, true, resultOptions));
 					}
 				}
 				else if ("SWITCH".equals(controlCommand)) {
-					toReplace = String.valueOf(interprete(controlSwitch(mc.group(2), object, mc.group(3)), fieldNameToFieldMap, object, true, resultOptions));
+					toReplace = String.valueOf(interpret(controlSwitch(mc.group(2), object, mc.group(3)), fieldNameToFieldMap, object, true, resultOptions));
 				}
 				
 				command = command.replace(mc.group(0), (toReplace != null ? toReplace.trim() : ""));
@@ -169,7 +169,7 @@ public class TestScriptInterpreter {
 			while (m.find()) {
 				String replace = m.group(0);
 				//System.out.println("found: " + replace);
-				String toReplace = String.valueOf(interprete(replace, fieldNameToFieldMap, object, false, resultOptions));
+				String toReplace = String.valueOf(interpret(replace, fieldNameToFieldMap, object, false, resultOptions));
 				//System.out.println("replacing: " + m.group(0) + " -> " + toReplace);
 				command = command.replace(m.group(0), toReplace);
 			}

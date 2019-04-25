@@ -2,11 +2,8 @@ package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -38,9 +35,6 @@ import at.alladin.nntool.shared.qos.ResultOptions;
 @Service
 public class QoSEvaluationService {
 	
-	//TODO: parse objs differently, so we don't need to parse the qos_test_uid (potentially do this in the put-measurement request)
-	private static final String QOS_TEST_UID_KEY = "qos_test_uid";
-	
 	@Autowired
 	public QoSMeasurementObjectiveRepository qosMeasurementObjectiveRepository;
 
@@ -64,7 +58,6 @@ public class QoSEvaluationService {
 				continue;
 			}
 			
-			//this.compareTestResults(testResult, result, resultKeys, testType, resultOptions);
 			ret.getResults().add(compareTestResults(qosResult, objective, resultKeys));
 			
 		}
@@ -102,7 +95,7 @@ public class QoSEvaluationService {
 		
 		if (objective != null && objective.getEvaluations() != null) {
 			for (Map<String, String> evaluation : objective.getEvaluations()) {
-				//TODO: fix!
+				//TODO: fix double gson call!
 				AbstractResult res = gson.fromJson(gson.toJson(evaluation), resultClass);
 				if (res.getPriority() != null && res.getPriority() == Integer.MAX_VALUE) {
 					res.setPriority(maxPriority--);
@@ -117,7 +110,6 @@ public class QoSEvaluationService {
 				try {
 					desc = ResultComparer.compare(result, objectiveResult, obtainFields(resultClass), resultOptions);
 				} catch (IllegalArgumentException | IllegalAccessException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					continue;
 				}
@@ -166,8 +158,19 @@ public class QoSEvaluationService {
 			final Map<String, String> evaluationKeyMap = new HashMap<>();
 			qosResult.getResults().forEach((string, obj) -> {
 				if (obj != null) {
-					evaluationKeyMap.put(string, obj.toString());
+					//do some ugly parsing
+					if (obj instanceof Double) {
+						final Double doubleObj = (Double) obj;
+						if (doubleObj.doubleValue() == doubleObj.intValue()) {
+							evaluationKeyMap.put(string, Integer.toString(doubleObj.intValue()));
+						} else {
+							evaluationKeyMap.put(string, Double.toString(doubleObj));
+						}
+					} else {
+						evaluationKeyMap.put(string, obj.toString());
+					}
 				} else {
+					//TODO: do we add null values?
 					evaluationKeyMap.put(string, "");
 				}
 			}); 
@@ -195,7 +198,6 @@ public class QoSEvaluationService {
 		
 		for (Field f : clazz.getDeclaredFields()) {
 			if (f.isAnnotationPresent(SerializedName.class)) {
-				//annotation: HstoreKey was found
 				String fieldName = ((SerializedName) f.getAnnotation(SerializedName.class)).value();
 				//check for duplicates:
 				if (!ret.containsKey(fieldName)) {

@@ -1,5 +1,7 @@
 package at.alladin.nettest.shared.server.storage.couchdb.domain.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
@@ -71,6 +73,15 @@ public class Settings {
 	@JsonProperty("measurements")
 	private Map<String, SubMeasurementSettings> measurements;
 	
+	/**
+	 * The list defining the groups returned in the detail measurement response.
+	 */
+	@JsonPropertyDescription("The list defining the groups returned in the detail measurement response.")
+	@JsonProperty("speedtest_detail_groups")
+	@SerializedName("speedtest_detail_groups")
+	@Expose
+	private List<SpeedtestDetailGroup> speedtestDetailGroups = new ArrayList<>();
+	
 	public String getId() {
 		return id;
 	}
@@ -117,6 +128,14 @@ public class Settings {
 
 	public void setMeasurements(Map<String, SubMeasurementSettings> measurements) {
 		this.measurements = measurements;
+	}
+	
+	public List<SpeedtestDetailGroup> getSpeedtestDetailGroups() {
+		return speedtestDetailGroups;
+	}
+	
+	public void setSpeedtestDetailGroups(List<SpeedtestDetailGroup> speedtestDetailGroups) {
+		this.speedtestDetailGroups = speedtestDetailGroups;
 	}
 
 	/**

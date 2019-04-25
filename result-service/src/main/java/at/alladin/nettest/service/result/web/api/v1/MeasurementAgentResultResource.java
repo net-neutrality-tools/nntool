@@ -146,7 +146,7 @@ public class MeasurementAgentResultResource {
 			return ResponseEntity.badRequest().build();
 		}
 		
-		return ResponseEntity.ok(null);
+		return ResponseHelper.ok(storageService.getDetailMeasurementByAgentAndMeasurementUuid(agentUuid, uuid));
 	}
 
 	/**

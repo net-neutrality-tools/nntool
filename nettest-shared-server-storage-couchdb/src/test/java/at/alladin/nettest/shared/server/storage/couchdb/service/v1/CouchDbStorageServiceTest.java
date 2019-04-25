@@ -83,9 +83,12 @@ public class CouchDbStorageServiceTest {
 	@MockBean
 	private QoSMeasurementObjectiveRepository qosMeasurementObjectiveRepository;
 	
+	@MockBean
+	private DetailMeasurementService detailMeasurementService;
+	
 	@Autowired
 	private StorageService storageService;
-
+	
 	@Test(expected=StorageServiceException.class)
 	public void testCouchDbStorageServiceSaveWithoutValidAgentIdThrowsException() throws JsonParseException, JsonMappingException, IOException {
 		final LmapReportDto lmapReportDto = objectMapper.readValue(model1Resource.getInputStream(), LmapReportDto.class);

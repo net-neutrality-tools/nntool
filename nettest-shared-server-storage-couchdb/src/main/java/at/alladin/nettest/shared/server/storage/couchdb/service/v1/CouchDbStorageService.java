@@ -3,6 +3,7 @@ package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,6 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.Settin
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationQoSRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationSpeedRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.BriefMeasurementResponseMapper;
-import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.DetailMeasurementResponseMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportModelMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapper;
@@ -74,6 +74,9 @@ public class CouchDbStorageService implements StorageService {
 	private QoSEvaluationService qosEvaluationService;
 	
 	@Autowired
+	private DetailMeasurementService detailMeasurementService;
+	
+	@Autowired
 	private LmapReportModelMapper lmapReportModelMapper;
 	
 	@Autowired
@@ -87,9 +90,6 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private BriefMeasurementResponseMapper briefMeasurementResponseMapper;
-	
-	@Autowired
-	private DetailMeasurementResponseMapper detailMeasurementResponseMapper;
 	
 	@Autowired
 	private LmapTaskMapper lmapTaskMapper;
@@ -109,6 +109,7 @@ public class CouchDbStorageService implements StorageService {
 		
 		measurement.setUuid(UUID.randomUUID().toString());
 		measurement.setOpenDataUuid(UUID.randomUUID().toString());
+		measurement.setSubmitTime(LocalDateTime.now(ZoneId.of("UTC")));
 		
 		try {
 			measurementRepository.save(measurement);
@@ -246,8 +247,10 @@ public class CouchDbStorageService implements StorageService {
 	@Override
 	public DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid (String measurementAgentUuid, String measurementUuid) throws StorageServiceException {
 		final Measurement measurement = obtainMeasurement(measurementAgentUuid, measurementUuid);
-		
-		return detailMeasurementResponseMapper.map(measurement);
+		//TODO: default settings?
+		final Settings settings = settingsRepository.findByUuid("4e7567ef-175b-44f4-8436-8fd6d22dab48");
+		return detailMeasurementService.groupResult(measurement, settings.getSpeedtestDetailGroups(),
+				Locale.ENGLISH, 10000);//detailMeasurementResponseMapper.map(measurement);
 	}
 	
 	@Override

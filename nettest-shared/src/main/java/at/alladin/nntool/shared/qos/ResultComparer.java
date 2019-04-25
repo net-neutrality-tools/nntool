@@ -57,7 +57,7 @@ public class ResultComparer {
 			for (Field f : fieldNameToFieldMap.values()) {
 				f.setAccessible(true);
 				if (!f.isAnnotationPresent(NonComparableField.class) && f.get(result1) != null && !Collection.class.isAssignableFrom(f.getType())) {
-					Object r = TestScriptInterpreter.interprete(String.valueOf(f.get(result1)), fieldNameToFieldMap, result2, false, options);
+					Object r = TestScriptInterpreter.interpret(String.valueOf(f.get(result1)), fieldNameToFieldMap, result2, false, options);
 					f.set(result2, (r instanceof EvalResult) ? r : String.valueOf(r));
 				}
 			}
@@ -68,7 +68,7 @@ public class ResultComparer {
 			for (Field f : fieldNameToFieldMap.values()) {
 				f.setAccessible(true);
 				if (!f.isAnnotationPresent(NonComparableField.class) && f.get(result2) != null && !Collection.class.isAssignableFrom(f.getType())) {
-					Object r = TestScriptInterpreter.interprete(String.valueOf(f.get(result2)), fieldNameToFieldMap, result1, false, options);
+					Object r = TestScriptInterpreter.interpret(String.valueOf(f.get(result2)), fieldNameToFieldMap, result1, false, options);
 					f.set(result2, (r instanceof EvalResult) ? r : String.valueOf(r));	
 				}
 			}
@@ -298,10 +298,10 @@ public class ResultComparer {
 				}
 			}
 		}
-		else if (o2 == null) {
+		else if (o2 == null && o1 != null) {
 			return 1;
 		}
-		else if (o1 == null) {
+		else if (o1 == null && o2 != null) {
 			return -1;
 		}
 		
