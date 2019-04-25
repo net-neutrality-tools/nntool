@@ -67,19 +67,23 @@ public class LmapReportModelExampleTest extends AbstractLmapExampleTest {
 		//speedResultDto.setParameters(Object parameters);
 		
         final SpeedMeasurementTypeParameters speedParams = new SpeedMeasurementTypeParameters();
+        /*
         final SpeedMeasurementTypeParameters.Durations dur = new SpeedMeasurementTypeParameters.Durations();
         dur.setDownload(10);
         dur.setDownloadSlowStart(3);
         dur.setUpload(10);
         dur.setUploadSlowStart(3);
         //speedParams.setDurations(dur);
+        */
 
+        /*
         final SpeedMeasurementTypeParameters.Flows flows = new SpeedMeasurementTypeParameters.Flows();
         flows.setDownload(3);
         flows.setDownloadSlowStart(3);
         flows.setUpload(3);
         flows.setUploadSlowStart(3);
         flows.setRtt(3);
+        */
         //speedParams.setFlows(flows);
         speedParams.setRttCount(10);
         speedParams.setJavascriptMeasurementCodeUrl("measurement.berec.eu");

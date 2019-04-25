@@ -1,5 +1,7 @@
 package at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
@@ -57,7 +59,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 	@JsonProperty(required = true, value = "measurement_configuration_map")
 	private Map<SpeedMeasurementClass, SpeedMeasurementConfiguration> measurementConfigurationMap;
 
-	public static enum SpeedMeasurementClass {
+	public enum SpeedMeasurementClass {
 		SINGLE_STREAM,
 		LOW,
 		MIDDLE,
@@ -67,196 +69,187 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 
 	public static class SpeedMeasurementConfiguration {
 		/**
-		 * @see Durations
+		 * Contains all measurement class configurations for the upload test.
 		 */
-		@io.swagger.annotations.ApiModelProperty(required = true, value = "Durations for each phase of the measurement.")
-		@JsonPropertyDescription("Durations for each phase of the measurement.")
-		@Expose
-		@SerializedName("durations")
-		@JsonProperty(required = true, value = "durations")
-		private Durations durations;
-
-		/**
-		 * @see Flows
-		 */
-		@io.swagger.annotations.ApiModelProperty(required = true, value = "Number of (TCP) flows for each phase of the measurement.")
-		@JsonPropertyDescription("Number of (TCP) flows for each phase of the measurement.")
-		@Expose
-		@SerializedName("flows")
-		@JsonProperty(required = true, value = "flows")
-		private Flows flows;
-
-		@io.swagger.annotations.ApiModelProperty(required = true, value = "The frame sizes for each phase of the measurement.")
-		@JsonPropertyDescription("The frame sizes for each phase of the measurement.")
-		@Expose
-		@SerializedName("frame_sizes")
-		@JsonProperty(required = true, value = "frame_sizes")
-		private FrameSizes frameSizes;
-
-		public Durations getDurations() {
-			return durations;
-		}
-
-		public void setDurations(Durations durations) {
-			this.durations = durations;
-		}
-
-		public Flows getFlows() {
-			return flows;
-		}
-
-		public void setFlows(Flows flows) {
-			this.flows = flows;
-		}
-
-		public FrameSizes getFrameSizes() {
-			return frameSizes;
-		}
-
-		public void setFrameSizes(FrameSizes frameSizes) {
-			this.frameSizes = frameSizes;
-		}
-
-	}
-
-	/**
-	 * Durations for each phase of the measurement.
-	 * 
-	 * @author alladin-IT GmbH (bp@alladin.at)
-	 *
-	 */
-	@io.swagger.annotations.ApiModel(description = "Durations for each phase of the measurement.")
-	@JsonClassDescription("Durations for each phase of the measurement.")
-	public static class Durations extends PhaseCountOptions {
-		
-	}
-	
-	/**
-	 * Number of (TCP) flows for each phase of the measurement.
-	 * 
-	 * @author alladin-IT GmbH (bp@alladin.at)
-	 *
-	 */
-	@io.swagger.annotations.ApiModel(description = "Number of (TCP) flows for each phase of the measurement.")
-	@JsonClassDescription("Number of (TCP) flows for each phase of the measurement.")
-	public static class Flows extends PhaseCountOptions {
-		
-	}
-
-	/**
-	 * The frame sizes for each phase of the measurement
-	 *
-	 * @author fk
-	 *
-	 */
-	@io.swagger.annotations.ApiModel(description = "The frame sizes for each phase of the measurement.")
-	@JsonClassDescription("The frame sizes for each phase of the measurement.")
-	public static class FrameSizes extends PhaseCountOptions {
-
-	}
-
-	/**
-	 * Object that stores an integer value for each speed measurement phase.
-	 * 
-	 * @author alladin-IT GmbH (bp@alladin.at)
-	 *
-	 */
-	@io.swagger.annotations.ApiModel(description = "Object that stores an integer value for each speed measurement phase.")
-	@JsonClassDescription("Object that stores an integer value for each speed measurement phase.")
-	@JsonInclude(Include.NON_EMPTY)
-	public static class PhaseCountOptions {
-		
-		/**
-		 * Value for the download slow-start phase.
-		 */
-		@io.swagger.annotations.ApiModelProperty("Value for the download slow-start phase.")
-		@JsonPropertyDescription("Value for the download slow-start phase.")
-		@Expose
-		@SerializedName("download_slow_start")
-		@JsonProperty("download_slow_start")
-		private Integer downloadSlowStart;
-		
-		/**
-		 * Value for the download phase.
-		 */
-		@io.swagger.annotations.ApiModelProperty("Value for the download phase.")
-		@JsonPropertyDescription("Value for the download phase.")
-		@Expose
-		@SerializedName("download")
-		@JsonProperty("download")
-		private Integer download;
-		
-		/**
-		 * Value for the upload slow-start phase.
-		 */
-		@io.swagger.annotations.ApiModelProperty("Value for the upload slow-start phase.")
-		@JsonPropertyDescription("Value for the upload slow-start phase.")
-		@Expose
-		@SerializedName("upload_slow_start")
-		@JsonProperty("upload_slow_start")
-		private Integer uploadSlowStart;
-		
-		/**
-		 * Value for the upload phase.
-		 */
-		@io.swagger.annotations.ApiModelProperty("Value for the upload phase.")
-		@JsonPropertyDescription("Value for the upload phase.")
+		@JsonPropertyDescription("Contains all measurement class configurations for the upload test.")
 		@Expose
 		@SerializedName("upload")
 		@JsonProperty("upload")
-		private Integer upload;
-		
+		private List<SpeedMeasurementClass> uploadClassList = new ArrayList<>();
+
 		/**
-		 * Value for the RTT phase.
+		 * Contains all measurement class configurations for the download test.
 		 */
-		@io.swagger.annotations.ApiModelProperty("Value for the RTT phase.")
-		@JsonPropertyDescription("Value for the RTT phase.")
+		@JsonPropertyDescription("Contains all measurement class configurations for the download test.")
 		@Expose
-		@SerializedName("rtt")
-		@JsonProperty("rtt")
-		private Integer rtt;
+		@SerializedName("download")
+		@JsonProperty("download")
+		private List<SpeedMeasurementClass> downloadClassList = new ArrayList<>();
 
-		public Integer getDownloadSlowStart() {
-			return downloadSlowStart;
+		@Override
+		public String toString() {
+			return "SpeedMeasurementSettings{" +
+					"uploadClassList=" + uploadClassList +
+					", downloadClassList=" + downloadClassList +
+					"} " + super.toString();
 		}
 
-		public void setDownloadSlowStart(Integer downloadSlowStart) {
-			this.downloadSlowStart = downloadSlowStart;
-		}
+		/**
+		 * Holds a single measurement class configuration.
+		 *
+		 * @author Lukasz Budryk (alladin-IT GmbH)
+		 */
+		@JsonClassDescription("Holds a single measurement class configuration.")
+		public class SpeedMeasurementClass {
 
-		public Integer getDownload() {
-			return download;
-		}
+			/**
+			 *
+			 */
+			@JsonPropertyDescription("")
+			@Expose
+			@SerializedName("default")
+			@JsonProperty("default")
+			private Boolean isDefault = false;
 
-		public void setDownload(Integer download) {
-			this.download = download;
-		}
+			/**
+			 * The requested number of streams for the measurement.
+			 */
+			@JsonPropertyDescription("The requested number of streams for the measurement.")
+			@Expose
+			@SerializedName("streams")
+			@JsonProperty("streams")
+			private Integer numStreams;
 
-		public Integer getUploadSlowStart() {
-			return uploadSlowStart;
-		}
+			/**
+			 * The frame size of the measurement.
+			 */
+			@JsonPropertyDescription("The frame size of the measurement.")
+			@Expose
+			@SerializedName("frameSize")
+			@JsonProperty("frameSize")
+			private Integer frameSize;
 
-		public void setUploadSlowStart(Integer uploadSlowStart) {
-			this.uploadSlowStart = uploadSlowStart;
-		}
+			/**
+			 * The boundaries for this specific measurement class.
+			 */
+			@JsonPropertyDescription("The boundaries for this specific measurement class.")
+			@Expose
+			@SerializedName("bounds")
+			@JsonProperty("bounds")
+			private Bounds bounds;
 
-		public Integer getUpload() {
-			return upload;
-		}
+			/**
+			 * The number of frames sent per upload method call.
+			 */
+			@JsonPropertyDescription("The number of frames sent per upload method call.")
+			@Expose
+			@SerializedName("framesPerCall")
+			@JsonProperty("framesPerCall")
+			private Integer framesPerCall;
 
-		public void setUpload(Integer upload) {
-			this.upload = upload;
-		}
+			/**
+			 *
+			 * @author Lukasz Budryk (alladin-IT GmbH)
+			 */
+			@JsonClassDescription("")
+			public class Bounds {
 
-		public Integer getRtt() {
-			return rtt;
-		}
+				/**
+				 * The lower bound.
+				 */
+				@JsonPropertyDescription("The lower bound.")
+				@Expose
+				@SerializedName("lower")
+				@JsonProperty("lower")
+				private Double lower;
 
-		public void setRtt(Integer rtt) {
-			this.rtt = rtt;
+				/**
+				 * The upper bound.
+				 */
+				@JsonPropertyDescription("The upper bound.")
+				@Expose
+				@SerializedName("upper")
+				@JsonProperty("upper")
+				private Double upper;
+
+				public Double getLower() {
+					return lower;
+				}
+
+				public void setLower(Double lower) {
+					this.lower = lower;
+				}
+
+				public Double getUpper() {
+					return upper;
+				}
+
+				public void setUpper(Double upper) {
+					this.upper = upper;
+				}
+
+				@Override
+				public String toString() {
+					return "Bounds{" +
+							"lower=" + lower +
+							", upper=" + upper +
+							'}';
+				}
+			}
+
+			public Boolean getDefault() {
+				return isDefault;
+			}
+
+			public void setDefault(Boolean aDefault) {
+				isDefault = aDefault;
+			}
+
+			public Integer getNumStreams() {
+				return numStreams;
+			}
+
+			public void setNumStreams(Integer numStreams) {
+				this.numStreams = numStreams;
+			}
+
+			public Integer getFrameSize() {
+				return frameSize;
+			}
+
+			public void setFrameSize(Integer frameSize) {
+				this.frameSize = frameSize;
+			}
+
+			public Bounds getBounds() {
+				return bounds;
+			}
+
+			public void setBounds(Bounds bounds) {
+				this.bounds = bounds;
+			}
+
+			public Integer getFramesPerCall() {
+				return framesPerCall;
+			}
+
+			public void setFramesPerCall(Integer framesPerCall) {
+				this.framesPerCall = framesPerCall;
+			}
+
+			@Override
+			public String toString() {
+				return "SpeedMeasurementClass{" +
+						"isDefault=" + isDefault +
+						", numStreams=" + numStreams +
+						", frameSize=" + frameSize +
+						", bounds=" + bounds +
+						", framesPerCall=" + framesPerCall +
+						'}';
+			}
 		}
 	}
-	
+
 	/**
 	 * Configuration object that holds the measurement server information.
 	 * 
