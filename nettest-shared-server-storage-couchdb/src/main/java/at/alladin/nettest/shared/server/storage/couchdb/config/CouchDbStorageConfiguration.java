@@ -52,17 +52,21 @@ public class CouchDbStorageConfiguration extends CouchDbConfiguration {
 	public GsonBuilder couchDbGsonBuilder() {
 		final GsonBuilder gsonBuilder = super.couchDbGsonBuilder();
 		
-		gsonBuilder.registerTypeAdapter(Measurement.class, new MeasurementConverter());
-		gsonBuilder.registerTypeAdapter(Settings.class, new SettingsConverter());
+		gsonBuilder.registerTypeAdapter(Measurement.class, new MeasurementConverter(super.couchDbGsonBuilder().create()));
+		gsonBuilder.registerTypeAdapter(Settings.class, new SettingsConverter(super.couchDbGsonBuilder().create()));
 		
 		logger.info("registered measurement enabled gsonBuilder");
 		
 		return gsonBuilder;
 	}
 
-	public static class SettingsConverter implements JsonDeserializer<Settings> {
+	public class SettingsConverter implements JsonDeserializer<Settings> {
 
-		private static Gson gson = new Gson();
+		private final Gson gson;
+
+		public SettingsConverter(final Gson gson) {
+			this.gson = gson;
+		}
 
 		@Override
 		public Settings deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -97,15 +101,20 @@ public class CouchDbStorageConfiguration extends CouchDbConfiguration {
 		}
 	}
 
-	public static class MeasurementConverter implements JsonDeserializer<Measurement> {
-		
-		private static Gson gson = new Gson();
-		
+	public class MeasurementConverter implements JsonDeserializer<Measurement> {
+
+		private final Gson gson;
+
+		public MeasurementConverter(final Gson gson) {
+			this.gson = gson;
+		}
+
 		@Override
 		public Measurement deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 				throws JsonParseException {
+
 			final Measurement ret = gson.fromJson(json, Measurement.class);
-			
+
 			final JsonElement measurementsJson = json.getAsJsonObject().get("measurements");
 			if (measurementsJson != null && measurementsJson.isJsonObject()) {
 				for (Entry<String, JsonElement> entry : measurementsJson.getAsJsonObject().entrySet()) {
@@ -118,19 +127,20 @@ public class CouchDbStorageConfiguration extends CouchDbConfiguration {
 					}
 					Class<? extends SubMeasurement> subMeasurementClass = SubMeasurement.class;
 					switch (type) {
-					case QOS:
-						subMeasurementClass = QoSMeasurement.class;
-						break;
-					case SPEED:
-						subMeasurementClass = SpeedMeasurement.class;
-						break;
+						case QOS:
+							subMeasurementClass = QoSMeasurement.class;
+							break;
+						case SPEED:
+							subMeasurementClass = SpeedMeasurement.class;
+							break;
 					}
 					ret.getMeasurements().put(type, gson.fromJson(entry.getValue(), subMeasurementClass));
 				}
 			}
-			
+
 			return ret;
 		}
-		
+
 	}
+
 }
