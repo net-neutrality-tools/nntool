@@ -26,7 +26,6 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurem
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nntool.shared.db.QoSTestResult.TestType;
-import at.alladin.nntool.shared.hstoreparser.HstoreParseException;
 import at.alladin.nntool.shared.qos.AbstractResult;
 import at.alladin.nntool.shared.qos.ResultComparer;
 import at.alladin.nntool.shared.qos.ResultDesc;
@@ -204,7 +203,8 @@ public class QoSEvaluationService {
 					ret.put(fieldName, f);
 				}
 				else {
-					throw new HstoreParseException(HstoreParseException.HSTORE_OBJECT_KEY_ALREADY_IN_USE + fieldName);
+					//TODO: make custom exception (do we need this w/out the hstore thingy?
+					throw new RuntimeException("Field already in use: " + fieldName);
 				}
 			}
 			

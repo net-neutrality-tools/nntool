@@ -20,8 +20,6 @@ package at.alladin.nntool.shared.qos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
-
 /**
  * 
  * example result:
@@ -41,57 +39,46 @@ import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
  */
 public class UdpResult extends AbstractResult {
 	
-	@HstoreKey("udp_objective_delay")
 	@SerializedName("udp_objective_delay")
 	@Expose
 	private Object delay;
 
-	@HstoreKey("udp_objective_out_port")
 	@SerializedName("udp_objective_out_port")
 	@Expose
 	private Object outPort;
 	
-	@HstoreKey("udp_result_out_num_packets")
 	@SerializedName("udp_result_out_num_packets")
 	@Expose
 	private Object resultOutNumPackets;
 	
-	@HstoreKey("udp_result_out_response_num_packets")
 	@SerializedName("udp_result_out_response_num_packets")
 	@Expose
 	private Object resultOutNumPacketsResponse;
 	
-	@HstoreKey("udp_objective_out_num_packets")
 	@SerializedName("udp_objective_out_num_packets")
 	@Expose
 	private Object outNumPackets;
 	
-	@HstoreKey("udp_objective_in_port")
 	@SerializedName("udp_objective_in_port")
 	@Expose
 	private Object inPort;
 	
-	@HstoreKey("udp_result_in_num_packets")
 	@SerializedName("udp_result_in_num_packets")
 	@Expose
 	private Object resultInNumPackets;
 	
-	@HstoreKey("udp_objective_in_num_packets")
 	@SerializedName("udp_objective_in_num_packets")
 	@Expose
 	private Object inNumPackets;
 	
-	@HstoreKey("udp_result_in_response_num_packets")
 	@SerializedName("udp_result_in_response_num_packets")
 	@Expose
 	private Object resultInNumPacketsResponse;
 	
-	@HstoreKey("udp_result_in_packet_loss_rate")
 	@SerializedName("udp_result_in_packet_loss_rate")
 	@Expose
 	private Object incomingPlr;
 
-	@HstoreKey("udp_result_out_packet_loss_rate")
 	@SerializedName("udp_result_out_packet_loss_rate")
 	@Expose
 	private Object outgoingPlr;

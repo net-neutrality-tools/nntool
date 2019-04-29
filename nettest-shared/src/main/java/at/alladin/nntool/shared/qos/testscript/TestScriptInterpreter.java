@@ -31,7 +31,6 @@ import javax.script.*;
 import org.json.JSONObject;
 
 import at.alladin.nettest.shared.nntool.Helperfunctions;
-import at.alladin.nntool.shared.hstoreparser.HstoreParseException;
 import at.alladin.nntool.shared.qos.AbstractResult;
 import at.alladin.nntool.shared.qos.ResultOptions;
 import at.alladin.nntool.shared.qos.testscript.TestScriptInterpreter.EvalResult.EvalResultType;
@@ -426,8 +425,6 @@ public class TestScriptInterpreter {
 				//System.out.println("PARAM object: " + args[0] + " -> " + value + " of " + object.toString());
 				return value;				
 			}
-		} catch (HstoreParseException e) {
-			throw new ScriptException(ScriptException.ERROR_UNKNOWN + " PARSE: " + e.getMessage());
 		} catch (Throwable t) {
 			throw new ScriptException(ScriptException.ERROR_UNKNOWN + " PARSE: " + t.getMessage());
 		}
@@ -485,14 +482,14 @@ public class TestScriptInterpreter {
 		return map;
 	}
 	
-	private static Object getFieldValue(final Map<String, Field> fieldNameToFieldMap, final String param, final Object object) {
+	private static Object getFieldValue(final Map<String, Field> fieldNameToFieldMap, final String param, final Object object) throws ScriptException {
 		Field field = fieldNameToFieldMap.get(param);
 		if (field != null) {
 			try {
 				field.setAccessible(true);
 				return field.get(object);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				throw new HstoreParseException(HstoreParseException.HSTORE_COULD_NOT_GET_VALUE + field.getClass().getCanonicalName() + "." + field.getName() + "\n", e);
+				throw new ScriptException("Could not get field: " + field.getClass().getCanonicalName() + "." + field.getName() + "\n", e);
 			}
 		}
 		

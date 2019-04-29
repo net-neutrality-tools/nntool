@@ -19,7 +19,6 @@ package at.alladin.nntool.shared.qos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
 
 
 /**
@@ -44,37 +43,30 @@ import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
  */
 public class TcpResult extends AbstractResult {
 
-	@HstoreKey("tcp_result_in")
 	@SerializedName("tcp_result_in")
 	@Expose
 	private String inResult;
-	
-	@HstoreKey("tcp_objective_in_port")
+
 	@SerializedName("tcp_objective_in_port")
 	@Expose
 	private Integer inPort;
 
-	@HstoreKey("tcp_result_in_response")
 	@SerializedName("tcp_result_in_response")
 	@Expose
 	private String inResponse;
 	
-	@HstoreKey("tcp_result_out")
 	@SerializedName("tcp_result_out")
 	@Expose
 	private String outResult;
 	
-	@HstoreKey("tcp_objective_out_port")
 	@SerializedName("tcp_objective_out_port")
 	@Expose
 	private Integer outPort;
 
-	@HstoreKey("tcp_result_out_response")
 	@SerializedName("tcp_result_out_response")
 	@Expose
 	private String outResponse;
 
-	@HstoreKey("tcp_objective_timeout")
 	@SerializedName("tcp_objective_timeout")
 	@Expose
 	private Long timeout;

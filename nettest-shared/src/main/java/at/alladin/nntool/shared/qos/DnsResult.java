@@ -21,9 +21,6 @@ import java.util.HashSet;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nntool.shared.hstoreparser.annotation.HstoreCollection;
-import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
-
 /**
  * 
  * @author lb
@@ -37,17 +34,14 @@ public class DnsResult extends AbstractResult {
 	 *
 	 */
 	public static class DnsEntry {
-		@HstoreKey("dns_result_address")
 		@SerializedName("dns_result_address")
 		@Expose
 		private String address;
 		
-		@HstoreKey("dns_result_ttl")
 		@SerializedName("dns_result_ttl")
 		@Expose
 		private Long ttl;
 		
-		@HstoreKey("dns_result_priority")
 		@SerializedName("dns_result_priority")
 		@Expose
 		private Short priority;
@@ -138,48 +132,38 @@ public class DnsResult extends AbstractResult {
 		}
 	}
 	
-	@HstoreKey("dns_objective_host")
 	@SerializedName("dns_objective_host")
 	@Expose
 	private String host;
 
-	@HstoreKey("dns_result_info")
 	@SerializedName("dns_result_info")
 	@Expose
 	private String info;
 	
-	@HstoreKey("dns_result_status")
 	@SerializedName("dns_result_status")
 	@Expose
 	private String status;
 
-	@HstoreKey("dns_objective_resolver")
 	@SerializedName("dns_objective_resolver")
 	@Expose
 	private String resolver;
 	
-	@HstoreKey("dns_objective_dns_record")
 	@SerializedName("dns_objective_dns_record")
 	@Expose
 	private String record;
 	
-	@HstoreKey("dns_objective_timeout")
 	@SerializedName("dns_objective_timeout")
 	@Expose
 	private Object timeout;
 	
-	@HstoreKey("dns_result_entries_found")
 	@SerializedName("dns_result_entries_found")
 	@Expose
 	private Object entriesFound;
 	
-	@HstoreKey("dns_result_duration")
 	@SerializedName("dns_result_duration")
 	@Expose
 	private Object duration;
 	
-	@HstoreKey("dns_result_entries")
-	@HstoreCollection(DnsEntry.class)
 	@SerializedName("dns_result_entries")
 	@Expose
 	private HashSet<DnsEntry> resultEntries;
