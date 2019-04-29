@@ -1,13 +1,11 @@
 package at.alladin.nettest.service.result.web.api.v1;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -28,6 +26,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.Ful
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeneralMeasurementTypeDto;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
+import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import io.swagger.annotations.ApiParam;
 
 /**
@@ -143,7 +142,7 @@ public class MeasurementAgentResultResource {
 		@ApiParam(value = "Flag that indicates if the details should be grouped") @RequestParam(value = "grouped", defaultValue = "false") boolean grouped) {
 
 		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
-			return ResponseEntity.badRequest().build();
+			throw new StorageServiceException("Invalid agent uuid");
 		}
 		
 		return ResponseHelper.ok(storageService.getDetailMeasurementByAgentAndMeasurementUuid(agentUuid, uuid));

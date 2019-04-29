@@ -126,7 +126,7 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		
 		@Mapping(source = "timeBasedResult.cellLocations", target = "networkInfo.cellLocationInfo.cellLocations"),
 		@Mapping(source = "timeBasedResult.signals", target = "networkInfo.signalInfo.signals"),
-		@Mapping(expression = "java(parseMeasurements(lmapReportDto))", target = "measurements"),
+		@Mapping(expression = "java(parseMeasurements(lmapReportDto))", target = "measurements")
 	})
 	Measurement map(LmapReportDto lmapReportDto);
 	
@@ -136,7 +136,8 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		@Mapping(source="downloadRawData", target="speedRawData.download"),
 		@Mapping(source="uploadRawData", target="speedRawData.upload"),
 		@Mapping(source="status", target="statusInfo"),
-		@Mapping(expression="java(parseAverageDownload(subMeasurementResult))", target="throughputAvgDownloadBps")
+		@Mapping(expression="java(parseAverageDownload(subMeasurementResult))", target="throughputAvgDownloadBps"),
+		@Mapping(expression="java(parseAverageUpload(subMeasurementResult))", target="throughputAvgUploadBps")
 	})
 	SpeedMeasurement map (SpeedMeasurementResult subMeasurementResult);
 	
@@ -154,6 +155,14 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		}
 		
 		return (long) (result.getBytesDownload() * 8 / (result.getDurationDownloadNs() / 1e9));
+	}
+	
+	default Long parseAverageUpload (final SpeedMeasurementResult result) {
+		if (result.getBytesUpload() == null || result.getDurationUploadNs() == null) {
+			return 0L;
+		}
+		
+		return (long) (result.getBytesUpload() * 8 / (result.getDurationUploadNs() / 1e9));
 	}
 	
 	default Map<MeasurementTypeDto, SubMeasurement> parseMeasurements (LmapReportDto lmapReportDto) {
