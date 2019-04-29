@@ -26,10 +26,9 @@ import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServ
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementServerRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationQoSRepository;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationSpeedRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.BriefMeasurementResponseMapperImpl;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapperImpl;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportModelMapperImpl;
@@ -73,13 +72,10 @@ public class CouchDbStorageServiceTest {
 	private MeasurementAgentRepository measurementAgentRepository;
 	
 	@MockBean
-	private TaskConfigurationSpeedRepository taskConfigurationSpeedRepository;
-
-	@MockBean
-	private TaskConfigurationQoSRepository taskConfigurationQoSRepository;
+	private QoSMeasurementObjectiveRepository qosMeasurementObjectiveRepository;
 	
 	@MockBean
-	private QoSMeasurementObjectiveRepository qosMeasurementObjectiveRepository;
+	private MeasurementServerRepository measurementServerRepository;
 	
 	@MockBean
 	private DetailMeasurementService detailMeasurementService;

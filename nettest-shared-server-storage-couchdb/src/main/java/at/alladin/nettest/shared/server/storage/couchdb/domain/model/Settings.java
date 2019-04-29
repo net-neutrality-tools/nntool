@@ -5,11 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -315,6 +312,22 @@ public class Settings {
 		@JsonProperty("download")
 		private List<SpeedMeasurementClass> downloadClassList = new ArrayList<>();
 
+		public List<SpeedMeasurementClass> getUploadClassList() {
+			return uploadClassList;
+		}
+
+		public void setUploadClassList(List<SpeedMeasurementClass> uploadClassList) {
+			this.uploadClassList = uploadClassList;
+		}
+
+		public List<SpeedMeasurementClass> getDownloadClassList() {
+			return downloadClassList;
+		}
+
+		public void setDownloadClassList(List<SpeedMeasurementClass> downloadClassList) {
+			this.downloadClassList = downloadClassList;
+		}
+
 		@Override
 		public String toString() {
 			return "SpeedMeasurementSettings{" +
@@ -489,5 +502,19 @@ public class Settings {
 	@JsonClassDescription("Settings applicable only to conducted Quality of Service (QoS) measurements.")
 	public class QoSMeasurementSettings extends SubMeasurementSettings {
 
+		@JsonPropertyDescription("The uuid of the qos measurement server to be used during qos measurements.")
+		@Expose
+		@SerializedName("qos_server_uuid")
+		@JsonProperty("qos_server_uuid")
+		private String qosServerUuid;
+
+		public String getQosServerUuid() {
+			return qosServerUuid;
+		}
+
+		public void setQosServerUuid(String qosServerUuid) {
+			this.qosServerUuid = qosServerUuid;
+		}
+		
 	}
 }

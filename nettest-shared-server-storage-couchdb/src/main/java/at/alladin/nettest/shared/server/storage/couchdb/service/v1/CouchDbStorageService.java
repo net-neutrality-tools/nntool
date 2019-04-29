@@ -30,13 +30,12 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.TaskConfiguration;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementServerRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationQoSRepository;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationSpeedRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.BriefMeasurementResponseMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportModelMapper;
@@ -62,13 +61,10 @@ public class CouchDbStorageService implements StorageService {
 	private MeasurementAgentRepository measurementAgentRepository;
 	
 	@Autowired
-	private TaskConfigurationSpeedRepository taskConfigurationSpeedRepository;
-	
-	@Autowired
-	private TaskConfigurationQoSRepository taskConfigurationQoSRepository;
-	
-	@Autowired
 	private QoSMeasurementObjectiveRepository qosMeasurementObjectiveRepository;
+	
+	@Autowired
+	private MeasurementServerRepository measurementServerRepository;
 	
 	@Autowired
 	private QoSEvaluationService qosEvaluationService;
@@ -186,17 +182,24 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	@Override
-	public LmapTaskDto getTaskDto(MeasurementTypeDto type, String version) {
-		TaskConfiguration taskConfig = null;
+	public LmapTaskDto getTaskDto(final MeasurementTypeDto type, final String settingsUuid) {
 		try {
+			final Settings settings = settingsRepository.findByUuid(settingsUuid);
+			
 			switch (type) {
 			case SPEED:
-				taskConfig = taskConfigurationSpeedRepository.findByNameAndVersion(type.toString(), version);
-				return lmapTaskMapper.map(taskConfig);
+				return lmapTaskMapper.map(settings, type.toString());
 			case QOS:
 				final List<QoSMeasurementObjective> qosObjectiveList = qosMeasurementObjectiveRepository.findAllByEnabled(true);
-				taskConfig = taskConfigurationQoSRepository.findByNameAndVersion(type.toString(), version);
-				return lmapTaskMapper.map(taskConfig, qosObjectiveList);
+				
+				if (settings.getMeasurements() != null && settings.getMeasurements().containsKey(MeasurementTypeDto.QOS)) {
+					final QoSMeasurementSettings qosSettings = (QoSMeasurementSettings) settings.getMeasurements().get(MeasurementTypeDto.QOS);
+					return lmapTaskMapper.map(settings, measurementServerRepository.findByUuid(
+							qosSettings.getQosServerUuid()), qosObjectiveList, type.toString());
+				} else {
+					return lmapTaskMapper.map(settings, null, qosObjectiveList, type.toString());
+				}
+				
 			default:
 				return null;
 			}
