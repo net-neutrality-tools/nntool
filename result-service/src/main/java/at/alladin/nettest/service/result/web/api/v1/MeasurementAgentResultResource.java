@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import at.alladin.nettest.service.result.config.ResultServiceProperties;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiPagination;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
@@ -43,6 +44,9 @@ public class MeasurementAgentResultResource {
 
 	@Autowired
 	private StorageService storageService;
+	
+	@Autowired
+	private ResultServiceProperties properties;
 	
 	/**
 	 * Retrieve a (paginated) list of measurements made by this measurement agent.
@@ -145,7 +149,7 @@ public class MeasurementAgentResultResource {
 			throw new StorageServiceException("Invalid agent uuid");
 		}
 		
-		return ResponseHelper.ok(storageService.getDetailMeasurementByAgentAndMeasurementUuid(agentUuid, uuid));
+		return ResponseHelper.ok(storageService.getDetailMeasurementByAgentAndMeasurementUuid(agentUuid, uuid, properties.getSettingsUuid()));
 	}
 
 	/**

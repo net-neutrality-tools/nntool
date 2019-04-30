@@ -37,7 +37,7 @@ public interface StorageService {
 
 	FullMeasurementResponse getFullMeasurementByAgentAndMeasurementUuid (String measurementAgentUuid, String measurementUuid) throws StorageServiceException;
 	
-	DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid (String measurementAgentUuid, String measurementUuid) throws StorageServiceException;
+	DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid (String measurementAgentUuid, String measurementUuid, String settingsUuid) throws StorageServiceException;
 	
 	List<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid (String measurementAgentUuid, 
 			Pageable pageable) throws StorageServiceException;

@@ -43,7 +43,7 @@ public class QoSEvaluationService {
 	
 	private Map<Long, QoSMeasurementObjective> objectiveIdToMeasurementObjectiveMap;
 	
-	public void initMeasurementObjectiveMap() {
+	private void initMeasurementObjectiveMap() {
 		//if this were a post-construct, all servers would need to request QoSMeasurementObjective in their application.yml (as they all know the storage service)
 		//initialize the qos objective map (recalculate it everytime, if no server restart on qos definition change is desired)
 		final List<QoSMeasurementObjective> objectiveList = qosMeasurementObjectiveRepository.findAllByEnabled(true);

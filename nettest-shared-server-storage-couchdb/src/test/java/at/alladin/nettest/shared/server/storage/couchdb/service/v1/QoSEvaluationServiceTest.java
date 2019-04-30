@@ -35,10 +35,10 @@ public class QoSEvaluationServiceTest {
 	
 	@Injectable 
 	@Mocked 
-	QoSMeasurementObjectiveRepository objectiveRepo;
+	private QoSMeasurementObjectiveRepository objectiveRepo;
 	
 	@Injectable
-	GsonBuilder builder;
+	private GsonBuilder builder;
 	
 	private QoSMeasurement qosMeasurement;
 	

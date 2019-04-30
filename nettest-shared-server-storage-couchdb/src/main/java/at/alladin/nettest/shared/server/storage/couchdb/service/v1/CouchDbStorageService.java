@@ -248,10 +248,10 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	@Override
-	public DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid (String measurementAgentUuid, String measurementUuid) throws StorageServiceException {
+	public DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid (String measurementAgentUuid, String measurementUuid, final String settingsUuid) throws StorageServiceException {
 		final Measurement measurement = obtainMeasurement(measurementAgentUuid, measurementUuid);
 		//TODO: default settings?
-		final Settings settings = settingsRepository.findByUuid("4e7567ef-175b-44f4-8436-8fd6d22dab48");
+		final Settings settings = settingsRepository.findByUuid(settingsUuid);
 		return detailMeasurementService.groupResult(measurement, settings.getSpeedtestDetailGroups(),
 				Locale.ENGLISH, 10000);//detailMeasurementResponseMapper.map(measurement);
 	}
