@@ -265,6 +265,10 @@ public abstract class AbstractResult {
 	public Map<String, Object> getResultMap() {
 		return resultMap;
 	}
+	
+	public void setResultMap(Map<String, Object> resultMap) {
+		this.resultMap = resultMap;
+	}
 
 	public void setResultJson(JSONObject resultJson) {
 		this.resultMap = TestScriptInterpreter.jsonToMap(resultJson);

@@ -165,4 +165,12 @@ public class EvaluatedQoSResult {
 	public void setEvaluationKeyMap(Map<String, String> evaluationKeyMap) {
 		this.evaluationKeyMap = evaluationKeyMap;
 	}
+
+	@Override
+	public String toString() {
+		return "EvaluatedQoSResult [type=" + type + ", summary=" + summary + ", description=" + description
+				+ ", evaluationCount=" + evaluationCount + ", successCount=" + successCount + ", failureCount="
+				+ failureCount + ", implausible=" + implausible + ", evaluationKeyMap=" + evaluationKeyMap + "]";
+	}
+	
 }

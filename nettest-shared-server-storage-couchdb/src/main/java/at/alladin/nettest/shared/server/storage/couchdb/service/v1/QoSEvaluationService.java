@@ -43,7 +43,7 @@ public class QoSEvaluationService {
 		final FullQoSMeasurement ret = new FullQoSMeasurement();
 		ret.setResults(new ArrayList<>());
 		
-		//TODO: move this into post-construct
+		//TODO: move this into post-construct (unless we want to apply changes from db w/out restarting)
 		final List<QoSMeasurementObjective> objectiveList = qosMeasurementObjectiveRepository.findAllByEnabled(true);
 		final Map<Long, QoSMeasurementObjective> objectiveIdToMeasurementObjectiveMap = new HashMap<>();
 		objectiveList.forEach( (o) -> objectiveIdToMeasurementObjectiveMap.put(Long.parseLong(o.getObjectiveId()), o));
@@ -81,6 +81,7 @@ public class QoSEvaluationService {
 		
 		final String elem = gson.toJson(qosResult.getResults());
 		final AbstractResult result = gson.fromJson(elem, resultClass);	// == testResult
+		result.setResultMap(qosResult.getResults()); //and add the map (needed for evaluations (e.g. %EVAL xxxxx%))
 		
 		//create a parsed abstract result set sorted by priority
 		final Set<AbstractResult> expResultSet = new TreeSet<>(new Comparator<AbstractResult>() {
