@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.Format;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,19 +44,10 @@ public class DetailMeasurementService {
 	 * Groups the results according to the groupStructure param
 	 * Will move all values that are defined in the groupStructure from their current location into the location defined by the groupStructure
 	 * If none of the defined values of a group within the groupStructure are valid, the groupStructure will NOT be added at all
-	 * If an exception is thrown during this process, the original json String is returned
-	 * @param json, the JSON result to be grouped
-	 * @param groupStructure, the structure to be applied to the json String as obtained w/ServerResource.getSetting(speedtestDetailGroups) TODO: make this more specific
-	 * @return a JSONObject that has all key/value pairs that are defined in the groupStructure moved to the correct place, all other values remain unchanged
+	 * @param measurement, the measurement result to be grouped
+	 * @param groupStructure, the structure to be applied to the measurement as obtained w/ServerResource.getSetting(speedtestDetailGroups) TODO: make this more specific
+	 * @return a DetailMeasurementResponse with the grouped measurement result
 	 */
-	public DetailMeasurementResponse groupJsonResult(final Measurement measurement, final List<SpeedtestDetailGroup> groupStructure){
-		final DetailMeasurementResponse ret = new DetailMeasurementResponse();
-		ret.setGroups(new ArrayList<>());
-		groupStructure.forEach(group -> ret.getGroups().add(extractGroupValues(measurement, group)));
-		
-		return ret;
-	}
-	
 	public DetailMeasurementResponse groupResult(final Measurement measurement, final List<SpeedtestDetailGroup> groupStructure, final Locale locale, 
 			final int geoAccuracyDetailLimit) {
 		return groupResult(measurement, groupStructure, locale, geoAccuracyDetailLimit, false);
@@ -111,8 +103,19 @@ public class DetailMeasurementService {
 					continue;
 				}
 				
-				//TODO: if key starts with SPEED or QOS -> start w/different values
-				final Object value = getObjectAt(keyPath, measurement, Measurement.class);
+				//if key starts with SPEED or QOS -> start w/different values
+				final Object value;
+				switch (keyPath[0].toLowerCase()) {
+				case SPEED_PREFIX:
+					value = getObjectAt(Arrays.copyOfRange(keyPath, 1, keyPath.length), measurement.getMeasurements().get(MeasurementTypeDto.SPEED), SpeedMeasurement.class);
+					break;
+				case QOS_PREFIX:
+					value = getObjectAt(Arrays.copyOfRange(keyPath, 1, keyPath.length), measurement.getMeasurements().get(MeasurementTypeDto.QOS), QoSMeasurement.class);
+					break;
+				default:
+					value = getObjectAt(keyPath, measurement, Measurement.class);
+				}
+				
 				if (value == null) {
 					continue;
 				}
@@ -132,6 +135,7 @@ public class DetailMeasurementService {
 				//special cases get their own formatting (not ideal...)
 				if(key.endsWith("network_type")){
 					item.setValue(Helperfunctions.getNetworkTypeName(Integer.parseInt(val)));
+					//TODO: add specific rules for the items below
 				} else {
 					//default formatting
 					if(formatEnum != null){
@@ -182,74 +186,31 @@ public class DetailMeasurementService {
 				return null;
 			}
 			try {
-				final Field field = currentClass.getDeclaredField(part);
+				Field field = null;
+				while (currentClass != Object.class) {
+					try {
+						field = currentClass.getDeclaredField(part);
+					} catch (NoSuchFieldException ex) {
+						currentClass = currentClass.getSuperclass();
+						continue;
+					}
+					break;
+				}
+				if (field == null) {
+					return null;
+				}
 				field.setAccessible(true);
 				
 				currentObject = field.get(currentObject);
 				currentClass = field.getType();
 
-			} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+			} catch (IllegalArgumentException | IllegalAccessException | SecurityException e) {
 				return null;
 			}
 			
 		}
 		
 		return currentObject;
-	}
-	
-	/**
-	 * Helper method to extract all values specified in the groupDefinition from the json JSONObject
-	 * places them into the defined groups instead
-	 * @param json the JSONObject containing all the information to be grouped
-	 * @param groupDefinition the definition of a single group to be extracted by this method
-	 * @return the same json with the specified values moved into the specified groups
-	 */
-	private DetailMeasurementGroup extractGroupValues(final Measurement measurement, final SpeedtestDetailGroup groupDefinition){
-		final DetailMeasurementGroup ret = new DetailMeasurementGroup();
-		
-		ret.setIconCharacter(groupDefinition.getIcon());
-		//TODO: translate + add suffix/prefix
-		ret.setDescription(groupDefinition.getKey());
-		ret.setTitle(groupDefinition.getKey());
-		ret.setItems(new ArrayList<>());
-		
-		
-		for (SpeedtestDetailGroupEntry entry : groupDefinition.getValues()) {
-			final String[] keyPath = entry.getKey().split("\\.");
-			if(keyPath.length == 0){
-				continue;
-			}
-			
-			final Object value;
-			if (SPEED_PREFIX.equals(keyPath[0].toLowerCase())) {
-				value = getObjectAt(keyPath, measurement.getMeasurements().get(MeasurementTypeDto.SPEED), SpeedMeasurement.class);
-			} else if (QOS_PREFIX.equals(keyPath[0].toLowerCase())) {
-				value = getObjectAt(keyPath, measurement.getMeasurements().get(MeasurementTypeDto.QOS), QoSMeasurement.class);
-			} else {
-				value = getObjectAt(keyPath, measurement, Measurement.class);
-			}
-			
-			if (value == null) {
-				continue;
-			}
-			
-			//TODO: specific rules for the items added below
-			
-			final DetailMeasurementGroupItem item = new DetailMeasurementGroupItem();
-			item.setKey(entry.getKey());
-			if (entry.getTranslationKey() == null) {
-				item.setTitle("key_" + entry.getKey());
-			} else {
-				item.setTitle(entry.getTranslationKey()); //TODO: translate
-			}
-			item.setUnit(entry.getUnit());
-			item.setValue(value.toString());
-			
-			ret.getItems().add(item);
-			
-		}
-		
-		return ret;
 	}
 	
 	private String getGeoLocation(final int geoAccuracyDetailLimit, final Locale locale, final GeoLocation location) throws JSONException {
