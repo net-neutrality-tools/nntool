@@ -122,7 +122,7 @@ public class QoSResult {
 
 	@Override
 	public String toString() {
-		return "QoSResult [objectiveId=" + objectiveId + ", type=" + type + ", results=" + results + ", succesCount="
+		return "QoSResult [objectiveId=" + objectiveId + ", type=" + type + ", results=" + results + ", successCount="
 				+ successCount + ", failureCount=" + failureCount + ", implausible=" + implausible + "]";
 	}
 	
