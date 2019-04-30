@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.EvaluatedQoSResult;
@@ -37,17 +38,27 @@ public class QoSEvaluationService {
 	@Autowired
 	public QoSMeasurementObjectiveRepository qosMeasurementObjectiveRepository;
 
-	private Gson gson = new Gson();
+	@Autowired
+	private GsonBuilder gsonBuilder;
+	
+	private Map<Long, QoSMeasurementObjective> objectiveIdToMeasurementObjectiveMap;
+	
+	public void initMeasurementObjectiveMap() {
+		//if this were a post-construct, all servers would need to request QoSMeasurementObjective in their application.yml (as they all know the storage service)
+		//initialize the qos objective map (recalculate it everytime, if no server restart on qos definition change is desired)
+		final List<QoSMeasurementObjective> objectiveList = qosMeasurementObjectiveRepository.findAllByEnabled(true);
+		objectiveIdToMeasurementObjectiveMap = new HashMap<>();
+		objectiveList.forEach( (o) -> objectiveIdToMeasurementObjectiveMap.put(Long.parseLong(o.getObjectiveId()), o));
+	}
 	
 	public FullQoSMeasurement evaluateQoSMeasurement (final QoSMeasurement measurement) {
+		if (objectiveIdToMeasurementObjectiveMap == null) {
+			initMeasurementObjectiveMap();
+		}
+		
 		final FullQoSMeasurement ret = new FullQoSMeasurement();
 		ret.setResults(new ArrayList<>());
 		
-		//TODO: move this into post-construct (unless we want to apply changes from db w/out restarting)
-		final List<QoSMeasurementObjective> objectiveList = qosMeasurementObjectiveRepository.findAllByEnabled(true);
-		final Map<Long, QoSMeasurementObjective> objectiveIdToMeasurementObjectiveMap = new HashMap<>();
-		objectiveList.forEach( (o) -> objectiveIdToMeasurementObjectiveMap.put(Long.parseLong(o.getObjectiveId()), o));
-
 		//start copying
 		final Map<QoSMeasurementType, TreeSet<ResultDesc>> resultKeys = new HashMap<>();
 		
@@ -78,9 +89,10 @@ public class QoSEvaluationService {
 		qosResult.setType(null);
 		qosResult.setObjectiveId(null);
 		
+		final Gson gson = gsonBuilder.create();
 		
-		final String elem = gson.toJson(qosResult.getResults());
-		final AbstractResult result = gson.fromJson(elem, resultClass);	// == testResult
+		//fix double gson call
+		final AbstractResult result = gson.fromJson(gson.toJson(qosResult.getResults()), resultClass);	// == testResult
 		result.setResultMap(qosResult.getResults()); //and add the map (needed for evaluations (e.g. %EVAL xxxxx%))
 		
 		//create a parsed abstract result set sorted by priority
