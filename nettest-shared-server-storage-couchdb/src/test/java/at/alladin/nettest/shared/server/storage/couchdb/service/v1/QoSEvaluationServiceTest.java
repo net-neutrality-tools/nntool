@@ -12,6 +12,8 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gson.GsonBuilder;
+
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.EvaluatedQoSResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
@@ -34,6 +36,9 @@ public class QoSEvaluationServiceTest {
 	@Injectable 
 	@Mocked 
 	QoSMeasurementObjectiveRepository objectiveRepo;
+	
+	@Injectable
+	GsonBuilder builder;
 	
 	private QoSMeasurement qosMeasurement;
 	
@@ -61,8 +66,9 @@ public class QoSEvaluationServiceTest {
 		resMap.put("tcp_result_out_response", "PING");
 		resMap.put("tcp_result_out", "OK");
 		
+		objectiveList = new ArrayList<>();
 		
-		objectiveList = new ArrayList<>();		
+		builder = new GsonBuilder();
 	}
 	
 	@Test
