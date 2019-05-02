@@ -15,7 +15,8 @@
     "asar": "2.0.1",
     "electron": "5.0.0",
     "electron-builder": "20.39.0",
-    "electron-packager": "13.1.1"
+    "electron-packager": "13.1.1",
+    "fsevents": "1.2.4"
   },
   "build": {
     "asar": true,
