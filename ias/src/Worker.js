@@ -328,14 +328,8 @@ function connect()
         }
         else if (wsTestCase === 'upload')
         {
-            if (!singleThread && typeof require !== 'undefined')
-            {
-                importScripts('modules/JSTool.js');
-                jsTool = new JSTool();
-            }
-
             wsCompleted = false;
-            ulData = jsTool.generateRandomData(ulDataSize, true, false);
+            ulData = generateRandomData(ulDataSize, true, false);
         }
     };
 
@@ -476,6 +470,50 @@ function upload()
             }
         }
     }, ulIntervalTiming);
+};
+
+/**
+ * @function generateRandomData
+ * @description Function to generate Random ASCII Data
+ * @public
+ * @param {int} length Random Data Length
+ * @param {bool} asString Indicates if the callback should be a string
+ * @param {bool} asArrayBuffer Indicates if the callback should be a n ArrayBuffer
+ */
+function generateRandomData(length, asString, asArrayBuffer)
+{
+    var mask = '';
+    mask += 'abcdefghijklmnopqrstuvwxyz';
+    mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    mask += '0123456789';
+    mask += '~`!@#$%^&*()_+-={}[]:;?,./|\\';
+
+    if (asArrayBuffer)
+    {
+          var    arrayBuffer = new ArrayBuffer(length);
+          var bufferView = new Uint8Array(arrayBuffer);
+        for (var i = length; i > 0; --i)
+        {
+            bufferView[i] = mask.charCodeAt(Math.floor(Math.random() * mask.length));
+        }
+        return arrayBuffer;
+    }
+    else
+    {
+        var data = '';
+        for (var i = length; i > 0; --i)
+        {
+            data += mask[Math.floor(Math.random() * mask.length)];
+        }
+        if (asString)
+        {
+            return data;
+        }
+        else
+        {
+            return new Blob([data]);
+        }
+    }
 };
 
 /**
