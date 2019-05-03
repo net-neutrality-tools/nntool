@@ -1,5 +1,11 @@
 # Created by https://www.gitignore.io/api/c,osx,vim,c++,ruby,macos,linux,swift,xcode,appcode,windows,fastlane,carthage,cocoapods,sublimetext,objective-c,java,maven,gradle,eclipse,android,jetbrains+all
 
+### Desktop ###
+ias-desktop/modules/ias.desktop.js
+ias-desktop/modules/index.html
+ias-desktop/modules/JSTool.js
+ias-desktop/modules/Worker.js
+
 ### Android ###
 # Built application files
 *.apk

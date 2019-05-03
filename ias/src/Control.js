@@ -411,19 +411,19 @@ function WSControl()
             }
             else
             {
-                if (typeof require !== 'undefined' && wsTestCase === 'download' && typeof global === 'undefined')
+                if (typeof require !== 'undefined' && measurementParameters.platform === 'desktop')
                 {
                     var WorkerNode              = require("tiny-worker");
                     var path                    = require('path');
                     var ipcRendererMeasurement  = require('electron').ipcRenderer;
 
                     wsWorkersStatus[wsID]       = wsStateClosed;
-                    wsWorkers[wsID]             = new WorkerNode(path.join(__dirname, 'Worker.js'));
+                    wsWorkers[wsID]             = new WorkerNode(path.join(__dirname, 'modules/Worker.js'));
 
-                    ipcRendererMeasurement.send('measurementSetWorkerPID', wsWorkers[wsID].child.pid),
+                    ipcRendererMeasurement.send('iasSetWorkerPID', wsWorkers[wsID].child.pid),
 
                     workerData = JSON.parse(workerData);
-                    workerData.ndServerFamily   = measurementParameters.ndServerFamily;
+                    workerData.ndServerFamily = measurementParameters.ndServerFamily;
                     workerData = JSON.stringify(workerData);
                 }
                 else

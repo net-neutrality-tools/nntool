@@ -363,14 +363,13 @@ JSTool.prototype.extend = function ()
 
 JSTool.prototype.performRouteToClientLookup = function(target, port)
 {
-    htPostTool = null;
-    htPostTool = new HTPost();
-    htPostTool.setURL('http://' + target + ':' + port);
-    htPostTool.setValues(JSON.stringify({cmd:'traceroute'}));
-    htPostTool.setContentType('application/json');
-    htPostTool.setTimeout(15000);
-    htPostTool.setMaxTries(1);
-    htPostTool.executeRequest();
+    var xhr = createCORSRequest('POST', 'http://' + target + ':' + port);
+    if (xhr)
+    {
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.timeout = 5000;
+        xhr.send(JSON.stringify({cmd:'traceroute'}));
+    }
 };
 
 JSTool.prototype.isEmpty = function(obj)
@@ -389,6 +388,36 @@ JSTool.prototype.isEmpty = function(obj)
 
 
 /*-------------------------private function------------------------*/
+
+function createCORSRequest(method, url)
+{
+    var xhr = new XMLHttpRequest();
+    if ('withCredentials' in xhr)
+    {
+        xhr.open(method, url, true);
+    } 
+    else if (typeof XDomainRequest !== 'undefined')
+    {
+        xhr = new XDomainRequest();
+        xhr.open(method, url);
+    } 
+    else 
+    {
+        delete xhr;
+        post();
+    }
+    
+    xhr.onload = function()
+    {
+        if (xhr.readyState === 4 && xhr.status === 200)
+        {
+            htPostCallbackTool(xhr.responseText, 0);
+            delete xhr;
+        }
+    };
+    
+    return xhr;
+}
 
 function htPostCallbackTool(data)
 {
@@ -416,19 +445,11 @@ function reportRouteToClientToMeasurement(data)
 
     try
     {
-        data.hops.splice(data.hops.length-2, 2);
-    }
-    catch(e)
-    {
-        data.hops = [];
-    }
-
-    try
-    {
         report.server_client_route_hops = Number(data.hops[data.hops.length-1].id);
     }
     catch (error)
     {
+        data.hops = [];
         report.server_client_route_hops = 0;
     }
 
