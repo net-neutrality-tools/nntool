@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import at.alladin.nettest.spring.data.couchdb.core.mapping.DocTypeHelper;
+import at.alladin.nettest.spring.data.couchdb.core.mapping.Document;
+
 /**
  * Measurement server configuration.
  * 
@@ -13,7 +16,27 @@ import com.google.gson.annotations.SerializedName;
  *
  */
 @JsonClassDescription("Measurement server configuration.")
+@Document("MeasurementServer")
 public class MeasurementServer {
+	
+	@Expose
+	@SerializedName("_id")
+	@JsonProperty("_id")
+	private String id;
+	
+	@Expose
+	@SerializedName("_rev")
+	@JsonProperty("_rev")
+	private String rev;
+	
+	@JsonProperty("docType")
+	@Expose
+	@SerializedName("docType") // TODO: rename to @docType
+	private String docType;
+	
+	public MeasurementServer() {
+		docType = DocTypeHelper.getDocType(getClass());
+	}
 	
 	/**
 	 * A UUID which serves as primary key.

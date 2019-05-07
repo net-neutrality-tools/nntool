@@ -9,8 +9,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.common.LmapOptionDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapResultDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
@@ -23,8 +21,6 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurem
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.TaskConfiguration;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.TaskConfiguration.Option;
 
 /**
  * 
@@ -33,6 +29,9 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.TaskConfigu
  */
 @Mapper(componentModel = "spring")
 public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
+	
+	public static final String QOS_TEST_UID_KEY = "qos_test_uid";
+	public static final String QOS_TEST_TYPE_KEY = "test_type";
 
 	// Explicit map method not necessary if all fields have the same name
 //	@Mappings({
@@ -127,7 +126,7 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		
 		@Mapping(source = "timeBasedResult.cellLocations", target = "networkInfo.cellLocationInfo.cellLocations"),
 		@Mapping(source = "timeBasedResult.signals", target = "networkInfo.signalInfo.signals"),
-		@Mapping(expression = "java(parseMeasurements(lmapReportDto))", target = "measurements"),
+		@Mapping(expression = "java(parseMeasurements(lmapReportDto))", target = "measurements")
 	})
 	Measurement map(LmapReportDto lmapReportDto);
 	
@@ -136,7 +135,9 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		@Mapping(source="relativeEndTimeNs", target="measurementTime.relativeEndTimeNs"),
 		@Mapping(source="downloadRawData", target="speedRawData.download"),
 		@Mapping(source="uploadRawData", target="speedRawData.upload"),
-		@Mapping(source="status", target="statusInfo")
+		@Mapping(source="status", target="statusInfo"),
+		@Mapping(expression="java(parseAverageDownload(subMeasurementResult))", target="throughputAvgDownloadBps"),
+		@Mapping(expression="java(parseAverageUpload(subMeasurementResult))", target="throughputAvgUploadBps")
 	})
 	SpeedMeasurement map (SpeedMeasurementResult subMeasurementResult);
 	
@@ -147,6 +148,22 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		@Mapping(expression="java(parseQoSResult(subMeasurementResult))", target="results")
 	})
 	QoSMeasurement map (QoSMeasurementResult subMeasurementResult);
+	
+	default Long parseAverageDownload (final SpeedMeasurementResult result) {
+		if (result.getBytesDownload() == null || result.getDurationDownloadNs() == null) {
+			return 0L;
+		}
+		
+		return (long) (result.getBytesDownload() * 8 / (result.getDurationDownloadNs() / 1e9));
+	}
+	
+	default Long parseAverageUpload (final SpeedMeasurementResult result) {
+		if (result.getBytesUpload() == null || result.getDurationUploadNs() == null) {
+			return 0L;
+		}
+		
+		return (long) (result.getBytesUpload() * 8 / (result.getDurationUploadNs() / 1e9));
+	}
 	
 	default Map<MeasurementTypeDto, SubMeasurement> parseMeasurements (LmapReportDto lmapReportDto) {
 		Map<MeasurementTypeDto, SubMeasurement> ret = new HashMap<>();
@@ -173,12 +190,20 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		}
 		for (Map<String, Object> map : mapList) {
 			final QoSResult res = new QoSResult();
-			Object val = map.get("test_type");
+			Object val = map.get(QOS_TEST_TYPE_KEY);
 			if (val != null) {
 				try {
 					res.setType(QoSMeasurementType.valueOf(val.toString().toUpperCase()));
 				} catch (IllegalArgumentException ex) {
 					ex.printStackTrace();
+				}
+			}
+			val = map.get(QOS_TEST_UID_KEY);
+			if (val != null) {
+				try {
+					res.setObjectiveId(Long.parseLong(val.toString()));
+				} catch (IllegalArgumentException ex) {
+					
 				}
 			}
 			res.setResults(map);

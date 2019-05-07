@@ -18,9 +18,15 @@ spring:
         create-if-not-exists: true
         entities:
           - Measurement
+          - MeasurementAgent
+      - name: settings
+        create-if-not-exists: true
+        entities:
+          - QoSMeasurementObjective
+          - Settings
 
 server:
-  port: 8081
+  port: 8082
 
 logging:
   level:

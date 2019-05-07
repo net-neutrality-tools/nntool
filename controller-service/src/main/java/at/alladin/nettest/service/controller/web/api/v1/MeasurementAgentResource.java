@@ -68,7 +68,13 @@ public class MeasurementAgentResource {
 			throw new MeasurementAgentRegistrationTermsAndConditionsNotAcceptedException();
 		}
 		
-		final RegistrationResponse registrationResponse = storageService.registerMeasurementAgent(registrationApiRequest);
+		final RegistrationResponse registrationResponse;
+		try {
+			registrationResponse = storageService.registerMeasurementAgent(registrationApiRequest);
+		} catch (StorageServiceException ex) {
+			//TODO: talk about handling that differently
+			throw new MeasurementAgentRegistrationTermsAndConditionsNotAcceptedException("Client has unknown uuid in registration request");
+		}
 		
 		try {
 			registrationResponse.setSettings(storageService.getSettings(controllerServiceProperties.getSettingsUuid()));

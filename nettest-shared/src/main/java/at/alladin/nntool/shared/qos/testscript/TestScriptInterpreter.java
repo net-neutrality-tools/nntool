@@ -16,6 +16,7 @@
 // based on: https://raw.githubusercontent.com/alladin-IT/open-rmbt/master/RMBTControlServer/src/at/alladin/rmbt/qos/testscript/TestScriptInterpreter.java
 package at.alladin.nntool.shared.qos.testscript;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -30,9 +31,6 @@ import javax.script.*;
 import org.json.JSONObject;
 
 import at.alladin.nettest.shared.nntool.Helperfunctions;
-import at.alladin.nntool.shared.hstoreparser.Hstore;
-import at.alladin.nntool.shared.hstoreparser.HstoreParseException;
-import at.alladin.nntool.shared.hstoreparser.HstoreParser;
 import at.alladin.nntool.shared.qos.AbstractResult;
 import at.alladin.nntool.shared.qos.ResultOptions;
 import at.alladin.nntool.shared.qos.testscript.TestScriptInterpreter.EvalResult.EvalResultType;
@@ -113,8 +111,8 @@ public class TestScriptInterpreter {
 	 * @param command
 	 * @return
 	 */
-	public static Object interprete(String command, ResultOptions resultOptions) {
-		return interprete(command, null, null, false, resultOptions);
+	public static Object interpret(String command, ResultOptions resultOptions) {
+		return interpret(command, null, null, false, resultOptions);
 	}
 		
 	/**
@@ -122,7 +120,7 @@ public class TestScriptInterpreter {
 	 * @param command
 	 * @return
 	 */
-	public synchronized static Object interprete(String command, Hstore hstore, AbstractResult object, boolean useRecursion, ResultOptions resultOptions) {
+	public synchronized static Object interpret(String command, Map<String, Field> fieldNameToFieldMap, AbstractResult object, boolean useRecursion, ResultOptions resultOptions) {
 
 		if (jsEngine == null) {
 			ScriptEngineManager sem = new ScriptEngineManager();
@@ -144,11 +142,11 @@ public class TestScriptInterpreter {
 				//System.out.println("found control command: " + controlCommand + ", clause: " + mc.group(2));
 				if ("IF".equals(controlCommand)) {
 					if (controlIf(mc.group(2), object)) {
-						toReplace = String.valueOf(interprete(mc.group(3), hstore, object, true, resultOptions));
+						toReplace = String.valueOf(interpret(mc.group(3), fieldNameToFieldMap, object, true, resultOptions));
 					}
 				}
 				else if ("SWITCH".equals(controlCommand)) {
-					toReplace = String.valueOf(interprete(controlSwitch(mc.group(2), object, mc.group(3)), hstore, object, true, resultOptions));
+					toReplace = String.valueOf(interpret(controlSwitch(mc.group(2), object, mc.group(3)), fieldNameToFieldMap, object, true, resultOptions));
 				}
 				
 				command = command.replace(mc.group(0), (toReplace != null ? toReplace.trim() : ""));
@@ -170,7 +168,7 @@ public class TestScriptInterpreter {
 			while (m.find()) {
 				String replace = m.group(0);
 				//System.out.println("found: " + replace);
-				String toReplace = String.valueOf(interprete(replace, hstore, object, false, resultOptions));
+				String toReplace = String.valueOf(interpret(replace, fieldNameToFieldMap, object, false, resultOptions));
 				//System.out.println("replacing: " + m.group(0) + " -> " + toReplace);
 				command = command.replace(m.group(0), toReplace);
 			}
@@ -207,10 +205,10 @@ public class TestScriptInterpreter {
 				return random(args);
 			}
 			else if (COMMAND_PARAM.equals(scriptCommand)) {
-				return parse(args, hstore, object, resultOptions);
+				return parse(args, fieldNameToFieldMap, object, resultOptions);
 			}
 			else if (COMMAND_EVAL.equals(scriptCommand)) {
-				return eval(args, hstore, object);
+				return eval(args, object);
 			}
 			else if (COMMAND_RANDOM_URL.equals(scriptCommand)) {
 				return randomUrl(args);
@@ -284,7 +282,7 @@ public class TestScriptInterpreter {
 	 * @return
 	 * @throws ScriptException
 	 */
-	private static Object eval(String[] args, Hstore hstore, AbstractResult object) throws ScriptException {
+	private static Object eval(String[] args, AbstractResult object) throws ScriptException {
 		try {
 			boolean isJsObject = false;
 			
@@ -329,7 +327,7 @@ public class TestScriptInterpreter {
 					final String type = (String) jsEngineNativeObjectGetter.invoke(result, "type");
 					final String key = (String) jsEngineNativeObjectGetter.invoke(result, "key");
 					
-					System.out.println(type + " " + key);
+					//System.out.println(type + " " + key);
 					
 					evalResult = new EvalResult(EvalResultType.valueOf(type.toUpperCase(Locale.US)), key);
 					
@@ -350,18 +348,16 @@ public class TestScriptInterpreter {
 	 * @return
 	 * @throws ScriptException
 	 */
-	private static Object parse(String[] args, Hstore hstore, Object object, ResultOptions options) throws ScriptException {
+	private static Object parse(String[] args, Map<String, Field> fieldNameToFieldMap, Object object, ResultOptions options) throws ScriptException {
 
 		if (object == null) {
 			throw new ScriptException(ScriptException.ERROR_RESULT_IS_NULL + " PARSE");
 		}
-
-		HstoreParser<?> parser = hstore.getParser(object.getClass());
 		
 		if (args.length < 1) {
 			throw new ScriptException(ScriptException.ERROR_INVALID_ARGUMENT_COUNT + " PARSE: " + args.length);
 		}
-		if (parser == null) {
+		if (fieldNameToFieldMap == null) {
 			throw new ScriptException(ScriptException.ERROR_PARSER_IS_NULL + " PARSE");
 		}
 
@@ -372,7 +368,7 @@ public class TestScriptInterpreter {
 			if (m.find()) {
 				String param = m.group(1);
 				int index = Integer.valueOf(m.group(2));
-				Object array = parser.getValue(param, object);
+				Object array = getFieldValue(fieldNameToFieldMap, param, object);
 				
 				Object indexedObject = null;
 				if (array != null) {
@@ -394,7 +390,7 @@ public class TestScriptInterpreter {
 					if (args.length > 1) {
 						String[] nextArgs = new String[args.length - 1];
 						nextArgs = Arrays.copyOfRange(args, 1, args.length);
-						return parse(nextArgs, hstore, indexedObject, options);
+						return parse(nextArgs, fieldNameToFieldMap, indexedObject, options);
 					}
 					else {
 						return indexedObject;
@@ -402,7 +398,7 @@ public class TestScriptInterpreter {
 				}
 			}
 			else {
-				Object value = parser.getValue(args[0], object);
+				Object value = getFieldValue(fieldNameToFieldMap, args[0], object);
 				if (args.length > 1) {
 					try {
 						long divisor = Long.parseLong(args[1]);
@@ -429,8 +425,6 @@ public class TestScriptInterpreter {
 				//System.out.println("PARAM object: " + args[0] + " -> " + value + " of " + object.toString());
 				return value;				
 			}
-		} catch (HstoreParseException e) {
-			throw new ScriptException(ScriptException.ERROR_UNKNOWN + " PARSE: " + e.getMessage());
 		} catch (Throwable t) {
 			throw new ScriptException(ScriptException.ERROR_UNKNOWN + " PARSE: " + t.getMessage());
 		}
@@ -486,5 +480,19 @@ public class TestScriptInterpreter {
 		}
 		
 		return map;
+	}
+	
+	private static Object getFieldValue(final Map<String, Field> fieldNameToFieldMap, final String param, final Object object) throws ScriptException {
+		Field field = fieldNameToFieldMap.get(param);
+		if (field != null) {
+			try {
+				field.setAccessible(true);
+				return field.get(object);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				throw new ScriptException("Could not get field: " + field.getClass().getCanonicalName() + "." + field.getName() + "\n", e);
+			}
+		}
+		
+		return null;
 	}
 }

@@ -31,6 +31,7 @@ import at.alladin.nntool.shared.qos.TracerouteResult;
 import at.alladin.nntool.shared.qos.UdpResult;
 import at.alladin.nntool.shared.qos.VoipResult;
 import at.alladin.nntool.shared.qos.WebsiteResult;
+import at.alladin.nntool.shared.qos.EchoProtocolResult;
 
 /**
  * 
@@ -52,7 +53,8 @@ public class QoSTestResult implements Serializable {
 		WEBSITE(WebsiteResult.class), 
 		NON_TRANSPARENT_PROXY(NonTransparentProxyResult.class),
 		TRACEROUTE(TracerouteResult.class),
-		VOIP(VoipResult.class);
+		VOIP(VoipResult.class),
+		ECHO_PROTOCOL(EchoProtocolResult.class);
 
 		
 		protected Class<? extends AbstractResult> clazz; 

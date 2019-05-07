@@ -19,8 +19,6 @@ package at.alladin.nntool.shared.qos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
-
 /**
  * 
  * Result example:
@@ -42,7 +40,6 @@ public class WebsiteResult extends AbstractResult {
 	/**
 	 * 
 	 */
-	@HstoreKey("website_objective_url")
 	@SerializedName("website_objective_url")
 	@Expose
 	private String url;
@@ -50,7 +47,6 @@ public class WebsiteResult extends AbstractResult {
 	/**
 	 * 
 	 */
-	@HstoreKey("website_objective_clear_cache")
 	@SerializedName("website_objective_clear_cache")
 	@Expose
 	private Boolean clearCache;
@@ -58,7 +54,6 @@ public class WebsiteResult extends AbstractResult {
 	/**
 	 * 
 	 */
-	@HstoreKey("website_objective_user_agent")
 	@SerializedName("website_objective_user_agent")
 	@Expose
 	private String userAgent;
@@ -66,44 +61,36 @@ public class WebsiteResult extends AbstractResult {
 	/**
 	 * 
 	 */
-	@HstoreKey("website_objective_timeout")
 	@SerializedName("website_objective_timeout")
 	@Expose
 	private Long timeout;
 	
 	////
 	
-	@HstoreKey("website_result_info")
 	@SerializedName("website_result_info")
 	@Expose
 	private String info;
 	
-	@HstoreKey("website_result_status")
 	@SerializedName("website_result_status")
 	@Expose
 	private String status;
 	
-	@HstoreKey("website_result_duration")
 	@SerializedName("website_result_duration")
 	@Expose
 	private Long duration;
 	
-	@HstoreKey("website_result_rx_bytes")
 	@SerializedName("website_result_rx_bytes")
 	@Expose
 	private Long rxBytes;
 	
-	@HstoreKey("website_result_tx_bytes")
 	@SerializedName("website_result_tx_bytes")
 	@Expose
 	private Long txBytes;
 	
-	@HstoreKey("website_result_first_http_response_time_ns")
 	@SerializedName("website_result_first_http_response_time_ns")
 	@Expose
 	private Long firstHttpResponseTimeNs;
 	
-	@HstoreKey("website_result_request_count")
 	@SerializedName("website_result_request_count")
 	@Expose
 	private Integer requestCount;
