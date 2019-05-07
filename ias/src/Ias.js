@@ -453,7 +453,7 @@ function Ias()
 
         if (performRouteToClientLookup && !performedRouteToClientLookup && (performDownloadMeasurement || performUploadMeasurement))
         {
-            jsTool.performRouteToClientLookup(wsMeasurementParameters.wsTarget + '.' + wsMeasurementParameters.wsTLD, routeToClientTargetPort);
+            jsTool.performRouteToClientLookup(wsMeasurementParameters.wsTargets[Math.floor(Math.random() * wsMeasurementParameters.wsTargets.length)] + '.' + wsMeasurementParameters.wsTLD, routeToClientTargetPort);
             performedRouteToClientLookup = true;
         }
 
@@ -529,16 +529,14 @@ function Ias()
         wsMeasurementParameters.testCase = 'download';
         if (typeof require !== 'undefined')
         {
-            /*
-            if (v6)
+            if (wsMeasurementParameters.wsTargets[0].indexOf('ipv6') !== -1)
             {
                 wsMeasurementParameters.ndServerFamily = 6;
             }
-            else
+            else if (wsMeasurementParameters.wsTargets[0].indexOf('ipv4') !== -1)
             {
                 wsMeasurementParameters.ndServerFamily = 4;
             }
-            */
         }
         wsControl.measurementStart(JSON.stringify(wsMeasurementParameters));
     }
@@ -623,7 +621,7 @@ function Ias()
 
     function startGcTimer()
     {
-        if (typeof require !== 'undefined' && platformModule.isIOS)
+        if (typeof require !== 'undefined' && typeof platformModule !== 'undefined' && platformModule.isIOS)
         {
             gcTimer = setInterval(function ()
             {

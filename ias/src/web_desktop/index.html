@@ -2,20 +2,22 @@
 <head>
     <meta charset='utf-8'/>
     <title>ias</title>
-    <meta name='viewport' content='width=device-width'/>
-    <meta content='yes' name='apple-mobile-web-app-capable'/>
+    <meta name="viewport" content="width=device-width"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <script language='JavaScript' type='text/javascript' src='ias.web.js'></script>
+    <script type="text/javascript" src="ias.web.js"></script>
 </head>
 
 <body onload="setButtons()">
     <div style="width: 100%; overflow: hidden;">
 
-        <div style="width: 500px; float: left;">
-            <h1 style="padding-left:50px;">ias 1.0.0</h1>
+        <div style="width: 450px; float: left;">
 
-                <div style="padding-left:50px;border-spacing:100px;">
+            <div id="header">
+                <h1 style="padding-left:50px;">ias 1.0.0</h1>
+            </div>
 
+            <div style="padding-left:50px;border-spacing:100px;">
                 <table>
                     <tr>
                         <td>IP Version</td>
@@ -45,16 +47,17 @@
                 <button id='downloadButton' onclick='iasStart("download")'    >Download</button>
                 <button id='uploadButton' onclick='iasStart("upload")'        >Upload</button>
             </div>
-            <br><br>
-            <h1 style="padding-left:50px;">port blocking 1.0.0</h1>
 
+            <div id="portblocking_control">
+                <br><br>
+                <h1 style="padding-left:50px;">port blocking 1.0.0</h1>
                 <div style="padding-left:50px;border-spacing:100px;">
-
-                <button id='portBlockingStartButton' onclick='portBlockingStart()'>Start</button>
+                    <button id='portBlockingStartButton' onclick='portBlockingStart()'>Start</button>
+                </div>
             </div>
         </div>
 
-        <div style="margin-left: 500px;">
+        <div style="margin-left: 450px;">
             <br>
             <table>
                 <tr>
@@ -78,7 +81,7 @@
                 </tr>
 
                 <tr>
-                    <td><div style="padding-left:40px;border-spacing:20px;">Port Blocking: </div></td>
+                    <td><div style="padding-left:40px;border-spacing:20px;" id="portblocking_result">Port Blocking: </div></td>
                     <td><div style="padding-left:20px;border-spacing:20px;" id="port_blocking">-</div></td>
                 </tr>
             </table>
@@ -104,15 +107,30 @@
 
         /*!
          *      \author zafaco GmbH <info@zafaco.de>
-         *      \date Last update: 2019-03-20
+         *      \date Last update: 2019-04-08
          *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
          */
+
+
+
+
+        /*-------------------------functions web and desktop------------------------*/
 
         var ias;
         var iasParameters = {};
 
         var portBlocking;
         var portBlockingParameters = {};
+
+        var cliOptions;
+
+        if (typeof require !== "undefined")
+        {
+            document.getElementById("header").innerHTML = "<h1 style=\"padding-left:50px;\">ias desktop 1.0.0</h1>";
+            document.getElementById("portblocking_control").innerHTML = "";
+            document.getElementById("portblocking_result").innerHTML = "";
+            document.getElementById("port_blocking").innerHTML = "";
+        }
 
         function iasStart(testCase)
         {
@@ -158,7 +176,8 @@
             iasParameters.wsAuthTimestamp               = 'placeholderTimestamp';
 
             iasParameters.wsWorkerPath                  = 'Worker.js';
-            iasParameters.performRouteToClientLookup    = false;
+            iasParameters.performRouteToClientLookup    = true;
+            iasParameters.routeToClientTargetPort       = 8080;
 
             iasParameters.download  = {};
             iasParameters.upload    = {};
@@ -302,49 +321,90 @@
                 iasParameters.upload.performMeasurement     = true;
             }
 
-            delete ias;
-            ias = null;
-            ias = new Ias();
+            if (typeof cliOptions !== 'undefined')
+            {
+                iasParameters.rtt.performMeasurement        = false;
+                iasParameters.download.performMeasurement   = false;
+                iasParameters.upload.performMeasurement     = false;
 
-            ias.measurementStart(JSON.stringify(iasParameters));
+                if (typeof cliOptions.rtt !== 'undefined')
+                {
+                    iasParameters.rtt.performMeasurement = cliOptions.rtt.performMeasurement;
+                }
+                if (typeof cliOptions.download !== 'undefined')
+                {
+                    iasParameters.download.performMeasurement = cliOptions.download.performMeasurement;
+                }
+                if (typeof cliOptions.upload !== 'undefined')
+                {
+                    iasParameters.upload.performMeasurement = cliOptions.upload.performMeasurement;
+                }
+            }
+
+            if (typeof require === "undefined")
+            {
+                delete ias;
+                ias = null;
+                ias = new Ias();
+
+                ias.measurementStart(JSON.stringify(iasParameters));
+            }
+            else
+            {
+                iasParameters.platform                  = 'desktop';
+                iasSendToControl('start', JSON.stringify(iasParameters));
+            }
         }
 
         function iasStop()
         {
-            ias.measurementStop();
+            if (typeof require === "undefined")
+            {
+                ias.measurementStop();
 
-            document.getElementById('stopButton').disabled = true;
-            document.getElementById('loadButton').disabled = false;
+                document.getElementById('status').innerHTML = 'Measurement stopped';
+                document.getElementById('stopButton').disabled = true;
+                document.getElementById('loadButton').disabled = false;
+            }
+            else
+            {
+                iasSendToControl('stop');
+            }
         }
 
-        function portBlockingStart()
+        if (typeof require === "undefined")
         {
-            outputPrepare();
-            document.getElementById('stopButton').disabled = true;
+            function portBlockingStart()
+            {
+                outputPrepare();
+                document.getElementById('stopButton').disabled = true;
 
-            portBlockingParameters.platform     = 'web';
-            portBlockingParameters.target       = 'peer-ias-de-01.net-neutrality.tools';
-            portBlockingParameters.targetIpv4   = '82.199.148.52';
-            portBlockingParameters.targetIpv6   = '2a01:4a0:f::11';
+                portBlockingParameters.platform     = 'web';
+                portBlockingParameters.target       = 'peer-ias-de-01.net-neutrality.tools';
+                portBlockingParameters.targetIpv4   = '82.199.148.52';
+                portBlockingParameters.targetIpv6   = '2a01:4a0:f::11';
 
-            portBlockingParameters.user         = 'berec';
-            portBlockingParameters.password     = 'berec';
-            portBlockingParameters.ports        = [123, 500, 4500, 5060, 7000];
-            portBlockingParameters.timeout      = 5000;
+                portBlockingParameters.user         = 'berec';
+                portBlockingParameters.password     = 'berec';
+                portBlockingParameters.ports        = [123, 500, 4500, 5060, 7000];
+                portBlockingParameters.timeout      = 5000;
 
-            delete portBlocking;
-            portBlocking = null;
-            portBlocking = new PortBlocking();
+                delete portBlocking;
+                portBlocking = null;
+                portBlocking = new PortBlocking();
 
-            portBlocking.measurementStart(portBlockingParameters);
+                portBlocking.measurementStart(portBlockingParameters);
+            }
         }
 
         function setButtons()
         {
-            toggleButtons(true);
-            document.getElementById('loadButton').disabled                = true;
-
-            document.getElementById('status').innerHTML                   = 'MeasurementLoad successful';
+            if (typeof require === "undefined")
+            {
+                toggleButtons(true);
+                document.getElementById('loadButton').disabled  = true;
+                document.getElementById('status').innerHTML     = 'MeasurementLoad successful';
+            }
         }
 
         function toggleButtons(enable)
@@ -355,7 +415,11 @@
             document.getElementById('uploadButton').disabled              = !enable;
             document.getElementById('stopButton').disabled                = enable;
             document.getElementById('loadButton').disabled                = !enable;
-            document.getElementById('portBlockingStartButton').disabled   = !enable;
+
+            if (typeof require === "undefined")
+            {
+                document.getElementById('portBlockingStartButton').disabled   = !enable;
+            }
         }
 
         function measurementCallback(data)
@@ -365,7 +429,10 @@
 
         function iasCallback(data)
         {
-            outputData(data);
+            if (typeof require === 'undefined')
+            {
+                outputData(data);
+            }
         }
 
         function outputPrepare()
@@ -380,7 +447,11 @@
             document.getElementById('rtt').innerHTML = '-';
             document.getElementById('download').innerHTML = '-';
             document.getElementById('upload').innerHTML = '-';
-            document.getElementById('port_blocking').innerHTML = '-';
+
+            if (typeof require === "undefined")
+            {
+                document.getElementById('port_blocking').innerHTML = '-';
+            }
             document.getElementById('kpis').innerHTML = '';
         }
 
@@ -427,15 +498,18 @@
                     {
                         outputToHtml((data.upload_info[data.upload_info.length-1].throughput_avg_bps / 1000 / 1000).toFixed(2), 'upload');
                     }
-                    if (data.test_case === 'port_blocking' && data.port_blocking.results.length !== 0)
+                    if (typeof require === "undefined")
                     {
-                        var reachable = 0;
-                        data.port_blocking.results.forEach(function(element)
+                        if (data.test_case === 'port_blocking' && data.port_blocking.results.length !== 0)
                         {
-                            if (element.reachable === true) reachable++;
-                        });
+                            var reachable = 0;
+                            data.port_blocking.results.forEach(function(element)
+                            {
+                                if (element.reachable === true) reachable++;
+                            });
 
-                        outputToHtml('' + reachable + ' of ' + data.port_blocking.results.length + ' reachable', 'port_blocking');
+                            outputToHtml('' + reachable + ' of ' + data.port_blocking.results.length + ' reachable', 'port_blocking');
+                        }
                     }
 
                     outputToHtml(JSON.stringify(orderKeys(data), null, 4), 'kpis');
@@ -467,6 +541,7 @@
         function load()
         {
              location.reload();
+             iasSendToControl('load');
         }
 
         function orderKeys(obj)
@@ -491,6 +566,94 @@
             }
 
             return obj;
+        }
+
+
+
+
+        /*-------------------------functions desktop------------------------*/
+
+        if (typeof require !== "undefined")
+        {
+            const url           = require('url');
+            const unhandled     = require('electron-unhandled');
+            var path            = require('path');
+            var ipcRendererUi   = require('electron').ipcRenderer;
+            
+            unhandled({'showDialog':false});
+
+            function iasSendToControl(cmd, data)
+            {
+                ipcRendererUi.send('iasControl', cmd, data);
+            }
+
+            function iasDidLoad()
+            {
+                toggleButtons(true);
+                document.getElementById('loadButton').disabled  = true;
+                document.getElementById('status').innerHTML     = 'MeasurementLoad successful';
+            }
+
+            function iasCallbackWithResponse(report)
+            {
+                outputData(report);
+            }
+            
+            function iasDidCompleteWithResponse(report, error)
+            {
+                outputData(report);
+            }
+            
+            function iasDidStop()
+            {
+                document.getElementById('status').innerHTML = 'Measurement stopped';
+                document.getElementById('stopButton').disabled = true;
+                document.getElementById('loadButton').disabled = false;
+            }
+
+            /*-------------------------ias-desktop Callbacks------------------------*/
+            
+            ipcRendererUi.on('iasCallback', function(event, cmd, report, error)
+            {
+                switch(cmd)
+                {
+                    case 'iasDidLoad':
+                    {
+                        iasDidLoad();
+                        break;
+                    }
+
+                    case 'iasCallbackWithResponse':
+                    {
+                        iasCallbackWithResponse(report);
+                        break;
+                    }
+                    
+                    case 'iasDidCompleteWithResponse':
+                    {
+                        iasDidCompleteWithResponse(report, error);
+                        break;
+                    }
+
+                    case 'iasDidStop':
+                    {
+                        iasDidStop();
+                        break;
+                    }
+                }
+            });
+
+            ipcRendererUi.on('cli', function(event, cmd, data)
+            {
+                if (cmd === 'start')
+                {
+                    if (typeof data !== 'undefined')
+                    {
+                        cliOptions = JSON.parse(data);
+                    }
+                    iasStart('all');
+                }
+            });
         }
 
     </script>
