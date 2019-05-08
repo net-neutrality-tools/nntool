@@ -624,6 +624,22 @@ void              nopoll_ctx_set_on_accept (noPollCtx            * ctx,
 	return;
 }
 
+void           nopoll_ctx_set_on_reject (noPollCtx           * ctx,
+					 noPollActionHandler   on_reject,
+					 noPollPtr             user_data)
+{
+	/* set the handler */
+	ctx->on_reject = on_reject;
+	if (ctx->on_reject == NULL)
+		ctx->on_reject_data = NULL;
+	else
+		ctx->on_reject_data = user_data;
+	return;
+}
+
+
+
+
 /** 
  * @brief Allows to set a general handler to get notifications about a
  * message received over any connection that is running under the

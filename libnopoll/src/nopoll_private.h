@@ -92,7 +92,7 @@ struct _noPollCtx {
 	/** 
 	 * @internal Connection array list and its length.
 	 */
-        int               conn_id;
+    int               conn_id;
 	noPollConn     ** conn_list;
 	int               conn_length;
 	/** 
@@ -105,6 +105,12 @@ struct _noPollCtx {
 	 */
 	noPollActionHandler on_accept;
 	noPollPtr           on_accept_data;
+
+	/** 
+	 * @internal Reference to defined on reject handling.
+	 */
+	noPollActionHandler on_reject;
+	noPollPtr           on_reject_data;
 
 	/** 
 	 * @internal Reference to defined on ready handling.
@@ -267,6 +273,11 @@ struct _noPollConn {
 	noPollMsg   * pending_msg;
 	long int      pending_diff;
 	long int      pending_desp;
+
+	/** 
+	 * @internal Flag to indicate plain http usage instead of websockets.
+	 */
+	nopoll_bool   http_on;
 
 	/** 
 	 * @internal Flag to handle TLS support upon connection

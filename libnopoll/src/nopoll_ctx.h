@@ -74,6 +74,10 @@ void           nopoll_ctx_set_on_accept (noPollCtx           * ctx,
 					 noPollActionHandler   on_accept,
 					 noPollPtr             user_data);
 
+void           nopoll_ctx_set_on_reject (noPollCtx           * ctx,
+					 noPollActionHandler   on_reject,
+					 noPollPtr             user_data);
+
 void           nopoll_ctx_set_on_open (noPollCtx            * ctx,
 				       noPollActionHandler    on_open,
 				       noPollPtr              user_data);

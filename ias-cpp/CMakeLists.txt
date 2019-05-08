@@ -17,9 +17,9 @@
 # */
 
 
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.2)
 
-project(ias-server)
+project(ias-client)
 
 #---------------------------------------------------------------------------------
 
@@ -31,40 +31,22 @@ ENDIF (NOT THREADS_FOUND)
 
 #---------------------------------------------------------------------------------
 
-MESSAGE(STATUS "Looking for pkg-config")
-FIND_PROGRAM(PKG_CONFIG NAMES pkg-config PATHS /usr/bin/)
-IF (${PKG_CONFIG} STREQUAL PKG_CONFIG-NOTFOUND)
-	MESSAGE(FATAL_ERROR "ERROR: try -> apt install pkg-config")
-ENDIF (${PKG_CONFIG} STREQUAL PKG_CONFIG-NOTFOUND)
-
-#---------------------------------------------------------------------------------
-
-MESSAGE(STATUS "Looking for libnopoll")
-FIND_PROGRAM(LIBNOPOLL NAMES libnopoll.so PATHS /usr/local/lib/)
-IF (${LIBNOPOLL} STREQUAL LIBNOPOLL-NOTFOUND)
-	MESSAGE(FATAL_ERROR "ERROR: libnopoll missing")
-ENDIF (${LIBNOPOLL} STREQUAL LIBNOPOLL-NOTFOUND)
-
-#---------------------------------------------------------------------------------
-
 set(dir ${CMAKE_CURRENT_SOURCE_DIR}/build)
 set(EXECUTABLE_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
 set(LIBRARY_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
-
+ 
 set ( CMAKE_VERBOSE_MAKEFILE true )
 add_definitions(-std=c++11)
-add_definitions(-g)
-add_definitions(-Wall)
-add_definitions(-Wextra)
+add_definitions ("-g")
+add_definitions ("-Wall")
+add_definitions ("-Wextra")
 add_definitions(-DNNTOOL)
-add_definitions(-DNNTOOL_SERVER)
-add_definitions("$$(pkg-config nopoll --cflags)")
-add_definitions("$$(pkg-config nopoll --libs)")
+add_definitions(-DNNTOOL_CLIENT)
 
 add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/../ias-libnntool ${CMAKE_CURRENT_BINARY_DIR}/ias-libnntool)
 add_subdirectory (src)
 
-INSTALL(PROGRAMS build/ias-server DESTINATION bin )
+INSTALL(PROGRAMS build/ias-client DESTINATION bin )
 INSTALL(PROGRAMS build/libnntool.so DESTINATION /usr/lib )
 
 INCLUDE (InstallRequiredSystemLibraries)
@@ -79,8 +61,8 @@ SET (CPACK_DEBIAN_PACKAGE_SECTION "measurement")
 SET (CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
 set (CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
-SET (CPACK_PACKAGE_DESCRIPTION "ias server (ias-server)")
-SET (CPACK_PACKAGE_DESCRIPTION_SUMMARY "ias server (ias-server)")
+SET (CPACK_PACKAGE_DESCRIPTION "ias client cpp (ias-client)")
+SET (CPACK_PACKAGE_DESCRIPTION_SUMMARY "ias client cpp (ias-client)")
 SET (CPACK_DEBIAN_PACKAGE_MAINTAINER "zafaco GmbH")
 SET (CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}_${CPACK_DEBIAN_ARCHITECTURE}")
 
