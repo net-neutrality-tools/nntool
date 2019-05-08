@@ -33,4 +33,10 @@ public class QoSMeasurement extends SubMeasurement {
 	public void setResults(List<QoSResult> results) {
 		this.results = results;
 	}
+
+	@Override
+	public String toString() {
+		return "QoSMeasurement [results=" + results + "]";
+	}
+	
 }

@@ -89,4 +89,11 @@ public class DetailMeasurementGroup {
 	public void setItems(List<DetailMeasurementGroupItem> items) {
 		this.items = items;
 	}
+
+	@Override
+	public String toString() {
+		return "DetailMeasurementGroup [title=" + title + ", description=" + description + ", iconCharacter="
+				+ iconCharacter + ", items=" + items + "]";
+	}
+	
 }

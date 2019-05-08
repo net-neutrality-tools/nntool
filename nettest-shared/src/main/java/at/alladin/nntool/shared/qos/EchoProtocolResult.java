@@ -19,39 +19,31 @@ package at.alladin.nntool.shared.qos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
-
 /**
  * @author fk 
  */
 public class EchoProtocolResult extends AbstractResult {
 
-	@HstoreKey("echo_protocol_objective_host")
 	@SerializedName("echo_protocol_objective_host")
 	@Expose
 	private Object host;
 
-	@HstoreKey("echo_protocol_objective_port")
 	@SerializedName("echo_protocol_objective_port")
 	@Expose
 	private Object port;
 
-	@HstoreKey("echo_protocol_objective_protocol")
 	@SerializedName("echo_protocol_objective_protocol")
 	@Expose
 	private Object protocol;
 
-	@HstoreKey("echo_protocol_objective_payload")
 	@SerializedName("echo_protocol_objective_payload")
 	@Expose
 	private Object payload;
 
-	@HstoreKey("echo_protocol_status")
 	@SerializedName("echo_protocol_status")
 	@Expose
 	private Object status;
 
-	@HstoreKey("echo_protocol_result")
 	@SerializedName("echo_protocol_result")
 	@Expose
 	private Object result;

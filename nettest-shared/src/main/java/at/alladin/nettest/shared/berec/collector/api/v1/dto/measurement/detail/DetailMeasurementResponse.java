@@ -37,4 +37,10 @@ public class DetailMeasurementResponse extends BasicResponse {
 	public void setGroups(List<DetailMeasurementGroup> groups) {
 		this.groups = groups;
 	}
+
+	@Override
+	public String toString() {
+		return "DetailMeasurementResponse [groups=" + groups + "]";
+	}
+	
 }

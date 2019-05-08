@@ -87,4 +87,11 @@ public class DetailMeasurementGroupItem {
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
+
+	@Override
+	public String toString() {
+		return "DetailMeasurementGroupItem [key=" + key + ", title=" + title + ", value=" + value + ", unit=" + unit
+				+ "]";
+	}
+	
 }

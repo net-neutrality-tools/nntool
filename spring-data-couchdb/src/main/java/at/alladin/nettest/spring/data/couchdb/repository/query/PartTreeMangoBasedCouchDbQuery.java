@@ -29,9 +29,11 @@ public class PartTreeMangoBasedCouchDbQuery extends AbstractCouchDbRepositoryQue
 
 	@Override
 	public Object execute(Object[] parameters) {
+		final ParametersParameterAccessor paramAccessor = new ParametersParameterAccessor(method.getParameters(), parameters);
+		
 		final MangoQueryCreator creator = new MangoQueryCreator(
 			partTree, 
-			new ParametersParameterAccessor(method.getParameters(), parameters), 
+			paramAccessor, 
 			method.getDocType()
 		);
 		
@@ -41,7 +43,7 @@ public class PartTreeMangoBasedCouchDbQuery extends AbstractCouchDbRepositoryQue
 		
 		final CouchDbQueryResult<?> queryResult = operations.query(query, getQueryMethod().getReturnedObjectType());
 		
-		List<?> docs = queryResult.getDocs();
+		final List<?> docs = queryResult.getDocs();
 		
 		if (method.isCollectionQuery()) {
 			return docs;

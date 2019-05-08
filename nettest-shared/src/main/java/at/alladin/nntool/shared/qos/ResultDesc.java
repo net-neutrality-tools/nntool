@@ -17,8 +17,10 @@
 
 package at.alladin.nntool.shared.qos;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +29,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import at.alladin.nntool.shared.db.QoSTestResult.TestType;
-import at.alladin.nntool.shared.hstoreparser.Hstore;
 import at.alladin.nntool.shared.qos.testscript.TestScriptInterpreter;
 
 
@@ -91,7 +92,7 @@ public class ResultDesc implements Comparable<ResultDesc> {
 	/**
 	 * 
 	 */
-	private Hstore hstore;
+	private Map<String, Field> fieldNameToFieldMap;
 	
 	/**
 	 * 
@@ -110,11 +111,11 @@ public class ResultDesc implements Comparable<ResultDesc> {
 	 * @param statusCode
 	 * @param key
 	 */
-	public ResultDesc(String statusCode, String key, AbstractResult resultObject, Hstore hstore, ResultOptions options) {
+	public ResultDesc(String statusCode, String key, AbstractResult resultObject, Map<String, Field> fieldNameToFieldMap, ResultOptions options) {
 		this.statusCode = statusCode;
 		this.key = key;
 		this.resultObject = resultObject;
-		this.hstore = hstore;
+		this.fieldNameToFieldMap = fieldNameToFieldMap;
 		this.options = options;
 	}
 	
@@ -143,7 +144,7 @@ public class ResultDesc implements Comparable<ResultDesc> {
 	}
 	
 	public String getParsedValue() {
-		return (parsedValue != null ? parsedValue : (parsedValue = String.valueOf(TestScriptInterpreter.interprete(value, hstore, resultObject, true, options))));
+		return (parsedValue != null ? parsedValue : (parsedValue = String.valueOf(TestScriptInterpreter.interpret(value, fieldNameToFieldMap, resultObject, true, options))));
 	}
 
 	public TestType getTestType() {

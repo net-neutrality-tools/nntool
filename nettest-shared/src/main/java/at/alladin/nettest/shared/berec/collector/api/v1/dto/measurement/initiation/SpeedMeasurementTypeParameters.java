@@ -55,17 +55,10 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 	private Integer rttCount;
 
 	@Expose
-	@SerializedName("measurement_configuration_map")
-	@JsonProperty(required = true, value = "measurement_configuration_map")
-	private Map<SpeedMeasurementClass, SpeedMeasurementConfiguration> measurementConfigurationMap;
+	@SerializedName("measurement_configuration")
+	@JsonProperty(required = true, value = "measurement_configuration")
+	private SpeedMeasurementConfiguration measurementConfiguration;
 
-	public enum SpeedMeasurementClass {
-		SINGLE_STREAM,
-		LOW,
-		MIDDLE,
-		HIGH,
-		VERY_HIGH
-	}
 
 	public static class SpeedMeasurementConfiguration {
 		/**
@@ -85,7 +78,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 		@SerializedName("download")
 		@JsonProperty("download")
 		private List<SpeedMeasurementClass> downloadClassList = new ArrayList<>();
-
+		
 		@Override
 		public String toString() {
 			return "SpeedMeasurementSettings{" +
@@ -100,7 +93,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 		 * @author Lukasz Budryk (alladin-IT GmbH)
 		 */
 		@JsonClassDescription("Holds a single measurement class configuration.")
-		public class SpeedMeasurementClass {
+		public static class SpeedMeasurementClass {
 
 			/**
 			 *
@@ -152,7 +145,7 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 			 * @author Lukasz Budryk (alladin-IT GmbH)
 			 */
 			@JsonClassDescription("")
-			public class Bounds {
+			public static class Bounds {
 
 				/**
 				 * The lower bound.
@@ -248,6 +241,23 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 						'}';
 			}
 		}
+
+		public List<SpeedMeasurementClass> getUploadClassList() {
+			return uploadClassList;
+		}
+
+		public void setUploadClassList(List<SpeedMeasurementClass> uploadClassList) {
+			this.uploadClassList = uploadClassList;
+		}
+
+		public List<SpeedMeasurementClass> getDownloadClassList() {
+			return downloadClassList;
+		}
+
+		public void setDownloadClassList(List<SpeedMeasurementClass> downloadClassList) {
+			this.downloadClassList = downloadClassList;
+		}
+		
 	}
 
 	/**
@@ -278,15 +288,6 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 		}
 	}
 
-	public Map<SpeedMeasurementClass, SpeedMeasurementConfiguration> getMeasurementConfigurationMap() {
-		return measurementConfigurationMap;
-	}
-
-	public void setMeasurementConfigurationMap(
-			Map<SpeedMeasurementClass, SpeedMeasurementConfiguration> measurementConfigurationMap) {
-		this.measurementConfigurationMap = measurementConfigurationMap;
-	}
-
 	public String getJavascriptMeasurementCodeUrl() {
 		return javascriptMeasurementCodeUrl;
 	}
@@ -311,4 +312,12 @@ public class SpeedMeasurementTypeParameters extends MeasurementTypeParameters {
 		this.rttCount = rttCount;
 	}
 
+	public SpeedMeasurementConfiguration getMeasurementConfiguration() {
+		return measurementConfiguration;
+	}
+
+	public void setMeasurementConfiguration(SpeedMeasurementConfiguration measurementConfiguration) {
+		this.measurementConfiguration = measurementConfiguration;
+	}
+	
 }

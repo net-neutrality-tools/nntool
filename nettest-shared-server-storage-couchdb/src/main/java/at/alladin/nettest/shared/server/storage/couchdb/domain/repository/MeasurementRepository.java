@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.springframework.data.domain.Pageable;
+
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.spring.data.couchdb.core.query.Key;
 import at.alladin.nettest.spring.data.couchdb.core.query.MangoQuery;
@@ -20,6 +22,12 @@ public interface MeasurementRepository extends CouchDbRepository<Measurement> {
 	Measurement findByUuid(String uuid);
 
 	Measurement findByUuidAndUuidExists(String uuid);
+	
+	List<Measurement> findByAgentInfoUuid/*OrderByStarttimeDesc*/(String uuid, Pageable pageable);
+	
+	List<Measurement> findByAgentInfoUuid(String uuid);
+	
+	////
 	
 	@MangoQuery("{\n" + 
 	"   \"selector\": {\n" + 

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import at.alladin.nettest.service.controller.config.ControllerServiceProperties;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapActionDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityTaskDto;
@@ -29,7 +30,10 @@ public class MeasurementConfigurationService {
 	@Autowired
 	private StorageService storageService;
 	
-	public LmapControlDto getLmapControlDtoForCapabilities(final LmapCapabilityDto capabilities) {
+	@Autowired
+	private ControllerServiceProperties controllerServiceProperties;
+	
+	public LmapControlDto getLmapControlDtoForCapabilities (final LmapCapabilityDto capabilities) {
 		final LmapControlDto ret = new LmapControlDto();
 		
 		ret.setCapabilities(capabilities);
@@ -106,11 +110,10 @@ public class MeasurementConfigurationService {
 		if (name == null || version == null) {
 			return null;
 		}
-		
+
+		final LmapTaskDto ret = storageService.getTaskDto(name, controllerServiceProperties.getSettingsUuid());
 		final List<String> tagList = new ArrayList<String>();
-		tagList.add(version);
-		
-		final LmapTaskDto ret = storageService.getTaskDto(name, version);
+		//tagList.add(version);
 		
 		if (ret != null) {
 			ret.setTagList(tagList);

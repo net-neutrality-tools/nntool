@@ -19,7 +19,6 @@ package at.alladin.nntool.shared.qos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
 
 /**
  * 
@@ -28,37 +27,30 @@ import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
  */
 public class HttpProxyResult extends AbstractResult {
 
-	@HstoreKey("http_objective_url")
 	@SerializedName("http_objective_url")
 	@Expose
 	private String target;
 
-	@HstoreKey("http_objective_range")
 	@SerializedName("http_objective_range")
 	@Expose
 	private String range;
 
-	@HstoreKey("http_result_length")
 	@SerializedName("http_result_length")
 	@Expose
 	private Long length;
 	
-	@HstoreKey("http_result_header")
 	@SerializedName("http_result_header")
 	@Expose
 	private String header;
 	
-	@HstoreKey("http_result_status")
 	@SerializedName("http_result_status")
 	@Expose
 	private String status;
 	
-	@HstoreKey("http_result_hash")
 	@SerializedName("http_result_hash")
 	@Expose
 	private String hash;
 	
-	@HstoreKey("http_result_duration")
 	@SerializedName("http_result_duration")
 	@Expose
 	private Long duration;

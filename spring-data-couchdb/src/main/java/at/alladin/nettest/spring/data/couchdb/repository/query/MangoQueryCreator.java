@@ -1,10 +1,16 @@
 package at.alladin.nettest.spring.data.couchdb.repository.query;
 
+import java.lang.reflect.Field;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.mapping.PropertyPath;
 import org.springframework.data.repository.query.ParameterAccessor;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.data.repository.query.parser.Part;
@@ -14,6 +20,7 @@ import com.cloudant.client.api.query.Expression;
 import com.cloudant.client.api.query.Operation;
 import com.cloudant.client.api.query.QueryBuilder;
 import com.cloudant.client.api.query.Selector;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * 
@@ -26,14 +33,35 @@ public class MangoQueryCreator extends AbstractQueryCreator<String, Selector> {
 	
 	private final String docType;
 	
+	private final ParameterAccessor parameters;
+	
 	public MangoQueryCreator(PartTree tree, ParameterAccessor parameters, String docType) {
 		super(tree, parameters);
 		
+		this.parameters = parameters;
 		this.docType = docType;
 	}
 
 	private Selector createDocTypeSelector() {
 		return Expression.eq("docType", docType);
+	}
+	
+	private String toCustomDotPath (final PropertyPath propertyPath) {
+		String segment = propertyPath.getSegment();
+		try {
+			final Field field = propertyPath.getOwningType().getType().getDeclaredField(segment);
+			final SerializedName serializedName = field.getAnnotation(SerializedName.class);
+			if (serializedName != null) {
+				segment = serializedName.value();			
+			} 
+		} catch (Exception ex) {
+		}
+		
+		if (propertyPath.hasNext()) {
+			return segment + "." + toCustomDotPath(propertyPath.next());
+		}
+
+		return segment;
 	}
 	
 	/*
@@ -50,7 +78,7 @@ public class MangoQueryCreator extends AbstractQueryCreator<String, Selector> {
 		logger.debug("{}", part.getProperty().toDotPath());
 		logger.debug("{}", part.getProperty().next());
 		
-		final String propertyDotPath = part.getProperty().toDotPath(); // Mango query works with dotPath (e.g. "nested1.nested2.abc": 123)
+		final String propertyDotPath = toCustomDotPath(part.getProperty()); //part.getProperty().toDotPath(); // Mango query works with dotPath (e.g. "nested1.nested2.abc": 123)
 		
 		switch (part.getType()) {
 		case IS_NULL:
@@ -110,6 +138,33 @@ public class MangoQueryCreator extends AbstractQueryCreator<String, Selector> {
 	 */
 	@Override
 	protected String complete(Selector criteria, Sort sort) {
-		return new QueryBuilder(Operation.and(createDocTypeSelector(), criteria))/*.sort(sort)*/.build();
+		final QueryBuilder queryBuilder = new QueryBuilder(Operation.and(createDocTypeSelector(), criteria));
+		
+		if (sort != null) {
+			queryBuilder.sort(parseSortObject(sort));
+		}
+		
+		if (parameters != null) {
+			final Pageable pageable = parameters.getPageable();
+			if (pageable != null && pageable.isPaged()) {
+				queryBuilder
+					.skip(pageable.getOffset())
+					.limit(pageable.getPageSize());
+			}
+			//TODO: do we sort from pageable if it is not paged?
+			if (pageable.getSort() != null) {
+				queryBuilder.sort(parseSortObject(pageable.getSort()));
+			}
+		}
+		
+		return queryBuilder.build();
+	}
+	
+	protected com.cloudant.client.api.query.Sort[] parseSortObject (final Sort sort) {
+		final List<com.cloudant.client.api.query.Sort> sortList = sort.get().map(o -> {
+			return o.getDirection() == Direction.DESC ? com.cloudant.client.api.query.Sort.desc(o.getProperty()) : com.cloudant.client.api.query.Sort.asc(o.getProperty());
+		}).collect(Collectors.toList());
+		
+		return sortList.toArray(new com.cloudant.client.api.query.Sort[] {});
 	}
 }
