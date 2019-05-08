@@ -8,6 +8,12 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 
+
+    <!-- CUSTOM VIEWS -->
+    <string name="measurement_server_selection_default_server">Default</string>
+    <string name="measurement_server_selection_title">Select a Measurement Server</string>
+    <string name="measurement_server_selection_default_server_selected">Default server selected.</string>
+
     <string name="task_register_agent_dialog_info">Registering measurement agent…</string>
     <string name="task_measurement_initiation_dialog_info">Initiating measurement…</string>
     <string name="task_send_report_dialog_info">Sending report to collector…</string>
@@ -16,4 +22,5 @@
     <string name="alert_send_measurement_results_error">An error occurred while sending measurement results.</string>
 
     <string name="measurement_data_consumption_warning">I am a data consumption warning!</string>
+
 </resources>

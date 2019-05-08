@@ -1,12 +1,9 @@
 package at.alladin.nettest.nntool.android.app.workflow.tc;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +13,12 @@ import android.widget.Button;
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
+import at.alladin.nettest.nntool.android.app.workflow.AbstractFullScreenDialogFragment;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
  */
-public class TermsAndConditionsFragment extends DialogFragment {
+public class TermsAndConditionsFragment extends AbstractFullScreenDialogFragment {
 
     public final static int TERMS_AND_CONDITIONS_VERSION = 1;
 
@@ -34,24 +32,20 @@ public class TermsAndConditionsFragment extends DialogFragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+    public boolean isCancelable() {
+        return false;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.tc_dialog, container, false);
+    public int getViewId() {
+        return R.layout.tc_dialog;
+    }
 
-        final Toolbar toolbar = v.findViewById(R.id.toolbar_tc);
-        toolbar.setNavigationIcon(R.drawable.ic_close);
-        toolbar.setNavigationOnClickListener(view -> getActivity().finishAffinity());
-        toolbar.setTitle("Terms & Conditions");
-
-        final Button b = v.findViewById(R.id.button_confirm_tc);
+    @Override
+    public void onViewCreated(View v) {
         final Activity activity = getActivity();
-        b.setOnClickListener(view -> {
+
+        setOnConfirmListener(() -> {
             PreferencesUtil.setTermsAndConditionsAccepted(getContext(), TERMS_AND_CONDITIONS_VERSION);
             activity.runOnUiThread(new Runnable() {
                 @Override
@@ -62,21 +56,11 @@ public class TermsAndConditionsFragment extends DialogFragment {
             dismiss();
         });
 
+        setOnCloseListener(() -> activity.finishAffinity());
+
+        setToolbarTitle("Terms & Conditions", true);
+
         final WebView web = v.findViewById(R.id.webview_tc);
-
         web.loadUrl("file:///android_asset/tc.html");
-
-        return v;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if (dialog != null) {
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        }
-
-        getDialog().setCancelable(false);
     }
 }
