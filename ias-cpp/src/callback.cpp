@@ -185,7 +185,7 @@ void CCallback::rttUdpCallback(string cmd)
 		//---------------------------
 		
 		//Calculate Min, Avg, Max
-		CTool::calculateResults( tempMeasurement.ping, 1, 1);
+		CTool::calculateResults( tempMeasurement.ping, 1, 0);
 			
 		//---------------------------
 	
@@ -236,7 +236,7 @@ void CCallback::rttUdpCallback(string cmd)
 	Json::object jMeasurementResults;
 	jMeasurementResults["duration_ns"] = to_string(tempMeasurement.ping.duration_ns);
 	jMeasurementResults["average_ns"] = to_string(tempMeasurement.ping.avg * 1000 * 1000);
-	//jMeasurementResults["median_ms"] = to_string();
+	jMeasurementResults["median_ns"] = to_string(tempMeasurement.ping.median_ns);
 	jMeasurementResults["min_ns"] = to_string(tempMeasurement.ping.min * 1000 * 1000);
 	jMeasurementResults["max_ns"] = to_string(tempMeasurement.ping.max * 1000 * 1000);
 	jMeasurementResults["num_sent"] = to_string(tempMeasurement.ping.requests );
@@ -244,7 +244,7 @@ void CCallback::rttUdpCallback(string cmd)
 	jMeasurementResults["num_error"] = to_string(tempMeasurement.ping.errors);
 	jMeasurementResults["num_missing"] = to_string(tempMeasurement.ping.missing);
 	jMeasurementResults["packet_size"] = to_string(tempMeasurement.ping.packetsize);
-	//jMeasurementResults["standard_deviation_ns"] = to_string();
+	jMeasurementResults["standard_deviation_ns"] = to_string(tempMeasurement.ping.standard_deviation_ns);
 	jMeasurementResults["peer"] = tempMeasurement.ping.servername;
 
 	jMeasurementResultsRttUdp = jMeasurementResults;
