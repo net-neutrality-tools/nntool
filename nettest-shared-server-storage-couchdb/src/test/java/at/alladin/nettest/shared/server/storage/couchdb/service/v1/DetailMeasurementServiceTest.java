@@ -35,7 +35,7 @@ public class DetailMeasurementServiceTest {
 	
 	@Before
 	public void init() {
-		locale = Locale.ENGLISH;
+		locale = Locale.US;
 		
 		detailMeasurementService = new DetailMeasurementService();
 		

@@ -53,6 +53,7 @@
  *
  * Currently this handler is used by:
  * - \ref nopoll_ctx_set_on_accept
+ * - \ref nopoll_ctx_set_on_reject
  * - \ref nopoll_ctx_set_on_open
  *
  * @param ctx The context where the wait is happening.

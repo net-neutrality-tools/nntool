@@ -12,14 +12,14 @@
 
 #/*!
 # *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2019-05-03
+# *      \date Last update: 2019-04-30
 # *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
 # */
 
 
 cmake_minimum_required(VERSION 2.8.2)
 
-project(ias-server)
+project(ias-client)
 
 #---------------------------------------------------------------------------------
 
@@ -29,21 +29,23 @@ set(CMAKE_BUILD_TYPE Release)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-add_executable(ias-server
-    iasserver.cpp
-    tcpserver.cpp
-    tcphandler.cpp
-    tcptraceroutehandler.cpp
-    udpserver.cpp
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../ias-libnntool/)
+
+add_executable(ias-client
+	iasclient.cpp 
+	type.cpp
+	callback.cpp
+	timer.cpp
+	measurement.cpp
+	tests/ping.cpp
+	tests/download.cpp 
+	tests/upload.cpp 
+	tests/upload_sender.cpp
 )
 
-TARGET_LINK_LIBRARIES(ias-server
-    ${CMAKE_THREAD_LIBS_INIT}
-    nntool
-    -llog4cpp
-    -lssl
-    -lcrypto
-    -lnopoll
+TARGET_LINK_LIBRARIES(ias-client 
+	${CMAKE_THREAD_LIBS_INIT} 
+	nntool
 )
 
 INCLUDE(CPack)

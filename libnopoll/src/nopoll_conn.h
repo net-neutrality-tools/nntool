@@ -232,6 +232,11 @@ void               nopoll_conn_connect_timeout (noPollCtx * ctx,
 
 long               nopoll_conn_get_connect_timeout (noPollCtx * ctx);
 
+void nopoll_conn_set_http_on (noPollConn * conn, nopoll_bool http_on);
+
+nopoll_bool nopoll_conn_get_http_on (noPollConn * conn);
+
+
 /** internal api **/
 void nopoll_conn_complete_handshake (noPollConn * conn);
 
