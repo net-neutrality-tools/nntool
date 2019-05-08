@@ -100,4 +100,15 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <!-- SERVER SELECTION LIST -->
+    <style name="Nettest.ServerSelection.Item.Name" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="Nettest.ServerSelection.Item.Country" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
 </resources>

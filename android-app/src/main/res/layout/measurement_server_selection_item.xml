@@ -1,6 +1,11 @@
 <LinearLayout android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
     android:layout_width="match_parent"
     android:descendantFocusability="blocksDescendants"
+    android:background="@drawable/border_bottom"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
@@ -10,11 +15,15 @@
         android:orientation="vertical">
 
         <TextView
+            style="@style/Nettest.ServerSelection.Item.Name"
+            android:text="Server Name"
             android:id="@+id/text_server_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
+            style="@style/Nettest.ServerSelection.Item.Country"
+            android:text="Server Country"
             android:id="@+id/text_server_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
