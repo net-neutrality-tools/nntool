@@ -16,34 +16,20 @@
 # *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
 # */
 
-
-cmake_minimum_required(VERSION 2.8.2)
-
-project(ias-server)
-
-#---------------------------------------------------------------------------------
-
 set(CMAKE_BUILD_TYPE Release)
 
 #---------------------------------------------------------------------------------
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+add_library (nntool SHARED 
+				typedef.cpp 
+				tool.cpp
+				connection.cpp
+				configmanager.cpp 
+				basisthread.cpp
+				trace.cpp
+				http.cpp
+				json11.cpp
+				sha1.cpp
+) 
 
-add_executable(ias-server
-    iasserver.cpp
-    tcpserver.cpp
-    tcphandler.cpp
-    tcptraceroutehandler.cpp
-    udpserver.cpp
-)
-
-TARGET_LINK_LIBRARIES(ias-server
-    ${CMAKE_THREAD_LIBS_INIT}
-    nntool
-    -llog4cpp
-    -lssl
-    -lcrypto
-    -lnopoll
-)
-
-INCLUDE(CPack)
+target_link_libraries(nntool)

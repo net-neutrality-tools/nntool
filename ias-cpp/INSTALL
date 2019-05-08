@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #/*
 # *********************************************************************************
 # *                                                                               *
@@ -12,12 +14,12 @@
 
 #/*!
 # *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2019-03-20
+# *      \date Last update: 2019-04-27
 # *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
 # */
 
 echo "";
-echo " -- ias server  -- ";
+echo " -- ias client cpp  -- ";
 echo "";
 
 # set font-style and colors
@@ -67,7 +69,7 @@ fi
 echo "";
 
 #compile------------------------------------------------------------------------
-echo -n ""$BOLD"Do you want to compile ias server? [Y/n] "$GREEN"(default=Y)"$RESET" : ";
+echo -n ""$BOLD"Do you want to compile ias client cpp? [Y/n] "$GREEN"(default=Y)"$RESET" : ";
 read compile;
 if [ "$compile" != "n" ]; then
 	echo "";
@@ -87,7 +89,7 @@ fi
 echo "";
 
 #cleanup -----------------------------------------------------------------------
-echo -n ""$BOLD"Do you want to clean ias server Project? [Y/n] "$GREEN"(default=Y)"$RESET" : ";
+echo -n ""$BOLD"Do you want to clean ias client cpp Project? [Y/n] "$GREEN"(default=Y)"$RESET" : ";
 read clean;
 if [ "$clean" != "n" ]; then
 	$RM -rf ./cmake_install.cmake 2>/dev/null
