@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-06
+ *      \date Last update: 2019-05-08
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -211,10 +211,10 @@ unsigned long long CTool::calculateResultsAvg( map<int,unsigned long long> dmap 
 
 int CTool::calculateResults(struct measurement_data &sMeasurement)
 {
-	return CTool::calculateResults(sMeasurement, 1);
+	return CTool::calculateResults(sMeasurement, 1, 0);
 }
 
-int CTool::calculateResults(struct measurement_data &sMeasurement, double increment)
+int CTool::calculateResults(struct measurement_data &sMeasurement, double increment, int ai_offset)
 {
 	double count = 0;
 	
@@ -225,7 +225,7 @@ int CTool::calculateResults(struct measurement_data &sMeasurement, double increm
 	map<int, unsigned long long>::iterator AI;
 	
 	//Starting multiple Instances for every Probe
-	for (AI = sMeasurement.results.begin(); AI != sMeasurement.results.end(); ++AI)
+	for (AI = std::next(sMeasurement.results.begin(), ai_offset); AI != sMeasurement.results.end(); ++AI)
 	{
 		if( (*AI).second < min )
 			min = (*AI).second;

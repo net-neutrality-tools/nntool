@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-03
+ *      \date Last update: 2019-05-08
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -82,10 +82,10 @@ int CTimer::run()
 			//If equal, we are synced
 			if( sync_counter == mInstances )
 			{
-				mCallback->callback("info", "starting measurement");
+				mCallback->callback("info", "starting measurement", 0, "");
 				//Wait for TCP Slow Start
 				usleep( TCP_STARTUP );
-				mCallback->callback("info", "measurement started");
+				mCallback->callback("info", "measurement started", 0, "");
 
 				//Start timer
 				TIMER_RUNNING = true;
@@ -126,7 +126,7 @@ int CTimer::run()
 				{
 					current_index = TIMER_INDEX;
 
-					mCallback->callback("report", "measurement report");
+					mCallback->callback("report", "measurement report", 0, "");
 				}
 
 				//Sleep 10ms
@@ -143,7 +143,7 @@ int CTimer::run()
 			break;
 	}
 
-	mCallback->callback("finish", "measurement completed");
+	mCallback->callback("finish", "measurement completed", 0, "");
 	
 	TIMER_ACTIVE = false;
 	

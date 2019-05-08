@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-06
+ *      \date Last update: 2019-05-08
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -113,7 +113,7 @@ int Ping::run()
 		if( ( mSock = mSocket->udp6Socket(mClient) ) < 0 )
 		{
 			//Error
-			TRC_ERR("Creating socket failed - socket() [root?]");
+			TRC_ERR("Creating socket failed - socket()");
 			return EXIT_FAILURE;
 		}
 		
@@ -126,7 +126,7 @@ int Ping::run()
 		if( ( mSock = mSocket->udpSocket(mClient) ) < 0 )
 		{
 			//Error
-			TRC_ERR("Creating socket failed - socket() [root?]");
+			TRC_ERR("Creating socket failed - socket()");
 			return EXIT_FAILURE;
 		}
 		
@@ -204,7 +204,7 @@ int Ping::run()
 			//Split String in different String and save in Vector
 			CTool::tokenize(sResponse, vResponse, delimiter);
 			
-			//check if Vector as at min 1 entries
+			//check if Vector has at min 1 entries
 			if( vResponse.size() > 1 )
 			{
 				//Save Values from Vector to Variable
@@ -296,8 +296,8 @@ int Ping::run()
 		}
 		
 		measurements.ping.service_availability 	= service_availability;
-		measurements.ping.error_code		= error;
-		measurements.ping.error_description	= error_description;
+		measurements.ping.error_code			= error;
+		measurements.ping.error_description		= error_description;
 			
 	//Unlock Mutex
 	pthread_mutex_unlock(&mutex);
