@@ -260,11 +260,12 @@ void measurementStart(string measurementParameters)
 	if( pCallback->createThread() != 0 )
 	{
 		TRC_ERR( "Error: Failure while creating the Thread - Callback!" );
+		shutdown();
 	}
 
     if (!::RTT && !::DOWNLOAD && !::UPLOAD)
     {
-    	pCallback->callback("error", "measurement error", 1, "no test case enabled");
+    	pCallback->callback("error", "no test case enabled", 1, "no test case enabled");
 
     	shutdown();
     }
@@ -316,6 +317,7 @@ void measurementStop()
 
 void startTestCase(int nTestCase)
 {
+	syncing_threads.clear();
 	pCallback->mTestCase = nTestCase;
 	pMeasurement = new CMeasurement( pConfig, pXml, pService, conf.sProvider, nTestCase, pCallback);
 	pMeasurement->startMeasurement();
@@ -358,7 +360,6 @@ void show_usage(char* argv0)
 
     exit(EXIT_FAILURE);
 }
-
 
 static void signal_handler(int signal)
 {

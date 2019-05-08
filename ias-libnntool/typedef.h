@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-01
+ *      \date Last update: 2019-05-08
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -35,6 +35,8 @@ class measurement_data
 		unsigned long long avg;
 		unsigned long long max;
 		unsigned long long duration_ns;
+		unsigned long long median_ns;
+		unsigned long long standard_deviation_ns;
 
 		//General
 		unsigned long long packetsize;

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-06
+ *      \date Last update: 2019-05-08
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -211,21 +211,28 @@ unsigned long long CTool::calculateResultsAvg( map<int,unsigned long long> dmap 
 
 int CTool::calculateResults(struct measurement_data &sMeasurement)
 {
-	return CTool::calculateResults(sMeasurement, 1);
+	return CTool::calculateResults(sMeasurement, 1, 0);
 }
 
-int CTool::calculateResults(struct measurement_data &sMeasurement, double increment)
+int CTool::calculateResults(struct measurement_data &sMeasurement, double increment, int ai_offset)
 {
 	double count = 0;
 	
-	unsigned long long min = sMeasurement.results.begin()->second;
-	unsigned long long avg = 0;
-	unsigned long long max = 0;
+	unsigned long long min 		= std::next(sMeasurement.results.begin(), ai_offset)->second;
+	unsigned long long avg 		= 0;
+	unsigned long long max 		= 0;
+	unsigned long long sum 		= 0;
+	unsigned long long sumSq	= 0;
+	double avgDouble			= 0;
+
+	#ifdef NNTOOL
+	vector<double> medianVector;
+	#endif
 	
 	map<int, unsigned long long>::iterator AI;
 	
 	//Starting multiple Instances for every Probe
-	for (AI = sMeasurement.results.begin(); AI != sMeasurement.results.end(); ++AI)
+	for (AI = std::next(sMeasurement.results.begin(), ai_offset); AI != sMeasurement.results.end(); ++AI)
 	{
 		if( (*AI).second < min )
 			min = (*AI).second;
@@ -233,14 +240,19 @@ int CTool::calculateResults(struct measurement_data &sMeasurement, double increm
 		if( (*AI).second > max )
 			max = (*AI).second;
 		
-		avg +=  (*AI).second;
+		sum +=  (*AI).second;
+
+		#ifdef NNTOOL
+		medianVector.push_back((*AI).second);
+		sumSq += (*AI).second * (*AI).second;
+		#endif
 
 		count += increment;
 	}
 
 	if( count != 0 )
 	{	
-		avg = avg/count;
+		avg = avgDouble = (double)sum / (double)count;
 
 		sMeasurement.min = min;
 		sMeasurement.avg = avg;
@@ -248,6 +260,23 @@ int CTool::calculateResults(struct measurement_data &sMeasurement, double increm
 
 		#ifdef NNTOOL
 		sMeasurement.duration_ns = count * 1000 * 1000 * 1000;
+
+		//calculate median
+        sort(medianVector.begin(), medianVector.end());
+        size_t samples = medianVector.size();
+        
+        if (samples%2 == 0)
+        {
+            sMeasurement.median_ns  = ((medianVector[samples/2-1] + medianVector[samples/2])/2) * 1000 * 1000;
+        }
+        else
+        {
+            sMeasurement.median_ns  = medianVector[samples/2] * 1000 * 1000;
+        }
+
+        //calculate population standard deviation
+        double variancePopulation = (double)sumSq / (double)count - avgDouble * avgDouble;
+        sMeasurement.standard_deviation_ns = sqrt(variancePopulation) * 1000 * 1000;
 		#endif
 	}
 	

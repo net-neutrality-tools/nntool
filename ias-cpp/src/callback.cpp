@@ -56,12 +56,9 @@ int CCallback::run()
 	return 0;
 }
 
-void CCallback::callback(string cmd, string msg)
+void CCallback::callback(string cmd, string msg, int error_code, string error_description)
 {
-	if (::DEBUG)
-	{
-		cout << "[" << "] " << "DEBUG: Callback Received: cmd: " + cmd + ", msg: " + msg << endl;
-	}
+	TRC_DEBUG("Callback Received: cmd: " + cmd + ", msg: " + msg);
 
 	if (cmd.compare("report") == 0 || cmd.compare("finish") == 0)
 	{
@@ -96,26 +93,28 @@ void CCallback::callback(string cmd, string msg)
 		}
 	}
 
-	callbackToPlatform(cmd, msg);
+	callbackToPlatform(cmd, msg, error_code, error_description);
 
 	if (cmd.compare("finish") == 0 && ::RTT == PERFORMED_RTT && ::DOWNLOAD == PERFORMED_DOWNLOAD && ::UPLOAD == PERFORMED_UPLOAD)
 	{
-		callbackToPlatform("completed", msg);
+		callbackToPlatform("completed", msg, error_code, error_description);
 	}
 }
 
-void CCallback::callback(string cmd, string msg, int error_code, string error_description)
-{
-	//TODO: callback error
-}
-
-void CCallback::callbackToPlatform(string cmd, string msg)
+void CCallback::callbackToPlatform(string cmd, string msg, int error_code, string error_description)
 {
 	//construct JSON callback
 	jMeasurementResults = Json::object{};
 	jMeasurementResults["cmd"] = cmd;
 	jMeasurementResults["msg"] = msg;
 	jMeasurementResults["test_case"] = conf.sTestName;
+
+	if (error_code != 0)
+	{
+		jMeasurementResults["error_code"] = error_code;
+		jMeasurementResults["error_description"] = error_description;
+		TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
+	}
 
 	if (Json(jMeasurementResultsRttUdp).object_items().size() > 0)
 	{
@@ -142,10 +141,7 @@ void CCallback::callbackToPlatform(string cmd, string msg)
 
 	if (platform.compare("desktop") == 0 && clientos.compare("linux") == 0)
 	{
-		if (::DEBUG)
-		{
-			cout << "[" << "] " << "DEBUG: Callback:" << endl << Json(jMeasurementResults).dump() << endl;
-		}
+		TRC_DEBUG("Callback: " + Json(jMeasurementResults).dump());
 	}
 	if (platform.compare("mobile") == 0 && clientos.compare("android") == 0)
 	{
@@ -189,7 +185,7 @@ void CCallback::rttUdpCallback(string cmd)
 		//---------------------------
 		
 		//Calculate Min, Avg, Max
-		CTool::calculateResults( tempMeasurement.ping );
+		CTool::calculateResults( tempMeasurement.ping, 1, 0);
 			
 		//---------------------------
 	
@@ -240,7 +236,7 @@ void CCallback::rttUdpCallback(string cmd)
 	Json::object jMeasurementResults;
 	jMeasurementResults["duration_ns"] = to_string(tempMeasurement.ping.duration_ns);
 	jMeasurementResults["average_ns"] = to_string(tempMeasurement.ping.avg * 1000 * 1000);
-	//jMeasurementResults["median_ms"] = to_string();
+	jMeasurementResults["median_ns"] = to_string(tempMeasurement.ping.median_ns);
 	jMeasurementResults["min_ns"] = to_string(tempMeasurement.ping.min * 1000 * 1000);
 	jMeasurementResults["max_ns"] = to_string(tempMeasurement.ping.max * 1000 * 1000);
 	jMeasurementResults["num_sent"] = to_string(tempMeasurement.ping.requests );
@@ -248,7 +244,7 @@ void CCallback::rttUdpCallback(string cmd)
 	jMeasurementResults["num_error"] = to_string(tempMeasurement.ping.errors);
 	jMeasurementResults["num_missing"] = to_string(tempMeasurement.ping.missing);
 	jMeasurementResults["packet_size"] = to_string(tempMeasurement.ping.packetsize);
-	//jMeasurementResults["standard_deviation_ns"] = to_string();
+	jMeasurementResults["standard_deviation_ns"] = to_string(tempMeasurement.ping.standard_deviation_ns);
 	jMeasurementResults["peer"] = tempMeasurement.ping.servername;
 
 	jMeasurementResultsRttUdp = jMeasurementResults;
@@ -382,7 +378,7 @@ void CCallback::downloadCallback(string cmd)
 	//---------------------------
 
 	//Calculate Min, Avg, Max
-	CTool::calculateResults( tempMeasurement.download, 0.5 );
+	CTool::calculateResults( tempMeasurement.download, 0.5, 0 );
 
 	TRC_INFO( ("DOWNLOAD: " + CTool::toString(tempMeasurement.download.avg )).c_str());
 
@@ -434,7 +430,7 @@ void CCallback::uploadCallback(string cmd)
 			if( (*itThread)->nHttpResponseDuration != 0 )
 			{
 				tempMeasurement.upload.httpresponse[(*itThread)->pid]		= (*itThread)->nHttpResponseDuration;
-				//TRC_DEBUG( ("httpresponse ["+CTool::toString( pid )+"]: "+CTool::toString( nHttpResponseDuration ) ).c_str() );
+				//TRC_DEBUG( ("httpresponse ["+CTool::toString( (*itThread)->pid )+"]: "+CTool::toString( (*itThread)->nHttpResponseDuration ) ).c_str() );
 			}
 			
 			tempMeasurement.upload.packetsize 			= MAX_PACKET_SIZE;
@@ -523,7 +519,7 @@ void CCallback::uploadCallback(string cmd)
 	//---------------------------
 
 	//Calculate Min, Avg, Max
-	CTool::calculateResults( tempMeasurement.upload, 0.5 );
+	CTool::calculateResults( tempMeasurement.upload, 0.5, 0 );
 
 	TRC_INFO( ("UPLOAD: " + CTool::toString(tempMeasurement.upload.avg )).c_str());
 

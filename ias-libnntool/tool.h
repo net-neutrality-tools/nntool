@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-06
+ *      \date Last update: 2019-05-08
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -72,7 +72,7 @@ class CTool
 
 		static int calculateResults(struct measurement_data &sMeasurement);
 
-		static int calculateResults(struct measurement_data &sMeasurement, double increment);
+		static int calculateResults(struct measurement_data &sMeasurement, double increment, int ai_offset);
 		
 		static string getSystemInfoOS();
 		
