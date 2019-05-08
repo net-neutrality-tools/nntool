@@ -35,7 +35,7 @@ using namespace std;
 class CCallback : public CBasisThread
 {
 	private:
-		void callbackToPlatform(string cmd, string msg);
+		void callbackToPlatform(string cmd, string msg, int error_code, string error_description);
 		void rttUdpCallback(string cmd);
 		void downloadCallback(string cmd);
 		void uploadCallback(string cmd);
@@ -63,8 +63,6 @@ class CCallback : public CBasisThread
 		virtual ~CCallback();
 		
 		int run();
-
-		void callback(string cmd, string msg);
 
 		void callback(string cmd, string msg, int error_code, string error_description);
 };
