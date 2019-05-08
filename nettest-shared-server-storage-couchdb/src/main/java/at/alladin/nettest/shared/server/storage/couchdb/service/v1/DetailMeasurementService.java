@@ -68,7 +68,7 @@ public class DetailMeasurementService {
 	 */
 	public DetailMeasurementResponse groupResult(final Measurement measurement, final List<SpeedtestDetailGroup> groupStructure, final Locale locale, 
 			final int geoAccuracyDetailLimit, final boolean includeKeys) {
-		final Format format = new DecimalFormat("0.00");
+		final Format format = new DecimalFormat("0.00", new DecimalFormatSymbols(locale));
 		//final JsonArray groupedResultsJson = groupJsonResult(gson.toJson(measurement, Measurement.class), groupStructure).getAsJsonArray("groups");
     	
     	//Fill in the corresponding Response with translated and formatted values
