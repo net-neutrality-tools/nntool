@@ -7,13 +7,14 @@ import {PortBlockingTestImplementation} from "../tests-implementation/port-block
 import {PortBlockingTestState} from "../tests-implementation/port-blocking/port-blocking-test-state";
 import {PortBlockingTestTypeEnum} from "../tests-implementation/port-blocking/enums/port-blocking-test-type";
 import {BarUIShowableTestTypeEnum} from "../tests-ui/bar/enums/bar-ui-showable-test-type.enum";
+import {PortBlockingTestConfig} from "../tests-implementation/port-blocking/port-blocking-test-config";
 
 @Component({
     // needs to be mentioned here, but also mentioned in gauge-ui.ts for reference
     templateUrl: "./app/testing/tests-ui/bar/bar-ui.template.html",
     selector: 'port-blocking-test-bar'
 })
-export class PortBlockingTestBar extends BarUI<PortBlockingTestImplementation, PortBlockingTestState> {
+export class PortBlockingTestBar extends BarUI<PortBlockingTestImplementation, PortBlockingTestConfig, PortBlockingTestState> {
 
 
     // TODO: rethink DI in this use case, testImplementation should not be one instance, if there were more than one test at once

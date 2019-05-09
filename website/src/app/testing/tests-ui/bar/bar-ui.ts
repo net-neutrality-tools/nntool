@@ -6,6 +6,7 @@ import {ConfigService} from "../../../services/config.service";
 import {TranslateService} from "@ngx-translate/core";
 import {BarUIState} from "./bar-ui-state";
 import {BarUIShowableTestTypeEnum} from "./enums/bar-ui-showable-test-type.enum";
+import {TestConfig} from "../../tests-implementation/test-config";
 
 class Point {
     constructor (public x: number, public y: number) {}
@@ -14,8 +15,8 @@ class Point {
 @Component({
     templateUrl: "./app/testing/tests-ui/bar/bar-ui.template.html",
 })
-export abstract class BarUI<T extends TestImplementation<TS>, TS extends TestState>
-    extends Test<BarUIState, T, TS>
+export abstract class BarUI<T extends TestImplementation<TC, TS>, TC extends TestConfig, TS extends TestState>
+    extends Test<BarUIState, T, TC, TS>
     implements AfterViewInit {
 
     private resolutionScaleFactor: number = 2; // read window.devicePixelRatio (inject window object properly)
@@ -70,17 +71,18 @@ export abstract class BarUI<T extends TestImplementation<TS>, TS extends TestSta
         this.canvasContext = this.canvas.getContext('2d');
         this.addResize();
         this.setCanvas();
-        this.start(false);
     }
 
     private handleState = (state: BarUIState) => {
         this.currentState = state;
-        this.draw(this.currentState);
+        if (this.canvas && this.canvasContext) {
+            this.draw(this.currentState);
+        }
     }
 
     public setActive = (active: boolean) => {
         this.active = active;
-        if (this.active && this.canvas) {
+        if (this.active && this.canvas && this.canvasContext) {
             setTimeout(() => {
                 this.resizeEvent();
             }, 0);

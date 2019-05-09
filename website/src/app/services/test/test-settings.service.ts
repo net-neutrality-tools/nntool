@@ -1,25 +1,8 @@
-import {Injectable, ElementRef} from "@angular/core";
-
-import {Observable, of} from "rxjs";
-import {map, mergeMap, tap} from "rxjs/operators";
+import {Injectable} from "@angular/core";
 
 import {Logger, LoggerService} from "../log.service";
 import {UserInfo, UserService} from "../user.service";
-import {RequestAPI} from "../../test/models/api/request.api";
-import {RegistrationRequestAPI} from "../../test/models/registration/registration-request.api";
-import {ResponseAPI} from "../../test/models/api/response.api";
-import {RegistrationResponseAPI} from "../../test/models/registration/registration-response.api";
 import {MeasurementAgentType} from "../../test/models/api/request-info.api";
-import {RequestsService} from "../requests.service";
-import {SettingsRequestAPI} from "../../test/models/settings/settings-request.api";
-import {SettingsResponseAPI} from "../../test/models/settings/settings-response.api";
-import {LmapControlAPI} from "../../test/models/measurements/lmap-control.api";
-import {LmapReportAPI} from "../../test/models/measurements/lmap-report.api";
-import {MeasurementResultResponseAPI} from "../../test/models/measurements/measurement-result-response.api";
-import {EventTypeEnum} from "../../test/models/measurements/lmap-event-type.api";
-import {LmapStateAPI} from "../../test/models/measurements/lmap-state.api";
-import {ExecutionMode} from "../../test/models/measurements/lmap-schedule.api";
-import {SuppressionState} from "../../test/models/measurements/lmap-suppression.api";
 import {TranslateService} from "@ngx-translate/core";
 import {ConfigService} from "../config.service";
 
@@ -137,9 +120,9 @@ export class TestSettingsService {
     private _agentSettings: AgentSettings;
     private _testSettings: TestSettings;
 
-    constructor(protected configService: ConfigService,
-                protected userService: UserService,
-                protected translateService: TranslateService) {
+    constructor(private configService: ConfigService,
+                private userService: UserService,
+                private translateService: TranslateService) {
 
         const config = this.configService.getConfig();
 

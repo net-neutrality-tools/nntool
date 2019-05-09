@@ -5,6 +5,6 @@ import {Component, OnInit} from "@angular/core";
     selector: "speed-graph",
     templateUrl: "./app/measurement/speed.graph.component.html"
 })
-export class SpeedGraphComponent implements OnInit {
+export class SpeedGraphComponent {
 
 }

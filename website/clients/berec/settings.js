@@ -22,7 +22,7 @@ module.exports = {
     servers: {
         map: "",
         statistic: "",
-        control: ""
+        control: "http://localhost:8080/api/v1/"
     },
     keys: {
         "google": ""

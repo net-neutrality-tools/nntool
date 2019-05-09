@@ -1,4 +1,4 @@
-const commonDir = '../common';
+const commonDir = '../ias';
 const packageDirWithinCommon = './build/uglified/web';
 const buildScript = './build.sh';
 const packageJSON = './common-package.json'; // TODO: Consider inlining file

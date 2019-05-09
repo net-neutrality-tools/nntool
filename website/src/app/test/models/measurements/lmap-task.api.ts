@@ -1,6 +1,3 @@
-import {RequestInfoAPI} from "../api/request-info.api";
-import {LmapCapabilityAPI} from "./lmap-capability.api";
-import {LmapAgentAPI} from "./lmap-agent.api";
 import {LmapOptionAPI} from "./lmap-option.api";
 import {LmapFunctionAPI} from "./lmap-function.api";
 

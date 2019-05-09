@@ -1,4 +1,4 @@
-import {Injectable, ElementRef} from "@angular/core";
+import {Injectable} from "@angular/core";
 
 import {Observable, of} from "rxjs";
 import {map, mergeMap, tap} from "rxjs/operators";
@@ -17,6 +17,7 @@ import {LmapControlAPI} from "../../test/models/measurements/lmap-control.api";
 import {LmapReportAPI} from "../../test/models/measurements/lmap-report.api";
 import {MeasurementResultResponseAPI} from "../../test/models/measurements/measurement-result-response.api";
 import {TestSettingsService} from "./test-settings.service";
+import {ConfigService} from "../config.service";
 
 
 @Injectable()
@@ -29,7 +30,8 @@ export class TestService {
 
     constructor (private requestService: RequestsService,
                  private userService: UserService,
-                 private testSettingsService: TestSettingsService) {
+                 private testSettingsService: TestSettingsService,
+                 private configService: ConfigService) {
     }
 
     private postMeasurementAgent (registrationRequest?: RequestAPI<RegistrationRequestAPI>):
@@ -74,7 +76,7 @@ export class TestService {
         }
 
         return this.requestService.postJson<ResponseAPI<RegistrationResponseAPI>>(
-            'http://localhost:8080/api/v1/measurement-agents', registrationRequest);
+            `${this.configService.getServerControl()}measurement-agents`, registrationRequest);
     }
 
     private getSettings (settingsRequest?: RequestAPI<SettingsRequestAPI>): Observable<ResponseAPI<SettingsResponseAPI>> {
@@ -114,14 +116,15 @@ export class TestService {
             };
         }
         return this.requestService.getJson<ResponseAPI<SettingsResponseAPI>>(
-            'http://localhost:8080/api/v1/measurement-agents/' + settingsRequest.request_info.agent_id + '/settings', settingsRequest).pipe(
-                tap((response: ResponseAPI<SettingsResponseAPI>) => {
-                    this.settings = response.data;
-                })
+            `${this.configService.getServerControl()}measurement-agents/
+            ${settingsRequest.request_info.agent_id}/settings`, settingsRequest).pipe(
+            tap((response: ResponseAPI<SettingsResponseAPI>) => {
+                this.settings = response.data;
+            })
         );
     }
 
-    public newMeasurement (lmapControl?: LmapControlAPI): Observable<any> {
+    public newMeasurement (lmapControl?: LmapControlAPI): Observable<LmapControlAPI> {
 
         return of(this.userService.user).pipe(
             mergeMap((user: UserInfo) => {
@@ -209,14 +212,15 @@ export class TestService {
                     os_version: agentSettings.os_version,
                     timezone: agentSettings.timezone
                 };
-                return this.requestService.postJson<any>(
-                    'http://localhost:8080/api/v1/measurements', lmapControl);
+                return this.requestService.postJson<LmapControlAPI>(
+                    `${this.configService.getServerControl()}measurements`, lmapControl);
 
             })
         );
     }
 
-    public postMeasurementResults (lmapReport: LmapReportAPI): Observable<ResponseAPI<MeasurementResultResponseAPI>> {
+    public postMeasurementResults (lmapReport: LmapReportAPI, serverCollectorUrl: string):
+        Observable<ResponseAPI<MeasurementResultResponseAPI>> {
         const { agentSettings, testSettings } = this.testSettingsService;
 
         if (!lmapReport) {
@@ -249,7 +253,7 @@ export class TestService {
 
         lmapReport["additional_request_info"] = {
             agent_type: testSettings.agent_type,
-            agent_uuid: agentSettings.uuid,
+            agent_uuid: this.userService.user.uuid,
             api_level: undefined,
             app_git_revision: testSettings.app_revision,
             app_version_code: testSettings.app_version_code,
@@ -272,9 +276,12 @@ export class TestService {
             os_version: agentSettings.os_version,
             timezone: agentSettings.timezone
         };
-        lmapReport["agent-id"] = agentSettings.uuid;
+        lmapReport["agent-id"] = this.userService.user.uuid;
 
+        if (serverCollectorUrl === undefined || serverCollectorUrl === null || serverCollectorUrl === '') {
+            serverCollectorUrl = this.settings.urls.collector_service;
+        }
         return this.requestService.postJson<ResponseAPI<MeasurementResultResponseAPI>>(
-            'http://localhost:8081/api/v1/measurements', lmapReport);
+            `${serverCollectorUrl}`, lmapReport);
     }
 }

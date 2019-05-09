@@ -12,6 +12,16 @@ import {TestService} from "../services/test/test.service";
 import {SpeedTestState} from "../testing/tests-implementation/speed/speed-test-state";
 import {PortBlockingTestState} from "../testing/tests-implementation/port-blocking/port-blocking-test-state";
 import {LmapReportAPI} from "./models/measurements/lmap-report.api";
+import {LmapOptionAPI, MeasurementTypeParameters} from "./models/measurements/lmap-option.api";
+import {LmapTaskAPI} from "./models/measurements/lmap-task.api";
+import {LmapControlAPI} from "./models/measurements/lmap-control.api";
+import {TestComponentStatus} from "../testing/enums/test-component-status.enum";
+import {
+    QoSMeasurementResult,
+    RttInfo,
+    SpeedMeasurementResult,
+    SubMeasurementResult
+} from "./models/measurements/lmap-result.api";
 
 
 export {TestGuard} from "./test.guard";
@@ -21,6 +31,13 @@ export {TestGuard} from "./test.guard";
     templateUrl: "./app/test/test.component.html"
 })
 export class NetTestComponent extends BaseNetTestComponent {
+
+    protected measurementControl: LmapControlAPI = undefined;
+    private speedControl: LmapTaskAPI = undefined;
+    public speedConfig: MeasurementTypeParameters = undefined; // TODO: change to measurement configuration
+    private qosControl: LmapTaskAPI = undefined;
+    public qosConfig: MeasurementTypeParameters = undefined; // TODO: change to measurement configuration
+    private testResults: (SpeedMeasurementResult | QoSMeasurementResult)[] = [];
 
     constructor (
         testService: TestService,
@@ -42,62 +59,55 @@ export class NetTestComponent extends BaseNetTestComponent {
         super.agree();
     }
 
-    speedTestFinished(speedTestResult: SpeedTestState): void {
-        const lmapReport: LmapReportAPI = {
-            "additional_request_info": undefined,
-            "agent-id": undefined,
-            "date": undefined,
-            "group-id": undefined,
-            "measurement-point": undefined,
-            "result": [
-                {
-                    "action": undefined,
-                    "conflict": undefined,
-                    "cycle-number": undefined,
-                    "end": undefined,
-                    "event": undefined,
-                    "option": undefined,
-                    "parameters": undefined,
-                    "results": [
-                        {
-                            "deserialize_type": "speed_result", //qos_result
-                            "reason": null,
-                            "relative_end_time_ns": null,
-                            "relative_start_time_ns": null,
-                            "status": null,
-                            "results": []
-                        }
-                    ],
-                    "schedule": undefined,
-                    "start": undefined,
-                    "status": undefined,
-                    "tag": undefined,
-                    "task": undefined
-                }
-            ],
-            "time_based_result": undefined
-        };
+    handleTestSeriesStatusChange(testComponentStatus: TestComponentStatus) {
+        this.testInProgress = testComponentStatus !== TestComponentStatus.WAITING;
+        if (testComponentStatus === TestComponentStatus.REQUESTS_CONFIG && this.user.acceptTC) {
+            this.requestMeasurement();
+        }
+        if (testComponentStatus === TestComponentStatus.WAITING && this.user.acceptTC) {
+            this.testSeriesFinished();
+        }
+    }
 
-        lmapReport.result[0].results[0]['bytes_download'] = speedTestResult.downBit / 8;
-        lmapReport.result[0].results[0]['bytes_upload'] = speedTestResult.upBit / 8;
-        lmapReport.result[0].results[0]['duration_rtt_ns'] = 1000 * 1000 * 1000;
-        lmapReport.result[0].results[0]['duration_download_ns'] = 1000 * 1000 * 1000;
-        lmapReport.result[0].results[0]['duration_upload_ns'] = 1000 * 1000 * 1000;
-        lmapReport.result[0].results[0]['rtt_info'] = {
-            rtts: [
-                {
-                    rtt_ns: speedTestResult.ping * 1000 * 1000
-                }
-            ]
-        };
-
-
-
-        this.testService.postMeasurementResults(lmapReport).subscribe(response => {
+    private requestMeasurement (): void {
+        this.testService.newMeasurement().subscribe(response => {
+            this.processTestControl(response);
+            this.measurementControl = response;
         });
     }
 
-    portBlockingTestFinished(portBlockingTestResult: PortBlockingTestState): void {
+    private processTestControl (measurementControl: LmapControlAPI): void {
+        if (measurementControl && measurementControl.tasks) {
+            measurementControl.tasks.forEach((task: LmapTaskAPI) => {
+                switch (task.name) {
+                    case 'SPEED':
+                        this.speedConfig = task.option.reduce(
+                            (config: any, option: LmapOptionAPI) => {
+                                return option.name === 'parameters_speed' ?
+                                    option["measurement-parameters"]["measurement_configuration"]
+                                    : config;
+                            }, {});
+                        this.speedControl = task;
+                        break;
+                    case 'QOS':
+                        this.qosConfig = task.option.reduce(
+                            (config: any, option: LmapOptionAPI) => {
+                                return option.name === "parameters_qos" ?
+                                    option["measurement-parameters"]["objectives"]
+                                    : config;
+                            }, {});
+                        this.qosControl = task;
+                        break;
+                }
+            });
+        }
+    }
+
+    private testSeriesFinished(): void {
+        if (this.testResults.length === 0) {
+            return;
+        }
+
         const lmapReport: LmapReportAPI = {
             "additional_request_info": undefined,
             "agent-id": undefined,
@@ -113,16 +123,7 @@ export class NetTestComponent extends BaseNetTestComponent {
                     "event": undefined,
                     "option": undefined,
                     "parameters": undefined,
-                    "results": [
-                        {
-                            "deserialize_type": "qos_result", //qos_result
-                            "reason": null,
-                            "relative_end_time_ns": null,
-                            "relative_start_time_ns": null,
-                            "status": null,
-                            "results": []
-                        }
-                    ],
+                    "results": [],
                     "schedule": undefined,
                     "start": undefined,
                     "status": undefined,
@@ -132,24 +133,68 @@ export class NetTestComponent extends BaseNetTestComponent {
             ],
             "time_based_result": undefined
         };
-        let count = 300; //?
+
+        this.testResults.forEach((subMeasurementResult: (SpeedMeasurementResult | QoSMeasurementResult)) => {
+            lmapReport.result[0].results.push(subMeasurementResult);
+        });
+
+        this.testService.postMeasurementResults(
+            lmapReport,
+            this.speedControl.option.reduce(
+                (url: string, option: LmapOptionAPI) => option.name === 'result_collector_base_url' ? (url + option.value) : url, '')
+        ).subscribe(response => {
+        });
+
+        this.testResults = [];
+    }
+
+    speedTestFinished(speedTestResult: SpeedTestState): void {
+        const speedMeasurementResult: SpeedMeasurementResult = new SpeedMeasurementResult();
+
+        speedMeasurementResult.deserialize_type = "speed_result";
+        speedMeasurementResult.reason = null;
+        speedMeasurementResult.relative_end_time_ns = null;
+        speedMeasurementResult.relative_start_time_ns = null;
+        speedMeasurementResult.status = null;
+        speedMeasurementResult.bytes_download = speedTestResult.downBit / 8;
+        speedMeasurementResult.bytes_upload = speedTestResult.upBit / 8;
+        speedMeasurementResult.duration_rtt_ns = 1000 * 1000 * 1000;
+        speedMeasurementResult.duration_download_ns = 1000 * 1000 * 1000;
+        speedMeasurementResult.duration_upload_ns = 1000 * 1000 * 1000;
+        speedMeasurementResult.rtt_info = new RttInfo();
+        speedMeasurementResult.rtt_info.rtts = [
+            {
+                rtt_ns: speedTestResult.ping * 1000 * 1000,
+                relative_time_ns: undefined
+            }
+        ];
+
+        this.testResults.push(speedMeasurementResult);
+    }
+
+    portBlockingTestFinished(portBlockingTestResult: PortBlockingTestState): void {
+        const qosMeasurementResult: QoSMeasurementResult = new QoSMeasurementResult();
+        qosMeasurementResult.deserialize_type = "qos_result";
+        qosMeasurementResult.reason = null;
+        qosMeasurementResult.relative_end_time_ns = null;
+        qosMeasurementResult.relative_start_time_ns = null;
+        qosMeasurementResult.status = null;
+        qosMeasurementResult.results = [];
+
         for (const port of portBlockingTestResult.types[0].ports) {
-            lmapReport.result[0].results[0]['results'].push(
+            qosMeasurementResult.results.push(
                 {
-                    "duration_ns": undefined,
-                    "echo_protocol_objective_payload": "UPD payload",
-                    "echo_protocol_objective_protocol": "udp",
-                    "qos_test_uid": ++count,
-                    "echo_protocol_status": port.reachable ? "SUCCESS" : "ERROR",
-                    "echo_protocol_objective_port": port.number,
-                    "start_time_ns": undefined,
-                    "echo_protocol_objective_timeout": undefined,
-                    "test_type": "echo_protocol",
-                    "echo_protocol_objective_host": "ENTER_QOS_SERVER_ADDRESS"
+                    "udp_result_out_num_packets": 1,
+                    "udp_objective_out_num_packets": 1,
+                    "qos_test_uid": port.uid,
+                    "test_type": "udp",
+                    "udp_result_out_response_num_packets": port.reachable ? 1 : 0,
+                    "udp_result_out_packet_loss_rate": port.reachable ? 0 : 100,
+                    "udp_objective_out_port": port.number
                 }
             );
         }
-        this.testService.postMeasurementResults(lmapReport).subscribe(response => {
-        });
+
+        this.testResults.push(qosMeasurementResult);
     }
 }

@@ -205,11 +205,11 @@ export class UserService {
         if (!user || !user.uuid) {
             return throwError("No user set");
         }
-        const lang: string = this.translateService.currentLang;
+        //const lang: string = this.translateService.currentLang;
         return Observable.create((observer: any) => {
             this.requests.getJson<any>(
-                Location.joinWithSlash(this.config.servers.control, "clients/" + user.uuid + "/measurements"),
-                {lang: lang}
+                Location.joinWithSlash("http://localhost:8082/api/v1/measurement-agents", user.uuid + "/measurements"),
+                {}
             ).subscribe(
                 (data: any) => {
                     this.logger.debug("User Mes", data);

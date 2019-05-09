@@ -7,13 +7,14 @@ import {SpeedTestStateEnum} from "../tests-implementation/speed/enums/speed-test
 import {GaugeUIStateEnum} from "../tests-ui/gauge/enums/gauge-ui-state.enum";
 import {ConfigService} from "../../services/config.service";
 import {TranslateService} from "@ngx-translate/core";
+import {SpeedTestConfig} from "../tests-implementation/speed/speed-test-config";
 
 @Component({
     // needs to be mentioned here, but also mentioned in gauge-ui.ts for reference
     templateUrl: "./app/testing/tests-ui/gauge/gauge-ui.template.html",
     selector: 'speed-test-gauge'
 })
-export class SpeedTestGauge extends GaugeUI<SpeedTestImplementation, SpeedTestState> {
+export class SpeedTestGauge extends GaugeUI<SpeedTestImplementation, SpeedTestConfig, SpeedTestState> {
 
 
     // TODO: rethink DI in this use case, testImplementation should not be one instance, if there were more than one test at once

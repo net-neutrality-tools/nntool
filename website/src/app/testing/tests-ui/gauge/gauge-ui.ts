@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, NgZone} from "@angular/core";
+import {AfterViewInit, Component} from "@angular/core";
 import {GaugeUIState} from "./gauge-ui-state";
 import {TestState} from "../../tests-implementation/test-state";
 import {TestImplementation} from "../../tests-implementation/test-implementation";
@@ -10,27 +10,30 @@ import {ConfigService} from "../../../services/config.service";
 import {TranslateService} from "@ngx-translate/core";
 import {BaseMeasurementGauge} from "./existing-gauge-ui/base.gauge.ui";
 import {MeasurementGauge} from "./existing-gauge-ui/gauge.ui";
+import {TestConfig} from "../../tests-implementation/test-config";
 
 @Component({
     templateUrl: "./app/testing/tests-ui/gauge/gauge-ui.template.html",
 })
-export abstract class GaugeUI<T extends TestImplementation<TS>, TS extends TestState>
-    extends Test<GaugeUIState, T, TS>
+export abstract class GaugeUI<T extends TestImplementation<TC, TS>, TC extends TestConfig, TS extends TestState>
+    extends Test<GaugeUIState, T, TC, TS>
     implements AfterViewInit {
 
     private active: boolean;
 
-    private config: WebsiteSettings;
+    private renderingConfig: WebsiteSettings;
     protected testGauge: BaseMeasurementGauge;
 
     protected constructor(testImplementation: T, configService: ConfigService, protected translateService: TranslateService) {
         super(testImplementation);
         this.state.subscribe(this.handleState);
-        this.config = configService.getConfig();
+        this.renderingConfig = configService.getConfig();
     }
 
     private handleState = (state: GaugeUIState) => {
-        this.testGauge.onStateChange(state);
+        if (this.testGauge) {
+            this.testGauge.onStateChange(state);
+        }
     }
 
     public setActive = (active: boolean) => {
@@ -45,11 +48,10 @@ export abstract class GaugeUI<T extends TestImplementation<TS>, TS extends TestS
     ngAfterViewInit () {
         this.testGauge = this.getGauge();
         this.testGauge.draw();
-        this.start(false);
     }
 
     private getGauge (): any {
-        let hasQos: boolean = this.config.nettest && this.config.nettest.tests && this.config.nettest.tests.qos;
+        let hasQos: boolean = this.renderingConfig.nettest && this.renderingConfig.nettest.tests && this.renderingConfig.nettest.tests.qos;
         const translations: {[key: string]: any} = {
             SPEED_MBPS: "Mbps",
             DURATION_MS: "ms",
@@ -66,8 +68,8 @@ export abstract class GaugeUI<T extends TestImplementation<TS>, TS extends TestS
             fontColor: "#FFFFFF"
         };
         let font: string = null;
-        if (this.config.colors.gauge) {
-            const gc: {[key: string]: string} = this.config.colors.gauge;
+        if (this.renderingConfig.colors.gauge) {
+            const gc: {[key: string]: string} = this.renderingConfig.colors.gauge;
             gaugeColors = {
                 baseColor: gc.arc_background,
                 valueColor: gc.arc_inner,

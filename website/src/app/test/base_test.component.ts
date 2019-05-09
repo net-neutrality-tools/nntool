@@ -1,4 +1,4 @@
-import {OnInit, AfterViewInit, OnDestroy, ElementRef, NgZone, ViewChild, Injectable} from "@angular/core";
+import {OnInit, OnDestroy, ElementRef, NgZone, Injectable} from "@angular/core";
 import {TranslateService} from "@ngx-translate/core";
 
 import {Logger, LoggerService} from "../services/log.service";
@@ -35,7 +35,6 @@ export abstract class BaseNetTestComponent implements OnInit, OnDestroy {
     errorMsg: string = null;
     measurementLink: string = null;
     protected _screenNr: number = 0;
-    protected measurementRequested: boolean = false;
     private _testInProgress: boolean = false;
 
     format: (value: any, setting: any) => any = formatUtils;
@@ -82,9 +81,6 @@ export abstract class BaseNetTestComponent implements OnInit, OnDestroy {
     ngOnInit () {
         this.config = this.configService.getConfig();
         this.screenNr = 0;
-        if (this.user.acceptTC) {
-            this.requestMeasurement();
-        }
     }
 
     ngOnDestroy (): void {
@@ -98,12 +94,5 @@ export abstract class BaseNetTestComponent implements OnInit, OnDestroy {
     agree (): void {
         this.user.acceptTC = true;
         this.userService.save();
-        this.requestMeasurement();
-    }
-
-    private requestMeasurement (): void {
-        this.testService.newMeasurement().subscribe(response => {
-            this.measurementRequested = true;
-        });
     }
 }

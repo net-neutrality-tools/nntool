@@ -8,6 +8,7 @@ export class PortBlockingTestState extends TestState {
             number: number;
             reachable: boolean;
             finished: boolean;
+            uid: string;
         }[]
     }[];
 }

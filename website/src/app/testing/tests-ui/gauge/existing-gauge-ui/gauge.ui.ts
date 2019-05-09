@@ -65,7 +65,7 @@ export class MeasurementGauge extends BaseMeasurementGauge {
         // Not drawn
         this.dirty = oldDirty;
 
-        if (value === StateView.READY) {
+        /*if (value === StateView.READY) {
             this.stateView.className = "btn__nettest-state";
         }
         if (value === StateView.INIT) {
@@ -76,7 +76,7 @@ export class MeasurementGauge extends BaseMeasurementGauge {
         }
         if (value === StateView.ERROR) {
             this.stateView.className = "btn__nettest-state complete";
-        }
+        }*/
 
         if (this.stateContent !== old) {
             this.stateView.innerText = this.stateContent;

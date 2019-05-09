@@ -1,4 +1,4 @@
-export enum BasicTestStateEnum {
+export enum BasicTestState {
     INITIALIZED = 'INITIALIZED',
     RUNNING = 'RUNNING',
     ENDED = 'ENDED'

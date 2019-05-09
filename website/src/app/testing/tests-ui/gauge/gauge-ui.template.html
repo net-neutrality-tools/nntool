@@ -11,7 +11,7 @@
     complete: class="btn__nettest-state complete"
     -->
     <button
-            class="btn__nettest-state" id="nettest-state"
-            (click)="start(true)"
+            class="btn__nettest-state" [ngClass]="{'inprogress': manualStartShouldBeDisabled}" id="nettest-state"
+            (click)="requestStart()"
     >h</button>
 </div>

@@ -1,5 +1,6 @@
-import {AfterViewInit, Component, ContentChildren, ElementRef, Input, QueryList} from "@angular/core";
+import {AfterViewInit, Component, ContentChildren, EventEmitter, Input, Output, QueryList} from "@angular/core";
 import {StartableTest} from "./test.component";
+import {TestComponentStatus} from "./enums/test-component-status.enum";
 
 @Component({
     template: '<ng-content></ng-content>',
@@ -15,31 +16,57 @@ export class TestSeriesComponent implements AfterViewInit {
     @Input()
     private visible: boolean = true;
 
+    @Output()
+    private statusChange: EventEmitter<TestComponentStatus> = new EventEmitter<TestComponentStatus>();
+
     // for now
-    private fixedTestComponents: StartableTest[];
+    private currentFixedTestComponents: StartableTest[];
     private currentTestIndex: number = 0;
 
     constructor() {
+
     }
 
     ngAfterViewInit(): void {
-        this.fixedTestComponents = this.testComponents.toArray();
-        this.fixedTestComponents.forEach((testComponent: StartableTest) => {
+        /*this.testComponents.changes.subscribe(
+            (testComponents) => {
+                const test = this.currentFixedTestComponents;
+                console.log(test);
+            }
+        );*/
+        this.currentFixedTestComponents = this.testComponents.toArray();
+        this.currentFixedTestComponents.forEach((testComponent: StartableTest) => {
             testComponent.setActive(false);
-            testComponent.ended().subscribe(this.testHasEnded);
+            testComponent.onChangedRunningState.subscribe(this.testHasEnded);
         });
-        this.fixedTestComponents[this.currentTestIndex].setActive(true);
-        if (this.autostart) {
-            this.fixedTestComponents[this.currentTestIndex].start(true);
+        if (this.currentFixedTestComponents.length > 0) {
+            this.currentFixedTestComponents[this.currentTestIndex].setActive(true);
+            if (this.autostart) {
+                this.currentFixedTestComponents[this.currentTestIndex].requestStart();
+            }
         }
     }
 
-    private testHasEnded = (ended: boolean) => {
-        if (ended) {
-            this.fixedTestComponents[this.currentTestIndex].setActive(false);
-            this.currentTestIndex = (this.currentTestIndex + 1) % this.fixedTestComponents.length;
-            this.fixedTestComponents[this.currentTestIndex].setActive(true);
-            this.fixedTestComponents[this.currentTestIndex].start(true);
+    private testHasEnded = (testComponentStatus: TestComponentStatus) => {
+        switch (testComponentStatus) {
+            case TestComponentStatus.WAITING:
+                this.currentFixedTestComponents[this.currentTestIndex].setActive(false);
+                this.currentTestIndex = (this.currentTestIndex + 1) % this.currentFixedTestComponents.length;
+                this.currentFixedTestComponents[this.currentTestIndex].setActive(true);
+                if (this.currentTestIndex !== 0) {
+                    this.currentFixedTestComponents[this.currentTestIndex].requestStart();
+                } else {
+                    this.statusChange.emit(TestComponentStatus.WAITING);
+                }
+                break;
+            case TestComponentStatus.WORKING:
+                if (this.currentTestIndex === 0) {
+                    this.statusChange.emit(TestComponentStatus.WORKING);
+                }
+                break;
+            case TestComponentStatus.REQUESTS_CONFIG:
+                this.statusChange.emit(TestComponentStatus.REQUESTS_CONFIG);
+                break;
         }
     }
 }

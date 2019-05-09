@@ -6,25 +6,24 @@
              [_screenNr]="screenNr"
              (_screenNrChange)="screenNr = $event"
         ></div>
-        <test-series *ngIf="user && user.acceptTC && measurementRequested"
+        <test-series *ngIf="user && user.acceptTC"
                      [autostart]="autostart"
                      [hidden]="!(user && user.acceptTC && screenNr === 1)"
                      [visible]="user && user.acceptTC && screenNr === 1"
+                     (statusChange)="handleTestSeriesStatusChange($event)"
         >
             <speed-test-gauge #startableTest
-                              [autostart]="false"
+                              [config]="speedConfig"
                               (finished)="speedTestFinished($event)"
                               (errorMsgChange)="errorMsg = $event"
-                              (measurementLinkChange)="measurementLink = $event"
-                              (testInProgressChange)="testInProgress = $event"
+                              (statusChange)="$event"
             >
             </speed-test-gauge>
             <port-blocking-test-bar #startableTest
-                                    [autostart]="false"
+                                    [config]="qosConfig"
                                     (finished)="portBlockingTestFinished($event)"
                                     (errorMsgChange)="errorMsg = $event"
-                                    (measurementLinkChange)="measurementLink = $event"
-                                    (testInProgressChange)="testInProgress = $event"
+                                    (statusChange)="$event"
             >
             </port-blocking-test-bar>
         </test-series>
