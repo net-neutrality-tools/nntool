@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import at.alladin.nettest.nntool.android.app.R;
-import at.alladin.nettest.nntool.android.app.workflow.AbstractFullScreenDialogFragment;
+import at.alladin.nettest.nntool.android.app.dialog.AbstractFullScreenDialogFragment;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
@@ -39,7 +39,7 @@ public class MeasurementServerSelectionFragment extends AbstractFullScreenDialog
     }
 
     @Override
-    public int getViewId() {
+    public int getLayoutId() {
         return R.layout.fragment_measurement_server_selection;
     }
 

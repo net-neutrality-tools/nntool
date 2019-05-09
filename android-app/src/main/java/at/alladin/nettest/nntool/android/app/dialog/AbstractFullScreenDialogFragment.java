@@ -1,4 +1,4 @@
-package at.alladin.nettest.nntool.android.app.workflow;
+package at.alladin.nettest.nntool.android.app.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;

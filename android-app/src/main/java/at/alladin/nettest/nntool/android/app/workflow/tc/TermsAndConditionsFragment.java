@@ -1,19 +1,13 @@
 package at.alladin.nettest.nntool.android.app.workflow.tc;
 
 import android.app.Activity;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.Button;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
-import at.alladin.nettest.nntool.android.app.workflow.AbstractFullScreenDialogFragment;
+import at.alladin.nettest.nntool.android.app.dialog.AbstractFullScreenDialogFragment;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -37,7 +31,7 @@ public class TermsAndConditionsFragment extends AbstractFullScreenDialogFragment
     }
 
     @Override
-    public int getViewId() {
+    public int getLayoutId() {
         return R.layout.tc_dialog;
     }
 
