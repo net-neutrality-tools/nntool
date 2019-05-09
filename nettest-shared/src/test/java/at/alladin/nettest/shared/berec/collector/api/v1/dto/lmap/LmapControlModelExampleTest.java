@@ -184,6 +184,7 @@ public class LmapControlModelExampleTest extends AbstractLmapExampleTest {
         qosParams.setObjectives(objectives);
 
         final SpeedMeasurementTypeParameters speedParams = new SpeedMeasurementTypeParameters();
+        /*
         final SpeedMeasurementTypeParameters.Durations dur = new SpeedMeasurementTypeParameters.Durations();
         dur.setDownload(10);
         dur.setDownloadSlowStart(3);
@@ -198,6 +199,7 @@ public class LmapControlModelExampleTest extends AbstractLmapExampleTest {
         flows.setUploadSlowStart(3);
         flows.setRtt(3);
         //speedParams.setFlows(flows);
+        */
         speedParams.setRttCount(10);
         speedParams.setJavascriptMeasurementCodeUrl("measurement.berec.eu");
 

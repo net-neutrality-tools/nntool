@@ -1,16 +1,16 @@
 package at.alladin.nettest.shared.server.storage.couchdb.domain.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.spring.data.couchdb.core.mapping.DocTypeHelper;
 import at.alladin.nettest.spring.data.couchdb.core.mapping.Document;
 
@@ -69,7 +69,16 @@ public class Settings {
 	@Expose
 	@SerializedName("measurements")
 	@JsonProperty("measurements")
-	private Map<String, SubMeasurementSettings> measurements;
+	private Map<MeasurementTypeDto, SubMeasurementSettings> measurements;
+	
+	/**
+	 * The list defining the groups returned in the detail measurement response.
+	 */
+	@JsonPropertyDescription("The list defining the groups returned in the detail measurement response.")
+	@JsonProperty("speedtest_detail_groups")
+	@SerializedName("speedtest_detail_groups")
+	@Expose
+	private List<SpeedtestDetailGroup> speedtestDetailGroups = new ArrayList<>();
 	
 	public String getId() {
 		return id;
@@ -111,12 +120,20 @@ public class Settings {
 		this.urls = urls;
 	}
 
-	public Map<String, SubMeasurementSettings> getMeasurements() {
+	public Map<MeasurementTypeDto, SubMeasurementSettings> getMeasurements() {
 		return measurements;
 	}
 
-	public void setMeasurements(Map<String, SubMeasurementSettings> measurements) {
+	public void setMeasurements(Map<MeasurementTypeDto, SubMeasurementSettings> measurements) {
 		this.measurements = measurements;
+	}
+	
+	public List<SpeedtestDetailGroup> getSpeedtestDetailGroups() {
+		return speedtestDetailGroups;
+	}
+	
+	public void setSpeedtestDetailGroups(List<SpeedtestDetailGroup> speedtestDetailGroups) {
+		this.speedtestDetailGroups = speedtestDetailGroups;
 	}
 
 	/**
@@ -271,131 +288,209 @@ public class Settings {
 	 * Settings applicable only to conducted speed measurements.
 	 *
 	 * @author alladin-IT GmbH (bp@alladin.at)
+	 * @author Lukasz Budryk (alladin-IT GmbH)
 	 *
 	 */
 	@JsonClassDescription("Settings applicable only to conducted speed measurements.")
 	public class SpeedMeasurementSettings extends SubMeasurementSettings {
 
 		/**
-		 * The requested number of streams for the download measurement.
+		 * Contains all measurement class configurations for the upload test.
 		 */
-		@JsonPropertyDescription("The requested number of streams for the download measurement.")
+		@JsonPropertyDescription("Contains all measurement class configurations for the upload test.")
 		@Expose
-		@SerializedName("num_streams_download")
-		@JsonProperty("num_streams_download")
-		private Integer numStreamsDownload;
+		@SerializedName("upload")
+		@JsonProperty("upload")
+		private List<SpeedMeasurementClass> uploadClassList = new ArrayList<>();
 
 		/**
-		 * The requested number of streams for the upload measurement.
+		 * Contains all measurement class configurations for the download test.
 		 */
-		@JsonPropertyDescription("The requested number of streams for the upload measurement.")
+		@JsonPropertyDescription("Contains all measurement class configurations for the download test.")
 		@Expose
-		@SerializedName("num_streams_upload")
-		@JsonProperty("num_streams_upload")
-		private Integer numStreamsUpload;
+		@SerializedName("download")
+		@JsonProperty("download")
+		private List<SpeedMeasurementClass> downloadClassList = new ArrayList<>();
+
+		public List<SpeedMeasurementClass> getUploadClassList() {
+			return uploadClassList;
+		}
+
+		public void setUploadClassList(List<SpeedMeasurementClass> uploadClassList) {
+			this.uploadClassList = uploadClassList;
+		}
+
+		public List<SpeedMeasurementClass> getDownloadClassList() {
+			return downloadClassList;
+		}
+
+		public void setDownloadClassList(List<SpeedMeasurementClass> downloadClassList) {
+			this.downloadClassList = downloadClassList;
+		}
+
+		@Override
+		public String toString() {
+			return "SpeedMeasurementSettings{" +
+					"uploadClassList=" + uploadClassList +
+					", downloadClassList=" + downloadClassList +
+					"} " + super.toString();
+		}
 
 		/**
-		 * The requested number of packets to send during the RTT measurement.
+		 * Holds a single measurement class configuration.
+		 *
+		 * @author Lukasz Budryk (alladin-IT GmbH)
 		 */
-		@JsonPropertyDescription("The requested number of packets to send during the RTT measurement.")
-		@Expose
-		@SerializedName("num_packets_rtt")
-		@JsonProperty("num_packets_rtt")
-		private Integer numPacketsRtt;
+		@JsonClassDescription("Holds a single measurement class configuration.")
+		public class SpeedMeasurementClass {
 
-		/**
-		 * The nominal duration for the upload slow-start phase.
-		 */
-		@io.swagger.annotations.ApiModelProperty("The nominal duration for the upload slow-start phase.")
-		@JsonPropertyDescription("The nominal duration for the upload slow-start phase.")
-		@Expose
-		@SerializedName("duration_upload_slow_start")
-		@JsonProperty("duration_upload_slow_start")
-		private Integer durationUploadSlowStart;
+			/**
+			 *
+			 */
+			@JsonPropertyDescription("")
+			@Expose
+			@SerializedName("default")
+			@JsonProperty("default")
+			private Boolean isDefault = false;
 
-		/**
-		 * The nominal duration for the download slow-start phase.
-		 */
-		@io.swagger.annotations.ApiModelProperty("The nominal duration for the download slow-start phase.")
-		@JsonPropertyDescription("The nominal duration for the download slow-start phase.")
-		@Expose
-		@SerializedName("duration_download_slow_start")
-		@JsonProperty("duration_download_slow_start")
-		private Integer durationDownloadSlowStart;
+			/**
+			 * The requested number of streams for the measurement.
+			 */
+			@JsonPropertyDescription("The requested number of streams for the measurement.")
+			@Expose
+			@SerializedName("streams")
+			@JsonProperty("streams")
+			private Integer numStreams;
 
-		/**
-		 * The nominal measurement duration of the download measurement.
-		 */
-		@JsonPropertyDescription("The nominal measurement duration of the download measurement.")
-		@Expose
-		@SerializedName("duration_download_ns")
-		@JsonProperty("duration_download_ns")
-		private Long durationDownloadNs;
+			/**
+			 * The frame size of the measurement.
+			 */
+			@JsonPropertyDescription("The frame size of the measurement.")
+			@Expose
+			@SerializedName("frameSize")
+			@JsonProperty("frameSize")
+			private Integer frameSize;
 
-		/**
-		 * The nominal measurement duration of the upload measurement.
-		 */
-		@JsonPropertyDescription("The nominal measurement duration of the upload measurement.")
-		@Expose
-		@SerializedName("duration_upload_ns")
-		@JsonProperty("duration_upload_ns")
-		private Long durationUploadNs;
+			/**
+			 * The boundaries for this specific measurement class.
+			 */
+			@JsonPropertyDescription("The boundaries for this specific measurement class.")
+			@Expose
+			@SerializedName("bounds")
+			@JsonProperty("bounds")
+			private Bounds bounds;
 
-		public Integer getNumStreamsDownload() {
-			return numStreamsDownload;
+			/**
+			 * The number of frames sent per upload method call.
+			 */
+			@JsonPropertyDescription("The number of frames sent per upload method call.")
+			@Expose
+			@SerializedName("framesPerCall")
+			@JsonProperty("framesPerCall")
+			private Integer framesPerCall;
+
+			/**
+			 *
+			 * @author Lukasz Budryk (alladin-IT GmbH)
+			 */
+			@JsonClassDescription("")
+			public class Bounds {
+
+				/**
+				 * The lower bound.
+				 */
+				@JsonPropertyDescription("The lower bound.")
+				@Expose
+				@SerializedName("lower")
+				@JsonProperty("lower")
+				private Double lower;
+
+				/**
+				 * The upper bound.
+				 */
+				@JsonPropertyDescription("The upper bound.")
+				@Expose
+				@SerializedName("upper")
+				@JsonProperty("upper")
+				private Double upper;
+
+				public Double getLower() {
+					return lower;
+				}
+
+				public void setLower(Double lower) {
+					this.lower = lower;
+				}
+
+				public Double getUpper() {
+					return upper;
+				}
+
+				public void setUpper(Double upper) {
+					this.upper = upper;
+				}
+
+				@Override
+				public String toString() {
+					return "Bounds{" +
+							"lower=" + lower +
+							", upper=" + upper +
+							'}';
+				}
+			}
+
+			public Boolean getDefault() {
+				return isDefault;
+			}
+
+			public void setDefault(Boolean aDefault) {
+				isDefault = aDefault;
+			}
+
+			public Integer getNumStreams() {
+				return numStreams;
+			}
+
+			public void setNumStreams(Integer numStreams) {
+				this.numStreams = numStreams;
+			}
+
+			public Integer getFrameSize() {
+				return frameSize;
+			}
+
+			public void setFrameSize(Integer frameSize) {
+				this.frameSize = frameSize;
+			}
+
+			public Bounds getBounds() {
+				return bounds;
+			}
+
+			public void setBounds(Bounds bounds) {
+				this.bounds = bounds;
+			}
+
+			public Integer getFramesPerCall() {
+				return framesPerCall;
+			}
+
+			public void setFramesPerCall(Integer framesPerCall) {
+				this.framesPerCall = framesPerCall;
+			}
+
+			@Override
+			public String toString() {
+				return "SpeedMeasurementClass{" +
+						"isDefault=" + isDefault +
+						", numStreams=" + numStreams +
+						", frameSize=" + frameSize +
+						", bounds=" + bounds +
+						", framesPerCall=" + framesPerCall +
+						'}';
+			}
 		}
 
-		public void setNumStreamsDownload(Integer numStreamsDownload) {
-			this.numStreamsDownload = numStreamsDownload;
-		}
-
-		public Integer getNumStreamsUpload() {
-			return numStreamsUpload;
-		}
-
-		public void setNumStreamsUpload(Integer numStreamsUpload) {
-			this.numStreamsUpload = numStreamsUpload;
-		}
-
-		public Integer getNumPacketsRtt() {
-			return numPacketsRtt;
-		}
-
-		public void setNumPacketsRtt(Integer numPacketsRtt) {
-			this.numPacketsRtt = numPacketsRtt;
-		}
-
-		public Integer getDurationUploadSlowStart() {
-			return durationUploadSlowStart;
-		}
-
-		public void setDurationUploadSlowStart(Integer durationUploadSlowStart) {
-			this.durationUploadSlowStart = durationUploadSlowStart;
-		}
-
-		public Integer getDurationDownloadSlowStart() {
-			return durationDownloadSlowStart;
-		}
-
-		public void setDurationDownloadSlowStart(Integer durationDownloadSlowStart) {
-			this.durationDownloadSlowStart = durationDownloadSlowStart;
-		}
-
-		public Long getDurationDownloadNs() {
-			return durationDownloadNs;
-		}
-
-		public void setDurationDownloadNs(Long durationDownloadNs) {
-			this.durationDownloadNs = durationDownloadNs;
-		}
-
-		public Long getDurationUploadNs() {
-			return durationUploadNs;
-		}
-
-		public void setDurationUploadNs(Long durationUploadNs) {
-			this.durationUploadNs = durationUploadNs;
-		}
 	}
 
 	/**
@@ -407,5 +502,19 @@ public class Settings {
 	@JsonClassDescription("Settings applicable only to conducted Quality of Service (QoS) measurements.")
 	public class QoSMeasurementSettings extends SubMeasurementSettings {
 
+		@JsonPropertyDescription("The uuid of the qos measurement server to be used during qos measurements.")
+		@Expose
+		@SerializedName("qos_server_uuid")
+		@JsonProperty("qos_server_uuid")
+		private String qosServerUuid;
+
+		public String getQosServerUuid() {
+			return qosServerUuid;
+		}
+
+		public void setQosServerUuid(String qosServerUuid) {
+			this.qosServerUuid = qosServerUuid;
+		}
+		
 	}
 }

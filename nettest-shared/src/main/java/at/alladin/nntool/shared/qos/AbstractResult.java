@@ -24,7 +24,6 @@ import org.json.JSONObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
 import at.alladin.nntool.shared.qos.annotations.NonComparableField;
 import at.alladin.nntool.shared.qos.testscript.TestScriptInterpreter;
 
@@ -60,40 +59,33 @@ public abstract class AbstractResult {
 	@NonComparableField
 	protected Map<String, Object> resultMap = new HashMap<String, Object>();
 	
-	@HstoreKey("operator")
 	@SerializedName("operator")
 	@Expose
 	@NonComparableField
 	protected String operator;
 	
-	@HstoreKey("on_failure")
 	@SerializedName("on_failure")
 	@Expose
 	@NonComparableField
 	protected String onFailure;
 	
-	@HstoreKey("on_success")
 	@SerializedName("on_success")
 	@Expose
 	@NonComparableField
 	protected String onSuccess;
 	
-	@HstoreKey("evaluate")
 	@SerializedName("evaluate")
 	@Expose
 	protected Object evaluate;
 	
-	@HstoreKey("end_time_ns")
 	@SerializedName("end_time_ns")
 	@Expose
 	protected Long endTimeNs;
 	
-	@HstoreKey("start_time_ns")
 	@SerializedName("start_time_ns")
 	@Expose
 	protected Long startTimeNs;
 	
-	@HstoreKey("duration_ns")
 	@SerializedName("duration_ns")
 	@Expose
 	protected Long testDuration;
@@ -102,7 +94,6 @@ public abstract class AbstractResult {
 	//	Advanced implementations:
 	///////////////////////////////////////
 	
-	@HstoreKey("success_condition")
 	@SerializedName("success_condition")
 	@Expose
 	@NonComparableField
@@ -115,7 +106,6 @@ public abstract class AbstractResult {
 	 * <li>{@link AbstractResult#RESULT_TYPE_INFO}: Will not count as a success or failure. The status of the result will be "info"</li>
 	 * </ul>
 	 */
-	@HstoreKey("failure_type")
 	@SerializedName("failure_type")
 	@Expose
 	@NonComparableField
@@ -124,7 +114,6 @@ public abstract class AbstractResult {
 	/**
 	 * @see AbstractResult#failureType
 	 */
-	@HstoreKey("success_type")
 	@SerializedName("success_type")
 	@Expose
 	@NonComparableField
@@ -137,7 +126,6 @@ public abstract class AbstractResult {
 	 * <li>{@link AbstractResult#BEHAVIOUR_ABORT}: Will cause the evaluation to abort. All following expected results will be ignored.</li>
 	 * </ul>
 	 */
-	@HstoreKey("on_failure_behaviour")
 	@SerializedName("on_failure_behaviour")
 	@Expose
 	@NonComparableField
@@ -147,7 +135,6 @@ public abstract class AbstractResult {
 	 * the behaviour of the evaluation if the test succeeds
 	 * @see AbstractResult#onFailureBehaivour
 	 */
-	@HstoreKey("on_success_behaviour")
 	@SerializedName("on_success_behaviour")
 	@Expose
 	@NonComparableField
@@ -159,7 +146,6 @@ public abstract class AbstractResult {
 	 * <br>
 	 * default: {@link Integer#MAX_VALUE} 
 	 */
-	@HstoreKey("priority")
 	@SerializedName("priority")
 	@Expose
 	@NonComparableField
@@ -278,6 +264,10 @@ public abstract class AbstractResult {
 	
 	public Map<String, Object> getResultMap() {
 		return resultMap;
+	}
+	
+	public void setResultMap(Map<String, Object> resultMap) {
+		this.resultMap = resultMap;
 	}
 
 	public void setResultJson(JSONObject resultJson) {

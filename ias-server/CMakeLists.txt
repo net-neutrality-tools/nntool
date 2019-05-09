@@ -12,7 +12,7 @@
 
 #/*!
 # *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2019-04-08
+# *      \date Last update: 2019-05-03
 # *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
 # */
 
@@ -55,12 +55,17 @@ set ( CMAKE_VERBOSE_MAKEFILE true )
 add_definitions(-std=c++11)
 add_definitions(-g)
 add_definitions(-Wall)
+add_definitions(-Wextra)
+add_definitions(-DNNTOOL)
+add_definitions(-DNNTOOL_SERVER)
 add_definitions("$$(pkg-config nopoll --cflags)")
 add_definitions("$$(pkg-config nopoll --libs)")
 
+add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/../ias-libnntool ${CMAKE_CURRENT_BINARY_DIR}/ias-libnntool)
 add_subdirectory (src)
 
 INSTALL(PROGRAMS build/ias-server DESTINATION bin )
+INSTALL(PROGRAMS build/libnntool.so DESTINATION /usr/lib )
 
 INCLUDE (InstallRequiredSystemLibraries)
 SET (CPACK_COMPONENTS_ALL Libraries ApplicationData)
@@ -74,8 +79,8 @@ SET (CPACK_DEBIAN_PACKAGE_SECTION "measurement")
 SET (CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
 set (CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 
-SET (CPACK_PACKAGE_DESCRIPTION "WebSocket Measurement Server (ias-server)")
-SET (CPACK_PACKAGE_DESCRIPTION_SUMMARY "WebSocket Measurement Server (ias-server)")
+SET (CPACK_PACKAGE_DESCRIPTION "ias server (ias-server)")
+SET (CPACK_PACKAGE_DESCRIPTION_SUMMARY "ias server (ias-server)")
 SET (CPACK_DEBIAN_PACKAGE_MAINTAINER "zafaco GmbH")
 SET (CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}_${CPACK_DEBIAN_ARCHITECTURE}")
 

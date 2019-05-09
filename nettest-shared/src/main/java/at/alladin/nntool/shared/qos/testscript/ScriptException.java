@@ -46,4 +46,8 @@ public class ScriptException extends Exception {
 		super(errMsg);
 	}
 	
+	public ScriptException(final String errMsg, final Exception ex) {
+		super(errMsg, ex);
+	}
+	
 }

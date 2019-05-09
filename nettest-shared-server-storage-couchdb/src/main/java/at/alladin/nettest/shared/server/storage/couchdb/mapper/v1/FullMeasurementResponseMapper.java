@@ -55,7 +55,7 @@ public interface FullMeasurementResponseMapper extends DateTimeMapper {
 				ret.put(type, this.map((SpeedMeasurement) measurementParam.get(type)));
 				break;
 			case QOS:
-				ret.put(type, this.map((QoSMeasurement) measurementParam.get(type)));
+				//ret.put(type, this.map((QoSMeasurement) measurementParam.get(type)));
 				break;
 			}
 			

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-02-13
+ *      \date Last update: 2019-05-03
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -273,7 +273,7 @@ function connect()
 
     try 
     {
-        if (typeof require !== 'undefined' && wsTestCase === 'download')
+        if (typeof require !== 'undefined' && typeof platformModule === 'undefined')
         {
             var logDebug = false;
             var WebSocketNode = require('ws');
@@ -329,7 +329,7 @@ function connect()
         else if (wsTestCase === 'upload')
         {
             wsCompleted = false;
-            ulData = jsTool.generateRandomData(ulDataSize, true, false);
+            ulData = generateRandomData(ulDataSize, true, false);
         }
     };
 
@@ -353,50 +353,61 @@ function connect()
         if (wsTestCase === 'download')
         {
             wsData      += event.data.size;
-            //wsFrameSize = event.data.size;
             wsFrames++;
         }
         else
         {
             //console.log('Server: response text received: ' + event.data);
             //reportToControl('info', 'Server: response text received: ' + event.data);
-            try 
-            {
-                var data = JSON.parse(event.data);
-            }
-            catch (error)
-            {
-                //console.log('webSocket on Message: json parse error');
-                //reportToControl('info', 'webSocket on Message: json parse error');
-                return;
-            }
 
-            if (data.cmd === 'rttReport')
-            {
-                wsRttValues.avg         = Number(data.avg) * 1000 * 1000;
-                wsRttValues.med         = Number(data.med) * 1000 * 1000;
-                wsRttValues.min         = Number(data.min) * 1000 * 1000;
-                wsRttValues.max         = Number(data.max) * 1000 * 1000;
-                wsRttValues.requests    = Number(data.req);
-                wsRttValues.replies     = Number(data.rep);
-                wsRttValues.errors      = Number(data.err);
-                wsRttValues.missing     = Number(data.mis);
-                wsRttValues.packetsize  = Number(data.pSz);
-                wsRttValues.stDevPop    = Number(data.std_dev_pop) * 1000 * 1000;
-                wsRttValues.server      = String(data.srv);
-            }
-
-            if (data.cmd === 'ulReport')
+            if (wsTestCase === 'upload')
             {
                 var length = 0;
                 for (var key in ulReportDict)
                 {
                     length++;
                 }
-                ulReportDict[length]        = {};
-                ulReportDict[length].time   = Number(data.time);
-                ulReportDict[length].bRcv   = Number(data.bRcv);
-                ulReportDict[length].hRcv   = Number(data.hRcv);
+
+                var data = event.data.split(',');
+                if (data.length > 4)
+                {
+                    ulReportDict[length]        = {};
+                    ulReportDict[length].bRcv   = Number(data[0]);
+                    ulReportDict[length].time   = Number(data[3]);
+                    ulReportDict[length].hRcv   = Number(data[4]);
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else if (wsTestCase === 'rtt')
+            {
+                try 
+                {
+                    var data = JSON.parse(event.data);
+                }
+                catch (error)
+                {
+                    //console.log('webSocket on Message: json parse error');
+                    //reportToControl('info', 'webSocket on Message: json parse error');
+                    return;
+                }
+
+                if (data.cmd === 'rttReport')
+                {
+                    wsRttValues.avg         = Number(data.avg) * 1000 * 1000;
+                    wsRttValues.med         = Number(data.med) * 1000 * 1000;
+                    wsRttValues.min         = Number(data.min) * 1000 * 1000;
+                    wsRttValues.max         = Number(data.max) * 1000 * 1000;
+                    wsRttValues.requests    = Number(data.req);
+                    wsRttValues.replies     = Number(data.rep);
+                    wsRttValues.errors      = Number(data.err);
+                    wsRttValues.missing     = Number(data.mis);
+                    wsRttValues.packetsize  = Number(data.pSz);
+                    wsRttValues.stDevPop    = Number(data.std_dev_pop) * 1000 * 1000;
+                    wsRttValues.server      = String(data.srv);
+                }
             }
         }
     };
@@ -471,6 +482,50 @@ function upload()
             }
         }
     }, ulIntervalTiming);
+};
+
+/**
+ * @function generateRandomData
+ * @description Function to generate Random ASCII Data
+ * @public
+ * @param {int} length Random Data Length
+ * @param {bool} asString Indicates if the callback should be a string
+ * @param {bool} asArrayBuffer Indicates if the callback should be a n ArrayBuffer
+ */
+function generateRandomData(length, asString, asArrayBuffer)
+{
+    var mask = '';
+    mask += 'abcdefghijklmnopqrstuvwxyz';
+    mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    mask += '0123456789';
+    mask += '~`!@#$%^&*()_+-={}[]:;?,./|\\';
+
+    if (asArrayBuffer)
+    {
+          var    arrayBuffer = new ArrayBuffer(length);
+          var bufferView = new Uint8Array(arrayBuffer);
+        for (var i = length; i > 0; --i)
+        {
+            bufferView[i] = mask.charCodeAt(Math.floor(Math.random() * mask.length));
+        }
+        return arrayBuffer;
+    }
+    else
+    {
+        var data = '';
+        for (var i = length; i > 0; --i)
+        {
+            data += mask[Math.floor(Math.random() * mask.length)];
+        }
+        if (asString)
+        {
+            return data;
+        }
+        else
+        {
+            return new Blob([data]);
+        }
+    }
 };
 
 /**

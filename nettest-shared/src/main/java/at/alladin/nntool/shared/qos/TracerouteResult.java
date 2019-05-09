@@ -21,9 +21,6 @@ import java.util.ArrayList;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nntool.shared.hstoreparser.annotation.HstoreCollection;
-import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
-
 /**
  * 
  * 
@@ -32,49 +29,39 @@ import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
  */
 public class TracerouteResult extends AbstractResult {
 	
-	@HstoreKey("traceroute_objective_host")
 	@SerializedName("traceroute_objective_host")
 	@Expose
 	private String url;
 	
-	@HstoreKey("traceroute_result_status")
 	@SerializedName("traceroute_result_status")
 	@Expose
 	private String status;
 	
-	@HstoreKey("traceroute_result_duration")
 	@SerializedName("traceroute_result_duration")
 	@Expose
 	private Long duration;
 		
-	@HstoreKey("traceroute_objective_timeout")
 	@SerializedName("traceroute_objective_timeout")
 	@Expose
 	private Long timeout;
 	
-	@HstoreKey("traceroute_objective_max_hops")
 	@SerializedName("traceroute_objective_max_hops")
 	@Expose
 	private Integer maxHops;
 	
-	@HstoreKey("traceroute_result_hops")
 	@SerializedName("traceroute_result_hops")
 	@Expose
 	private Integer hops;
 	
-	@HstoreKey("traceroute_result_details")
-	@HstoreCollection(PathElement.class)
 	@SerializedName("traceroute_result_details")
 	@Expose
 	private ArrayList<PathElement> resultEntries;
 	
 	public final static class PathElement {
-		@HstoreKey("time")
 		@SerializedName("time")
 		@Expose
 		long time;
 		
-		@HstoreKey("host")
 		@SerializedName("host")
 		@Expose
 		String host;

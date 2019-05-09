@@ -14,7 +14,7 @@
 
 #/*!
 # *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2019-03-20
+# *      \date Last update: 2019-04-08
 # *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
 # */
 
@@ -31,6 +31,7 @@ mkdir build/plain/core
 
 mkdir build/plain/web
 mkdir build/plain/mobile
+mkdir build/plain/desktop
 
 if [ -z $1 ]; then
     mkdir build/uglified
@@ -39,6 +40,7 @@ if [ -z $1 ]; then
 
     mkdir build/uglified/web
     mkdir build/uglified/mobile
+    mkdir build/uglified/desktop
 fi
 
 
@@ -59,13 +61,10 @@ fi
 #---------------------------------------------------------
 
 #build web
-cp -R src/web/* build/plain/web/
+cp -R src/web_desktop/* build/plain/web/
 
 if [ -z $1 ]; then
-    cp -R src/web/index.html build/uglified/web/
-    #cd build/plain/web/
-    #for f in *.js; do short=${f%.js}; uglifyjs -c drop_console=true -m --comments /^!/ -- $f > ../../uglified/web/$short.js; done
-    #cd ../../
+    cp -R src/web_desktop/index.html build/uglified/web/
 fi
 
 cd build/
@@ -121,11 +120,51 @@ fi
 
 rm plain/mobile/header.js
 rm plain/mobile/footer.js
-rm -R plain/core/
 
 if [ -z $1 ]; then
     rm uglified/mobile/header.js
     rm uglified/mobile/footer.js
+fi
+
+cd ../
+
+
+#---------------------------------------------------------
+
+#build desktop
+cp -R src/web_desktop/* build/plain/desktop/
+
+if [ -z $1 ]; then
+    cp -R src/web_desktop/index.html build/uglified/desktop/
+fi
+
+cd build/
+
+cat plain/core/modules/browser.report.js    >> plain/desktop/ias.desktop.js
+cat plain/core/modules/Tool.js              >> plain/desktop/ias.desktop.js
+cat plain/core/Control.js                   >> plain/desktop/ias.desktop.js
+cat plain/core/Ias.js                       >> plain/desktop/ias.desktop.js
+cat plain/core/Worker.js                    >> plain/desktop/ias.desktop.js
+
+if [ -z $1 ]; then
+    uglifyjs -c drop_console=true -m --comments /^!/ plain/desktop/ias.desktop.js > uglified/desktop/ias.desktop.js
+fi
+
+cp plain/core/Worker.js plain/desktop/
+cp plain/core/modules/Tool.js plain/desktop/JSTool.js
+
+if [ -z $1 ]; then
+    cp uglified/core/Worker.js uglified/desktop/
+    cp uglified/core/modules/Tool.js uglified/desktop/JSTool.js
+fi
+
+
+#---------------------------------------------------------
+
+#cleanup core
+rm -R plain/core/
+
+if [ -z $1 ]; then
     rm -R uglified/core/
 fi
 

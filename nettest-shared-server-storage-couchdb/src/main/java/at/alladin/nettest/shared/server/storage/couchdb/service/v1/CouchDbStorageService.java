@@ -2,9 +2,12 @@ package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
@@ -14,19 +17,26 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.Setti
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.disassociate.DisassociateResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgent;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.TaskConfiguration;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementServerRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationQoSRepository;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TaskConfigurationSpeedRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.BriefMeasurementResponseMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportModelMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapper;
@@ -51,10 +61,16 @@ public class CouchDbStorageService implements StorageService {
 	private MeasurementAgentRepository measurementAgentRepository;
 	
 	@Autowired
-	private TaskConfigurationSpeedRepository taskConfigurationSpeedRepository;
+	private QoSMeasurementObjectiveRepository qosMeasurementObjectiveRepository;
 	
 	@Autowired
-	private TaskConfigurationQoSRepository taskConfigurationQoSRepository;
+	private MeasurementServerRepository measurementServerRepository;
+	
+	@Autowired
+	private QoSEvaluationService qosEvaluationService;
+	
+	@Autowired
+	private DetailMeasurementService detailMeasurementService;
 	
 	@Autowired
 	private LmapReportModelMapper lmapReportModelMapper;
@@ -67,6 +83,9 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private FullMeasurementResponseMapper fullMeasurementResponseMapper;
+	
+	@Autowired
+	private BriefMeasurementResponseMapper briefMeasurementResponseMapper;
 	
 	@Autowired
 	private LmapTaskMapper lmapTaskMapper;
@@ -86,6 +105,7 @@ public class CouchDbStorageService implements StorageService {
 		
 		measurement.setUuid(UUID.randomUUID().toString());
 		measurement.setOpenDataUuid(UUID.randomUUID().toString());
+		measurement.setSubmitTime(LocalDateTime.now(ZoneId.of("UTC")));
 		
 		try {
 			measurementRepository.save(measurement);
@@ -162,27 +182,33 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	@Override
-	public LmapTaskDto getTaskDto(MeasurementTypeDto type, String version) {
-		TaskConfiguration taskConfig = null;
+	public LmapTaskDto getTaskDto(final MeasurementTypeDto type, final String settingsUuid) {
 		try {
+			final Settings settings = settingsRepository.findByUuid(settingsUuid);
+			
 			switch (type) {
 			case SPEED:
-				taskConfig = taskConfigurationSpeedRepository.findByNameAndVersion(type.toString(), version);
-				break;
+				return lmapTaskMapper.map(settings, type.toString());
 			case QOS:
-				taskConfig = taskConfigurationQoSRepository.findByNameAndVersion(type.toString(), version);
-				break;
+				final List<QoSMeasurementObjective> qosObjectiveList = qosMeasurementObjectiveRepository.findAllByEnabled(true);
+				
+				if (settings.getMeasurements() != null && settings.getMeasurements().containsKey(MeasurementTypeDto.QOS)) {
+					final QoSMeasurementSettings qosSettings = (QoSMeasurementSettings) settings.getMeasurements().get(MeasurementTypeDto.QOS);
+					return lmapTaskMapper.map(settings, measurementServerRepository.findByUuid(
+							qosSettings.getQosServerUuid()), qosObjectiveList, type.toString());
+				} else {
+					return lmapTaskMapper.map(settings, null, qosObjectiveList, type.toString());
+				}
+				
+			default:
+				return null;
 			}
 			
 		} catch (Exception ex) {
 			throw new StorageServiceException(ex);
 		}
-		if (taskConfig == null) {
-			return null;
-		}
-		return lmapTaskMapper.map(taskConfig);
 	}
-
+	
 	@Override
 	public SettingsResponse getSettings(String settingsUuid) throws StorageServiceException {
 		final Settings settings;
@@ -197,8 +223,82 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	@Override
-	public FullMeasurementResponse getMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid,
+	public List<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid (final String measurementAgentUuid, 
+			final Pageable pageable) {
+		final List<Measurement> measurementList = measurementRepository.findByAgentInfoUuid(measurementAgentUuid, pageable);
+		return briefMeasurementResponseMapper.map(measurementList);
+	}
+	
+	@Override
+	public FullMeasurementResponse getFullMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid,
 			String measurementUuid) throws StorageServiceException {
+		final Measurement measurement = obtainMeasurement(measurementAgentUuid, measurementUuid);
+		
+		final FullMeasurementResponse ret = fullMeasurementResponseMapper.map(measurement);
+		
+		//evaluate the qos stuff 
+		final QoSMeasurement qosMeasurement = (QoSMeasurement) measurement.getMeasurements().get(MeasurementTypeDto.QOS);
+		if (qosMeasurement != null) {
+			//TODO: forward qosMeasurement to mapper
+			final FullQoSMeasurement fullQosMeasurement = qosEvaluationService.evaluateQoSMeasurement(qosMeasurement);
+			ret.getMeasurements().put(MeasurementTypeDto.QOS, fullQosMeasurement);
+		}
+		
+		return ret;
+	}
+	
+	@Override
+	public DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid (String measurementAgentUuid, String measurementUuid, final String settingsUuid) throws StorageServiceException {
+		final Measurement measurement = obtainMeasurement(measurementAgentUuid, measurementUuid);
+		//TODO: default settings?
+		final Settings settings = settingsRepository.findByUuid(settingsUuid);
+		return detailMeasurementService.groupResult(measurement, settings.getSpeedtestDetailGroups(),
+				Locale.ENGLISH, 10000);//detailMeasurementResponseMapper.map(measurement);
+	}
+	
+	@Override
+	public DisassociateResponse disassociateMeasurement(final String agentUuid, final String measurementUuid) throws StorageServiceException {
+		final Measurement measurement;
+		try {
+			measurement = measurementRepository.findByUuid(measurementUuid);
+		} catch (Exception ex) {
+			throw new StorageServiceException("Unknown measurement");
+		}
+		if (measurement.getAgentInfo().getUuid() == null) {
+			throw new StorageServiceException("Measurement already disassociated");
+		}
+		if (!agentUuid.equals(measurement.getAgentInfo().getUuid())) {
+			throw new StorageServiceException("Invalid agent/measurement uuid pair");
+		}
+		anonymizeMeasurement(measurement);
+		try {
+			measurementRepository.save(measurement);
+		} catch (Exception ex) {
+			throw new StorageServiceException(ex);
+		}
+		return new DisassociateResponse();
+	}
+	
+	@Override
+	public DisassociateResponse disassociateAllMeasurements(final String agentUuid) throws StorageServiceException {
+		try {
+			final List<Measurement> measurementList = measurementRepository.findByAgentInfoUuid(agentUuid);
+			measurementList.forEach(m -> anonymizeMeasurement(m));
+			measurementRepository.saveAll(measurementList);
+		} catch (Exception ex) {
+			throw new StorageServiceException(ex);
+		}
+		return new DisassociateResponse();
+	}
+	
+	private void anonymizeMeasurement (final Measurement toAnonymize) {
+		//TODO: do we anonymize anything else?
+		if (toAnonymize.getAgentInfo() != null) {
+			toAnonymize.getAgentInfo().setUuid(null);
+		}
+	}
+	
+	private Measurement obtainMeasurement (final String measurementAgentUuid, final String measurementUuid) throws StorageServiceException {
 		final Measurement measurement;
 		try {
 			measurement = measurementRepository.findByUuid(measurementUuid);
@@ -209,7 +309,6 @@ public class CouchDbStorageService implements StorageService {
 				|| !measurementAgentUuid.equals(measurement.getAgentInfo().getUuid())) {
 			throw new StorageServiceException("No measurement for agent and uuid found.");
 		}
-		
-		return fullMeasurementResponseMapper.map(measurement);
+		return measurement;
 	}
 }
