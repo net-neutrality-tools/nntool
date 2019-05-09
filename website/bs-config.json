@@ -1,0 +1,14 @@
+{
+  "server": {
+    "baseDir": "./dist/"
+  },
+  "browser": [
+    "chrome"
+  ],
+  "files": ["./dist"],
+  "watchOptions": {
+    "ignored": "*"
+  },
+  "open": false,
+  "_codeSync": false
+}

@@ -1,0 +1,11 @@
+{
+  "name": "@zafaco/breitbandtest",
+  "version": "1.0.0",
+  "description": "Breitbandtest",
+  "main": "ias.web.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "zafaco GmbH <info@zafaco.de>",
+  "license": "Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved."
+}
