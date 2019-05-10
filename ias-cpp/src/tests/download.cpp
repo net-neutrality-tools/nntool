@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-03
+ *      \date Last update: 2019-05-10
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -73,24 +73,37 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 //! \return 0
 int Download::run()
 {	
+	bool ipv6validated = false;
+
 	//Syslog Message
 	TRC_INFO( ("Starting Download Thread with PID: " + CTool::toString(syscall(SYS_gettid))).c_str() );
 
 	//Get Hostname and make DNS Request
 	TRC_DEBUG( ("Resolving Hostname for Measurement: "+mServerName).c_str() );
-	#ifndef NNTOOL
-	//MYSQL_LOG("Measurement-DL-Hostname",mServerName);
+
+	#ifdef NNTOOL
+	struct addrinfo *ips;
+	memset(&ips, 0, sizeof ips);
+
+	ips = CTool::getIpsFromHostname( mServerName, true );
+
+	char host[NI_MAXHOST];
+	
+	getnameinfo(ips->ai_addr, ips->ai_addrlen, host, sizeof host, NULL, 0, NI_NUMERICHOST);
+	mServer = string(host);
+	if (CTool::validateIp(mServer) == 6) ipv6validated = true; 
 	#endif
 
+	#ifndef NNTOOL
+	//MYSQL_LOG("Measurement-DL-Hostname",mServerName);
 	if( CTool::validateIp(mClient) == 6)
 		mServer = CTool::getIpFromHostname( mServerName, 6 );
 	else
 		mServer = CTool::getIpFromHostname( mServerName, 4 );
-	
-	TRC_DEBUG( ("Resolved Hostname for Measurement: "+mServer).c_str() );
-	#ifndef NNTOOL
 	//MYSQL_LOG("Measurement-DL-Server",mServer);
 	#endif
+
+	TRC_DEBUG( ("Resolved Hostname for Measurement: "+mServer).c_str() );
 
 	pid = syscall(SYS_gettid);
 	
@@ -114,7 +127,11 @@ int Download::run()
 	nHttpResponseDuration = 0;
 	nHttpResponseReportValue = 0;
 	
-	if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 )
+	#ifndef NNTOOL
+	if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 ) ipv6validated = true;
+	#endif
+
+	if (ipv6validated)
 	{	
 		//Create a TCP socket
 		if( ( mSock = mSocket->tcp6Socket(mClient, mServer, mPort) ) < 0 )
