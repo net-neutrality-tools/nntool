@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-08
+ *      \date Last update: 2019-05-10
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -110,6 +110,8 @@ class CTool
 		static string getIpFromHostname( string sString );
 		
 		static string getIpFromHostname( string sString, int nType );
+
+		static struct addrinfo* getIpsFromHostname( string sString, bool bReachable );
 		
 		static string getHostname();
 		
