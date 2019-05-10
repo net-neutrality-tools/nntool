@@ -1,0 +1,59 @@
+<!-- #section-intro -->
+<section class="section" id="section-intro">
+    <div class="wrapper">
+        <header class="section-header">
+            <h1>{{ 'SETTINGS.HEADER' | translate }}</h1>
+            <div class="icon icon-settings"></div>
+        </header>
+    </div>
+</section>
+<!-- #section-intro end -->
+
+<!-- #section-features -->
+<section class="section" id="section-features">
+    <div class="wrapper">
+        <div class="section-columns">
+            <form name="user_settings" class="baseline">
+                <fieldset>
+                    <p *ngIf="shown.client_uuid">
+                        {{ 'SETTINGS.CLIENT_UUID' | translate }}: {{ clientUuid ? clientUuid : '-' }}
+                    </p>
+                    <p *ngIf="shown.anonymous_mode">
+                        <label class="checkbox-label" for="user_disassoc">
+                            <input type="checkbox" id="user_disassoc" name="user_disassoc" [(ngModel)]="disassociated" (ngModelChange)="save()" />
+                            {{ 'SETTINGS.DISASSOCIATE' | translate }}
+                        </label>
+                    </p>
+                    <p *ngIf="shown.invisible">
+                        <label class="checkbox-label" for="user_invisible">
+                            <input type="checkbox" id="user_invisible" name="user_invisible" [(ngModel)]="invisible" (ngModelChange)="save()">
+                            {{ 'SETTINGS.INVISIBLE' | translate }}
+                        </label>
+                    </p>
+                    <p *ngIf="shown.force_ip4">
+                        <label class="checkbox-label" for="user_force_ip4">
+                            <input type="checkbox" id="user_force_ip4" name="user_force_ip4" [(ngModel)]="forceIp" (ngModelChange)="save()">
+                            {{ 'SETTINGS.FORCE_IP4' | translate }}
+                        </label>
+                    </p>
+                    <!--button type="submit" class="button" (click)="save()">{{ 'SETTINGS.SAVE' | translate }}</button-->
+                </fieldset>
+            </form>
+
+            <form name="user_delete_data" class="baseline" *ngIf="shown.delete_user">
+                <fieldset>
+                    <legend>{{ 'SETTINGS.DELETE_TEXT' | translate }}</legend>
+                    <p *ngIf="!shown.no_anonymize_before_delete_user">
+                        <label class="checkbox-label" for="user_disassoc_b4">
+                            <input type="checkbox" id="user_disassoc_b4" name="user_disassoc_b4" [(ngModel)]="disassociateBeforeDelete" (ngModelChange)="save()">
+                            {{ 'SETTINGS.DISASSOCIATE_BEFORE_DELETE' | translate }}
+                        </label>
+                    </p>
+                    <!-- Maybe not submit -->
+                    <button class="button" type="submit" (click)="clear()">{{ 'SETTINGS.DELETE' | translate }}</button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</section>
+<!-- #section-features end -->

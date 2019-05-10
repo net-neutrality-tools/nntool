@@ -1,0 +1,97 @@
+= Website
+
+== Prerequisites
+
+- node v8
+- npm v6
+
+== Setup
+
+[source, bash]
+----
+npm i
+npm install gulp -g # for convenience
+gulp --gulpfile prepare-common.js # build common project
+gulp watch
+----
+
+== Development
+
+We use gulp as the build tool.
+All paths are relative to the root git directory.
+
+=== Files
+
+==== settings.js
+
+Defines the client specific settings like servers, map keys, gauge colors or enabled features.
+If `nettest` is disabled an empty test component will be included, which should prevent test code from being compiled
+into the distribution.
+
+==== loadingText.js
+
+Text to be displayed while angular is starting (only one language available).
+
+==== i18n
+
+For each language specified in the settings, it will attempt to merge a `<language>.json` from each location. +
+Default locations (always included):
+
+- src/i18n: the base translation
+- client/<client>/i18n: client specific translations
+- arbitrary locations specified by one or more `i18n` flags
+
+Is the same translation key present in multiple files, earlier entries will overwrite later ones.
+
+=== Commands
+
+==== watch
+
+Watch mode - where it recompiles the source files after changes automatically. +
+If the recompile does not take effect (e.g. for the client settings), restart the command.
+
+===== Example
+
+----
+gulp watch
+----
+
+==== build
+
+Builds the website in dev/production mode (angular). The files will however still reside in different files. +
+(Like the dist folder with watch-command)
+
+===== Example
+
+----
+gulp build:prod
+----
+
+or
+
+----
+gulp build:prod
+----
+
+==== bundle
+
+Bundles the build (build directory) into the bundle directory. +
+Merges, minifies and uglifies all client css, js, translation files and the vendor js.
+
+===== Example
+
+bundling may take some time - longer than building
+
+----
+gulp bundle
+----
+
+==== build and bundle
+
+First executes a `build` followed by a bundle
+
+===== Example
+
+----
+gulp build:bundle
+----
