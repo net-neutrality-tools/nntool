@@ -24,7 +24,7 @@ import UIKit
     @IBOutlet private var rttValueLabel: UILabel?
     @IBOutlet private var downloadValueLabel: UILabel?
     @IBOutlet private var uploadValueLabel: UILabel?
-    
+
     func setText(_ text: String, forPhase phase: SpeedMeasurementPhase) {
         switch phase {
         case .rtt: rttValueLabel?.text = text
@@ -33,7 +33,7 @@ import UIKit
         default: break
         }
     }
-    
+
     func reset() {
         rttValueLabel?.text = " " // empty string or nil causes stack view to collapse
         downloadValueLabel?.text = " "

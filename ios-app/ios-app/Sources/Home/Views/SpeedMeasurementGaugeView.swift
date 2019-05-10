@@ -22,7 +22,7 @@ import UIKit
 @IBDesignable class SpeedMeasurementGaugeView: NibView {
 
     @IBOutlet private var startButton: UIButton?
-    @IBOutlet private var speedMeasurementGauge: SpeedMeasurementGauge?
+    @IBOutlet var speedMeasurementGauge: SpeedMeasurementGauge?
 
     @IBOutlet private var networkTypeLabel: UILabel?
     @IBOutlet private var networkDetailLabel: UILabel?
@@ -30,37 +30,49 @@ import UIKit
     var startButtonActionCallback: (() -> Void)?
 
     private static let iconFont = UIFont(name: "berec-icons", size: 50)
-    
+
     private var startButtonSystemFont: UIFont?
-    
+
+    var isStartButtonEnabled: Bool {
+        get {
+            return startButton?.isEnabled ?? false
+        }
+        set {
+            startButton?.isEnabled = newValue
+        }
+    }
+
     override func awakeFromNib() {
         startButtonSystemFont = startButton?.titleLabel?.font
     }
-    
+
     ///
     @IBAction func startButtonPrimaryActionTriggered() {
         startButtonActionCallback?()
-        
+
         //setActivePhase(phase: .initialize)
     }
-    
+
     private func updateButton(icon: IconFont, color: UIColor) {
         startButton?.titleLabel?.font = SpeedMeasurementGaugeView.iconFont
-        
+
         startButton?.setIcon(icon, for: .normal)
         startButton?.backgroundColor = color
     }
-    
+
     func setActivePhase(phase: SpeedMeasurementPhase) {
         updateButton(icon: phase.icon, color: BEREC_DARK_GRAY)
+
+        speedMeasurementGauge?.currentPhase = phase
+        speedMeasurementGauge?.progress = 0
     }
-    
+
     func reset() {
         startButton?.titleLabel?.font = startButtonSystemFont
-        
+
         startButton?.setTitle("GO", for: .normal)
         startButton?.backgroundColor = BEREC_RED
-        
+
         speedMeasurementGauge?.reset()
     }
 }

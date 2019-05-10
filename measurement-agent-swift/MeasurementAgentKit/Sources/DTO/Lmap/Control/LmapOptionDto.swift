@@ -18,7 +18,7 @@
 import Foundation
 
 /// Options may be used to identify the role of a Task or to pass a Channel name to a Task.
-class LmapOptionDto: Codable {
+public class LmapOptionDto: Codable {
 
     /// An identifier uniquely identifying an option.
     /// This identifier is required by YANG to uniquely identify a name/value pair,
@@ -26,13 +26,13 @@ class LmapOptionDto: Codable {
     var id: String?
 
     /// The name of the option.
-    var name: String?
+    public var name: String?
 
     /// The value of the option.
-    var value: String?
+    public var value: String?
 
     /// The additional measurement parameters of the option.
-    var measurementParameters: MeasurementTypeParametersDto? // TODO: should be moved to LmapResultDto
+    public var measurementParameters: MeasurementTypeParametersWrapperDto?/*MeasurementTypeParametersDto?*/ // TODO: should be moved to LmapResultDto
 
     ///
     enum CodingKeys: String, CodingKey {

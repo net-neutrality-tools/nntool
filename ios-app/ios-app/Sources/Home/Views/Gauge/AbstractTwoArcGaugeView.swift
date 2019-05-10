@@ -24,7 +24,7 @@ import UIKit
     var _progress: Double = 0
 
     ///
-    var currentPhase: GaugePhase = .initialize {
+    var currentPhase: SpeedMeasurementPhase = .initialize {
         didSet {
             update()
         }
@@ -117,8 +117,9 @@ import UIKit
     func update() {
         setNeedsDisplay()
     }
-    
+
     func reset() {
+        currentPhase = .initialize
         progress = 0
         value = 0
     }

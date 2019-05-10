@@ -84,6 +84,7 @@
 		E0B9A379224C0802002AB640 /* UIKit+IconFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A378224C0802002AB640 /* UIKit+IconFont.swift */; };
 		E0B9A37D224C1349002AB640 /* UIViewController+WebBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A37C224C1349002AB640 /* UIViewController+WebBrowser.swift */; };
 		E0E9BB10226F57DA00146699 /* SpeedMeasurementPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E9BB0F226F57DA00146699 /* SpeedMeasurementPhase.swift */; };
+		E0EA84E72282C1B000EB73BF /* SpeedHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84E62282C1B000EB73BF /* SpeedHelper.swift */; };
 		E860F5CA7C59FD468EEE2892 /* Pods_All_ios_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91316B94C5B307833124DBA0 /* Pods_All_ios_app.framework */; };
 /* End PBXBuildFile section */
 
@@ -231,6 +232,7 @@
 		E0B9A378224C0802002AB640 /* UIKit+IconFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+IconFont.swift"; sourceTree = "<group>"; };
 		E0B9A37C224C1349002AB640 /* UIViewController+WebBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+WebBrowser.swift"; sourceTree = "<group>"; };
 		E0E9BB0F226F57DA00146699 /* SpeedMeasurementPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedMeasurementPhase.swift; sourceTree = "<group>"; };
+		E0EA84E62282C1B000EB73BF /* SpeedHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedHelper.swift; sourceTree = "<group>"; };
 		FAC9DAE7413ECAE8092FFC80 /* Pods_All_Speed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_Speed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -566,6 +568,7 @@
 				E0B9A378224C0802002AB640 /* UIKit+IconFont.swift */,
 				E0B9A37C224C1349002AB640 /* UIViewController+WebBrowser.swift */,
 				E00F4B02226719DE00EAD0C0 /* UIAlertController+ProgressIndicator.swift */,
+				E0EA84E62282C1B000EB73BF /* SpeedHelper.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -650,6 +653,7 @@
 			buildConfigurationList = E026A5A82241271A00BACDB5 /* Build configuration list for PBXNativeTarget "ios-app" */;
 			buildPhases = (
 				1AB73F8B8DD73C0088EF14CF /* [CP] Check Pods Manifest.lock */,
+				E0EA84E52280824600EB73BF /* Run swiftlint autocorrect */,
 				E026A57A2241271700BACDB5 /* Sources */,
 				E026A57B2241271700BACDB5 /* Frameworks */,
 				E026A57C2241271700BACDB5 /* Resources */,
@@ -970,6 +974,24 @@
 			shellPath = /bin/sh;
 			shellScript = "if which ${PODS_ROOT}/SwiftLint/swiftlint >/dev/null; then\n    ${PODS_ROOT}/SwiftLint/swiftlint\nelse\n    echo \"warning: SwiftLint is not installed, run pod install.\"\nfi\n";
 		};
+		E0EA84E52280824600EB73BF /* Run swiftlint autocorrect */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run swiftlint autocorrect";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#if which ${PODS_ROOT}/SwiftLint/swiftlint >/dev/null; then\n#  ${PODS_ROOT}/SwiftLint/swiftlint autocorrect\n#else\n#  echo \"warning: SwiftLint is not installed, run pod install.\"\n#fi\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1004,6 +1026,7 @@
 				E0B9A373224B9CD0002AB640 /* QoSProgressView.swift in Sources */,
 				E0B9A345224A61DB002AB640 /* SpeedMeasurementGauge.swift in Sources */,
 				E0B9A359224AB092002AB640 /* HomeScreenDeviceInformationView.swift in Sources */,
+				E0EA84E72282C1B000EB73BF /* SpeedHelper.swift in Sources */,
 				E0E9BB10226F57DA00146699 /* SpeedMeasurementPhase.swift in Sources */,
 				E0B9A343224A6017002AB640 /* AbstractTwoArcGaugeView.swift in Sources */,
 				E0B9A351224A8F65002AB640 /* NibView.swift in Sources */,

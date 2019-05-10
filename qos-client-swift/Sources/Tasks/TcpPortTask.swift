@@ -1,32 +1,28 @@
-// TODO: license
-
 import Foundation
-import XCGLogger
 
-///
-public class TcpPortTaskExecutor: AbstractBidirectionalIpTaskExecutor<TcpPortTaskConfiguration, TcpPortTaskResult> {
+class TcpPortTask: QoSBidirectionalIpTask {
 
     ///
     static let PAYLOAD = "PING"
 
     private var resultResponse: String?
 
-    override var taskType: TaskType? {
-        return .tcpPort
+    override var statusKey: String {
+        return direction == .outgoing ? "tcp_result_out" : "tcp_result_in"
     }
 
-    ///
-    override public var result: TcpPortTaskResult {
-        let r = super.result
+    override var result: QoSTaskResult {
+        var r = super.result
 
-        switch internalConfig.direction {
+        // TODO: r["tcp_result_error_details"] = "?"
+        // TODO: set objective values?
+
+        switch direction {
         case .outgoing:
-            r.resultOut = status
-            r.resultOutResponse = resultResponse
+            r["tcp_result_out_response"] = resultResponse
 
         case .incoming:
-            r.resultIn = status
-            r.resultInResponse = resultResponse
+            r["tcp_result_in_response"] = resultResponse
 
         default:
             break
@@ -43,20 +39,14 @@ public class TcpPortTaskExecutor: AbstractBidirectionalIpTaskExecutor<TcpPortTas
             return
         }
 
-        guard let qosTestUid = internalConfig.qosTestUid else {
-            logger.warning("qosTestUid is not set")
-            self.status = .error
-            return
-        }
-
         // run tcp stream util
         let tcpStreamUtil = TcpStreamUtil(config: tcpStreamUtilConfig)
         tcpStreamUtil.controlFunc = {
             // control connection request
-            let cmd = String(format: "TCPTEST %@ %lu +ID%d", self.internalConfig.direction.rawValue, tcpStreamUtilConfig.port, qosTestUid)
+            let cmd = String(format: "TCPTEST %@ %lu +ID%d", self.direction.rawValue, tcpStreamUtilConfig.port, self.uid)
 
             do {
-                let waitForAnswer = self.internalConfig.direction == .outgoing
+                let waitForAnswer = self.direction == .outgoing
 
                 let response = try self.executeCommand(cmd: cmd, waitForAnswer: waitForAnswer)
 
@@ -72,31 +62,30 @@ public class TcpPortTaskExecutor: AbstractBidirectionalIpTaskExecutor<TcpPortTas
             return true
         }
 
-        (status, resultResponse) = tcpStreamUtil.runStream()
+        let (utilStatus, resultResponse) = tcpStreamUtil.runStream()
+
+        self.status = QoSTaskStatus(rawValue: utilStatus.rawValue) ?? .error
+        self.resultResponse = resultResponse
 
         // TODO
-        //internalResult?.resultErrorDetails = "TODO"
+        //internalResult?.resultErrorDetails = "?"
 
         logger.info("TCP port task finished")
     }
 
     ///
     private func currentTcpStreamUtilConfiguration() -> TcpStreamUtilConfiguration? {
-        guard let host = internalConfig.serverAddress else {
-            return nil
-        }
-
         var tcpStreamUtilConfig = TcpStreamUtilConfiguration(
-            host: host,
+            host: controlConnectionParams.host,
             port: 0, // gets set in switch/case
             outgoing: true,
-            timeoutNs: internalConfig.timeoutNs,
+            timeoutNs: timeoutNs,
             payload: TcpPortTaskExecutor.PAYLOAD
         )
 
-        switch internalConfig.direction {
+        switch direction {
         case .outgoing:
-            guard let portOut = internalConfig.portOut else {
+            guard let portOut = portOut else {
                 return nil
             }
 
@@ -104,7 +93,7 @@ public class TcpPortTaskExecutor: AbstractBidirectionalIpTaskExecutor<TcpPortTas
             tcpStreamUtilConfig.outgoing = true
 
         case .incoming:
-            guard let portIn = internalConfig.portIn else {
+            guard let portIn = portIn else {
                 return nil
             }
 

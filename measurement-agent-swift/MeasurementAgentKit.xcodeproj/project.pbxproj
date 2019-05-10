@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		53BD18F682BE646F2DFBC336 /* Pods_All_MeasurementAgentKitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C682F72910A176E058DDC7C1 /* Pods_All_MeasurementAgentKitTests.framework */; };
 		5FF324BB37BAC3DF4012226C /* Pods_All_MeasurementAgentKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DFE748A7D3CD3A25F24E12E /* Pods_All_MeasurementAgentKit_iOS.framework */; };
+		B180E1202284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B180E11F2284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift */; };
 		E00F48C7225F340000EAD0C0 /* RegistrationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48C6225F340000EAD0C0 /* RegistrationRequest.swift */; };
 		E00F48C9225F3BDF00EAD0C0 /* MeasurementTypeDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48C8225F3BDF00EAD0C0 /* MeasurementTypeDto.swift */; };
 		E00F48CC225F72B300EAD0C0 /* ProgramProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48CB225F72B300EAD0C0 /* ProgramProtocol.swift */; };
@@ -66,6 +67,8 @@
 		E0CE899A2253D57F009C1E25 /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CE89992253D57F009C1E25 /* ApiError.swift */; };
 		E0CE89A02253E17E009C1E25 /* JsonHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CE899F2253E17E009C1E25 /* JsonHelper.swift */; };
 		E0CE89A22253FC31009C1E25 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CE89A12253FC31009C1E25 /* ApiRequest.swift */; };
+		E0EA84E022806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84DF22806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift */; };
+		E0EA84E222807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84E122807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +86,7 @@
 		56B22020D9F21525F333997C /* Pods-All-MeasurementAgentKit_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-MeasurementAgentKit_iOS.release.xcconfig"; path = "Target Support Files/Pods-All-MeasurementAgentKit_iOS/Pods-All-MeasurementAgentKit_iOS.release.xcconfig"; sourceTree = "<group>"; };
 		5DFE748A7D3CD3A25F24E12E /* Pods_All_MeasurementAgentKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_MeasurementAgentKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C785EEC28EAFE68CB3B6981 /* Pods-All-MeasurementAgentKit_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-MeasurementAgentKit_iOS.debug.xcconfig"; path = "Target Support Files/Pods-All-MeasurementAgentKit_iOS/Pods-All-MeasurementAgentKit_iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		B180E11F2284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IasMeasurementTypeParametersDto.swift; sourceTree = "<group>"; };
 		C682F72910A176E058DDC7C1 /* Pods_All_MeasurementAgentKitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_MeasurementAgentKitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E00F48C6225F340000EAD0C0 /* RegistrationRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationRequest.swift; sourceTree = "<group>"; };
 		E00F48C8225F3BDF00EAD0C0 /* MeasurementTypeDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementTypeDto.swift; sourceTree = "<group>"; };
@@ -145,6 +149,8 @@
 		E0CE89992253D57F009C1E25 /* ApiError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
 		E0CE899F2253E17E009C1E25 /* JsonHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonHelper.swift; sourceTree = "<group>"; };
 		E0CE89A12253FC31009C1E25 /* ApiRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
+		E0EA84DF22806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSMeasurementTypeParametersDto.swift; sourceTree = "<group>"; };
+		E0EA84E122807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementTypeParametersWrapperDto.swift; sourceTree = "<group>"; };
 		F5899225AFC5FD7CB8A7B061 /* Pods-All-MeasurementAgentKitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-MeasurementAgentKitTests.release.xcconfig"; path = "Target Support Files/Pods-All-MeasurementAgentKitTests/Pods-All-MeasurementAgentKitTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -288,7 +294,6 @@
 			children = (
 				E0B9A3CF224D428D002AB640 /* LmapReportDto.swift */,
 				E0B9A3E1224D50E1002AB640 /* LmapResultDto.swift */,
-				E0B9A3E3224D52CE002AB640 /* LmapOptionDto.swift */,
 				E0B9A3E7224D5497002AB640 /* LmapConflictDto.swift */,
 			);
 			path = Report;
@@ -311,6 +316,7 @@
 				E0B9A3F4224D5C4D002AB640 /* LmapTaskDto.swift */,
 				E0B9A3F2224D5B28002AB640 /* LmapAgentDto.swift */,
 				E0B9A402224D6426002AB640 /* SuppressionStateDto.swift */,
+				E0B9A3E3224D52CE002AB640 /* LmapOptionDto.swift */,
 			);
 			path = Control;
 			sourceTree = "<group>";
@@ -330,6 +336,9 @@
 				E0B9A3DD224D4E79002AB640 /* MeasurementResultNetworkPointInTimeDto.swift */,
 				E0B9A3DF224D4FC8002AB640 /* PointInTimeValueDto.swift */,
 				E0B9A3E5224D544B002AB640 /* MeasurementTypeParametersDto.swift */,
+				E0EA84E122807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift */,
+				E0EA84DF22806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift */,
+				B180E11F2284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift */,
 				E00F48C8225F3BDF00EAD0C0 /* MeasurementTypeDto.swift */,
 				E0B9A3CC224D4131002AB640 /* Lmap */,
 			);
@@ -396,6 +405,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E0B9A3C0224D3EAB002AB640 /* Build configuration list for PBXNativeTarget "MeasurementAgentKit_iOS" */;
 			buildPhases = (
+				E0EA84E3228081BC00EB73BF /* Run swiftlint autocorrect */,
 				207B797518BDD82F0C5F52C6 /* [CP] Check Pods Manifest.lock */,
 				E0B9A3A7224D3EAB002AB640 /* Headers */,
 				E0B9A3A8224D3EAB002AB640 /* Sources */,
@@ -557,6 +567,24 @@
 			shellPath = /bin/sh;
 			shellScript = "if which ${PODS_ROOT}/SwiftLint/swiftlint >/dev/null; then\n  ${PODS_ROOT}/SwiftLint/swiftlint\nelse\n  echo \"warning: SwiftLint is not installed, run pod install.\"\nfi\n";
 		};
+		E0EA84E3228081BC00EB73BF /* Run swiftlint autocorrect */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run swiftlint autocorrect";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#if which ${PODS_ROOT}/SwiftLint/swiftlint >/dev/null; then\n#  ${PODS_ROOT}/SwiftLint/swiftlint autocorrect\n#else\n#  echo \"warning: SwiftLint is not installed, run pod install.\"\n#fi\n";
+		};
 		FE18DDF2A848D645E637DAA0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -594,6 +622,7 @@
 				E00F4AEF2264B41C00EAD0C0 /* MeasurementAgentConfiguration.swift in Sources */,
 				E00F4AFB22660B2B00EAD0C0 /* MeasurementRunner.swift in Sources */,
 				E0B9A3DC224D4CF8002AB640 /* CellLocationDto.swift in Sources */,
+				B180E1202284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift in Sources */,
 				E0B9A3F9224D5F5C002AB640 /* LmapStopDto.swift in Sources */,
 				E0B9A41C224E6860002AB640 /* ApiResponse.swift in Sources */,
 				E00F48CC225F72B300EAD0C0 /* ProgramProtocol.swift in Sources */,
@@ -610,6 +639,7 @@
 				E0B9A3EB224D5780002AB640 /* LmapControlDto.swift in Sources */,
 				E0B9A3CB224D4113002AB640 /* MeasurementAgent.swift in Sources */,
 				E01DEE832253B5AC00983B1C /* MeasurementResultResponse.swift in Sources */,
+				E0EA84E022806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift in Sources */,
 				E0B9A3DA224D4B65002AB640 /* SignalDto.swift in Sources */,
 				E00F4AF72265F24200EAD0C0 /* MeasurementAgentBuilder.swift in Sources */,
 				E0B9A413224E65BF002AB640 /* IpResponse.swift in Sources */,
@@ -627,6 +657,7 @@
 				E0B9A3FF224D60B0002AB640 /* LmapActionDto.swift in Sources */,
 				E0B9A401224D6313002AB640 /* LmapSuppressionDto.swift in Sources */,
 				E0B9A410224E645B002AB640 /* RestApiService.swift in Sources */,
+				E0EA84E222807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift in Sources */,
 				E00F48C9225F3BDF00EAD0C0 /* MeasurementTypeDto.swift in Sources */,
 				E0B9A40E224E638B002AB640 /* ResultService.swift in Sources */,
 				E0B9A3D0224D428D002AB640 /* LmapReportDto.swift in Sources */,

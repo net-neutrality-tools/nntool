@@ -69,7 +69,8 @@ public class MeasurementRunner {
             DispatchQueue.global(qos: .unspecified).async {
                 self.runMeasurement(controlDto: responseControlDto)
             }
-        }) { _ in
+        }) { err in
+            print("err: \(err)")
             self.delegate?.measurementDidFail(self)
         }
     }
@@ -93,43 +94,63 @@ public class MeasurementRunner {
         if let tasks = controlDto.tasks {
             if tasks.count == 0 {
                 // TODO: fail measurement, no tasks provided
-                self.delegate?.measurementDidFail(self)
+                fail()
                 return
             }
 
             for task in tasks {
                 print("run task \(task.name), \(task.options)")
-                
+
                 //task.name
                 //task.options
-                
+
                 let taskType = MeasurementTypeDto(rawValue: task.name!)! // TODO: !, !
-                
+
                 guard let programConfiguration = programs[taskType] else {
                     // TODO: should we fail if we don't have the requested program?
+                    print("---- NO PROGRAM FOR TASK TYPE \(taskType) ----")
                     return
                 }
-                
-                let programInstance = programConfiguration.newInstance(task)
-                
+
+                guard let programInstance = try? programConfiguration.newInstance(task) else {
+                    return
+                }
+
                 delegate?.measurementRunner(self, willStartProgramWithName: task.name!, implementation: programInstance) // TODO: !
-                
+
                 do {
                     // TODO: how to cancel measurement?
                     let result = try programInstance.run()
+                    print(":: program \(task.name!) returned result:")
+                    print(result)
+                    print(":: -------")
                 } catch {
                     // TODO
                 }
-                
+
                 delegate?.measurementRunner(self, didFinishProgramWithName: task.name!, implementation: programInstance) // !
             }
-            
+
             print("-- all finished")
-            
-            delegate?.measurementDidFinish(self)
+
+            finish()
             return
         }
 
+        fail()
+    }
+
+    private func finish() {
+        delegate?.measurementDidFinish(self)
+        stop()
+    }
+
+    private func fail(/*error: Error*/) {
         delegate?.measurementDidFail(self)
+        stop()
+    }
+
+    private func stop() {
+        delegate?.measurementDidStop(self)
     }
 }

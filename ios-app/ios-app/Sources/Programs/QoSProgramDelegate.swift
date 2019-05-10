@@ -20,4 +20,10 @@ import Foundation
 ///
 protocol QoSProgramDelegate {
 
+    func qosDidStart(_ qos: QoSProgram)
+
+    func qosDidStop(_ qos: QoSProgram)
+
+    //func qos(_ qos: QoSProgram, didStartWithGroups: [Any])
+
 }

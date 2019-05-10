@@ -36,7 +36,7 @@ public class ControlConnection: NSObject {
     private(set) var state: State = .disconnected
 
     private var currentCommand: String?
-    private var currentCommandReadAnswer: Bool = false
+    private var currentCommandReadAnswer = false
 
     private var currentSuccessCallback: SuccessCallback?
     private var currentErrorCallback: ErrorCallback?

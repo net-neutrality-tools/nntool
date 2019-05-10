@@ -53,16 +53,25 @@ public class AbstractBidirectionalIpTaskConfiguration: AbstractControlConnection
         try super.init(from: decoder)
 
         let container = try decoder.container(keyedBy: CodingKeysTest2.self)
-        portOut = try container.decode(UInt16.self, forKey: .portOut)
-        portIn = try container.decode(UInt16.self, forKey: .portIn)
+
+        if let portOutString = try container.decodeIfPresent(String.self, forKey: .portOut) {
+            portOut = UInt16(portOutString)
+        }
+
+        if let portInString = try container.decodeIfPresent(String.self, forKey: .portIn) {
+            portIn = UInt16(portInString)
+        }
+
+        //portOut = try container.decode(UInt16.self, forKey: .portOut)
+        //portIn = try container.decode(UInt16.self, forKey: .portIn)
     }
 
     public override func encode(to encoder: Encoder) throws {
         try super.encode(to: encoder)
 
-        var container = encoder.container(keyedBy: CodingKeysTest.self)
-        try container.encode(serverAddress, forKey: .serverAddress)
-        try container.encode(serverPort, forKey: .serverPort)
+        var container = encoder.container(keyedBy: CodingKeysTest2.self)
+        try container.encode(portOut, forKey: .portOut)
+        try container.encode(portIn, forKey: .portIn)
     }
 
     ///

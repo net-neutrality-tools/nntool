@@ -1,4 +1,4 @@
-// MeasurementAgentKit: ProgramConfiguration.swift, created on 16.04.19
+// ios-app: SpeedHelper.swift, created on 08.05.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -17,17 +17,16 @@
 
 import Foundation
 
-///
-public struct ProgramConfiguration {
+class SpeedHelper {
 
-    public var name: String
-    public var version: String
+    class func throughputLogarithmMbps(bps: Double, gaugeParts: UInt = 4, maxMbps: Double = 1000) -> Double {
+        if bps < 10_000 {
+            return 0
+        }
 
-    public var newInstance: (LmapTaskDto /* TODO: use other object */) throws -> (/*AnyProgram<Any>*/ProgramProtocol)
+        let maxLog = log10(maxMbps)
+        let gp = Double(gaugeParts)
 
-    public init(name: String, version: String, newInstance: @escaping (LmapTaskDto /* TODO: use other object */) throws -> (/*AnyProgram<Any>*/ProgramProtocol)) {
-        self.name = name
-        self.version = version
-        self.newInstance = newInstance
+        return ((gp - maxLog) + log10(bps / 1e6)) / gp
     }
 }

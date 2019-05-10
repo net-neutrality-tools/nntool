@@ -1,4 +1,4 @@
-// ios-app: QoSGroupProgressCell.swift, created on 26.03.19
+// MeasurementAgentKit: MeasurementTypeParametersWrapperDto.swift, created on 06.05.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,43 +16,30 @@
  ******************************************************************************/
 
 import Foundation
-import UIKit
 
-///
-class QoSGroupProgressCell: UITableViewCell {
+public class MeasurementTypeParametersWrapperDto: Codable {
 
-    ///
-    @IBOutlet private var progressView: QoSProgressView?
+    var deserializeType: String?
 
-    ///
-    @IBOutlet private var groupNameLabel: UILabel?
+    public var content: MeasurementTypeParametersDto?
 
-    ///
-    var animatesProgressChanges = true
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
 
-    ///
-    var progress: Float {
-        get {
-            return progressView?.progress ?? 0
-        }
-        set {
-            progressView?.setProgress(newValue, animated: animatesProgressChanges)
+        deserializeType = try container.decodeIfPresent(String.self, forKey: .deserializeType) ?? ""
+
+        switch deserializeType {
+        case "qos_params":
+            content = try QoSMeasurementTypeParametersDto(from: decoder)
+        case "speed_params":
+            content = try IasMeasurementTypeParametersDto(from: decoder)
+        default:
+            break
         }
     }
 
     ///
-    var groupName: String? {
-        get {
-            return groupNameLabel?.text
-        }
-        set {
-            groupNameLabel?.text = newValue
-        }
-    }
-
-    ///
-    override func prepareForReuse() {
-        //progress = 0
-        progressView?.setProgress(0, animated: false)
+    enum CodingKeys: String, CodingKey {
+        case deserializeType = "deserialize_type"
     }
 }

@@ -35,6 +35,17 @@ public class AbstractTaskConfiguration: Codable {
 
     }
 
+    required public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        if let timeoutNs = try container.decodeIfPresent(UInt64.self, forKey: .timeoutNs) {
+            self.timeoutNs = timeoutNs
+        }
+
+        self.concurrencyGroup = try container.decodeIfPresent(Int.self, forKey: .timeoutNs)
+        self.qosTestUid = try container.decodeIfPresent(Int.self, forKey: .timeoutNs)
+    }
+
     ///
     enum CodingKeys: String, CodingKey {
         case timeoutNs = "timeout"

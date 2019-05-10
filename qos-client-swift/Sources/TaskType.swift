@@ -27,4 +27,5 @@ enum TaskType: String, Codable {
 
     ///
     case echoProtocol = "echo_protocol"
+
 }

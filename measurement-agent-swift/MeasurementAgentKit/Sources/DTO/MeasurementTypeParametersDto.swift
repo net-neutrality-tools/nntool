@@ -19,6 +19,6 @@ import Foundation
 
 /// Base class for sub measurement parameters that are sent to the measurement agent.
 /// These can contain special measurement instructions (e.g. stream count, duration, timeouts, ...).
-class MeasurementTypeParametersDto: Codable {
+public class MeasurementTypeParametersDto: Codable {
 
 }

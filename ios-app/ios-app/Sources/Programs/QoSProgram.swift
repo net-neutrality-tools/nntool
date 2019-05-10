@@ -23,13 +23,71 @@ import QoSKit
 class QoSProgram: ProgramProtocol {
     //typealias Delegate = QoSProgramDelegate
 
-    var delegate: QoSProgramDelegate?
+    var programDelegate: ProgramDelegate?
+
+    //var delegate: QoSProgramDelegate?
+
+    var forwardDelegate: QoSTaskExecutorDelegate?
+
+    var objectives: [String: [[String: Any]]]?
+
+    let semaphore = DispatchSemaphore(value: 0)
+
+    var result: [QoSTaskResult]?
 
     func run() throws -> [AnyHashable: Any] {
-        print("----\nRUN QOS PROGRAM\n----")
-        sleep(5)
-        print("----\nQOS PROGRAM finished\n----")
-        
-        return [:]
+        guard let objtvs = objectives else {
+            return [:]
+        }
+
+        let qosTaskExecutor = QoSTaskExecutor()
+        qosTaskExecutor.delegate = self
+
+        qosTaskExecutor.startWithObjectives(objtvs, token: "bbd1ee96-0779-4619-b993-bb4bf7089754_1528136454_3gr2gw9lVhtVONV0XO62Vamu/uw=") // TODO
+
+        print("before wait")
+
+        semaphore.wait()
+
+        print("after wait")
+
+        guard let r = result else {
+            return [:]
+        }
+
+        return ["result": r]
+    }
+}
+
+extension QoSProgram: QoSTaskExecutorDelegate {
+
+    func taskExecutorDidStart(_ taskExecutor: QoSTaskExecutor, withTaskGroups groups: [QoSTaskGroup]) {
+        print("QOS -- START with: \(groups)")
+
+        forwardDelegate?.taskExecutorDidStart(taskExecutor, withTaskGroups: groups)
+    }
+
+    func taskExecutorDidFail(_ taskExecutor: QoSTaskExecutor, withError error: Error?) {
+        print("QOS -- ERROR: \(error)")
+
+        forwardDelegate?.taskExecutorDidFail(taskExecutor, withError: error)
+
+        semaphore.signal()
+    }
+
+    func taskExecutorDidUpdateProgress(_ progress: Double, ofGroup group: QoSTaskGroup, totalProgress: Double) {
+        print("QOS -- UPDATE PROGRESS: \(progress), \(group), total: \(totalProgress)")
+
+        forwardDelegate?.taskExecutorDidUpdateProgress(progress, ofGroup: group, totalProgress: totalProgress)
+    }
+
+    func taskExecutorDidFinishWithResult(_ result: [QoSTaskResult]) {
+        print("QOS -- finish! \(result)")
+
+        self.result = result
+
+        forwardDelegate?.taskExecutorDidFinishWithResult(result)
+
+        semaphore.signal()
     }
 }

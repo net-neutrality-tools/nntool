@@ -21,21 +21,21 @@ import Foundation
 public class LmapTaskDto: Codable {
 
     /// The unique name of a Task.
-    var name: String?
+    public var name: String?
 
     /// A list of entries in a registry identifying functions.
-    var functions: [LmapFunctionDto]?
+    public var functions: [LmapFunctionDto]?
 
     /// The (local) program to invoke in order to execute the Task.
     /// If this leaf is not set, then the system will try to identify a suitable program based on the registry information present.
-    var program: String?
+    public var program: String?
 
     /// The list of Task-specific options.
-    var options: [LmapOptionDto]?
+    public var options: [LmapOptionDto]?
 
     /// A set of Task-specific tags that are reported together with the measurement results to a Collector.
     /// A tag can be used, for example, to carry the Measurement Cycle ID.
-    var tags: [String]?
+    public var tags: [String]?
 
     ///
     enum CodingKeys: String, CodingKey {

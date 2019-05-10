@@ -20,15 +20,61 @@ import MeasurementAgentKit
 
 let MEASUREMENT_AGENT =
     MeasurementAgentBuilder(controlServiceBaseUrl: "http://localhost:8080/api/v1")
-        .program(task: .speed, config: ProgramConfiguration(name: "IAS", version: "1.0.0") { (_: LmapTaskDto) in
-            // TODO: use configuration of provided object
+        .program(task: .speed, config: ProgramConfiguration(name: "IAS", version: "1.0.0") { (taskDto: LmapTaskDto) in
+            let optionDict = taskDto.options?.reduce(into: [String: Any]()) { result, option in
+                guard let name = option.name else {
+                    return
+                }
 
-            return /*AnyProgram<IASProgramDelegate>(*/IASProgram()/*)*/
+                if let mp = option.measurementParameters {
+                    result[name] = mp
+                } else {
+                    result[name] = option.value
+                }
+            }
+
+            let measurementConfig = ((optionDict?["parameters_speed"] as? MeasurementTypeParametersWrapperDto)?.content as? IasMeasurementTypeParametersDto)?.measurementConfiguration
+
+            let p = IASProgram()
+            p.config = measurementConfig
+
+            return p
         })
-        .program(task: .qos, config: ProgramConfiguration(name: "QOS", version: "1.0.0") { (_: LmapTaskDto) in
-            // TODO: use configuration of provided object
+        .program(task: .qos, config: ProgramConfiguration(name: "QOS", version: "1.0.0") { (taskDto: LmapTaskDto) in
+            let optionDict = taskDto.options?.reduce(into: [String: Any]()) { result, option in
+                guard let name = option.name else {
+                    return
+                }
 
-            return QoSProgram()
+                if let mp = option.measurementParameters {
+                    result[name] = mp
+                } else {
+                    result[name] = option.value
+                }
+            }
+
+            let p = QoSProgram()
+
+            if var objectives: [String: [[String: Any]]] = ((optionDict?["parameters_qos"] as? MeasurementTypeParametersWrapperDto)?.content as? QoSMeasurementTypeParametersDto)?.objectives {
+
+                if let serverAddr = optionDict?["server_addr"] as? String, let serverPort = optionDict?["server_port"] as? String {
+
+                    for item in objectives {
+                        let (k, v) = item
+
+                        for var (index, i) in v.enumerated() {
+                            if i["server_addr"] == nil || i["server_port"] == nil {
+                                objectives[k]?[index]["server_addr"] = serverAddr
+                                objectives[k]?[index]["server_port"] = serverPort
+                            }
+                        }
+                    }
+                }
+
+                p.objectives = objectives
+            }
+
+            return p
         })
         .build()
 
@@ -45,4 +91,3 @@ let BEREC_RED        = UIColor(rgb: 0x921F56)
 ////
 
 let APP_TINT_COLOR = BEREC_DARK_GRAY
-

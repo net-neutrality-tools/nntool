@@ -151,7 +151,7 @@
                             <containerView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j2f-ZU-0jV" userLabel="QoS Group Progress View">
                                 <rect key="frame" x="19" y="108" width="337.5" height="388"/>
                                 <connections>
-                                    <segue destination="svj-DY-D0y" kind="embed" id="2O1-QQ-9B1"/>
+                                    <segue destination="svj-DY-D0y" kind="embed" identifier="embed_qos_measurement_view_controller" id="2O1-QQ-9B1"/>
                                 </connections>
                             </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ovj-et-Dag" customClass="ProgressInfoBar" customModule="ios_app" customModuleProvider="target">
@@ -175,7 +175,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <action selector="measurementResultButtonTapped" destination="l2h-VI-UHi" eventType="primaryActionTriggered" id="cP0-W2-5hv"/>
+                                    <action selector="viewMeasurementResultButtonTapped" destination="l2h-VI-UHi" eventType="primaryActionTriggered" id="fej-NH-ZB7"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -214,8 +214,10 @@
                     </navigationItem>
                     <connections>
                         <outlet property="progressInfoBar" destination="Ovj-et-Dag" id="SkF-EB-GR4"/>
+                        <outlet property="qosView" destination="j2f-ZU-0jV" id="TU8-wP-7bC"/>
                         <outlet property="speedMeasurementBasicResultView" destination="MM6-Ex-lJm" id="wDV-Gu-rOY"/>
                         <outlet property="speedMeasurementGaugeView" destination="43k-dR-OY1" id="VMQ-oe-A0r"/>
+                        <outlet property="viewMeasurementResultButton" destination="ade-vS-2jV" id="PO6-3t-ygn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vl1-bK-3IW" userLabel="First Responder" sceneMemberID="firstResponder"/>

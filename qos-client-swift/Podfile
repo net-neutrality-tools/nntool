@@ -1,5 +1,7 @@
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
+platform :ios, '10.0'
+
 use_frameworks!
 
 # ignore all warnings from all pods
@@ -15,13 +17,11 @@ abstract_target 'All' do
   pod 'XCGLogger', '~> 7.0.0'
 
   target 'QoSKit_iOS' do
-    platform :ios, '10.0'
+
   end
 
   target 'QoSKitUnitTests' do
-      platform :ios, '10.0'
-
-      pod 'Nimble', '~> 8.0.1'
+    pod 'Nimble', '~> 8.0.1'
   end
 end
 

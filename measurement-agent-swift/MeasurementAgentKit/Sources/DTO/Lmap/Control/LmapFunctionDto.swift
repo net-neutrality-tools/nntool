@@ -18,7 +18,7 @@
 import Foundation
 
 /// This grouping models a list of entries in a registry that identify functions of a Task.
-class LmapFunctionDto: Codable {
+public class LmapFunctionDto: Codable {
 
     /// The unique name of a Task.
     var uri: String?

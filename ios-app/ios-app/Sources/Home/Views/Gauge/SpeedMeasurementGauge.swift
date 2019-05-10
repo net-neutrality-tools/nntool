@@ -50,7 +50,7 @@ import UIKit
         let fixedValue = CGFloat(min(1, max(0, value)))
 
         let anglePerPhase = CGFloat(angle/CGFloat(phases.count))
-        
+
         context.saveGState()
 
         //
@@ -76,7 +76,7 @@ import UIKit
         // draw progress
         context.setStrokeColor(progressColor.cgColor)
 
-        let z = CGFloat(currentPhase.rawValue)
+        let z = CGFloat(currentPhase.phaseIndex)
 
         let progressAngle = (z * anglePerPhase) + anglePerPhase * fixedProgress
 

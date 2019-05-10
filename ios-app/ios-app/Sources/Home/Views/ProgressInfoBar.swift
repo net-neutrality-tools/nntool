@@ -31,22 +31,22 @@ import UIKit
         if let icon = newIcon {
             leftIconLabel?.icon = icon
         }
-        
+
         leftValueLabel?.text = value
     }
-    
+
     func setRightValue(value: String, newIcon: IconFont? = nil) {
         if let icon = newIcon {
             rightIconLabel?.icon = icon
         }
-        
+
         rightValueLabel?.text = value
     }
-    
+
     func reset() {
         leftIconLabel?.icon = nil
         leftValueLabel?.text = nil
-        
+
         rightIconLabel?.icon = nil
         rightValueLabel?.text = nil
     }

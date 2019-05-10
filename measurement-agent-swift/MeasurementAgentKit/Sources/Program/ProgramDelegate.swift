@@ -18,7 +18,11 @@
 import Foundation
 
 ///
-protocol ProgramDelegate {
+public protocol ProgramDelegate {
 
-    func willStartProgram(_ name: String)
+    func programDidStart(_ program: ProgramProtocol)
+
+    func programDidStop(_ program: ProgramProtocol)
+
+    func program(_ program: ProgramProtocol, didUpdateProgressTo progress: Float)
 }

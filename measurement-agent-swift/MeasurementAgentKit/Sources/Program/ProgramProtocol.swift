@@ -19,13 +19,13 @@ import Foundation
 
 ///
 public protocol ProgramProtocol {
-    //associatedtype Delegate
 
-    //var delegate: Delegate? { get set }
-    //var delegate: Any? { get set }
+    var programDelegate: ProgramDelegate? {
+        get set
+    }
 
     //var result: [:]? { get }
-    
+
     func run() throws -> [AnyHashable: Any]
-    
+
 }

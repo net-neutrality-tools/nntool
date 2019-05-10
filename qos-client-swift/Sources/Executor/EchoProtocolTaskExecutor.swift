@@ -18,7 +18,7 @@ import Foundation
 import CocoaAsyncSocket
 
 ///
-public class EchoProtocolTaskExecutor: AbstractTaskExecutor<EchoProtocolTaskConfiguration, EchoProtocolTaskResult>, GCDAsyncSocketDelegate {
+public class EchoProtocolTaskExecutor: AbstractTaskExecutor<EchoProtocolTaskConfiguration, EchoProtocolTaskResult> {
 
     ///
     private var resultResponse: String?

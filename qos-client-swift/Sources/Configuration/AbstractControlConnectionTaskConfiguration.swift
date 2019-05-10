@@ -33,8 +33,8 @@ public class AbstractControlConnectionTaskConfiguration: AbstractTaskConfigurati
         try super.init(from: decoder)
 
         let container = try decoder.container(keyedBy: CodingKeysTest.self)
-        serverAddress = try container.decode(String.self, forKey: .serverAddress)
-        serverPort = try container.decode(UInt16.self, forKey: .serverPort)
+        self.serverAddress = try container.decodeIfPresent(String.self, forKey: .serverAddress)
+        self.serverPort = try container.decodeIfPresent(UInt16.self, forKey: .serverPort)
     }
 
     public override func encode(to encoder: Encoder) throws {

@@ -22,21 +22,26 @@ enum SpeedMeasurementPhase: String {
     case rtt        = "rtt"
     case download   = "download"
     case upload     = "upload"
-    
+
     var icon: IconFont {
-        get {
-            switch self {
-                case .initialize: return .hourglass // TODO
-                case .rtt:        return .rtt
-                case .download:   return .down
-                case .upload:     return .up
-            }
+        switch self {
+        case .initialize: return .hourglass // TODO
+        case .rtt:        return .rtt
+        case .download:   return .down
+        case .upload:     return .up
         }
     }
-    
+
     var localizedString: String {
-        get {
-            return NSLocalizedString("measurement.speed.phase.\(self.rawValue)", comment: "Translation of speed measurement phase '\(self.rawValue)'")
+        return NSLocalizedString("measurement.speed.phase.\(self.rawValue)", comment: "Translation of speed measurement phase '\(self.rawValue)'")
+    }
+
+    var phaseIndex: UInt {
+        switch self {
+        case .initialize: return 0
+        case .rtt:        return 1
+        case .download:   return 2
+        case .upload:     return 3
         }
     }
 }

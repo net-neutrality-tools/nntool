@@ -149,4 +149,96 @@ class MeasurementAgentKitTests: XCTestCase {
 
         wait(for: [expectation], timeout: 10.0)
     }
+
+    func testX() {
+
+        let json = """
+        {
+        "measurement_configuration" : {
+          "upload" : [ {
+            "default" : true,
+            "streams" : 4,
+            "frameSize" : 2048,
+            "bounds" : {
+              "lower" : 1.05,
+              "upper" : 0.01
+            },
+            "framesPerCall" : 1
+          }, {
+            "default" : null,
+            "streams" : 4,
+            "frameSize" : 65535,
+            "bounds" : {
+              "lower" : 525.0,
+              "upper" : 0.95
+            },
+            "framesPerCall" : 1
+          }, {
+            "default" : null,
+            "streams" : 4,
+            "frameSize" : 65535,
+            "bounds" : {
+              "lower" : 1050.0,
+              "upper" : 475.0
+            },
+            "framesPerCall" : 4
+          }, {
+            "default" : null,
+            "streams" : 8,
+            "frameSize" : 65535,
+            "bounds" : {
+              "lower" : 9000.0,
+              "upper" : 950.0
+            },
+            "framesPerCall" : 20
+          } ],
+          "download" : [ {
+            "default" : true,
+            "streams" : 4,
+            "frameSize" : 2048,
+            "bounds" : {
+              "lower" : 1.05,
+              "upper" : 0.01
+            },
+            "framesPerCall" : null
+          }, {
+            "default" : null,
+            "streams" : 4,
+            "frameSize" : 32768,
+            "bounds" : {
+              "lower" : 525.0,
+              "upper" : 0.95
+            },
+            "framesPerCall" : null
+          }, {
+            "default" : null,
+            "streams" : 4,
+            "frameSize" : 524288,
+            "bounds" : {
+              "lower" : 1050.0,
+              "upper" : 475.0
+            },
+            "framesPerCall" : null
+          }, {
+            "default" : null,
+            "streams" : 8,
+            "frameSize" : 524288,
+            "bounds" : {
+              "lower" : 9000.0,
+              "upper" : 950.0
+            },
+            "framesPerCall" : null
+          } ]
+        }
+      }
+    """
+
+        let data = json.data(using: .utf8)!
+        // swiftlint:disable all
+        let x = try! JSONDecoder().decode(MeasurementTypeParametersWrapperDto.self, from: data)
+        // swiftlint:enable all
+
+        print(x.content)
+        print((x.content as? IasMeasurementTypeParametersDto)?.measurementConfiguration)
+    }
 }

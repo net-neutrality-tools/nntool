@@ -17,9 +17,24 @@
 
 import Foundation
 import UIKit
+import QoSKit
 
 ///
 class QoSMeasurementViewController: UITableViewController {
+
+    var groups = [QoSTaskGroup]() {
+        didSet {
+            groupProgress = groups.reduce(into: [String: Float]()) { (result, group) in
+                result[group.key] = 0
+            }
+
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+
+    private var groupProgress: [String: Float]?
 
     ///
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -28,7 +43,7 @@ class QoSMeasurementViewController: UITableViewController {
 
     ///
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return groups.count
     }
 
     ///
@@ -36,10 +51,28 @@ class QoSMeasurementViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "qos_group_progress_cell", for: indexPath)
 
         if let qosCell = cell as? QoSGroupProgressCell {
-            qosCell.progress = 0.2 * Float(indexPath.row)
-            qosCell.groupName = "Group \(indexPath.row)"
+            let group = groups[indexPath.row]
+
+            qosCell.groupName = group.key
+            qosCell.progress = groupProgress?[group.key] ?? 0
         }
 
         return cell
+    }
+
+    ////
+
+    func updateProgress(progress: Double, forGroup group: QoSTaskGroup) {
+        guard let groupIndex = groups.firstIndex(where: { $0 === group }) else {
+            return
+        }
+
+        groupProgress?[group.key] = Float(progress)
+
+        DispatchQueue.main.async {
+            if let qosCell = self.tableView.cellForRow(at: IndexPath(row: groupIndex, section: 0)) as? QoSGroupProgressCell {
+                qosCell.progress = Float(progress)
+            }
+        }
     }
 }

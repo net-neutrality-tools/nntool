@@ -18,18 +18,10 @@ import Foundation
 import UIKit
 
 ///
-public enum GaugePhase: Int {
-    case initialize = 0
-    case rtt
-    case down
-    case up
-}
-
-///
 protocol GaugeProtocol {
 
     ///
-    var currentPhase: GaugePhase { get set }
+    var currentPhase: SpeedMeasurementPhase { get set }
 
     ///
     var progress: Double { get set }
