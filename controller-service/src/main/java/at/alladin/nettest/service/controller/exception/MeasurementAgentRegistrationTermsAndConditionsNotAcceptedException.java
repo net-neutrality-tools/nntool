@@ -1,10 +1,14 @@
 package at.alladin.nettest.service.controller.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 /**
  * 
  * @author alladin-IT GmbH (bp@alladin.at)
  *
  */
+@ResponseStatus(HttpStatus.BAD_REQUEST)
 public class MeasurementAgentRegistrationTermsAndConditionsNotAcceptedException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

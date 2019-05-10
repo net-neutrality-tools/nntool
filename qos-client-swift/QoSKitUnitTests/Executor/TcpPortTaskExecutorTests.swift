@@ -16,28 +16,27 @@
 
 import XCTest
 @testable import QoSKit
-import ObjectMapper
 
 class TcpPortQoSTaskExecutorTests: XCTestCase {
 
     override func setUp() {
-        continueAfterFailure = false
+        //continueAfterFailure = false
     }
-    
+
     func testOutgoing() {
         // TODO: mock control connection
         // TODO: mock cocoaasyncsocket
-        
+
         let config = TcpPortTaskConfiguration()
         config.timeoutNs = 10 * NSEC_PER_SEC
-        
+
         config.serverAddress = "peer-qos-de-01.net-neutrality.tools"//"localhost"
         config.serverPort = 5233
-        
+
         config.qosTestUid = 12
-        
+
         config.portOut = 8077
-        
+
         let controlConnection = ControlConnection(
             host: config.serverAddress!,
             port: config.serverPort!,
@@ -45,29 +44,29 @@ class TcpPortQoSTaskExecutorTests: XCTestCase {
             timeoutS: config.timeoutS,
             token: "bbd1ee96-0779-4619-b993-bb4bf7089754_1528136454_3gr2gw9lVhtVONV0XO62Vamu/uw="
         )
-        
+
         let executor = TcpPortTaskExecutor(config: config, controlConnection: controlConnection)
         let result = executor.runTask()
-        
+
         controlConnection.disconnect()
-        
-        print(result.toJSONString(prettyPrint: true)!)
+
+        //print(result.toJSONString(prettyPrint: true)!)
     }
-    
+
     func testIncoming() {
         // TODO: mock control connection
         // TODO: mock cocoaasyncsocket
-        
+
         let config = TcpPortTaskConfiguration()
         config.timeoutNs = 10 * NSEC_PER_SEC
-        
+
         config.serverAddress = "localhost"
         config.serverPort = 5233
-        
+
         config.qosTestUid = 13
-        
+
         config.portIn = 8078
-        
+
         let controlConnection = ControlConnection(
             host: config.serverAddress!,
             port: config.serverPort!,
@@ -75,12 +74,12 @@ class TcpPortQoSTaskExecutorTests: XCTestCase {
             timeoutS: config.timeoutS,
             token: "bbd1ee96-0779-4619-b993-bb4bf7089754_1528136454_3gr2gw9lVhtVONV0XO62Vamu/uw="
         )
-        
+
         let executor = TcpPortTaskExecutor(config: config, controlConnection: controlConnection)
         let result = executor.runTask()
-        
+
         controlConnection.disconnect()
-            
-        print(result.toJSONString(prettyPrint: true)!)
+
+        //print(result.toJSONString(prettyPrint: true)!)
     }
 }

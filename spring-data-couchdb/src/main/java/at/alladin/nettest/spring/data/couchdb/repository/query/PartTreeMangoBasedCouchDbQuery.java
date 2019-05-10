@@ -54,7 +54,7 @@ public class PartTreeMangoBasedCouchDbQuery extends AbstractCouchDbRepositoryQue
 		}
 		
 		if (docs.size() > 0) {
-			return docs.get(0); 
+			return docs.get(0);
 		}
 		
 		return null;

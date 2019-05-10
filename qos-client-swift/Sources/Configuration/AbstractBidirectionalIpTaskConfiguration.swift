@@ -15,41 +15,68 @@
  ***************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 ///
 public class AbstractBidirectionalIpTaskConfiguration: AbstractControlConnectionTaskConfiguration {
-   
+
     ///
-    enum Direction: String {
+    enum Direction: String, Codable {
         case unknown = "UNKNOWN"
         case outgoing = "OUT"
         case incoming = "IN"
     }
-    
+
     ///
     var portOut: UInt16?
-    
+
     //
     var portIn: UInt16?
-    
+
     ///
     var direction: Direction {
         if let p = portOut, p > 0 {
             return .outgoing
         }
-        
+
         if let p = portIn, p > 0 {
             return .incoming
         }
-        
+
         return .unknown
     }
-    
-    public override func mapping(map: Map) {
-        super.mapping(map: map)
-        
-        portOut <- map["out_port"]
-        portIn <- map["in_port"]
+
+    public required init() {
+        super.init()
+    }
+
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+
+        let container = try decoder.container(keyedBy: CodingKeysTest2.self)
+
+        if let portOutString = try container.decodeIfPresent(String.self, forKey: .portOut) {
+            portOut = UInt16(portOutString)
+        }
+
+        if let portInString = try container.decodeIfPresent(String.self, forKey: .portIn) {
+            portIn = UInt16(portInString)
+        }
+
+        //portOut = try container.decode(UInt16.self, forKey: .portOut)
+        //portIn = try container.decode(UInt16.self, forKey: .portIn)
+    }
+
+    public override func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+
+        var container = encoder.container(keyedBy: CodingKeysTest2.self)
+        try container.encode(portOut, forKey: .portOut)
+        try container.encode(portIn, forKey: .portIn)
+    }
+
+    ///
+    enum CodingKeysTest2: String, CodingKey { // had to rename from CodingKeys (see https://bugs.swift.org/browse/SR-6747)
+        case portOut = "out_port"
+        case portIn = "in_port"
     }
 }

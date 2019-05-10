@@ -15,9 +15,8 @@
  ***************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 ///
 public class TcpPortTaskConfiguration: AbstractBidirectionalIpTaskConfiguration {
-    
+
 }

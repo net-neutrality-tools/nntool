@@ -44,7 +44,7 @@ public class ApiRequestInfo {
 	private String timezone;
 
     /**
-     * Type of measurement agent. Can be one of 'MOBILE', 'BROWSER', 'DESKTOP', 'CLI'.
+     * Type of measurement agent. Can be one of 'MOBILE', 'BROWSER', 'DESKTOP'.
      */
     @io.swagger.annotations.ApiModelProperty(required = true, value = "Type of agent.")
     @JsonPropertyDescription("Type of agent.")

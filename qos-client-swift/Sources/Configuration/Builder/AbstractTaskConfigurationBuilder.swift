@@ -18,36 +18,36 @@ import Foundation
 
 public class AbstractTaskConfigurationBuilder<C: AbstractTaskConfiguration>: BuilderProtocol {
     typealias Result = C
-    
+
     var obj = C()
 
     public init() {
-        
+
     }
-    
+
     ////
-    
+
     @discardableResult
     public func timeoutNs(_ timeoutNs: UInt64) -> Self {
         obj.timeoutNs = timeoutNs
-        
+
         return self
     }
-    
+
     @discardableResult
     public func qosTestUid(_ qosTestUid: Int) -> Self {
         obj.qosTestUid = qosTestUid
-        
+
         return self
     }
-    
+
     @discardableResult
     public func concurrencyGroup(_ concurrencyGroup: Int) -> Self {
         obj.concurrencyGroup = concurrencyGroup
-        
+
         return self
     }
-    
+
     public func build() -> C {
         return obj
     }

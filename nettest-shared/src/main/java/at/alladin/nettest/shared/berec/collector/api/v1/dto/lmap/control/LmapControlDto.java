@@ -76,7 +76,7 @@ public class LmapControlDto {
 	/**
 	 * Configuration of LMAP events. 
 	 * Implementations may be forced to delay acting upon the occurrence of events in the face of local constraints.
-	 *  An Action triggered by an event therefore should not rely on the accuracy provided by the scheduler implementation.
+	 * An Action triggered by an event therefore should not rely on the accuracy provided by the scheduler implementation.
 	 */
 	@io.swagger.annotations.ApiModelProperty(required = true, value = "Configuration of LMAP events. Implementations may be forced to delay acting upon the occurrence of events in the face of local constraints. An Action triggered by an event therefore should not rely on the accuracy provided by the scheduler implementation.")
 	@JsonPropertyDescription("Configuration of LMAP events. Implementations may be forced to delay acting upon the occurrence of events in the face of local constraints. An Action triggered by an event therefore should not rely on the accuracy provided by the scheduler implementation.")
@@ -86,10 +86,10 @@ public class LmapControlDto {
 	private List<LmapEventDto> events = new ArrayList<>();
 	
 	/**
-	 * Additional information that is sent by client alongside the request. This contains most information from ClientInfo.
+	 * Additional information that is sent by agent alongside the request.
 	 */
-	@io.swagger.annotations.ApiModelProperty(required = true, value = "Additional information that is sent by client alongside the request. This contains most information from ClientInfo.")
-	@JsonPropertyDescription("Additional information that is sent by client alongside the request. This contains most information from ClientInfo.")
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "Additional information that is sent by agent alongside the request.")
+	@JsonPropertyDescription("Additional information that is sent by agent alongside the request.")
 	@Expose
 	@SerializedName("additional-request-info")
 	@JsonProperty(required = true, value = "additional-request-info")	

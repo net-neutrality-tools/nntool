@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import at.alladin.nettest.service.controller.exception.GeneralBadRequestException;
 import at.alladin.nettest.service.controller.service.MeasurementConfigurationService;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapAgentDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
@@ -50,34 +53,33 @@ public class MeasurementInitiationResource {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> requestMeasurement(@ApiParam("Initiation request") @RequestBody LmapControlDto measurementInitiationRequest) {
 		
-		if (measurementInitiationRequest.getAgent() == null || 
-				measurementInitiationRequest.getAgent().getAgentId() == null) {
+		final LmapAgentDto agentDto = measurementInitiationRequest.getAgent();
+		
+		if (agentDto == null || agentDto.getAgentId() == null) {
 			//TODO: do we hide that in production?
-			return ResponseEntity.badRequest().body("No agent provided");
+			throw new GeneralBadRequestException("No agent provided");
 		}
 		try {
-			if (!storageService.isValidMeasurementAgentUuid(measurementInitiationRequest.getAgent().getAgentId())) {
-				return ResponseEntity.badRequest().body("Invalid agent provided");
+			if (!storageService.isValidMeasurementAgentUuid(agentDto.getAgentId())) {
+				throw new GeneralBadRequestException("Invalid agent provided");
 			}
 		} catch (StorageServiceException ex) {
-			return ResponseEntity.badRequest().body("Invalid agent provided");
+			throw new GeneralBadRequestException("Invalid agent provided");
 		}
 		
-		if (measurementInitiationRequest.getCapabilities() == null || 
-				measurementInitiationRequest.getCapabilities().getTasks() == null ||
-				measurementInitiationRequest.getCapabilities().getTasks().size() == 0) {
-			return ResponseEntity.badRequest().body("No capabilities provided");
+		final LmapCapabilityDto capabilityDto = measurementInitiationRequest.getCapabilities();
+		
+		if (capabilityDto == null || capabilityDto.getTasks() == null || capabilityDto.getTasks().size() == 0) {
+			throw new GeneralBadRequestException("No capabilities provided");
 		}
 		
 		// TODO: load balancing
-		final LmapControlDto lmapControlDto = measurementConfigurationService.getLmapControlDtoForCapabilities(measurementInitiationRequest.getCapabilities());
+		final LmapControlDto lmapControlDto = measurementConfigurationService.getLmapControlDtoForCapabilities(capabilityDto);
 		lmapControlDto.setAdditionalRequestInfo(measurementInitiationRequest.getAdditionalRequestInfo());
-		lmapControlDto.setAgent(measurementInitiationRequest.getAgent());
-		lmapControlDto.setCapabilities(measurementInitiationRequest.getCapabilities());
+		lmapControlDto.setAgent(agentDto);
+		
 		
 		//measurementInitiationRequest.getAgent().getAgentId();
-		
-		
 		
 		return ResponseEntity.ok(lmapControlDto);
 	}

@@ -22,21 +22,21 @@ public class UdpPortTaskConfigurationBuilder: AbstractBidirectionalIpTaskConfigu
     @discardableResult
     public func packetCountOut(_ packetCountOut: Int) -> Self {
         obj.packetCountOut = packetCountOut
-        
+
         return self
     }
-    
+
     @discardableResult
     public func packetCountIn(_ packetCountIn: Int) -> Self {
         obj.packetCountIn = packetCountIn
-        
+
         return self
     }
-    
+
     @discardableResult
     public func delayNs(_ delayNs: UInt64) -> Self {
         obj.delayNs = delayNs
-        
+
         return self
     }
 }

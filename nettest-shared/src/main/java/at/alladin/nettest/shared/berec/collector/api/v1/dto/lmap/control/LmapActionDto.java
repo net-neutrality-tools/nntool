@@ -26,7 +26,6 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.common.LmapOpti
 @JsonInclude(Include.NON_EMPTY)
 public class LmapActionDto {
 	
-	
 	/**
 	 * The unique identifier for this Action.
 	 */
@@ -66,7 +65,7 @@ public class LmapActionDto {
 	@Expose
 	@SerializedName("option")
 	@JsonProperty(required = true, value = "option")
-	private List<LmapOptionDto> optionList = new ArrayList<>();
+	private List<LmapOptionDto> optionList = new ArrayList<>(); // TODO: rename options
 	
 	/**
 	 * A set of Schedules receiving the output produced by this Action. 
@@ -78,7 +77,7 @@ public class LmapActionDto {
 	@Expose
 	@SerializedName("destination")
 	@JsonProperty(required = true, value = "destination")
-	private List<String> destinationList = new ArrayList<>();
+	private List<String> destinationList = new ArrayList<>(); // TODO: rename destinations
 	
 	/**
 	 * A set of Action-specific tags that are reported together with the measurement results to a Collector.
@@ -88,7 +87,7 @@ public class LmapActionDto {
 	@Expose
 	@SerializedName("tag")
 	@JsonProperty(required = true, value = "tag")
-	private List<String> tagList = new ArrayList<>();
+	private List<String> tagList = new ArrayList<>(); // TODO: rename tags
 	
 	/**
 	 * A set of Suppression tags that are used to select Actions to be suppressed.
@@ -98,7 +97,7 @@ public class LmapActionDto {
 	@Expose
 	@SerializedName("suppression-tag")
 	@JsonProperty(required = true, value = "suppression-tag")
-	private List<String> suppressionTagList = new ArrayList<>();
+	private List<String> suppressionTagList = new ArrayList<>(); // TODO: rename suppressionTags
 	
 	/**
 	 * The current state of the Action (One of: enabled, disabled, running, suppressed).

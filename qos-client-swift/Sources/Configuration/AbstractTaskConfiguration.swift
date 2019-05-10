@@ -15,35 +15,42 @@
  ***************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 ///
-public class AbstractTaskConfiguration: Mappable {
-    
+public class AbstractTaskConfiguration: Codable {
+
     var timeoutNs: UInt64 = 10 * NSEC_PER_SEC // TODO: config file
-    
+
     // deprecated
     var concurrencyGroup: Int?
     var qosTestUid: Int?
-    
+
     ////
-    
+
     var timeoutS: Double {
         return Double(timeoutNs) / Double(NSEC_PER_SEC)
     }
-    
+
     public required init() {
-        
+
     }
-    
-    public required init?(map: Map) {
-        
+
+    required public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        if let timeoutNs = try container.decodeIfPresent(UInt64.self, forKey: .timeoutNs) {
+            self.timeoutNs = timeoutNs
+        }
+
+        self.concurrencyGroup = try container.decodeIfPresent(Int.self, forKey: .timeoutNs)
+        self.qosTestUid = try container.decodeIfPresent(Int.self, forKey: .timeoutNs)
     }
-    
-    public func mapping(map: Map) {
-        timeoutNs        <- map["timeout"]
-        
-        concurrencyGroup <- map["concurrency_group"]
-        qosTestUid       <- map["qos_test_uid"]
+
+    ///
+    enum CodingKeys: String, CodingKey {
+        case timeoutNs = "timeout"
+
+        case concurrencyGroup = "concurrency_group"
+        case qosTestUid       = "qos_test_uid"
     }
 }

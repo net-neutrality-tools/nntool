@@ -1,0 +1,14 @@
+excluded:
+  - Pods
+
+disabled_rules:
+  - identifier_name
+
+#file_length:
+#  warning: 800
+#  error: 1000
+
+line_length:
+  warning: 200
+  error: 280
+
