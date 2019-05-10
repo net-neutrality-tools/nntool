@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-06
+ *      \date Last update: 2019-05-10
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -65,6 +65,9 @@ class CConnection
 		
 		//! Open Datagram-Socket in UNIX
 		int udpSocketServer();
+
+		//! Open Datagram-Socket in UNIX
+		int udpSocketServer(int &nPort, string sIp);
 		
 		//! Open Datagram-Socket in UNIX
 		int udp6Socket( string &interface );
@@ -72,6 +75,9 @@ class CConnection
 		//! Open Datagram-Socket in UNIX
 		int udp6SocketServer( int &nPort );
 		
+		//! Open Datagram-Socket in UNIX
+		int udp6SocketServer( int &nPort, string sIp );
+
 		//! Open TCP-Socket in UNIX
 		int tcpSocket( string &interface, string &sServer, int &nPort );
 		
