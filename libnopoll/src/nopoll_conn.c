@@ -549,8 +549,6 @@ int nopoll_conn_tls_receive (noPollConn * conn, char * buffer, int buffer_size)
 	/*if (conn->handshake_ok && conn->tls_on && conn->http_on) return 0;*/
 	nopoll_bool needs_retry;
 
-	nopoll_log (conn->ctx, NOPOLL_LEVEL_DEBUG, "HIZT");
-
 	/* call to read content */
 	res = SSL_read (conn->ssl, buffer, buffer_size);
 	nopoll_log (conn->ctx, NOPOLL_LEVEL_DEBUG, "SSL: received %d bytes..", res);
@@ -577,19 +575,28 @@ int nopoll_conn_tls_send (noPollConn * conn, char * buffer, int buffer_size)
 	int         res;
 	nopoll_bool needs_retry;
 
-	/* call to read content */
-	res = SSL_write (conn->ssl, buffer, buffer_size);
-	nopoll_log (conn->ctx, NOPOLL_LEVEL_DEBUG, "SSL: sent %d bytes (requested: %d)..", res, buffer_size); 
+	while (1) 
+	{
+		/* call to write content */
+		res = SSL_write (conn->ssl, buffer, buffer_size);
+		nopoll_log (conn->ctx, NOPOLL_LEVEL_DEBUG, "SSL: sent %d bytes (requested: %d)..", res, buffer_size); 
 
-	/* call to handle error */
-	res = __nopoll_conn_tls_handle_error (conn, res, "SSL_write", &needs_retry);
-	nopoll_log (conn->ctx, NOPOLL_LEVEL_DEBUG, "   SSL: after processing error, sent %d bytes (requested: %d)..",  res, buffer_size);
-	if (res == -2) {
+		/* call to handle error */
+		res = __nopoll_conn_tls_handle_error (conn, res, "SSL_write", &needs_retry);
+		nopoll_log (conn->ctx, NOPOLL_LEVEL_DEBUG, "   SSL: after processing error, sent %d bytes (requested: %d)..",  res, buffer_size);
+		if (res == -2) {
+			nopoll_log (conn->ctx, NOPOLL_LEVEL_DEBUG, "%i",  needs_retry);
 #if defined(NOPOLL_OS_UNIX)
 		errno = NOPOLL_EWOULDBLOCK;
 #elif defined(NOPOLL_OS_WIN32)
 		WSASetLastError(NOPOLL_EWOULDBLOCK);
 #endif
+		}
+		else
+		{
+			break;
+		}
+		nopoll_sleep (10000);
 	}
 
 	return res;
@@ -2203,7 +2210,7 @@ int nopoll_conn_default_send (noPollConn * conn, char * buffer, int buffer_size)
 	/* nopoll_log (conn->ctx, NOPOLL_LEVEL_DEBUG, "SEND CALLED"); */
     if (conn->tls_on == nopoll_true)
     {
-    	/* opoll_log (conn->ctx, NOPOLL_LEVEL_DEBUG, "TLS SEND CALLED"); */
+    	/* nopoll_log (conn->ctx, NOPOLL_LEVEL_DEBUG, "TLS SEND CALLED"); */
         conn->send    = nopoll_conn_tls_send;
         return conn->send (conn, buffer, buffer_size);
     }
