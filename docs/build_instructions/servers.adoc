@@ -28,7 +28,7 @@ curl -X POST \
     http://localhost:5984/settings/_bulk_docs \
   -H 'Content-Type: application/json' \
   -H 'cache-control: no-cache' \
-  -d @default_couchDB_data.json`
+  -d @default_couchDB_data.json
 ```
 
 ==== CouchDB server integration
