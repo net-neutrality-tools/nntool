@@ -16,7 +16,6 @@
 
 import XCTest
 @testable import QoSKit
-import ObjectMapper
 
 ///
 class EchoProtocolTaskExecutorTests: XCTestCase {
@@ -24,7 +23,7 @@ class EchoProtocolTaskExecutorTests: XCTestCase {
     override func setUp() {
         continueAfterFailure = false
     }
-    
+
     func testTcp() {
         let config = EchoProtocolTaskConfigurationBuilder()
             .timeoutNs(10 * NSEC_PER_SEC)
@@ -33,14 +32,14 @@ class EchoProtocolTaskExecutorTests: XCTestCase {
             .protocolType(.tcp)
             .payload("PING_tcp")
             .build()
-        
+
         let executor = EchoProtocolTaskExecutor(config: config)
-        
+
         let result = executor.runTask()
-        
-        print(result.toJSONString(prettyPrint: true)!)
+
+        //print(result.toJSONString(prettyPrint: true)!)
     }
-    
+
     func testUdp() {
         let config = EchoProtocolTaskConfigurationBuilder()
             .timeoutNs(10 * NSEC_PER_SEC)
@@ -49,33 +48,33 @@ class EchoProtocolTaskExecutorTests: XCTestCase {
             .protocolType(.udp)
             .payload("PING_udp")
             .build()
-        
+
         let executor = EchoProtocolTaskExecutor(config: config)
-        
+
         let result = executor.runTask()
-        
-        print(result.toJSONString(prettyPrint: true)!)
+
+        //print(result.toJSONString(prettyPrint: true)!)
     }
-    
+
     func testAsync() {
         let expectation = XCTestExpectation(description: "runTask")
-        
+
         let config = EchoProtocolTaskConfiguration()
         config.timeoutNs = 10 * NSEC_PER_SEC
-        
+
         config.host = "localhost"
         config.port = 7
         config.protocolType = .tcp
         config.payload = "HTTP /-get"
-        
+
         let executor = EchoProtocolTaskExecutor(config: config)
-        
-        executor.runTask(success: { result in
-            print(result.toJSONString(prettyPrint: true)!)
-            
+
+        executor.runTask(success: { _ in
+            //print(result.toJSONString(prettyPrint: true)!)
+
             expectation.fulfill()
         })
-        
+
         wait(for: [expectation], timeout: 10.0)
     }
 }

@@ -1,6 +1,6 @@
 package at.alladin.nettest.service.result.web.api.v1;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import at.alladin.nettest.service.result.config.ResultServiceProperties;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiPagination;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
@@ -26,6 +27,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.Ful
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeneralMeasurementTypeDto;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
+import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import io.swagger.annotations.ApiParam;
 
 /**
@@ -42,6 +44,9 @@ public class MeasurementAgentResultResource {
 
 	@Autowired
 	private StorageService storageService;
+	
+	@Autowired
+	private ResultServiceProperties properties;
 	
 	/**
 	 * Retrieve a (paginated) list of measurements made by this measurement agent.
@@ -60,7 +65,13 @@ public class MeasurementAgentResultResource {
 		@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid,
 		Pageable pageable) {
 
-		return ResponseHelper.ok(new PageImpl<>(Arrays.asList(new BriefMeasurementResponse()), pageable, 1));
+		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
+			return ResponseEntity.badRequest().build();
+		}
+		
+		final List<BriefMeasurementResponse> responseList = storageService.getPagedBriefMeasurementResponseByAgentUuid(agentUuid, pageable);
+		
+		return ResponseHelper.ok(new PageImpl<>(responseList, pageable, 1));
 	}
 
 	/**
@@ -79,7 +90,11 @@ public class MeasurementAgentResultResource {
 	})
 	@DeleteMapping(value = "/{agentUuid}/measurements", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<ApiResponse<DisassociateResponse>> disassociateAllMeasurements(@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid) {
-		return ResponseEntity.ok(null);
+		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
+			return ResponseEntity.badRequest().build();
+		}
+		
+		return ResponseHelper.ok(storageService.disassociateAllMeasurements(agentUuid));
 	}
 
 	/**
@@ -102,9 +117,13 @@ public class MeasurementAgentResultResource {
 		@ApiParam(value = "The measurement UUID", required = true) @PathVariable String uuid,
 		@ApiParam(value = "Set of included measurement types (e.g. SPEED, TCP_PORT, VOIP, ...). If nothing is provided all measurement types are returned") @RequestParam(required = false, name = "include") Set<GeneralMeasurementTypeDto> includedMeasurementTypes) {
 
+		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
+			return ResponseEntity.badRequest().build();
+		}
+		
 		logger.debug("{}", includedMeasurementTypes);
 		
-		return ResponseHelper.ok(storageService.getMeasurementByAgentAndMeasurementUuid(agentUuid, uuid));
+		return ResponseHelper.ok(storageService.getFullMeasurementByAgentAndMeasurementUuid(agentUuid, uuid));
 	}
 
 	/**
@@ -126,7 +145,11 @@ public class MeasurementAgentResultResource {
 		@ApiParam(value = "The measurement UUID", required = true) @PathVariable String uuid,
 		@ApiParam(value = "Flag that indicates if the details should be grouped") @RequestParam(value = "grouped", defaultValue = "false") boolean grouped) {
 
-		return ResponseEntity.ok(null);
+		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
+			throw new StorageServiceException("Invalid agent uuid");
+		}
+		
+		return ResponseHelper.ok(storageService.getDetailMeasurementByAgentAndMeasurementUuid(agentUuid, uuid, properties.getSettingsUuid()));
 	}
 
 	/**
@@ -149,6 +172,10 @@ public class MeasurementAgentResultResource {
 		@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid,
 		@ApiParam(value = "The measurement UUID", required = true) @PathVariable String uuid) {
 
-		return ResponseEntity.ok(null);
+		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
+			return ResponseEntity.badRequest().build();
+		}
+		
+		return ResponseHelper.ok(storageService.disassociateMeasurement(agentUuid, uuid));
 	}
 }

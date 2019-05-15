@@ -1,0 +1,15 @@
+<!-- #section-map -->
+<section class="section" id="section-map">
+    <!--<div id="map_canvas" class="leaflet-container"></div>-->
+    <div id="map_legend" *ngIf="legend">
+        <h2 class="legend-label">{{ 'MAP.LEGEND' | translate }}<ng-container *ngIf="unit">{{ " (" + unit + ")" }}</ng-container></h2>
+        <div class="legend-gradient" [ngStyle]="{'background': 'linear-gradient(90deg,' + legend.colors + ')'}">
+        </div>
+        <div class="legend-captions">
+            <span class="legend-caption-value" *ngFor="let cap of legend.captions">
+                {{ cap }}
+            </span>
+        </div>
+    </div>
+</section>
+<!-- #section-map end -->

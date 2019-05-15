@@ -1,5 +1,10 @@
 package at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control;
 
+/**
+ * 
+ * TODO
+ *
+ */
 public enum LmapStateDto {
 	ENABLED, // The value 'enabled' indicates that the Action/Schedule is currently enabled.
 	DISABLED, // The value 'disabled' indicates that the Action/Schedule is currently disabled.

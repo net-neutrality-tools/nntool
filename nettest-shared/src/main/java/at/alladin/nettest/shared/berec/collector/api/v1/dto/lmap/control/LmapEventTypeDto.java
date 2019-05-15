@@ -21,7 +21,7 @@ public abstract class LmapEventTypeDto {
 	@Expose
 	@SerializedName("type")
 	@JsonProperty(required = true, value = "type")
-	protected EventTypeEnum type;
+	protected EventTypeEnum type; // TODO: rename EventTypeDto
 	
 	public LmapEventTypeDto (final EventTypeEnum type) {
 		this.type = type;

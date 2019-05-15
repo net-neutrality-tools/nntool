@@ -19,7 +19,6 @@ package at.alladin.nntool.shared.qos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
 
 /**
  * 
@@ -28,122 +27,98 @@ import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
  */
 public class VoipResult extends AbstractResult {
 	
-	@HstoreKey("voip_objective_in_port")
 	@SerializedName("voip_objective_in_port")
 	@Expose
 	Object inPort;
 	
-	@HstoreKey("voip_objective_out_port")
 	@SerializedName("voip_objective_out_port")
 	@Expose
 	Object outPort;
 	
-	@HstoreKey("voip_objective_call_duration")
 	@SerializedName("voip_objective_call_duration")
 	@Expose
 	Object callDuration;
 	
-	@HstoreKey("voip_objective_bits_per_sample")
 	@SerializedName("voip_objective_bits_per_sample")
 	@Expose
 	Object bitsPerSample;
 	
-	@HstoreKey("voip_objective_sample_rate")
 	@SerializedName("voip_objective_sample_rate")
 	@Expose
 	Object sampleRate;
 	
-	@HstoreKey("voip_objective_delay")
 	@SerializedName("voip_objective_delay")
 	@Expose
 	Object delay;
 	
-	@HstoreKey("voip_objective_timeout")
 	@SerializedName("voip_objective_timeout")
 	@Expose
 	Object timeout;
 
-	@HstoreKey("voip_objective_payload")
 	@SerializedName("voip_objective_payload")
 	@Expose
 	Object payload;
 
-	@HstoreKey("voip_result_in_max_jitter")
 	@SerializedName("voip_result_in_max_jitter")
 	@Expose
 	Object maxJitterIn;
 
-	@HstoreKey("voip_result_in_mean_jitter")
 	@SerializedName("voip_result_in_mean_jitter")
 	@Expose
 	Object meanJitterIn;
 
-	@HstoreKey("voip_result_in_max_delta")
 	@SerializedName("voip_result_in_max_delta")
 	@Expose
 	Object maxDeltaIn;
 
-	@HstoreKey("voip_result_in_num_packets")
 	@SerializedName("voip_result_in_num_packets")
 	@Expose
 	Object numPacketsIn;
 
-	@HstoreKey("voip_result_in_skew")
 	@SerializedName("voip_result_in_skew")
 	@Expose
 	Object skewIn;
 
-	@HstoreKey("voip_result_out_max_jitter")
 	@SerializedName("voip_result_out_max_jitter")
 	@Expose
 	Object maxJitterOut;
 
-	@HstoreKey("voip_result_out_mean_jitter")
 	@SerializedName("voip_result_out_mean_jitter")
 	@Expose
 	Object meanJitterOut; // this variable was called "minJitter", but the json key was "..._mean_jitter", which one is correct? assuming "mean" is correct.
 
-	@HstoreKey("voip_result_out_max_delta")
 	@SerializedName("voip_result_out_max_delta")
 	@Expose
 	Object maxDeltaOut;
 
-	@HstoreKey("voip_result_out_num_packets")
 	@SerializedName("voip_result_out_num_packets")
 	@Expose
 	Object numPacketsOut;
 
-	@HstoreKey("voip_result_out_skew")
 	@SerializedName("voip_result_out_skew")
 	@Expose
 	Object skewOut;
 	
-	@HstoreKey("voip_result_in_sequence_error")
 	@SerializedName("voip_result_in_sequence_error")
 	@Expose
 	Object seqErrorsIn;
 	
-	@HstoreKey("voip_result_out_sequence_error")
 	@SerializedName("voip_result_out_sequence_error")
 	@Expose
 	Object seqErrorsOut;
 
-	@HstoreKey("voip_result_in_short_seq")
 	@SerializedName("voip_result_in_short_seq")
 	@Expose
 	Object shortSequenceIn;
 
-	@HstoreKey("voip_result_out_short_seq")
 	@SerializedName("voip_result_out_short_seq")
 	@Expose
 	Object shortSequenceOut;
 
-	@HstoreKey("voip_result_in_long_seq")
 	@SerializedName("voip_result_in_long_seq")
 	@Expose
 	Object longSequenceIn;
 
-	@HstoreKey("voip_result_out_long_seq")
 	@SerializedName("voip_result_out_long_seq")
 	@Expose
 	Object longSequenceOut;

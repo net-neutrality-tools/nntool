@@ -178,8 +178,10 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
 
 -(void)measurementLoad
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = true;
-    [UIApplication sharedApplication].idleTimerDisabled = true;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = true;
+        [UIApplication sharedApplication].idleTimerDisabled = true;
+    });
     
     if (!self.tool.networkReachable)
     {
@@ -196,8 +198,10 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
 
 -(void)measurementStart
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = true;
-    [UIApplication sharedApplication].idleTimerDisabled = true;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = true;
+        [UIApplication sharedApplication].idleTimerDisabled = true;
+    });
     
     if (!self.tool.networkReachable)
     {
@@ -298,8 +302,10 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
 {
     [self removeObserver];
     
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = true;
-    [UIApplication sharedApplication].idleTimerDisabled = true;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = true;
+        [UIApplication sharedApplication].idleTimerDisabled = true;
+    });
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true) objectAtIndex:0] stringByAppendingPathComponent:@"ias.mobile.js"];
@@ -780,17 +786,14 @@ void handler(JSContextRef ctx, JSValueRef error)
 
 -(void)measurementDidLoadWithResponse:(NSDictionary*)response withError:(NSError*)error
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = false;
-    [UIApplication sharedApplication].idleTimerDisabled = false;
-    
-    dispatch_async(dispatch_get_main_queue(), ^
-                   {
-                       if (self.speedDelegate && [self.speedDelegate respondsToSelector:@selector(measurementDidLoadWithResponse:withError:)])
-                       {
-                           [self.speedDelegate measurementDidLoadWithResponse:response withError:error];
-                       }
-                   });
-    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = false;
+        [UIApplication sharedApplication].idleTimerDisabled = false;
+                       
+        if (self.speedDelegate && [self.speedDelegate respondsToSelector:@selector(measurementDidLoadWithResponse:withError:)]) {
+            [self.speedDelegate measurementDidLoadWithResponse:response withError:error];
+        }
+    });
 }
 
 -(void)measurementCallbackWithResponse:(NSDictionary*)response
@@ -806,8 +809,10 @@ void handler(JSContextRef ctx, JSValueRef error)
 
 -(void)measurementDidCompleteWithResponse:(NSDictionary*)response withError:(NSError*)error
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = false;
-    [UIApplication sharedApplication].idleTimerDisabled = false;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = false;
+        [UIApplication sharedApplication].idleTimerDisabled = false;
+    });
     
     [self stopUpdatingKpis];
     [self performSelector:@selector(tnsContextUnref) withObject:nil afterDelay:tnsContextUnrefTimeout];
@@ -823,8 +828,10 @@ void handler(JSContextRef ctx, JSValueRef error)
 
 -(void)measurementDidStop
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = false;
-    [UIApplication sharedApplication].idleTimerDisabled = false;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = false;
+        [UIApplication sharedApplication].idleTimerDisabled = false;
+    });
     
     [self stopUpdatingKpis];
 
@@ -839,8 +846,10 @@ void handler(JSContextRef ctx, JSValueRef error)
 
 -(void)measurementDidClearCache
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = false;
-    [UIApplication sharedApplication].idleTimerDisabled = false;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = false;
+        [UIApplication sharedApplication].idleTimerDisabled = false;
+    });
     
     dispatch_async(dispatch_get_main_queue(), ^
                    {

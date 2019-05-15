@@ -64,7 +64,7 @@ public class LmapSuppressionDto {
 	@Expose
 	@SerializedName("match")
 	@JsonProperty(required = true, value = "match")
-	private List<String> matchList;
+	private List<String> matchList; // TODO: rename matches
 	
 	/**
 	 * If 'stop-running' is true, running Schedules and Actions 
@@ -86,7 +86,7 @@ public class LmapSuppressionDto {
 	@Expose
 	@SerializedName("state")
 	@JsonProperty(required = true, value = "state")
-	private SuppressionState state;
+	private SuppressionState state; // TODO: rename ...Dto
 
 	public String getName() {
 		return name;
@@ -136,6 +136,11 @@ public class LmapSuppressionDto {
 		this.state = state;
 	}
 
+	/**
+	 * 
+	 * TODO
+	 *
+	 */
 	public enum SuppressionState {
 		ENABLED,
 		DISABLED,

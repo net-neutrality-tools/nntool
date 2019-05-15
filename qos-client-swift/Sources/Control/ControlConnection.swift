@@ -6,10 +6,10 @@ import CocoaAsyncSocket
 
 ///
 public class ControlConnection: NSObject {
-    
-    typealias SuccessCallback = (_ response: String?) -> ()
-    typealias ErrorCallback = (_ error: Error) -> ()
-    
+
+    typealias SuccessCallback = (_ response: String?) -> Void
+    typealias ErrorCallback = (_ error: Error) -> Void
+
     public enum State: Int {
         case disconnecting
         case disconnected
@@ -18,7 +18,7 @@ public class ControlConnection: NSObject {
         case authenticating
         case authenticated
     }
-    
+
     public enum Tag: Int {
         case greeting
         case accept
@@ -27,51 +27,51 @@ public class ControlConnection: NSObject {
         case command
         case quit
     }
-    
+
     private let delegateQueue = DispatchQueue(label: "at.alladin.nettest.qos.control.delegate")
     private let commandQueue = DispatchQueue(label: "at.alladin.nettest.qos.control.command")
-    
+
     private var socket: GCDAsyncSocketProtocol
-    
+
     private(set) var state: State = .disconnected
 
     private var currentCommand: String?
-    private var currentCommandReadAnswer: Bool = false
-    
+    private var currentCommandReadAnswer = false
+
     private var currentSuccessCallback: SuccessCallback?
     private var currentErrorCallback: ErrorCallback?
-    
+
     ////
-    
+
     private let host: String
     private let port: UInt16
     private let tls: Bool
     private let timeoutS: Double
     let token: String/*?*/ // TODO: make token optional
-    
+
     public init(host: String, port: UInt16, tls: Bool = true, timeoutS: Double, token: String, socket: GCDAsyncSocketProtocol = GCDAsyncSocket() /* testability */) {
         // TODO: GCDAsyncSocketProtocol
-        
+
         self.host = host
         self.port = port
         self.timeoutS = timeoutS
         self.token = token
         self.tls = tls
-    
+
         self.socket = socket
-        
+
         super.init()
-        
+
         self.socket.delegate = self
         self.socket.delegateQueue = delegateQueue
     }
-    
+
     ///
     func connect() {
         assert(state == .disconnected)
-        
+
         state = .connecting
-        
+
         do {
             try socket.connect(toHost: host, onPort: port, withTimeout: timeoutS)
         } catch {
@@ -84,24 +84,24 @@ public class ControlConnection: NSObject {
     ///
     func disconnect() {
         state = .disconnecting
-        
+
         if socket.isConnected {
             writeLine(line: "QUIT", tag: .quit, readAnswer: false)
         }
-        
+
         socket.disconnect()
     }
-    
+
     ///
     func executeCommand(cmd: String, waitForAnswer: Bool = false, success successCallback: SuccessCallback?, error errorCallback: ErrorCallback?) {
         commandQueue.async {
             self.commandQueue.suspend()
-            
+
             self.currentCommand = cmd
             self.currentCommandReadAnswer = waitForAnswer
             self.currentSuccessCallback = successCallback
             self.currentErrorCallback = errorCallback
-            
+
             if self.state == .disconnected {
             //if self.state != .authenticated {
                 self.connect()
@@ -111,14 +111,14 @@ public class ControlConnection: NSObject {
             }
         }
     }
-    
+
     ///
     private func writeCurrentCommand() {
         if let cmd = currentCommand {
             writeLine(line: cmd, tag: .command, readAnswer: currentCommandReadAnswer)
         }
     }
-    
+
     ///
     private func finishCurrentCommand(response: String?, error: Error?) {
         if let err = error {
@@ -126,26 +126,26 @@ public class ControlConnection: NSObject {
         } else {
             currentSuccessCallback?(response)
         }
-        
+
         currentCommand = nil
         currentSuccessCallback = nil
         currentErrorCallback = nil
-        
+
         commandQueue.resume()
     }
-    
+
     ///
     private func writeLine(line: String, tag: Tag, readAnswer: Bool = false) {
         if let requestData = line.appending("\n").data(using: .utf8) {
             logger.debug("write: '\(line)'")
             socket.write(requestData, withTimeout: timeoutS, tag: tag.rawValue)
-            
+
             if readAnswer {
                 readLine(tag: tag)
             }
         }
     }
-    
+
     ///
     private func readLine(tag: Tag) {
         logger.debug("read tag: \(tag)")
@@ -155,7 +155,7 @@ public class ControlConnection: NSObject {
 
 ///
 extension ControlConnection: GCDAsyncSocketDelegate {
-    
+
     ///
     public func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
         if tls {
@@ -166,23 +166,23 @@ extension ControlConnection: GCDAsyncSocketDelegate {
             readLine(tag: .greeting)
         }
     }
-    
+
     public func socket(_ sock: GCDAsyncSocket, didReceive trust: SecTrust, completionHandler: @escaping (Bool) -> Void) {
         // wrong error message if this method isn't implemented:
         // "GCDAsyncSocketManuallyEvaluateTrust specified in tlsSettings, but delegate doesn't implement socket:shouldTrustPeer:"
-        
+
         completionHandler(true) // TODO: make this configurable
     }
-    
+
     ///
     public func socketDidSecure(_ sock: GCDAsyncSocket) {
         readLine(tag: .greeting)
     }
-    
+
     ///
     public func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
         logger.debug("!!!!!!!!! \(String(describing: String(data: data, encoding: .utf8)))")
-        
+
         if let t = Tag(rawValue: tag) {
             switch t {
             case .greeting:
@@ -203,11 +203,11 @@ extension ControlConnection: GCDAsyncSocketDelegate {
             }
         } else {
             assert(false) // should never happen
-            
+
             disconnect()
         }
     }
-    
+
     ///
     public func socket(_ sock: GCDAsyncSocket, didWriteDataWithTag tag: Int) {
         if let t = Tag(rawValue: tag) {
@@ -216,11 +216,11 @@ extension ControlConnection: GCDAsyncSocketDelegate {
             }
         }
     }
-    
+
     ///
     public func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
         state = .disconnected
-        
+
         if currentErrorCallback != nil {
             finishCurrentCommand(response: nil, error: err)
         }

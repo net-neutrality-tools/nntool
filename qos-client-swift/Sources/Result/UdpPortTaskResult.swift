@@ -15,61 +15,59 @@
  ***************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 public class UdpPortTaskResult: AbstractBidirectionalIpTaskResult {
-    
+
     var objectivePacketCountOut: Int?
     var objectivePacketCountIn: Int?
-    
+
     var objectiveDelayNs: UInt64?
-    
+
     ////
-    
+
     var packetCountOut: Int?
     var packetCountIn: Int?
-    
+
     var responsePacketCountOut: Int?
     var responsePacketCountIn: Int?
-    
+
     var packetLossRateOut: Double?
     var packetLossRateIn: Double?
-    
+
     ////
-    
+
     var rttsOutNs: [String: UInt64]?
     var rttAvgOutNs: UInt64?
-    
+
     var rttsInNs: [String: UInt64]?
     var rttAvgInNs: UInt64?
-    
-    public override func mapping(map: Map) {
-        super.mapping(map: map)
 
-        objectiveTimeoutNs <- map["udp_objective_timeout"]
-        
-        objectivePortOut <- map["udp_objective_out_port"]
-        objectivePortIn  <- map["udp_objective_in_port"]
-        
-        objectivePacketCountOut <- map["udp_objective_out_num_packets"]
-        objectivePacketCountIn  <- map["udp_objective_in_num_packets"]
-        objectiveDelayNs        <- map["udp_objective_delay"]
+    ///
+    enum CodingKeys: String, CodingKey {
+        case objectiveTimeoutNs = "udp_objective_timeout"
 
-        status <- map["udp_result_status"] // not implemented on server
-        
-        packetCountOut <- map["udp_result_out_num_packets"]
-        packetCountIn  <- map["udp_result_in_num_packets"]
-        
-        responsePacketCountOut <- map["udp_result_out_response_num_packets"]
-        responsePacketCountIn  <- map["udp_result_in_response_num_packets"]
-        
-        packetLossRateOut <- map["udp_result_out_packet_loss_rate"]
-        packetLossRateIn  <- map["udp_result_in_packet_loss_rate"]
-        
-        rttsOutNs   <- map["udp_result_out_rtts_ns"]
-        rttAvgOutNs <- map["udp_result_out_rtt_avg_ns"]
-        
-        rttsInNs   <- map["udp_result_in_rtts_ns"]
-        rttAvgInNs <- map["udp_result_in_rtt_avg_ns"]
+        case objectivePortOut = "udp_objective_out_port"
+        case objectivePortIn  = "udp_objective_in_port"
+
+        case objectivePacketCountOut = "udp_objective_out_num_packets"
+        case objectivePacketCountIn  = "udp_objective_in_num_packets"
+        case objectiveDelayNs        = "udp_objective_delay"
+
+        case status = "udp_result_status" // not implemented on server
+
+        case packetCountOut = "udp_result_out_num_packets"
+        case packetCountIn  = "udp_result_in_num_packets"
+
+        case responsePacketCountOut = "udp_result_out_response_num_packets"
+        case responsePacketCountIn  = "udp_result_in_response_num_packets"
+
+        case packetLossRateOut = "udp_result_out_packet_loss_rate"
+        case packetLossRateIn  = "udp_result_in_packet_loss_rate"
+
+        case rttsOutNs   = "udp_result_out_rtts_ns"
+        case rttAvgOutNs = "udp_result_out_rtt_avg_ns"
+
+        case rttsInNs   = "udp_result_in_rtts_ns"
+        case rttAvgInNs = "udp_result_in_rtt_avg_ns"
     }
 }

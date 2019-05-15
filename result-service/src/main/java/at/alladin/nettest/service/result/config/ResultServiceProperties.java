@@ -10,5 +10,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "result", ignoreUnknownFields = true)
 public class ResultServiceProperties {
+	
+	private String settingsUuid;
 
+	public String getSettingsUuid() {
+		return settingsUuid;
+	}
+
+	public void setSettingsUuid(String settingsUuid) {
+		this.settingsUuid = settingsUuid;
+	}
 }

@@ -1,0 +1,14 @@
+output: docs
+clean: true
+#source_directory: QoSKit/Sources
+author: alladin-IT GmbH
+author_url: https://alladin.at
+copyright: 2019 alladin-IT GmbH
+module: QoSKit
+module_version: 0.0.1
+min_acl: private
+xcodebuild_arguments:
+  - "-workspace"
+  - "QoSKit.xcworkspace"
+  - "-scheme"
+  - "QoSKit_iOS"

@@ -18,20 +18,20 @@ import Foundation
 
 ///
 public class AbstractBidirectionalIpTaskConfigurationBuilder<C: AbstractBidirectionalIpTaskConfiguration>: AbstractControlConnectionTaskConfigurationBuilder<C> {
-    
+
     ///
     @discardableResult
     public func portOut(_ portOut: UInt16) -> Self {
         obj.portOut = portOut
-        
+
         return self
     }
-    
+
     ///
     @discardableResult
     public func portIn(_ portIn: UInt16) -> Self {
         obj.portIn = portIn
-        
+
         return self
     }
 }

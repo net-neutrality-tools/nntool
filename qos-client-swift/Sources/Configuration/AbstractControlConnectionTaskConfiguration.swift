@@ -15,21 +15,39 @@
  ***************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 ///
 public class AbstractControlConnectionTaskConfiguration: AbstractTaskConfiguration {
-   
+
     ///
     var serverAddress: String?
-    
+
     ///
     var serverPort: UInt16?
-    
-    public override func mapping(map: Map) {
-        super.mapping(map: map)
-        
-        serverAddress <- map["server_addr"]
-        serverPort    <- map["server_port"]
+
+    public required init() {
+        super.init()
+    }
+
+    public required init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
+
+        let container = try decoder.container(keyedBy: CodingKeysTest.self)
+        self.serverAddress = try container.decodeIfPresent(String.self, forKey: .serverAddress)
+        self.serverPort = try container.decodeIfPresent(UInt16.self, forKey: .serverPort)
+    }
+
+    public override func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+
+        var container = encoder.container(keyedBy: CodingKeysTest.self)
+        try container.encode(serverAddress, forKey: .serverAddress)
+        try container.encode(serverPort, forKey: .serverPort)
+    }
+
+    ///
+    enum CodingKeysTest: String, CodingKey { // had to rename from CodingKeys (see https://bugs.swift.org/browse/SR-6747)
+        case serverAddress = "server_addr"
+        case serverPort    = "server_port"
     }
 }

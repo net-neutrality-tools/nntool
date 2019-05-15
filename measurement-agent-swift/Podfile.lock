@@ -1,0 +1,38 @@
+PODS:
+  - Nimble (8.0.1)
+  - ObjcExceptionBridging (1.0.1):
+    - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
+  - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
+  - Siesta (1.4.3):
+    - Siesta/Core (= 1.4.3)
+  - Siesta/Core (1.4.3)
+  - SwiftLint (0.31.0)
+  - XCGLogger (7.0.0):
+    - XCGLogger/Core (= 7.0.0)
+  - XCGLogger/Core (7.0.0):
+    - ObjcExceptionBridging
+
+DEPENDENCIES:
+  - Nimble (~> 8.0.1)
+  - Siesta (~> 1.4.3)
+  - SwiftLint (~> 0.31.0)
+  - XCGLogger (~> 7.0.0)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Nimble
+    - ObjcExceptionBridging
+    - Siesta
+    - SwiftLint
+    - XCGLogger
+
+SPEC CHECKSUMS:
+  Nimble: 45f786ae66faa9a709624227fae502db55a8bdd0
+  ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
+  Siesta: 83795fdf6a43232d1d2909e1a3dfb92ab5916d26
+  SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
+  XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
+
+PODFILE CHECKSUM: fb6c4bc60703916ee7e128fca62fbb7d24620690
+
+COCOAPODS: 1.6.1

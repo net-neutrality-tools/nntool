@@ -19,7 +19,6 @@ package at.alladin.nntool.shared.qos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
 
 /**
  * 
@@ -28,27 +27,22 @@ import at.alladin.nntool.shared.hstoreparser.annotation.HstoreKey;
  */
 public class NonTransparentProxyResult extends AbstractResult {
 	
-	@HstoreKey("nontransproxy_objective_request")
 	@SerializedName("nontransproxy_objective_request")
 	@Expose
 	private String request;
 
-	@HstoreKey("nontransproxy_objective_timeout")
 	@SerializedName("nontransproxy_objective_timeout")
 	@Expose
 	private Long timeout;
 
-	@HstoreKey("nontransproxy_result")
 	@SerializedName("nontransproxy_result")
 	@Expose
 	private String result;
 
-	@HstoreKey("nontransproxy_result_response")
 	@SerializedName("nontransproxy_result_response")
 	@Expose
 	private String response;
 
-	@HstoreKey("nontransproxy_objective_port")
 	@SerializedName("nontransproxy_objective_port")
 	@Expose
 	private Integer port;

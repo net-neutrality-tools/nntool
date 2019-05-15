@@ -23,8 +23,8 @@ spring:
         create-if-not-exists: true
         entities:
           - Settings
-          - TaskConfigurationSpeed
-          - TaskConfigurationQoS
+          - MeasurementServer
+          - QoSMeasurementObjective
 
 server:
   port: 8080

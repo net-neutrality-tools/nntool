@@ -18,17 +18,17 @@ import Foundation
 
 /// Helper class for timestamps.
 final class TimeHelper {
-    
+
     /// Returns the current nanosecond timstamp based on CPU ticks.
     class func currentTimeNs() -> UInt64 {
         var info = mach_timebase_info(numer: 0, denom: 0)
         mach_timebase_info(&info)
-        
+
         let ticks = mach_absolute_time()
-        
+
         return (ticks * UInt64(info.numer)) / UInt64(info.denom)
     }
-    
+
     /// Returns the current timestamp as milliseconds.
     class func currentTimeMs() -> UInt64 {
         return UInt64(Date().timeIntervalSince1970 * 1000)

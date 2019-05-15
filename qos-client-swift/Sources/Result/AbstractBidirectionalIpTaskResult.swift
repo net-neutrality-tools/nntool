@@ -15,15 +15,14 @@
  ***************************************************************************/
 
 import Foundation
-import ObjectMapper
 
 ///
 public class AbstractBidirectionalIpTaskResult: AbstractControlConnectionTaskResult {
-   
+
     ///
     var objectivePortOut: UInt16?
-    
+
     ///
     var objectivePortIn: UInt16?
-    
+
 }

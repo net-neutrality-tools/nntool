@@ -12,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Configuration of parameters affecting the whole Measurement Agent.
- * Corresponds to the Agent in the LMAP standard
+ * Corresponds to the Agent in the LMAP standard.
  * @author fk
  *
  */

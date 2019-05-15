@@ -18,10 +18,10 @@ import Foundation
 
 ///
 enum TaskExecutorError: Error {
-    
+
     ///
     case unknownError
-    
+
     ///
     case controlConnectionError
 }
