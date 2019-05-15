@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-06
+ *      \date Last update: 2019-05-10
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -41,7 +41,7 @@ int CConnection::rawSocketEth()
 	sock = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
 	if( sock == -1 )
 	{
-		TRC_ERR("Error [rawSocketEth]: Could not creating socket" );
+		TRC_ERR("Error [rawSocketEth]: Could not create socket" );
 		return EXIT_FAILURE;
 	}
 	
@@ -58,7 +58,7 @@ int CConnection::udpSocket(string &interface)
 	sock = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
 	if( sock == -1 )
 	{
-		TRC_ERR("Error [udpSocket]: Could not creating socket" );
+		TRC_ERR("Error [udpSocket]: Could not create socket" );
 		return EXIT_FAILURE;
 	}
 	
@@ -78,22 +78,41 @@ int CConnection::udpSocket(string &interface)
 }
 
 //! \brief
-//!    Open UDP-Socket in UNIX
+//!    Open UDP-Socket v6 in UNIX
+//! \param &interface
 //! \return sock
 int CConnection::udpSocketServer()
+{
+	int mPort = 0;
+	return udpSocketServer(mPort, "");
+}
+
+//! \brief
+//!    Open UDP-Socket in UNIX
+//! \return sock
+int CConnection::udpSocketServer(int &nPort, string sIp)
 {
 	//Open Socket
 	sock = socket( AF_INET, SOCK_DGRAM, IPPROTO_UDP );
 	if( sock == -1 )
 	{
-		TRC_ERR("Error [udpSocket]: Could not creating socket" );
+		TRC_ERR("Error [udpSocket]: Could not create socket" );
 		return EXIT_FAILURE;
 	}
 	
 	//Parameterset for Socket
 	memset(&sockinfo_in, 0, sizeof(sockinfo_in));
 	sockinfo_in.sin_family 		= AF_INET;
-	sockinfo_in.sin_addr.s_addr 	= htonl(INADDR_ANY);
+	sockinfo_in.sin_addr.s_addr = htonl(INADDR_ANY);
+
+	if (nPort != 0)
+	{
+		sockinfo_in.sin_port = htons(nPort);
+	}
+	if (sIp.compare("") != 0)
+	{
+		sockinfo_in.sin_addr.s_addr = inet_addr(sIp.c_str());
+	}
 	
 	//Bind Socket to Interface
 	if( bind( sock, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in)) == -1 )
@@ -117,7 +136,7 @@ int CConnection::udp6Socket(string &interface)
 	sock = socket( AF_INET6, SOCK_DGRAM, IPPROTO_UDP );
 	if( sock == -1 )
 	{
-		TRC_ERR("Error [udp6Socket]: Could not creating socket" );
+		TRC_ERR("Error [udp6Socket]: Could not create socket" );
 		return EXIT_FAILURE;
 	}
 	
@@ -147,13 +166,22 @@ int CConnection::udp6Socket(string &interface)
 //! \return sock
 int CConnection::udp6SocketServer(int &nPort)
 {
+	return udp6SocketServer(nPort, "");
+}
+
+//! \brief
+//!    Open UDP-Socket v6 in UNIX
+//! \param &interface
+//! \return sock
+int CConnection::udp6SocketServer(int &nPort, string sIp)
+{
 	int no = 0;
 	
 	//Open Socket
 	sock = socket( AF_INET6, SOCK_DGRAM, IPPROTO_UDP );
 	if( sock == -1 )
 	{
-		TRC_ERR("Error [udp6Socket]: Could not creating socket" );
+		TRC_ERR("Error [udp6Socket]: Could not create socket" );
 		return EXIT_FAILURE;
 	}
 	
@@ -162,7 +190,12 @@ int CConnection::udp6SocketServer(int &nPort)
 	sockinfo_in6.sin6_flowinfo 	= 0;
 	sockinfo_in6.sin6_family 	= AF_INET6;
 	sockinfo_in6.sin6_port		= htons(nPort);
-	
+
+	if (sIp.compare("") != 0)
+	{
+		(void) inet_pton (AF_INET6, sIp.c_str(), sockinfo_in6.sin6_addr.s6_addr);
+	}
+
 	setsockopt(sock, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&no, sizeof(no));
 		
 	//Bind Socket to Interface
@@ -191,7 +224,7 @@ int CConnection::tcpSocket(string &interface, string &sServer, int &nPort )
 	sock = socket( AF_INET, SOCK_STREAM, 0 );
 	if( sock == -1 )
 	{
-		TRC_ERR( "Error [tcpSocket]: Could not creating socket" );
+		TRC_ERR( "Error [tcpSocket]: Could not create socket" );
 		return EXIT_FAILURE;
 	}
 	
@@ -250,7 +283,7 @@ int CConnection::tcpSocketServer( int &nPort )
 	sock = socket( AF_INET, SOCK_STREAM, 0 );
 	if( sock == -1 )
 	{
-		TRC_ERR( "Error [tcpSocketServer]: Could not creating socket" );
+		TRC_ERR( "Error [tcpSocketServer]: Could not create socket" );
 		return EXIT_FAILURE;
 	}
 	
@@ -292,7 +325,7 @@ int CConnection::tcp6Socket(string &interface, string &sServer, int &nPort )
 	sock = socket( AF_INET6, SOCK_STREAM, 0 );
 	if( sock == -1 )
 	{
-		TRC_ERR("Error [tcp6Socket]: Could not creating socket" );
+		TRC_ERR("Error [tcp6Socket]: Could not create socket" );
 		return EXIT_FAILURE;
 	}
 	
@@ -357,7 +390,7 @@ int CConnection::tcp6SocketServer( int &nPort )
 	sock = socket( AF_INET6, SOCK_STREAM, 0 );
 	if( sock == -1 )
 	{
-		TRC_ERR("Error [tcp6SocketServer]: Could not creating socket" );
+		TRC_ERR("Error [tcp6SocketServer]: Could not create socket" );
 		return EXIT_FAILURE;
 	}
 	

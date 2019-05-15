@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-03
+ *      \date Last update: 2019-05-10
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -546,7 +546,7 @@ void CTcpHandler::websocket_message_handler(noPollCtx *ctx, noPollConn *conn, no
     
     if (uploadRunning)
     {
-        uploadBytesReceived         += nopoll_msg_get_payload_size(msg);
+        uploadBytesReceived += nopoll_msg_get_payload_size(msg);
 
         if (nopoll_msg_opcode(msg) != 0)
         {

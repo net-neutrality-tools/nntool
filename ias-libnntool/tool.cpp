@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-08
+ *      \date Last update: 2019-05-10
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -616,6 +616,32 @@ string CTool::getIpFromHostname( string sString, int nType )
 	freeaddrinfo(result);
 	
 	return string(host);
+}
+
+struct addrinfo* CTool::getIpsFromHostname( string sString, bool bReachable )
+{
+	int error = 0;
+	
+	struct addrinfo query, *ips;
+
+	memset(&query, 0, sizeof query);
+	query.ai_family = AF_UNSPEC;
+
+	if (bReachable)
+	{
+		query.ai_flags = (AI_V4MAPPED | AI_ADDRCONFIG);
+	}
+	else
+	{
+		query.ai_flags = AI_V4MAPPED;
+	}
+	
+	if( ( error = getaddrinfo(sString.c_str(), NULL, &query, &ips) ) != 0 )
+	{
+		TRC_ERR( "Could not Request DNS - DNS ERROR" );
+	}
+
+    return ips;
 }
 
 //! \brief

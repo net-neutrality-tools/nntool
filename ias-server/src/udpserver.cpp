@@ -76,7 +76,15 @@ int CUdpListener::run()
 	struct udphdr *udp;
 	
 	//Create a datagram/UDP socket
-	if( ( mSendSocket = mSocket->udp6SocketServer(mPort) ) < 0 )
+	if( ( mUdp4SendSocket = mSocket->udpSocketServer(mPort, "ipv4") ) < 0 )
+	{
+		//Error
+		TRC_CRIT("Socket creation failed - Could not establish connection on Port: " + to_string(mPort));
+		return EXIT_FAILURE;
+	}
+
+	//Create a datagram/UDP socket
+	if( ( mUdp6SendSocket = mSocket->udp6SocketServer(mPort, "ipv6") ) < 0 )
 	{
 		//Error
 		TRC_CRIT("Socket creation failed - Could not establish connection on Port: " + to_string(mPort));
@@ -172,7 +180,7 @@ int CUdpListener::run()
 			clientv4.sin_port 	= htons(nUdpSrcPort);
 			
 			// send the sResponse to the client
-			nResponse = sendto(mSendSocket, sResponse.c_str(), sResponse.size(), 0, (struct sockaddr *)&clientv4, sizeof(clientv4));
+			nResponse = sendto(mUdp4SendSocket, sResponse.c_str(), sResponse.size(), 0, (struct sockaddr *)&clientv4, sizeof(clientv4));
 		}
 		if( eth_proto == 0x86dd )
 		{
@@ -182,7 +190,7 @@ int CUdpListener::run()
 			clientv6.sin6_port 	= htons(nUdpSrcPort);
 			
 			// send the sResponse to the client
-			nResponse = sendto(mSendSocket, sResponse.c_str(), sResponse.size(), 0, (struct sockaddr *)&clientv6, sizeof(clientv6));
+			nResponse = sendto(mUdp6SendSocket, sResponse.c_str(), sResponse.size(), 0, (struct sockaddr *)&clientv6, sizeof(clientv6));
 		}
 		
 		//on Error
@@ -194,7 +202,8 @@ int CUdpListener::run()
         TRC_INFO("Socket: udpListener: Connection Shutdown for Client IP: " +CTool::toString(ip_saddr) + " on Port: " + CTool::toString(nUdpSrcPort));
     }
 
-    close(mSendSocket);
+    close(mUdp4SendSocket);
+    close(mUdp6SendSocket);
     close(mRecvSocket);
 
     TRC_DEBUG("End Thread: UDP Listener with PID: " + std::to_string(syscall(SYS_gettid)));

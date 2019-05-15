@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-06
+ *      \date Last update: 2019-05-10
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -130,7 +130,7 @@ int main(int argc, char** argv)
     }
     
     CTcpServer *tcpTlsListener = new CTcpServer(mPortTls, mPortTraceroute, true);
-    if (mPort != 0)
+    if (mPortTls != 0)
     {
         if (tcpTlsListener->createThread() != 0)
         {
@@ -140,7 +140,7 @@ int main(int argc, char** argv)
     }
 
     CTcpServer *tcpTracerouteListener = new CTcpServer(mPortTraceroute, mPortTraceroute, false);
-    if (mPort != 0)
+    if (mPortTraceroute != 0)
     {
         if (tcpTracerouteListener->createThread() != 0)
         {
