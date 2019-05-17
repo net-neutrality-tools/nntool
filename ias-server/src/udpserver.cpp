@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-06
+ *      \date Last update: 2019-05-17
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
  
@@ -75,21 +75,27 @@ int CUdpListener::run()
 	struct ip6_hdr *iphv6;
 	struct udphdr *udp;
 	
-	//Create a datagram/UDP socket
-	if( ( mUdp4SendSocket = mSocket->udpSocketServer(mPort, "ipv4") ) < 0 )
+	//if no ip bindings are configured, bind on ::
+	if (::CONFIG["ip_bindings"]["v4"].string_value().compare("") == 0 && ::CONFIG["ip_bindings"]["v6"].string_value().compare("") == 0)
 	{
-		//Error
-		TRC_CRIT("Socket creation failed - Could not establish connection on Port: " + to_string(mPort));
-		return EXIT_FAILURE;
-	}
+		if( ( mUdp6SendSocket = mSocket->udp6SocketServer(mPort) < 0 ) )
+		{
+			TRC_CRIT("Socket creation failed - Could not establish connection on Port: " + to_string(mPort));
+		}
+	} 
+	else
+	{
+		if( ::CONFIG["ip_bindings"]["v4"].string_value().compare("") != 0 && ( mUdp4SendSocket = mSocket->udpSocketServer(mPort, ::CONFIG["ip_bindings"]["v4"].string_value()) ) < 0 )
+		{
+			TRC_CRIT("Socket creation failed - Could not establish connection on Port: " + to_string(mPort));
+		}
 
-	//Create a datagram/UDP socket
-	if( ( mUdp6SendSocket = mSocket->udp6SocketServer(mPort, "ipv6") ) < 0 )
-	{
-		//Error
-		TRC_CRIT("Socket creation failed - Could not establish connection on Port: " + to_string(mPort));
-		return EXIT_FAILURE;
+		if( ::CONFIG["ip_bindings"]["v6"].string_value().compare("") != 0 && ( mUdp6SendSocket = mSocket->udp6SocketServer(mPort, ::CONFIG["ip_bindings"]["v6"].string_value()) ) < 0 )
+		{
+			TRC_CRIT("Socket creation failed - Could not establish connection on Port: " + to_string(mPort));
+		}
 	}
+	
 	
 	//Create a RAW socket
 	if( ( mRecvSocket = mSocket->rawSocketEth() ) < 0 )
@@ -99,7 +105,7 @@ int CUdpListener::run()
 		return EXIT_FAILURE;
 	}
         
-        TRC_INFO("Start Thread: UDP Listener on Port: " + to_string(mPort) + " with PID: " + std::to_string(syscall(SYS_gettid)));
+    TRC_INFO("Start Thread: UDP Listener on Port: " + to_string(mPort) + " with PID: " + std::to_string(syscall(SYS_gettid)));
    
 	
 	//While Loop for listening
