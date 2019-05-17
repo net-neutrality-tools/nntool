@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-10
+ *      \date Last update: 2019-05-17
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -30,10 +30,10 @@ sockaddr_in6        *mClient;
 bool                mTlsSocket;
         
 vector<string>      allowedProtocols;
-unsigned long long  webSocketTimeout;
+unsigned long long  tcpTimeout;
 string              sClientIp;
 
-string              secret;
+string              shared_secret;
 
 string              hostname;
 
@@ -101,24 +101,53 @@ CTcpHandler::CTcpHandler(int nSocket, string nClientIp, bool nTlsSocket, sockadd
     mSocket                     = nSocket;
     mTlsSocket                  = nTlsSocket;
     
-    webSocketTimeout            = 25;
-    
+    if (::CONFIG["tcp_timeout"].int_value() != 0)
+    {
+        tcpTimeout = ::CONFIG["tcp_timeout"].int_value();
+    }
+    else
+    {
+        tcpTimeout              = 25;
+    }
+
     allowedProtocols.push_back("rtt");
     allowedProtocols.push_back("download");
     allowedProtocols.push_back("upload");
     
     sClientIp                   = nClientIp;
     
-    secret                      = "";
+    if (::CONFIG["shared_secret"].string_value().compare("") != 0)
+    {
+        shared_secret = ::CONFIG["shared_secret"].string_value();
+    }
+    else
+    {
+        shared_secret           = "default_shared_secret";
+    }
 
-    hostname                    = "peer-ias-de-01";
+    if (::CONFIG["hostname"].string_value().compare("") != 0)
+    {
+        hostname = ::CONFIG["hostname"].string_value();
+    }
+    else
+    {
+        hostname                = "default_hostname";
+    }
 
     rttRunning                  = false;
     downloadRunning             = false;
     uploadRunning               = false;
     
     downloadFrameSize           = 32768;
-    downloadRandomDataSize      = 1123457;
+    
+    if (::CONFIG["random_data_size"].int_value() != 0)
+    {
+        downloadRandomDataSize = ::CONFIG["random_data_size"].int_value();
+    }
+    else
+    {
+        downloadRandomDataSize  = 1123457;
+    }
 
     rttRequests                 = 10+1;
     rttRequestTimeout           = 1000;
@@ -890,14 +919,14 @@ int CTcpHandler::download(noPollCtx *ctx, noPollConn *conn)
         endTime = CTool::get_timestamp();
         runningTime = CTool::get_timestamp_sec() - startTime;
              
-    } while (nResponse > 0 && runningTime < webSocketTimeout && downloadRunning);
+    } while (nResponse > 0 && runningTime < tcpTimeout && downloadRunning);
     
     if (connectionIsValidWebSocket)
     {
         nopoll_conn_flush_writes(conn, 2000, 0);
     }
     
-    if (downloadRunning && runningTime >= webSocketTimeout) 
+    if (downloadRunning && runningTime >= tcpTimeout) 
     {
         showShutdown = true;
         showStopped  = false;
@@ -962,14 +991,14 @@ int CTcpHandler::upload(noPollCtx *ctx, noPollConn *conn)
         endTime = CTool::get_timestamp();
         runningTime = CTool::get_timestamp_sec() - startTime;
         
-    } while (runningTime < webSocketTimeout && uploadRunning);
+    } while (runningTime < tcpTimeout && uploadRunning);
     
     if (connectionIsValidWebSocket)
     {
         nopoll_conn_flush_writes(conn, 2000, 0);
     }
     
-    if (uploadRunning && runningTime >= webSocketTimeout) 
+    if (uploadRunning && runningTime >= tcpTimeout) 
     {
         showShutdown = false;
         showStopped  = false;
@@ -1015,7 +1044,7 @@ bool CTcpHandler::checkAuth(string authToken, string authTimestamp, string handl
         return false;
     }
     
-    string authTokenComputed = sha1(authTimestamp + secret);
+    string authTokenComputed = sha1(authTimestamp + shared_secret);
     
     TRC_DEBUG("WebSocket handler: computed token:       \"" + authTokenComputed + "\"");
     
