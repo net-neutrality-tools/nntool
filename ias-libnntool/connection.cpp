@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-10
+ *      \date Last update: 2019-05-17
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -78,13 +78,12 @@ int CConnection::udpSocket(string &interface)
 }
 
 //! \brief
-//!    Open UDP-Socket v6 in UNIX
+//!    Open UDP-Socket in UNIX
 //! \param &interface
 //! \return sock
-int CConnection::udpSocketServer()
+int CConnection::udpSocketServer(int &nPort)
 {
-	int mPort = 0;
-	return udpSocketServer(mPort, "");
+	return udpSocketServer(nPort, "");
 }
 
 //! \brief
