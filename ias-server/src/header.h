@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-06
+ *      \date Last update: 2019-05-17
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -89,6 +89,7 @@
 
 
 using namespace std;
+using namespace json11;
 
 
 #define MAX_PACKET_SIZE 1500
@@ -125,6 +126,7 @@ extern bool DEBUG_NOPOLL_CRITICAL;
 extern bool RUNNING;
 extern bool OVERLOADED;
 extern bool SERVERMONITORING;
+extern Json CONFIG;
 
 #define IF_SCAN_PATTERN " %[^:]:%llu %llu %*d %*d %*d %*d %*d %*d %llu %llu"
 	

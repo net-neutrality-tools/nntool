@@ -1,0 +1,16 @@
+{
+  "ip_bindings": {
+    "v4": "",
+    "v6": ""
+  },
+  "port_bindings": {
+    "tcp": 80,
+    "tcp_tls": 443,
+    "tcp_traceroute": 8080,
+    "udp": 80
+  },
+  "shared_secret": "my_shared_secret",
+  "hostname": "my_hostname",
+  "tcp_timeout": "25",
+  "random_data_size": 1123457
+}

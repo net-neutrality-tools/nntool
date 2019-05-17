@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-03
+ *      \date Last update: 2019-05-10
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -73,23 +73,41 @@ Upload::Upload( CConfigManager *pConfig, CConfigManager *pXml, CConfigManager *p
 //! \return 0
 int Upload::run()
 {	
+	bool ipv6validated = false;
+
 	//Syslog Message
 	TRC_INFO( ("Starting Upload Thread with PID: " + CTool::toString(syscall(SYS_gettid))).c_str() );
 
 	//Get Hostname and make DNS Request
 	TRC_DEBUG( ("Resolving Hostname for Measurement: "+mServerName).c_str() );
 
+	#ifdef NNTOOL
+	struct addrinfo *ips;
+	memset(&ips, 0, sizeof ips);
+
+	ips = CTool::getIpsFromHostname( mServerName, true );
+
+	char host[NI_MAXHOST];
+	
+	getnameinfo(ips->ai_addr, ips->ai_addrlen, host, sizeof host, NULL, 0, NI_NUMERICHOST);
+	mServer = string(host);
+	if (CTool::validateIp(mServer) == 6) ipv6validated = true; 
+	#endif
+
+	#ifndef NNTOOL
 	if( CTool::validateIp(mClient) == 6)
 		mServer = CTool::getIpFromHostname( mServerName, 6 );
 	else
 		mServer = CTool::getIpFromHostname( mServerName, 4 );
+	#endif
 
 	TRC_DEBUG( ("Resolved Hostname for Measurement: "+mServer).c_str() );
 		
 	pid = syscall(SYS_gettid);
+
 	measurementTimeStart 	= 0;
 	measurementTimeEnd 		= 0;
-	measurementTimeDuration 	= 0;
+	measurementTimeDuration = 0;
 	
 	measurementTimeStart = CTool::get_timestamp();
 	
@@ -115,8 +133,12 @@ int Upload::run()
 	
 	nHttpResponseDuration = 0;
 	nHttpResponseReportValue = 0;
-		
-	if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 )
+
+	#ifndef NNTOOL
+	if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 ) ipv6validated = true;
+	#endif
+
+	if (ipv6validated)
 	{
 		//Create a TCP socket
 		if( ( mSock = mSocket->tcp6Socket(mClient, mServer, mPort) ) < 0 )
