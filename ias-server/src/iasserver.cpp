@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-10
+ *      \date Last update: 2019-05-17
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -33,8 +33,8 @@ bool DEBUG_NOPOLL_ERROR;
 bool DEBUG_NOPOLL_CRITICAL;
 bool DAEMONMODE;
 bool RUNNING;
-
 bool OVERLOADED;
+Json CONFIG;
 
 int mPort               = 80;
 int mPortTls            = 443;
@@ -118,6 +118,36 @@ int main(int argc, char** argv)
     pTrace->init("/etc/ias-server/trace.ini","ias-server");
 
     TRC_INFO("Status: ias-server started");
+
+    ifstream in("/etc/ias-server/config.json");
+    stringstream buffer;
+    buffer << in.rdbuf();
+    string error;
+    ::CONFIG = Json::parse(buffer.str(), error);
+
+    if (error.compare("") != 0)
+    {
+        TRC_ERR("Configuration File not found, using defaults");
+    }
+    else
+    {
+        if (::CONFIG["port_bindings"]["tcp"].int_value() != 0)
+        {
+            mPort = ::CONFIG["port_bindings"]["tcp"].int_value();
+        }
+        if (::CONFIG["port_bindings"]["tcp_tls"].int_value() != 0)
+        {
+            mPortTls = ::CONFIG["port_bindings"]["tcp_tls"].int_value();
+        }
+        if (::CONFIG["port_bindings"]["tcp_traceroute"].int_value() != 0)
+        {
+            mPortTraceroute = ::CONFIG["port_bindings"]["tcp_traceroute"].int_value();
+        }
+        if (::CONFIG["port_bindings"]["udp"].int_value() != 0)
+        {
+            mPortUdp= ::CONFIG["port_bindings"]["udp"].int_value();
+        }
+    }
     
     CTcpServer *tcpListener = new CTcpServer(mPort, mPortTraceroute, false);
     if (mPort != 0)
