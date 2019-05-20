@@ -92,8 +92,9 @@ int main(int argc, char** argv)
 	
 	long int opt;
 	int tls = 0;
+	string tcp_target_port = "80";
 
-	while ( ( opt = getopt( argc, argv, "rdutnhv" ) ) != -1 )
+	while ( ( opt = getopt( argc, argv, "rdut:nhv" ) ) != -1 )
 	{
 		switch (opt)
 		{
@@ -108,6 +109,12 @@ int main(int argc, char** argv)
 				break;
 			case 't':
 				tls = 1;
+				tcp_target_port = optarg;
+				if (optopt == 't')
+				{
+	                show_usage(argv[0]);
+                	return EXIT_SUCCESS;
+				}
 				break;
 			case 'n':
 				::DEBUG = true;
@@ -162,7 +169,7 @@ int main(int argc, char** argv)
 	jMeasurementParameters["platform"] = "desktop";
 	jMeasurementParameters["clientos"] = "linux";
 	jMeasurementParameters["wsTLD"] = "net-neutrality.tools";
-	jMeasurementParameters["wsTargetPort"] = "80";
+	jMeasurementParameters["wsTargetPort"] = tcp_target_port;
 	jMeasurementParameters["wsWss"] = to_string(tls);
 	jMeasurementParameters["wsAuthToken"] = "placeholderToken";
 	jMeasurementParameters["wsAuthTimestamp"] = "placeholderTimestamp";
@@ -347,17 +354,17 @@ void shutdown()
 
 void show_usage(char* argv0)
 {
-	cout<< "                                                 	" <<endl;
-	cout<< "Usage: " << argv0 << " [ options ... ]           	" <<endl;
-	cout<< "                                                 	" <<endl;
-	cout<< "  -r             - Perform RTT measurement       	" <<endl;
-	cout<< "  -d             - Perform Download measurement  	" <<endl;
-	cout<< "  -u             - Perform Upload measurement    	" <<endl;
-	cout<< "  -t             - Enable TLS for TCP Connections	" <<endl;
-	cout<< "  -n             - Show debugging output	 	 	" <<endl;
-	cout<< "  -h             - Show Help                     	" <<endl;
-	cout<< "  -v             - Show Version                  	" <<endl;
-	cout<< "                                                 	" <<endl;
+	cout<< "                                                 				" <<endl;
+	cout<< "Usage: " << argv0 << " [ options ... ]           				" <<endl;
+	cout<< "                                                 				" <<endl;
+	cout<< "  -r             - Perform RTT measurement       				" <<endl;
+	cout<< "  -d             - Perform Download measurement  				" <<endl;
+	cout<< "  -u             - Perform Upload measurement    				" <<endl;
+	cout<< "  -t port        - Enable TLS for TCP Connections on stated port" <<endl;
+	cout<< "  -n             - Show debugging output	 	 				" <<endl;
+	cout<< "  -h             - Show Help                     				" <<endl;
+	cout<< "  -v             - Show Version                  				" <<endl;
+	cout<< "                                                 				" <<endl;
 
     exit(EXIT_FAILURE);
 }
