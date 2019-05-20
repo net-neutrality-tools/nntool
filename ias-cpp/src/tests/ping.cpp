@@ -125,7 +125,7 @@ int Ping::run()
 		{
 			//Error
 			TRC_ERR("Creating socket failed - socket()");
-			return EXIT_FAILURE;
+			return -1;
 		}
 		
 		ipv6 = true;
@@ -138,7 +138,7 @@ int Ping::run()
 		{
 			//Error
 			TRC_ERR("Creating socket failed - socket()");
-			return EXIT_FAILURE;
+			return -1;
 		}
 		
 		ipv4 = true;
