@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-10
+ *      \date Last update: 2019-05-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -28,7 +28,7 @@ Upload::Upload()
 //!	Virtual Destructor
 Upload::~Upload()
 {
-	delete(mSocket);
+	delete(mConnection);
 }
 
 //! \brief
@@ -40,10 +40,12 @@ Upload::Upload( CConfigManager *pConfig, CConfigManager *pXml, CConfigManager *p
 {
 	mClient 	= CTool::getIP( pService->readString("TAC51","LAN-IF","eth1"), pXml->readLong(sProvider, "NET_TYPE", 4)  );
 	
-	mServerName 	= pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
+	mServerName = pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
 
 	mServer 	= pXml->readString(sProvider,"IP","1.1.1.1");	
 	mPort   	= pXml->readLong(sProvider,"UL_PORT",80);
+
+	mTls		= pXml->readLong(sProvider,"TLS",0);
 	
 	#ifndef NNTOOL
 	//Security Credentials
@@ -58,7 +60,7 @@ Upload::Upload( CConfigManager *pConfig, CConfigManager *pXml, CConfigManager *p
 		mLimit = 1000000;
 	
 	//Create Socket Object
-	mSocket = new CConnection();
+	mConnection = new CConnection();
 		
 	mConfig = pConfig;
 	
@@ -141,11 +143,11 @@ int Upload::run()
 	if (ipv6validated)
 	{
 		//Create a TCP socket
-		if( ( mSock = mSocket->tcp6Socket(mClient, mServer, mPort) ) < 0 )
+		if( mConnection->tcp6Socket(mClient, mServer, mPort, mTls, mServerName) < 0 )
 		{
 			//Error
 			TRC_ERR("Creating socket failed - Could not establish connection");
-			return EXIT_FAILURE;
+			return -1;
 		}
 		
 		ipversion = 6;
@@ -153,11 +155,11 @@ int Upload::run()
 	else
 	{
 		//Create a TCP socket
-		if( ( mSock = mSocket->tcpSocket(mClient, mServer, mPort) ) < 0 )
+		if( mConnection->tcpSocket(mClient, mServer, mPort, mTls, mServerName) < 0 )
 		{
 			//Error
 			TRC_ERR("Creating socket failed - Could not establish connection");
-			return EXIT_FAILURE;
+			return -1;
 		}
 		
 		ipversion = 4;
@@ -168,16 +170,16 @@ int Upload::run()
 	tv.tv_usec = 0;
 	
 	//Set Socket Timeout
-	setsockopt( mSock, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval) );
-	setsockopt( mSock, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval) );
+	setsockopt( mConnection->mSocket, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval) );
+	setsockopt( mConnection->mSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval) );
 	
 	//Send Request and Authenticate Client
-	CHttp *pHttp = new CHttp( mConfig, mSock, mUploadString );
+	CHttp *pHttp = new CHttp( mConfig, mConnection, mUploadString );
 	if( pHttp->requestToReferenceServer() < 0 )
 	{
-		TRC_INFO("No valid credentials for this server: "+mServer);
+		TRC_INFO("No valid credentials for this server: " + mServer);
 		
-		close(mSock);
+		mConnection->close();
 
 		return 0;
 	}
@@ -186,7 +188,7 @@ int Upload::run()
 	mServerHostname = pHttp->getHttpServerHostname();
 
 	//Start Upload Receiver Thread
-	CUploadSender* pUploadSender = new CUploadSender(mSock);
+	CUploadSender* pUploadSender = new CUploadSender(mConnection);
 	pUploadSender->createThread();
 
 	mUpload.datasize_total = 0;
@@ -211,7 +213,7 @@ int Upload::run()
 		vResponse.clear();
 		
 		//Receive Data from Server
-		mResponse = recv(mSock, rbuffer, MAX_PACKET_SIZE, 0);
+		mResponse = mConnection->receive(rbuffer, MAX_PACKET_SIZE, 0);
 		
 		//Send signal, we are ready
 		syncing_threads[pid] = 1;
@@ -338,8 +340,8 @@ int Upload::run()
 			if( error == 1 )
 				error_description		+= "/";
 			
-			service_availability 			= 0;
-			error 					= 2;
+			service_availability 		= 0;
+			error 						= 2;
 			error_description 			+= "HTTP Response > "+CTool::toString( (mLimit/1000000) )+"s";
 		}
 		
@@ -350,8 +352,8 @@ int Upload::run()
 			if( error == 1 )
 				error_description		+= "/";
 			
-			service_availability 			= 0;
-			error 					= 1;
+			service_availability 		= 0;
+			error 						= 1;
 			error_description 			+= "Socket closed";
 		}	
 		
@@ -362,8 +364,8 @@ int Upload::run()
 			if( error == 1 )
 				error_description		+= "/";
 			
-			service_availability 			= 0;
-			error 					= 1;
+			service_availability 		= 0;
+			error 						= 1;
 			error_description 			+= "No Data from Socket";
 		}
 		
@@ -374,7 +376,7 @@ int Upload::run()
 		if( measurements.upload.service_availability == 0 || measurements.upload.error_code == 2 || error == 2 )
 		{
 			measurements.upload.service_availability 	= service_availability;
-			measurements.upload.error_code			= error;
+			measurements.upload.error_code				= error;
 			measurements.upload.error_description		= error_description;
 		}
 		
@@ -401,7 +403,7 @@ int Upload::run()
 	delete( pHttp );
 	delete( pUploadSender );
 	
-	close(mSock);
+	mConnection->close();
 	free(rbuffer);
 	
 	//Syslog Message
@@ -409,4 +411,3 @@ int Upload::run()
 	
 	return 0;
 }
-

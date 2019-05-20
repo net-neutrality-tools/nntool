@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-04-28
+ *      \date Last update: 2019-05-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -33,9 +33,9 @@ CUploadSender::~CUploadSender()
 //! \brief
 //!	Standard Constructor
 //! \param nSocket
-CUploadSender::CUploadSender( int nSocket )
+CUploadSender::CUploadSender( CConnection *nConnection )
 {
-	mSocket = nSocket;
+	mConnection = nConnection;
 	
 	nPointer = 0;
 }
@@ -63,8 +63,8 @@ int CUploadSender::run()
 			nPointer += MAX_PACKET_SIZE;
 		}
 		
-		mResponse = send(mSocket ,payload.data(), MAX_PACKET_SIZE, 0);
-		
+		mResponse = mConnection->send(payload.data(), MAX_PACKET_SIZE, 0);
+
 		//Got an error
 		if(mResponse == -1)
 		{

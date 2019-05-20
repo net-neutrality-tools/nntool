@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-04-29
+ *      \date Last update: 2019-05-17
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -21,6 +21,7 @@
 
 #include "../header.h"
 #include "upload_sender.h"
+
 /*!
 \class Upload
 \brief Class with Upload Functions
@@ -29,8 +30,8 @@
 class Upload : public CBasisThread
 {
 	private:
-		int mSock;
 		int mPort;
+		int mTls;
 		unsigned long long mLimit;
 		string mUploadString;
 		
@@ -41,7 +42,7 @@ class Upload : public CBasisThread
 		
 		int ipversion;
 				
-		CConnection *mSocket;
+		CConnection *mConnection;
 		
 		CConfigManager *mConfig;
 		
