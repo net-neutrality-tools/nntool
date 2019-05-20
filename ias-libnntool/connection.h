@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-17
+ *      \date Last update: 2019-05-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -33,7 +33,8 @@ using namespace std;
 class CConnection
 {
 	private:
-		int sock;
+		int mTls;
+		string mTlsSubjectValidation;
 
 		/*!
 		\struct sockaddr addr;
@@ -44,14 +45,16 @@ class CConnection
 		struct sockaddr_in sockinfo_in;
 		struct sockaddr_in6 sockinfo_in6;
 
-		/*!
-		\struct ifreq ifinfo;
-		\brief Struct of Interface-Register
-		- Initialisation of the struct named ifinfo
-		*/
-		struct ifreq ifinfo;
+	  	SSL_CTX* 			ctx;
+		SSL*     			ssl;
+		X509*    			server_cert;
+		const SSL_METHOD	*method;
+
+		int connectTLS();
 
 	public:
+		int mSocket;
+
 		//!Standard Constructor
 		CConnection();
 
@@ -80,6 +83,9 @@ class CConnection
 
 		//! Open TCP-Socket in UNIX
 		int tcpSocket( string &interface, string &sServer, int &nPort );
+
+		//! Open TCP-Socket in UNIX
+		int tcpSocket( string &interface, string &sServer, int &nPort, int nTls, string sTlsSubjectValidation );
 		
 		//! Open TCP-Socket in UNIX
 		int tcpSocketServer( int &nPort );
@@ -88,7 +94,18 @@ class CConnection
 		int tcp6Socket(string &interface, string &sServer, int &nPort );
 		
 		//! Open TCP-Socket in UNIX
+		int tcp6Socket(string &interface, string &sServer, int &nPort, int nTls, string sTlsSubjectValidation );
+		
+		//! Open TCP-Socket in UNIX
 		int tcp6SocketServer( int &nPort );
+
+		//! Generic send function
+		int send(const void *buf, int num, int flags );
+
+		//! Generic receive function
+		int receive(void *buf, int num, int flags );
+
+		int close();
 };
 
 #endif
