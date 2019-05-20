@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-10
+ *      \date Last update: 2019-05-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -28,7 +28,7 @@ Download::Download()
 //!	Virtual Destructor
 Download::~Download()
 {
-	delete(mSocket);
+	delete(mConnection);
 }
 
 //! \brief
@@ -45,6 +45,8 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 	mServer 	= pXml->readString(sProvider,"IP","1.1.1.1");
 	mPort   	= pXml->readLong(sProvider,"DL_PORT",80);
 
+	mTls		= pXml->readLong(sProvider,"TLS",0);
+
 	#ifndef NNTOOL
 	//Security Credentials
 	pConfig->writeString("security","user",pXml->readString(sProvider,"USER",""));
@@ -58,7 +60,7 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 		mLimit = 1000000;
 	
 	//Create Socket Object
-	mSocket = new CConnection();
+	mConnection = new CConnection();
 	
 	mConfig = pConfig;
 	
@@ -134,11 +136,11 @@ int Download::run()
 	if (ipv6validated)
 	{	
 		//Create a TCP socket
-		if( ( mSock = mSocket->tcp6Socket(mClient, mServer, mPort) ) < 0 )
+		if( ( mConnection->tcp6Socket(mClient, mServer, mPort, mTls, mServerName) ) < 0 )
 		{
 			//Error
 			TRC_DEBUG("Creating socket failed - Could not establish connection");
-			return EXIT_FAILURE;
+			return -1;
 		}
 		
 		ipversion = 6;
@@ -149,11 +151,11 @@ int Download::run()
 	else
 	{
 		//Create a TCP socket
-		if( ( mSock = mSocket->tcpSocket(mClient, mServer, mPort) ) < 0 )
+		if( ( mConnection->tcpSocket(mClient, mServer, mPort, mTls, mServerName) ) < 0 )
 		{
 			//Error
 			TRC_DEBUG("Creating socket failed - Could not establish connection");
-			return EXIT_FAILURE;
+			return -1;
 		}
 		
 		ipversion = 4;
@@ -168,20 +170,20 @@ int Download::run()
 	tv.tv_sec = 5;
 	tv.tv_usec = 0;
 	
-	setsockopt( mSock, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval) );
-	setsockopt( mSock, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval) );
+	setsockopt( mConnection->mSocket, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval) );
+	setsockopt( mConnection->mSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval) );
 	
 	//Send Request and Authenticate Client
-	CHttp *pHttp = new CHttp( mConfig, mSock, mDownloadString );
+	CHttp *pHttp = new CHttp( mConfig, mConnection, mDownloadString );
 	if( pHttp->requestToReferenceServer() < 0 )
 	{
-		TRC_INFO("No valid credentials for this server: "+mServer);
+		TRC_INFO("No valid credentials for this server: " + mServer);
 
 		#ifndef NNTOOL
 		//MYSQL_LOG("Measurement-DL-Auth","No valid credentials for this server: "+mServer);
 		#endif
 		
-		close(mSock);
+		mConnection->close();
 		
 		free(rbuffer);
 		
@@ -206,7 +208,7 @@ int Download::run()
 	while( RUNNING && TIMER_ACTIVE && !TIMER_STOPPED && !m_fStop )
 	{
 		//Get data from socket
-		mResponse = recv(mSock, rbuffer, MAX_PACKET_SIZE, 0);
+		mResponse = mConnection->receive(rbuffer, MAX_PACKET_SIZE, 0);
 		
 		//Send signal, we are ready
 		syncing_threads[pid] = 1;
@@ -363,8 +365,7 @@ int Download::run()
 
 	delete( pHttp );
 	
-	close(mSock);
-	
+	mConnection->close();
 	free( rbuffer );
 		
 	//Syslog Message
