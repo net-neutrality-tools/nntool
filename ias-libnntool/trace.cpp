@@ -20,6 +20,7 @@
 
 CTrace* CTrace::global_pHandlerTrace = NULL;
 pthread_mutex_t CTrace::global_mutexCreateTrace = PTHREAD_MUTEX_INITIALIZER;
+std::function<void(std::string)> CTrace::logFunction = nullptr;
 
 //! \brief
 //!	Standard Constructor
@@ -35,6 +36,7 @@ CTrace::~CTrace()
 
 CTrace* CTrace::getInstance()
 {
+	
 	pthread_mutex_lock(&global_mutexCreateTrace);
 	{
 		if ( global_pHandlerTrace == NULL)
@@ -43,7 +45,7 @@ CTrace* CTrace::getInstance()
 		}
 	}
 	pthread_mutex_unlock(&global_mutexCreateTrace);
-	
+
 	return global_pHandlerTrace;
 }
 
@@ -129,7 +131,7 @@ void CTrace::logInfo(string sMessage)
 
 void CTrace::logDebug(string sMessage)
 {
-	if (::DEBUG)
+	//if (DEBUG)
 	{
 		logToPlatform("DEBUG", sMessage);
 	}
@@ -137,14 +139,16 @@ void CTrace::logDebug(string sMessage)
 
 void CTrace::logToPlatform(string category, string sMessage)
 {
-	string platform = ::PLATFORM;
-	string clientos = ::CLIENT_OS;
-
-	if (platform.compare("desktop") == 0 && clientos.compare("linux") == 0)
-	{
-		cout << "[" << CTool::get_timestamp_string() << "] " << category << ": " << sMessage << endl;
+//	string platform = ::PLATFORM;
+//	string clientos = ::CLIENT_OS;
+	if (CTrace::logFunction != nullptr) {
+		CTrace::logFunction("[" + CTool::get_timestamp_string() + "] " + category + ": " + sMessage);
 	}
-	if (platform.compare("mobile") == 0 && clientos.compare("android") == 0)
+//	if (platform.compare("desktop") == 0 && clientos.compare("linux") == 0)
+	{
+//		cout << "[" << CTool::get_timestamp_string() << "] " << category << ": " << sMessage << endl;
+	}
+//	if (platform.compare("mobile") == 0 && clientos.compare("android") == 0)
 	{
 		//android logging hookup
 		//log category and sMessage via ndk

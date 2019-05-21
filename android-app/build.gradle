@@ -36,6 +36,14 @@ android {
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
     }
+
+    // Encapsulates your external native build configurations.
+    externalNativeBuild {
+
+        cmake {
+            path file('../ias-cpp/CMakeLists.txt')
+        }
+    }
 }
 
 dependencies {

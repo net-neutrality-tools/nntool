@@ -53,7 +53,7 @@ public class TitleFragment extends Fragment {
                                             (Serializable) result.getTaskDescList());
                                     bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_COLLECTOR_URL,
                                             result.getCollectorUrl());
-                                    ((MainActivity) getActivity()).startMeasurement(MeasurementType.QOS, bundle);
+                                    ((MainActivity) getActivity()).startMeasurement(MeasurementType.SPEED, bundle);
                                 }
                             }
                         });

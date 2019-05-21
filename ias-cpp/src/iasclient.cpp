@@ -51,7 +51,7 @@ struct measurement measurements;
 
 vector<char> randomDataValues;
 
-pthread_mutex_t mutex;
+pthread_mutex_t mutex1;
 
 map<int,int> syncing_threads;
 
@@ -89,7 +89,7 @@ int main(int argc, char** argv)
 	::RTT				= false;
 	::DOWNLOAD 			= false;
 	::UPLOAD 			= false;
-	
+
 	long int opt;
 	int tls = 0;
 	string tcp_target_port = "80";
@@ -124,7 +124,7 @@ int main(int argc, char** argv)
                 return EXIT_SUCCESS;
 			case 'v':
 				cout << "ias client" << endl;
-				cout << "Version: " << VERSION << endl;	
+				cout << "Version: " << VERSION << endl;
 				return 0;
 			case '?':
 			default:
@@ -142,11 +142,11 @@ int main(int argc, char** argv)
 	}
 
     //Signal Handler
-    signal(SIGINT, signal_handler);
-	signal(SIGFPE, signal_handler);
-	signal(SIGABRT, signal_handler);
-	signal(SIGSEGV, signal_handler);
-	signal(SIGCHLD, signal_handler);
+//    signal(SIGINT, signal_handler);
+//	signal(SIGFPE, signal_handler);
+//	signal(SIGABRT, signal_handler);
+//	signal(SIGSEGV, signal_handler);
+//	signal(SIGCHLD, signal_handler);
 
 	Json::object jRttParameters;
 	Json::object jDownloadParameters;
@@ -192,6 +192,13 @@ int main(int argc, char** argv)
  */
 void measurementStart(string measurementParameters)
 {
+    //Signal Handler
+    signal(SIGINT, signal_handler);
+    signal(SIGFPE, signal_handler);
+    signal(SIGABRT, signal_handler);
+    signal(SIGSEGV, signal_handler);
+    signal(SIGCHLD, signal_handler);
+
 	//android api hookup
 	//call with json measurementParameters via ndk
 
@@ -349,7 +356,7 @@ void shutdown()
 
 	delete(pTrace);
 
-	exit(EXIT_SUCCESS);
+	//exit(EXIT_SUCCESS);
 }
 
 void show_usage(char* argv0)
@@ -371,9 +378,11 @@ void show_usage(char* argv0)
 
 static void signal_handler(int signal)
 {
+	TRC_ERR("Error signal received " + std::to_string(signal));
+
 	CTool::print_stacktrace();
 	
     ::RUNNING = false;
     sleep(1);
-    exit(signal);
+    //exit(signal);
 }

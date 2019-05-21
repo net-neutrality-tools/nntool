@@ -32,10 +32,9 @@ public abstract class AbstractCanvasWithLabels extends View {
 
     protected float singleArcAngle = 0f;
 
-    protected String[] currentProgressLabels;
-    protected String[] allProgressLabels;
+    protected String[] progressLabels;
 
-    protected double baseTestPhases = 4;
+    protected int testPhases = 4;
 
     public AbstractCanvasWithLabels(final Context context) {
         super(context);
@@ -52,7 +51,7 @@ public abstract class AbstractCanvasWithLabels extends View {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        allProgressLabels = getAllProgressLabels();
+        progressLabels = getProgressLabels();
     }
 
     //TODO: we may not need to enforce an onDraw's existance, but here we are!
@@ -103,9 +102,8 @@ public abstract class AbstractCanvasWithLabels extends View {
 
     protected abstract void initialize();
 
-    protected String[] getAllProgressLabels() {
-        final String[] ret = new String[] {"init", "ping", "down", "up"};
-        return ret;
+    protected String[] getProgressLabels() {
+        return progressLabels;
     }
 
     protected String getStringWithWhitespace(final String text, final int whiteSpaces) {
@@ -120,13 +118,6 @@ public abstract class AbstractCanvasWithLabels extends View {
             }
         }
         return builder.toString();
-    }
-
-    protected int getTotalTestPhases () {
-        //make the progress value dynamically adjust to the number of test phases (dbl for the dbl arithmetic when dividing)
-        int totalTestPhases = (int) baseTestPhases;
-
-        return totalTestPhases;
     }
 
     protected float coordFW(final float x, final float y) {

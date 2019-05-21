@@ -42,7 +42,7 @@ public class CanvasArcDoubleGaugeWithLabels extends AbstractCanvasWithLabels {
         final RingArc speedRing = new RingArc(centerX, centerY, arcPaint.getStrokeWidth(), .625f);
         final RingArc progressRing = new RingArc(centerX, centerY, arcPaint.getStrokeWidth(), .9f);
 
-        canvas.save();
+        //canvas.save();
 
         canvas.rotate(90 + ((360f-ARC_ANGLE)/2f), centerX, centerY);
         arcPaint.setColor(getResources().getColor(R.color.gauge_speed_bg));
@@ -50,7 +50,7 @@ public class CanvasArcDoubleGaugeWithLabels extends AbstractCanvasWithLabels {
         arcPaint.setColor(getResources().getColor(R.color.gauge_progress_bg));
         canvas.drawArc(progressRing.getBounds(), 0, ARC_ANGLE, false, arcPaint);
 
-        canvas.restore();
+        //canvas.restore();
 
         canvas.restoreToCount(saveCount);
     }

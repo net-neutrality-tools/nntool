@@ -17,6 +17,7 @@
  */
 
 #include "callback.h"
+#include "android_connector.h"
 
 //! \brief
 //!	Standard Destructor
@@ -139,12 +140,14 @@ void CCallback::callbackToPlatform(string cmd, string msg, int error_code, strin
 	string platform = ::PLATFORM;
 	string clientos = ::CLIENT_OS;
 
-	if (platform.compare("desktop") == 0 && clientos.compare("linux") == 0)
+	//if (platform.compare("desktop") == 0 && clientos.compare("linux") == 0)
 	{
-		TRC_DEBUG("Callback: " + Json(jMeasurementResults).dump());
+	//	TRC_DEBUG("Callback: " + Json(jMeasurementResults).dump());
 	}
-	if (platform.compare("mobile") == 0 && clientos.compare("android") == 0)
+	//if (platform.compare("mobile") == 0 && clientos.compare("android") == 0)
 	{
+	    //TODO: remove tight android coupling
+	    AndroidConnector::getInstance().callback(jMeasurementResults);
 		//android callback hookup
 		//callback Json(jMeasurementResults).dump() via ndk
 	}
@@ -155,7 +158,7 @@ void CCallback::rttUdpCallback(string cmd)
 	struct measurement tempMeasurement;
 
 	//Lock Mutex
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&mutex1);
 
 		struct measurement_data mPingResult = pingThread->mPingResult;
 
@@ -228,7 +231,7 @@ void CCallback::rttUdpCallback(string cmd)
 		tempMeasurement.ping.error_description		= pingThread->error_description;
 			
 	//Unlock Mutex
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&mutex1);
 
 	TRC_INFO( ("RTT UDP: " + CTool::toString(tempMeasurement.ping.avg )).c_str());
 
@@ -248,6 +251,7 @@ void CCallback::rttUdpCallback(string cmd)
 	jMeasurementResults["peer"] = tempMeasurement.ping.servername;
 
 	jMeasurementResultsRttUdp = jMeasurementResults;
+	
 }
 
 void CCallback::downloadCallback(string cmd)
@@ -260,7 +264,7 @@ void CCallback::downloadCallback(string cmd)
 	for(vector<Download*>::iterator itThread = vDownloadThreads.begin(); itThread != vDownloadThreads.end(); ++itThread)
 	{
 		//Lock Mutex
-		pthread_mutex_lock(&mutex);
+		pthread_mutex_lock(&mutex1);
 
 			struct measurement_data mDownload = (*itThread)->mDownload;
 
@@ -344,7 +348,7 @@ void CCallback::downloadCallback(string cmd)
 				tempMeasurement.streams++;
 
 		//Unlock Mutex
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&mutex1);
 	}
 
 	map<int, unsigned long long> mTmpMap;
@@ -407,7 +411,7 @@ void CCallback::uploadCallback(string cmd)
 		}
 		
 		//Lock Mutex
-		pthread_mutex_lock(&mutex);
+		pthread_mutex_lock(&mutex1);
 		
 			unsigned long long nUploadt0 = mUpload.results.begin()->first;
 			
@@ -480,7 +484,7 @@ void CCallback::uploadCallback(string cmd)
 				tempMeasurement.streams++;
 			
 		//Unlock Mutex
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&mutex1);
 	}
 
 	map<int, unsigned long long> mTmpMap;

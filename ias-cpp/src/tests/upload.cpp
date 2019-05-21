@@ -84,16 +84,22 @@ int Upload::run()
 	TRC_DEBUG( ("Resolving Hostname for Measurement: "+mServerName).c_str() );
 
 	#ifdef NNTOOL
-	struct addrinfo *ips;
-	memset(&ips, 0, sizeof ips);
+// TODO: readd for android
+//	struct addrinfo *ips;
+//	memset(&ips, 0, sizeof ips);
+//
+//	ips = CTool::getIpsFromHostname( mServerName, true );
+//
+//	char host[NI_MAXHOST];
+//
+//	getnameinfo(ips->ai_addr, ips->ai_addrlen, host, sizeof host, NULL, 0, NI_NUMERICHOST);
+//	mServer = string(host);
+	if( CTool::validateIp(mClient) == 6)
+		mServer = CTool::getIpFromHostname( mServerName, 6 );
+	else
+		mServer = CTool::getIpFromHostname( mServerName, 4 );
 
-	ips = CTool::getIpsFromHostname( mServerName, true );
-
-	char host[NI_MAXHOST];
-	
-	getnameinfo(ips->ai_addr, ips->ai_addrlen, host, sizeof host, NULL, 0, NI_NUMERICHOST);
-	mServer = string(host);
-	if (CTool::validateIp(mServer) == 6) ipv6validated = true; 
+	if (CTool::validateIp(mServer) == 6) ipv6validated = true;
 	#endif
 
 	#ifndef NNTOOL
@@ -291,7 +297,7 @@ int Upload::run()
 	measurementTimeDuration = measurementTimeEnd - measurementTimeStart;
 	
 	//Lock Mutex
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&mutex1);
 	
 		unsigned long long nUploadt0 = mUpload.results.begin()->first;
 		
@@ -393,7 +399,7 @@ int Upload::run()
 			).c_str() );
 		
 	//Unlock Mutex
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&mutex1);
 	#endif
 	
 	#ifdef NNTOOL

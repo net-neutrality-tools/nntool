@@ -15,6 +15,7 @@ import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.app.workflow.history.HistoryFragment;
 import at.alladin.nettest.nntool.android.app.workflow.map.MapFragment;
+import at.alladin.nettest.nntool.android.app.workflow.measurement.SpeedFragment;
 import at.alladin.nettest.nntool.android.app.workflow.settings.SettingsFragment;
 import at.alladin.nettest.nntool.android.app.workflow.main.TitleFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
@@ -65,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
             case TITLE:
                 targetFragment = TitleFragment.newInstance();
                 break;
+            case MEASUREMENT_SPEED:
+                isBottomNavigationVisible = false;
+                targetFragment = SpeedFragment.newInstance();
+                break;
             case MEASUREMENT_QOS:
                 isBottomNavigationVisible = false;
                 targetFragment = QosFragment.newInstance();
@@ -95,6 +100,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void startMeasurement(final MeasurementType measurementType, final Bundle options) {
         switch (measurementType) {
+            case SPEED:
+                navigateTo(WorkflowTarget.MEASUREMENT_SPEED);
+                final Intent speedIntent = new Intent(MeasurementService.ACTION_START_SPEED_MEASUREMENT,
+                        null, this, MeasurementService.class);
+                speedIntent.putExtras(options);
+                startService(speedIntent);
+                break;
             case QOS:
                 navigateTo(WorkflowTarget.MEASUREMENT_QOS);
                 final Intent intent = new Intent(MeasurementService.ACTION_START_QOS_MEASUREMENT,
@@ -133,10 +145,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         getSupportActionBar().setElevation(0f);
+
     }
 
     public void registerMeasurementAgent() {
         RegisterMeasurementAgentTask task = new RegisterMeasurementAgentTask(this, null);
         task.execute();
     }
+
 }

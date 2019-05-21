@@ -6,16 +6,16 @@ package at.alladin.nettest.nntool.android.app.workflow.measurement;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.workflow.measurement.jni.JniSpeedMeasurementClient;
 import at.alladin.nettest.qos.android.QoSMeasurementClientAndroid;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.TaskDesc;
@@ -40,6 +40,8 @@ public class MeasurementService extends Service {
     final AtomicBoolean isBound = new AtomicBoolean(false);
 
     QoSMeasurementClientAndroid qosMeasurementClient;
+
+    private JniSpeedMeasurementClient jniSpeedMeasurementClient;
 
     public class MeasurementServiceBinder extends Binder {
         public MeasurementService getService() {
@@ -77,8 +79,19 @@ public class MeasurementService extends Service {
         return qosMeasurementClient;
     }
 
+    public JniSpeedMeasurementClient getJniSpeedMeasurementClient() {
+        return jniSpeedMeasurementClient;
+    }
+
     public void startMeasurement() {
         //TODO: speed measurement
+        jniSpeedMeasurementClient = new JniSpeedMeasurementClient();
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                jniSpeedMeasurementClient.startMeasurement();
+            }
+        });
     }
 
     public void startQosMeasurement(final Bundle options) {

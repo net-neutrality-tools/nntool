@@ -33,50 +33,49 @@ using namespace std;
 */
 class CHttp
 {
-	private: 
+	private:
 		CConnection *mConnection;
 
 		string mType;
 		string mHostname;
-		
+
 		string mAuthenticationToken;
 		string mAuthenticationTimestamp;
-		
+
 		//Vars for Getter
 		unsigned long long mHttpRequestTime;
 		unsigned long long mHttpResponseTime;
 		string mHttpServerHostname;
-		
+
 		CConfigManager *mConfig;
 		sockaddr_in6 *mClient;
-	
+
 	public:
 		CHttp();
-		
+
 		virtual ~CHttp();
-		
+
 		CHttp( CConfigManager *pConfig, CConnection *nConnection );
-		
+
 		CHttp( CConfigManager *pConfig, CConnection *nConnection, string sType );
-		
+
 		int parseResponse();
-		
+
 		string requestSha256( const string sString );
-		
+
 		int generateHTML(string &content, string message);
-		
+
 		int getHttpResponseDuration();
-		
+
 		string getHttpServerHostname();
-		
+
 		int responseForbidden();
-		
+
 		int responseNotFound();
-		
+
 		int responseOk();
-		
+
 		int requestToReferenceServer();
 };
 
-#endif  
- 
+#endif

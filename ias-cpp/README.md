@@ -4,7 +4,6 @@
 make
 cmake
 g++
-libssl-dev
 Linux (any Version)
 
 ### Build ###

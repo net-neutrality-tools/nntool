@@ -16,7 +16,7 @@
 # *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
 # */
 
-set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Debug)
 
 #---------------------------------------------------------------------------------
 

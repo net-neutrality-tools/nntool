@@ -36,10 +36,9 @@ set(EXECUTABLE_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
 set(LIBRARY_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
  
 set ( CMAKE_VERBOSE_MAKEFILE true )
-add_definitions(-std=c++11)
+add_definitions(-std=c++14)
 add_definitions ("-g")
-add_definitions ("-Wall")
-add_definitions ("-Wextra")
+add_definitions ("-W")
 add_definitions(-DNNTOOL)
 add_definitions(-DNNTOOL_CLIENT)
 

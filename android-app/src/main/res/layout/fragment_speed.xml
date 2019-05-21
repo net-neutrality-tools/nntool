@@ -13,4 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <at.alladin.nettest.nntool.android.app.view.CanvasArcDoubleGaugeWithLabels
+        android:id="@+id/canvas_arc_double_gauge_with_labels"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

@@ -70,7 +70,7 @@ int CConnection::udpSocket(string &interface)
 	sockinfo_in.sin_addr.s_addr 	= inet_addr(interface.c_str());
 
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in)) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in)) == -1 )
 	{
 		TRC_ERR("Error [udpSocket]: Could not bind socket to interface" );
 		return -1;
@@ -116,7 +116,7 @@ int CConnection::udpSocketServer(int &nPort, string sIp)
 	}
 	
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in)) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in)) == -1 )
 	{
 		TRC_ERR("Error [udpSocket]: Could not bind socket to interface" );
 		return -1;
@@ -152,7 +152,7 @@ int CConnection::udp6Socket(string &interface)
 	(void) inet_pton (AF_INET6, interface.c_str(), sockinfo_in6.sin6_addr.s6_addr);
 	
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
 	{
 		TRC_ERR("Error [udp6Socket]: Could not bind socket to interface" );
 		return -1;
@@ -200,7 +200,7 @@ int CConnection::udp6SocketServer(int &nPort, string sIp)
 	setsockopt(mSocket, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&no, sizeof(no));
 		
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
 	{
 		TRC_ERR("Error [udp6Socket]: Could not bind socket to interface" );
 		return -1;
@@ -247,7 +247,7 @@ int CConnection::tcpSocket(string &interface, string &sServer, int &nPort, int n
 	sockinfo_in.sin_addr.s_addr = inet_addr(interface.c_str());
 	
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in) ) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in) ) == -1 )
 	{
 		TRC_ERR( "Error [tcpSocket]: Could not bind socket to interface" );
 		return -1;
@@ -281,10 +281,10 @@ int CConnection::tcpSocket(string &interface, string &sServer, int &nPort, int n
 		return -1;
 	}
 
-	if (mTls && connectTLS() != 0)
-	{
-		return -1;
-	}
+	//if (mTls && connectTLS() != 0)
+	//{
+	//	return -1;
+	//}
 	
 	return mSocket;
 }
@@ -314,7 +314,7 @@ int CConnection::tcpSocketServer( int &nPort )
 	setsockopt(mSocket, SOL_SOCKET,SO_REUSEADDR,(const char *) &on, sizeof(on));
 	
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in) ) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in) ) == -1 )
 	{
 		TRC_ERR( "Error [tcpSocketServer]: Could not bind socket to interface" );
 		return -1;
@@ -370,7 +370,7 @@ int CConnection::tcp6Socket(string &interface, string &sServer, int &nPort, int 
 	setsockopt(mSocket, SOL_SOCKET,SO_REUSEADDR,(const char *) &on, sizeof(on));
 	
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
 	{
 		TRC_ERR("Error [tcp6Socket]: Could not bind socket to interface" );
 		return -1;
@@ -404,10 +404,10 @@ int CConnection::tcp6Socket(string &interface, string &sServer, int &nPort, int 
 		return -1;
 	}
 
-	if (mTls && connectTLS() != 0)
-	{
-		return -1;
-	}
+	//if (mTls && connectTLS() != 0)
+	//{
+	//	return -1;
+	//}
 
 	return mSocket;
 }
@@ -440,7 +440,7 @@ int CConnection::tcp6SocketServer( int &nPort )
 	setsockopt(mSocket, SOL_SOCKET,SO_REUSEADDR,(const char *) &on, sizeof(on));
 	
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
 	{
 		TRC_ERR("Error [tcp6SocketServer]: Could not bind socket to interface" );
 		return -1;
@@ -457,10 +457,10 @@ int CConnection::send(const void *buf, int num, int flags)
 	{
 		return ::send(mSocket, buf, num, flags);
 	}
-	else if ( mTls == 1 )
-	{
-		return SSL_write(ssl, buf, num); 
-	}
+	//else if ( mTls == 1 )
+	//{
+	//	return SSL_write(ssl, buf, num);
+	//}
 
 	return -1;
 }
@@ -471,10 +471,10 @@ int CConnection::receive(void *buf, int num, int flags)
 	{
 		return ::recv(mSocket, buf, num, flags);
 	}
-	else if ( mTls == 1 )
-	{
-		return SSL_read(ssl, buf, num);
-	}
+	//else if ( mTls == 1 )
+	//{
+	//	return SSL_read(ssl, buf, num);
+	//}
 
 	return -1;
 }
@@ -484,43 +484,43 @@ int CConnection::close()
 	return ::close(mSocket);
 }
 
-int CConnection::connectTLS()
-{
-  	int ssl_error = 0;
-
-	OpenSSL_add_ssl_algorithms();
-	method = TLS_client_method();
-	SSL_load_error_strings();
-	ctx = SSL_CTX_new (method);
-
-	ssl = SSL_new (ctx);
-	SSL_set_fd(ssl, mSocket);
-	ssl_error = SSL_connect(ssl);
-
-	if (ssl_error <= 0)
-	{
-		ssl_error = SSL_get_error(ssl, -1);
-		TRC_ERR("SSL Error " + to_string(ssl_error) + " while negotiating TLS connection");
-		return -1;
-	}
-	else
-	{
-		string subject_name = "";
-		server_cert = SSL_get_peer_certificate (ssl);
-		subject_name = X509_NAME_oneline (X509_get_subject_name (server_cert), 0, 0);
-
-		TRC_DEBUG("TLS Certificate Subject name: " + subject_name);
-		TRC_DEBUG("TLS Subejct validation: " + mTlsSubjectValidation);
-
-		//check subject name
-		if (mTlsSubjectValidation.compare("") != 1 && subject_name.find(mTlsSubjectValidation) == string::npos )
-		{
-			TRC_ERR("TLS Certificate Subject name validation failed ");
-			return -1;
-		}
-
-		TRC_INFO("TLS Connection established");
-	}
-
-	return 0;
-}
+//int CConnection::connectTLS()
+//{
+//  	int ssl_error = 0;
+//
+//	OpenSSL_add_ssl_algorithms();
+//	method = TLS_client_method();
+//	SSL_load_error_strings();
+//	ctx = SSL_CTX_new (method);
+//
+//	ssl = SSL_new (ctx);
+//	SSL_set_fd(ssl, mSocket);
+//	ssl_error = SSL_connect(ssl);
+//
+//	if (ssl_error <= 0)
+//	{
+//		ssl_error = SSL_get_error(ssl, -1);
+//		TRC_ERR("SSL Error " + to_string(ssl_error) + " while negotiating TLS connection");
+//		return -1;
+//	}
+//	else
+//	{
+//		string subject_name = "";
+//		server_cert = SSL_get_peer_certificate (ssl);
+//		subject_name = X509_NAME_oneline (X509_get_subject_name (server_cert), 0, 0);
+//
+//		TRC_DEBUG("TLS Certificate Subject name: " + subject_name);
+//		TRC_DEBUG("TLS Subejct validation: " + mTlsSubjectValidation);
+//
+//		//check subject name
+//		if (mTlsSubjectValidation.compare("") != 1 && subject_name.find(mTlsSubjectValidation) == string::npos )
+//		{
+//			TRC_ERR("TLS Certificate Subject name validation failed ");
+//			return -1;
+//		}
+//
+//		TRC_INFO("TLS Connection established");
+//	}
+//
+//	return 0;
+//}
