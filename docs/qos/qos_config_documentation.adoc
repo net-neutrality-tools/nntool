@@ -1,0 +1,905 @@
+[[overview]]
+= QoS database and settings documentation
+Lukasz Budryk, Florian Jung
+v1.5.0, 2017-08-22
+:toc: left
+:toclevels: 3
+
+[[summary]]
+== Abstract
+This document covers all necessary information on how to set up QoS (quality of service) tests for the *NetTest*. It also contains a detailed description of all database relevant fields needed for these tests.
+The basic concept of the *NetTest QoS-Tests* is the following:
+
+* Dynamic design: all tests can be set up without changing the code of client and/or server:
+** Tests can be turned on/off or fully edited whenever they need to be.
+** Support for different languages can be added anytime
+** Because of the real-time and on-demand evaluation old tests are being affected by all changes too (great advantage for example if a new language has been implemented, or a new test evaluation method has been added)
+
+The second and third section: <<qos-test-result>> and <<database-qos_measurement_objective>> will cover all available json keys, used for test objectives as well as for all test results.
+
+The fourth section: <<testscript>> covers the dynamic content by using a simple script.
+
+The fifth section: <<examples>> has some step by step examples.
+
+[[qos-test-result]]
+== QoS test results
+
+[[qos-test-result-over]]
+=== QoS result overview
+There are 8 different tests so far:
+
+* <<qos-test-result-json-website,WEBSITE>>
+* <<qos-test-result-json-http,HTTP PROXY>>
+* <<qos-test-result-json-nontransproxy,NON TRANSPARENT PROXY>>
+* <<qos-test-result-json-dns,DNS>>
+* <<qos-test-result-json-tcp,TCP>>
+* <<qos-test-result-json-udp,UDP>>
+* <<qos-test-result-json-voip,VOICE OVER IP>>
+* <<qos-test-result-json-traceroute,TRACEROUTE>>
+
+All test objectives and results are stored as JSON key-value pairs. This chapter will cover all available JSON keys and their purpose. They are stored in the `configuration` database. Basically all test result (and objective) JSON keys are composed of 3 components:
+
+ TESTTYPE_RESULTTYPE_LABEL
+
+where:
+
+* `TESTTYPE` defines the type of the test (see list below) and can have the following values (they represent the list below in the same order):
+** `website`
+** `http`
+** `nontransproxy`
+** `dns`
+** `tcp`
+** `udp`
+** `voip`
+** `traceroute`
+
+* `RESULTTYPE` can be:
+** `objective`
+** `result`
+
++
+`objecitve` means that this was a test parameter (objective) from the control server, where `result` is used to hold all test result values.
+
+* `LABEL` is only a label to make the results more human readable
+
+[[qos-test-result-json]]
+=== JSON specification
+Following these naming conventions the specification has been set up. Here are all JSON keys grouped by the test type:
+
+[[qos-test-result-json-all]]
+==== all tests
+these key/value pairs can be accessed from all tests
+
+    * `start_time_ns` => starting time of the test in ns relative to the speedtest start
+    * `duration_ns` => duration of the test in ns
+
+[[qos-test-result-json-website]]
+==== website (= Website download test)
+    * `website_objective_url` => the target URL of this test
+    * `website_objective_timeout` => test timeout
+    * `website_result_tx_bytes` => bytes transferred during the test
+    * `website_result_rx_bytes` => bytes received during the test
+    * `website_result_duration` => time needed to download and render the website in nanoseconds
+    * `website_result_status` => the status code (http header), this can have the value -1 if the website was unreachable
+    * `website_result_info` => information about the test procedure; it is generates by the client itself, depending on how the test ended; possible values:
+            ** `OK` => test worked as expected
+            ** `ERROR` => some error occured (most of the cases: unreachable target)
+            ** `TIMEOUT` => timeout exceeded (see parameter: website_objective_timeout)
+
+[[qos-test-result-json-http]]
+==== http (= Http proxy test)
+    * `http_objective_range` (_optional_) => defines the string that will be passed to the range request header
+    * `http_objective_url` => target of this test
+    * `http_result_header` => response header
+    * `http_result_length` => content length
+    * `http_result_hash` => checksum of the content, this field also contains information about the final result of the test
+        It may contain the following values:
+            ** 'any hexadecimal value' - the md5 checksum of the content that was downloaded
+            ** `TIMEOUT` - the download timeout has been reached
+            ** `ERROR` - another error occured (host not available, connection timeout, etc.)
+    * `http_result_status` => status code in the response header (or -1 if there was no response)
+
+[[qos-test-result-json-nontransproxy]]
+==== nontransproxy (= Non transparent proxy test)
+    * `nontransproxy_objective_request` => request string for this test
+    * `nontransproxy_objective_port` => test port
+    * `nontransproxy_objective_timeout` => timeout
+    * `nontransproxy_result` => enum that represents the result status of this test. Possible values are:
+            ** `OK` - the test was successful (=test execution; regardless of the test result)
+            ** `TIMEOUT` - the download timeout has been reached
+            ** `ERROR` - another error occured (host not available, connection timeout, etc.)
+    * `nontransproxy_result_response` => response (echo from test server)
+
+[[qos-test-result-json-dns]]
+==== dns (= DNS test)
+    * `dns_objective_host` => target host of this test
+    * `dns_objective_dns_record` => dns record to request
+    * `dns_objective_resolver` => dns resolver to be used for this test
+    * `dns_objective_timeout` => dns query timeout in ns
+    * `dns_result_duration` => time needed to complete the test in ns
+    * `dns_result_info` => enum that represents the result status of this test. Possible values are:
+        ** `OK` - the test was successful (=test execution; regardless of the test result)
+        ** `TIMEOUT` - the dns query timeout has been reached
+        ** `ERROR` - another error occured
+    * `dns_result_status` => the query status; the most common values are:
+        ** `NOERROR` => request completed without any error
+        ** `NXDOMAIN` => non existent domain
+    * `dns_result_entries_found` => number of entries found
+    * `dns_result_entries` => result of this test containing all dns entries that were found (IMPORTANT: the value of this object is always an array, even if there is only one entry)
+            an entry is composed of the following:
+        ** `dns_result_ttl` => the time to live of the dns entry
+        ** `dns_result_address` => the address this dns entry points to
+        ** `dns_result_priority` => priority, if exists (as in MX or SRV record)
+
+[[qos-test-result-json-tcp]]
+==== tcp (= TCP incoming/outgoing test)
+    * `tcp_objective_timeout` => test timeout
+    * `tcp_objective_in_port` => port number used for the incoming test
+    * `tcp_result_in` => enum:
+        ** `OK` - incoming test succeeded
+        ** `FAILED` - incoming test failed.
+    * `tcp_result_in_response` => server message received after a connection was established
+    * `tcp_objective_out_port` => port number used for the outgoing test
+    * `tcp_result_out` => enum:
+        ** `OK` - outgoing test succeeded
+        ** `FAILED` - outgoing test failed.
+    * `tcp_result_out_response` => response that the client received after sending an message to the test server
+
+[[qos-test-result-json-udp]]
+==== udp (= UDP incoming/outgoing test)
+    * `udp_objective_timeout` => test timeout
+    * `udp_objective_delay` => delay between packets (in ns)
+    * `udp_objective_out_port` => port number used for the outgoing test
+    * `udp_objective_out_num_packets` => the number of packets to be sent by the client
+    * `udp_result_out_num_packets` => the number of packets received by the test server
+    * `udp_result_out_packet_loss_rate` => outgoing packet loss rate
+    * `udp_result_out_response_num_packets` => responses to outgoing packets
+    * `udp_objective_in_port` => port number used for the incoming test
+    * `udp_objective_in_num_packets` => the number of packets to be sent by the test server
+    * `udp_result_in_num_packets` => the number of packets received by the client
+    * `udp_result_in_response_num_packets` => responses to incoming packets received from server
+    * `udp_result_in_packet_loss_rate` => incoming packet loss rate
+
+[[qos-test-result-json-voip]]
+==== voip (= Voice over IP test)
+
+[IMPORTANT]
+The *VoIP* test uses the RTP protocol as defined in RFC 3550 <<citation-1,[1]>>.
+
+    * `voip_objective_delay` => (_optional_) delay between packets in ns, default: 20000000ns (=20ms)
+    * `voip_objective_timeout` => (_optional_) test timeout, default: 3000000000ns (=3000ms)
+    * [[voip_objective_payload]]`voip_objective_payload` => (_optional_) payload type, as defined in RFC 3551 <<citation-2,[2]>>, supported payload types and their values can be found in the table below. The relevant field is *"Payload type"*. The default value is: `0` (=PCMU).
++
+[IMPORTANT]
+Codecs with payload type "_dyn_" have no static payload type assigned and are only used with a dynamic payload type <<citation-2,[2]>>. These codecs are not supported by the VoIP test.
++
+[format="csv", options="header", cols="<,^s,<,<"]
+|===
+Codec name, Payload type, Clock rate, Codec type
+"PCMU", 0, 8000, AUDIO
+"GSM", 3, 8000, AUDIO
+"G723", 4, 8000, AUDIO
+"DVI4_8", 5, 8000, AUDIO
+"DVI4_16", 6, 16000, AUDIO
+"LPC", 7, 8000, AUDIO
+"PCMA", 8, 8000, AUDIO
+"G722", 9, 8000, AUDIO
+"L16_1", 10, 44100, AUDIO
+"L16_2", 11, 44100, AUDIO
+"QCELP", 12, 8000, AUDIO
+CN,13, 8000, AUDIO
+MPA,14, 90000, AUDIO
+G728,15, 8000, AUDIO
+DVI4_11,16, 11025, AUDIO
+DVI4_22,17, 22050, AUDIO
+G729,18, 8000, AUDIO
+"G726_40",_dyn_, 8000, AUDIO
+"G726_32",_dyn_, 8000, AUDIO
+"G726_24",_dyn_, 8000, AUDIO
+"G726_16",_dyn_, 8000, AUDIO
+G729D,_dyn_, 8000, AUDIO
+G729E,_dyn_, 8000, AUDIO
+"GSM_EFR",_dyn_, 8000, AUDIO
+L8,_dyn_,_variable_, AUDIO
+RED,_dyn_,_variable_, AUDIO
+VDVI,_dyn_,_variable_, AUDIO
+CELB,25, 90000, VIDEO
+JPEG,26, 90000, VIDEO
+NV,28, 90000, VIDEO
+H261,31, 90000, VIDEO
+MPV,32, 90000, VIDEO
+MP2T,33, 90000, BOTH
+H263,34, 90000, VIDEO
+"H263_1998",_dyn_, 90000, VIDEO
+|===
+
+    * `voip_objective_in_port` => the port for the incoming voice stream
+    * `voip_objective_out_port` => the port for the outgoing voice stream
+    * `voip_objective_call_duration` => (_optional_) duration of the simulated call, default: 1000000000ns (=1000ms)
+    * `voip_objective_bits_per_sample` => (_optional_) bits per sample, default: 8
+    * `voip_objective_sample_rate` => (_optional_) the sample rate in _Hz_, default: 8000
+    * `voip_result_status` => the test result, enum:
+    ** `OK` - the test was successful (=test execution; regardless of the test result)
+    ** `TIMEOUT` - the test timeout has beed reached
+    ** `ERROR` - another error occured
+    * incoming voice stream results (client side):
+    ** `voip_result_in_short_seq` => the shortest correct packet sequence (fewest number of packets in correct order)
+    ** `voip_result_in_long_seq` => the longest correct packet sequence (most number of packets in correct order)
+    ** `voip_result_in_max_jitter` => the max jitter in ns
+    ** `voip_result_in_mean_jitter` => the mean jitter in ns
+    ** `voip_result_in_skew` => the skew in ns
+    ** `voip_result_in_num_packets` => number of packets received
+    ** `voip_result_in_max_delta` => highest delay between received packets
+    ** `voip_result_in_sequence_error` => number of sequence errors (packets out of order)
+    * outgoing voice stream results:
+    ** `voip_result_out_short_seq` => the shortest correct packet sequence (fewest number of packets in correct order)
+    ** `voip_result_out_long_seq` => the longest correct packet sequence (most number of packets in correct order)
+    ** `voip_result_out_max_jitter` => the max jitter in ns
+    ** `voip_result_out_mean_jitter` => the mean jitter in ns
+    ** `voip_result_out_skew` => the skew in ns
+    ** `voip_result_out_max_delta` => highest delay between received packets
+    ** `voip_result_out_num_packets` => number of packets received
+    ** `voip_result_out_sequence_error` => number of sequence errors (packets out of order)
+
+[[qos-test-result-json-traceroute]]
+==== traceroute (= Traceroute test)
+    * `traceroute_objective_host` => the target host
+    * `traceroute_objective_timeout` => test timeout
+    * `traceroute_objective_max_hops` => (_optional_) max hops allowed, default: 30
+    * `traceroute_result_details` => a detailed list of the route (IMPORTANT: the value of this object is always an array, even if there is only one entry). An entry is composed of:
+        ** `host` => host ip (and name if available)
+        ** `time` => the time needed to reach the host
+    * `traceroute_result_status` => enum:
+        ** `OK` - test succeeded
+        ** `TIMEOUT` - timeout has been reached.
+        ** `MAX_HOPS_EXCEEDED` - max hops (see `traceroute_objective_max_hops`) has been exceeded before the target could be reached.
+        ** `FAILED` - test failed (some other error occured during the test)
+    * `traceroute_result_hops` => hops needed to reach the target host.
+
+
+[[database-qos_measurement_objective]]
+== QoS test objectives
+The purpose of this is to provide tests (in detail: test parameters and test objectives) for all clients.
+
+Fields:
+
+    * `qos_test_uid`, type: _integer_ => uid
+    * `type`, type: _qostest_ => the test type
+    * `params`, type: _json_ => (see 3.1.1) test objectives.
+    * `results`, type: _json_ => (see 3.1.3) expected test results.
+    * `concurrencyGroup`, type: _integer_ => (see 3.1.5) tests that belong to the same group are executed simultaneously. This is also the order of test execution.
+    * `description`, type: _text_ => (see 3.1.6) references the key of an text entry in the qos_test_desc table. This is the longer and more technical test summary.
+    * `summary`, type: _text_ => (see 3.1.7) references the key of an text entry in the qos_test_desc table. This is the short test summary.
+
+[[database-qos_test_objective-param]]
+=== Field `param`
+Test parameters are basically json keys without `TESTTYPE` and `RESULTTYPE` (where `RESULTTYPE` must be objective). This means that for example a website test json key (as described in the section: <<qos-test-result-json>>) with the name: `website_objective_url` would be transformed to `url`. After a test has been executed by the client it adds the `TESTTYPE` and `RESULTTYPE` prefix to the parameters and send them back to the server. This procedure is needed to be able to differentiate between objectives (test parameters) and results (results during or after the test) because both are saved in the <<database-qos_test_result>> table in a single field: `results`. The following parameters (objectives) are supported (sorted by test type):
+
+    * <<qos-test-result-json-website>>, example and available parameters:
+
+        {
+            "url":"http://alladin.at",
+            "timeout":10000000000
+        }
+
+    ** `url` => the target URL of this test (see `website_objective_url`)
+    ** `timeout` => test timeout (see `website_objective_timeout`)
+
+    * <<qos-test-result-json-http>>, example and available parameters:
+
+        {
+            "range":"bytes=0-999",
+            "target":"https://www.rtr.at",
+            "conn_timeout":5000000000,
+            "download_timeout":15000000000
+        }
+
+    ** `range` => (_optional_) defines the string that will be passed to the range request header (see `http_objective_range`)
+    ** `url` => target url of this test (see `http_objective_url`)
+    ** `conn_timeout` => connection timeout in ns (no equivalent json key = not in result table)
+    ** `download_timeout` => download timeout in ns (no equivalent json key = not in result table)
+
+    * <<qos-test-result-json-nontransproxy>>, example and available parameters:
+
+        {
+            "port":"%RANDOM 50000 55000%",
+            "request":"GET / HTTR/7.9"
+        }
+
+    ** `port` => test port (see `nontransproxy_objective_port`)
+    ** `request` => request string for this test (see `nontransproxy_objective_request`)
+    ** `timeout` => test timeout (see `nontransproxy_objective_timeout`)
+
+    * <<qos-test-result-json-dns>>, example and available parameters:
+
+        {
+            "host":"rtr.at",
+            "record":"MX",
+            "resolver":"8.8.8.8"
+        }
+
+    ** `host` => target host of this test (see `dns_objective_host`)
+    ** `record` =>  dns record to request (see `dns_objective_record`)
+    ** `resolver` => (_optional_) dns resolver to be used for this test (see `dns_objective_resolver`) - if not set the standard system resolver is used
+    ** `timeout` => (_optional_) dns query timeout in ns (see `dns_objective_timeout`) - default: 5000000000ns (=5000ms)
+
+    * <<qos-test-result-json-tcp>>, example and available parameters:
+
+        {
+            "timeout":3000000000,
+            "out_port":"%RANDOM 20000 40000%"
+        }
+
+    ** `timeout` => test timeout (see `tcp_objective_timeout`)
+    ** `out_port` => port number used for the outgoing test (see `tcp_objective_out_port`)
+    ** `in_port` => port number used for the incoming test (see `tcp_objective_in_port`)
+
+[TIP]
+It is possible to create incoming-only or outgoing-only tests. This means: either `out_port` or `in_port` or both parameters have to be set.
+
+    * <<qos-test-result-json-udp>>, example and available parameters:
+
+        {
+            "in_port":"%RANDOM 10000 50000%",
+            "timeout":2500000000,
+            "in_num_packets":"%RANDOM 8 12%",
+            "delay":500000000
+        }
+
+    ** `delay` => (_optional_) delay between packets in ns (see `udp_objective_delay`) - default: 300000000ns (=300ms)
+    ** `timeout` => test timeout (see `udp_objective_timeout`)
+    ** `in_port` => port number used for the incoming test (see `udp_objective_in_port`)
+    ** `in_num_packets` => the number of packets for the incoming test (see `udp_objective_in_num_packets`)
+    ** `out_port` => port number used for the outgoing test (see `udp_objective_out_port`)
+    ** `out_num_packets` => the number of packets for the outgoing test (see `udp_objective_out_num_packets`)
+
+[TIP]
+It is possible to create incoming-only or outgoing-only tests. This means: either [`out_port` and `out_num_packets`] or [`in_port` and `in_num_packets`] or both parameter groups have to be set.
+
+    * <<qos-test-result-json-voip>>, example and available parameters:
+
+        {
+            "in_port": "5060",
+            "out_port": "5060",
+            "timeout": "6000000000",
+            "call_duration": "2000000000"
+        }
+
+    ** `delay` => (_optional_) delay between packets in ns, default: 20000000ns (=20ms)
+    ** `timeout` => (_optional_) test timeout, default: 3000000000ns (=3000ms)
+    ** `payload` => (_optional_) payload type, default: 0 (=PCMU). For a detailed documentation see: <<voip_objective_payload, VoIP: voip_objective_payload>>
+    ** `out_port` => the port for the outgoing voice stream
+    ** `in_port` => the port for the incoming voice stream
+    ** `call_duration` => (_optional_) duration of the simulated call, default: 1000000000ns (=1000ms)
+    ** `bits_per_sample` => (_optional_) bits per sample, default: 8
+    ** `sample_rate` => (_optional_) the sample rate in _Hz_, default: 8000
+
+    * <<qos-test-result-json-traceroute>>, example and available parameters:
+
+        {
+            "host": "google.com",
+            "timeout": "35000000000"
+        }
+
+    ** `host` => the target host
+    ** `timeout` => test timeout
+    ** `max_hops` => (_optional_) max hops allowed, default: 30
+
+
+[[database-qos_test_objective-result]]
+=== Field `result`
+This field contains the expected test results (from now on: 'ETR') and the behaviour in case of failure and/or success.
+
+The reason that an 'ETR' is an array is the method of evaluation: an 'ETR' can have multiple conditions. To explain the functionality of ETRs imagine the following scenario:
+
+[abstract]
+A non transparent proxy test is run on a random port between 1 and 25000. The request it will send is an erroneous HTTP request (`GET / HTTR 7.9`). After the test has finished we compare the result of the test to the request. If both are equal, then no proxy has changed the request, so no proxy has been detected. Which means that the test was successful in the QoS point of view. A second check is done to determine the port number classification (just a check if the random port was not above 1024). This has nothing to do with quality of service but will demonstrate the possibilities of the *NetTest QoS-Tests*. Here are the objectives:
+
+[source,json]
+    {
+        "port":"%RANDOM 1 25000%",
+    	"request":"GET / HTTR/7.9"
+    }
+
+Before we write the json for the evaluation of this test let's sum it up with a pseudo script:
+
+* ETR[0]:
+    ** compare: `nontransproxy_result_response` to `nontransproxy_objective_request` using the sign: '"equal"'.
+    ** if test fails display message: `ntp.failure`
+    ** if test succeeds display message: `ntp.success`
+
+* ETR[1]:
+    ** compare: `nontransproxy_objective_port` to `1024` using the sign: '"lower or equal"'.
+    ** if test succeeds display message: `ntp.port_not_over_1024`
+    ** if test fails display message: `ntp.port_over_1024`
+
+This is how the ETR method works in theory. Now for the real implementation:
+
+* ETR[0] would be stored as:
++
+[source,json]
+	{
+	    "operator": "eq",
+	    "on_success": "ntp.success",
+	    "on_failure": "ntp.failure",
+	    "nontransproxy_result_response": "%PARAM nontransproxy_objective_request%"
+	}
+
+* ETR[1] would be stored as:
++
+[source,json]
+	{
+	    "operator": "le",
+	    "on_success": "ntp.port_not_over_1024",
+	    "on_failure": "ntp.port_over_1024",
+	    "nontransproxy_object_port":"1024"
+	}
+
+Summary:
+Each ETR entry needs to contain at least two key-value pairs (one condition operator and at least one event).
+
+[IMPORTANT]
+There is an important exception: When using the `evaluate` expected result key it is possible to use JavaScript and to omit all other keys (see below and 3. Testscript)
+
+[[database-qos_test_objective-condition-op]]
+==== Condition operators
+
+    * key: `operator` => the operator used in this entry to evaluate test results. An operator may be:
+        ** `eq` => equals
+        ** `ne` => not equals
+        ** `lt` => lower than
+        ** `gt` => greater than
+        ** `le` => lower or equal
+        ** `ge` => greater or equal
+
+    * key: `evaluate` => the value needs to be an `%EVAL %` TestScript command (see 3. TestScript). If you use this type of comparison, the variable `result` in the javascript code contains the behaviour of the test result. It can hold one ot the following values:
+        ** a boolean `true` if the test was successful
+        ** or a boolean `false` if the test failed.
+        ** or an object that contains two keys:
+            *** `type` - the type of the result, enum:
+            **** `failure`
+            **** `success`
+            *** `key` - the key of the message to be returned
+
++
+The following example checks if a dns test returned some results. If it was true the message `dns.found` is returned, otherwise `dns.notfound`
+
+    "evaluate":"%EVAL
+        if(dns_result_entries>0)
+            result={'type':'success', 'key':'dns.found'};
+        else
+            result={'type':'failure', 'key':'dns.notfound'}; %"
+
+[[database-qos_test_objective-events]]
+==== Events
+
+    * key: `on_success` => represents the key of a text entry in the qos_test_desc table. Shown if evaluation succeeded.
++
+[IMPORTANT]
+    it always counts as a test success (= green list on device).
+        If this parameter is empty or contains a non existent key then nothing is shown on success.
+
+    * key: `on_failure` => represents the key of an text entry in the qos_test_desc table. Shown if evaluation failed.
++
+[IMPORTANT]
+    it always counts as a test failure (= red list on device).
+        If this parameter is empty or contains a non existent key then nothing is shown on failure.
+
+All other parameters are optional and can have keys as defined in the json specification (depending on the test)
+
+[[database-qos_test_objective-concurrency_group]]
+=== Field `concurrencyGroup`
+It defines the group the test belongs to. Tests that belong to the same group are executed simultaneously. The group order is ascending: 0..n (zero to n).
+
+[[database-qos_test_objective-test_desc]]
+=== Field `description`
+References the key in the translation. The text represents the longer (and more technical) description of a test (not to be confused with the test type description and test summary) and is shown in the app regardless of whether the test results are positive or negative
+
+[[database-qos_test_objective-test_summary]]
+=== Field `test_summary`
+References the key in the translation. The text represents the short (and simple) description of a test (not to be confused with the test type description and test description) and is shown in the app regardless of whether the test results are positive or negative
+
+[[testscript]]
+== TestScript
+To add some dynamic content and to make test descriptions contain results or objectives a simple script (templating engine) has been added to the *NetTest*. TestScript commands can be used to display variables (test results) or to do some evaluation. The command syntax looks as follows: `%COMMAND param1 param2 ...%`
+
+Additionally the TestScript provides control structures to hide or show text blocks. See <<testcript-control-structures, control structures>> below for detailed information.
+
+=== Commands
+The supported commands are:
+
+    * PARAM
+    * RANDOM
+    * RANDOMURL
+    * EVAL
+
+[[testscript-param]]
+==== Command: PARAM
+Syntax: `%PARAM param1 [param2] [...]%`
+
+The main purpose of this command is to return the value of a test result/objective parameter (set by param1) as defined by the <<qos-test-result-json>>.
+
+One reason for multiple parameters are arrays (see <<qos-test-result-json-dns,DNS test>> -> `dns_result_entries`). To access the value of `dns_result_ttl` of the first entry the following syntax is used: `%PARAM dns_result_entries[0] dns_result_ttl%`. Only one child can be accessed with one command. The index is zero-based (-> first element = 0, second = 1, etc.)
+
+Another reason for multiple parameters is the number formatting feature:
+
+The `PARAM` command can be also used to format numbers. In this case the following syntax is needed:
+`PARAM param divisor precision grouping` (e.g. `%PARAM duration_ns 1000000 0 f%`) where:
+
+    * `divisor` - is the divisor that the parameter value will be divided by
+    * `precision` - is the precision of the division
+    * `grouping` - tells the pasres to group numbers in 1000s (like: 1,435,535.42); allowed values are:
+        ** `t` = true
+        ** `f` = false (this is the default value, therefor this third parameter is not needed when you don't want to use the grouping feature)
+
+[[testscript-random]]
+==== Command: RANDOM
+Syntax: `%RANDOM param1 [param2]%`
+
+This command generates a random number. If param2 is set then the result is between param1 (inclusive) and param2 (exclusive). If param2 is not set, then the result is between 0 (zero, inclusive) and param1 (exclusive)
+
+[[testscript-randomurl]]
+==== Command: RANDOMURL
+Syntax: `%RANDOMURL prefix number_of_random_digits suffix%`
+
+This command generates a random url by using the prefix and suffix as constants and generating a random hexadecimal hash with the length of number_of_random_digits. Example: `%RANDOMURL www.unknown 10 .com%` could genrate the following url: www.unknown4e87a4be91.com
+
+[[testscript-eval]]
+==== Command: EVAL
+Syntax: `%EVAL some_javascript()%`
+
+This command is run by a JavaScript interpreter. To make this TestScript command return something the variable `result` needs to be set in the JavaScript code. The result object can contain following values:
+
+    ** any non-object value, for example:
+
++
+[source,javascript]
+        result = 10;
+        result = true;
+        result = "resultString";
+
+    ** or it may contain an object, that holds 2 key-value pairs:
+    `type` and `key`. This can be used to replace the complicated "operator and on_success and/or on_failure" syntax. This means that this result method can be used only for the `evaluate` condition operator (see <<database-qos_test_objective-condition-op, condition operators>> in <<database-qos_test_objective-result>>). Here is a description of what these parameters can hold and are used for:
+        *** `type`: either `"success"` or `"failure"` - it tells the script interpreter that the result will be of this type (replaces: `on_success` and `on_failure`)
+        *** `key`: holds the message key. Code example:
+
+                            "evaluate":"%EVAL
+                                    if (tcp_result_out=='TIMEOUT') result = {type: 'FAILURE', key: 'tcp.timeout'};
+                                    else if (tcp_result_out=='ERROR') result = {type: 'FAILURE', key: 'tcp.error'};
+                                    else if (tcp_result_out=='OK') result = {type: 'SUCCESS', key: 'tcp.success'};
+                                    else result=null;%"
+
+
++
+All test result values can be used in the JS code, the variables have the same names as defined in the <<qos-test-result-json>>.
+The JS parser has an own TestScript library included to make some evaluations easier. To access functions from this library you need to address the "nn" object. The following functions are available:
+
+        ** `nn.isEmpty(someArray[])` - returns true if the array "someArray" is null or doesn't have any elements
+        ** `nn.getCount(someArray[])` - returns the number of elements of an array
+        ** `nn.isNull(someObject)` - returns ture if the object "someObject" is null, otherwise it returns false
+
+
+=== TestScript rules
+
+    * The interpreter doesn't work recursive: commands inside commands will not work.
+    As said above, only one parameter can be accessed at a time. Some examples:
+    ** correct: `%PARAM dns_objective_resolver%`
+    ** correct: `%PARAM dns_result_entries[0] dns_result_priority%`
+    ** [red]#incorrect:# `%PARAM dns_objective_resolver dns_result_duration%`
+    ** [red]#incorrect:# `%PARAM dns_result_entries[0] dns_result_priority dns_result_ttl%`
+
+    * A command is only valid if it is a single line of code (no new-line characters allowed)
+
+    * If used as objective or expected result parameter (see <<database>>) the TestScript command must be the only one parameter. Examples:
+        ** correct:
+
+            {
+                "timeout": "%RANDOM 10000 20000%"
+            }
+
+        ** [red]#incorrect:#
+
+            {
+                "timeout": "%RANDOM 100 200%00"
+            }
+
+        ** correct:
+
+            {
+                "tcp_objective_in_port": "%PARAM tcp_objective_in_port%"
+            }
+
+        ** [red]#incorrect:#
+
+            {
+                "http_objective_target": "http://www.test.abc/item%RANDOM 10000 20000%.html"
+            }
+
+[[testcript-control-structures]]
+=== Control structures
+Control structures help to show or hide full text blocks. The syntax is a bit different than the sytax for commands: a `$` (dollar sign) has to be appended before the control type. All control structures are code blocks, which means they need a closing tag.
+The statements are parsed and run by a JavaScript interpreter.
+
+    %$CONTROL js_statement%
+    text
+    block
+    %$ENDCONTROL js_statement%
+
+IMPORTANT: It is important to provide the same statement in the opening as well as in the closing tag of each control structure. It has to be *exactly* the same in both tags otherwise it won't be recognized by the interpreter.
+
+Following control structures are supported:
+
+    * <<testscript-control-ifendif,IF-ENDIF>>
+
+[[testscript-control-ifendif]]
+==== Control structure: IF-ENDIF
+If the evaluated statement is true than the block inside the IF-ENDIF structure is displayed. Otherwise it is hidden.
+
+The syntax is as follows:
+
+    %$IF (js_statement)%
+    block
+    to
+    be
+    displayed
+    or
+    hidden
+    %$ENDIF (js_statement)%
+
+
+[[examples]]
+== Examples
+
+=== Workflow
+
+A typical workflow for generating a test is:
+
+[ditaa, "workflow"]
+....
+  Theoretical part
+
+        /--------------------------\
+        | cGRE                     |
+        | Create test scenario     |
+        |                          |
+        \-----------+--------------/
+                    |
+====================|====================
+  Practical part    |
+                    v
+        /--------------------------\
+        |                          |	+-----+
+        | Define test parameters   |    |cPNK |
+        |                          +--->|param|
+        |                          |    |{s}  |
+        |                          |	+-----+
+        \-----------+--------------/
+                    |
+                    |
+                    v
+        /--------------------------\
+        |                          |	+------+
+        | Define expected results  |    |cPNK  |
+        | (fail/success criteria)  +--->|result|
+        |                          |    |{s}   |
+        |                          |	+------+
+        \-----------+--------------/
+....
+
+
+=== DNS
+*Scenario*: A user wants to connect to a specific domain but mistypes the URL. The mistyped domain does not exist. There are DNS resolvers that return IP addresses for non existent domains (so called _"DNS hijacking"_ or _"DNS spoofing"_). This is not in conformity with net neutrality. The only correct response would be an empty result list (no addresses found), and a `NXDOMAIN` (non existent domain) status code.
+
+*Task*: Check if the user's ISP's DNS resolver is returning the status code `NXDOMAIN` if a domain does not exist.
+
+A short summary of the objectives and results would be:
+
+    * A random domain with a length of 16 (not including www. and .com)
+    * We will use the default timeout of 5 seconds
+    * The record we are looking for is A
+    * We will also use the standard resolver from our provider
+
+The equivalent database entry would be:
+
+[source,json]
+{
+    "host": "%RANDOMURL www. 10 .com%",
+    "record": "A"
+}
+
+
+The parameters `resolver` and `timeout` are not needed as the default values will suit this test scenario (timeout default value = 5000ms, resolver default value = provider's resolver).
+Now a short summary of the objectives (=expected results in this test scenario):
+
+    * If the response list has more than 0 (zero) entries and the test result info was `OK` the test failed (in case of `ERROR` or `TIMEOUT` the number of entries would be zero too, but this would not mean that this domain doesn't exist).
+    * A different approach (and an easier one) would be to compare the test result parameter dns_result_status which should hold a `NXDOMAIN` string. In this case the server knows that the test was executed successfully and the result is as expected.
+    * As an optional result the client could display a negative (=failure) message when the test timeout has been reached (`dns_result_info` = `TIMEOUT`)
+
+'''
+The database entry in the first case would be:
+
+[source,json]
+{
+    "operator":"eq",
+    "on_failure": "dns.unknowndomain.failure",
+    "on_success": "dns.unknowndomain.success",
+    "dns_result_entries_found": "0",
+    "dns_result_info": "OK"
+}
+
+`dns_result_entries_found` and `dns_result_info` are beeing compared to the values `0` and `OK`. The comparison uses an equals sign (`"operator": "eq"`). If both comparisons are true then the `on_success` string will be returned by the control server, else (that means that at least one condition is false) the `on_failure` string will be returned.
+
+'''
+The second case would produce the following entry:
+
+[source,json]
+{
+    "operator": "ne",
+    "on_failure": "dns.unknowndomain.failure",
+    "on_success": "dns.unknowndomain.success",
+    "dns_result_status": "NXDOMAIN"
+}
+
+We are comparing `dns_result_status` with `NXDOMAIN`. That's it.
+
+'''
+Optionally the client could display an error message if the timeout has been exceeded during the test. This would produce the following JSON:
+
+[source,json]
+{
+    "operator": "ne",
+    "on_failure": "test.timeout.exceeded",
+    "dns_result_info": "TIMEOUT"
+}
+
+As mentioned in 3.1.3 `on_success` not only means that the comparison was successful but it also signalizes the device to show this message in the "green list" (= test was successful). If this message should be displayed in the "red list" (= test failed) it's important to define a different condition. This is solved by using the `ne` (= not equals) operator:
+If `dns_result_info` does not hold the value: `TIMEOUT` (`dns_result_info` != `TIMEOUT`), `on_success` is beeing returned, otherwise `on_failure`. The other new thing in this example is the missing `on_success`. As also mentioned in 3.1.3 a result message can be omitted if the corresponding `on_success` or `on_failure` is missing. This means if the test did not run into a timeout nothing happens.
+
+'''
+The last step would be to put these conditions together. In this example the second option (because of its simplicity) and the timeout-condition are used. The entry in the database would be the following:
+
+[source,json]
+[
+    {
+        "operator": "eq",
+        "on_failure": "dns.unknowndomain.failure",
+        "on_success": "dns.unknowndomain.success",
+        "dns_result_status": "NXDOMAIN"
+    },
+    {
+        "operator": "ne",
+        "on_failure": "test.timeout.exceeded",
+        "dns_result_info": "TIMEOUT"
+    }
+]
+
+=== Other examples
+==== Non Transparent Proxy
+*Task*: check if a non transparent proxy can be found on the SMTP port 25 <<citation-3,[3]>>.
+
+To determine the presence of a non transparent proxy the client needs to send an erronous plain text request messsage on a standardised port to the test server. If a proxy is between the client and the server it could change or reject the request because it's not correct. A correct SMTP message would be <<citation-4,[4]>>:
+
+    EHLO mail.somedomain.tld
+
+An incorrect request message could be a malformed HTTP request <<citation-5,[5]>> for example:
+
+    GET / BADPRTCL/4.9
+
+The parameters for this tests are (field `param`):
+
+[source,json]
+{
+    "port": "25",
+    "request": "GET / BADPRTCL/4.9",
+    "timeout": "3000000000"
+}
+
+To evaluate the test the server's response needs to be checked, which should be the same as the request. This is because the test server does act as a echo service in the case of a non transparent proxy test.
+This would go into the `result` field:
+
+[source,json]
+[
+    {
+        "operator": "eq",
+        "on_failure": "ntp.failure",
+        "on_success": "ntp.success",
+        "nontransproxy_result_response": "%PARAM nontransproxy_objective_request%"
+    }
+]
+
+As mentioned in a previous section (see <<database-qos_test_objective-result>>) the `result` field is always an array, regardless of the number of evaluations. In this case there is only one. The evaluation is pretty simple: The value of `nontransproxy_result_response` is compared to `nontransproxy_objective_request` by using the `eq` (=equal) operator. To compare a variable to another variable's value the usage of `%PARAM %` (or `%EVAL %`) is inevitables (see <<testscript>>). Of course it is possible to replace this line of code with the following:
+
+[source,json]
+    "nontransproxy_result_response": "GET / BADPRTCL/4.9"
+
+The JSON above is only an example and its purpose is to show the possibilities of the QoS evaluation methods.
+
+So, if both values are the same the result is a success and the message with the key: `ntp.success` is beeing returned to the client. Otherwise the client will get a failure and the message with the key: `ntp.failure`.
+
+==== VoIP
+*Task*: check if the incoming or outgoing jitter is acceptable.
+
+[NOTE]
+What is an _acceptable jitter_ anyway?
+The acceptable jitter depends on the size of the jitter buffer which can compensate some asynchronous packet arrivals and change them to synchronous sequences. Most systems will do fine with a maximum jitter of 50ms. Maximum jitter values may be as high as
+one half of the buffer size. Jitter buffers can be configured and/or are dynamic. +
+As of ITU G.114 a delay (that includes packet transport delay and jitter) of 150ms is considered desirable. For inter-regional calls up to 250ms can be satisfactory <<citation-6,[6]>>. +
+Other sources provide a desirable delay value of 150ms and an acceptable delay of up to 400ms <<citation-7,[7]>>. +
+So a jitter buffer of 100ms is realistic, which results in an acceptable mean jitter of 50ms.
+
+To evaluate the jitter this test will use the mean incoming and outgoing jitter that is stored in: `voip_result_in_mean_jitter` and `voip_result_out_mean_jitter`.
+We need to make sure that the value is below 50ms (=50000000ns) so it can be treaten as an acceptable jitter. This example covers the `%EVAL %` TestScript function and demonstrates its usage.
+
+[TIP]
+Most results can contain a `NULL` value. This can occure if a test ran into a timeout or there was another error before the value could be determined. The best practice when comparing numbers is to check if the variable is not `NULL` by using the `nn.isNull(variable_name)` function inside the JS code.
+
+[source,json]
+[
+    {
+        "evaluate": "%EVAL if (!nn.isNull(voip_result_out_mean_jitter) && voip_result_out_mean_jitter <= 50000000) result=true; else result=false;%",
+        "on_failure": "voip.jitter.outgoing.failure",
+        "on_success": "voip.jitter.outgoing.success"
+    },
+    {
+        "evaluate": "%EVAL if (!nn.isNull(voip_result_in_mean_jitter) && voip_result_in_mean_jitter <= 50000000) result=true; else result=false;%", "on_failure": "voip.jitter.incoming.failure",
+        "on_success": "voip.jitter.incoming.success"
+    }
+]
+
+The JSON above tells the server to check if the mean jitter is below 50ms and not `NULL`. Only if both conditions are true the variable `result` is set to `true` else the value of `result` is `false`. Depending on these values a different message is beeing displayed for the incoming and outgoing jitter.
+
+== Normative and informative references
+
+[[citation-1]]
+* +++[1]+++
+Schulzrinne, H., Casner, S., Frederick, R. and V. Jacobson, "RTP:  A Transport Protocol for Real-Time Applications", https://www.ietf.org/rfc/rfc3550.txt[RFC 3550], July 2003.
+
+[[citation-2]]
+* +++[2]+++
+Schulzrinne, H. and S. Casner, "RTP Profile for Audio and Video Conferences with Minimal Control", https://www.ietf.org/rfc/rfc3551.txt[RFC 3551], July 2003.
+
+[[citation-3]]
+* +++[3]+++
+IANA, http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.txt["Service Name and Transport Protocol Port Number Registry"]
+
+[[citation-4]]
+* +++[4]+++
+Klensin, J., ed., "Simple Mail Transfer Protocol", https://www.ietf.org/rfc/rfc2821.txt[RFC 2821], April 2001.
+
+[[citation-5]]
+* +++[5]+++
+Fielding, R., ed. and J. Reschke, ed., "Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing", http://tools.ietf.org/html/rfc7230[RFC 7230], June 2014.
+
+[[citation-6]]
+* +++[6]+++
+ITU, "One-way transmission time", http://www.itu.int/rec/T-REC-G.114-200305-I/en[ITU G.114], March 2005
+
+[[citation-7]]
+* +++[7]+++
+CISCO, http://www.cisco.com/c/en/us/support/docs/voice/voice-quality/5125-delay-details.html["Understanding Delay in Packet Voice Networks"], February 2006
+
+[[citation-n1]]
+* Bray, T., ed., "The JavaScript Object Notation (JSON) Data Interchange Format", https://tools.ietf.org/html/rfc7159[RFC 7159], March 2014
+
+[[citation-n2]]
+* Mockapetris, P., "DOMAIN NAMES - IMPLEMENTATION AND SPECIFICATION", https://www.ietf.org/rfc/rfc1035.txt[RFC 1035], November 1987
+
+:sectnums!:
+[[aenderungshistorie]]
+== Changelog
+
+[options="header,autowidth"]
+|===
+|Version |Date |Comment
+
+|1.5.0 |2017-08-22 a|
+* Switching to couchDB
+|1.1.0 |2015-12-09 a|
+* Added control structures
+* Added single-line rule (TestScript)
+* Fixed typos
+|1.0.1 |2015-10-30 a|
+* Fixed typos and other small errors
+|1.0 |2015-03-20 a|
+* Initial version
+|===

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-08
+ *      \date Last update: 2019-05-10
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -65,19 +65,6 @@ int Ping::run()
 {	
 	//Syslog Message
 	TRC_INFO( ("Starting Ping Thread with PID: " + CTool::toString(syscall(SYS_gettid))).c_str() );
-	
-	#ifdef NNTOOL
-	//Get Hostname and make DNS Request
-	TRC_DEBUG( ("Resolving Hostname for Measurement: "+mServerName).c_str() );
-	if( CTool::validateIp(mClient) == 6)
-		mServer = CTool::getIpFromHostname( mServerName, 6 );
-	else
-		mServer = CTool::getIpFromHostname( mServerName, 4 );
-	
-	TRC_DEBUG( ("Resolved Hostname for Measurement: "+mServer).c_str() );
-	int pid = syscall(SYS_gettid);
-	::MEASUREMENT_DURATION = (int)mPingQuery * 1.5 * 1.1;
-	#endif
 
 	measurementTimeStart 	= 0;
 	measurementTimeEnd 		= 0;
@@ -103,18 +90,42 @@ int Ping::run()
 	
 	bool ipv6 = false;
 	bool ipv4 = false;
+
+	bool ipv6validated = false;
 	
 	vector<string> vResponse;
 	string delimiter = ",";
 
-	if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 )
+	#ifdef NNTOOL
+	TRC_DEBUG( ("Resolving Hostname for Measurement: "+mServerName).c_str() );
+	struct addrinfo *ips;
+	memset(&ips, 0, sizeof ips);
+
+	ips = CTool::getIpsFromHostname( mServerName, true );
+
+	char host[NI_MAXHOST];
+	
+	getnameinfo(ips->ai_addr, ips->ai_addrlen, host, sizeof host, NULL, 0, NI_NUMERICHOST);
+	mServer = string(host);
+	
+	::MEASUREMENT_DURATION = (int)mPingQuery * 1.5 * 1.1;
+
+	TRC_DEBUG( ("Resolved Hostname for Measurement: "+mServer).c_str() );
+	if (CTool::validateIp(mServer) == 6) ipv6validated = true; 
+	#endif
+
+	#ifndef NNTOOL
+	if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 ) ipv6validated = true;
+	#endif
+
+	if (ipv6validated)	
 	{
 		//Create a datagram/UDP socket
 		if( ( mSock = mSocket->udp6Socket(mClient) ) < 0 )
 		{
 			//Error
 			TRC_ERR("Creating socket failed - socket()");
-			return EXIT_FAILURE;
+			return -1;
 		}
 		
 		ipv6 = true;
@@ -127,7 +138,7 @@ int Ping::run()
 		{
 			//Error
 			TRC_ERR("Creating socket failed - socket()");
-			return EXIT_FAILURE;
+			return -1;
 		}
 		
 		ipv4 = true;
@@ -146,7 +157,7 @@ int Ping::run()
 	{
 		#ifdef NNTOOL
 		//Send signal, we are ready
-		syncing_threads[pid] = 1;
+		syncing_threads[syscall(SYS_gettid)] = 1;
 		#endif
 
 		//Zero Buffer

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-04-29
+ *      \date Last update: 2019-05-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -32,9 +32,9 @@ CHttp::~CHttp()
 
 //! \brief
 //!	Standard Constructor
-CHttp::CHttp( CConfigManager *pConfig, int nSocket )
+CHttp::CHttp( CConfigManager *pConfig, CConnection *nConnection )
 {
-	mSocket = nSocket;
+	mConnection = nConnection;
 	
 	mConfig = pConfig;
 	
@@ -48,10 +48,11 @@ CHttp::CHttp( CConfigManager *pConfig, int nSocket )
 
 //! \brief
 //!	Standard Constructor
-CHttp::CHttp( CConfigManager *pConfig, int nSocket, string sType)
+CHttp::CHttp( CConfigManager *pConfig, CConnection *nConnection, string sType)
 {
+	mConnection = nConnection;
+
 	mConfig = pConfig;
-	mSocket = nSocket;
 	mType = sType;	
 		
 	mHttpRequestTime = 0;
@@ -87,7 +88,7 @@ int CHttp::parseResponse()
 	bzero(rbuffer, MAXBUFFER);
 	
 	//get data from socket
-	recv_len = recv( mSocket, rbuffer, MAXBUFFER, 0 );
+	recv_len = mConnection->receive(rbuffer, MAXBUFFER, 0);
 	
 	buffer = string(rbuffer);
 	
@@ -198,7 +199,8 @@ int CHttp::responseForbidden()
 	//send_init +="\0";	
 				
 	//String to Server
-	int send_len = send( mSocket , send_init.c_str(), send_init.size(), 0 );
+	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
+
 	
 	if(DEBUG)
 	{
@@ -229,7 +231,7 @@ int CHttp::responseNotFound()
 	//send_init +="\0";
 	
 	//String to Server
-	int send_len = send( mSocket , send_init.c_str(), send_init.size(), 0 );
+	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
 	
 	if(DEBUG)
 	{
@@ -291,7 +293,7 @@ int CHttp::responseOk()
 	}
 				
 	//String to Server
-	int send_len = send( mSocket , send_init.c_str(), send_init.size(), 0 );
+	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
 	
 	if(DEBUG)
 	{
@@ -308,13 +310,13 @@ int CHttp::responseOk()
 int CHttp::requestToReferenceServer()
 {
 	string send_init = "";
-	send_init += ""+mType+" /data.img HTTP/1.1\r\n";
-	send_init += "Host: "+mHostname+"\r\n";
-	send_init += "Cookie: tk="+ mAuthenticationToken + "; ts=" + mAuthenticationTimestamp + "\r\n";
+	send_init += "" + mType + " /data.img HTTP/1.1\r\n";
+	send_init += "Host: " + mHostname + "\r\n";
+	send_init += "Cookie: tk=" + mAuthenticationToken + "; ts=" + mAuthenticationTimestamp + "\r\n";
 	send_init += "Connection: keep-alive\r\n\r\n";
 		
 	//String to Server
-	int send_len = send(mSocket , send_init.c_str(), send_init.size(), 0);
+	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
 	
 	if(DEBUG)
 	{

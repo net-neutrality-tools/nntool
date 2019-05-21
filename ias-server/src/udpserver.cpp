@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-06
+ *      \date Last update: 2019-05-17
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
  
@@ -75,13 +75,27 @@ int CUdpListener::run()
 	struct ip6_hdr *iphv6;
 	struct udphdr *udp;
 	
-	//Create a datagram/UDP socket
-	if( ( mSendSocket = mSocket->udp6SocketServer(mPort) ) < 0 )
+	//if no ip bindings are configured, bind on ::
+	if (::CONFIG["ip_bindings"]["v4"].string_value().compare("") == 0 && ::CONFIG["ip_bindings"]["v6"].string_value().compare("") == 0)
 	{
-		//Error
-		TRC_CRIT("Socket creation failed - Could not establish connection on Port: " + to_string(mPort));
-		return EXIT_FAILURE;
+		if( ( mUdp6SendSocket = mSocket->udp6SocketServer(mPort) < 0 ) )
+		{
+			TRC_CRIT("Socket creation failed - Could not establish connection on Port: " + to_string(mPort));
+		}
+	} 
+	else
+	{
+		if( ::CONFIG["ip_bindings"]["v4"].string_value().compare("") != 0 && ( mUdp4SendSocket = mSocket->udpSocketServer(mPort, ::CONFIG["ip_bindings"]["v4"].string_value()) ) < 0 )
+		{
+			TRC_CRIT("Socket creation failed - Could not establish connection on Port: " + to_string(mPort));
+		}
+
+		if( ::CONFIG["ip_bindings"]["v6"].string_value().compare("") != 0 && ( mUdp6SendSocket = mSocket->udp6SocketServer(mPort, ::CONFIG["ip_bindings"]["v6"].string_value()) ) < 0 )
+		{
+			TRC_CRIT("Socket creation failed - Could not establish connection on Port: " + to_string(mPort));
+		}
 	}
+	
 	
 	//Create a RAW socket
 	if( ( mRecvSocket = mSocket->rawSocketEth() ) < 0 )
@@ -91,7 +105,7 @@ int CUdpListener::run()
 		return EXIT_FAILURE;
 	}
         
-        TRC_INFO("Start Thread: UDP Listener on Port: " + to_string(mPort) + " with PID: " + std::to_string(syscall(SYS_gettid)));
+    TRC_INFO("Start Thread: UDP Listener on Port: " + to_string(mPort) + " with PID: " + std::to_string(syscall(SYS_gettid)));
    
 	
 	//While Loop for listening
@@ -172,7 +186,7 @@ int CUdpListener::run()
 			clientv4.sin_port 	= htons(nUdpSrcPort);
 			
 			// send the sResponse to the client
-			nResponse = sendto(mSendSocket, sResponse.c_str(), sResponse.size(), 0, (struct sockaddr *)&clientv4, sizeof(clientv4));
+			nResponse = sendto(mUdp4SendSocket, sResponse.c_str(), sResponse.size(), 0, (struct sockaddr *)&clientv4, sizeof(clientv4));
 		}
 		if( eth_proto == 0x86dd )
 		{
@@ -182,7 +196,7 @@ int CUdpListener::run()
 			clientv6.sin6_port 	= htons(nUdpSrcPort);
 			
 			// send the sResponse to the client
-			nResponse = sendto(mSendSocket, sResponse.c_str(), sResponse.size(), 0, (struct sockaddr *)&clientv6, sizeof(clientv6));
+			nResponse = sendto(mUdp6SendSocket, sResponse.c_str(), sResponse.size(), 0, (struct sockaddr *)&clientv6, sizeof(clientv6));
 		}
 		
 		//on Error
@@ -194,7 +208,8 @@ int CUdpListener::run()
         TRC_INFO("Socket: udpListener: Connection Shutdown for Client IP: " +CTool::toString(ip_saddr) + " on Port: " + CTool::toString(nUdpSrcPort));
     }
 
-    close(mSendSocket);
+    close(mUdp4SendSocket);
+    close(mUdp6SendSocket);
     close(mRecvSocket);
 
     TRC_DEBUG("End Thread: UDP Listener with PID: " + std::to_string(syscall(SYS_gettid)));

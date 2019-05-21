@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-04-28
+ *      \date Last update: 2019-05-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -29,7 +29,7 @@
 class CUploadSender : public CBasisThread
 {	
 	private:
-		int mSocket;
+		CConnection *mConnection;
 		int mResponse;
 		
 		unsigned long long nPointer;
@@ -42,7 +42,7 @@ class CUploadSender : public CBasisThread
 		//! Standard Destructor
 		virtual ~CUploadSender();
 		
-		CUploadSender(int nSocket);
+		CUploadSender(CConnection *nConnection);
 		
 		int run();
 };
