@@ -21,23 +21,4 @@ For the UDP port blocking module, a specified set of ports is tested against a d
 Open *index.html* from *build/{plain|uglfied}/web/* in a Browser of your choice and choose a test case. The browser developer console should only be used for debugging purposes, as an active developer console can cause performance issues.
 
 To perform rtt, download, or upload measurements, the *ias-server* module has to be deployed on the measurement peer.
-To perform port blocking measurements, the *coturn TURN server (https://github.com/coturn/coturn)* has to be deployed on the measurement peer.
-
-*coturn TURN server* can be installed via *apt install coturn* on debian-based systems. The current version 4.5.0.7 was verified for port blocking measurements.
-*coturn TURN server* can be executed with the following bash-script:
-
-```
-#!/bin/bash
-
-credentials=berec:berec
-realmname=berec
-
-ports=(123 500 4500 5060)
-
-for port in "${ports[@]}"
-do
-    turnserver -n -v -o --no-dtls --no-tls -u $credentials -r $realmname -p $port [-L <first-ip-address> -L <second-ip-address> ...]
-done
-```
-
-Please note, that the stated credentials and realmname must match the configured values in the ias-module.
+To perform port blocking measurements, the *coturn TURN server (https://github.com/coturn/coturn)* has to be deployed on the measurement peer (for detailed instructions on how to setup the *coturn TURN server* reference the documentation in the `docs/build_instructions/servers.adoc` file).
