@@ -4,7 +4,7 @@
 
 == General
 
-All servers can be built using the ./gradlew build command.
+All general servers can be built using the ./gradlew build command.
 The config/application-dev.yml and config/application-prod.yml files of the servers allow binding them to a desired port (the server.port setting).
 
 === CouchDB setup
@@ -18,8 +18,18 @@ Note: While not tested, setting up the docker contained CouchDB under Windows sh
 The file `default_couchDB_data.json` contains the necessary data to fill the couchDB with default data. This needs an already existing `settings` database to fill with default configurations 
 (Note that the databases will be constructed on the first startup of a server which needs the settings database, e.g. the controller service).
 The `default_couchDB_data.json` file contains the body of a bulk update request to the couchDB, which adds the specific files to the database.
-Using a tool, like e.g. CURL or Postman, a POST request to the location of the couchDB to the `/settings/_bulk_docs` path (e.g. `http://localhost:5984/settings/_bulk_docs`)
-adds all provided documents to the couchDB. The `default_couchDB_data.json` file can be used as is as the body of said POST request to the couchDB. 
+Using a tool, like e.g. CURL or Postman, a POST request to the location of the couchDB to the `/settings/_bulk_docs` path (e.g. `http://localhost:5984/settings/_bulk_docs`) 
+adds all provided documents to the couchDB. 
+The `default_couchDB_data.json` file can be used as is as the body of said POST request to the couchDB. 
+An exemplary curl command to be executed from the `docs\build_instructions` folder, if the couchdb is setup on localhost:5984 and the settings database has already been constructed (either manually or by starting the controller): 
+
+```
+curl -X POST \
+    http://localhost:5984/settings/_bulk_docs \
+  -H 'Content-Type: application/json' \
+  -H 'cache-control: no-cache' \
+  -d @default_couchDB_data.json
+```
 
 ==== CouchDB server integration
 
@@ -33,20 +43,45 @@ The export data service extracts the measurement data from a PostgreSQL for perf
 
 Servers that need a PostgreSQL to work have a corresponding setting in their `src/main/resources/config/application-dev.yml` and `src/main/resources/config/application-prod.yml`.  Under datasource.url the path to the  used PostgreSQL needs be entered (e.g. http://localhost:5432/db).
 
-== Controller
+=== Controller
 
 The controller uses both the measurement and the settings database. The settings database needs be setup correctly in order to build a running system. Default settings for the different aspects of the system are in the file: `default_couchDB_data` (see the general instructions for details). It can be added into the CouchDB's settings database, to make creating a working configuration easier.
 
 Note that the settings file to be used by the controller is set in the controller-services config.yml (under controller.settings_uuid).  If a settings file with a different uuid should be used by the controller, this setting needs to be updated (the current default setting matches the uuid from `default_base_settings`).
 
-== Result service
+=== Result service
 
 The result service uses both the measurement and the settings database. It needs the settings from the file: `default_couchDB_data` (see the general instructions for details).
 
-== Collector
+=== Collector
 
 The collector needs no specific setup, apart from the general CouchDB setup.
 
-== Export
+=== Export
 
 The open data export service needs a functioning PostgreSQL database to work. The configuration which fields are exported is located in the config/application.yml under data-export.fields. In the `docs/project_management/milestones/1/deliverables/secondary_db_postgresql_schema.sql` file, sql statements to create the PostgreSQL database are given. After executing these statements, debug data for testing is available in the `default_postgresql_data.sql` file, which contains a few insert statements to test the PostgreSQL database with.
+
+== Additional servers
+
+=== Coturn TURN server
+
+To perform port blocking measurements, the *coturn TURN server (https://github.com/coturn/coturn)* has to be deployed on the measurement peer.
+
+The *coturn TURN server* can be installed via *apt install coturn* on debian-based systems. The current version 4.5.0.7 was verified for port blocking measurements.
+*coturn TURN server* can be executed with the following bash-script:
+
+```
+#!/bin/bash
+
+credentials=berec:berec
+realmname=berec
+
+ports=(123 500 4500 5060)
+
+for port in "${ports[@]}"
+do
+    turnserver -n -v -o --no-dtls --no-tls -u $credentials -r $realmname -p $port [-L <first-ip-address> -L <second-ip-address> ...]
+done
+```
+
+Please note, that the stated credentials and realmname must match the configured values in the ias-module.
