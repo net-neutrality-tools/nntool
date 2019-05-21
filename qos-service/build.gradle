@@ -1,5 +1,15 @@
 apply from: "${project.rootDir}/gradle/java8.gradle"
 
+apply plugin: 'com.google.cloud.tools.jib'
+
+jib {
+  to.image = "nntool.eu/${project.name}:${version}"
+  to.tags = ['latest']
+  container {
+    ports = ['20-10000', '20-10000/udp']
+  }
+}
+
 dependencies {
     implementation project(path: ':nettest-shared', configuration: 'default')
 
@@ -24,11 +34,10 @@ jar {
     }
 }
 
-
 test {
     //println "\n\nPATH: ${classpath.find { it.name.contains("jmockit") }.absolutePath}\n\n"
     jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
-    
+
     /*testLogging {
         showStandardStreams = true
     }*/

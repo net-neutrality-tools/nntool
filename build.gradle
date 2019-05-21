@@ -17,6 +17,7 @@ buildscript {
         classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: spring_boot_version
 
         classpath 'com.bmuschko:gradle-clover-plugin:2.2.1'
+        classpath 'gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.2.0'
     }
 }
 
