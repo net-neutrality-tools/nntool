@@ -253,4 +253,22 @@ public class CellSignalStrengthWrapper {
 	public void setTimingAdvance(Integer timingAdvance) {
 		this.timingAdvance = timingAdvance;
 	}
+
+	@Override
+	public String toString() {
+		return "CellSignalStrengthWrapper{" +
+				"timeStampMillis=" + timeStampMillis +
+				", timeStampNano=" + timeStampNano +
+				", networkId=" + networkId +
+				", signalStrength=" + signalStrength +
+				", gsmBitErrorRate=" + gsmBitErrorRate +
+				", wifiLinkSpeed=" + wifiLinkSpeed +
+				", wifiRssi=" + wifiRssi +
+				", lteRsrp=" + lteRsrp +
+				", lteRsrq=" + lteRsrq +
+				", lteRssnr=" + lteRssnr +
+				", lteCqi=" + lteCqi +
+				", timingAdvance=" + timingAdvance +
+				'}';
+	}
 }

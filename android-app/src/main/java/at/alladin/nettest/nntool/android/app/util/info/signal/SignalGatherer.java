@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.CellInfo;
+import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
@@ -17,8 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import at.alladin.nettest.nntool.android.app.support.telephony.CellInfoWrapper;
 import at.alladin.nettest.nntool.android.app.support.telephony.CellSignalStrengthWrapper;
 import at.alladin.nettest.nntool.android.app.support.telephony.SignalItem;
+import at.alladin.nettest.nntool.android.app.util.PermissionUtil;
 import at.alladin.nettest.nntool.android.app.util.info.Gatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkTypeAware;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
@@ -50,6 +53,13 @@ public class SignalGatherer extends Gatherer<SignalStrengthChangeEvent> {
 
         int events = PhoneStateListener.LISTEN_SIGNAL_STRENGTHS;
         getTelephonyManager().listen(telephonyStateListener, events);
+
+        try {
+            CellLocation.requestLocationUpdate();
+        }
+        catch (final Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -106,12 +116,21 @@ public class SignalGatherer extends Gatherer<SignalStrengthChangeEvent> {
 
         @Override
         public void onCellInfoChanged(List<CellInfo> cellInfoList) {
+            System.out.println("------- onCellInfoChanged ---------");
+
             if (cellInfoList == null) {
                 return;
             }
 
             for (final CellInfo cellInfo : cellInfoList) {
+                if (cellInfo.isRegistered()) {
+                    setCurrentValue(
+                            new SignalStrengthChangeEvent(
+                                    CurrentSignalStrength.fromCellInfoWrapper(CellInfoWrapper.fromCellInfo(cellInfo))));
 
+                    setLastSignalItem(CellSignalStrengthWrapper.fromCellInfo(cellInfo));
+                    break;
+                }
             }
         }
 
@@ -119,7 +138,7 @@ public class SignalGatherer extends Gatherer<SignalStrengthChangeEvent> {
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
 
             if (signalStrength != null) {
-                Log.d(TAG, signalStrength.toString());
+                Log.d(TAG, "Got new signalStrength: " + signalStrength.toString());
             }
 
             final int network = getNetwork();
@@ -220,7 +239,14 @@ public class SignalGatherer extends Gatherer<SignalStrengthChangeEvent> {
                 final SignalItem signalItem = SignalItem.getCellSignalItem(network, strength, errorRate, lteRsrp, lteRsrq, lteRsssnr, lteCqi);
                 final CellSignalStrengthWrapper signalStrengthWrapper = CellSignalStrengthWrapper.fromSignalItem(signalItem);
                 signalStrengthWrapper.setNetworkId(network);
-                lastSignalItem.set(signalStrengthWrapper);
+                setLastSignalItem(signalStrengthWrapper);
+
+                if (PermissionUtil.isLocationPermissionGranted(getInformationProvider().getContext())) {
+                    onCellInfoChanged(getTelephonyManager().getAllCellInfo());
+                }
+                else {
+                    Log.w(TAG, "Location permission not granted. Cannot read cell location info.");
+                }
 
                 //System.out.println(getTelephonyManager().getAllCellInfo().get(0));
             }
@@ -233,6 +259,11 @@ public class SignalGatherer extends Gatherer<SignalStrengthChangeEvent> {
                 listener.onSignalStrengthChange(event);
             }
         }
+    }
+
+    public void setLastSignalItem(final CellSignalStrengthWrapper signalItem) {
+        lastSignalItem.set(signalItem);
+        Log.d(TAG, "New signal item: " + lastSignalItem.get());
     }
 
     @Override

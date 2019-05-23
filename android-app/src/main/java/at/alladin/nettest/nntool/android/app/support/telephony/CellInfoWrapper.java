@@ -21,10 +21,10 @@ public class CellInfoWrapper {
         this.cellSignalStrengthWrapper = cellSignalStrengthWrapper;
     }
 
-    public static CellInfoWrapper fromCellInfo(final CellInfo cellInfo, final int networkId) {
+    public static CellInfoWrapper fromCellInfo(final CellInfo cellInfo) {
         final CellInfoWrapper wrapper = new CellInfoWrapper(CellIdentityWrapper.fromCellInfo(cellInfo),
                 CellSignalStrengthWrapper.fromCellInfo(cellInfo));
-        wrapper.getCellSignalStrengthWrapper().setNetworkId(networkId);
+        //wrapper.getCellSignalStrengthWrapper().setNetworkId(networkId);
         return wrapper;
     }
 
