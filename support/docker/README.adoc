@@ -1,0 +1,37 @@
+== docker-compose development scripts for nntool
+
+== Using docker-compose
+Useful commands:
+
+- docker-compose build - Build custom Docker images listed with `build:` in docker-compose.yml
+- docker-compose ps - List running containers
+- docker-compose up - Start Docker containers
+- docker-compose down - Stop/Destroy Docker containers
+
+=== nntool dev environment
+
+In the Git root directory run `./gradlew jibDockerBuild -Dskip-android` to create Docker images.
+Then run the following commands to start docker-compose:
+
+  cd support/docker
+  docker-compose build
+  docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+(docker-compose ... -d = detach)
+
+Currently, it is necessary to run `./scripts/init.couchdb` after the first `docker-compose up` to insert the necessary configuration.
+
+https://docs.docker.com/compose/extends/#multiple-compose-files
+
+=== Running parts of the docker-compose file
+
+It is possible to specify a subset of containers after the `up` statement.
+The following command starts the controller-service, collector-service and the couchdb container (because controller-service and/or collector-service depend on couchdb):
+
+  docker-compose -f docker-compose.yml -f docker-compose.dev.yml up controller-service collector-service
+
+== Configuration
+
+The configuration for the dev environment can be found inside `config/dev` directory.
+For most of the containers (except for qos-service) the configuration directory of the application will be mapped as volume into the correct path.
+If changes were made to one of the configuration files, a restart of the specific container or the whole docker-compose is necessary.

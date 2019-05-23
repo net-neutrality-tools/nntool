@@ -1,0 +1,279 @@
+{
+    "docs": [
+        {
+            "docType": "QoSMeasurementObjective",
+            "objective_id": 200,
+            "enabled": true,
+            "type": "TCP",
+            "concurrency_group": 200,
+            "measurement_server_uuid": "mServer",
+            "translation_keys": {
+                "summary": "TCP_summary",
+                "description": "TCP_description"
+            },
+            "parameters": {
+                "out_port": "25542"
+            },
+            "evaluations": [
+                {
+                    "operator": "eq",
+                    "on_failure": "tcp.failure",
+                    "tcp_result_out": "OK",
+                    "on_success": "tcp.success"
+                }
+            ]
+        },
+        {
+            "docType": "QoSMeasurementObjective",
+            "objective_id": 201,
+            "enabled": true,
+            "type": "TCP",
+            "concurrency_group": 200,
+            "measurement_server_uuid": "mServer",
+            "translation_keys": {
+                "summary": "TCP_summary",
+                "description": "TCP_description"
+            },
+            "parameters": {
+                "out_port": "25545"
+            },
+            "evaluations": [
+                {
+                    "operator": "eq",
+                    "on_failure": "tcp.failure",
+                    "tcp_result_out": "OK",
+                    "on_success": "tcp.success"
+                }
+            ]
+        },
+        {
+            "docType": "QoSMeasurementObjective",
+            "objective_id": 250,
+            "enabled": true,
+            "type": "UDP",
+            "concurrency_group": 201,
+            "measurement_server_uuid": "mServer",
+            "translation_keys": {
+                "summary": "UDP_summary",
+                "description": "UDP_description"
+            },
+            "parameters": {
+                "out_port": "25004",
+                "out_num_packets": "1"
+            },
+            "evaluations": [
+                {
+                    "operator": "eq",
+                    "on_failure": "udp.failure",
+                    "udp_result_out_num_packets": "1",
+                    "on_success": "udp.success"
+                }
+            ]
+        },
+        {
+            "docType": "QoSMeasurementObjective",
+            "objective_id": 251,
+            "enabled": true,
+            "type": "UDP",
+            "concurrency_group": 201,
+            "measurement_server_uuid": "mServer",
+            "translation_keys": {
+                "summary": "UDP_summary",
+                "description": "UDP_description"
+            },
+            "parameters": {
+                "out_port": "25005",
+                "out_num_packets": "1"
+            },
+            "evaluations": [
+                {
+                    "operator": "eq",
+                    "on_failure": "udp.failure",
+                    "udp_result_out_num_packets": "1",
+                    "on_success": "udp.success"
+                }
+            ]
+        },
+        {
+            "docType": "QoSMeasurementObjective",
+            "objective_id": 301,
+            "enabled": true,
+            "type": "ECHO_PROTOCOL",
+            "concurrency_group": 301,
+            "measurement_server_uuid": "mServer",
+            "translation_keys": {
+                "summary": "ECHO_PROTOCOL_summary",
+                "description": "ECHO_PROTOCOL_description"
+            },
+            "parameters": {
+                "echo_protocol_objective_protocol": "udp",
+                "echo_protocol_objective_payload": "UPD payload",
+                "server_addr": "127.0.0.1",
+                "server_port": "20007"
+            },
+            "evaluations": [
+                {
+                    "operator": "eq",
+                    "on_failure": "echo_protocol.failure",
+                    "echo_protocl_result": "OK",
+                    "on_success": "echo_protocol.success"
+                }
+            ]
+        },
+        {
+            "docType": "QoSMeasurementObjective",
+            "objective_id": 302,
+            "enabled": true,
+            "type": "ECHO_PROTOCOL",
+            "concurrency_group": 302,
+            "measurement_server_uuid": "mServer",
+            "translation_keys": {
+                "summary": "ECHO_PROTOCOL_summary",
+                "description": "ECHO_PROTOCOL_description"
+            },
+            "parameters": {
+                "echo_protocol_objective_protocol": "tcp",
+                "echo_protocol_objective_payload": "TCP payload",
+                "server_addr": "127.0.0.1",
+                "server_port": "20007"
+            },
+            "evaluations": [
+                {
+                    "operator": "eq",
+                    "on_failure": "echo_protocol.failure",
+                    "echo_protocl_result": "OK",
+                    "on_success": "echo_protocol.success"
+                }
+            ]
+        },
+        {
+            "docType": "Settings",
+            "uuid": "4e7567ef-175b-44f4-8436-8fd6d22dab48",
+            "urls": {
+                "controller_service": "http://localhost:18080/api/v1",
+                "controller_service_ipv4": "ipv4",
+                "controller_service_ipv6": "ipv6",
+                "collector_service": "http://localhost:18081/api/v1"
+            },
+            "measurements": {
+                "SPEED": {
+                    "upload": [
+                        {
+                            "default": true,
+                            "streams": 4,
+                            "frameSize": 2048,
+                            "framesPerCall": 1,
+                            "bounds": {
+                                "upper": 0.01,
+                                "lower": 1.05
+                            }
+                        },
+                        {
+                            "streams": 4,
+                            "frameSize": 65535,
+                            "framesPerCall": 1,
+                            "bounds": {
+                                "upper": 0.95,
+                                "lower": 525
+                            }
+                        },
+                        {
+                            "streams": 4,
+                            "frameSize": 65535,
+                            "framesPerCall": 4,
+                            "bounds": {
+                                "upper": 475,
+                                "lower": 1050
+                            }
+                        },
+                        {
+                            "streams": 8,
+                            "frameSize": 65535,
+                            "framesPerCall": 20,
+                            "bounds": {
+                                "upper": 950,
+                                "lower": 9000
+                            }
+                        }
+                    ],
+                    "download": [
+                        {
+                            "default": true,
+                            "streams": 4,
+                            "frameSize": 2048,
+                            "bounds": {
+                                "upper": 0.01,
+                                "lower": 1.05
+                            }
+                        },
+                        {
+                            "streams": 4,
+                            "frameSize": 32768,
+                            "bounds": {
+                                "upper": 0.95,
+                                "lower": 525
+                            }
+                        },
+                        {
+                            "streams": 4,
+                            "frameSize": 524288,
+                            "bounds": {
+                                "upper": 475,
+                                "lower": 1050
+                            }
+                        },
+                        {
+                            "streams": 8,
+                            "frameSize": 524288,
+                            "bounds": {
+                                "upper": 950,
+                                "lower": 9000
+                            }
+                        }
+                    ]
+                },
+                "QOS": {
+                    "qos_server_uuid": "qos_server"
+                }
+            },
+            "speedtest_detail_groups": [
+                {
+                    "key": "group1",
+                    "icon": "a",
+                    "values": [
+                        {
+                            "key": "openDataUuid",
+                            "translation_key": "translate_uuid"
+                        },
+                        {
+                            "key": "submitTime",
+                            "translation_key": "translate_time"
+                        }
+                    ]
+                },
+                {
+                    "key": "group2",
+                    "icon": "b",
+                    "values": [
+                        {
+                            "key": "deviceInfo.osInfo.name",
+                            "translation_key": "translate_osName"
+                        },
+                        {
+                            "key": "agentInfo.timezone",
+                            "translation_key": "translate_timezone"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "docType": "MeasurementServer",
+            "uuid": "qos_server",
+            "type": "QOS",
+            "name": "qos_server",
+            "port": "5235",
+            "address_ipv4": "127.0.0.1"
+        }
+    ]
+}

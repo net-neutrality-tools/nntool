@@ -1,0 +1,63 @@
+version: '3'
+
+volumes:
+  data-couchdb:
+    driver: local
+  data-postgresql:
+    driver: local
+  #data-elasticsearch:
+  #  driver: local
+
+services:
+  couchdb:
+    ports:
+      - "15984:5984"
+
+  postgresqldb:
+    ports:
+      - "15432:5432"
+
+  #elasticsearch:
+  #  ports:
+  #    - "19200:9200"
+  #    - "19300:9300"
+
+  controller-service:
+    volumes:
+      - ./config/dev/controller-service:/etc/nettest/controller-service:ro
+    ports:
+      - "18080:8080"
+
+  collector-service:
+    volumes:
+      - ./config/dev/collector-service:/etc/nettest/collector-service:ro
+    ports:
+      - "18081:8081"
+
+  result-service:
+    volumes:
+      - ./config/dev/result-service:/etc/nettest/result-service:ro
+    ports:
+      - "18082:8082"
+
+  ias-server:
+    ports:
+      - "20080:80"
+      - "28080:8080"
+      - "20443:443"
+
+  echo-protocol-server:
+    ports:
+      - "20007:7"
+      - "20007:7/udp"
+
+  qos-service:
+    volumes:
+      #- ./config/dev/qos-service:/etc/nettest/qos-service:ro
+      - ./config/dev/qos-service/config.properties:/config.properties:ro
+    ports:
+      - "15235:5235"
+      - "25542:5542"
+      - "25545:5545"
+      - "25004:5004/udp"
+      - "25005:5005/udp"
