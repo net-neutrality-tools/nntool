@@ -1,0 +1,24 @@
+spring:
+  profiles:
+    active: dev
+  
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: false
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    platform: postgres
+    url: jdbc:postgresql://postgresqldb:5432/nntool
+    username: nntool
+    password: nntool
+
+server:
+  port: 8084
+  
+logging:
+  level:
+    ROOT: INFO
+    at.alladin.nettest: DEBUG
+    org.springframework.cache: TRACE

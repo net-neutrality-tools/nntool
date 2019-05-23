@@ -1,0 +1,79 @@
+version: '3'
+
+volumes:
+  data-couchdb:
+    driver: local
+  data-postgresql:
+    driver: local
+  #data-elasticsearch:
+  #  driver: local
+
+services:
+  couchdb:
+    ports:
+      - "15984:5984"
+
+  postgresqldb:
+    ports:
+      - "15432:5432"
+
+  #elasticsearch:
+  #  ports:
+  #    - "19200:9200"
+  #    - "19300:9300"
+
+  controller-service:
+    volumes:
+      - ./config/dev/controller-service:/etc/nettest/controller-service:ro
+    ports:
+      - "18080:8080"
+
+  collector-service:
+    volumes:
+      - ./config/dev/collector-service:/etc/nettest/collector-service:ro
+    ports:
+      #- "18081:8081" # if started via java -jar
+      - "18081:8080" # if started via servlet container (e.g. jetty)
+
+  result-service:
+    volumes:
+      - ./config/dev/result-service:/etc/nettest/result-service:ro
+    ports:
+      #- "18082:8082"
+      - "18082:8080"
+
+  #search-service:
+  #  volumes:
+  #    - ./config/dev/search-service:/etc/nettest/search-service:ro
+  #  ports:
+  #    #- "18083:8083"
+  #    - "18083:8080"
+
+  statistic-service:
+    volumes:
+      - ./config/dev/statistic-service:/etc/nettest/statistic-service:ro
+    ports:
+      #- "18084:8084"
+      - "18084:8080"
+
+  ias-server:
+    ports:
+      - "20080:80"
+      - "28080:8080"
+      - "20443:443"
+
+  echo-protocol-server:
+    ports:
+      - "20007:7"
+      - "20007:7/udp"
+
+  qos-service:
+    volumes:
+      #- ./config/dev/qos-service:/etc/nettest/qos-service:ro
+      - ./config/dev/qos-service/config.properties:/config.properties:ro
+    ports:
+      - "15235:5235"
+      - "25542:5542"
+      - "25545:5545"
+      - "25004:5004/udp"
+      - "25005:5005/udp"

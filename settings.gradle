@@ -53,15 +53,20 @@ if (System.getProperty('skip-android') != null) {
  	skipAndroid = true
 }
 
+gradle.ext.skipAndroid = skipAndroid
+gradle.ext.includeJibGradlePlugin = skipAndroid
+
 if (skipAndroid) {
 	println '*) Skipping Android projects because: ' + skipMsg
+  println '*) Including jib-gradle-plugin'
 } else {
 	println '*) Including Android apps'
 
-	include 'android-demo'
 	include 'android-common'
 	include 'android-speed'
-    include 'android-app'
-
 	include 'qos-client-android'
+	
+  include 'android-demo'
+  include 'android-app'
 }
+

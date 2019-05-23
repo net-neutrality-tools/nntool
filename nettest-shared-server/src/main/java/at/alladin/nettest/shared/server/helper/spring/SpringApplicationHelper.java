@@ -84,7 +84,7 @@ public final class SpringApplicationHelper {
 	private static String[] getProperties(String configDirectoryName) {
 		return new String[] {
 			//"spring.config.location=file:" + NettestConstants.EXTERNAL_CONFIG_LOCATION + "/" + configDirectoryName // overrides internal config location
-			"spring.config.additional-location=file:" + NettestConstants.EXTERNAL_CONFIG_LOCATION + "/" + configDirectoryName
+			"spring.config.additional-location=file:" + NettestConstants.EXTERNAL_CONFIG_LOCATION + "/" + configDirectoryName + "/" // trailing slash is important!
 		};
 	}
 	

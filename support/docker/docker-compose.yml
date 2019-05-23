@@ -1,0 +1,93 @@
+version: '3'
+
+# See https://docs.docker.com/compose/startup-order/ for documentation on startup problems
+
+# TODO: add measurement and qos servers to couchdb!
+
+volumes:
+  data-couchdb:
+  data-postgresql:
+  #data-elasticsearch:
+
+services:
+  couchdb:
+    image: couchdb:2
+    volumes:
+      - data-couchdb:/opt/couchdb/data
+    restart: on-failure
+
+  postgresqldb:
+    image: nntool.eu/postgresql-postgis-quantile:latest
+    build: ./nntool/postgresql_postgis_quantile
+    volumes:
+      - data-postgresql:/var/lib/postgresql/data
+    restart: on-failure
+
+  #elasticsearch:
+  #  image: elasticsearch:7.1.0
+  #  volumes:
+  #    - data-elasticsearch:/usr/share/elasticsearch/data
+  #  restart: on-failure
+
+  controller-service:
+    #image: nntool.eu/controller-service:1.0
+    image: nntool.eu/controller-service:latest
+    depends_on:
+      - couchdb
+    links:
+      - couchdb
+    restart: on-failure
+
+  collector-service:
+    #image: nntool.eu/collector-service:1.0
+    image: nntool.eu/collector-service:latest
+    depends_on:
+      - couchdb
+    links:
+      - couchdb
+    restart: on-failure
+
+  result-service:
+    #image: nntool.eu/result-service:1.0
+    image: nntool.eu/result-service:latest
+    depends_on:
+      - couchdb
+    links:
+      - couchdb
+    restart: on-failure
+
+#  search-service:
+#    #image: nntool.eu/search-service:1.0
+#    image: nntool.eu/search-service:latest
+#    depends_on:
+#      - elasticsearch
+#    links:
+#      - elasticsearch
+#    restart: on-failure
+
+  statistic-service:
+    #image: nntool.eu/statistic-service:1.0
+    image: nntool.eu/statistic-service:latest
+    depends_on:
+      - postgresqldb # TODO: watch timing, we may need wait-for-it.sh
+    links:
+      - postgresqldb
+    restart: on-failure
+
+  ias-server:
+    #image: nntool.eu/ias-server:1.0
+    image: nntool.eu/ias-server:latest
+    build:
+      context: ../..
+      dockerfile: ias-server.Dockerfile
+    restart: on-failure
+
+  echo-protocol-server:
+    image: nntool.eu/echo-protocol-server:latest
+    build: ./nntool/echo_protocol_server
+    restart: on-failure
+
+  qos-service:
+    #image: nntool.eu/qos-service:1.0
+    image: nntool.eu/qos-service:latest
+    restart: on-failure
