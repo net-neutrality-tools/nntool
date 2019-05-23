@@ -9,11 +9,13 @@ import android.widget.TextView;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkChangeEvent;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkChangeListener;
+import at.alladin.nettest.nntool.android.app.util.info.signal.SignalStrengthChangeEvent;
+import at.alladin.nettest.nntool.android.app.util.info.signal.SignalStrengthChangeListener;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  */
-public class ProviderAndSignalView extends RelativeLayout implements NetworkChangeListener {
+public class ProviderAndSignalView extends RelativeLayout implements NetworkChangeListener, SignalStrengthChangeListener {
 
     private final static String TAG = ProviderAndSignalView.class.getSimpleName();
 
@@ -47,6 +49,13 @@ public class ProviderAndSignalView extends RelativeLayout implements NetworkChan
 
         if (event != null) {
             providerText.setText(event.getOperatorName());
+        }
+    }
+
+    @Override
+    public void onSignalStrengthChange(SignalStrengthChangeEvent event) {
+        if (event != null) {
+            signalText.setText(event.getCurrentSignalStrength().toString());
         }
     }
 }

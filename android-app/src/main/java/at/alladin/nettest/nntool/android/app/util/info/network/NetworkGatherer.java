@@ -53,12 +53,11 @@ public class NetworkGatherer extends Gatherer<NetworkChangeEvent> implements Net
         }
     }
 
-    public boolean removeNetworkCHangeListener(final NetworkChangeListener listener) {
+    public boolean removeNetworkChangeListener(final NetworkChangeListener listener) {
         return networkChangeListenerList.remove(listener);
     }
 
     /*
-
     insufficient reliability!
 
     private ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {

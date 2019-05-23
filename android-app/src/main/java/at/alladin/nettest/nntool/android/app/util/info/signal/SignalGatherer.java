@@ -6,14 +6,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.telephony.CellInfo;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import at.alladin.nettest.nntool.android.app.support.telephony.CellSignalStrengthWrapper;
+import at.alladin.nettest.nntool.android.app.support.telephony.SignalItem;
 import at.alladin.nettest.nntool.android.app.util.info.Gatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkTypeAware;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
@@ -23,7 +28,7 @@ import static at.alladin.nettest.nntool.android.app.util.info.network.NetworkTyp
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  */
-public class SignalGatherer extends Gatherer<SignalGatherer.CurrentSignalStrength> {
+public class SignalGatherer extends Gatherer<SignalStrengthChangeEvent> {
 
     private final static String TAG = SignalGatherer.class.getSimpleName();
 
@@ -31,50 +36,16 @@ public class SignalGatherer extends Gatherer<SignalGatherer.CurrentSignalStrengt
 
     private final TelephonyStateListener telephonyStateListener = new TelephonyStateListener();
 
-    private final AtomicReference<SignalItem> lastSignalItem = new AtomicReference<>(null);
+    private final AtomicReference<CellSignalStrengthWrapper> lastSignalItem = new AtomicReference<>(null);
 
-    public static class CurrentSignalStrength {
-        final SignalItem.SignalType signalType;
-        final int signal;
-        final int lteRsrq;
-
-        public CurrentSignalStrength(final SignalItem.SignalType signalType, final int signal) {
-            this(signalType, signal, SignalItem.UNKNOWN);
-        }
-
-        public CurrentSignalStrength(final SignalItem.SignalType signalType, final int signal, final int lteRsrq) {
-            this.signalType = signalType;
-            this.signal = signal;
-            this.lteRsrq = lteRsrq;
-        }
-
-        public SignalItem.SignalType getSignalType() {
-            return signalType;
-        }
-
-        public int getSignal() {
-            return signal;
-        }
-
-        public int getLteRsrq() {
-            return lteRsrq;
-        }
-
-        @Override
-        public String toString() {
-            return "CurrentSignalStrength{" +
-                    "signalType=" + signalType +
-                    ", signal=" + signal +
-                    ", lteRsrq=" + lteRsrq +
-                    '}';
-        }
-    }
+    private List<SignalStrengthChangeListener> signalStrengthChangeListenerList = new ArrayList<>();
 
     @Override
     public void start() {
         IntentFilter intentFilter;
         intentFilter = new IntentFilter();
         intentFilter.addAction(WifiManager.RSSI_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         getInformationProvider().getContext().registerReceiver(networkStateBroadcastReceiver, intentFilter);
 
         int events = PhoneStateListener.LISTEN_SIGNAL_STRENGTHS;
@@ -87,7 +58,19 @@ public class SignalGatherer extends Gatherer<SignalGatherer.CurrentSignalStrengt
         getTelephonyManager().listen(telephonyStateListener, PhoneStateListener.LISTEN_NONE);
     }
 
-    public SignalItem getLastSignalItem() {
+    public void addSignalStrengthChangeListener(final SignalStrengthChangeListener listener) {
+        if (listener != null && !signalStrengthChangeListenerList.contains(listener)) {
+            signalStrengthChangeListenerList.add(listener);
+            listener.onSignalStrengthChange(getCurrentValue());
+        }
+    }
+
+    public boolean removeSignalStrengthChangeListener(final SignalStrengthChangeListener listener) {
+        return signalStrengthChangeListenerList.remove(listener);
+    }
+
+
+    public CellSignalStrengthWrapper getLastSignalItem() {
         return lastSignalItem.get();
     }
 
@@ -105,18 +88,32 @@ public class SignalGatherer extends Gatherer<SignalGatherer.CurrentSignalStrengt
 
         @Override
         public void onReceive(final Context context, final Intent intent) {
+            System.out.println("WIFI CHANGE: " + intent + ", EXTRAS: " + intent.getExtras());
             final String action = intent.getAction();
-            if (action.equals(WifiManager.RSSI_CHANGED_ACTION) && getNetwork() == NETWORK_WIFI) {
+            if (getNetwork() == NETWORK_WIFI) {
                 final WifiInfo wifiInfo = getWifiManager().getConnectionInfo();
                 final int rssi = wifiInfo.getRssi();
                 if (rssi != -1 && rssi >= ACCEPT_WIFI_RSSI_MIN)  {
-                    setCurrentValue(new CurrentSignalStrength(SignalItem.SignalType.WIFI, rssi));
+                    setCurrentValue(
+                            new SignalStrengthChangeEvent(
+                                    new CurrentSignalStrength(CurrentSignalStrength.SignalType.WIFI, rssi)));
                 }
             }
         }
     }
 
     private class TelephonyStateListener extends PhoneStateListener {
+
+        @Override
+        public void onCellInfoChanged(List<CellInfo> cellInfoList) {
+            if (cellInfoList == null) {
+                return;
+            }
+
+            for (final CellInfo cellInfo : cellInfoList) {
+
+            }
+        }
 
         @Override
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
@@ -209,17 +206,38 @@ public class SignalGatherer extends Gatherer<SignalGatherer.CurrentSignalStrengt
                     }
 
                     if (lteRsrp != SignalItem.UNKNOWN) {
-                        setCurrentValue(new CurrentSignalStrength(SignalItem.SignalType.RSRP, lteRsrp, lteRsrq));
+                        setCurrentValue(
+                                new SignalStrengthChangeEvent(
+                                        new CurrentSignalStrength(CurrentSignalStrength.SignalType.RSRP, lteRsrp, lteRsrq)));
                     }
                     else {
-                        setCurrentValue(new CurrentSignalStrength(SignalItem.SignalType.MOBILE, strength));
+                        setCurrentValue(
+                                new SignalStrengthChangeEvent(
+                                        new CurrentSignalStrength(CurrentSignalStrength.SignalType.MOBILE, strength)));
                     }
                 }
 
                 final SignalItem signalItem = SignalItem.getCellSignalItem(network, strength, errorRate, lteRsrp, lteRsrq, lteRsssnr, lteCqi);
-                lastSignalItem.set(signalItem);
+                final CellSignalStrengthWrapper signalStrengthWrapper = CellSignalStrengthWrapper.fromSignalItem(signalItem);
+                signalStrengthWrapper.setNetworkId(network);
+                lastSignalItem.set(signalStrengthWrapper);
+
                 //System.out.println(getTelephonyManager().getAllCellInfo().get(0));
             }
         }
+    }
+
+    private void dispatchSignalStrengthChangedEvent(final SignalStrengthChangeEvent event) {
+        if (signalStrengthChangeListenerList != null) {
+            for (final SignalStrengthChangeListener listener : signalStrengthChangeListenerList) {
+                listener.onSignalStrengthChange(event);
+            }
+        }
+    }
+
+    @Override
+    public void setCurrentValue(SignalStrengthChangeEvent currentValue) {
+        super.setCurrentValue(currentValue);
+        dispatchSignalStrengthChangedEvent(currentValue);
     }
 }

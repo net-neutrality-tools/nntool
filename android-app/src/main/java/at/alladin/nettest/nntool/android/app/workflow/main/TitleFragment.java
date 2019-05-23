@@ -25,6 +25,7 @@ import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
 import at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
@@ -122,6 +123,12 @@ public class TitleFragment extends Fragment implements ServiceConnection {
         if (networkGatherer != null && providerSignalView != null) {
             networkGatherer.addNetworkChangeListener(providerSignalView);
         }
+
+        final SignalGatherer signalGatherer = informationService.getInformationProvider().getGatherer(SignalGatherer.class);
+        if (signalGatherer != null && providerSignalView != null) {
+            signalGatherer.addSignalStrengthChangeListener(providerSignalView);
+        }
+
         Log.d(TAG, "InformationService connected");
     }
 
@@ -129,8 +136,14 @@ public class TitleFragment extends Fragment implements ServiceConnection {
     public void onServiceDisconnected(ComponentName name) {
         final NetworkGatherer networkGatherer = informationService.getInformationProvider().getGatherer(NetworkGatherer.class);
         if (networkGatherer != null && providerSignalView != null) {
-            networkGatherer.removeNetworkCHangeListener(providerSignalView);
+            networkGatherer.removeNetworkChangeListener(providerSignalView);
         }
+
+        final SignalGatherer signalGatherer = informationService.getInformationProvider().getGatherer(SignalGatherer.class);
+        if (signalGatherer != null && providerSignalView != null) {
+            signalGatherer.removeSignalStrengthChangeListener(providerSignalView);
+        }
+
         informationService = null;
         Log.d(TAG, "InformationService disconnected");
     }

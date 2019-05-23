@@ -1,19 +1,13 @@
-package at.alladin.nettest.nntool.android.app.util.info.signal;
+package at.alladin.nettest.nntool.android.app.support.telephony;
 
-import at.alladin.nettest.nntool.android.app.support.telephony.CellInfoWrapper;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkTypeAware;
 
 /**
+ * old signal model
  * @author Lukasz Budryk (lb@alladin.at)
  */
 public class SignalItem {
     public final static int UNKNOWN = Integer.MIN_VALUE;
-
-    public enum SignalType {
-        MOBILE,
-        WIFI,
-        RSRP
-    }
 
     public final Long timeStampMillis;
     public final Long timeStampNano;
@@ -42,15 +36,15 @@ public class SignalItem {
                        final int lteRsrq, final int lteRssnr, final int lteCqi) {
         this.timeStampMillis = System.currentTimeMillis();
         this.timeStampNano = System.nanoTime();
-        this.networkId = CellInfoWrapper.maxIntegerToNull(networkId);
-        this.signalStrength = CellInfoWrapper.maxIntegerToNull(signalStrength);
-        this.gsmBitErrorRate = CellInfoWrapper.maxIntegerToNull(gsmBitErrorRate);
-        this.wifiLinkSpeed = CellInfoWrapper.maxIntegerToNull(wifiLinkSpeed);
-        this.wifiRssi = CellInfoWrapper.maxIntegerToNull(wifiRssi);
-        this.lteRsrp = CellInfoWrapper.maxIntegerToNull(lteRsrp);
-        this.lteRsrq = CellInfoWrapper.maxIntegerToNull(lteRsrq);
-        this.lteRssnr = CellInfoWrapper.maxIntegerToNull(lteRssnr);
-        this.lteCqi = CellInfoWrapper.maxIntegerToNull(lteCqi);
+        this.networkId = CellIdentityWrapper.maxIntegerToNull(networkId);
+        this.signalStrength = CellIdentityWrapper.maxIntegerToNull(signalStrength);
+        this.gsmBitErrorRate = CellIdentityWrapper.maxIntegerToNull(gsmBitErrorRate);
+        this.wifiLinkSpeed = CellIdentityWrapper.maxIntegerToNull(wifiLinkSpeed);
+        this.wifiRssi = CellIdentityWrapper.maxIntegerToNull(wifiRssi);
+        this.lteRsrp = CellIdentityWrapper.maxIntegerToNull(lteRsrp);
+        this.lteRsrq = CellIdentityWrapper.maxIntegerToNull(lteRsrq);
+        this.lteRssnr = CellIdentityWrapper.maxIntegerToNull(lteRssnr);
+        this.lteCqi = CellIdentityWrapper.maxIntegerToNull(lteCqi);
     }
 
     @Override

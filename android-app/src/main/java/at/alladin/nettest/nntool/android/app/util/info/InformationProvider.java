@@ -44,17 +44,25 @@ public class InformationProvider {
         }
     }
 
-    public <T extends Gatherer> boolean registerGatherer(final Class<T> gathererClazz) {
+    public <T extends Gatherer> boolean registerGatherer(final Class<T> clazz) {
         try {
-            final T gatherer = gathererClazz.newInstance();
-            gatherer.setInformationProvider(this);
-            gathererMap.put(gathererClazz, gatherer);
-            return true;
+            final T gatherer = clazz.newInstance();
+            return registerGatherer(gatherer, clazz);
         } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
 
         return false;
+    }
+
+    public <T extends Gatherer> boolean registerGatherer(final T gatherer, final Class<T> clazz) {
+        if (gathererMap.containsKey(clazz)) {
+            return false;
+        }
+
+        gatherer.setInformationProvider(this);
+        gathererMap.put(clazz, gatherer);
+        return true;
     }
 
     public <T extends Gatherer> T unregisterGatherer(final Class<T> gathererClazz) {
