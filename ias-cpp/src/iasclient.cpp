@@ -64,7 +64,7 @@ CConfigManager* pService;
 CCallback *pCallback;
 CMeasurement* pMeasurement;
 
-
+MeasurementPhase currentTestPhase = MeasurementPhase::INIT;
 
 
 /*--------------Forward declarations--------------*/
@@ -291,6 +291,7 @@ void measurementStart(string measurementParameters)
 		conf.nTestCase = 2;
 		conf.sTestName = "rtt_udp";
 		TRC_INFO( ("Taking Testcase RTT UDP ("+CTool::toString(conf.nTestCase)+")").c_str() );
+		currentTestPhase = MeasurementPhase::PING;
 		startTestCase(conf.nTestCase);
 	}
 
@@ -300,6 +301,7 @@ void measurementStart(string measurementParameters)
 		conf.nTestCase = 3;
 		conf.sTestName = "download";
 		TRC_INFO( ("Taking Testcase DOWNLOAD ("+CTool::toString(conf.nTestCase)+")").c_str() );
+		currentTestPhase = MeasurementPhase::DOWNLOAD;
 		startTestCase(conf.nTestCase);
 	}
 
@@ -310,8 +312,11 @@ void measurementStart(string measurementParameters)
 		conf.nTestCase = 4;
 		conf.sTestName = "upload";
 		TRC_INFO( ("Taking Testcase UPLOAD ("+CTool::toString(conf.nTestCase)+")").c_str() );
+		currentTestPhase = MeasurementPhase::UPLOAD;
 		startTestCase(conf.nTestCase);
 	}
+
+	currentTestPhase = MeasurementPhase::END;
 
 	shutdown();
 }

@@ -17,7 +17,10 @@
  */
 
 #include "callback.h"
-#include "android_connector.h"
+
+#ifdef __ANDROID__
+    #include "android_connector.h"
+#endif
 
 //! \brief
 //!	Standard Destructor
@@ -57,101 +60,194 @@ int CCallback::run()
 	return 0;
 }
 
-void CCallback::callback(string cmd, string msg, int error_code, string error_description)
-{
-	TRC_DEBUG("Callback Received: cmd: " + cmd + ", msg: " + msg);
+#ifdef __ANDROID__
 
-	if (cmd.compare("report") == 0 || cmd.compare("finish") == 0)
-	{
-		if (mTestCase == 2)
-		{
-			rttUdpCallback(cmd);
+    void CCallback::callback(string cmd, string msg, int error_code, string error_description)
+        {
+            TRC_DEBUG("Callback Received: cmd: " + cmd + ", msg: " + msg);
 
-			if (cmd.compare("finish") == 0)
-			{
-				PERFORMED_RTT = true;
-			}
-		}
+            if (cmd.compare("report") == 0 || cmd.compare("finish") == 0)
+            {
+                if (mTestCase == 2)
+                {
+                    rttUdpCallback(cmd);
 
-		if (mTestCase == 3)
-		{
-			downloadCallback(cmd);
+                    if (cmd.compare("finish") == 0)
+                    {
+                        PERFORMED_RTT = true;
+                    }
+                }
 
-			if (cmd.compare("finish") == 0)
-			{
-				PERFORMED_DOWNLOAD = true;
-			}
-		}
+                if (mTestCase == 3)
+                {
+                    downloadCallback(cmd);
 
-		if (mTestCase == 4)
-		{
-			uploadCallback(cmd);
+                    if (cmd.compare("finish") == 0)
+                    {
+                        PERFORMED_DOWNLOAD = true;
+                    }
+                }
 
-			if (cmd.compare("finish") == 0)
-			{
-				PERFORMED_UPLOAD = true;
-			}
-		}
-	}
+                if (mTestCase == 4)
+                {
+                    uploadCallback(cmd);
 
-	callbackToPlatform(cmd, msg, error_code, error_description);
+                    if (cmd.compare("finish") == 0)
+                    {
+                        PERFORMED_UPLOAD = true;
+                    }
+                }
+            }
 
-	if (cmd.compare("finish") == 0 && ::RTT == PERFORMED_RTT && ::DOWNLOAD == PERFORMED_DOWNLOAD && ::UPLOAD == PERFORMED_UPLOAD)
-	{
-		callbackToPlatform("completed", msg, error_code, error_description);
-	}
-}
+            callbackToPlatform(cmd, msg, error_code, error_description);
 
-void CCallback::callbackToPlatform(string cmd, string msg, int error_code, string error_description)
-{
-	//construct JSON callback
-	jMeasurementResults = Json::object{};
-	jMeasurementResults["cmd"] = cmd;
-	jMeasurementResults["msg"] = msg;
-	jMeasurementResults["test_case"] = conf.sTestName;
+            if (cmd.compare("finish") == 0 && ::RTT == PERFORMED_RTT && ::DOWNLOAD == PERFORMED_DOWNLOAD && ::UPLOAD == PERFORMED_UPLOAD)
+            {
+                callbackToPlatform("completed", msg, error_code, error_description);
+            }
+        }
 
-	if (error_code != 0)
-	{
-		jMeasurementResults["error_code"] = error_code;
-		jMeasurementResults["error_description"] = error_description;
-		TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
-	}
+        void CCallback::callbackToPlatform(string cmd, string msg, int error_code, string error_description)
+        {
+            //construct JSON callback
+            jMeasurementResults = Json::object{};
+            jMeasurementResults["cmd"] = cmd;
+            jMeasurementResults["msg"] = msg;
+            jMeasurementResults["test_case"] = conf.sTestName;
 
-	if (Json(jMeasurementResultsRttUdp).object_items().size() > 0)
-	{
-		jMeasurementResults["rtt_udp_info"] = Json(jMeasurementResultsRttUdp);
-	}
+            const AndroidConnector &connector = AndroidConnector::getInstance();
 
-	if (Json(jMeasurementResultsDownload).array_items().size() > 0)
-	{
-		jMeasurementResults["download_info"] = Json(jMeasurementResultsDownload);
-	}
+            if (error_code != 0)
+            {
+                jMeasurementResults["error_code"] = error_code;
+                jMeasurementResults["error_description"] = error_description;
+                TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
+                connector.callbackError(error_code, error_description);
+            }
 
-	if (Json(jMeasurementResultsUpload).array_items().size() > 0)
-	{
-		jMeasurementResults["upload_info"] = Json(jMeasurementResultsUpload);
-	}
+            if (Json(jMeasurementResultsRttUdp).object_items().size() > 0)
+            {
+                jMeasurementResults["rtt_udp_info"] = Json(jMeasurementResultsRttUdp);
+            }
 
-	if (Json(jMeasurementResultsTime).object_items().size() > 0)
-	{
-		jMeasurementResults["time_info"] = Json(jMeasurementResultsTime);
-	}
-	
-	string platform = ::PLATFORM;
-	string clientos = ::CLIENT_OS;
+            if (Json(jMeasurementResultsDownload).array_items().size() > 0)
+            {
+                jMeasurementResults["download_info"] = Json(jMeasurementResultsDownload);
+            }
 
-	//if (platform.compare("desktop") == 0 && clientos.compare("linux") == 0)
-	{
-	//	TRC_DEBUG("Callback: " + Json(jMeasurementResults).dump());
-	}
-	//if (platform.compare("mobile") == 0 && clientos.compare("android") == 0)
-	{
-	    //TODO: remove tight android coupling
-	    AndroidConnector::getInstance().callback(jMeasurementResults);
-		//android callback hookup
-		//callback Json(jMeasurementResults).dump() via ndk
-	}
-}
+            if (Json(jMeasurementResultsUpload).array_items().size() > 0)
+            {
+                jMeasurementResults["upload_info"] = Json(jMeasurementResultsUpload);
+            }
+
+            if (Json(jMeasurementResultsTime).object_items().size() > 0)
+            {
+                jMeasurementResults["time_info"] = Json(jMeasurementResultsTime);
+            }
+
+            /*
+            if ("report" == cmd) {
+                connector.callbackReport();
+            } else if ("finish" == cmd) {
+                connector.callbackFinish();
+            } else if ("completed" == cmd) {
+                connector.callbackCompleted();
+            }
+            AndroidConnector::getInstance().callback(jMeasurementResults);
+            */
+        }
+#else
+
+    void CCallback::callback(string cmd, string msg, int error_code, string error_description)
+    {
+        TRC_DEBUG("Callback Received: cmd: " + cmd + ", msg: " + msg);
+
+        if (cmd.compare("report") == 0 || cmd.compare("finish") == 0)
+        {
+            if (mTestCase == 2)
+            {
+                rttUdpCallback(cmd);
+
+                if (cmd.compare("finish") == 0)
+                {
+                    PERFORMED_RTT = true;
+                }
+            }
+
+            if (mTestCase == 3)
+            {
+                downloadCallback(cmd);
+
+                if (cmd.compare("finish") == 0)
+                {
+                    PERFORMED_DOWNLOAD = true;
+                }
+            }
+
+            if (mTestCase == 4)
+            {
+                uploadCallback(cmd);
+
+                if (cmd.compare("finish") == 0)
+                {
+                    PERFORMED_UPLOAD = true;
+                }
+            }
+        }
+
+        callbackToPlatform(cmd, msg, error_code, error_description);
+
+        if (cmd.compare("finish") == 0 && ::RTT == PERFORMED_RTT && ::DOWNLOAD == PERFORMED_DOWNLOAD && ::UPLOAD == PERFORMED_UPLOAD)
+        {
+            callbackToPlatform("completed", msg, error_code, error_description);
+        }
+    }
+
+    void CCallback::callbackToPlatform(string cmd, string msg, int error_code, string error_description)
+    {
+        //construct JSON callback
+        jMeasurementResults = Json::object{};
+        jMeasurementResults["cmd"] = cmd;
+        jMeasurementResults["msg"] = msg;
+        jMeasurementResults["test_case"] = conf.sTestName;
+
+        if (error_code != 0)
+        {
+            jMeasurementResults["error_code"] = error_code;
+            jMeasurementResults["error_description"] = error_description;
+            TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
+        }
+
+        if (Json(jMeasurementResultsRttUdp).object_items().size() > 0)
+        {
+            jMeasurementResults["rtt_udp_info"] = Json(jMeasurementResultsRttUdp);
+        }
+
+        if (Json(jMeasurementResultsDownload).array_items().size() > 0)
+        {
+            jMeasurementResults["download_info"] = Json(jMeasurementResultsDownload);
+        }
+
+        if (Json(jMeasurementResultsUpload).array_items().size() > 0)
+        {
+            jMeasurementResults["upload_info"] = Json(jMeasurementResultsUpload);
+        }
+
+        if (Json(jMeasurementResultsTime).object_items().size() > 0)
+        {
+            jMeasurementResults["time_info"] = Json(jMeasurementResultsTime);
+        }
+
+        string platform = ::PLATFORM;
+        string clientos = ::CLIENT_OS;
+
+        if (platform.compare("desktop") == 0 && clientos.compare("linux") == 0)
+        {
+        	TRC_DEBUG("Callback: " + Json(jMeasurementResults).dump());
+        }
+    }
+
+#endif
 
 void CCallback::rttUdpCallback(string cmd)
 {
@@ -198,6 +294,8 @@ void CCallback::rttUdpCallback(string cmd)
 		tempMeasurement.ping.replies 		= nReply;
 		tempMeasurement.ping.missing 		= nMissing;
 		tempMeasurement.ping.errors 		= pingThread->nError;
+
+		tempMeasurement.ping.measurement_phase_progress = (tempMeasurement.ping.replies + tempMeasurement.ping.missing) / ((float) tempMeasurement.ping.requests);
 		
 		tempMeasurement.ping.starttime  	= pingThread->measurementTimeStart;
 		tempMeasurement.ping.endtime    	= pingThread->measurementTimeEnd;
@@ -249,6 +347,7 @@ void CCallback::rttUdpCallback(string cmd)
 	jMeasurementResults["packet_size"] = to_string(tempMeasurement.ping.packetsize);
 	jMeasurementResults["standard_deviation_ns"] = to_string(tempMeasurement.ping.standard_deviation_ns);
 	jMeasurementResults["peer"] = tempMeasurement.ping.servername;
+	jMeasurementResults["progress"] = tempMeasurement.ping.measurement_phase_progress;
 
 	jMeasurementResultsRttUdp = jMeasurementResults;
 	
@@ -307,7 +406,7 @@ void CCallback::downloadCallback(string cmd)
 			tempMeasurement.download.endtime    		= (*itThread)->measurementTimeEnd;
 			tempMeasurement.download.totaltime  		= (*itThread)->measurementTimeDuration;
 			
-			jMeasurementResultsTime["download_start"] = to_string(tempMeasurement.download.starttime * 1000);
+ 			jMeasurementResultsTime["download_start"] = to_string(tempMeasurement.download.starttime * 1000);
 
 			//Socket closed unexpectedly
 			if( (*itThread)->mResponse == -1 )
@@ -385,6 +484,9 @@ void CCallback::downloadCallback(string cmd)
 	CTool::calculateResults( tempMeasurement.download, 0.5, 0 );
 
 	TRC_INFO( ("DOWNLOAD: " + CTool::toString(tempMeasurement.download.avg )).c_str());
+
+	//measurement duration is given in seconds
+	tempMeasurement.download.measurement_phase_progress = tempMeasurement.download.duration_ns / (MEASUREMENT_DURATION * 1e9);
 
 	Json::object jMeasurementResults = getMeasurementResults(tempMeasurement, tempMeasurement.download, cmd);
 
@@ -525,6 +627,9 @@ void CCallback::uploadCallback(string cmd)
 	//Calculate Min, Avg, Max
 	CTool::calculateResults( tempMeasurement.upload, 0.5, 0 );
 
+	//measurement duration is given in seconds
+	tempMeasurement.upload.measurement_phase_progress = tempMeasurement.upload.duration_ns / (MEASUREMENT_DURATION * 1e9);
+
 	TRC_INFO( ("UPLOAD: " + CTool::toString(tempMeasurement.upload.avg )).c_str());
 
 	Json::object jMeasurementResults = getMeasurementResults(tempMeasurement, tempMeasurement.upload, cmd);
@@ -541,6 +646,7 @@ Json::object CCallback::getMeasurementResults(struct measurement tempMeasurement
 	jMeasurementResults["duration_ns"] = to_string(data.duration_ns);
 	jMeasurementResults["duration_ns_total"] = to_string(data.totaltime * 1000);
 	jMeasurementResults["num_streams_start"] = to_string(tempMeasurement.streams);
+	jMeasurementResults["progress"] = data.measurement_phase_progress;
 
 	if (cmd.compare("finish") == 0)
 	{

@@ -3,6 +3,11 @@ package at.alladin.nettest.nntool.android.app.workflow.measurement.jni;
 import android.support.annotation.Keep;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import at.alladin.nettest.nntool.android.app.workflow.measurement.SpeedMeasurementState;
+
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
  */
@@ -14,27 +19,25 @@ public class JniSpeedMeasurementClient {
 
     private static final String TAG = "SPEED_MEASUREMENT_JNI";
 
-    private JniSpeedMeasurementState measurementState;
+    private SpeedMeasurementState speedMeasurementState;
 
     public JniSpeedMeasurementClient() {
-        measurementState = new JniSpeedMeasurementState();
-        shareMeasurementState(measurementState.getDownloadMeasurement(), measurementState.getUploadMeasurement());
+        speedMeasurementState = new SpeedMeasurementState();
+        shareMeasurementState(speedMeasurementState, speedMeasurementState.getDownloadMeasurement(), speedMeasurementState.getUploadMeasurement());
     }
 
     @Keep
     public void cppCallback(final String message) {
         Log.d(TAG, message);
-        //Log.d(TAG, "measurement dl throughput " + measurementState.getDownloadMeasurement().getThroughputAvgBps() + " time: " + measurementState.getDownloadMeasurement().getDurationMsTotal());
+        Log.d(TAG, "state " + speedMeasurementState.getMeasurementPhase().toString());
+        Log.d(TAG, "prog " + speedMeasurementState.getProgress());
+        //Log.d(TAG, "measurement dl throughput " + speedMeasurementState.getDownloadMeasurement().getThroughputAvgBps() + " time: " + speedMeasurementState.getDownloadMeasurement().getDurationMsTotal());
+        //Log.d(TAG, "measurement ul throughput " + speedMeasurementState.getUploadMeasurement().getThroughputAvgBps() + " time: " + speedMeasurementState.getUploadMeasurement().getDurationMsTotal());
     }
 
-    /*
-            AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                startMeasurement();
-            }
-        });
-     */
+    public SpeedMeasurementState getSpeedMeasurementState() {
+        return speedMeasurementState;
+    }
 
     public native void startMeasurement();
 
@@ -44,5 +47,6 @@ public class JniSpeedMeasurementClient {
      * Call this method before starting a test to allow the cpp impl to write the current state into the passed JniSpeedMeasurementState obj
      * Is automatically called for the devs in the constructor
      */
-    private native void shareMeasurementState(final JniSpeedMeasurementState.JniSpeedState downloadMeasurementState, final JniSpeedMeasurementState.JniSpeedState uploadMeasurementState);
+    private native void shareMeasurementState(final SpeedMeasurementState speedMeasurementState, final SpeedMeasurementState.SpeedPhaseState downloadMeasurementState, final SpeedMeasurementState.SpeedPhaseState uploadMeasurementState);
+
 }

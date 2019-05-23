@@ -109,35 +109,35 @@ void CTrace::logDebug(string sMessage)
 
 #ifdef NNTOOL_CLIENT
 
-void CTrace::logCritical(string sMessage)
+void CTrace::logCritical(const string &sMessage)
 {
 	logToPlatform("CRITICAL", sMessage);
 }
 
-void CTrace::logErr(string sMessage)
+void CTrace::logErr(const string &sMessage)
 {
 	logToPlatform("ERROR", sMessage);
 }
 
-void CTrace::logWarn(string sMessage)
+void CTrace::logWarn(const string &sMessage)
 {
 	logToPlatform("WARN", sMessage);
 }
 
-void CTrace::logInfo(string sMessage)
+void CTrace::logInfo(const string &sMessage)
 {
 	logToPlatform("INFO", sMessage);
 }
 
-void CTrace::logDebug(string sMessage)
+void CTrace::logDebug(const string &sMessage)
 {
 	//if (DEBUG)
 	{
-		logToPlatform("DEBUG", sMessage);
+	//	logToPlatform("DEBUG", sMessage);
 	}
 }
 
-void CTrace::logToPlatform(string category, string sMessage)
+void CTrace::logToPlatform(const string &category, const string &sMessage)
 {
 //	string platform = ::PLATFORM;
 //	string clientos = ::CLIENT_OS;

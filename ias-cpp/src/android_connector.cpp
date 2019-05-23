@@ -19,9 +19,9 @@ extern "C" JNIEXPORT void JNICALL Java_at_alladin_nettest_nntool_android_app_wor
     //AndroidConnector::getInstance().stopMeasurement();
 }
 
-extern "C" JNIEXPORT void JNICALL Java_at_alladin_nettest_nntool_android_app_workflow_measurement_jni_JniSpeedMeasurementClient_shareMeasurementState (JNIEnv* env, jobject caller,
+extern "C" JNIEXPORT void JNICALL Java_at_alladin_nettest_nntool_android_app_workflow_measurement_jni_JniSpeedMeasurementClient_shareMeasurementState (JNIEnv* env, jobject caller, jobject baseMeasurementState,
                     jobject downloadMeasurementState, jobject uploadMeasurementState) {
-    AndroidConnector::getInstance().registerSharedObject(env, caller, downloadMeasurementState, uploadMeasurementState);
+    AndroidConnector::getInstance().registerSharedObject(env, caller, baseMeasurementState, downloadMeasurementState, uploadMeasurementState);
 }
 
 jint AndroidConnector::jniLoad(JavaVM* vm) {
@@ -32,28 +32,35 @@ jint AndroidConnector::jniLoad(JavaVM* vm) {
 
     jclass clazz = env->FindClass("at/alladin/nettest/nntool/android/app/workflow/measurement/jni/JniSpeedMeasurementClient");
     jniHelperClass = (jclass) env->NewGlobalRef(clazz);
+    callbackID = env->GetMethodID(jniHelperClass, "cppCallback", "(Ljava/lang/String;)V");
+
+    //get the fields for the SpeedphaseState
+    clazz = env->FindClass("at/alladin/nettest/nntool/android/app/workflow/measurement/SpeedMeasurementState$SpeedPhaseState");
+    fieldAvgDownloadThroughput = env->GetFieldID(clazz, "throughputAvgBps", "J");
+    fieldDurationMsTotal = env->GetFieldID(clazz, "durationMsTotal", "J");
+    fieldDurationMs = env->GetFieldID(clazz, "durationMs", "J");
+
+    //get the fields for the SpeedMeasurementState
+    clazz = env->FindClass("at/alladin/nettest/nntool/android/app/workflow/measurement/SpeedMeasurementState");
+    fieldProgress = env->GetFieldID(clazz, "progress", "F");
+
+    setMeasurementPhaseByStringValueID = env->GetMethodID(clazz, "setMeasurementPhaseByStringValue", "(Ljava/lang/String;)V");
+
     //according to the google examples, we can keep the reference to the javaVM until android takes it away from us
     javaVM = vm;
-//    env->RegisterNatives(jniHelperClass, jniMethods, sizeof(jniMethods));
-    //jniHelperClass = env->NewGlobalRef(clz);
 
-    //jniHelperObj = env->NewGlobalRef(env, )
-
-    __android_log_write(ANDROID_LOG_DEBUG, TAG, std::string("this is the android log function speaking").c_str());
+    __android_log_write(ANDROID_LOG_DEBUG, TAG, std::string("Jni on load called").c_str());
 
     return JNI_VERSION_1_6;
 }
 
-void AndroidConnector::registerSharedObject(JNIEnv* env, jobject caller, jobject downloadMeasurementState, jobject uploadMeasurementState) {
-    jclass classState = env->FindClass("at/alladin/nettest/nntool/android/app/workflow/measurement/jni/JniSpeedMeasurementState$JniSpeedState");
+void AndroidConnector::registerSharedObject(JNIEnv* env, jobject caller, jobject baseMeasurementState, jobject downloadMeasurementState, jobject uploadMeasurementState) {
     jniCaller = env->NewGlobalRef(caller);
 
-    downloadMeasurementState = env->NewGlobalRef(downloadMeasurementState);
-    uploadMeasurementState = env->NewGlobalRef(uploadMeasurementState);
+    this->baseMeasurementState = env->NewGlobalRef(baseMeasurementState);
+    this->downloadMeasurementState = env->NewGlobalRef(downloadMeasurementState);
+    this->uploadMeasurementState = env->NewGlobalRef(uploadMeasurementState);    
 
-    fieldAvgDownloadThroughput = env->GetFieldID(classState, "throughputAvgBps", "J");
-    fieldDurationMsTotal = env->GetFieldID(classState, "durationMsTotal", "J");
-    fieldDurationMs = env->GetFieldID(classState, "durationMs", "J");
 }
 
 void AndroidConnector::unregisterSharedObject() {
@@ -71,9 +78,17 @@ void AndroidConnector::unregisterSharedObject() {
     }
 
     //clean up the global jni references
+    if (baseMeasurementState != nullptr) {
+        env->DeleteGlobalRef(baseMeasurementState);
+        baseMeasurementState = nullptr;
+    }
     if (downloadMeasurementState != nullptr) {
         env->DeleteGlobalRef(downloadMeasurementState);
         downloadMeasurementState = nullptr;
+    }
+    if (uploadMeasurementState != nullptr) {
+        env->DeleteGlobalRef(uploadMeasurementState);
+        uploadMeasurementState = nullptr;
     }
     if (jniCaller != nullptr) {
         env->DeleteGlobalRef(jniCaller);
@@ -81,49 +96,78 @@ void AndroidConnector::unregisterSharedObject() {
     }
 }
 
-void AndroidConnector::callback(json11::Json::object& message) {
+void AndroidConnector::callback(json11::Json::object& message) const {
     JNIEnv* env;
     JavaVM* vm = AndroidConnector::javaVM;
     jint err = vm->GetEnv((void**)&env, JNI_VERSION_1_6);
     if (err == JNI_EDETACHED) {
-        //std::cout << "GetEnv: not attached" << std::endl;
         if (vm->AttachCurrentThread(&env, NULL) != 0) {
             return;
-            //std::cout << "Failed to attach" << std::endl;
         }
     } else if (err != JNI_OK) {
         return;
     }
-    const jmethodID callbackID = env->GetMethodID(jniHelperClass, "cppCallback", "(Ljava/lang/String;)V");
+
+    env->CallVoidMethod(baseMeasurementState, setMeasurementPhaseByStringValueID, env->NewStringUTF(getStringForMeasurementPhase(currentTestPhase).c_str()));
 
     //parse the json for now
-    if (message["rtt_udp_info"].is_array()) {
-        const json11::Json::array rttInfo = message["rtt_udp_info"].array_items();
-        const json11::Json recentResult = rttInfo.at(rttInfo.size() -1);
-
+    if (currentTestPhase == MeasurementPhase::PING) {
+        if (message["rtt_udp_info"].is_object()) {
+            const json11::Json recentResult = message["rtt_udp_info"];
+            //TODO: pass rtt state
+            passJniSpeedState(env, MeasurementPhase::PING, recentResult);
+        } else {
+            env->SetFloatField(baseMeasurementState, fieldProgress, 0.0f);
+        }
     }
 
     //get most recent download result
-    if (message["download_info"].is_array()) {
-        const json11::Json::array dlInfo = message["download_info"].array_items();
-        const json11::Json recentResult = dlInfo.at(dlInfo.size() -1);
-        passJniSpeedState(env, DOWNLOAD, recentResult);
+    if (currentTestPhase == MeasurementPhase::DOWNLOAD) {
+
+        if (message["download_info"].is_array()) {
+            const json11::Json::array dlInfo = message["download_info"].array_items();
+            const json11::Json recentResult = dlInfo.at(dlInfo.size() -1);
+            passJniSpeedState(env, MeasurementPhase::DOWNLOAD, recentResult);
+        } else {
+            env->SetFloatField(baseMeasurementState, fieldProgress, 0.0f);
+        }
     }
     
-	if (message["upload_info"].is_array()) {
-        const json11::Json::array ulInfo = message["download_info"].array_items();
-        const json11::Json recentResult = ulInfo.at(ulInfo.size() -1);
-        passJniSpeedState(env, UPLOAD, recentResult);
+	if (currentTestPhase == MeasurementPhase::UPLOAD) {
+        if (message["upload_info"].is_array()) {
+            const json11::Json::array ulInfo = message["upload_info"].array_items();
+            const json11::Json recentResult = ulInfo.at(ulInfo.size() -1);
+            passJniSpeedState(env, MeasurementPhase::UPLOAD, recentResult);
+        } else {
+            env->SetFloatField(baseMeasurementState, fieldProgress, 0.0f);
+        }
     }    
     
-    const jstring javaMsg = env->NewStringUTF(json11::Json(message).dump().c_str());
-    env->CallVoidMethod(jniCaller, callbackID, javaMsg);
+    //const jstring javaMsg = env->NewStringUTF(json11::Json(message).dump().c_str());
+    //env->CallVoidMethod(jniCaller, callbackID, javaMsg);
 
-    
 }
 
-void AndroidConnector::passJniSpeedState (JNIEnv* env, SpeedState speedStateToSet, const json11::Json& json) const {
-    jobject toFill = speedStateToSet == DOWNLOAD ? downloadMeasurementState : uploadMeasurementState;
+
+void AndroidConnector::callbackError(const int errorCode, const std::string &errorMessage) const {
+
+}
+
+void AndroidConnector::passJniSpeedState (JNIEnv* env, const MeasurementPhase& speedStateToSet, const json11::Json& json) const {
+    jobject toFill;
+
+    switch (speedStateToSet) {
+    case MeasurementPhase::PING:
+        //TODO: enter correct state
+        toFill = uploadMeasurementState;
+        break;
+    case MeasurementPhase::DOWNLOAD:
+        toFill = downloadMeasurementState;
+        break;
+    case MeasurementPhase::UPLOAD:
+        toFill = uploadMeasurementState;
+        break;
+    }
 
     if (toFill == nullptr) {
         return;
@@ -132,22 +176,30 @@ void AndroidConnector::passJniSpeedState (JNIEnv* env, SpeedState speedStateToSe
     //they're all strings
     json11::Json obj = json["duration_ns_total"];
     if (obj.is_string()) {
-        env->SetLongField(toFill, fieldDurationMsTotal, std::stoll(obj.string_value()) / 1e6);
+        //env->SetLongField(toFill, fieldDurationMsTotal, std::stoll(obj.string_value()) / 1e6);
+        //printLog("duration_ns_total: " + obj.string_value());
     }
 
     obj = json["throughput_avg_bps"];
     if (obj.is_string()) {
-        env->SetLongField(toFill, fieldAvgDownloadThroughput, std::stol(obj.string_value()) / 1e6);
+        //env->SetLongField(toFill, fieldAvgDownloadThroughput, std::stoll(obj.string_value()) / 8e6);
+        //printLog("throughtput_avg_bps: " + obj.string_value());
     }
 
     obj = json["duration_ns"];
     if (obj.is_string()) {
-        env->SetLongField(toFill, fieldDurationMs, std::stoll(obj.string_value()) / 1e6);
+        //env->SetLongField(toFill, fieldDurationMs, std::stoll(obj.string_value()) / 1e6);
+        //printLog("duration_ns: " + obj.string_value());
+    }
+
+    obj = json["progress"];
+    if (obj.is_number()) {
+        env->SetFloatField(baseMeasurementState, fieldProgress, obj.number_value());
     }
 
 }
 
-void AndroidConnector::printLog(const std::string& message) {
+void AndroidConnector::printLog(const std::string& message) const {
     __android_log_write(ANDROID_LOG_DEBUG, TAG, message.c_str());
 }
 

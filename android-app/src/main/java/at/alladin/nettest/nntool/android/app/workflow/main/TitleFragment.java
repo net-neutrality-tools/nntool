@@ -43,7 +43,7 @@ public class TitleFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final RequestMeasurementTask task = new RequestMeasurementTask(getContext(),
+                /*final RequestMeasurementTask task = new RequestMeasurementTask(getContext(),
                         new OnTaskFinishedCallback<LmapUtil.LmapTaskDescWrapper>() {
                             @Override
                             public void onTaskFinished(LmapUtil.LmapTaskDescWrapper result) {
@@ -59,6 +59,9 @@ public class TitleFragment extends Fragment {
                         });
 
                 task.execute();
+                */
+                final Bundle bundle = new Bundle();
+                ((MainActivity) getActivity()).startMeasurement(MeasurementType.SPEED, bundle);
             }
         });
 

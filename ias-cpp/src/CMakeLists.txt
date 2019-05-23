@@ -32,8 +32,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../ias-libnntool/)
 
 add_library(ias-client SHARED
-	iasclient.cpp 
-	type.cpp
+	iasclient.cpp
 	callback.cpp
 	timer.cpp
 	measurement.cpp

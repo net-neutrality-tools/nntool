@@ -1,28 +1,62 @@
-package at.alladin.nettest.nntool.android.app.workflow.measurement.jni;
+package at.alladin.nettest.nntool.android.app.workflow.measurement;
+
+import android.util.Log;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
  */
-public class JniSpeedMeasurementState {
+public class SpeedMeasurementState {
 
-    private JniSpeedState downloadMeasurement = new JniSpeedState();
+    private SpeedPhaseState downloadMeasurement = new SpeedPhaseState();
 
-    private JniSpeedState uploadMeasurement = new JniSpeedState();
+    private SpeedPhaseState uploadMeasurement = new SpeedPhaseState();
 
-    public JniSpeedState getDownloadMeasurement() {
+    //TODO: use progress!
+    private float progress;
+
+    private MeasurementPhase measurementPhase = MeasurementPhase.INIT;
+
+    public SpeedPhaseState getDownloadMeasurement() {
         return downloadMeasurement;
     }
 
-    public void setDownloadMeasurement(JniSpeedState downloadMeasurement) {
+    public void setDownloadMeasurement(SpeedPhaseState downloadMeasurement) {
         this.downloadMeasurement = downloadMeasurement;
     }
 
-    public JniSpeedState getUploadMeasurement() {
+    public SpeedPhaseState getUploadMeasurement() {
         return uploadMeasurement;
     }
 
-    public void setUploadMeasurement(JniSpeedState uploadMeasurement) {
+    public void setUploadMeasurement(SpeedPhaseState uploadMeasurement) {
         this.uploadMeasurement = uploadMeasurement;
+    }
+
+    public void setMeasurementPhaseByStringValue(final String state) {
+        if (state == null) {
+            return;
+        }
+        try {
+            measurementPhase = MeasurementPhase.valueOf(state);
+        } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public float getProgress() {
+        return progress;
+    }
+
+    public void setProgress(float progress) {
+        this.progress = progress;
+    }
+
+    public MeasurementPhase getMeasurementPhase() {
+        return measurementPhase;
+    }
+
+    public void setMeasurementPhase(MeasurementPhase measurementPhase) {
+        this.measurementPhase = measurementPhase;
     }
 
     @Override
@@ -33,7 +67,15 @@ public class JniSpeedMeasurementState {
                 '}';
     }
 
-    public class JniSpeedState {
+    public enum MeasurementPhase {
+        INIT,
+        PING,
+        DOWNLOAD,
+        UPLOAD,
+        END
+    }
+
+    public class SpeedPhaseState {
         private long bytes;
 
         private long bytesIncludingSlowStart;
@@ -101,6 +143,7 @@ public class JniSpeedMeasurementState {
         }
 
         public void setThroughputAvgBps(long throughputAvgBps) {
+            Log.d("STATE", "setter called");
             this.throughputAvgBps = throughputAvgBps;
         }
 

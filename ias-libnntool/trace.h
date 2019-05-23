@@ -55,18 +55,18 @@ class CTrace
 		void init(string strIniFileName, string sCat);
 		#endif
 
-		void logCritical(string strMessage);
+		void logCritical(const string &strMessage);
 		
-		void logErr(string strMessage);
+		void logErr(const string &strMessage);
 		
-		void logWarn(string strMessage);
+		void logWarn(const string &strMessage);
 		
-		void logInfo(string strMessage);
+		void logInfo(const string &strMessage);
 		
-		void logDebug(string strMessage);
+		void logDebug(const string &strMessage);
 
 		#ifdef NNTOOL_CLIENT
-		void logToPlatform(string category, string sMessage);
+		void logToPlatform(const string &category, const string &sMessage);
 		#endif
 };
 

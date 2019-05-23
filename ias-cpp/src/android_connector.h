@@ -6,6 +6,7 @@
 #include <jni.h>
 #include <iostream>
 #include "../../ias-libnntool/json11.hpp"
+#include "type.h"
 
 extern void measurementStart(std::string measurementParameters);
 
@@ -58,6 +59,8 @@ extern class CConfigManager* pService;
 extern class CCallback *pCallback;
 extern class CMeasurement* pMeasurement;
 
+extern MeasurementPhase currentTestPhase;
+
 class AndroidConnector {
 
 
@@ -67,7 +70,7 @@ class AndroidConnector {
             return instance;
         }
 
-        void registerSharedObject(JNIEnv* env, jobject caller, jobject downloadMeasurementState, jobject uploadMeasurementState);
+        void registerSharedObject(JNIEnv* env, jobject caller, jobject baseMeasurementState, jobject downloadMeasurementState, jobject uploadMeasurementState);
 
         /**
         *   resets state and releases global java references made during setup
@@ -78,11 +81,13 @@ class AndroidConnector {
 
         jint jniLoad(JavaVM* vm);
 
-        void callback(json11::Json::object& message);
+        void callback(json11::Json::object& message) const;
         /*
         * The method forwarded to the trace to allow for easy android printing
         */
-        void printLog(const std::string& message);
+        void printLog(const std::string& message) const;
+
+        void callbackError(const int errorCode, const std::string &errorMessage) const;
 
         AndroidConnector(AndroidConnector const&) = delete;
         void operator=(AndroidConnector const&) = delete;
@@ -90,30 +95,49 @@ class AndroidConnector {
         void operator=(AndroidConnector const&&) = delete;
     private:
 
-        enum SpeedState {
-            DOWNLOAD,
-            UPLOAD
-        };
-
         static const char* TAG;
 
         JavaVM *javaVM;
         jclass jniHelperClass;
-        jobject jniHelperObj;
         jobject jniCaller;
 
+        //the method to be sending the callback to
+        jmethodID callbackID;
+        jmethodID setMeasurementPhaseByStringValueID;
+
         //the object to set the current progress state in
+        jobject baseMeasurementState;
         jobject downloadMeasurementState;
         jobject uploadMeasurementState;
 
         //the field ids of the settable values
+        //baseMeasurementFields
+        jfieldID fieldProgress;
+        
+        //speedMeasurementFields
         jfieldID fieldAvgDownloadThroughput;
         jfieldID fieldDurationMsTotal;
         jfieldID fieldDurationMs;
 
         AndroidConnector() {};
 
-        void passJniSpeedState (JNIEnv *env, SpeedState speedStateToSet, const json11::Json& json) const;
+        void passJniSpeedState (JNIEnv *env, const MeasurementPhase& speedStateToSet, const json11::Json& json) const;
+
+        static std::string getStringForMeasurementPhase(const MeasurementPhase &phase)  {
+            switch (phase) {
+                case MeasurementPhase::INIT:
+                    return "INIT";
+                case MeasurementPhase::PING:
+                    return "PING";
+                case MeasurementPhase::DOWNLOAD:
+                    return "DOWNLOAD";
+                case MeasurementPhase::UPLOAD:
+                    return "UPLOAD";
+                case MeasurementPhase::END:
+                    return "END";
+                
+            }
+        }
 
     //void trace (const std::string message);
 

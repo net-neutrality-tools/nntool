@@ -20,8 +20,7 @@ set(CMAKE_BUILD_TYPE Debug)
 
 #---------------------------------------------------------------------------------
 
-add_library (nntool SHARED 
-				typedef.cpp 
+add_library (nntool SHARED
 				tool.cpp
 				connection.cpp
 				configmanager.cpp 

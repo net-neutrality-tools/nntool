@@ -11,4 +11,16 @@
     <string name="task_register_agent_dialog_info">Registering measurement agent…</string>
     <string name="task_measurement_initiation_dialog_info">Initiating measurement…</string>
     <string name="task_send_report_dialog_info">Sending report to collector…</string>
+
+    <string name="measurement_gauge_label_init">init</string>
+    <string name="measurement_gauge_label_ping">ping</string>
+    <string name="measurement_gauge_label_down">down</string>
+    <string name="measurement_gauge_label_up">up</string>
+
+    <string name="measurement_gauge_speed_zero">0</string>
+    <string name="measurement_gauge_speed_one">1Mb</string>
+    <string name="measurement_gauge_speed_two">10Mb</string>
+    <string name="measurement_gauge_speed_three">100Mb</string>
+    <string name="measurement_gauge_speed_four">1Gb</string>
+
 </resources>

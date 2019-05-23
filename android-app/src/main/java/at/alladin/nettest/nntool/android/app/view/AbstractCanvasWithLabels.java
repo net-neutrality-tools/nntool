@@ -9,6 +9,12 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.workflow.measurement.SpeedMeasurementState;
+
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
  */
@@ -32,9 +38,14 @@ public abstract class AbstractCanvasWithLabels extends View {
 
     protected float singleArcAngle = 0f;
 
-    protected String[] progressLabels;
+    protected List<String> progressLabels;
+    protected int progressLabelWhitespaces = 2;
 
-    protected int testPhases = 4;
+    protected List<String> speedLabels;
+    protected int speedLabelWhitespaces = 1;
+
+    //the state holding the current test progress
+    protected SpeedMeasurementState speedMeasurementState;
 
     public AbstractCanvasWithLabels(final Context context) {
         super(context);
@@ -48,10 +59,25 @@ public abstract class AbstractCanvasWithLabels extends View {
         super(context, attrs, defStyleAttr);
     }
 
+    public void setSpeedMeasurementState(final SpeedMeasurementState state) {
+        this.speedMeasurementState = state;
+    }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        progressLabels = getProgressLabels();
+        progressLabels = new ArrayList<>(4);
+        progressLabels.add(getStringWithWhitespace(getResources().getString(R.string.measurement_gauge_label_init), progressLabelWhitespaces));
+        progressLabels.add(getStringWithWhitespace(getResources().getString(R.string.measurement_gauge_label_ping), progressLabelWhitespaces));
+        progressLabels.add(getStringWithWhitespace(getResources().getString(R.string.measurement_gauge_label_down), progressLabelWhitespaces));
+        progressLabels.add(getStringWithWhitespace(getResources().getString(R.string.measurement_gauge_label_up), progressLabelWhitespaces));
+
+        speedLabels = new ArrayList<>(5);
+        speedLabels.add(getStringWithWhitespace(getResources().getString(R.string.measurement_gauge_speed_zero), speedLabelWhitespaces));
+        speedLabels.add(getStringWithWhitespace(getResources().getString(R.string.measurement_gauge_speed_one), speedLabelWhitespaces));
+        speedLabels.add(getStringWithWhitespace(getResources().getString(R.string.measurement_gauge_speed_two), speedLabelWhitespaces));
+        speedLabels.add(getStringWithWhitespace(getResources().getString(R.string.measurement_gauge_speed_three), speedLabelWhitespaces));
+        speedLabels.add(getStringWithWhitespace(getResources().getString(R.string.measurement_gauge_speed_four), speedLabelWhitespaces));
     }
 
     //TODO: we may not need to enforce an onDraw's existance, but here we are!
@@ -101,10 +127,6 @@ public abstract class AbstractCanvasWithLabels extends View {
     }
 
     protected abstract void initialize();
-
-    protected String[] getProgressLabels() {
-        return progressLabels;
-    }
 
     protected String getStringWithWhitespace(final String text, final int whiteSpaces) {
         final StringBuilder builder = new StringBuilder();
