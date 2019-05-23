@@ -32,13 +32,29 @@ services:
     volumes:
       - ./config/dev/collector-service:/etc/nettest/collector-service:ro
     ports:
-      - "18081:8081"
+      #- "18081:8081" # if started via java -jar
+      - "18081:8080" # if started via servlet container (e.g. jetty)
 
   result-service:
     volumes:
       - ./config/dev/result-service:/etc/nettest/result-service:ro
     ports:
-      - "18082:8082"
+      #- "18082:8082"
+      - "18082:8080"
+
+  #search-service:
+  #  volumes:
+  #    - ./config/dev/search-service:/etc/nettest/search-service:ro
+  #  ports:
+  #    #- "18083:8083"
+  #    - "18083:8080"
+
+  statistic-service:
+    volumes:
+      - ./config/dev/statistic-service:/etc/nettest/statistic-service:ro
+    ports:
+      #- "18084:8084"
+      - "18084:8080"
 
   ias-server:
     ports:

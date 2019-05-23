@@ -56,6 +56,24 @@ services:
       - couchdb
     restart: on-failure
 
+#  search-service:
+#    #image: nntool.eu/search-service:1.0
+#    image: nntool.eu/search-service:latest
+#    depends_on:
+#      - elasticsearch
+#    links:
+#      - elasticsearch
+#    restart: on-failure
+
+  statistic-service:
+    #image: nntool.eu/statistic-service:1.0
+    image: nntool.eu/statistic-service:latest
+    depends_on:
+      - postgresqldb # TODO: watch timing, we may need wait-for-it.sh
+    links:
+      - postgresqldb
+    restart: on-failure
+
   ias-server:
     #image: nntool.eu/ias-server:1.0
     image: nntool.eu/ias-server:latest
