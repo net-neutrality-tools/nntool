@@ -198,8 +198,8 @@ fabric.properties
 *.pdb
 
 # Kernel Module Compile Results
-*.mod*
-!*.modulemap
+# Rule *.mod* also excludes files like *.module.ts, *.model.ts, see issue #73
+#*.mod*
 *.cmd
 .tmp_versions/
 modules.order
