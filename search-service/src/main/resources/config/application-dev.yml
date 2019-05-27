@@ -11,3 +11,11 @@ spring:
 logging:
   level:
     at.alladin.nettest: DEBUG
+
+search-service:
+  elasticsearch:
+    host: localhost
+    port: 19200
+    scheme: http
+    index: nntool
+    queryTimeout: 10s

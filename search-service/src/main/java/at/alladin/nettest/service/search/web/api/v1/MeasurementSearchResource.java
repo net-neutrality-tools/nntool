@@ -6,10 +6,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
+import org.springframework.data.web.SortDefault.SortDefaults;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import at.alladin.nettest.service.search.service.SearchService;
@@ -45,12 +50,10 @@ public class MeasurementSearchResource {
 		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
 	})
 	@GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<ApiResponse<ApiPagination<Map<String, Object>/*BriefMeasurementResponse*/>>> getMeasurementList(Pageable pageable) {
-		
-		/*final List<BriefMeasurementResponse> responseList = new ArrayList<>();
-		
-		return ResponseHelper.ok(new PageImpl<>(responseList, pageable, 1));*/
-		
-		return ResponseHelper.ok(searchService.findAll(pageable));
+    public ResponseEntity<ApiResponse<ApiPagination<Map<String, Object>>>> getMeasurementList(
+    	@RequestParam(name = "q", required = false) String queryString, 
+    	@PageableDefault(page = 0, size = 50) @SortDefaults({ @SortDefault(sort = "end_time", direction = Sort.Direction.DESC )}) Pageable pageable
+    ) {
+		return ResponseHelper.ok(searchService.findAll(queryString, pageable));
 	}
 }
