@@ -7,6 +7,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -110,6 +112,18 @@ public class SearchService {
 				.collect(Collectors.toList());
 			
 			return new PageImpl<>(strList, pageable, searchHits.getTotalHits().value);
+		} catch (IOException e) {
+			throw new SearchException(e);
+		}
+	}
+
+	public Map<String, Object> findOneByOpenDataUuid(String openDataUuid) {
+		final GetRequest getRequest = new GetRequest(index, openDataUuid);
+		
+		try {
+			final GetResponse getResponse = elasticsearchClient.get(getRequest, RequestOptions.DEFAULT);
+			
+			return getResponse.getSourceAsMap();
 		} catch (IOException e) {
 			throw new SearchException(e);
 		}
