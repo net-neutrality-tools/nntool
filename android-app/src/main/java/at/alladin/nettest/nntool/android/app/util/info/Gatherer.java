@@ -52,7 +52,7 @@ public abstract class Gatherer<T> {
         return null;
     }
 
-    public abstract void start();
+    public abstract void onStart();
 
-    public abstract void stop();
+    public abstract void onStop();
 }

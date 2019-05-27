@@ -1,9 +1,8 @@
 package at.alladin.nettest.nntool.android.app.util.info;
 
 import android.content.Context;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 
@@ -21,6 +20,8 @@ public class InformationProvider {
 
     final WifiManager wifiManager;
 
+    final LocationManager locationManager;
+
     final Context context;
 
     final Map<Class<?>, Gatherer> gathererMap = new HashMap<>();
@@ -30,17 +31,18 @@ public class InformationProvider {
         this.connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         this.telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         this.wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
     }
 
-    public void onPause() {
+    public void onStop() {
         for (final Map.Entry<Class<?>, Gatherer> e : gathererMap.entrySet()) {
-            e.getValue().stop();
+            e.getValue().onStop();
         }
     }
 
-    public void onResume() {
+    public void onStart() {
         for (final Map.Entry<Class<?>, Gatherer> e : gathererMap.entrySet()) {
-            e.getValue().start();
+            e.getValue().onStart();
         }
     }
 
@@ -87,5 +89,9 @@ public class InformationProvider {
 
     public WifiManager getWifiManager() {
         return wifiManager;
+    }
+
+    public LocationManager getLocationManager() {
+        return locationManager;
     }
 }

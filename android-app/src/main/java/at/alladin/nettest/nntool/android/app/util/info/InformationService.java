@@ -6,6 +6,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
 
@@ -43,7 +44,7 @@ public class InformationService extends Service {
     @Override
     public void onDestroy() {
         Log.d(TAG,"onDestroy");
-        informationProvider.onPause();
+        informationProvider.onStop();
         super.onDestroy();
     }
 
@@ -54,7 +55,8 @@ public class InformationService extends Service {
             if (ACTION_START_INFORMATION_SERVICE.equals(intent.getAction())) {
                 registerGatherer(NetworkGatherer.class);
                 registerGatherer(SignalGatherer.class);
-                informationProvider.onResume();
+                registerGatherer(GeoLocationGatherer.class);
+                informationProvider.onStart();
             }
         }
 

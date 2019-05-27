@@ -23,6 +23,7 @@ import at.alladin.nettest.nntool.android.app.support.telephony.CellSignalStrengt
 import at.alladin.nettest.nntool.android.app.support.telephony.SignalItem;
 import at.alladin.nettest.nntool.android.app.util.PermissionUtil;
 import at.alladin.nettest.nntool.android.app.util.info.Gatherer;
+import at.alladin.nettest.nntool.android.app.util.info.ListenableGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkTypeAware;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 
@@ -31,7 +32,7 @@ import static at.alladin.nettest.nntool.android.app.util.info.network.NetworkTyp
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  */
-public class SignalGatherer extends Gatherer<SignalStrengthChangeEvent> {
+public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent, SignalStrengthChangeListener> {
 
     private final static String TAG = SignalGatherer.class.getSimpleName();
 
@@ -41,10 +42,8 @@ public class SignalGatherer extends Gatherer<SignalStrengthChangeEvent> {
 
     private final AtomicReference<CellSignalStrengthWrapper> lastSignalItem = new AtomicReference<>(null);
 
-    private List<SignalStrengthChangeListener> signalStrengthChangeListenerList = new ArrayList<>();
-
     @Override
-    public void start() {
+    public void onStart() {
         IntentFilter intentFilter;
         intentFilter = new IntentFilter();
         intentFilter.addAction(WifiManager.RSSI_CHANGED_ACTION);
@@ -63,22 +62,18 @@ public class SignalGatherer extends Gatherer<SignalStrengthChangeEvent> {
     }
 
     @Override
-    public void stop() {
+    public void onStop() {
         getInformationProvider().getContext().unregisterReceiver(networkStateBroadcastReceiver);
         getTelephonyManager().listen(telephonyStateListener, PhoneStateListener.LISTEN_NONE);
     }
 
-    public void addSignalStrengthChangeListener(final SignalStrengthChangeListener listener) {
-        if (listener != null && !signalStrengthChangeListenerList.contains(listener)) {
-            signalStrengthChangeListenerList.add(listener);
+    @Override
+    public void addListener(final SignalStrengthChangeListener listener) {
+        super.addListener(listener);
+        if (listener != null) {
             listener.onSignalStrengthChange(getCurrentValue());
         }
     }
-
-    public boolean removeSignalStrengthChangeListener(final SignalStrengthChangeListener listener) {
-        return signalStrengthChangeListenerList.remove(listener);
-    }
-
 
     public CellSignalStrengthWrapper getLastSignalItem() {
         return lastSignalItem.get();
@@ -254,8 +249,8 @@ public class SignalGatherer extends Gatherer<SignalStrengthChangeEvent> {
     }
 
     private void dispatchSignalStrengthChangedEvent(final SignalStrengthChangeEvent event) {
-        if (signalStrengthChangeListenerList != null) {
-            for (final SignalStrengthChangeListener listener : signalStrengthChangeListenerList) {
+        if (getListenerList() != null) {
+            for (final SignalStrengthChangeListener listener : getListenerList()) {
                 listener.onSignalStrengthChange(event);
             }
         }

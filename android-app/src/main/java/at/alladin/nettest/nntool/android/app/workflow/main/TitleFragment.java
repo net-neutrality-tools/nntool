@@ -121,12 +121,12 @@ public class TitleFragment extends Fragment implements ServiceConnection {
         informationService = ((InformationService.InformationServiceBinder) service).getService();
         final NetworkGatherer networkGatherer = informationService.getInformationProvider().getGatherer(NetworkGatherer.class);
         if (networkGatherer != null && providerSignalView != null) {
-            networkGatherer.addNetworkChangeListener(providerSignalView);
+            networkGatherer.addListener(providerSignalView);
         }
 
         final SignalGatherer signalGatherer = informationService.getInformationProvider().getGatherer(SignalGatherer.class);
         if (signalGatherer != null && providerSignalView != null) {
-            signalGatherer.addSignalStrengthChangeListener(providerSignalView);
+            signalGatherer.addListener(providerSignalView);
         }
 
         Log.d(TAG, "InformationService connected");
@@ -136,12 +136,12 @@ public class TitleFragment extends Fragment implements ServiceConnection {
     public void onServiceDisconnected(ComponentName name) {
         final NetworkGatherer networkGatherer = informationService.getInformationProvider().getGatherer(NetworkGatherer.class);
         if (networkGatherer != null && providerSignalView != null) {
-            networkGatherer.removeNetworkChangeListener(providerSignalView);
+            networkGatherer.removeListener(providerSignalView);
         }
 
         final SignalGatherer signalGatherer = informationService.getInformationProvider().getGatherer(SignalGatherer.class);
         if (signalGatherer != null && providerSignalView != null) {
-            signalGatherer.removeSignalStrengthChangeListener(providerSignalView);
+            signalGatherer.removeListener(providerSignalView);
         }
 
         informationService = null;

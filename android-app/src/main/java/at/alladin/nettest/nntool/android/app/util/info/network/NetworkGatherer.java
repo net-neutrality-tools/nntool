@@ -22,11 +22,12 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import at.alladin.nettest.nntool.android.app.util.info.Gatherer;
+import at.alladin.nettest.nntool.android.app.util.info.ListenableGatherer;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  */
-public class NetworkGatherer extends Gatherer<NetworkChangeEvent> implements NetworkTypeAware {
+public class NetworkGatherer extends ListenableGatherer<NetworkChangeEvent, NetworkChangeListener> implements NetworkTypeAware {
 
     private final static String TAG = NetworkGatherer.class.getSimpleName();
 
@@ -36,8 +37,6 @@ public class NetworkGatherer extends Gatherer<NetworkChangeEvent> implements Net
 
     private final TelephonyStateListener telephonyStateListener = new TelephonyStateListener();
 
-    private List<NetworkChangeListener> networkChangeListenerList = new ArrayList<>();
-
     public static String removeQuotationsInCurrentSSIDForJellyBean(String ssid)
     {
         if (Build.VERSION.SDK_INT >= 17 && ssid != null && ssid.startsWith("\"") && ssid.endsWith("\"")) {
@@ -46,15 +45,12 @@ public class NetworkGatherer extends Gatherer<NetworkChangeEvent> implements Net
         return ssid;
     }
 
-    public void addNetworkChangeListener(final NetworkChangeListener listener) {
-        if (listener != null && !networkChangeListenerList.contains(listener)) {
-            networkChangeListenerList.add(listener);
+    @Override
+    public void addListener(final NetworkChangeListener listener) {
+        super.addListener(listener);
+        if (listener != null) {
             listener.onNetworkChange(getCurrentValue());
         }
-    }
-
-    public boolean removeNetworkChangeListener(final NetworkChangeListener listener) {
-        return networkChangeListenerList.remove(listener);
     }
 
     /*
@@ -79,7 +75,7 @@ public class NetworkGatherer extends Gatherer<NetworkChangeEvent> implements Net
     */
 
     @Override
-    public void start() {
+    public void onStart() {
         IntentFilter intentFilter;
         intentFilter = new IntentFilter();
         intentFilter.addAction(WifiManager.RSSI_CHANGED_ACTION);
@@ -99,7 +95,7 @@ public class NetworkGatherer extends Gatherer<NetworkChangeEvent> implements Net
     }
 
     @Override
-    public void stop() {
+    public void onStop() {
         getInformationProvider().getContext().unregisterReceiver(networkStateBroadcastReceiver);
         getTelephonyManager().listen(telephonyStateListener, PhoneStateListener.LISTEN_NONE);
         /*
@@ -195,8 +191,8 @@ public class NetworkGatherer extends Gatherer<NetworkChangeEvent> implements Net
             }
             setCurrentValue(networkChangeEvent);
 
-            if (networkChangeListenerList != null) {
-                for (final NetworkChangeListener listener : networkChangeListenerList) {
+            if (getListenerList() != null) {
+                for (final NetworkChangeListener listener : getListenerList()) {
                     listener.onNetworkChange(networkChangeEvent);
                 }
             }
