@@ -21,7 +21,7 @@ import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
 })
 @ComponentScan({
 	"at.alladin.nettest.service.search", 
-	//"at.alladin.nettest.shared.server.web.api.v1"
+	"at.alladin.nettest.shared.server.web.api.v1"
 })
 public class SearchServiceApplication extends SpringBootServletInitializer {
 
