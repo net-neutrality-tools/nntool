@@ -12,6 +12,13 @@
     <string name="task_measurement_initiation_dialog_info">Initiating measurement…</string>
     <string name="task_send_report_dialog_info">Sending report to collector…</string>
 
+    <string name="top_progress_bar_view_speed_unit">Mbps</string>
+    <string name="top_progress_bar_view_ping_unit">ms</string>
+
+    <string name="bottom_measurement_result_summary_view_download_unit">Download (Mbps)</string>
+    <string name="bottom_measurement_result_summary_view_upload_unit">Upload (Mbps)</string>
+    <string name="bottom_measurement_result_summary_view_ping_unit">Ping (ms)</string>
+
     <string name="measurement_gauge_label_init">init</string>
     <string name="measurement_gauge_label_ping">ping</string>
     <string name="measurement_gauge_label_down">down</string>

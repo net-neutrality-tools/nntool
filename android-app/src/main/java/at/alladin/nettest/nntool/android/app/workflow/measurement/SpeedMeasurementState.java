@@ -1,6 +1,6 @@
 package at.alladin.nettest.nntool.android.app.workflow.measurement;
 
-import android.util.Log;
+import android.support.annotation.Keep;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
@@ -11,7 +11,8 @@ public class SpeedMeasurementState {
 
     private SpeedPhaseState uploadMeasurement = new SpeedPhaseState();
 
-    //TODO: use progress!
+    private PingPhaseState pingMeasurement = new PingPhaseState();
+
     private float progress;
 
     private MeasurementPhase measurementPhase = MeasurementPhase.INIT;
@@ -32,6 +33,15 @@ public class SpeedMeasurementState {
         this.uploadMeasurement = uploadMeasurement;
     }
 
+    public PingPhaseState getPingMeasurement() {
+        return pingMeasurement;
+    }
+
+    public void setPingMeasurement(PingPhaseState pingMeasurement) {
+        this.pingMeasurement = pingMeasurement;
+    }
+
+    @Keep
     public void setMeasurementPhaseByStringValue(final String state) {
         if (state == null) {
             return;
@@ -73,6 +83,18 @@ public class SpeedMeasurementState {
         DOWNLOAD,
         UPLOAD,
         END
+    }
+
+    public class PingPhaseState {
+        private long averageMs;
+
+        public long getAverageMs() {
+            return averageMs;
+        }
+
+        public void setAverageMs(long averageMs) {
+            this.averageMs = averageMs;
+        }
     }
 
     public class SpeedPhaseState {
@@ -143,7 +165,6 @@ public class SpeedMeasurementState {
         }
 
         public void setThroughputAvgBps(long throughputAvgBps) {
-            Log.d("STATE", "setter called");
             this.throughputAvgBps = throughputAvgBps;
         }
 

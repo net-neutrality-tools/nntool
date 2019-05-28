@@ -44,8 +44,11 @@ public abstract class AbstractCanvasWithLabels extends View {
     protected List<String> speedLabels;
     protected int speedLabelWhitespaces = 1;
 
-    //the state holding the current test progress
-    protected SpeedMeasurementState speedMeasurementState;
+    //the progress to be displayed (0,1)
+    protected float progressValue = 0;
+
+    //the achieved speedValue in mbps
+    protected double speedValue = 0;
 
     public AbstractCanvasWithLabels(final Context context) {
         super(context);
@@ -59,8 +62,12 @@ public abstract class AbstractCanvasWithLabels extends View {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setSpeedMeasurementState(final SpeedMeasurementState state) {
-        this.speedMeasurementState = state;
+    public void setSpeedValue (final double speedValue) {
+        this.speedValue = speedValue;
+    }
+
+    public void setProgressValue (final float progressValue) {
+        this.progressValue = progressValue;
     }
 
     @Override

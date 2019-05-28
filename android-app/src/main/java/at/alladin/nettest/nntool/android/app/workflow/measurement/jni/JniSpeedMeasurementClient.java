@@ -23,16 +23,17 @@ public class JniSpeedMeasurementClient {
 
     public JniSpeedMeasurementClient() {
         speedMeasurementState = new SpeedMeasurementState();
-        shareMeasurementState(speedMeasurementState, speedMeasurementState.getDownloadMeasurement(), speedMeasurementState.getUploadMeasurement());
+        shareMeasurementState(speedMeasurementState, speedMeasurementState.getPingMeasurement(), speedMeasurementState.getDownloadMeasurement(), speedMeasurementState.getUploadMeasurement());
     }
 
     @Keep
     public void cppCallback(final String message) {
         Log.d(TAG, message);
-        Log.d(TAG, "state " + speedMeasurementState.getMeasurementPhase().toString());
-        Log.d(TAG, "prog " + speedMeasurementState.getProgress());
-        //Log.d(TAG, "measurement dl throughput " + speedMeasurementState.getDownloadMeasurement().getThroughputAvgBps() + " time: " + speedMeasurementState.getDownloadMeasurement().getDurationMsTotal());
-        //Log.d(TAG, "measurement ul throughput " + speedMeasurementState.getUploadMeasurement().getThroughputAvgBps() + " time: " + speedMeasurementState.getUploadMeasurement().getDurationMsTotal());
+    }
+
+    @Keep
+    public void cppCallbackFinished (final String message) {
+        Log.d(TAG, message);
     }
 
     public SpeedMeasurementState getSpeedMeasurementState() {
@@ -47,6 +48,13 @@ public class JniSpeedMeasurementClient {
      * Call this method before starting a test to allow the cpp impl to write the current state into the passed JniSpeedMeasurementState obj
      * Is automatically called for the devs in the constructor
      */
-    private native void shareMeasurementState(final SpeedMeasurementState speedMeasurementState, final SpeedMeasurementState.SpeedPhaseState downloadMeasurementState, final SpeedMeasurementState.SpeedPhaseState uploadMeasurementState);
+    private native void shareMeasurementState(final SpeedMeasurementState speedMeasurementState, final SpeedMeasurementState.PingPhaseState pingMeasurementState,
+                                              final SpeedMeasurementState.SpeedPhaseState downloadMeasurementState, final SpeedMeasurementState.SpeedPhaseState uploadMeasurementState);
 
+    /**
+     * Method to free the global java references from the cpp code
+     * Call after every ended measurement (either stopped or finished)
+     * Equivalent to shareMeasurementState method
+     */
+    private native void cleanUp();
 }

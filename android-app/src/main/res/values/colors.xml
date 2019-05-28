@@ -20,6 +20,7 @@
     <color name="qos_measurement_progress_item_fg">@color/theme_primary_color</color>
     <color name="qos_measurement_progress_item_text_fg">@color/theme_app_bg</color>
 
+    <color name="gauge_phase_indicator">#4d515d</color>
     <color name="gauge_progress_fg">@color/theme_secondary_color</color>
     <color name="gauge_progress_bg">@color/qos_measurement_progress_item_bg</color>
     <color name="gauge_speed_fg">@color/theme_primary_color</color>
@@ -27,4 +28,8 @@
 
     <color name="top_progress_bar_left_fg">@color/theme_secondary_color</color>
     <color name="top_progress_bar_right_fg">@color/theme_primary_color</color>
+
+    <color name="bottom_result_overview_icon">@color/theme_primary_color</color>
+    <color name="bottom_result_overview_text">@color/theme_text_color</color>
+
 </resources>

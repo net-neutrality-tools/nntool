@@ -9,8 +9,6 @@ import android.util.AttributeSet;
 
 import at.alladin.nettest.nntool.android.app.R;
 
-import static java.lang.Math.log10;
-
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  */
@@ -60,11 +58,15 @@ public class CanvasArcDoubleGaugeWithLabels extends AbstractCanvasWithLabels {
         arcPaint.setColor(getResources().getColor(R.color.gauge_progress_bg));
         canvas.drawArc(progressRing.getBounds(), 0, ARC_ANGLE, false, arcPaint);
 
+        //progress arc
+
+        //draw the progress foreground
+        arcPaint.setColor(getResources().getColor(R.color.gauge_progress_fg));
+        canvas.drawArc(progressRing.getBounds(), 0, (float) (ARC_ANGLE*progressValue), false, arcPaint);
+
         //define arcpaint for the gauges
         arcPaint.setStrokeWidth(coordFW(SMALL_POINTER_SIZE, defaultWidth));
-        arcPaint.setColor(getResources().getColor(R.color.black));
-
-        //progress arc
+        arcPaint.setColor(getResources().getColor(R.color.theme_app_bg));
 
         final int progressLabelSize = progressLabels.size();
         final float radProgress = ((float) (2f*Math.PI*(progressRing.getBounds().width()/2f))) * (ARC_ANGLE/360f);
@@ -84,18 +86,15 @@ public class CanvasArcDoubleGaugeWithLabels extends AbstractCanvasWithLabels {
         final float radSpeedPart = radSpeed / (speedLabelSize - 1);
 
         //get speed log value
-        if (speedMeasurementState != null) {
+        if (speedValue > 0) {
+
+            //TODO: precompute that stuff
             final double maxLog = Math.log10(1000d);
             final double gaugeParts = speedLabelSize - 1;
 
-            if (speedMeasurementState.getDownloadMeasurement() != null) {
-                //TODO: state checking
-                if (speedMeasurementState.getDownloadMeasurement().getThroughputAvgBps() > 10000) {
-                    final double downLog = ((gaugeParts - maxLog) + Math.log10(speedMeasurementState.getDownloadMeasurement().getThroughputAvgBps() / 1e6)) / gaugeParts;
-                    arcPaint.setColor(getResources().getColor(R.color.gauge_speed_fg));
-                    canvas.drawArc(speedRing.getBounds(), 0, (float)(ARC_ANGLE*downLog), false, arcPaint);
-                }
-            }
+            final double logSpeed = ((gaugeParts - maxLog) + Math.log10(speedValue)) / gaugeParts;
+            arcPaint.setColor(getResources().getColor(R.color.gauge_speed_fg));
+            canvas.drawArc(speedRing.getBounds(), 0, (float) (ARC_ANGLE * logSpeed), false, arcPaint);
         }
 
         for (int i = 0; i < speedLabelSize; i++) {
@@ -112,6 +111,7 @@ public class CanvasArcDoubleGaugeWithLabels extends AbstractCanvasWithLabels {
         }
 
         arcPaint.setStrokeWidth(coordFW(REALLY_SMALL_POINTER_SIZE, defaultWidth));
+        arcPaint.setColor(getResources().getColor(R.color.theme_app_bg));
         final float speedRingOffset = coordFW(SMALL_POINTER_SIZE - REALLY_SMALL_POINTER_SIZE, defaultWidth) / 2;
         for (int i = 1; i < speedLabelSize - 1; i++) {
             canvas.drawArc(speedRing.getBounds(speedRingOffset), i * (ARC_ANGLE / (speedLabelSize - 1)), 1f, false, arcPaint);
@@ -132,7 +132,7 @@ public class CanvasArcDoubleGaugeWithLabels extends AbstractCanvasWithLabels {
         arcPaint.setAntiAlias(true);
 
         arcTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        arcTextPaint.setColor(getResources().getColor(R.color.black));
+        arcTextPaint.setColor(getResources().getColor(R.color.theme_app_bg));
         arcTextPaint.setTextSize(coordFH(4, defaultHeight));
 
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

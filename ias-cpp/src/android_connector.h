@@ -70,7 +70,7 @@ class AndroidConnector {
             return instance;
         }
 
-        void registerSharedObject(JNIEnv* env, jobject caller, jobject baseMeasurementState, jobject downloadMeasurementState, jobject uploadMeasurementState);
+        void registerSharedObject(JNIEnv* env, jobject caller, jobject baseMeasurementState, jobject pingMeasurementState, jobject downloadMeasurementState, jobject uploadMeasurementState);
 
         /**
         *   resets state and releases global java references made during setup
@@ -82,12 +82,14 @@ class AndroidConnector {
         jint jniLoad(JavaVM* vm);
 
         void callback(json11::Json::object& message) const;
+
+        void callbackError(const int errorCode, const std::string &errorMessage) const;
+
+        void callbackFinished (const json11::Json::object& message);
         /*
         * The method forwarded to the trace to allow for easy android printing
         */
         void printLog(const std::string& message) const;
-
-        void callbackError(const int errorCode, const std::string &errorMessage) const;
 
         AndroidConnector(AndroidConnector const&) = delete;
         void operator=(AndroidConnector const&) = delete;
@@ -103,21 +105,26 @@ class AndroidConnector {
 
         //the method to be sending the callback to
         jmethodID callbackID;
+        jmethodID cppCallbackFinishedID;
         jmethodID setMeasurementPhaseByStringValueID;
 
         //the object to set the current progress state in
         jobject baseMeasurementState;
         jobject downloadMeasurementState;
         jobject uploadMeasurementState;
+        jobject pingMeasurementState;
 
         //the field ids of the settable values
         //baseMeasurementFields
         jfieldID fieldProgress;
         
         //speedMeasurementFields
-        jfieldID fieldAvgDownloadThroughput;
+        jfieldID fieldAvgThroughput;
         jfieldID fieldDurationMsTotal;
         jfieldID fieldDurationMs;
+
+        //pingMeasurementFields
+        jfieldID fieldAverageMs;
 
         AndroidConnector() {};
 
@@ -139,16 +146,8 @@ class AndroidConnector {
             }
         }
 
-    //void trace (const std::string message);
-
 //TODO: get the compiling to use basic cpp instructions as well
 
-
-/*
-JNIEXPORT void JNICALL startMeasurement (JNIEnv* env, jobject thiz, const std::string measurementConfiguration) {
-
-}
-*/
 
 };
 

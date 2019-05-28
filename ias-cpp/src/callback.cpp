@@ -145,16 +145,11 @@ int CCallback::run()
                 jMeasurementResults["time_info"] = Json(jMeasurementResultsTime);
             }
 
-            /*
-            if ("report" == cmd) {
-                connector.callbackReport();
-            } else if ("finish" == cmd) {
-                connector.callbackFinish();
-            } else if ("completed" == cmd) {
-                connector.callbackCompleted();
+            if (cmd == "completed") {
+                AndroidConnector::getInstance().callbackFinished(jMeasurementResults);
+            } else {
+                AndroidConnector::getInstance().callback(jMeasurementResults);
             }
-            AndroidConnector::getInstance().callback(jMeasurementResults);
-            */
         }
 #else
 
