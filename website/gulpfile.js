@@ -136,7 +136,6 @@ const tscConfig = require('./tsconfig.json');
 const sourcemaps = require('gulp-sourcemaps');
 const gulpTslint = require('gulp-tslint');
 const tslint = require('tslint');
-const runSequence = require('run-sequence');
 const lite = require('lite-server');
 var server = null;
 const rename = require('gulp-rename');
@@ -214,14 +213,9 @@ gulp.task('serve:resume', function (cb) {
 
 
 /**
- * Clean the contents of all directories
- */
-gulp.task('clean:all', ['clean:build', 'clean:stage', 'clean:bundle']);
-
-/**
  * Clean the contents of the build directory
  */
-gulp.task('clean:build', function () {
+gulp.task('clean:build', () => {
     return del(buildDir + '/**/*');
 });
 
@@ -238,6 +232,11 @@ gulp.task('clean:stage', function () {
 gulp.task('clean:bundle', function () {
     return del(bundleDir + '/**/*');
 });
+
+/**
+ * Clean the contents of all directories
+ */
+gulp.task('clean:all', gulp.series('clean:build', 'clean:stage', 'clean:bundle'));
 
 /**
  * Clean compiled js - stage
@@ -262,7 +261,7 @@ gulp.task('clean:app:build', function () {
 /**
  * Clean compiled js - build+stage
  */
-gulp.task('clean:app', ['clean:app:stage', 'clean:app:build']);
+gulp.task('clean:app', gulp.series('clean:app:stage', 'clean:app:build'));
 
 /**
  * Clean libraries - build
@@ -351,19 +350,21 @@ gulp.task('compile:ts:do', function () {
  * Copy and compile typescript - src->stage->build
  */
 gulp.task('compile:ts', function (cb) {
-    runSequence(
-        ['copy:ts', 'clean:app:build'],
+    gulp.series(
+        //['copy:ts', 'clean:app:build'],
+        'copy:ts', 
+        'clean:app:build',
         'tslint',
         'compile:ts:do',
-        cb
-    );
+        //cb
+    )(cb);
 });
 
 /**
  * Compile client less - client->src
  */
 // TODO: staging
-gulp.task('compile:less', ['clean:less'], function () {
+gulp.task('compile:less', gulp.series('clean:less', () => {
     return gulp
         .src([
             clientDir + '/' + client + '/less/client.less'
@@ -374,12 +375,12 @@ gulp.task('compile:less', ['clean:less'], function () {
         .pipe(replace('url(\'../', 'url(\'./../'))
         .pipe(replace('url(\'/', 'url(\'./../../'))
         .pipe(gulp.dest(buildDir + '/assets/css/'))
-});
+}));
 
 /**
  * Compile client adoc - src->build
  */
-gulp.task('compile:adoc', ['clean:adoc'], function () {
+gulp.task('compile:adoc', gulp.series('clean:adoc', () => {
     return gulp
         .src([
             clientDir + '/' + client + '/adoc/*/*.adoc'
@@ -389,13 +390,13 @@ gulp.task('compile:adoc', ['clean:adoc'], function () {
             attributes: ['showToc', 'showNumberedHeadings', 'showTitle']
         }))
         .pipe(gulp.dest(buildDir + '/i18n/view/'))
-});
+}));
 
 
 /**
  * Copy libraries - direct
  */
-gulp.task('copy:libs', ['clean:libs'], function () {
+gulp.task('copy:libs', gulp.series('clean:libs', () => {
     return gulp.src(
         [
             'core-js/client/shim.min.js',
@@ -428,25 +429,7 @@ gulp.task('copy:libs', ['clean:libs'], function () {
     ).pipe(
         gulp.dest(buildDir + '/lib')
     )
-});
-
-/**
- * Copy static assets - i.e. non TypeScript compiled source / non app js - direct? (except test)
- */
-gulp.task('copy:assets:main', ['copy:assets:main:test'], function () {
-    return gulp.src(
-        [
-            srcDir + '/app/**/*.html',
-            "!" + srcDir + '/app/test/**/*.html',
-            srcDir + '/assets/**/*',
-            srcDir + '/systemjs.config.js',
-            srcDir + '/browserconfig.xml'
-        ],
-        {base : srcDir + '/'}
-    ).pipe(
-        gulp.dest(buildDir + '/')
-    )
-});
+}));
 
 gulp.task('copy:assets:main:test', function () {
     return gulp.src(
@@ -460,9 +443,27 @@ gulp.task('copy:assets:main:test', function () {
 });
 
 /**
+ * Copy static assets - i.e. non TypeScript compiled source / non app js - direct? (except test)
+ */
+gulp.task('copy:assets:main', gulp.series('copy:assets:main:test', () => {
+    return gulp.src(
+        [
+            srcDir + '/app/**/*.html',
+            "!" + srcDir + '/app/test/**/*.html',
+            srcDir + '/assets/**/*',
+            srcDir + '/systemjs.config.js',
+            srcDir + '/browserconfig.xml'
+        ],
+        {base : srcDir + '/'}
+    ).pipe(
+        gulp.dest(buildDir + '/')
+    )
+}));
+
+/**
  * Copy images from client - direct
  */
-gulp.task('copy:client:img', [], function () {
+gulp.task('copy:client:img', () => {
     return gulp.src(
         [
             clientDir + '/' + client + '/img/*'
@@ -476,7 +477,7 @@ gulp.task('copy:client:img', [], function () {
 /**
  * Copy fonts from client - direct
  */
-gulp.task('copy:client:fonts', [], function () {
+gulp.task('copy:client:fonts', () => {
     return gulp.src(
         [
             clientDir + '/' + client + '/fonts/*'
@@ -490,7 +491,7 @@ gulp.task('copy:client:fonts', [], function () {
 /**
  * Copy client js - direct
  */
-gulp.task('copy:client:js', [], function () {
+gulp.task('copy:client:js', () => {
     return gulp.src(
         [
             clientDir + '/' + client + '/js/*'
@@ -504,7 +505,7 @@ gulp.task('copy:client:js', [], function () {
 /**
  * Copy client download files - direct
  */
-gulp.task('copy:client:download', [], function () {
+gulp.task('copy:client:download', () => {
     return gulp.src(
         [
             clientDir + '/' + client + '/download/*'
@@ -535,19 +536,25 @@ gulp.task('copy:client:templates', function () {
  * Copy client and own assets - direct?
  */
 gulp.task('copy:assets',  function (cb) {
-    runSequence(
+    gulp.series(
         'clean:assets',
         'copy:assets:main',
-        [
+        /*[
             'copy:client:js',
             'copy:client:img',
             'copy:client:fonts',
             'copy:client:download',
             'copy:client:templates',
             'copy:i18n'
-        ],
-        cb
-    )
+        ],*/
+        'copy:client:js',
+        'copy:client:img',
+        'copy:client:fonts',
+        'copy:client:download',
+        'copy:client:templates',
+        'copy:i18n',
+        //cb
+    )(cb);
 });
 
 /**
@@ -555,12 +562,12 @@ gulp.task('copy:assets',  function (cb) {
  *
  * src->build; client->build;
  */
-gulp.task('copy:i18n', ['clean:i18n'], function (cb) {
-    runSequence(
+gulp.task('copy:i18n', gulp.series('clean:i18n', (cb) => {
+    gulp.series(
         'create:i18n',
-        cb
-    )
-});
+        //cb
+    )(cb);
+}));
 
 /**
  * Copy typescript to staging
@@ -568,26 +575,16 @@ gulp.task('copy:i18n', ['clean:i18n'], function (cb) {
  * src->stage; client->stage;
  */
 gulp.task('copy:ts', function (cb) {
-    runSequence(
+    gulp.series(
         'clean:app:stage',
-        ['copy:ts:main', 'create:constants'],
-        ['create:settings', 'copy:ts:client'],
-        cb
-    );
-});
-
-/**
- * Copy main typescript to staging (except test)
- *
- * src->stage;
- */
-gulp.task('copy:ts:main', ['copy:ts:test:real', 'copy:ts:test:mock'], function () {
-    return gulp.src(
-        [srcDir + '/app/**/*.ts', srcDir + "/app/**/*.js", "!" + srcDir + "/app/test/**/*"],
-        {base : srcDir + '/'}
-    ).pipe(
-        gulp.dest(stageDir + '/')
-    );
+        //['copy:ts:main', 'create:constants'],
+        //['create:settings', 'copy:ts:client'],
+        'copy:ts:main', 
+        'create:constants',
+        'create:settings', 
+        'copy:ts:client',
+        //cb
+    )(cb);
 });
 
 gulp.task('copy:ts:test:real', function () {
@@ -605,8 +602,6 @@ gulp.task('copy:ts:test:real', function () {
             gulp.dest(stageDir + '/')
         );
 });
-
-gulp.task('copy:ts:test:mock', ['copy:ts:test:mock:module', 'copy:ts:test:mock:component']);
 
 gulp.task('copy:ts:test:mock:module', function () {
     return gulp.src(
@@ -629,6 +624,22 @@ gulp.task('copy:ts:test:mock:component', function () {
             gulp.dest(stageDir + '/app/test/')
         );
 });
+
+gulp.task('copy:ts:test:mock', gulp.series('copy:ts:test:mock:module', 'copy:ts:test:mock:component'));
+
+/**
+ * Copy main typescript to staging (except test)
+ *
+ * src->stage;
+ */
+gulp.task('copy:ts:main', gulp.series('copy:ts:test:real', 'copy:ts:test:mock', () => {
+    return gulp.src(
+        [srcDir + '/app/**/*.ts', srcDir + "/app/**/*.js", "!" + srcDir + "/app/test/**/*"],
+        {base : srcDir + '/'}
+    ).pipe(
+        gulp.dest(stageDir + '/')
+    );
+}));
 
 gulp.task('create:constants', function (cb) {
     // git rev-parse [--abbrev-ref] --branches HEAD -> list [name of] branches
@@ -702,10 +713,21 @@ gulp.task('create:i18n', function (cb) {
 });
 
 
+gulp.task('copy:bundle:leaflet', function () {
+    // TODO: rewrite leaflet css (replace str)
+    return gulp
+        .src(
+            [
+                buildDir + '/lib/leaflet/dist/images/*'
+            ],
+            {base : buildDir + '/lib/leaflet/dist/'}
+        ).pipe(gulp.dest(bundleDir + '/assets/css/'));
+});
+
 /**
  * Copy bundle - build->bundle
  */
-gulp.task('copy:bundle', [/*'copy:bundle:css', */'copy:bundle:leaflet'], function () {
+gulp.task('copy:bundle', gulp.series(/*'copy:bundle:css', */'copy:bundle:leaflet', () => {
     return gulp
         .src(
             [
@@ -721,18 +743,7 @@ gulp.task('copy:bundle', [/*'copy:bundle:css', */'copy:bundle:leaflet'], functio
             ],
             {base : buildDir + '/'}
         ).pipe(gulp.dest(bundleDir + '/'));
-});
-
-gulp.task('copy:bundle:leaflet', function () {
-    // TODO: rewrite leaflet css (replace str)
-    return gulp
-        .src(
-            [
-                buildDir + '/lib/leaflet/dist/images/*'
-            ],
-            {base : buildDir + '/lib/leaflet/dist/'}
-        ).pipe(gulp.dest(bundleDir + '/assets/css/'));
-});
+}));
 
 
 /**
@@ -751,7 +762,7 @@ gulp.task('copy:ts:client', function () {
 /**
  * Inject js/css into index.html - build
  */
-gulp.task('inject', ['copy:assets', 'copy:libs'], function () {
+gulp.task('inject', gulp.series('copy:assets', 'copy:libs', () => {
     var target = gulp.src(srcDir + '/index.html');
     var sources = gulp.src(
         [
@@ -770,7 +781,7 @@ gulp.task('inject', ['copy:assets', 'copy:libs'], function () {
         ].concat(clientIncludeList), {read: false}
     );
     target
-        .pipe(inject(gulp.src(''), {
+        .pipe(inject(gulp.src('.'), {
             starttag: '<!-- inject:external -->',
             transform: function () {
                 var res = "";
@@ -781,7 +792,7 @@ gulp.task('inject', ['copy:assets', 'copy:libs'], function () {
             },
             empty: true
         }))
-        .pipe(inject(gulp.src(''), {
+        .pipe(inject(gulp.src('.'), {
             starttag: '<!-- inject:loading -->',
             transform: function () {
                 return loadingText;
@@ -793,12 +804,12 @@ gulp.task('inject', ['copy:assets', 'copy:libs'], function () {
     return target
         .pipe(inject(sources, {ignorePath: buildDir, addRootSlash: false}))
         .pipe(gulp.dest(buildDir))
-});
+}));
 
 /**
  * Inject js/css into index-bundled.html - build
  */
-gulp.task('inject:bundle', ['copy:assets', 'copy:libs'], function () {
+gulp.task('inject:bundle', gulp.series('copy:assets', 'copy:libs', () => {
     var target = gulp.src(srcDir + '/index-bundled.html');
     var sources = gulp.src(
         [
@@ -837,50 +848,54 @@ gulp.task('inject:bundle', ['copy:assets', 'copy:libs'], function () {
     return target
         .pipe(inject(sources, {ignorePath: bundleDir, addRootSlash: true}))
         .pipe(gulp.dest(bundleDir));
-});
+}));
 
 
 /**
  * Build a part - src->stage->build; client->build; src->build
  */
 gulp.task('build:part',  function (cb) {
-    runSequence('compile:ts', 'copy:assets', cb)
+    gulp.series('compile:ts', 'copy:assets'/*, cb*/)(cb);
 });
 
 gulp.task('build', function (cb) {
-    runSequence(
-        ['compile:ts', 'compile:less', 'compile:adoc'],
-        ['inject'/*, 'copy:i18n'*/],
-        cb
-    )
+    gulp.series(
+        //['compile:ts', 'compile:less', 'compile:adoc'],
+        //['inject'/*, 'copy:i18n'*/],
+        'compile:ts', 
+        'compile:less', 
+        'compile:adoc',
+        'inject'/*, 'copy:i18n'*/,
+        //cb
+    )(cb);
 });
 
 gulp.task('build:dev', function (cb) {
-    runSequence(
+    /*return*/ gulp.series(
         'clean:all',
         'set-env:dev',
         'build',
-        cb
-    );
+        //cb
+    )(cb);
 });
 
 gulp.task('build:prod', function (cb) {
-    runSequence(
+    gulp.series(
         'clean:all',
         'set-env:prod',
         'build',
-        cb
-    );
+        //cb
+    )(cb);
 });
 
 gulp.task('build:bundle', function (cb) {
-    runSequence(
+    gulp.series(
         'clean:all',
         'set-env:prod',
         'build',
         'bundle',
-        cb
-    );
+        //cb
+    )(cb);
 });
 
 gulp.task('bundle:css', function () {
@@ -934,7 +949,7 @@ gulp.task('bundle:js:reflect', function (cb) {
     );
 });
 
-gulp.task('bundle:js', ['bundle:js:reflect'], function (cb) {
+gulp.task('bundle:js', gulp.series('bundle:js:reflect', (cb) => {
     var it = function () {
         pump([
                 gulp.src([
@@ -982,7 +997,7 @@ gulp.task('bundle:js', ['bundle:js:reflect'], function (cb) {
         ],
         it
     );
-});
+}));
 
 gulp.task('bundle:i18n', function (cb) {
     pump([
@@ -996,11 +1011,11 @@ gulp.task('bundle:i18n', function (cb) {
     );
 });
 
-gulp.task('bundle:app', function () {
-    return bundle("app/main.js", bundleDir + '/assets/js/bundle.app.js');
+gulp.task('bundle:app', function (done) {
+    bundle("app/main.js", bundleDir + '/assets/js/bundle.app.js', done);
 });
 
-gulp.task('bundle:app:minify', ['bundle:app'], function (cb) {
+gulp.task('bundle:app:minify', gulp.series('bundle:app', (cb) => {
     pump([
             gulp.src(bundleDir + '/assets/js/bundle.app.js'),
             rename('bundle.app.min.js'),
@@ -1024,7 +1039,7 @@ gulp.task('bundle:app:minify', ['bundle:app'], function (cb) {
         ],
         cb
     );
-});
+}));
 
 function bundle(src, dst, opt) {
     const bundleOptions = Object.assign({
@@ -1039,10 +1054,14 @@ function bundle(src, dst, opt) {
 }
 
 gulp.task('bundle', function (cb) {
-    runSequence(
+    gulp.series(
         'clean:bundle',
         'copy:bundle',
-        ['bundle:app:minify', 'bundle:css', 'bundle:js', 'bundle:i18n'],
+        //['bundle:app:minify', 'bundle:css', 'bundle:js', 'bundle:i18n'],
+        'bundle:app:minify', 
+        'bundle:css', 
+        'bundle:js', 
+        'bundle:i18n',
         'inject:bundle',
         cb
     );
@@ -1087,14 +1106,13 @@ gulp.task('upload:bundle', function() {
         }, clientDeploySettings)));
 });
 
-gulp.task('upload', ['upload:prod']);
-
+gulp.task('upload', gulp.series('upload:prod'));
 
 /**
  * Deploy to production - build->remote
  */
 gulp.task('deploy:prod', function(cb) {
-    runSequence(
+    gulp.series(
         'build:prod',
         'upload:prod',
         cb
@@ -1106,48 +1124,48 @@ gulp.task('deploy:prod', function(cb) {
  * Deploy to production - build->bundled->remote
  */
 gulp.task('deploy:bundle', function(cb) {
-    runSequence(
+    gulp.series(
         'build:bundle',
         'upload:bundle',
         cb
     );
 });
 
-gulp.task('deploy', ['deploy:bundle']);
+gulp.task('deploy', gulp.series('deploy:bundle'));
 
 
 function watch () {
     gulp.watch(["package.js"]).on('change', function (e) {
         console.log('Npm ' + e.path + ' was ' + e.type + '. Building..');
-        runSequence('inject', 'serve:reload');
+        gulp.series('inject', 'serve:reload');
     });
     gulp.watch([clientDir + '/' + client + '/settings.js']).on('change', function (e) {
         console.log('Settings ' + e.path + ' was ' + e.type + '. Copy..');
-        runSequence('build:part', 'serve:reload');
+        gulp.series('build:part', 'serve:reload');
     });
     gulp.watch([clientDir + '/' + client + '/less/client.less', 'src/less/**/*.less']).on('change', function (e) {
         console.log('Less ' + e.path + ' was ' + e.type + '. Compiling..');
-        runSequence('compile:less', 'copy:assets', 'serve:reload');
+        gulp.series('compile:less', 'copy:assets', 'serve:reload');
     });
     gulp.watch([clientDir + '/' + client + '/adoc/**/*.adoc']).on('change', function (e) {
         console.log('Adoc ' + e.path + ' was ' + e.type + '. Compiling..');
-        runSequence('compile:adoc', 'serve:reload');
+        gulp.series('compile:adoc', 'serve:reload');
     });
     gulp.watch([clientDir + '/' + client + '/ts/**/*.html']).on('change', function (e) {
         console.log('Client template ' + e.path + ' was ' + e.type + '. Compiling..');
-        runSequence('build:part', 'serve:reload');
+        gulp.series('build:part', 'serve:reload');
     });
     gulp.watch([srcDir + '/i18n/*.json', clientDir + '/' + client + '/i18n/*.json']).on('change', function (e) {
         console.log('i18n ' + e.path + ' was ' + e.type + '. Compiling..');
-        runSequence('copy:i18n', 'serve:reload');
+        gulp.series('copy:i18n', 'serve:reload');
     });
     gulp.watch([srcDir + "/systemjs.config.js"]).on('change', function (e) {
         console.log('System ' + e.path + ' was ' + e.type + '. Building..');
-        runSequence('build:dev', 'serve:reload');
+        gulp.series('build:dev', 'serve:reload');
     });
     gulp.watch([srcDir + "/app/**/*.ts", srcDir + "/app/**/*.js", clientDir + "/" + client + "/ts/**/*.ts"]).on('change', function (e) {
         console.log('TypeScript file ' + e.path + ' was ' + e.type + '. Compiling..');
-        runSequence('build:part', 'serve:reload');
+        gulp.series('build:part', 'serve:reload');
     });
     gulp.watch([
         srcDir + "/**/*.html", srcDir + "/**/*.css", srcDir + "/**/*.js",
@@ -1155,7 +1173,7 @@ function watch () {
         "!" + srcDir + "/systemjs.config.js", "!" + srcDir + "/app/**/*.js"
     ]).on('change', function (e) {
         console.log('Resource file ' + e.path + ' was ' + e.type + '. Updating..');
-        runSequence('inject', 'serve:reload');
+        gulp.series('inject', 'serve:reload');
     });
     gulp.watch([
         clientDir + '/' + client + '/loadingText.js'
@@ -1166,34 +1184,34 @@ function watch () {
         } catch (e) {
             console.warn(clientDir + "/" + client + "/loadingText.js not found");
         }
-        runSequence('inject', 'serve:reload');
+        gulp.series('inject', 'serve:reload');
     });
     gulp.watch([
         clientDir + '/' + client + '/img/**/*'
     ]).on('change', function (e) {
         console.log('Client image file ' + e.path + ' was ' + e.type + '. Updating..');
-        runSequence('copy:client:img', 'serve:reload');
+        gulp.series('copy:client:img', 'serve:reload');
     });
     gulp.watch([
         clientDir + '/' + client + '/fonts/**/*'
     ]).on('change', function (e) {
         console.log('Client font file ' + e.path + ' was ' + e.type + '. Updating..');
-        runSequence('copy:client:fonts', 'serve:reload');
+        gulp.series('copy:client:fonts', 'serve:reload');
     });
     gulp.watch([
         clientDir + '/' + client + '/download/**/*'
     ]).on('change', function (e) {
         console.log('Client download file ' + e.path + ' was ' + e.type + '. Updating..');
-        runSequence('copy:client:download', 'serve:reload');
+        gulp.series('copy:client:download', 'serve:reload');
     });
 }
 
 
-gulp.task('watch', ['build:dev'], function (cb) {
+gulp.task('watch', gulp.series('build:dev', (cb) => {
     serve();
     watch();
     cb();
-});
+}));
 
 
-gulp.task('default', ['build:bundle']);
+gulp.task('default', gulp.series('build:bundle'));
