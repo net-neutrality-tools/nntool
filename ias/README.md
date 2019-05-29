@@ -1,7 +1,7 @@
 ## Building ##
 
 ### Prerequisites ###
-Node.js >= 8
+Node.js >= 8 (tested with v8.16.0 and 10.16.0)
 npm >= 5
 uglify-es >= 3
 Linux or macOS (any Version)
