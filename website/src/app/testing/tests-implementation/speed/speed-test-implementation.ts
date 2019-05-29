@@ -8,6 +8,8 @@ import {SpeedTestStateEnum} from "./enums/speed-test-state.enum";
 import {SpeedTestConfig} from "./speed-test-config";
 import {TestSchedulerService} from "../../test-scheduler.service";
 
+declare var Ias: any;
+
 @Injectable({
     providedIn: 'root',
 })
@@ -137,7 +139,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
         this.zone.runOutsideAngular(() => {
             const state = this.generateInitState(config);
 
-            window.iasCallback = (data: any) => { // TODO: inject window object properly
+            (<any>window).iasCallback = (data: any) => { // TODO: inject window object properly
                 if (!this.$state) {
                     return;
                 }
