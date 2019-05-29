@@ -8,6 +8,8 @@ import {PortBlockingTestTypeEnum} from "./enums/port-blocking-test-type";
 import {PortBlockingTestConfig} from "./port-blocking-test-config";
 import {TestSchedulerService} from "../../test-scheduler.service";
 
+declare var PortBlocking: any;
+
 @Injectable({
     providedIn: 'root',
 })
@@ -73,7 +75,7 @@ export class PortBlockingTestImplementation extends TestImplementation<PortBlock
         this.zone.runOutsideAngular(() => {
             const state = this.generateInitState(config);
 
-            window.measurementCallback = (data: any) => { // TODO: inject window object properly
+            (<any>window).measurementCallback = (data: any) => { // TODO: inject window object properly
                 if (!this.$state) {
                     return;
                 }
