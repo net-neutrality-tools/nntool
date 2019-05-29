@@ -11,7 +11,7 @@
 ----
 npm i
 npm install gulp -g # for convenience
-gulp --gulpfile prepare-common.js # build common project
+gulp --gulpfile prepare-ias.js # build ias project
 gulp watch
 ----
 
