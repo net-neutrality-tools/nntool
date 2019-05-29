@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-03
+ *      \date Last update: 2019-05-29
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -368,7 +368,7 @@ function connect()
                     length++;
                 }
 
-                var data = event.data.split(',');
+                var data = event.data.split(';')[0].split(',');
                 if (data.length > 4)
                 {
                     ulReportDict[length]        = {};
