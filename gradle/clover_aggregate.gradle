@@ -17,7 +17,7 @@ task printCloverCodeCoverage {
         def xml = new XmlParser().parseText(metrics)
 
         println '=============================== Coverage summary ==============================='
-        println 'clover_code_coverage: ' + ((xml.@coveredelements as Double) / (xml.@elements as Double)).round(4)
+        println 'clover_code_coverage: ' + (((xml.@coveredelements as Double) / (xml.@elements as Double)) * 100.0).round(2)
         println '================================================================================'
     }
 }
