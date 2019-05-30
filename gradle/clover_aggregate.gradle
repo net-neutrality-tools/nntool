@@ -13,7 +13,7 @@ clover {
 task printCloverCodeCoverage {
     dependsOn 'cloverAggregateReports'
     doLast {
-        String metrics = new File(/*"$rootProject.buildDir/reports/clover/clover.xml"*/"/tmp/clover.xml").readLines().get(3)
+        String metrics = new File("$rootProject.buildDir/reports/clover/clover.xml").readLines().get(3)
         def xml = new XmlParser().parseText(metrics)
 
         println '=============================== Coverage summary ==============================='
