@@ -1,14 +1,15 @@
 {
   "name": "website",
   "version": "0.0.1",
-  "author": "alladin-IT",
+  "author": "alladin-IT GmbH",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
+    "start": "npm run build:ias && ng serve",
+    "build": "npm run build:ias && ng build",
+    "test": "npm run build:ias && ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "npm run build:ias && ng e2e",
+    "build:ias": "cd ../ias/ && ./build.sh"
   },
   "private": true,
   "dependencies": {
@@ -25,8 +26,7 @@
     "zone.js": "~0.9.1",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
-    "ng2-nvd3": "^2.0.0",
-    "@zafaco/breitbandtest": "file:../ias/build/uglified/web"
+    "ng2-nvd3": "^2.0.0"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "^8.0.1",
@@ -38,8 +38,6 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
     "codelyzer": "^5.0.0",
-    "gulp": "~4.0.2",
-    "gulp-rename": "~1.4.0",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",
@@ -50,6 +48,7 @@
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
-    "typescript": "~3.4.3"
+    "typescript": "~3.4.3",
+    "uglify-es": "~3.3.9"
   }
 }

@@ -35,9 +35,9 @@
               "src/less/client.less"
             ],
             "scripts": [
-              "node_modules/@zafaco/breitbandtest/ias.web.js",
-              { "input": "node_modules/@zafaco/breitbandtest/Worker.js", "bundleName": "Worker" },
-              { "input": "node_modules/@zafaco/breitbandtest/Tool.js", "bundleName": "Tool" }
+              { "input": "../ias/build/uglified/web/ias.web.js", "bundleName": "ias.web" },
+              { "input": "../ias/build/uglified/web/Worker.js", "bundleName": "Worker" },
+              { "input": "../ias/build/uglified/web/Tool.js", "bundleName": "Tool" }
             ]
           },
           "configurations": {
@@ -112,9 +112,9 @@
               "src/less/client.less"
             ],
             "scripts": [
-              "node_modules/@zafaco/breitbandtest/ias.web.js",
-              { "input": "node_modules/@zafaco/breitbandtest/Worker.js", "bundleName": "Worker" },
-              { "input": "node_modules/@zafaco/breitbandtest/Tool.js", "bundleName": "Tool" }
+              { "input": "../ias/build/uglified/web/ias.web.js", "bundleName": "ias.web" },
+              { "input": "../ias/build/uglified/web/Worker.js", "bundleName": "Worker" },
+              { "input": "../ias/build/uglified/web/Tool.js", "bundleName": "Tool" }
             ]
           }
         },

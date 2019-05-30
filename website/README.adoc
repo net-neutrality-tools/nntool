@@ -7,35 +7,44 @@
 
 == Setup
 
+The following steps are needed to setup the development environment:
+
+- install dependencies using `npm install`
+- build IAS module (automatically done when using `npm run ...` commands)
+- serve or build website
+
 [source, bash]
 ----
-npm i
-npm install gulp -g # for convenience
-gulp --gulpfile prepare-ias.js # build ias project
-ng serve
+npm install
+npm start # runs npm build:ias and ng serve
 ----
 
 == Development
 
-Gulp is used to execute the ias build script.
-The website itself is built using angular-cli.
-
-(All paths are relative to the root git directory).
+The website is based on Angular 8 and is built using Angular CLI.
 
 === Commands
 
-==== ng serve
+==== npm
+
+===== build:ias
+
+Run `npm run build:ias` to build the IAS module.
+
+==== ng
+
+===== ng serve
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-==== build
+===== build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-==== Running unit tests
+===== Running unit tests
 
 Run `ng test` to execute the unit tests via https://karma-runner.github.io[Karma].
 
-==== Running end-to-end tests
+===== Running end-to-end tests
 
 Run `ng e2e` to execute the end-to-end tests via http://www.protractortest.org/[Protractor].
