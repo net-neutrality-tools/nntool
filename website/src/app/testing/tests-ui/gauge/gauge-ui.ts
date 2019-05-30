@@ -13,7 +13,7 @@ import {MeasurementGauge} from "./existing-gauge-ui/gauge.ui";
 import {TestConfig} from "../../tests-implementation/test-config";
 
 @Component({
-    templateUrl: "./app/testing/tests-ui/gauge/gauge-ui.template.html",
+    templateUrl: "./gauge-ui.template.html",
 })
 export abstract class GaugeUI<T extends TestImplementation<TC, TS>, TC extends TestConfig, TS extends TestState>
     extends Test<GaugeUIState, T, TC, TS>

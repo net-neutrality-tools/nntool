@@ -17,7 +17,7 @@ interface ITestType {
 
 
 @Component({
-    templateUrl: "./app/measurement/view-detail.component.html"
+    templateUrl: "../measurement/view-detail.component.html"
 })
 export class HistoryDetailViewComponent extends MeasurementDetailViewComponent {
 

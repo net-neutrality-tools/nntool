@@ -13,7 +13,7 @@ class Point {
 }
 
 @Component({
-    templateUrl: "./app/testing/tests-ui/bar/bar-ui.template.html",
+    templateUrl: "./bar-ui.template.html",
 })
 export abstract class BarUI<T extends TestImplementation<TC, TS>, TC extends TestConfig, TS extends TestState>
     extends Test<BarUIState, T, TC, TS>

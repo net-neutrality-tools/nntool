@@ -3,7 +3,7 @@ import {Logger, LoggerService} from "../services/log.service";
 
 @Component({
     selector: "footer",
-    templateUrl: "./app/footer/footer.component.html"
+    templateUrl: "./footer.component.html"
 })
 export class FooterComponent {
 

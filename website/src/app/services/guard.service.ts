@@ -79,7 +79,7 @@ export class Guard implements CanActivate, CanActivateChild {
 
     get hiddenInApp (): boolean {
         let agent: string = window.navigator.userAgent;
-        return agent && agent.toLowerCase().includes(this.settings.user_agent.toLowerCase());
+        return false; //TODO: agent && agent.toLowerCase().includes(this.settings.user_agent.toLowerCase());
     }
 
     get showOpenddataMessage (): boolean {

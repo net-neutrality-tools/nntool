@@ -64,7 +64,7 @@ import {TestSettingsService} from "./services/test/test-settings.service";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http, "./i18n/");
+    return new TranslateHttpLoader(http, "./assets/i18n/");
 }
 
 const MAIN_DECLARATIONS = [

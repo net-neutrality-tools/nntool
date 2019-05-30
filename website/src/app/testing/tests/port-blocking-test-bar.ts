@@ -11,7 +11,7 @@ import {PortBlockingTestConfig} from "../tests-implementation/port-blocking/port
 
 @Component({
     // needs to be mentioned here, but also mentioned in gauge-ui.ts for reference
-    templateUrl: "./app/testing/tests-ui/bar/bar-ui.template.html",
+    templateUrl: "../tests-ui/bar/bar-ui.template.html",
     selector: 'port-blocking-test-bar'
 })
 export class PortBlockingTestBar extends BarUI<PortBlockingTestImplementation, PortBlockingTestConfig, PortBlockingTestState> {

@@ -3,6 +3,8 @@ import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {Title} from "@angular/platform-browser";
 import {Location} from "@angular/common";
 
+import { environment } from '../environments/environment';
+
 import {TranslateService, LangChangeEvent, TranslationChangeEvent} from "@ngx-translate/core";
 import {Subscription} from "rxjs";
 import {filter} from "rxjs/operators";
@@ -18,8 +20,8 @@ import {UserInfo, UserService} from "./services/user.service";
 
 
 @Component({
-    selector: "[data-view-app]",
-    templateUrl: "./app/app.component.html"
+    selector: "app-root",
+    templateUrl: "./app.component.html"
 })
 export class AppComponent implements OnInit, OnDestroy {
 
@@ -53,7 +55,7 @@ export class AppComponent implements OnInit, OnDestroy {
         const reg = new RegExp(langs.join("|"));
         const browserLang = this.translateService.getBrowserLang();
         const storedLang = this.storage.load('user_lang', false);
-        this.renderer.addClass(document.body, this.configService.getClient());
+        //TODO: this.renderer.addClass(document.body, this.configService.getClient());
 
         this.translateService.addLangs(langs);
         this.translateService.setDefaultLang(langs[0]);
@@ -157,11 +159,16 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     menuOpen () {
-        $("body").toggleClass("menu-open");
+        // TODO: don't call window.document.body directly
+        if (window.document.body.classList.contains('menu-open')) {
+            this.menuClose()
+        } else {
+            this.renderer.addClass(document.body, 'menu-open')
+        }
     }
 
     menuClose () {
-        $("body").removeClass("menu-open");
+        this.renderer.removeClass(document.body, 'menu-open')
     }
 
     get showScrollInfo (): boolean {

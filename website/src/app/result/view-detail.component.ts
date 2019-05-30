@@ -3,7 +3,7 @@ import {MeasurementDetailViewComponent} from "../measurement/view-detail.compone
 
 
 @Component({
-    templateUrl: "./app/measurement/view-detail.component.html"
+    templateUrl: "../measurement/view-detail.component.html"
 })
 export class OpentestDetailViewComponent extends MeasurementDetailViewComponent {
 

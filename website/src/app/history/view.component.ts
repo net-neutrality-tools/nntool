@@ -3,7 +3,7 @@ import {Component} from "@angular/core";
 
 
 @Component({
-    templateUrl: "./app/measurement/view.component.html"
+    templateUrl: "../measurement/view.component.html"
 })
 export class HistoryViewComponent extends MeasurementViewComponent {
     protected resetData (cb?: () => void): void {}

@@ -129,8 +129,9 @@ export class RequestsService {
     }
 
     getCss (src: string): void {
-        $('head').append(
+        // TODO: jquery
+        /*$('head').append(
             $('<link rel="stylesheet" type="text/css" />').attr("href", src)
-        );
+        );*/
     }
 }

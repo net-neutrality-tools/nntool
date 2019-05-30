@@ -10,7 +10,7 @@ import {ConfigService} from "../services/config.service";
 
 
 @Component({
-    templateUrl: "./app/adoc/adoc.component.html"
+    templateUrl: "./adoc.component.html"
 })
 export class ADocComponent implements AfterViewInit, OnDestroy {
 

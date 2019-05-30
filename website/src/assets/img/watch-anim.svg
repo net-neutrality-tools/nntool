@@ -4,9 +4,8 @@
         .a {
             fill: transparent;
         }
-        
         .b {
-            fill: #111111;
+            fill: #921f56;
         }
         .c {
             fill: #ffffff;

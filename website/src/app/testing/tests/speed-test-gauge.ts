@@ -11,7 +11,7 @@ import {SpeedTestConfig} from "../tests-implementation/speed/speed-test-config";
 
 @Component({
     // needs to be mentioned here, but also mentioned in gauge-ui.ts for reference
-    templateUrl: "./app/testing/tests-ui/gauge/gauge-ui.template.html",
+    templateUrl: "../tests-ui/gauge/gauge-ui.template.html",
     selector: 'speed-test-gauge'
 })
 export class SpeedTestGauge extends GaugeUI<SpeedTestImplementation, SpeedTestConfig, SpeedTestState> {

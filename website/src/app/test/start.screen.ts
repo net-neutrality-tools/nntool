@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, Output} from "@angular/core";
 
 
 @Component({
-    templateUrl: "./app/test/start.screen.html",
+    templateUrl: "./start.screen.html",
     selector: ".screen-start"
 })
 export class StartScreen {

@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 
 import {WebsiteSettings} from "../settings/settings.interface";
-import {settings} from "../settings/settings";
 import {Logger, LoggerService} from "./log.service";
-import * as constants from "../constants";
+
+import { environment } from '../../environments/environment';
 
 
 export interface MapSettingsResponse {
@@ -23,13 +23,14 @@ export interface MapSettingsResponse {
     };
 }
 
+declare var __TEST_CONFIG__: any;
 
 @Injectable()
 export class ConfigService {
 
     private logger: Logger = LoggerService.getLogger("ConfigService");
-    private config: WebsiteSettings = settings;
-
+    private config: WebsiteSettings = environment;
+    private constants: any = __TEST_CONFIG__;
 
     constructor () {}
 
@@ -40,23 +41,23 @@ export class ConfigService {
     }
 
     getConfig (): any {
-        return this.config;
+        return environment;
     }
 
     getVersion (): string {
-        return constants.version ? constants.version : "";
+        return this.constants.version ? this.constants.version : "";
     }
 
     getBranch (): string {
-        return constants.branch ? constants.branch : "";
+        return this.constants.branch ? this.constants.branch : "";
     }
 
     getRevision (): string {
-        return constants.revision ? constants.revision : "";
+        return this.constants.revision ? this.constants.revision : "";
     }
 
     getClient (): string {
-        return constants.client ? constants.client : "";
+        return this.constants.client ? this.constants.client : "";
     }
 
     getServerControl (): string {

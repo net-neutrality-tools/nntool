@@ -1,65 +1,35 @@
-<!DOCTYPE html>
-<html class="no-js" lang="en">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
-    <link rel="shortcut icon" href="assets/img/favicon.ico">
-    <base href="./">
+  <meta charset="utf-8">
+  <title>Website</title>
+  
+  <base href="/">
 
-    <!-- inject:css -->
-    <!-- endinject -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
 
-    <script src="lib/systemjs/dist/system.src.js"></script>
-    <script src="lib/systemjs/dist/system-polyfills.js"></script>
-    <script src="lib/core-js/client/shim.min.js"></script>
-    <script src="lib/reflect-metadata/Reflect.js"></script>
-    <script src="lib/zone.js/dist/zone.js"></script>
-
-    <script>require = undefined; if (typeof module === 'object') { window.module = module; module = undefined; }</script>
-    <!-- inject:external -->
-    <!-- endinject -->
-    <script>if (window.module) { module = window.module; }</script>
-
-    <script src="systemjs.config.js"></script>
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
 </head>
 <body class="nettest">
-    <div data-view-app id="app">
-        <!-- #fullpage -->
-        <div id="fullpage" role="main">
-            <!-- #section-intro -->
-            <section class="section" id="section-intro">
-                <div class="wrapper">
-                    <!-- Loading container -->
-                    <div class="section-header loading-container">
-                        <h1>
-                            <!-- inject:loading -->
-                            <!-- endinject -->
-                        </h1>
-                        <img src="assets/img/watch-anim.svg" alt="loading content" class="load-animation">
-                    </div>
-                    <!-- Loading container end -->
-                </div>
-            </section>
-        </div>
-    </div>
-
-    <script>
-        document.documentElement.className = document.documentElement.className.replace("no-js", "js");
-    </script>
-    <!-- inject:js -->
-    <!-- endinject -->
-    <script>
-        System.import('app')
-            .then(null, console.error.bind(console));
-    </script>
-    <noscript>
-        <div>
-            Javascript is required to view this page..
-        </div>
-    </noscript>
+  <app-root>
+    <div id="fullpage" role="main">
+      <!-- #section-intro -->
+      <section class="section" id="section-intro">
+          <div class="wrapper">
+              <!-- Loading container -->
+              <div class="section-header loading-container">
+                  <h1>
+                      <!-- TODO: inject text? -->
+                      We are currently loading your content
+                  </h1>
+                  <img src="assets/img/watch-anim.svg" alt="loading content" class="load-animation">
+              </div>
+              <!-- Loading container end -->
+          </div>
+      </section>
+  </div>
+  </app-root>
 </body>
 </html>

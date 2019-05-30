@@ -19,7 +19,7 @@ export interface MarkerInfoResponse {
 
 @Component({
     selector: "[data-view-map]",
-    templateUrl: "./app/map/map.component.html"
+    templateUrl: "./map.component.html"
 })
 export class MapComponent {
 

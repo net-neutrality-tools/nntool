@@ -115,6 +115,7 @@ export class TestService {
                 }
             };
         }
+
         return this.requestService.getJson<ResponseAPI<SettingsResponseAPI>>(
             `${this.configService.getServerControl()}measurement-agents/
             ${settingsRequest.request_info.agent_id}/settings`, settingsRequest).pipe(
@@ -212,9 +213,9 @@ export class TestService {
                     os_version: agentSettings.os_version,
                     timezone: agentSettings.timezone
                 };
+
                 return this.requestService.postJson<LmapControlAPI>(
                     `${this.configService.getServerControl()}measurements`, lmapControl);
-
             })
         );
     }
@@ -281,6 +282,7 @@ export class TestService {
         if (serverCollectorUrl === undefined || serverCollectorUrl === null || serverCollectorUrl === '') {
             serverCollectorUrl = this.settings.urls.collector_service;
         }
+
         return this.requestService.postJson<ResponseAPI<MeasurementResultResponseAPI>>(
             `${serverCollectorUrl}`, lmapReport);
     }

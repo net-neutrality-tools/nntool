@@ -54,8 +54,9 @@ export class AppService {
         }
         const pos: number = (document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight;
         const maxPos: number = document.documentElement.scrollHeight;
-        const footerHeight: number = $('.section-footer').outerHeight() || 0;
-        this.showScroll = (maxPos - footerHeight) * 0.95 >= pos;
+        // TODO: jquery
+        /*const footerHeight: number = $('.section-footer').outerHeight() || 0;
+        this.showScroll = (maxPos - footerHeight) * 0.95 >= pos;*/
     }
 
     get trackScroll (): boolean {

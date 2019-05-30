@@ -28,7 +28,7 @@ export {TestGuard} from "./test.guard";
 
 
 @Component({
-    templateUrl: "./app/test/test.component.html"
+    templateUrl: "./test.component.html"
 })
 export class NetTestComponent extends BaseNetTestComponent {
 
