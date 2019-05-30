@@ -6,49 +6,49 @@ export const environment = {
   production: false,
   //////////
   features: {
-    "home": true,
-    "tc": true,
-    "nettest": true,
-    "statistics": true,
-    "map": true,
-    "history": true,
-    "testresults": true,
-    "help": true,
-    "opendata": true,
-    "about": false,
-    "footer": true,
-    "settings": true,
-    "docu": false
+    home: true,
+    tc: true,
+    nettest: true,
+    statistics: true,
+    map: true,
+    history: true,
+    testresults: true,
+    help: true,
+    opendata: true,
+    about: false,
+    footer: true,
+    settings: true,
+    docu: false
 },
-landing_page: "home",
-user_agent: "abc",
+landing_page: 'home',
+user_agent: 'abc',
 languages: [
-    "en",
+    'en',
 ],
 servers: {
-    map: "",
-    statistic: "",
-    //control: "http://localhost:8080/api/v1/"
-    control: "http://localhost:18080/api/v1/"
+    map: '',
+    statistic: '',
+    // control: "http://localhost:8080/api/v1/"
+    control: 'http://localhost:18080/api/v1/'
 },
 keys: {
-    "google": ""
+    google: ''
 },
-classificationColorStyle: "background",
+classificationColorStyle: 'background',
 colors: {
     groups: {
-        pink: ["#da7883", "#d16b74", "#a65056", "#8a3d43"],
-        orange: ["#ffce99", "#ffab65", "#ff8118", "#e67416"],
-        purple: ["#e097ff", "#bb8ed8", "#a34ed8", "#69328b"],
-        turquoise: ["#c8ebef", "#90bcbf", "#739c9e", "#64878a"],
-        green: ["#bfdb2d", "#a6bf27", "#8a9f21", "#71821b"]
+        pink: ['#da7883', '#d16b74', '#a65056', '#8a3d43'],
+        orange: ['#ffce99', '#ffab65', '#ff8118', '#e67416'],
+        purple: ['#e097ff', '#bb8ed8', '#a34ed8', '#69328b'],
+        turquoise: ['#c8ebef', '#90bcbf', '#739c9e', '#64878a'],
+        green: ['#bfdb2d', '#a6bf27', '#8a9f21', '#71821b']
     },
     gauge: {
-        arc_background: "#EFEFEF",
-        arc_inner: "#921F56",
-        arc_outer: "#29348A",
-        fontName: "arial",
-        font: "#FFFFFF"
+        arc_background: '#EFEFEF',
+        arc_inner: '#921F56',
+        arc_outer: '#29348A',
+        fontName: 'arial',
+        font: '#FFFFFF'
     }
 },
 nettest: {
@@ -63,8 +63,8 @@ nettest: {
 map: {
     showLegend: true,
     view: {
-        default_map: "google",
-        map_provider: ["google", "googleSatellite", "googleTerrain", "googleHybrid", "osm"],
+        default_map: 'google',
+        map_provider: ['google', 'googleSatellite', 'googleTerrain', 'googleHybrid', 'osm'],
         position: [48.209, 16.37],
         zoom_initial: 12,
         zoom_min: 1,
@@ -74,7 +74,7 @@ map: {
         }
     },
     filter_defaults: {
-        map_options: "all/download"
+        map_options: 'all/download'
     },
     options: {
         statistical_method: [],
@@ -83,18 +83,18 @@ map: {
         technology: [],
         operator: [],
         layer_type: [
-            {value: "hybrid", name: "MAP.SELECT.LAYER.HYBRID", unit: "", "default": true},
-            {value: "heatmap", name: "MAP.SELECT.LAYER.HEATMAP", unit: ""},
-            {value: "points", name: "MAP.SELECT.LAYER.POINTS", unit: ""}
+            {value: 'hybrid', name: 'MAP.SELECT.LAYER.HYBRID', unit: '', default: true},
+            {value: 'heatmap', name: 'MAP.SELECT.LAYER.HEATMAP', unit: ''},
+            {value: 'points', name: 'MAP.SELECT.LAYER.POINTS', unit: ''}
         ]
     }
 },
 opendata: {
     external: [
-        
+
     ],
     allow_full_download: false,
-    report_start_date: "2017/03/01"
+    report_start_date: '2017/03/01'
 },
 statistics: {
     graphs: {
@@ -119,7 +119,7 @@ statistics: {
         measurements_per_provider_over_time_speed: {
             enabled: true,
             show_box: 6,
-            select_method: "random",
+            select_method: 'random',
             select_count: 6
         },
         measurements_per_provider_over_time_count: {
@@ -136,354 +136,354 @@ result_list: {
 result: {
     keys: [
         {
-            header: "RESULT.DETAIL.SECTION.PROVIDER.HEADER",
-            icon: "f",
+            header: 'RESULT.DETAIL.SECTION.PROVIDER.HEADER',
+            icon: 'f',
             values: [
                 {
-                    key: "cat_technology"
+                    key: 'cat_technology'
                 },
                 {
-                    key: "ip_anonym"
+                    key: 'ip_anonym'
                 },
                 {
-                    key: "country_geoip"
+                    key: 'country_geoip'
                 },
                 {
-                    key: "network_name"
+                    key: 'network_name'
                 },
                 {
-                    key: "network_type"
+                    key: 'network_type'
                 }
             ]
         },
         {
-            header: "RESULT.DETAIL.SECTION.UNCATECORIZED.HEADER",
-            icon: "m",
+            header: 'RESULT.DETAIL.SECTION.UNCATECORIZED.HEADER',
+            icon: 'm',
             values: [
                 {
-                    key: "asn"
+                    key: 'asn'
                 },
                 {
-                    key: "bytes_download",
+                    key: 'bytes_download',
                     formats: [
                         {
-                            format: "number",
+                            format: 'number',
                             factor: 0.000001
                         },
                         {
-                            format: "speed"
+                            format: 'speed'
                         }
                     ],
-                    unit: "MB"
+                    unit: 'MB'
                 },
                 {
-                    key: "bytes_upload",
+                    key: 'bytes_upload',
                     formats: [
                         {
-                            format: "number",
+                            format: 'number',
                             factor: 0.000001
                         },
                         {
-                            format: "speed"
+                            format: 'speed'
                         }
                     ],
-                    unit: "MB"
+                    unit: 'MB'
                 },
                 {
-                    key: "client_version"
+                    key: 'client_version'
                 },
                 {
-                    key: "community"
+                    key: 'community'
                 },
                 {
-                    key: "connection"
+                    key: 'connection'
                 },
                 {
-                    key: "country_asn"
+                    key: 'country_asn'
                 },
                 {
-                    key: "country_location"
+                    key: 'country_location'
                 },
                 {
-                    key: "district"
+                    key: 'district'
                 },
                 {
-                    key: "distance"
+                    key: 'distance'
                 },
                 {
-                    key: "download_classification"
+                    key: 'download_classification'
                 },
                 {
-                    key: "download_kbit",
+                    key: 'download_kbit',
                     formats: [
                         {
-                            format: "number",
+                            format: 'number',
                             factor: 0.001
                         },
                         {
-                            format: "speed"
+                            format: 'speed'
                         }
                     ],
-                    unit: "Mbit/s"
+                    unit: 'Mbit/s'
                 },
                 {
-                    key: "duration_download_ms",
+                    key: 'duration_download_ms',
                     formats: [
                         {
-                            format: "ping"
+                            format: 'ping'
                         }
                     ],
-                    unit: "ms"
+                    unit: 'ms'
                 },
                 {
-                    key: "duration_upload_ms",
+                    key: 'duration_upload_ms',
                     formats: [
                         {
-                            format: "ping"
+                            format: 'ping'
                         }
                     ],
-                    unit: "ms"
+                    unit: 'ms'
                 },
                 {
-                    key: "lat",
+                    key: 'lat',
                     formats: [
                         {
-                            format: "fixed",
+                            format: 'fixed',
                             places: 4
                         }
                     ]
                 },
                 {
-                    key: "long",
+                    key: 'long',
                     formats: [
                         {
-                            format: "fixed",
+                            format: 'fixed',
                             places: 4
                         }
                     ]
                 },
                 {
-                    key: "loc_accuracy"
+                    key: 'loc_accuracy'
                 },
                 {
-                    key: "loc_src"
-                },
-
-                {
-                    key: "lte_rsrp",
-                    unit: "dBm"
+                    key: 'loc_src'
                 },
 
                 {
-                    key: "lte_rsrq",
-                    unit: "dBm"
+                    key: 'lte_rsrp',
+                    unit: 'dBm'
+                },
+
+                {
+                    key: 'lte_rsrq',
+                    unit: 'dBm'
                 },
                 {
-                    key: "model"
+                    key: 'model'
                 },
                 {
-                    key: "model_native"
+                    key: 'model_native'
                 },
                 {
-                    key: "network_country"
+                    key: 'network_country'
                 },
                 {
-                    key: "network_mcc_mnc"
+                    key: 'network_mcc_mnc'
                 },
                 {
-                    key: "num_threads"
+                    key: 'num_threads'
                 },
                 {
-                    key: "num_threads_requested"
+                    key: 'num_threads_requested'
                 },
                 {
-                    key: "num_threads_ul"
+                    key: 'num_threads_ul'
                 },
                 {
-                    key: "open_test_uuid"
+                    key: 'open_test_uuid'
                 },
                 {
-                    key: "ping_classification"
+                    key: 'ping_classification'
                 },
                 {
-                    key: "ping_ms",
+                    key: 'ping_ms',
                     formats: [
                         {
-                            format: "ping"
+                            format: 'ping'
                         }
                     ],
-                    unit: "ms"
+                    unit: 'ms'
                 },
                 {
-                    key: "ping_variance",
+                    key: 'ping_variance',
                     formats: [
                         {
-                            format: "ping"
+                            format: 'ping'
                         }
                     ],
-                    unit: "ms"
+                    unit: 'ms'
                 },
                 {
-                    key: "platform"
+                    key: 'platform'
                 },
                 {
-                    key: "public_ip_as_name"
+                    key: 'public_ip_as_name'
                 },
                 {
-                    key: "product"
+                    key: 'product'
                 },
                 {
-                    key: "province"
+                    key: 'province'
                 },
                 {
-                    key: "provider_name"
+                    key: 'provider_name'
                 },
                 {
-                    key: "roaming_type"
+                    key: 'roaming_type'
                 },
                 {
-                    key: "server_name"
+                    key: 'server_name'
                 },
                 {
-                    key: "signal_classification"
+                    key: 'signal_classification'
                 },
                 {
-                    key: "signal_strength",
-                    unit: "dBm"
+                    key: 'signal_strength',
+                    unit: 'dBm'
                 },
                 {
-                    key: "sim_country"
+                    key: 'sim_country'
                 },
                 {
-                    key: "test_duration",
-                    unit: "s"
+                    key: 'test_duration',
+                    unit: 's'
                 },
                 {
-                    key: "test_if_bytes_download",
+                    key: 'test_if_bytes_download',
                     formats: [
                         {
-                            format: "number",
+                            format: 'number',
                             factor: 0.000001
                         },
                         {
-                            format: "speed"
+                            format: 'speed'
                         }
                     ],
-                    unit: "MB"
+                    unit: 'MB'
                 },
                 {
-                    key: "test_if_bytes_upload",
+                    key: 'test_if_bytes_upload',
                     formats: [
                         {
-                            format: "number",
+                            format: 'number',
                             factor: 0.000001
                         },
                         {
-                            format: "speed"
+                            format: 'speed'
                         }
                     ],
-                    unit: "MB"
+                    unit: 'MB'
                 },
                 {
-                    key: "testdl_if_bytes_download",
+                    key: 'testdl_if_bytes_download',
                     formats: [
                         {
-                            format: "number",
+                            format: 'number',
                             factor: 0.000001
                         },
                         {
-                            format: "speed"
+                            format: 'speed'
                         }
                     ],
-                    unit: "MB"
+                    unit: 'MB'
                 },
                 {
-                    key: "testdl_if_bytes_upload",
+                    key: 'testdl_if_bytes_upload',
                     formats: [
                         {
-                            format: "number",
+                            format: 'number',
                             factor: 0.000001
                         },
                         {
-                            format: "speed"
+                            format: 'speed'
                         }
                     ],
-                    unit: "MB"
+                    unit: 'MB'
                 },
                 {
-                    key: "testul_if_bytes_download",
+                    key: 'testul_if_bytes_download',
                     formats: [
                         {
-                            format: "number",
+                            format: 'number',
                             factor: 0.000001
                         },
                         {
-                            format: "speed"
+                            format: 'speed'
                         }
                     ],
-                    unit: "MB"
+                    unit: 'MB'
                 },
                 {
-                    key: "testul_if_bytes_upload",
+                    key: 'testul_if_bytes_upload',
                     formats: [
                         {
-                            format: "number",
+                            format: 'number',
                             factor: 0.000001
                         },
                         {
-                            format: "speed"
+                            format: 'speed'
                         }
                     ],
-                    unit: "MB"
+                    unit: 'MB'
                 },
                 {
-                    key: "time",
+                    key: 'time',
                     formats: [
                         {
-                            format: "utc2local"
+                            format: 'utc2local'
                         }
                     ]
                 },
                 {
-                    key: "time_dl_ms",
+                    key: 'time_dl_ms',
                     formats: [
                         {
-                            format: "ping"
+                            format: 'ping'
                         }
                     ],
-                    unit: "ms"
+                    unit: 'ms'
                 },
                 {
-                    key: "time_ul_ms",
+                    key: 'time_ul_ms',
                     formats: [
                         {
-                            format: "ping"
+                            format: 'ping'
                         }
                     ],
-                    unit: "ms"
+                    unit: 'ms'
                 },
                 {
-                    key: "upload_classification"
+                    key: 'upload_classification'
                 },
                 {
-                    key: "upload_kbit",
+                    key: 'upload_kbit',
                     formats: [
                         {
-                            format: "number",
+                            format: 'number',
                             factor: 0.001
                         },
                         {
-                            format: "speed"
+                            format: 'speed'
                         }
                     ],
-                    unit: "Mbit/s"
+                    unit: 'Mbit/s'
                 },
                 {
-                    key: "wifi_link_speed",
-                    unit: "Mbit/s"
+                    key: 'wifi_link_speed',
+                    unit: 'Mbit/s'
                 },
                 {
-                    key: "zip_code"
+                    key: 'zip_code'
                 }
             ]
         }
@@ -492,8 +492,8 @@ result: {
         zoom_initial: 15,
         zoom_min: 4,
         zoom_max: 18,
-        default_map: "google",
-        map_provider: ["google", "osm"]
+        default_map: 'google',
+        map_provider: ['google', 'osm']
     },
     graph: {
         step_ms: 10

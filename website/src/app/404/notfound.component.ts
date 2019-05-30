@@ -1,6 +1,6 @@
-import {ADocComponent} from "../adoc/adoc.component";
+import {ADocComponent} from '../adoc/adoc.component';
 
 
 export class NotFoundComponent extends ADocComponent {
-    key: string = "404";
+    key = '404';
 }

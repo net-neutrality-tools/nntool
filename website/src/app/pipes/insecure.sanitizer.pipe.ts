@@ -1,18 +1,18 @@
-import {Pipe, PipeTransform} from "@angular/core";
-import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+import {Pipe, PipeTransform} from '@angular/core';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
 
 @Pipe({
-    name: "insecureSanitizeHtml"
+    name: 'insecureSanitizeHtml'
 })
 export class InsecureSanitizeHtml implements PipeTransform  {
 
-    constructor (private _sanitizer: DomSanitizer) {
+    constructor(private _sanitizer: DomSanitizer) {
 
     }
 
-    transform (v: string, key: string): SafeHtml {
-        v = v.replace(/(href=")(#.+?")/g, "$1" + key + "$2");
+    transform(v: string, key: string): SafeHtml {
+        v = v.replace(/(href=")(#.+?")/g, '$1' + key + '$2');
         return this._sanitizer.bypassSecurityTrustHtml(v);
     }
 }

@@ -1,6 +1,6 @@
-import {LmapStateAPI} from "./lmap-state.api";
-import {LmapActionAPI} from "./lmap-action.api";
-import {LmapStopAPI} from "./lmap-stop.api";
+import {LmapStateAPI} from './lmap-state.api';
+import {LmapActionAPI} from './lmap-action.api';
+import {LmapStopAPI} from './lmap-stop.api';
 
 export enum ExecutionMode {
     SEQUENTIAL = 'SEQUENTIAL',	// The Actions of the Schedule are executed sequentially.
@@ -36,7 +36,7 @@ export class LmapScheduleAPI {
      * The execution mode of this Schedule determines in which order the Actions of the Schedule are executed.
      * Supported values are: sequential, pipelined, parallel.
      */
-    "execution-mode": ExecutionMode;
+    'execution-mode': ExecutionMode;
 
     /**
      * A set of Schedule-specific tags that are reported together with the measurement results to a Collector.
@@ -46,7 +46,7 @@ export class LmapScheduleAPI {
     /**
      * A set of Suppression tags that are used to select Actions to be suppressed.
      */
-    "suppression-tag": string[];
+    'suppression-tag': string[];
 
     /**
      * The current state of the Schedule (One of: enabled, disabled, running, suppressed).
@@ -86,7 +86,7 @@ export class LmapScheduleAPI {
     /**
      * The date and time of the last invocation of this Schedule.
      */
-    "last-invocation": string; // TODO change back to Date
+    'last-invocation': string; // TODO change back to Date
 
     /**
      * An Action describes a Task that is invoked by the Schedule.

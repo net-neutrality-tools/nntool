@@ -1,10 +1,10 @@
-import {RequestInfoAPI} from "../api/request-info.api";
-import {LmapCapabilityAPI} from "./lmap-capability.api";
-import {LmapAgentAPI} from "./lmap-agent.api";
-import {LmapTaskAPI} from "./lmap-task.api";
-import {LmapScheduleAPI} from "./lmap-schedule.api";
-import {LmapSuppressionAPI} from "./lmap-suppression.api";
-import {LmapEventAPI} from "./lmap-event.api";
+import {RequestInfoAPI} from '../api/request-info.api';
+import {LmapCapabilityAPI} from './lmap-capability.api';
+import {LmapAgentAPI} from './lmap-agent.api';
+import {LmapTaskAPI} from './lmap-task.api';
+import {LmapScheduleAPI} from './lmap-schedule.api';
+import {LmapSuppressionAPI} from './lmap-suppression.api';
+import {LmapEventAPI} from './lmap-event.api';
 
 export class LmapControlAPI {
 
@@ -43,6 +43,6 @@ export class LmapControlAPI {
     /**
      * Additional information that is sent by client alongside the request. This contains most information from ClientInfo.
      */
-    "additional-request-info": RequestInfoAPI;
+    'additional-request-info': RequestInfoAPI;
 }
 

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 
-import {WebsiteSettings} from "../settings/settings.interface";
-import {Logger, LoggerService} from "./log.service";
+import {WebsiteSettings} from '../settings/settings.interface';
+import {Logger, LoggerService} from './log.service';
 
 import { environment } from '../../environments/environment';
 
@@ -28,11 +28,11 @@ declare var __TEST_CONFIG__: any;
 @Injectable()
 export class ConfigService {
 
-    private logger: Logger = LoggerService.getLogger("ConfigService");
+    private logger: Logger = LoggerService.getLogger('ConfigService');
     private config: WebsiteSettings = environment;
     private constants: any = __TEST_CONFIG__;
 
-    constructor () {}
+    constructor() {}
 
     clearArray(a: any[]): void {
         while (a.length > 0) {
@@ -40,35 +40,35 @@ export class ConfigService {
         }
     }
 
-    getConfig (): any {
+    getConfig(): any {
         return environment;
     }
 
-    getVersion (): string {
-        return this.constants.version ? this.constants.version : "";
+    getVersion(): string {
+        return this.constants.version ? this.constants.version : '';
     }
 
-    getBranch (): string {
-        return this.constants.branch ? this.constants.branch : "";
+    getBranch(): string {
+        return this.constants.branch ? this.constants.branch : '';
     }
 
-    getRevision (): string {
-        return this.constants.revision ? this.constants.revision : "";
+    getRevision(): string {
+        return this.constants.revision ? this.constants.revision : '';
     }
 
-    getClient (): string {
-        return this.constants.client ? this.constants.client : "";
+    getClient(): string {
+        return this.constants.client ? this.constants.client : '';
     }
 
-    getServerControl (): string {
+    getServerControl(): string {
         return this.config.servers.control;
     }
 
-    getServerStatistic (): string {
+    getServerStatistic(): string {
         return this.config.servers.statistic;
     }
 
-    getServerMap (): string {
+    getServerMap(): string {
         return this.config.servers.map;
     }
 }

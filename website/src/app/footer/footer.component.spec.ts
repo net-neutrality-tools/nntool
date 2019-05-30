@@ -15,7 +15,7 @@ describe('FooterComponent', () => {
         TranslateModule.forRoot({
           loader: {
             provide: TranslateLoader,
-            useFactory: (http: HttpClient) => new TranslateHttpLoader(http, "./assets/i18n/"),
+            useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/'),
             deps: [HttpClient]
           }
         }),

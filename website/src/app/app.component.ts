@@ -1,31 +1,29 @@
-import {Component, OnInit, OnDestroy, Renderer2} from "@angular/core";
-import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
-import {Title} from "@angular/platform-browser";
-import {Location} from "@angular/common";
+import {Component, OnInit, OnDestroy, Renderer2} from '@angular/core';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {Title} from '@angular/platform-browser';
+import {Location} from '@angular/common';
 
-import { environment } from '../environments/environment';
+import {TranslateService, LangChangeEvent, TranslationChangeEvent} from '@ngx-translate/core';
+import {Subscription} from 'rxjs';
+import {filter} from 'rxjs/operators';
 
-import {TranslateService, LangChangeEvent, TranslationChangeEvent} from "@ngx-translate/core";
-import {Subscription} from "rxjs";
-import {filter} from "rxjs/operators";
-
-import {FeatureSettings} from "./settings/features.settings.interface";
-import {ConfigService} from "./services/config.service";
-import {WebsiteSettings} from "./settings/settings.interface";
-import {Guard} from "./services/guard.service";
-import {Logger, LoggerService} from "./services/log.service";
-import {BrowserStorageService} from "./services/storage.service";
-import {AppService} from "./services/app.service";
-import {UserInfo, UserService} from "./services/user.service";
+import {FeatureSettings} from './settings/features.settings.interface';
+import {ConfigService} from './services/config.service';
+import {WebsiteSettings} from './settings/settings.interface';
+import {Guard} from './services/guard.service';
+import {Logger, LoggerService} from './services/log.service';
+import {BrowserStorageService} from './services/storage.service';
+import {AppService} from './services/app.service';
+import {UserInfo, UserService} from './services/user.service';
 
 
 @Component({
-    selector: "app-root",
-    templateUrl: "./app.component.html"
+    selector: 'app-root',
+    templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-    private logger: Logger = LoggerService.getLogger("AppComponent");
+    private logger: Logger = LoggerService.getLogger('AppComponent');
     features: FeatureSettings;
     config: WebsiteSettings;
     guard: Guard;
@@ -33,7 +31,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private localUrlRegex: any = /\/\w+#\w+.*/;
 
 
-    constructor (
+    constructor(
         private titleService: Title, private router: Router, private location: Location,
         public translateService: TranslateService, private configService: ConfigService, private guardService: Guard,
         private storage: BrowserStorageService, private renderer: Renderer2, private appService: AppService,
@@ -42,20 +40,20 @@ export class AppComponent implements OnInit, OnDestroy {
         this.guard = guardService;
     }
 
-    ngOnInit () {
-        this.logger.debug("Application component initialized ...");
+    ngOnInit() {
+        this.logger.debug('Application component initialized ...');
         this.logger.info(
-            "Running website version",
-            this.configService.getVersion(), " for ", this.configService.getClient(),
-            "(", this.configService.getBranch(), this.configService.getRevision(), ")"
+            'Running website version',
+            this.configService.getVersion(), ' for ', this.configService.getClient(),
+            '(', this.configService.getBranch(), this.configService.getRevision(), ')'
         );
         this.config = this.configService.getConfig();
         this.features = this.config.features;
         const langs: string[] = this.config.languages;
-        const reg = new RegExp(langs.join("|"));
+        const reg = new RegExp(langs.join('|'));
         const browserLang = this.translateService.getBrowserLang();
         const storedLang = this.storage.load('user_lang', false);
-        //TODO: this.renderer.addClass(document.body, this.configService.getClient());
+        // TODO: this.renderer.addClass(document.body, this.configService.getClient());
 
         this.translateService.addLangs(langs);
         this.translateService.setDefaultLang(langs[0]);
@@ -81,7 +79,7 @@ export class AppComponent implements OnInit, OnDestroy {
         ));
         this.subs.push(this.activatedRoute.queryParamMap.subscribe(
             (data: any) => {
-                this.logger.debug("Main Query param", data);
+                this.logger.debug('Main Query param', data);
                 if (data.params) {
                     const queryLang: string = data.params.lang;
                     const setUuid: string = data.params.set_uuid;
@@ -98,7 +96,7 @@ export class AppComponent implements OnInit, OnDestroy {
                         if (user.uuid !== setUuid) {
                             this.logger.debug('Setting client uuid', setUuid);
                             // New user - settings
-                            //user.apply(new UserInfo());
+                            // user.apply(new UserInfo());
                             // TODO: clean/validate
                             user.uuid = setUuid;
                             user.measurementUUIDs = [];
@@ -112,9 +110,9 @@ export class AppComponent implements OnInit, OnDestroy {
             (event: NavigationEnd) => {
                 const uri: string = event.url;
                 if (this.localUrlRegex.test(uri)) {
-                    let header: any = document.getElementsByClassName("site-header");
+                    const header: any = document.getElementsByClassName('site-header');
                     if (header && header.length > 0) {
-                        let height: number = 0 - header[0].scrollHeight;
+                        const height: number = 0 - header[0].scrollHeight;
                         setTimeout(() => {
                             window.scrollBy(0, height);
                         }, 0);
@@ -126,7 +124,7 @@ export class AppComponent implements OnInit, OnDestroy {
                     uri.split('#')[0].split('?')[0]
                 ).slice(1).split('/')[0];
                 if (url_location) {
-                    let i: number = 0;
+                    let i = 0;
                     const rms: string[] = [];
                     while (i < document.body.classList.length) {
                         const temp: string = document.body.classList.item(i);
@@ -144,34 +142,34 @@ export class AppComponent implements OnInit, OnDestroy {
         ));
     }
 
-    ngOnDestroy () {
+    ngOnDestroy() {
         while (this.subs.length > 0) {
             this.subs.pop().unsubscribe();
         }
     }
 
-    private updateTitle (): void {
-        this.subs.push(this.translateService.get("WEBSITE.TITLE").subscribe(
+    private updateTitle(): void {
+        this.subs.push(this.translateService.get('WEBSITE.TITLE').subscribe(
             (res) => {
                 this.titleService.setTitle(res);
             }
         ));
     }
 
-    menuOpen () {
+    menuOpen() {
         // TODO: don't call window.document.body directly
         if (window.document.body.classList.contains('menu-open')) {
-            this.menuClose()
+            this.menuClose();
         } else {
-            this.renderer.addClass(document.body, 'menu-open')
+            this.renderer.addClass(document.body, 'menu-open');
         }
     }
 
-    menuClose () {
-        this.renderer.removeClass(document.body, 'menu-open')
+    menuClose() {
+        this.renderer.removeClass(document.body, 'menu-open');
     }
 
-    get showScrollInfo (): boolean {
+    get showScrollInfo(): boolean {
         return this.appService.showScroll;
     }
 }

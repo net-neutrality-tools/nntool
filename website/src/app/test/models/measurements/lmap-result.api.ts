@@ -1,5 +1,5 @@
-import {LmapOptionAPI} from "./lmap-option.api";
-import {LmapConflictAPI} from "./lmap-conflict.api";
+import {LmapOptionAPI} from './lmap-option.api';
+import {LmapConflictAPI} from './lmap-conflict.api';
 
 /**
  * The status of a measurement.
@@ -360,7 +360,7 @@ export class WebSocketInfo {
 }
 
 export class QoSMeasurementResult extends SubMeasurementResult {
-    results:{[key: string]: any}[];
+    results: {[key: string]: any}[];
 }
 
 export class LmapResultAPI {
@@ -421,7 +421,7 @@ export class LmapResultAPI {
      * that is a multiple of the cycle-interval of the event that triggered the execution of the Schedule.
      * The value is only present if the event that triggered the execution of the Schedule has a defined cycle-interval.
      */
-    "cycle-number": string;
+    'cycle-number': string;
 
     /**
      * The status code returned by the execution of this Action.

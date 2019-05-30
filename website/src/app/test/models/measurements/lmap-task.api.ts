@@ -1,5 +1,5 @@
-import {LmapOptionAPI} from "./lmap-option.api";
-import {LmapFunctionAPI} from "./lmap-function.api";
+import {LmapOptionAPI} from './lmap-option.api';
+import {LmapFunctionAPI} from './lmap-function.api';
 
 export class LmapTaskAPI {
 

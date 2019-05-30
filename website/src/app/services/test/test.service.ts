@@ -1,40 +1,38 @@
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
 
-import {Observable, of} from "rxjs";
-import {map, mergeMap, tap} from "rxjs/operators";
+import {Observable, of} from 'rxjs';
+import {map, mergeMap, tap} from 'rxjs/operators';
 
-import {Logger, LoggerService} from "../log.service";
-import {UserInfo, UserService} from "../user.service";
-import {RequestAPI} from "../../test/models/api/request.api";
-import {RegistrationRequestAPI} from "../../test/models/registration/registration-request.api";
-import {ResponseAPI} from "../../test/models/api/response.api";
-import {RegistrationResponseAPI} from "../../test/models/registration/registration-response.api";
-import {MeasurementAgentType} from "../../test/models/api/request-info.api";
-import {RequestsService} from "../requests.service";
-import {SettingsRequestAPI} from "../../test/models/settings/settings-request.api";
-import {SettingsResponseAPI} from "../../test/models/settings/settings-response.api";
-import {LmapControlAPI} from "../../test/models/measurements/lmap-control.api";
-import {LmapReportAPI} from "../../test/models/measurements/lmap-report.api";
-import {MeasurementResultResponseAPI} from "../../test/models/measurements/measurement-result-response.api";
-import {TestSettingsService} from "./test-settings.service";
-import {ConfigService} from "../config.service";
-
+import {Logger, LoggerService} from '../log.service';
+import {UserInfo, UserService} from '../user.service';
+import {RequestAPI} from '../../test/models/api/request.api';
+import {RegistrationRequestAPI} from '../../test/models/registration/registration-request.api';
+import {ResponseAPI} from '../../test/models/api/response.api';
+import {RegistrationResponseAPI} from '../../test/models/registration/registration-response.api';
+import {MeasurementAgentType} from '../../test/models/api/request-info.api';
+import {RequestsService} from '../requests.service';
+import {SettingsRequestAPI} from '../../test/models/settings/settings-request.api';
+import {SettingsResponseAPI} from '../../test/models/settings/settings-response.api';
+import {LmapControlAPI} from '../../test/models/measurements/lmap-control.api';
+import {LmapReportAPI} from '../../test/models/measurements/lmap-report.api';
+import {MeasurementResultResponseAPI} from '../../test/models/measurements/measurement-result-response.api';
+import {TestSettingsService} from './test-settings.service';
+import {ConfigService} from '../config.service';
 
 @Injectable()
 export class TestService {
 
-    private settings: SettingsResponseAPI;
-
-    private static logger: Logger = LoggerService.getLogger("TestService");
-
-
-    constructor (private requestService: RequestsService,
-                 private userService: UserService,
-                 private testSettingsService: TestSettingsService,
-                 private configService: ConfigService) {
+    constructor(private requestService: RequestsService,
+                private userService: UserService,
+                private testSettingsService: TestSettingsService,
+                private configService: ConfigService) {
     }
 
-    private postMeasurementAgent (registrationRequest?: RequestAPI<RegistrationRequestAPI>):
+    private static logger: Logger = LoggerService.getLogger('TestService');
+
+    private settings: SettingsResponseAPI;
+
+    private postMeasurementAgent(registrationRequest?: RequestAPI<RegistrationRequestAPI>):
         Observable<ResponseAPI<RegistrationResponseAPI>> {
 
         // default values
@@ -79,7 +77,7 @@ export class TestService {
             `${this.configService.getServerControl()}measurement-agents`, registrationRequest);
     }
 
-    private getSettings (settingsRequest?: RequestAPI<SettingsRequestAPI>): Observable<ResponseAPI<SettingsResponseAPI>> {
+    private getSettings(settingsRequest?: RequestAPI<SettingsRequestAPI>): Observable<ResponseAPI<SettingsResponseAPI>> {
 
         // default values
         if (!settingsRequest) {
@@ -125,7 +123,7 @@ export class TestService {
         );
     }
 
-    public newMeasurement (lmapControl?: LmapControlAPI): Observable<LmapControlAPI> {
+    public newMeasurement(lmapControl?: LmapControlAPI): Observable<LmapControlAPI> {
 
         return of(this.userService.user).pipe(
             mergeMap((user: UserInfo) => {
@@ -144,7 +142,7 @@ export class TestService {
             mergeMap((user: UserInfo) => {
                 return this.getSettings().pipe(
                     map((response: ResponseAPI<SettingsResponseAPI>) => {
-                        return {user: user, settings: response.data};
+                        return {user, settings: response.data};
                     })
                 );
             }),
@@ -153,28 +151,28 @@ export class TestService {
 
                 if (!lmapControl) {
                     lmapControl = {
-                        "additional-request-info": undefined,
+                        'additional-request-info': undefined,
                         agent: {
-                            "agent-id": context.user.uuid,
-                            "group-id": undefined,
-                            "measurement-point": undefined,
-                            "report-agent-id": undefined,
-                            "report-group-id": undefined,
-                            "report-measurement-point": undefined,
-                            "controller-timeout": undefined,
-                            "last-started": undefined
+                            'agent-id': context.user.uuid,
+                            'group-id': undefined,
+                            'measurement-point': undefined,
+                            'report-agent-id': undefined,
+                            'report-group-id': undefined,
+                            'report-measurement-point': undefined,
+                            'controller-timeout': undefined,
+                            'last-started': undefined
                         },
                         capabilities: {
                             tasks: [
                                 {
-                                    name: "SPEED",
-                                    version: "1.0.0",
+                                    name: 'SPEED',
+                                    version: '1.0.0',
                                     function: undefined,
                                     program: undefined
                                 },
                                 {
-                                    name: "QOS",
-                                    version: "1.0.0",
+                                    name: 'QOS',
+                                    version: '1.0.0',
                                     function: undefined,
                                     program: undefined
                                 }
@@ -182,13 +180,13 @@ export class TestService {
                             version: undefined,
                             tag: undefined
                         },
-                        "events": undefined,
-                        "schedules": undefined,
-                        "suppressions": undefined,
-                        "tasks": undefined
+                        events: undefined,
+                        schedules: undefined,
+                        suppressions: undefined,
+                        tasks: undefined
                     };
                 }
-                lmapControl["additional-request-info"] = {
+                lmapControl['additional-request-info'] = {
                     agent_type: testSettings.agent_type,
                     agent_uuid: context.user.uuid,
                     api_level: undefined,
@@ -220,39 +218,39 @@ export class TestService {
         );
     }
 
-    public postMeasurementResults (lmapReport: LmapReportAPI, serverCollectorUrl: string):
+    public postMeasurementResults(lmapReport: LmapReportAPI, serverCollectorUrl: string):
         Observable<ResponseAPI<MeasurementResultResponseAPI>> {
         const { agentSettings, testSettings } = this.testSettingsService;
 
         if (!lmapReport) {
             lmapReport = {
-                "additional_request_info": undefined,
-                "agent-id": undefined,
-                "date": undefined,
-                "group-id": undefined,
-                "measurement-point": undefined,
-                "result": [
+                additional_request_info: undefined,
+                'agent-id': undefined,
+                date: undefined,
+                'group-id': undefined,
+                'measurement-point': undefined,
+                result: [
                     {
-                        "action": undefined,
-                        "conflict": undefined,
-                        "cycle-number": undefined,
-                        "end": undefined,
-                        "event": undefined,
-                        "option": undefined,
-                        "parameters": undefined,
-                        "results": [],
-                        "schedule": undefined,
-                        "start": undefined,
-                        "status": undefined,
-                        "tag": undefined,
-                        "task": undefined
+                        action: undefined,
+                        conflict: undefined,
+                        'cycle-number': undefined,
+                        end: undefined,
+                        event: undefined,
+                        option: undefined,
+                        parameters: undefined,
+                        results: [],
+                        schedule: undefined,
+                        start: undefined,
+                        status: undefined,
+                        tag: undefined,
+                        task: undefined
                     }
                 ],
-                "time_based_result": undefined
+                time_based_result: undefined
             };
         }
 
-        lmapReport["additional_request_info"] = {
+        lmapReport.additional_request_info = {
             agent_type: testSettings.agent_type,
             agent_uuid: this.userService.user.uuid,
             api_level: undefined,
@@ -277,7 +275,7 @@ export class TestService {
             os_version: agentSettings.os_version,
             timezone: agentSettings.timezone
         };
-        lmapReport["agent-id"] = this.userService.user.uuid;
+        lmapReport['agent-id'] = this.userService.user.uuid;
 
         if (serverCollectorUrl === undefined || serverCollectorUrl === null || serverCollectorUrl === '') {
             serverCollectorUrl = this.settings.urls.collector_service;

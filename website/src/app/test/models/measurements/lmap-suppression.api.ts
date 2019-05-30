@@ -37,7 +37,7 @@ export class LmapSuppressionAPI {
      * matching the Suppression will be terminated when Suppression is activated.
      * If 'stop-running' is false, running Schedules and Actions will not be affected if Suppression is activated.
      */
-    "stop-running": boolean;
+    'stop-running': boolean;
 
     /**
      * The current state of the Suppression.

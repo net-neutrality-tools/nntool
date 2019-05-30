@@ -43,15 +43,15 @@
         ]
       }
     ],
-    "no-consecutive-blank-lines": false,
-    "no-console": [
-      true,
-      "debug",
-      "info",
-      "time",
-      "timeEnd",
-      "trace"
+    "variable-name": [
+      true, 
+      "ban-keywords", 
+      "check-format", 
+      "allow-snake-case",
+      "allow-leading-underscore"
     ],
+    "no-consecutive-blank-lines": false,
+    "no-console": false,
     "no-empty": false,
     "no-inferrable-types": [
       true,

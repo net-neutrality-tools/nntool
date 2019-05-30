@@ -1,4 +1,4 @@
-import {BasicRequestAPI} from "../basic-request.api";
+import {BasicRequestAPI} from '../basic-request.api';
 
 export class RegistrationRequestAPI extends BasicRequestAPI {
 

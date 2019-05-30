@@ -1,11 +1,11 @@
-import {MeasurementViewComponent} from "../measurement/view.component";
-import {Component} from "@angular/core";
+import {MeasurementViewComponent} from '../measurement/view.component';
+import {Component} from '@angular/core';
 
 
 @Component({
-    templateUrl: "../measurement/view.component.html"
+    templateUrl: '../measurement/view.component.html'
 })
 export class HistoryViewComponent extends MeasurementViewComponent {
-    protected resetData (cb?: () => void): void {}
+    protected resetData(cb?: () => void): void {}
 
 }

@@ -1,4 +1,4 @@
-import {EventTypeEnum, LmapEventTypeAPI} from "./lmap-event-type.api";
+import {EventTypeEnum, LmapEventTypeAPI} from './lmap-event-type.api';
 
 export class LmapImmediateEvent extends LmapEventTypeAPI {
 

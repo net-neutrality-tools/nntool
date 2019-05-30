@@ -1,10 +1,10 @@
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
 
-import {Logger, LoggerService} from "../log.service";
-import {UserInfo, UserService} from "../user.service";
-import {MeasurementAgentType} from "../../test/models/api/request-info.api";
-import {TranslateService} from "@ngx-translate/core";
-import {ConfigService} from "../config.service";
+import {Logger, LoggerService} from '../log.service';
+import {UserInfo, UserService} from '../user.service';
+import {MeasurementAgentType} from '../../test/models/api/request-info.api';
+import {TranslateService} from '@ngx-translate/core';
+import {ConfigService} from '../config.service';
 
 export interface AgentSettings {
     uuid?: string;
@@ -49,7 +49,7 @@ export interface AgentSettings {
     /**
      * TODO:
      */
-    //test_measurement_server?: MeasurementServer;
+    // test_measurement_server?: MeasurementServer;
 
     // Post test result
 
@@ -116,7 +116,7 @@ export interface TestSettings {
 @Injectable()
 export class TestSettingsService {
 
-    private static logger: Logger = LoggerService.getLogger("TestSettingsService");
+    private static logger: Logger = LoggerService.getLogger('TestSettingsService');
     private _agentSettings: AgentSettings;
     private _testSettings: TestSettings;
 
@@ -130,7 +130,7 @@ export class TestSettingsService {
             language: this.translateService.currentLang,
             device: null,
             model: null,
-            timezone: "Etc/UTC",
+            timezone: 'Etc/UTC',
             publish_public_data: true,
             anonymous: this.user.disassociated,
             // TODO: test counter
@@ -141,18 +141,18 @@ export class TestSettingsService {
             servers: config.servers,
             ndt: false,
             agent_type: MeasurementAgentType.BROWSER,
-            agent_name: "RMBTws",
-            platform: "RMBTws",
+            agent_name: 'RMBTws',
+            platform: 'RMBTws',
             // branch-commit
-            app_revision: this.configService.getBranch() + "-" + this.configService.getRevision(),
+            app_revision: this.configService.getBranch() + '-' + this.configService.getRevision(),
             // version
             app_version: this.configService.getVersion(),
             // counter
             app_version_code: 0,
             // Protocol version
-            app_version_name: "0.3",
+            app_version_name: '0.3',
             // browser
-            test_thread_type: "SINGLE",
+            test_thread_type: 'SINGLE',
             test_pre_test_min_chunks: 5,
             test_pre_test_duration: 2,
             test_downlink_duration: 7,
@@ -181,7 +181,7 @@ export class TestSettingsService {
         }
     }
 
-    private get user (): UserInfo {
+    private get user(): UserInfo {
         return this.userService.user;
     }
 

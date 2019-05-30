@@ -24,7 +24,7 @@ export class LmapOptionAPI {
     /**
      * The additional measurement parameters of the option.
      */
-    "measurement-parameters": MeasurementTypeParameters;
+    'measurement-parameters': MeasurementTypeParameters;
 
 }
 

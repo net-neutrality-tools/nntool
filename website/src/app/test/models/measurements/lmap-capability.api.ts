@@ -1,4 +1,4 @@
-import {LmapCapabilityTaskAPI} from "./lmap-capability-task.api";
+import {LmapCapabilityTaskAPI} from './lmap-capability-task.api';
 
 export class LmapCapabilityAPI {
 

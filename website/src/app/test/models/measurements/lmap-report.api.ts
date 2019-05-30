@@ -1,6 +1,6 @@
-import {RequestInfoAPI} from "../api/request-info.api";
-import {TimeBasedResultAPI} from "./time-based-result.api";
-import {LmapResultAPI} from "./lmap-result.api";
+import {RequestInfoAPI} from '../api/request-info.api';
+import {TimeBasedResultAPI} from './time-based-result.api';
+import {LmapResultAPI} from './lmap-result.api';
 
 export class LmapReportAPI {
 
@@ -12,17 +12,17 @@ export class LmapReportAPI {
     /**
      * The agent-id of the agent from which this report originates.
      */
-    "agent-id": string;
+    'agent-id': string;
 
     /**
      * The group-id of the agent from which this report originates.
      */
-    "group-id": string;
+    'group-id': string;
 
     /**
      * The measurement-point of the agent from which this report originates.
      */
-    "measurement-point": string;
+    'measurement-point': string;
 
     /**
      * The list of Tasks for which results are reported.

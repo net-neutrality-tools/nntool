@@ -1,52 +1,43 @@
-import {Injectable} from "@angular/core";
-import {Location} from "@angular/common";
-import {HttpErrorResponse} from "@angular/common/http";
+import {Injectable} from '@angular/core';
+import {Location} from '@angular/common';
+import {HttpErrorResponse} from '@angular/common/http';
 
-import {TranslateService} from "@ngx-translate/core";
+import {TranslateService} from '@ngx-translate/core';
 import {forkJoin, Observable, Observer, throwError} from 'rxjs';
 
-import {Logger, LoggerService} from "./log.service";
-import {BrowserStorageService} from "./storage.service";
-import {RequestsService} from "./requests.service";
-import {ConfigService} from "./config.service";
-import {WebsiteSettings} from "../settings/settings.interface";
+import {Logger, LoggerService} from './log.service';
+import {BrowserStorageService} from './storage.service';
+import {RequestsService} from './requests.service';
+import {ConfigService} from './config.service';
+import {WebsiteSettings} from '../settings/settings.interface';
 
 
 export class UserInfo {
     /**
      * Disassociate measurements after taking them
      * - keep user id
-     *
-     * @type {boolean}
      */
-    disassociated: boolean = false;
+    disassociated = false;
 
     /**
      * Don't track me
      * - includes disassociate?
      * - delete user id after each test
-     *
-     * @type {boolean}
      */
-    invisible: boolean = false;
+    invisible = false;
 
     /**
      * Useful?
-     *
-     * @type {boolean}
      */
-    forceIp: boolean = false;
+    forceIp = false;
 
     /**
      *
-     * @type {boolean}
      */
-    disassociateBeforeDelete: boolean = false;
+    disassociateBeforeDelete = false;
 
     /**
      * Client uuid
-     *
-     * @type {any}
      */
     uuid: string = null;
 
@@ -54,13 +45,38 @@ export class UserInfo {
 
     /**
      * Accepted terms and conditions
-     *
-     * @type {boolean}
      */
-    acceptTC: boolean = false;
+    acceptTC = false;
+
+    static fromJson(json: string): UserInfo {
+        const obj: any = JSON.parse(json);
+        const userInfo: UserInfo = new UserInfo();
+        if (typeof obj.disassociated !== 'undefined') {
+            userInfo.disassociated = obj.disassociated;
+        }
+        if (typeof obj.invisible !== 'undefined') {
+            userInfo.invisible = obj.invisible;
+        }
+        if (typeof obj.forceIp !== 'undefined') {
+            userInfo.forceIp = obj.forceIp;
+        }
+        if (typeof obj.disassociateBeforeDelete !== 'undefined') {
+            userInfo.disassociateBeforeDelete = obj.disassociateBeforeDelete;
+        }
+        if (typeof obj.uuid !== 'undefined') {
+            userInfo.uuid = obj.uuid;
+        }
+        if (typeof obj.measurementUUIDs !== 'undefined') {
+            userInfo.measurementUUIDs = obj.measurementUUIDs;
+        }
+        if (typeof obj.acceptTC !== 'undefined') {
+            userInfo.acceptTC = obj.acceptTC;
+        }
+        return userInfo;
+    }
 
 
-    apply (other: UserInfo): void {
+    apply(other: UserInfo): void {
         this.disassociated = other.disassociated;
         this.invisible = other.invisible;
         this.forceIp = other.forceIp;
@@ -70,7 +86,7 @@ export class UserInfo {
         this.acceptTC = other.acceptTC;
     }
 
-    toJson (): string {
+    toJson(): string {
         const obj: any = {
             disassociated: this.disassociated,
             invisible: this.invisible,
@@ -83,44 +99,17 @@ export class UserInfo {
 
         return JSON.stringify(obj);
     }
-
-    static fromJson (json: string): UserInfo {
-        const obj: any = JSON.parse(json);
-        let userInfo: UserInfo = new UserInfo();
-        if (typeof obj.disassociated !== "undefined") {
-            userInfo.disassociated = obj.disassociated;
-        }
-        if (typeof obj.invisible !== "undefined") {
-            userInfo.invisible = obj.invisible;
-        }
-        if (typeof obj.forceIp !== "undefined") {
-            userInfo.forceIp = obj.forceIp;
-        }
-        if (typeof obj.disassociateBeforeDelete !== "undefined") {
-            userInfo.disassociateBeforeDelete = obj.disassociateBeforeDelete;
-        }
-        if (typeof obj.uuid !== "undefined") {
-            userInfo.uuid = obj.uuid;
-        }
-        if (typeof obj.measurementUUIDs !== "undefined") {
-            userInfo.measurementUUIDs = obj.measurementUUIDs;
-        }
-        if (typeof obj.acceptTC !== "undefined") {
-            userInfo.acceptTC = obj.acceptTC;
-        }
-        return userInfo;
-    }
 }
 
 
 @Injectable()
 export class UserService {
 
-    private logger: Logger = LoggerService.getLogger("UserService");
+    private logger: Logger = LoggerService.getLogger('UserService');
     private userInfo: UserInfo = null;
     private config: WebsiteSettings;
 
-    get user (): UserInfo {
+    get user(): UserInfo {
         if (this.userInfo === null) {
             this.userInfo = new UserInfo();
             this.load(this.userInfo);
@@ -128,7 +117,7 @@ export class UserService {
         return this.userInfo;
     }
 
-    set user (other: UserInfo) {
+    set user(other: UserInfo) {
         if (this.userInfo === null) {
             this.userInfo = new UserInfo();
             this.load(this.userInfo);
@@ -136,19 +125,19 @@ export class UserService {
         this.userInfo.apply(other);
     }
 
-    constructor (
+    constructor(
         private storage: BrowserStorageService, private requests: RequestsService,
         private configService: ConfigService, private translateService: TranslateService
     ) {
         this.config = this.configService.getConfig();
     }
 
-    private getKeyDefault (key: string, defaultValue: boolean): boolean {
+    private getKeyDefault(key: string, defaultValue: boolean): boolean {
         let res: any = this.storage.load(key);
-        if (res === null || typeof res === "undefined") {
+        if (res === null || typeof res === 'undefined') {
             res = defaultValue;
-        } else if (typeof res === "string") {
-            res = res === "true";
+        } else if (typeof res === 'string') {
+            res = res === 'true';
         }
         return res;
     }
@@ -158,7 +147,7 @@ export class UserService {
      *
      * @param user  Object to load info into (if not set -> use local userInfo)
      */
-    load (user: UserInfo = null): void {
+    load(user: UserInfo = null): void {
         /*
         user.disassociated = this.getKeyDefault("disassociated", user.disassociated);
         user.invisible = this.getKeyDefault("invisible", user.invisible);
@@ -168,7 +157,7 @@ export class UserService {
         if (!user) {
             user = this.user;
         }
-        const userInfoSt: string = this.storage.load("user_info", true);
+        const userInfoSt: string = this.storage.load('user_info', true);
         if (userInfoSt) {
             user.apply(UserInfo.fromJson(userInfoSt));
         }
@@ -179,7 +168,7 @@ export class UserService {
      *
      * @param user  User to save (if not set -> use local userInfo)
      */
-    save (user: UserInfo = null): void {
+    save(user: UserInfo = null): void {
         /*
         this.storage.save("disassociated", this.userInfo.disassociated, true);
         this.storage.save("invisible", this.userInfo.invisible, true);
@@ -189,39 +178,39 @@ export class UserService {
         if (!user) {
             user = this.user;
         }
-        this.storage.save("user_info", user.toJson(), true);
+        this.storage.save('user_info', user.toJson(), true);
     }
 
     /**
      * Load measurements (uuids) of user
      *
      * @param user  User to load measurements for (if not set -> use local userInfo)
-     * * @returns {Observable}   Was the call successful
+     * @returns Was the call successful
      */
-    loadMeasurements (user: UserInfo = null): Observable<any> {
+    loadMeasurements(user: UserInfo = null): Observable<any> {
         if (!user) {
             user = this.user;
         }
         if (!user || !user.uuid) {
-            return throwError("No user set");
+            return throwError('No user set');
         }
-        //const lang: string = this.translateService.currentLang;
-        return Observable.create((observer: any) => {
+        // const lang: string = this.translateService.currentLang;
+        return new Observable((observer: any) => {
             this.requests.getJson<any>(
-                Location.joinWithSlash("http://localhost:8082/api/v1/measurement-agents", user.uuid + "/measurements"),
+                Location.joinWithSlash('http://localhost:8082/api/v1/measurement-agents', user.uuid + '/measurements'),
                 {}
             ).subscribe(
                 (data: any) => {
-                    this.logger.debug("User Mes", data);
+                    this.logger.debug('User Mes', data);
                     user.measurementUUIDs = [];
 
-                    for (let mes of data) {
+                    for (const mes of data) {
                         user.measurementUUIDs.push(mes.test_uuid);
                     }
                     observer.next(data);
                 },
                 (err: HttpErrorResponse) => {
-                    this.logger.error("Error retrieving measurements", err);
+                    this.logger.error('Error retrieving measurements', err);
                     observer.error(err);
                 },
                 () => {
@@ -237,20 +226,20 @@ export class UserService {
      * @param clientUUID        UUID of client to use
      * @param measurementUUID   UUID of measurement to use
      * @param wait              Wait for completion of api call or return immediatelly
-     * @returns {Observable<any>}   Was the call successfull
+     * @returns Was the call successfull
      */
-    disassociate (clientUUID: string, measurementUUID: string, wait: boolean = true): Observable<any> {
+    disassociate(clientUUID: string, measurementUUID: string, wait: boolean = true): Observable<any> {
         if (clientUUID == null || !clientUUID) {
-            this.logger.error("No client uuid");
-            return throwError("No client uuid");
+            this.logger.error('No client uuid');
+            return throwError('No client uuid');
         }
         if (measurementUUID == null || !measurementUUID) {
-            this.logger.error("No measurement uuid");
-            return throwError("No measurement uuid");
+            this.logger.error('No measurement uuid');
+            return throwError('No measurement uuid');
         }
 
         return this.requests.deleteJson<any>(
-            Location.joinWithSlash(this.config.servers.control, "clients/" + clientUUID + "/measurements/" + measurementUUID)
+            Location.joinWithSlash(this.config.servers.control, 'clients/' + clientUUID + '/measurements/' + measurementUUID)
         );
     }
 
@@ -261,22 +250,22 @@ export class UserService {
      *
      * @param user  User to disassociate
      */
-    disassociateAll (user: UserInfo = null): Observable<any> {
+    disassociateAll(user: UserInfo = null): Observable<any> {
         if (!user) {
             user = this.user;
         }
 
         if (!user || !user.uuid) {
-            this.logger.error("No valid user given");
-            return throwError("No valid user given");
+            this.logger.error('No valid user given');
+            return throwError('No valid user given');
         }
 
-        return Observable.create((observer: Observer<any>) => {
+        return new Observable((observer: Observer<any>) => {
             this.loadMeasurements(user).subscribe(
                 () => {
-                    let obs: Observable<any>[] = [];
+                    const obs: Observable<any>[] = [];
 
-                    for (let mesID of user.measurementUUIDs) {
+                    for (const mesID of user.measurementUUIDs) {
                         obs.push(this.disassociate(user.uuid, mesID, true));
                     }
                     forkJoin(obs).subscribe(
@@ -284,9 +273,9 @@ export class UserService {
                             observer.next(null);
                         },
                         (err: string | HttpErrorResponse) => {
-                            //if (err instanceof Error) {
+                            // if (err instanceof Error) {
                             this.logger.error('Disassociate failed', err);
-                            observer.error("Disassociate failed");
+                            observer.error('Disassociate failed');
                         },
                         () => {
                             observer.complete();
@@ -294,7 +283,7 @@ export class UserService {
                     );
                 },
                 (error: any) => {
-                    this.logger.error("Failed to load measurements", error);
+                    this.logger.error('Failed to load measurements', error);
                     observer.error(error);
                 }
             );

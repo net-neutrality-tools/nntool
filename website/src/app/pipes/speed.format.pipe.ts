@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({name: 'formatSpeed'})
 export class SpeedFormatPipe implements PipeTransform {
 
-    transform (value: number): string {
+    transform(value: number): string {
         /*
         if (value >= 10) {
             return value.toFixed(0);

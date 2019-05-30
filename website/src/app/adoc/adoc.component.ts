@@ -1,33 +1,33 @@
-import {Component, OnDestroy, AfterViewInit, ElementRef, Renderer2} from "@angular/core";
+import {Component, OnDestroy, AfterViewInit, ElementRef, Renderer2, OnInit} from '@angular/core';
 
-import {TranslateService, LangChangeEvent} from "@ngx-translate/core";
-import {Subscription} from "rxjs";
-import {finalize} from "rxjs/operators";
+import {TranslateService, LangChangeEvent} from '@ngx-translate/core';
+import {Subscription} from 'rxjs';
+import {finalize} from 'rxjs/operators';
 
-import {ADocService} from "./adoc.service";
-import {LoggerService} from "../services/log.service";
-import {ConfigService} from "../services/config.service";
+import {ADocService} from './adoc.service';
+import {LoggerService} from '../services/log.service';
+import {ConfigService} from '../services/config.service';
 
 
 @Component({
-    templateUrl: "./adoc.component.html"
+    templateUrl: './adoc.component.html'
 })
-export class ADocComponent implements AfterViewInit, OnDestroy {
+export class ADocComponent implements AfterViewInit, OnDestroy, OnInit {
 
-    protected logger = LoggerService.getLogger("ADocComponent");
-    key: string = "";
+    protected logger = LoggerService.getLogger('ADocComponent');
+    key = '';
     private subs: Subscription[] = [];
-    loading: boolean = false;
+    loading = false;
     protected injectedVars: {[key: string]: string};
 
 
-    constructor (
+    constructor(
         private elementRef: ElementRef, private renderer: Renderer2,
         private translateService: TranslateService,
         private adoc: ADocService, protected configService: ConfigService,
     ) {}
 
-    ngOnInit () {
+    ngOnInit() {
         this.loading = true;
         this.adoc.setPage(this.key)
             .pipe( finalize(() => { this.loading = false; }) )
@@ -39,7 +39,7 @@ export class ADocComponent implements AfterViewInit, OnDestroy {
             );
     }
 
-    ngAfterViewInit () {
+    ngAfterViewInit() {
         this.subs.push(this.translateService.onLangChange.subscribe(
             (event: LangChangeEvent) => {
                 if (!this.loading || this.translateService.currentLang !== event.lang) {
@@ -62,12 +62,12 @@ export class ADocComponent implements AfterViewInit, OnDestroy {
             try {
                 this.subs.pop().unsubscribe();
             } catch (e) {
-                this.logger.error("Failed to unsubscribe", e);
+                this.logger.error('Failed to unsubscribe', e);
             }
         }
     }
 
-    private inject (vars: {[key: string]: string}): void {
+    private inject(vars: {[key: string]: string}): void {
         setTimeout(() => {
             for (const key in vars) {
                 if (!vars.hasOwnProperty(key)) {

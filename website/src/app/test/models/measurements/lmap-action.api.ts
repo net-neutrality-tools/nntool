@@ -1,5 +1,5 @@
-import {LmapStateAPI} from "./lmap-state.api";
-import {LmapOptionAPI} from "./lmap-option.api";
+import {LmapStateAPI} from './lmap-state.api';
+import {LmapOptionAPI} from './lmap-option.api';
 
 export class LmapActionAPI {
 
@@ -39,7 +39,7 @@ export class LmapActionAPI {
     /**
      * A set of Suppression tags that are used to select Actions to be suppressed.
      */
-    "suppression-tag": string[];
+    'suppression-tag': string[];
 
     /**
      * The current state of the Action (One of: enabled, disabled, running, suppressed).
@@ -78,36 +78,36 @@ export class LmapActionAPI {
     /**
      * The date and time of the last invocation of this Action.
      */
-    "last-invocation": string; // TODO: change back to Date
+    'last-invocation': string; // TODO: change back to Date
 
     /**
      * The date and time of the last completion of this Action.
      */
-    "last-completion": string; // TODO: change back to Date
+    'last-completion': string; // TODO: change back to Date
 
     /**
      * The status code returned by the last execution of this Action (with 0 indicating successful execution).
      */
-    "last-status": number;
+    'last-status': number;
 
     /**
      * The status message produced by the last execution of this Action.
      */
-    "last-message": string;
+    'last-message': string;
 
     /**
      * The date and time of the last failed completion of this Action.
      */
-    "last-failed-completion": string; // TODO: change back to Date
+    'last-failed-completion': string; // TODO: change back to Date
 
     /**
      * The status code returned by the last failed execution of this Action.
      */
-    "last-failed-status": number;
+    'last-failed-status': number;
 
     /**
      * The status message produced by the last failed execution of this Action.
      */
-    "last-failed-message": string;
+    'last-failed-message': string;
 }
 

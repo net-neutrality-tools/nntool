@@ -1,4 +1,4 @@
-import {GeoLocation, MeasurementAgentType} from "../api/request-info.api";
+import {GeoLocation, MeasurementAgentType} from '../api/request-info.api';
 
 export class BriefSubMeasurement {
     start_test: string; // TODO: change back to Date

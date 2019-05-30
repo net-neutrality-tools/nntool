@@ -1,32 +1,30 @@
-import {Injectable} from "@angular/core";
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 
-import {Observable, Subscriber} from "rxjs";
-import {first} from "rxjs/operators";
-import {TranslateService} from "@ngx-translate/core";
+import {Observable, Subscriber} from 'rxjs';
+import {first} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
 
-import {Logger, LoggerService} from "../services/log.service";
-import {RequestsService} from "../services/requests.service";
-
+import {Logger, LoggerService} from '../services/log.service';
+import {RequestsService} from '../services/requests.service';
 
 @Injectable()
 export class ADocService {
 
-    private logger: Logger = LoggerService.getLogger("ADocService");
-
+    private logger: Logger = LoggerService.getLogger('ADocService');
 
     constructor(
         private requests: RequestsService, private translate: TranslateService, private http: HttpClient
     ) {}
 
-    getAdoc (adoc: string, lang: string): Observable<string> {
+    getAdoc(adoc: string, lang: string): Observable<string> {
         return this.http.get(
-            "/i18n/view/" + lang + "/" + adoc + ".html", {responseType: 'text'}
+            '/i18n/view/' + lang + '/' + adoc + '.html', {responseType: 'text'}
         )
             .pipe( first() );
     }
 
-    setPage (adoc: string, lang?: string): Observable<string> {
+    setPage(adoc: string, lang?: string): Observable<string> {
         const transKey: string = 'STATIC.' + adoc.toUpperCase();
         const defLang: string = this.translate.getDefaultLang();
 
@@ -34,7 +32,7 @@ export class ADocService {
             lang = this.translate.currentLang;
         }
 
-        return Observable.create((subscriber: Subscriber<string>) => {
+        return new Observable((subscriber: Subscriber<string>) => {
             this.translate.getTranslation(lang).subscribe(
                 (data: any) => {
                     this.logger.debug(data);
@@ -45,25 +43,25 @@ export class ADocService {
                     ) {
                         this.logger.debug('adoc not found', adoc);
                         this.getAdoc(adoc, lang).subscribe(
-                            (data: any) => {
-                                this.logger.debug("Loaded " + adoc + " in " + lang);
-                                this.translate.set(transKey, data, lang);
-                                subscriber.next(data);
+                            (data2: any) => {
+                                this.logger.debug('Loaded ' + adoc + ' in ' + lang);
+                                this.translate.set(transKey, data2, lang);
+                                subscriber.next(data2);
                                 subscriber.complete();
                             },
                             (err: HttpErrorResponse) => {
                                 this.logger.debug('Adoc error', lang, err);
                                 if (err.status === 404 && lang !== defLang) {
-                                    this.logger.info("Using default lang..");
+                                    this.logger.info('Using default lang..');
                                     this.getAdoc(adoc, defLang).subscribe(
-                                        (data: any) => {
-                                            this.logger.debug("Loaded " + adoc + " in " + defLang);
-                                            this.translate.set(transKey, data, lang);
-                                            subscriber.next(data);
+                                        (data2: any) => {
+                                            this.logger.debug('Loaded ' + adoc + ' in ' + defLang);
+                                            this.translate.set(transKey, data2, lang);
+                                            subscriber.next(data2);
                                             subscriber.complete();
                                         },
-                                        (err: HttpErrorResponse) => {
-                                            this.logger.error('Adoc error', lang, err);
+                                        (err2: HttpErrorResponse) => {
+                                            this.logger.error('Adoc error', lang, err2);
                                             subscriber.error('Default lang failed');
                                         }
                                     );

@@ -1,7 +1,5 @@
-import {Component, OnInit, AfterViewInit} from "@angular/core";
+import {Component, OnInit, AfterViewInit} from '@angular/core';
 declare let google: any;
-
-
 
 export interface MarkerInfoResponse {
     measurements: {
@@ -16,12 +14,10 @@ export interface MarkerInfoResponse {
     }[];
 }
 
-
 @Component({
-    selector: "[data-view-map]",
-    templateUrl: "./map.component.html"
+    selector: 'app-map',
+    templateUrl: './map.component.html'
 })
 export class MapComponent {
-
 
 }

@@ -1,22 +1,22 @@
-import {Injectable, ElementRef} from "@angular/core";
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {Injectable, ElementRef} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 
-import {Observable} from "rxjs";
-import {first} from "rxjs/operators";
+import {Observable} from 'rxjs';
+import {first} from 'rxjs/operators';
 
-import {Logger, LoggerService} from "./log.service";
+import {Logger, LoggerService} from './log.service';
 
 
 @Injectable()
 export class RequestsService {
 
-    private static logger: Logger = LoggerService.getLogger("RequestsService");
+    private static logger: Logger = LoggerService.getLogger('RequestsService');
 
-    constructor (private http: HttpClient) {
+    constructor(private http: HttpClient) {
 
     }
 
-    private prepareHeaders (
+    private prepareHeaders(
         headers?: {[key: string]: any}, setAcceptJson: boolean = true, setContentTypeJson: boolean = true
     ): HttpHeaders {
         let res: HttpHeaders = new HttpHeaders();
@@ -28,12 +28,12 @@ export class RequestsService {
         }
 
         if (headers) {
-            for (let key in headers) {
+            for (const key in headers) {
                 if (!headers.hasOwnProperty(key)) {
                     continue;
                 }
                 const val: any = headers[key];
-                if (typeof val !== "undefined") {
+                if (typeof val !== 'undefined') {
                     res = res.set(key, val);
                 }
             }
@@ -42,10 +42,10 @@ export class RequestsService {
         return res;
     }
 
-    private prepareParams (params?: {[key: string]: any}): HttpParams {
+    private prepareParams(params?: {[key: string]: any}): HttpParams {
         let ps: HttpParams = new HttpParams();
         if (params != null && params) {
-            for (let key in params) {
+            for (const key in params) {
                 if (!params.hasOwnProperty(key)) {
                     continue;
                 }
@@ -61,7 +61,7 @@ export class RequestsService {
         return ps;
     }
 
-    getJson<T> (uri: string, params?: {[key: string]: any}, headers?: {[key: string]: any}): Observable<T> {
+    getJson<T>(uri: string, params?: {[key: string]: any}, headers?: {[key: string]: any}): Observable<T> {
         RequestsService.logger.debug('getJson', 'uri', uri, 'params', params);
 
         return this.http.get<T>(
@@ -73,7 +73,7 @@ export class RequestsService {
             .pipe<T>( first() );
     }
 
-    putJson<T> (uri: string, data: any, params?: {[key: string]: any}, headers?: {[key: string]: any}): Observable<T> {
+    putJson<T>(uri: string, data: any, params?: {[key: string]: any}, headers?: {[key: string]: any}): Observable<T> {
         RequestsService.logger.debug('putJson', 'uri', uri, 'params', params, 'data', data);
 
         return this.http.put<T>(
@@ -87,7 +87,7 @@ export class RequestsService {
             .pipe<T>( first() );
     }
 
-    postJson<T> (uri: string, data: any, params?: {[key: string]: any}, headers?: {[key: string]: any}): Observable<T> {
+    postJson<T>(uri: string, data: any, params?: {[key: string]: any}, headers?: {[key: string]: any}): Observable<T> {
         RequestsService.logger.debug('postJson', 'uri', uri, 'params', params, 'data', data);
         return this.http.post<T>(
             uri,
@@ -100,7 +100,7 @@ export class RequestsService {
             .pipe<T>( first() );
     }
 
-    deleteJson<T> (uri: string, params?: {[key: string]: any}, headers?: {[key: string]: any}): Observable<T> {
+    deleteJson<T>(uri: string, params?: {[key: string]: any}, headers?: {[key: string]: any}): Observable<T> {
         RequestsService.logger.debug('deleteJson', 'uri', uri, 'params', params);
 
         return this.http.delete<T>(
@@ -112,10 +112,10 @@ export class RequestsService {
             .pipe<T>( first() );
     }
 
-    getScript (src: string, elementRef: ElementRef, onload?: () => void): Observable<any> {
-        return Observable.create((observer: any) => {
-            let s = document.createElement("script");
-            s.type = "text/javascript";
+    getScript(src: string, elementRef: ElementRef, onload?: () => void): Observable<any> {
+        return new Observable((observer: any) => {
+            const s = document.createElement('script');
+            s.type = 'text/javascript';
             s.src = src;
             s.onload = () => {
                 if (onload) {
@@ -128,10 +128,10 @@ export class RequestsService {
         });
     }
 
-    getCss (src: string): void {
+    // getCss(src: string): void {
         // TODO: jquery
         /*$('head').append(
             $('<link rel="stylesheet" type="text/css" />').attr("href", src)
         );*/
-    }
+    // }
 }

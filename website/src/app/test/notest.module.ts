@@ -1,4 +1,4 @@
-import {NetTestComponent, TestGuard} from "./test.component";
+import {NetTestComponent, TestGuard} from './test.component';
 
 
 export const TEST_DECLARATIONS: any[] = [
