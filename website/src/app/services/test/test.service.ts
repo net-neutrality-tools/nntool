@@ -9,24 +9,30 @@ import {RequestAPI} from '../../test/models/api/request.api';
 import {RegistrationRequestAPI} from '../../test/models/registration/registration-request.api';
 import {ResponseAPI} from '../../test/models/api/response.api';
 import {RegistrationResponseAPI} from '../../test/models/registration/registration-response.api';
-import {MeasurementAgentType} from '../../test/models/api/request-info.api';
+import {GeoLocation, MeasurementAgentType} from '../../test/models/api/request-info.api';
 import {RequestsService} from '../requests.service';
 import {SettingsRequestAPI} from '../../test/models/settings/settings-request.api';
 import {SettingsResponseAPI} from '../../test/models/settings/settings-response.api';
-import {LmapControlAPI} from '../../test/models/measurements/lmap-control.api';
-import {LmapReportAPI} from '../../test/models/measurements/lmap-report.api';
 import {MeasurementResultResponseAPI} from '../../test/models/measurements/measurement-result-response.api';
 import {TestSettingsService} from './test-settings.service';
 import {ConfigService} from '../config.service';
+import {LmapControl} from '../../lmap/models/lmap-control.model';
+import {LmapReport} from '../../lmap/models/lmap-report.model';
+import {LocationService} from '../location.service';
+import {DeviceDetectorService, DeviceInfo} from 'ngx-device-detector';
+
 
 @Injectable()
 export class TestService {
 
-    constructor(private requestService: RequestsService,
-                private userService: UserService,
-                private testSettingsService: TestSettingsService,
-                private configService: ConfigService) {
-    }
+    constructor(
+        private requestService: RequestsService,
+        private userService: UserService,
+        private testSettingsService: TestSettingsService,
+        private configService: ConfigService,
+        private locationService: LocationService,
+        private deviceService: DeviceDetectorService
+    ) { }
 
     private static logger: Logger = LoggerService.getLogger('TestService');
 
@@ -42,7 +48,7 @@ export class TestService {
 
             registrationRequest = {
                 data: {
-                    group_name: undefined, // wurst
+                    group_name: undefined,
                     terms_and_conditions_accepted: true,
                     terms_and_conditions_accepted_version: 12
                 },
@@ -53,17 +59,7 @@ export class TestService {
                     app_version_code: testSettings.app_version_code,
                     app_version_name: testSettings.app_version_name,
                     code_name: undefined,
-                    geo_location: { // TODO: Real data
-                        accuracy: 0,
-                        altitude: 0,
-                        heading: 0,
-                        latitude: 0,
-                        longitude: 0,
-                        provider: undefined,
-                        relative_time_ns: 0,
-                        speed: 0,
-                        time: new Date().toISOString().slice(0, -1)
-                    },
+                    geo_location: this.getFirstLocation(),
                     language: agentSettings.language,
                     model: agentSettings.model,
                     os_name: undefined,
@@ -94,17 +90,7 @@ export class TestService {
                     app_version_code: testSettings.app_version_code,
                     app_version_name: testSettings.app_version_name,
                     code_name: undefined,
-                    geo_location: {
-                        accuracy: 0,
-                        altitude: 0,
-                        heading: 0,
-                        latitude: 0,
-                        longitude: 0,
-                        provider: undefined,
-                        relative_time_ns: 0,
-                        speed: 0,
-                        time: new Date().toISOString().slice(0, -1)
-                    },
+                    geo_location: this.getFirstLocation(),
                     language: agentSettings.language,
                     model: agentSettings.model,
                     os_name: undefined,
@@ -123,8 +109,7 @@ export class TestService {
         );
     }
 
-    public newMeasurement(lmapControl?: LmapControlAPI): Observable<LmapControlAPI> {
-
+    public newMeasurement(lmapControl?: LmapControl): Observable<LmapControl> {
         return of(this.userService.user).pipe(
             mergeMap((user: UserInfo) => {
                 if (!user.uuid) {
@@ -186,6 +171,9 @@ export class TestService {
                         tasks: undefined
                     };
                 }
+
+                const deviceInfo: DeviceInfo = this.deviceService.getDeviceInfo();
+
                 lmapControl['additional-request-info'] = {
                     agent_type: testSettings.agent_type,
                     agent_uuid: context.user.uuid,
@@ -193,32 +181,22 @@ export class TestService {
                     app_git_revision: testSettings.app_revision,
                     app_version_code: testSettings.app_version_code,
                     app_version_name: testSettings.app_version_name,
-                    code_name: undefined,
-                    geo_location: { // TODO: Real data
-                        accuracy: 0,
-                        altitude: 0,
-                        heading: 0,
-                        latitude: 0,
-                        longitude: 0,
-                        provider: undefined,
-                        relative_time_ns: 0,
-                        speed: 0,
-                        time: new Date().toISOString().slice(0, -1)
-                    },
+                    code_name: deviceInfo.browser_version,
+                    geo_location: this.getFirstLocation(),
                     language: agentSettings.language,
-                    model: agentSettings.model,
-                    os_name: undefined,
-                    os_version: agentSettings.os_version,
+                    model: deviceInfo.browser,
+                    os_name: deviceInfo.os,
+                    os_version: deviceInfo.os_version,
                     timezone: agentSettings.timezone
                 };
 
-                return this.requestService.postJson<LmapControlAPI>(
+                return this.requestService.postJson<LmapControl>(
                     `${this.configService.getServerControl()}measurements`, lmapControl);
             })
         );
     }
 
-    public postMeasurementResults(lmapReport: LmapReportAPI, serverCollectorUrl: string):
+    public postMeasurementResults(lmapReport: LmapReport, serverCollectorUrl: string):
         Observable<ResponseAPI<MeasurementResultResponseAPI>> {
         const { agentSettings, testSettings } = this.testSettingsService;
 
@@ -250,6 +228,8 @@ export class TestService {
             };
         }
 
+        const deviceInfo: DeviceInfo = this.deviceService.getDeviceInfo();
+
         lmapReport.additional_request_info = {
             agent_type: testSettings.agent_type,
             agent_uuid: this.userService.user.uuid,
@@ -257,22 +237,12 @@ export class TestService {
             app_git_revision: testSettings.app_revision,
             app_version_code: testSettings.app_version_code,
             app_version_name: testSettings.app_version_name,
-            code_name: undefined,
-            geo_location: { // TODO: Real data
-                accuracy: 0,
-                altitude: 0,
-                heading: 0,
-                latitude: 0,
-                longitude: 0,
-                provider: undefined,
-                relative_time_ns: 0,
-                speed: 0,
-                time: new Date().toISOString().slice(0, -1)
-            },
+            code_name: deviceInfo.browser_version,
+            geo_location: this.getFirstLocation(),
             language: agentSettings.language,
-            model: agentSettings.model,
-            os_name: undefined,
-            os_version: agentSettings.os_version,
+            model: deviceInfo.browser,
+            os_name: deviceInfo.os,
+            os_version: deviceInfo.os_version,
             timezone: agentSettings.timezone
         };
         lmapReport['agent-id'] = this.userService.user.uuid;
@@ -283,5 +253,10 @@ export class TestService {
 
         return this.requestService.postJson<ResponseAPI<MeasurementResultResponseAPI>>(
             `${serverCollectorUrl}`, lmapReport);
+    }
+
+    private getFirstLocation(): GeoLocation {
+        const locations: GeoLocation[] = this.locationService.getLocations();
+        return locations.length > 0 ? locations[0] : null;
     }
 }

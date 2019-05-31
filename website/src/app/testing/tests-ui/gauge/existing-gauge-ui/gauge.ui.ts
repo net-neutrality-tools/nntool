@@ -4,7 +4,7 @@ import {LoggerService} from '../../../../services/log.service';
 
 export class MeasurementGauge extends BaseMeasurementGauge {
 
-    private resolutionScaleFactor = 2; // read window.devicePixelRatio (inject window object properly)
+    private resolutionScaleFactor = 2;
     private arcWidth = 0;
     private arcSpace = 0;
     private buttonWidth = 75;
@@ -24,7 +24,7 @@ export class MeasurementGauge extends BaseMeasurementGauge {
         private stateView: HTMLElement,
         private pingView: HTMLElement, private upView: HTMLElement, private downView: HTMLElement,
         private positionView: HTMLElement, private providerView: HTMLElement, private deviceView: HTMLElement,
-        private technologyView: HTMLElement, private serverView: HTMLElement,
+        private technologyView: HTMLElement, private serverView: HTMLElement, private window: Window,
         translations: {[key: string]: any}, gaugeColors: {[key: string]: string} = null,
         public gaugeFont: string = null, public hasQos: boolean = false,
     ) {
@@ -32,6 +32,10 @@ export class MeasurementGauge extends BaseMeasurementGauge {
         this.logger = LoggerService.getLogger('MeasurementGauge');
         this.canvasContext = this.canvas.getContext('2d');
         this.canvasPartitionContext = this.canvasPartition.getContext('2d');
+
+        if (this.window && this.window.devicePixelRatio) {
+            this.resolutionScaleFactor = this.window.devicePixelRatio;
+        }
 
         // set canvas width and height to css values
         this.setCanvas();

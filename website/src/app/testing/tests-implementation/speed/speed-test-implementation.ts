@@ -151,7 +151,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
                     case 'rtt':
                         if (currentState.cmd === 'report') {
                             state.speedTestState = SpeedTestStateEnum.PING;
-                            state.ping = currentState.rtt_info.duration_ns / (1000 * 1000);
+                            state.ping = currentState.rtt_info.average_ns / (1000 * 1000);
                             state.progress = (
                                 currentState.rtt_info.num_received
                                 + currentState.rtt_info.num_missing
@@ -160,7 +160,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
                         }
                         if (currentState.cmd === 'finish') {
                             state.speedTestState = SpeedTestStateEnum.PING_OK;
-                            state.ping = currentState.rtt_info.duration_ns / (1000 * 1000);
+                            state.ping = currentState.rtt_info.average_ns / (1000 * 1000);
                             state.progress = 1;
                         }
                         break;

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {ConfigService} from '../../services/config.service';
 import {TranslateService} from '@ngx-translate/core';
 import {BarUIComponent} from '../tests-ui/bar/bar-ui';
@@ -8,6 +8,7 @@ import {PortBlockingTestState} from '../tests-implementation/port-blocking/port-
 import {PortBlockingTestTypeEnum} from '../tests-implementation/port-blocking/enums/port-blocking-test-type';
 import {BarUIShowableTestTypeEnum} from '../tests-ui/bar/enums/bar-ui-showable-test-type.enum';
 import {PortBlockingTestConfig} from '../tests-implementation/port-blocking/port-blocking-test-config';
+import {WINDOW} from '../../services/window.service';
 
 @Component({
     // needs to be mentioned here, but also mentioned in gauge-ui.ts for reference
@@ -19,9 +20,15 @@ export class PortBlockingTestBarComponent extends
 
     // TODO: rethink DI in this use case, testImplementation should not be one instance, if there were more than one test at once
     // TODO: Remove this constructor when DI on generic type figured out
-    constructor(testImplementation: PortBlockingTestImplementation, configService: ConfigService, translateService: TranslateService) {
-        super(testImplementation, configService, translateService);
+    constructor(
+        testImplementation: PortBlockingTestImplementation,
+        configService: ConfigService,
+        translateService: TranslateService,
+        @Inject(WINDOW) window: Window
+    ) {
+        super(testImplementation, configService, translateService, window);
     }
+
 
     protected testStateToUIState = (state: PortBlockingTestState): BarUIState => {
         const barUIState: BarUIState = new BarUIState();

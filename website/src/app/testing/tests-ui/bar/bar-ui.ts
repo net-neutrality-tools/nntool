@@ -19,7 +19,7 @@ export abstract class BarUIComponent<T extends TestImplementation<TC, TS>, TC ex
     extends Test<BarUIState, T, TC, TS>
     implements AfterViewInit {
 
-    private resolutionScaleFactor = 2; // read window.devicePixelRatio (inject window object properly)
+    private resolutionScaleFactor = 2;
     private canvas: HTMLCanvasElement;
     private canvasContext: CanvasRenderingContext2D;
     private currentState: BarUIState;
@@ -32,8 +32,18 @@ export abstract class BarUIComponent<T extends TestImplementation<TC, TS>, TC ex
     private barColors: {[key: string]: string};
     private font: string;
 
-    protected constructor(testImplementation: T, configService: ConfigService, protected translateService: TranslateService) {
+    protected constructor(
+        testImplementation: T,
+        configService: ConfigService,
+        protected translateService: TranslateService,
+        private window: Window
+    ) {
         super(testImplementation);
+
+        if (this.window && this.window.devicePixelRatio) {
+            this.resolutionScaleFactor = this.window.devicePixelRatio;
+        }
+
         this.state.subscribe(this.handleState);
         this.configureBarUI(configService.getConfig());
     }

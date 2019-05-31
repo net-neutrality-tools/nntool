@@ -141,8 +141,8 @@ export class TestSettingsService {
             servers: config.servers,
             ndt: false,
             agent_type: MeasurementAgentType.BROWSER,
-            agent_name: 'RMBTws',
-            platform: 'RMBTws',
+            agent_name: 'Ias',
+            platform: 'Ias',
             // branch-commit
             app_revision: this.configService.getBranch() + '-' + this.configService.getRevision(),
             // version

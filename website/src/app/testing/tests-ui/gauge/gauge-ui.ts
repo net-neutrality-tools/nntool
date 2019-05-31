@@ -1,4 +1,4 @@
-import {AfterViewInit, Component} from '@angular/core';
+import {AfterViewInit, Component, Inject} from '@angular/core';
 import {GaugeUIState} from './gauge-ui-state';
 import {TestState} from '../../tests-implementation/test-state';
 import {TestImplementation} from '../../tests-implementation/test-implementation';
@@ -11,6 +11,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {BaseMeasurementGauge} from './existing-gauge-ui/base.gauge.ui';
 import {MeasurementGauge} from './existing-gauge-ui/gauge.ui';
 import {TestConfig} from '../../tests-implementation/test-config';
+import {WINDOW} from '../../../services/window.service';
 
 @Component({
     templateUrl: './gauge-ui.template.html',
@@ -24,7 +25,12 @@ export abstract class GaugeUIComponent<T extends TestImplementation<TC, TS>, TC 
     private renderingConfig: WebsiteSettings;
     protected testGauge: BaseMeasurementGauge;
 
-    protected constructor(testImplementation: T, configService: ConfigService, protected translateService: TranslateService) {
+    protected constructor(
+        testImplementation: T,
+        configService: ConfigService,
+        protected translateService: TranslateService,
+        private window: Window
+    ) {
         super(testImplementation);
         this.state.subscribe(this.handleState);
         this.renderingConfig = configService.getConfig();
@@ -97,7 +103,7 @@ export abstract class GaugeUIComponent<T extends TestImplementation<TC, TS>, TC 
             document.getElementById('nettest-device'),
             document.getElementById('nettest-technology'),
             document.getElementById('nettest-server'),
-            translations, gaugeColors, font, hasQos,
+            this.window, translations, gaugeColors, font, hasQos,
         );
 
         let firstRun = true;

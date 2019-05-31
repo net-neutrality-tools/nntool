@@ -60,6 +60,9 @@ import {PortBlockingTestImplementation} from './testing/tests-implementation/por
 import {TestSeriesComponent} from './testing/test-series.component';
 import {TestService} from './services/test/test.service';
 import {TestSettingsService} from './services/test/test-settings.service';
+import {WINDOW_PROVIDER, WINDOW_REF_PROVIDER} from './services/window.service';
+import {LocationService} from './services/location.service';
+import {DeviceDetectorModule} from 'ngx-device-detector';
 
 
 // AoT requires an exported function for factories
@@ -111,6 +114,7 @@ const MAIN_DECLARATIONS = [
         FormsModule,
         HttpClientModule,
         routing,
+        DeviceDetectorModule.forRoot(),
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -142,7 +146,10 @@ const MAIN_DECLARATIONS = [
         SpeedTestImplementation,
         PortBlockingTestImplementation,
         TestService,
-        TestSettingsService
+        TestSettingsService,
+        WINDOW_REF_PROVIDER,
+        WINDOW_PROVIDER,
+        LocationService
     ],
     bootstrap: [AppComponent]
 })
