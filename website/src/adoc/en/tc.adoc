@@ -4,11 +4,7 @@
 :encoding: utf-8
 :lang: en
 
-
-
-
 //[[terms-of-use]]
 == Terms of Use
 
 TODO
-

@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "npm run build:ias && ng serve",
-    "build": "npm run build:ias && ng build",
+    "build": "npm run build:ias && ng build --extractCss",
     "test": "npm run build:ias && ng test",
     "lint": "ng lint",
     "e2e": "npm run build:ias && ng e2e",
@@ -29,15 +29,17 @@
     "ng2-nvd3": "^2.0.0"
   },
   "devDependencies": {
-    "@angular-builders/custom-webpack": "^8.0.1",
-    "@angular-devkit/build-angular": "^0.800.0",
+    "@angular-builders/custom-webpack": "~8.0.1",
+    "@angular-devkit/build-angular": "~0.800.1",
     "@angular/cli": "~8.0.0",
     "@angular/compiler-cli": "~8.0.0",
     "@angular/language-service": "~8.0.0",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
+    "asciidoctor.js": "^1.5.9",
     "codelyzer": "^5.0.0",
+    "copy-webpack-plugin": "^5.0.3",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",

@@ -19,7 +19,7 @@ export class ADocService {
 
     getAdoc(adoc: string, lang: string): Observable<string> {
         return this.http.get(
-            '/i18n/view/' + lang + '/' + adoc + '.html', {responseType: 'text'}
+            '/assets/i18n/view/' + lang + '/' + adoc + '.html', {responseType: 'text'}
         )
             .pipe( first() );
     }
