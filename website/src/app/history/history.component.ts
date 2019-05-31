@@ -239,8 +239,10 @@ export class HistoryComponent extends ResultListComponent implements OnInit {
 
                     this.results.push({
                         time: briefMeasurementResponse.start_time,
-                        down: speedResult ? '' + Math.round(speedResult.throughput_avg_download_bps / (1000 * 10)) / 100 : '',
-                        up: speedResult ? '' + Math.round(speedResult.throughput_avg_upload_bps / (1000 * 10)) / 100 : '',
+                        /* tslint:disable:no-string-literal */
+                        down: speedResult ? '' + Math.round(speedResult['throughput_avg_download_bps'] / (1000 * 10)) / 100 : '',
+                        up: speedResult ? '' + Math.round(speedResult['throughput_avg_upload_bps'] / (1000 * 10)) / 100 : '',
+                        /* tslint:enable:no-string-literal */
                         name,
                         signal: null,
                         ping: '',
