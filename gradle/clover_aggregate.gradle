@@ -9,3 +9,15 @@ clover {
         filter = 'log,main,getters,setters'
     }
 }
+
+task printCloverCodeCoverage {
+    dependsOn 'cloverAggregateReports'
+    doLast {
+        String metrics = new File("$rootProject.buildDir/reports/clover/clover.xml").readLines().get(3)
+        def xml = new XmlParser().parseText(metrics)
+
+        println '=============================== Coverage summary ==============================='
+        println 'clover_code_coverage: ' + (((xml.@coveredelements as Double) / (xml.@elements as Double)) * 100.0).round(2)
+        println '================================================================================'
+    }
+}

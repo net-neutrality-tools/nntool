@@ -2,7 +2,7 @@ buildscript {
 	ext {
 		eclipse_project_prefix = 'nntool'
 	}
-  repositories {
+  	repositories {
         google()
 
         mavenLocal()
@@ -21,7 +21,7 @@ buildscript {
         // Unfortunatly, just adding a dependency to jib-gradle-plugin breaks the Android build.
         // Therefore, we can only include it if we don't build Android modules.
         if (gradle.ext.includeJibGradlePlugin) {
-          classpath 'gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.2.0'
+        	classpath 'gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.2.0'
         }
     }
 }
@@ -79,7 +79,7 @@ subprojects { p ->
     // make root project clean task depend on (= execute) subproject clean tasks
 	rootProject.clean.dependsOn tasks.matching { it.name == "clean" }
 
-  clean.doLast {
+	clean.doLast {
 		delete ".clover"
 	}
 }

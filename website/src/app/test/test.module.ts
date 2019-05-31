@@ -1,10 +1,10 @@
-import {NetTestComponent, TestGuard} from "./test.component";
-import {StartScreen} from "./start.screen";
+import {NetTestComponent, TestGuard} from './test.component';
+import {StartScreenComponent} from './start.screen';
 
 
 export const TEST_DECLARATIONS: any[] = [
     NetTestComponent,
-    StartScreen,
+    StartScreenComponent,
 ];
 export const TEST_PROVIDERS: any[] = [
     TestGuard

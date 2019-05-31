@@ -1,27 +1,27 @@
-import {AfterViewInit, Component, ContentChildren, EventEmitter, Input, Output, QueryList} from "@angular/core";
-import {StartableTest} from "./test.component";
-import {TestComponentStatus} from "./enums/test-component-status.enum";
+import {AfterViewInit, Component, ContentChildren, EventEmitter, Input, Output, QueryList} from '@angular/core';
+import {StartableTest} from './test.component';
+import {TestComponentStatus} from './enums/test-component-status.enum';
 
 @Component({
     template: '<ng-content></ng-content>',
-    selector: "test-series"
+    selector: 'app-test-series'
 })
 export class TestSeriesComponent implements AfterViewInit {
 
     @ContentChildren('startableTest') testComponents: QueryList<StartableTest>;
 
     @Input()
-    private autostart: boolean = false;
+    private autostart = false;
 
     @Input()
-    private visible: boolean = true;
+    private visible = true;
 
     @Output()
     private statusChange: EventEmitter<TestComponentStatus> = new EventEmitter<TestComponentStatus>();
 
     // for now
     private currentFixedTestComponents: StartableTest[];
-    private currentTestIndex: number = 0;
+    private currentTestIndex = 0;
 
     constructor() {
 

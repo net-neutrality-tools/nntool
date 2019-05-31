@@ -33,7 +33,7 @@ export interface Grouped {
 export interface SpeedGraphGroup extends Grouped {
     values: {
         title: string;
-        curveType: "upload" | "download" | "signal";
+        curveType: 'upload' | 'download' | 'signal';
         values: {
             x: number;
             y: number;

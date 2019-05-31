@@ -1,12 +1,12 @@
-import {MapSettings} from "../map/map.settings.interface";
-import {FeatureSettings} from "./features.settings.interface";
-import {StatisticsSettings} from "../statistics/statistics.settings.interface";
-import {ResultSettings} from "../result/result.settings.interface";
-import {ServerSettings} from "./server.settings.interface";
-import {KeySettings} from "./key.settings.interface";
-import {ResultListSettings} from "../result-list/result_list.settings.interface";
-import {OpendataSettings} from "../opendata/opendata.settings.interface";
-import {UserSettings} from "../user/user.settings.interface";
+import {MapSettings} from '../map/map.settings.interface';
+import {FeatureSettings} from './features.settings.interface';
+import {StatisticsSettings} from '../statistics/statistics.settings.interface';
+import {ResultSettings} from '../result/result.settings.interface';
+import {ServerSettings} from './server.settings.interface';
+import {KeySettings} from './key.settings.interface';
+import {ResultListSettings} from '../result-list/result_list.settings.interface';
+import {OpendataSettings} from '../opendata/opendata.settings.interface';
+import {UserSettings} from '../user/user.settings.interface';
 
 
 export interface WebsiteSettings {

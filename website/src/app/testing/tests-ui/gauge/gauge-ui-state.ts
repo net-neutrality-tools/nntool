@@ -1,5 +1,5 @@
-import {UIState} from "../ui-state";
-import {GaugeUIStateEnum} from "./enums/gauge-ui-state.enum";
+import {UIState} from '../ui-state';
+import {GaugeUIStateEnum} from './enums/gauge-ui-state.enum';
 
 export class GaugeUIState extends UIState {
     gaugeUIState: GaugeUIStateEnum;
