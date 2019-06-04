@@ -72,6 +72,7 @@ class AndroidConnector {
 
         void registerSharedObject(JNIEnv* env, jobject caller, jobject baseMeasurementState, jobject pingMeasurementState, jobject downloadMeasurementState, jobject uploadMeasurementState);
 
+        void setSpeedSettings(JNIEnv* env, jobject speedTaskDesc);
         /**
         *   resets state and releases global java references made during setup
         */
@@ -125,6 +126,12 @@ class AndroidConnector {
 
         //pingMeasurementFields
         jfieldID fieldAverageMs;
+
+        //the settings from the SpeedTaskDesc
+        std::string measurementServerUrl;
+        int rttCount;
+        int downloadStreams;
+        int uploadStreams;
 
         AndroidConnector() {};
 

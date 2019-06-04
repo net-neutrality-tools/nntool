@@ -181,6 +181,11 @@ int main(int argc, char** argv)
 
 	Json jMeasurementParametersJson = jMeasurementParameters;
 
+    #ifdef NNTOOL_CLIENT
+    //register callback
+    CTrace::setLogFunction([] (const std::string &s) { std::cout << s; });
+    #endif
+
 	measurementStart(jMeasurementParametersJson.dump());
 }
 
@@ -244,7 +249,11 @@ void measurementStart(string measurementParameters)
 
 	Json::array jTargets = jMeasurementParameters["wsTargets"].array_items();
 	string wsTLD = jMeasurementParameters["wsTLD"].string_value();
+	#ifdef __ANDROID__
+	pXml->writeString(conf.sProvider, "DNS_HOSTNAME", jTargets[0].string_value() /* + "." + wsTLD*/);
+	#else
 	pXml->writeString(conf.sProvider, "DNS_HOSTNAME", jTargets[0].string_value() + "." + wsTLD);
+	#endif
 	jTargets = jMeasurementParameters["wsTargetsRtt"].array_items();
 	pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value() + "." + wsTLD);
 	

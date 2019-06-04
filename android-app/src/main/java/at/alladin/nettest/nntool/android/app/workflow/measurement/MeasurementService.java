@@ -15,6 +15,7 @@ import android.util.Log;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import at.alladin.nettest.nntool.android.app.util.LmapUtil;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.jni.JniSpeedMeasurementClient;
 import at.alladin.nettest.qos.android.QoSMeasurementClientAndroid;
 import at.alladin.nntool.client.ClientHolder;
@@ -31,9 +32,13 @@ public class MeasurementService extends Service {
 
     public static String ACTION_START_QOS_MEASUREMENT = "at.alladin.nettest.nntool.android.app.startQosMeasurement";
 
-    public static String EXTRAS_KEY_QOS_TASK_DESK_LIST = "qos_task_desk_list";
+    public static String EXTRAS_KEY_QOS_TASK_DESC_LIST = "qos_task_desc_list";
 
     public static String EXTRAS_KEY_QOS_TASK_COLLECTOR_URL = "qos_task_collector_url";
+
+    public static String EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL = "speed_task_collector_url";
+
+    public static String EXTRAS_KEY_SPEED_TASK_DESC = "speed_task_desc";
 
     final MeasurementServiceBinder binder = new MeasurementServiceBinder();
 
@@ -83,9 +88,10 @@ public class MeasurementService extends Service {
         return jniSpeedMeasurementClient;
     }
 
-    public void startMeasurement() {
-        //TODO: speed measurement
-        jniSpeedMeasurementClient = new JniSpeedMeasurementClient();
+    public void startMeasurement(final Bundle options) {
+        final String speedTaskCollectorUrl = options.getString(EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL);
+        final LmapUtil.SpeedTaskDesc speedTaskDesc = (LmapUtil.SpeedTaskDesc) options.getSerializable(EXTRAS_KEY_SPEED_TASK_DESC);
+        jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskCollectorUrl, speedTaskDesc);
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -106,7 +112,7 @@ public class MeasurementService extends Service {
                 getResources().getIntArray(R.array.qos_echo_service_udp_ports));
                 */
 
-        final List<TaskDesc> taskDescList = (List<TaskDesc>) options.getSerializable(EXTRAS_KEY_QOS_TASK_DESK_LIST);
+        final List<TaskDesc> taskDescList = (List<TaskDesc>) options.getSerializable(EXTRAS_KEY_QOS_TASK_DESC_LIST);
         final String collectorUrl = options.getString(EXTRAS_KEY_QOS_TASK_COLLECTOR_URL);
         final ClientHolder client = ClientHolder.getInstance(taskDescList, collectorUrl);
         qosMeasurementClient = new QoSMeasurementClientAndroid(client, getApplicationContext());
@@ -121,7 +127,7 @@ public class MeasurementService extends Service {
         if (intent != null) {
             Log.d(TAG, "Got intent with action: '" + intent.getAction() + "'");
             if (ACTION_START_SPEED_MEASUREMENT.equals(intent.getAction())) {
-                startMeasurement();
+                startMeasurement(intent.getExtras());
                 return START_STICKY;
             }
             else if (ACTION_START_QOS_MEASUREMENT.equals(intent.getAction())) {

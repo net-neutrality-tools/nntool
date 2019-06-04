@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.alladin.nettest.nntool.android.app.util.LmapUtil;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.SpeedMeasurementState;
 
 /**
@@ -21,9 +22,15 @@ public class JniSpeedMeasurementClient {
 
     private SpeedMeasurementState speedMeasurementState;
 
-    public JniSpeedMeasurementClient() {
+    private String collectorUrl;
+
+    private LmapUtil.SpeedTaskDesc speedTaskDesc;
+
+    public JniSpeedMeasurementClient(final String collectorUrl, final LmapUtil.SpeedTaskDesc speedTaskDesc) {
+        this.collectorUrl = collectorUrl;
+        this.speedTaskDesc = speedTaskDesc;
         speedMeasurementState = new SpeedMeasurementState();
-        shareMeasurementState(speedMeasurementState, speedMeasurementState.getPingMeasurement(), speedMeasurementState.getDownloadMeasurement(), speedMeasurementState.getUploadMeasurement());
+        shareMeasurementState(speedTaskDesc, speedMeasurementState, speedMeasurementState.getPingMeasurement(), speedMeasurementState.getDownloadMeasurement(), speedMeasurementState.getUploadMeasurement());
     }
 
     @Keep
@@ -48,7 +55,7 @@ public class JniSpeedMeasurementClient {
      * Call this method before starting a test to allow the cpp impl to write the current state into the passed JniSpeedMeasurementState obj
      * Is automatically called for the devs in the constructor
      */
-    private native void shareMeasurementState(final SpeedMeasurementState speedMeasurementState, final SpeedMeasurementState.PingPhaseState pingMeasurementState,
+    private native void shareMeasurementState(final LmapUtil.SpeedTaskDesc speedTaskDesc, final SpeedMeasurementState speedMeasurementState, final SpeedMeasurementState.PingPhaseState pingMeasurementState,
                                               final SpeedMeasurementState.SpeedPhaseState downloadMeasurementState, final SpeedMeasurementState.SpeedPhaseState uploadMeasurementState);
 
     /**
@@ -56,5 +63,5 @@ public class JniSpeedMeasurementClient {
      * Call after every ended measurement (either stopped or finished)
      * Equivalent to shareMeasurementState method
      */
-    private native void cleanUp();
+    //private native void cleanUp();
 }

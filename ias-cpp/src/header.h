@@ -50,7 +50,6 @@
 #include <arpa/nameser.h>
 #include <netdb.h>
 #include <resolv.h>
-//#include <ifaddrs.h>
 
 
 #include <cmath>
@@ -73,8 +72,12 @@
 #include <getopt.h>
 #include <getopt.h>
 #include <errno.h>
-//#include <execinfo.h>
 #include <cxxabi.h>
+
+#ifndef __ANDROID__
+    #include <execinfo.h>
+    #include <ifaddrs.h>
+#endif
 
 //openssl
 //#include <openssl/crypto.h>

@@ -23,9 +23,11 @@ void JNICALL Java_at_alladin_nettest_nntool_android_app_workflow_measurement_jni
 }
 
 extern "C" JNIEXPORT
-void JNICALL Java_at_alladin_nettest_nntool_android_app_workflow_measurement_jni_JniSpeedMeasurementClient_shareMeasurementState (JNIEnv* env, jobject caller, jobject baseMeasurementState, jobject pingMeasurementState,
-                    jobject downloadMeasurementState, jobject uploadMeasurementState) {
-    AndroidConnector::getInstance().registerSharedObject(env, caller, baseMeasurementState, pingMeasurementState, downloadMeasurementState, uploadMeasurementState);
+void JNICALL Java_at_alladin_nettest_nntool_android_app_workflow_measurement_jni_JniSpeedMeasurementClient_shareMeasurementState (JNIEnv* env, jobject caller, jobject speedTaskDesc,
+                    jobject baseMeasurementState, jobject pingMeasurementState, jobject downloadMeasurementState, jobject uploadMeasurementState) {
+    AndroidConnector &connector = AndroidConnector::getInstance();
+    connector.registerSharedObject(env, caller, baseMeasurementState, pingMeasurementState, downloadMeasurementState, uploadMeasurementState);
+    connector.setSpeedSettings(env, speedTaskDesc);
 }
 
 extern "C" JNIEXPORT
@@ -76,7 +78,24 @@ void AndroidConnector::registerSharedObject(JNIEnv* env, jobject caller, jobject
     this->downloadMeasurementState = env->NewGlobalRef(downloadMeasurementState);
     this->uploadMeasurementState = env->NewGlobalRef(uploadMeasurementState);
     this->pingMeasurementState = env->NewGlobalRef(pingMeasurementState);
+}
 
+void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
+    const jclass clazz = env->FindClass("at/alladin/nettest/nntool/android/app/util/LmapUtil$SpeedTaskDesc");
+
+    jfieldID toParseId = env->GetFieldID(clazz, "speedServerAddrV4", "Ljava/lang/String;");
+    const jstring serverUrl = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
+    const char *url = env->GetStringUTFChars(serverUrl, NULL);
+    measurementServerUrl = std::string(url);
+
+    toParseId = env->GetFieldID(clazz, "rttCount", "I");
+    rttCount = (int) env->GetIntField(speedTaskDesc, toParseId);
+
+    toParseId = env->GetFieldID(clazz, "downloadStreams", "I");
+    downloadStreams = (int) env->GetIntField(speedTaskDesc, toParseId);
+
+    toParseId = env->GetFieldID(clazz, "uploadStreams", "I");
+    uploadStreams = (int) env->GetIntField(speedTaskDesc, toParseId);
 }
 
 void AndroidConnector::unregisterSharedObject() {
@@ -217,15 +236,6 @@ void AndroidConnector::passJniSpeedState (JNIEnv* env, const MeasurementPhase& s
             env->SetLongField(toFill, fieldAvgThroughput, std::stoll(obj.string_value()) / 1e6);
         }
 
-//        obj = json["duration_ns_total"];
-//        if (obj.is_string()) {
-//            env->SetLongField(toFill, fieldDurationMsTotal, std::stoll(obj.string_value()) / 1e6);
-//        }
-//
-//        obj = json["duration_ns"];
-//        if (obj.is_string()) {
-//            env->SetLongField(toFill, fieldDurationMs, std::stoll(obj.string_value()) / 1e6);
-//        }
         break;
     }
 
@@ -265,8 +275,8 @@ void AndroidConnector::startMeasurement() {
 	jUploadParameters["performMeasurement"] = ::UPLOAD;
 
 	//set default measurement parameters
-	jDownloadParameters["streams"] = "1";
-	jUploadParameters["streams"] = "1";
+	jDownloadParameters["streams"] = std::to_string(downloadStreams);
+	jUploadParameters["streams"] = std::to_string(uploadStreams);
 	jMeasurementParameters["rtt"] = json11::Json(jRttParameters);
 	jMeasurementParameters["download"] = json11::Json(jDownloadParameters);
 	jMeasurementParameters["upload"] = json11::Json(jUploadParameters);
@@ -280,7 +290,7 @@ void AndroidConnector::startMeasurement() {
 	jMeasurementParameters["wsAuthTimestamp"] = "placeholderTimestamp";
 
 	json11::Json::array jTargets;
-	jTargets.push_back("peer-ias-de-01");
+	jTargets.push_back(measurementServerUrl);
 	jMeasurementParameters["wsTargets"] = json11::Json(jTargets);
 	jMeasurementParameters["wsTargetsRtt"] = json11::Json(jTargets);
 

@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.io.Serializable;
-import java.util.List;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
@@ -18,7 +17,6 @@ import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
-import at.alladin.nntool.client.v2.task.TaskDesc;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -43,25 +41,30 @@ public class TitleFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*final RequestMeasurementTask task = new RequestMeasurementTask(getContext(),
-                        new OnTaskFinishedCallback<LmapUtil.LmapTaskDescWrapper>() {
+                final RequestMeasurementTask task = new RequestMeasurementTask(getContext(),
+                        new OnTaskFinishedCallback<LmapUtil.LmapTaskWrapper>() {
                             @Override
-                            public void onTaskFinished(LmapUtil.LmapTaskDescWrapper result) {
+                            public void onTaskFinished(LmapUtil.LmapTaskWrapper result) {
                                 if (result != null && result.getTaskDescList() != null && result.getTaskDescList().size() > 0) {
                                     final Bundle bundle = new Bundle();
-                                    bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_DESK_LIST,
+                                    bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_DESC_LIST,
                                             (Serializable) result.getTaskDescList());
                                     bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_COLLECTOR_URL,
                                             result.getCollectorUrl());
+                                    bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL,
+                                            result.getSpeedCollectorUrl());
+                                    bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_DESC,
+                                            result.getSpeedTaskDesc());
                                     ((MainActivity) getActivity()).startMeasurement(MeasurementType.SPEED, bundle);
                                 }
                             }
                         });
 
                 task.execute();
-                */
+                /*
                 final Bundle bundle = new Bundle();
                 ((MainActivity) getActivity()).startMeasurement(MeasurementType.SPEED, bundle);
+                */
             }
         });
 
