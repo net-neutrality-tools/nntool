@@ -23,6 +23,8 @@ import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
+import at.alladin.nettest.nntool.android.app.util.info.Gatherer;
+import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
@@ -35,15 +37,15 @@ import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementTyp
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
  */
-public class TitleFragment extends Fragment implements ServiceConnection {
+public class TitleFragment extends Fragment {
 
     private final static String TAG = TitleFragment.class.getSimpleName();
-
-    private InformationService informationService;
 
     private ProviderAndSignalView providerSignalView;
 
     private GeoLocationView geoLocationView;
+
+    private InformationProvider informationProvider;
 
     /**
      *
@@ -112,55 +114,62 @@ public class TitleFragment extends Fragment implements ServiceConnection {
     @Override
     public void onResume() {
         super.onResume();
-        final Intent serviceIntent = new Intent(getContext(), InformationService.class);
-        getContext().bindService(serviceIntent, this, Context.BIND_AUTO_CREATE);
+        startInformationProvider();
+        //final Intent serviceIntent = new Intent(getContext(), InformationService.class);
+        //getContext().bindService(serviceIntent, this, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     public void onPause() {
-        getContext().unbindService(this);
+        stopInformationProvider();
+        //getContext().unbindService(this);
         super.onPause();
     }
 
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-        informationService = ((InformationService.InformationServiceBinder) service).getService();
-        final NetworkGatherer networkGatherer = informationService.getInformationProvider().getGatherer(NetworkGatherer.class);
+    public void startInformationProvider() {
+        if (informationProvider == null) {
+            informationProvider = new InformationProvider(getContext());
+        }
+
+        final NetworkGatherer networkGatherer = informationProvider.registerGatherer(NetworkGatherer.class);
+        final SignalGatherer signalGatherer = informationProvider.registerGatherer(SignalGatherer.class);
+        final GeoLocationGatherer geoLocationGatherer = informationProvider.registerGatherer(GeoLocationGatherer.class);
+
+        informationProvider.onStart();
+
         if (networkGatherer != null && providerSignalView != null) {
             networkGatherer.addListener(providerSignalView);
         }
 
-        final SignalGatherer signalGatherer = informationService.getInformationProvider().getGatherer(SignalGatherer.class);
         if (signalGatherer != null && providerSignalView != null) {
             signalGatherer.addListener(providerSignalView);
         }
 
-        final GeoLocationGatherer geoLocationGatherer = informationService.getInformationProvider().getGatherer(GeoLocationGatherer.class);
         if (geoLocationGatherer != null && geoLocationView != null) {
             geoLocationGatherer.addListener(geoLocationView);
         }
-
-        Log.d(TAG, "InformationService connected");
     }
 
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-        final NetworkGatherer networkGatherer = informationService.getInformationProvider().getGatherer(NetworkGatherer.class);
+    public void stopInformationProvider() {
+        if (informationProvider == null) {
+            return;
+        }
+
+        informationProvider.onStop();
+
+        final NetworkGatherer networkGatherer = informationProvider.getGatherer(NetworkGatherer.class);
         if (networkGatherer != null && providerSignalView != null) {
             networkGatherer.removeListener(providerSignalView);
         }
 
-        final SignalGatherer signalGatherer = informationService.getInformationProvider().getGatherer(SignalGatherer.class);
+        final SignalGatherer signalGatherer = informationProvider.getGatherer(SignalGatherer.class);
         if (signalGatherer != null && providerSignalView != null) {
             signalGatherer.removeListener(providerSignalView);
         }
 
-        final GeoLocationGatherer geoLocationGatherer = informationService.getInformationProvider().getGatherer(GeoLocationGatherer.class);
+        final GeoLocationGatherer geoLocationGatherer = informationProvider.getGatherer(GeoLocationGatherer.class);
         if (geoLocationGatherer != null && geoLocationView != null) {
             geoLocationGatherer.removeListener(geoLocationView);
         }
-
-        informationService = null;
-        Log.d(TAG, "InformationService disconnected");
     }
 }

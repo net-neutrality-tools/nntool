@@ -63,7 +63,7 @@ public class InformationService extends Service {
         return START_STICKY;
     }
 
-    public <T extends Gatherer> boolean registerGatherer(final Class<T> gathererClazz) {
+    public <T extends Gatherer> T registerGatherer(final Class<T> gathererClazz) {
         return informationProvider.registerGatherer(gathererClazz);
     }
 

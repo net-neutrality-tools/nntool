@@ -1,5 +1,6 @@
 package at.alladin.nettest.nntool.android.app.util.info;
 
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
@@ -48,6 +49,13 @@ public abstract class Gatherer<T> {
     public WifiManager getWifiManager() {
         if (informationProvider != null) {
             return informationProvider.getWifiManager();
+        }
+        return null;
+    }
+
+    public LocationManager getLocationManager() {
+        if (informationProvider != null) {
+            return informationProvider.getLocationManager();
         }
         return null;
     }

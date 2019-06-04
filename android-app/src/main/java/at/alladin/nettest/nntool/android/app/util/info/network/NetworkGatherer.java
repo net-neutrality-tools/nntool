@@ -23,11 +23,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import at.alladin.nettest.nntool.android.app.util.info.Gatherer;
 import at.alladin.nettest.nntool.android.app.util.info.ListenableGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeEvent;
+import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeListener;
+import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  */
-public class NetworkGatherer extends ListenableGatherer<NetworkChangeEvent, NetworkChangeListener> implements NetworkTypeAware {
+public class NetworkGatherer
+        extends ListenableGatherer<NetworkChangeEvent, NetworkChangeListener>
+        implements NetworkTypeAware {
 
     private final static String TAG = NetworkGatherer.class.getSimpleName();
 
@@ -71,6 +76,7 @@ public class NetworkGatherer extends ListenableGatherer<NetworkChangeEvent, Netw
             Log.d(TAG, "NetworkCallback.onLost " + network);
         }
     };
+
     */
 
     @Override
@@ -78,6 +84,9 @@ public class NetworkGatherer extends ListenableGatherer<NetworkChangeEvent, Netw
         IntentFilter intentFilter;
         intentFilter = new IntentFilter();
         intentFilter.addAction(WifiManager.RSSI_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.NETWORK_IDS_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         getInformationProvider().getContext().registerReceiver(networkStateBroadcastReceiver, intentFilter);
 
         int events = PhoneStateListener.LISTEN_SIGNAL_STRENGTHS;

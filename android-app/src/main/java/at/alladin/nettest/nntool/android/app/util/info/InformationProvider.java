@@ -46,7 +46,7 @@ public class InformationProvider {
         }
     }
 
-    public <T extends Gatherer> boolean registerGatherer(final Class<T> clazz) {
+    public <T extends Gatherer> T registerGatherer(final Class<T> clazz) {
         try {
             final T gatherer = clazz.newInstance();
             return registerGatherer(gatherer, clazz);
@@ -54,17 +54,17 @@ public class InformationProvider {
             e.printStackTrace();
         }
 
-        return false;
+        return null;
     }
 
-    public <T extends Gatherer> boolean registerGatherer(final T gatherer, final Class<T> clazz) {
+    public <T extends Gatherer> T registerGatherer(final T gatherer, final Class<T> clazz) {
         if (gathererMap.containsKey(clazz)) {
-            return false;
+            return null;
         }
 
         gatherer.setInformationProvider(this);
         gathererMap.put(clazz, gatherer);
-        return true;
+        return gatherer;
     }
 
     public <T extends Gatherer> T unregisterGatherer(final Class<T> gathererClazz) {

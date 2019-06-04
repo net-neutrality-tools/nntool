@@ -5,10 +5,13 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.webkit.GeolocationPermissions;
 
 import org.joda.time.LocalDateTime;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.nntool.android.app.util.PermissionUtil;
 import at.alladin.nettest.nntool.android.app.util.info.Gatherer;
@@ -47,6 +50,8 @@ public class GeoLocationGatherer extends ListenableGatherer<GeoLocationChangeEve
      */
     private LocationListenerImpl locationListener;
 
+    private AtomicBoolean isLocationEnabled = new AtomicBoolean(false);
+
     @Override
     public void addListener(GeoLocationChangeListener listener) {
         super.addListener(listener);
@@ -57,7 +62,7 @@ public class GeoLocationGatherer extends ListenableGatherer<GeoLocationChangeEve
 
     @Override
     public void onStart() {
-        final LocationManager locationManager = getInformationProvider().getLocationManager();
+        final LocationManager locationManager = getLocationManager();
 
         if (locationManager == null) {
             Log.w(TAG, "LocationManager not available.");
@@ -93,17 +98,44 @@ public class GeoLocationGatherer extends ListenableGatherer<GeoLocationChangeEve
         }
     }
 
+    protected void onLocationEnabled() {
+        if (!isLocationEnabled.getAndSet(true)) {
+            Log.d(TAG, "Location provider(s) enabled.");
+            final GeoLocationChangeEvent event = new GeoLocationChangeEvent(null,
+                    GeoLocationChangeEvent.GeoLocationChangeEventType.ENABLED);
+            emitGeoLocationChangeEvent(event);
+        }
+    }
+
+    protected void onLocationDisabled() {
+        if (isLocationEnabled.getAndSet(false)) {
+            Log.d(TAG, "All location providers disabled.");
+            final GeoLocationChangeEvent event = new GeoLocationChangeEvent(null,
+                    GeoLocationChangeEvent.GeoLocationChangeEventType.DISABLED);
+            emitGeoLocationChangeEvent(event);
+        }
+    }
+
     protected void onLocationChanged(final Location location) {
+        isLocationEnabled.set(true);
         if (!isBetterLocation(getCurrentValue(), location)) {
             return;
         }
 
-        final GeoLocationChangeEvent event = new GeoLocationChangeEvent(toGeoLocationDto(location));
-        setCurrentValue(event);
+        final GeoLocationChangeEvent event = new GeoLocationChangeEvent(toGeoLocationDto(location),
+                GeoLocationChangeEvent.GeoLocationChangeEventType.LOCATION_UPDATE);
+        emitGeoLocationChangeEvent(event);
+    }
 
+    private void emitGeoLocationChangeEvent(final GeoLocationChangeEvent event) {
+        setCurrentValue(event);
         for (final GeoLocationChangeListener listener : getListenerList()) {
             listener.onLocationChanged(event);
         }
+    }
+
+    public boolean isLocationEnabled() {
+        return isLocationEnabled.get();
     }
 
     private static GeoLocationDto toGeoLocationDto(final Location location) {
@@ -140,12 +172,28 @@ public class GeoLocationGatherer extends ListenableGatherer<GeoLocationChangeEve
         public void onProviderDisabled(final String provider)
         {
             Log.d(TAG, "provider disabled: " + provider);
+            final LocationManager lm = GeoLocationGatherer.this.getLocationManager();
+            if (lm != null) {
+                boolean isAnyLocationEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                        lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                if (!isAnyLocationEnabled) {
+                    GeoLocationGatherer.this.onLocationDisabled();
+                }
+            }
         }
 
         @Override
         public void onProviderEnabled(final String provider)
         {
             Log.d(TAG, "provider enabled: " + provider);
+            final LocationManager lm = GeoLocationGatherer.this.getLocationManager();
+            if (lm != null) {
+                boolean isAnyLocationEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                        lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                if (isAnyLocationEnabled) {
+                    GeoLocationGatherer.this.onLocationEnabled();
+                }
+            }
         }
 
         @Override

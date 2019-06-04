@@ -6,10 +6,19 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDt
  * @author Lukasz Budryk (lb@alladin.at)
  */
 public class GeoLocationChangeEvent {
+    public static enum GeoLocationChangeEventType {
+        DISABLED,
+        ENABLED,
+        LOCATION_UPDATE
+    }
+
     private GeoLocationDto geoLocationDto;
 
-    public GeoLocationChangeEvent(final GeoLocationDto geoLocationDto) {
+    private GeoLocationChangeEventType eventType;
+
+    public GeoLocationChangeEvent(final GeoLocationDto geoLocationDto, final GeoLocationChangeEventType type) {
         this.geoLocationDto = geoLocationDto;
+        this.eventType = type;
     }
 
     public GeoLocationDto getGeoLocationDto() {
@@ -20,10 +29,19 @@ public class GeoLocationChangeEvent {
         this.geoLocationDto = geoLocationDto;
     }
 
+    public GeoLocationChangeEventType getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(GeoLocationChangeEventType eventType) {
+        this.eventType = eventType;
+    }
+
     @Override
     public String toString() {
         return "GeoLocationChangeEvent{" +
                 "geoLocationDto=" + geoLocationDto +
+                ", eventType=" + eventType +
                 '}';
     }
 }

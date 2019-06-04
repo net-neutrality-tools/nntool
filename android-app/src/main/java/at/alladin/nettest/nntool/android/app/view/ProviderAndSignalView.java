@@ -45,9 +45,8 @@ public class ProviderAndSignalView extends RelativeLayout implements NetworkChan
 
     @Override
     public void onNetworkChange(NetworkChangeEvent event) {
-        Log.i(TAG, event.toString());
-
         if (event != null) {
+            Log.i(TAG, event.toString());
             providerText.setText(event.getOperatorName());
         }
     }

@@ -24,6 +24,9 @@ import at.alladin.nettest.nntool.android.app.support.telephony.SignalItem;
 import at.alladin.nettest.nntool.android.app.util.PermissionUtil;
 import at.alladin.nettest.nntool.android.app.util.info.Gatherer;
 import at.alladin.nettest.nntool.android.app.util.info.ListenableGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeEvent;
+import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeListener;
+import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkTypeAware;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 
@@ -32,7 +35,8 @@ import static at.alladin.nettest.nntool.android.app.util.info.network.NetworkTyp
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  */
-public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent, SignalStrengthChangeListener> {
+public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent, SignalStrengthChangeListener>
+    implements GeoLocationChangeListener {
 
     private final static String TAG = SignalGatherer.class.getSimpleName();
 
@@ -48,10 +52,17 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
         intentFilter = new IntentFilter();
         intentFilter.addAction(WifiManager.RSSI_CHANGED_ACTION);
         intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.NETWORK_IDS_CHANGED_ACTION);
         getInformationProvider().getContext().registerReceiver(networkStateBroadcastReceiver, intentFilter);
 
         int events = PhoneStateListener.LISTEN_SIGNAL_STRENGTHS;
         getTelephonyManager().listen(telephonyStateListener, events);
+
+        final GeoLocationGatherer geoLocationGatherer = getInformationProvider().getGatherer(GeoLocationGatherer.class);
+        if (geoLocationGatherer != null) {
+            geoLocationGatherer.addListener(this);
+        }
 
         try {
             CellLocation.requestLocationUpdate();
@@ -65,6 +76,11 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
     public void onStop() {
         getInformationProvider().getContext().unregisterReceiver(networkStateBroadcastReceiver);
         getTelephonyManager().listen(telephonyStateListener, PhoneStateListener.LISTEN_NONE);
+
+        final GeoLocationGatherer geoLocationGatherer = getInformationProvider().getGatherer(GeoLocationGatherer.class);
+        if (geoLocationGatherer != null) {
+            geoLocationGatherer.addListener(this);
+        }
     }
 
     @Override
@@ -94,7 +110,6 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
         @Override
         public void onReceive(final Context context, final Intent intent) {
             System.out.println("WIFI CHANGE: " + intent + ", EXTRAS: " + intent.getExtras());
-            final String action = intent.getAction();
             if (getNetwork() == NETWORK_WIFI) {
                 final WifiInfo wifiInfo = getWifiManager().getConnectionInfo();
                 final int rssi = wifiInfo.getRssi();
@@ -265,5 +280,16 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
     public void setCurrentValue(SignalStrengthChangeEvent currentValue) {
         super.setCurrentValue(currentValue);
         dispatchSignalStrengthChangedEvent(currentValue);
+    }
+
+    @Override
+    public void onLocationChanged(GeoLocationChangeEvent geoLocationChangeEvent) {
+        Log.d(TAG, "Location change event: " + geoLocationChangeEvent);
+        if (geoLocationChangeEvent != null
+                && GeoLocationChangeEvent.GeoLocationChangeEventType.ENABLED.equals(geoLocationChangeEvent.getEventType())) {
+            final Intent intent = new Intent();
+            intent.putExtra("GPS_ENABLED", true);
+            networkStateBroadcastReceiver.onReceive(getInformationProvider().getContext(), intent);
+        }
     }
 }
