@@ -37,8 +37,7 @@ public class NetworkGatherer extends ListenableGatherer<NetworkChangeEvent, Netw
 
     private final TelephonyStateListener telephonyStateListener = new TelephonyStateListener();
 
-    public static String removeQuotationsInCurrentSSIDForJellyBean(String ssid)
-    {
+    public static String removeQuotationsInCurrentSSIDForJellyBean(String ssid) {
         if (Build.VERSION.SDK_INT >= 17 && ssid != null && ssid.startsWith("\"") && ssid.endsWith("\"")) {
             ssid = ssid.substring(1, ssid.length() - 1);
         }

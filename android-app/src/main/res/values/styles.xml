@@ -76,6 +76,15 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="Nettest.Title.GeoLocation.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">19sp</item>
+    </style>
+
+    <style name="Nettest.Title.GeoLocation.Accuracy.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">12sp</item>
+    </style>
 
     <!-- TOP PROGRESS BAR -->
     <style name="Nettest.TopProgressBar.Text" parent="TextAppearance.AppCompat.Medium">
