@@ -1,12 +1,7 @@
 package at.alladin.nettest.nntool.android.app.workflow.main;
 
 import android.app.AlertDialog;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,9 +18,7 @@ import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
-import at.alladin.nettest.nntool.android.app.util.info.Gatherer;
 import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
-import at.alladin.nettest.nntool.android.app.util.info.InformationService;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
@@ -89,6 +82,8 @@ public class TitleFragment extends Fragment {
 
         geoLocationView = v.findViewById(R.id.view_geo_location);
 
+        Log.i(TAG, "onCreateView");
+
         return v;
     }
 
@@ -115,12 +110,14 @@ public class TitleFragment extends Fragment {
     public void onResume() {
         super.onResume();
         startInformationProvider();
+        Log.i(TAG, "onResume");
         //final Intent serviceIntent = new Intent(getContext(), InformationService.class);
         //getContext().bindService(serviceIntent, this, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     public void onPause() {
+        Log.i(TAG, "onPause");
         stopInformationProvider();
         //getContext().unbindService(this);
         super.onPause();
@@ -135,7 +132,7 @@ public class TitleFragment extends Fragment {
         final SignalGatherer signalGatherer = informationProvider.registerGatherer(SignalGatherer.class);
         final GeoLocationGatherer geoLocationGatherer = informationProvider.registerGatherer(GeoLocationGatherer.class);
 
-        informationProvider.onStart();
+        informationProvider.start();
 
         if (networkGatherer != null && providerSignalView != null) {
             networkGatherer.addListener(providerSignalView);
@@ -155,7 +152,7 @@ public class TitleFragment extends Fragment {
             return;
         }
 
-        informationProvider.onStop();
+        informationProvider.stop();
 
         final NetworkGatherer networkGatherer = informationProvider.getGatherer(NetworkGatherer.class);
         if (networkGatherer != null && providerSignalView != null) {

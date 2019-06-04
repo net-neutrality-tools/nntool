@@ -159,7 +159,6 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
             int lteCqi = SignalItem.UNKNOWN;
             int errorRate = SignalItem.UNKNOWN;
 
-
             // discard signal strength from GT-I9100G (Galaxy S II) - passes wrong info
             if (android.os.Build.MODEL != null)  {
                 if (android.os.Build.MODEL.equals("GT-I9100G")

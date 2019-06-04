@@ -44,7 +44,7 @@ public class InformationService extends Service {
     @Override
     public void onDestroy() {
         Log.d(TAG,"onDestroy");
-        informationProvider.onStop();
+        informationProvider.stop();
         super.onDestroy();
     }
 
@@ -56,7 +56,7 @@ public class InformationService extends Service {
                 registerGatherer(NetworkGatherer.class);
                 registerGatherer(SignalGatherer.class);
                 registerGatherer(GeoLocationGatherer.class);
-                informationProvider.onStart();
+                informationProvider.start();
             }
         }
 
