@@ -1,4 +1,5 @@
 import Foundation
+import CodableJSON
 
 class TcpPortTask: QoSBidirectionalIpTask {
 
@@ -19,10 +20,10 @@ class TcpPortTask: QoSBidirectionalIpTask {
 
         switch direction {
         case .outgoing:
-            r["tcp_result_out_response"] = resultResponse
+            r["tcp_result_out_response"] = JSON(resultResponse)
 
         case .incoming:
-            r["tcp_result_in_response"] = resultResponse
+            r["tcp_result_in_response"] = JSON(resultResponse)
 
         default:
             break

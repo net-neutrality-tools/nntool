@@ -35,9 +35,11 @@ class IASProgram: NSObject, ProgramProtocol {
 
     var config: IasMeasurementConfiguration?
 
+    private var currentPhase = SpeedMeasurementPhase.initialize
+
     var result: [AnyHashable: Any]?
 
-    func run() throws -> [AnyHashable: Any] {
+    func run() throws -> SubMeasurementResult {
         speed.speedDelegate = self
 
         //let tool = Tool()
@@ -63,6 +65,8 @@ class IASProgram: NSObject, ProgramProtocol {
         speed.parallelStreamsUpload = 4
         speed.frameSizeUpload = 32768
 
+        let res = IasMeasurementResult()
+        
         let encoder = JSONEncoder()
 
         // add speed classes (need to transform to Dictionary until Speed library works with objects)
@@ -83,13 +87,17 @@ class IASProgram: NSObject, ProgramProtocol {
         _ = measurementFinishedSemaphore.wait(timeout: DispatchTime.distantFuture) // TODO: result; timeout
 
         guard let r = result else {
-            return [:]
+            return res
         }
 
-        return ["result": r]
+        // TODO
+        
+        return res
     }
 
-    private var currentPhase = SpeedMeasurementPhase.initialize
+    func cancel() {
+        speed.measurementStop()
+    }
 }
 
 extension IASProgram: SpeedDelegate {

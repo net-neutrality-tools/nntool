@@ -30,7 +30,7 @@ public protocol MeasurementRunnerDelegate {
     func measurementDidStart(_ runner: MeasurementRunner)
 
     /// Measurement did finish successfully
-    func measurementDidFinish(_ runner: MeasurementRunner)
+    func measurementDidFinish(_ runner: MeasurementRunner) // TODO: result
 
     /// stopMeasurement() called by code
     func measurementDidStop(_ runner: MeasurementRunner)

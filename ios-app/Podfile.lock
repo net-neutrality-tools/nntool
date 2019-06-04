@@ -5,10 +5,12 @@ PODS:
   - CocoaLumberjack (3.5.2):
     - CocoaLumberjack/Core (= 3.5.2)
   - CocoaLumberjack/Core (3.5.2)
+  - CodableJSON (1.1.4)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
   - MeasurementAgentKit (0.0.1):
+    - CodableJSON (~> 1.1.4)
     - Siesta (~> 1.4.3)
     - XCGLogger (~> 7.0.0)
   - ObjcExceptionBridging (1.0.1):
@@ -26,6 +28,7 @@ PODS:
   - QoSKit (0.0.1):
     - Alamofire (~> 4.8.2)
     - CocoaAsyncSocket (~> 7.6.3)
+    - CodableJSON (~> 1.1.4)
     - XCGLogger (~> 7.0.0)
   - Siesta (1.4.3):
     - Siesta/Core (= 1.4.3)
@@ -47,7 +50,7 @@ DEPENDENCIES:
   - QoSKit (from `../qos-client-swift`)
   - SwiftGen (~> 6.1.0)
   - SwiftLint (~> 0.31.0)
-  - WebBrowser (~> 0.1.4)
+  - WebBrowser (~> 0.1.5)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -55,6 +58,7 @@ SPEC REPOS:
     - BartyCrouch
     - CocoaAsyncSocket
     - CocoaLumberjack
+    - CodableJSON
     - FMDB
     - ObjcExceptionBridging
     - Siesta
@@ -76,17 +80,18 @@ SPEC CHECKSUMS:
   BartyCrouch: 69e5e6ec67e77951dc1c22aa48abbf05d175b81c
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
+  CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  MeasurementAgentKit: 7d71e5d1b12ff28410ffc11c6a0638e154051e58
+  MeasurementAgentKit: c06ac85d6550f229d85facd3ed58b0f9bcb1409d
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   PocketSocket: 9c6867d66fb4f962af96b9b07f4b45bb561b2c2a
-  QoSKit: 08c162a7212e936aa9017f057550dde425faeb3f
+  QoSKit: 8086bd5406760ce215bf8816a39606d70b9f9329
   Siesta: 83795fdf6a43232d1d2909e1a3dfb92ab5916d26
   SwiftGen: f872ca75cbd17bf7103c17f13dcfa0d9a15667b0
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
   WebBrowser: 0248873c77f54e2ac504ece7c2bc8eeb710b5a4f
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: a3b49ff2fa94efa1340c9562c3797c743e42c73d
+PODFILE CHECKSUM: 45ff12ac800ff964f46704ef592ce1d85e4d946b
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.7.1

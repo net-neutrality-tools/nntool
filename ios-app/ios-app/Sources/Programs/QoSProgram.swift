@@ -18,6 +18,7 @@
 import Foundation
 import MeasurementAgentKit
 import QoSKit
+import CodableJSON
 
 ///
 class QoSProgram: ProgramProtocol {
@@ -29,21 +30,26 @@ class QoSProgram: ProgramProtocol {
 
     var forwardDelegate: QoSTaskExecutorDelegate?
 
-    var objectives: [String: [[String: Any]]]?
+    var objectives: [String: [[String: JSON]]]?
 
     let semaphore = DispatchSemaphore(value: 0)
 
     var result: [QoSTaskResult]?
 
-    func run() throws -> [AnyHashable: Any] {
+    var qosTaskExecutor: QoSTaskExecutor?
+
+    func run() throws -> SubMeasurementResult {
+        let res = QoSMeasurementResult()
+        
         guard let objtvs = objectives else {
-            return [:]
+            res.status = .failed
+            return res // or throw?
         }
 
-        let qosTaskExecutor = QoSTaskExecutor()
-        qosTaskExecutor.delegate = self
+        qosTaskExecutor = QoSTaskExecutor()
+        qosTaskExecutor?.delegate = self
 
-        qosTaskExecutor.startWithObjectives(objtvs, token: "bbd1ee96-0779-4619-b993-bb4bf7089754_1528136454_3gr2gw9lVhtVONV0XO62Vamu/uw=") // TODO
+        qosTaskExecutor?.startWithObjectives(objtvs, token: "bbd1ee96-0779-4619-b993-bb4bf7089754_1528136454_3gr2gw9lVhtVONV0XO62Vamu/uw=") // TODO
 
         print("before wait")
 
@@ -52,10 +58,20 @@ class QoSProgram: ProgramProtocol {
         print("after wait")
 
         guard let r = result else {
-            return [:]
+            res.status = .failed
+            return res // or throw?
         }
+        
+        res.status = .finished
+        
+        res.objectiveResults = r
+        print(res.objectiveResults)
+        
+        return res
+    }
 
-        return ["result": r]
+    func cancel() {
+        qosTaskExecutor?.cancel()
     }
 }
 
@@ -72,6 +88,11 @@ extension QoSProgram: QoSTaskExecutorDelegate {
 
         forwardDelegate?.taskExecutorDidFail(taskExecutor, withError: error)
 
+        //semaphore.signal()
+    }
+
+    func taskExecutorDidStop(_ taskExecutor: QoSTaskExecutor) {
+        forwardDelegate?.taskExecutorDidStop(taskExecutor)
         semaphore.signal()
     }
 
@@ -88,6 +109,6 @@ extension QoSProgram: QoSTaskExecutorDelegate {
 
         forwardDelegate?.taskExecutorDidFinishWithResult(result)
 
-        semaphore.signal()
+        //semaphore.signal()
     }
 }

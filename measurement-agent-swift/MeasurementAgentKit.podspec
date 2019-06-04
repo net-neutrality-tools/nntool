@@ -17,4 +17,5 @@ Pod::Spec.new do |s|
 
     s.dependency 'Siesta', '~> 1.4.3'
     s.dependency 'XCGLogger', '~> 7.0.0'
+    s.dependency 'CodableJSON', '~> 1.1.4'
 end

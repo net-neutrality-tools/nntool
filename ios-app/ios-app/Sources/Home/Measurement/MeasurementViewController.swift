@@ -360,6 +360,10 @@ extension MeasurementViewController: QoSTaskExecutorDelegate {
 
     }
 
+    func taskExecutorDidStop(_ taskExecutor: QoSTaskExecutor) {
+
+    }
+
     func taskExecutorDidUpdateProgress(_ progress: Double, ofGroup group: QoSTaskGroup, totalProgress: Double) {
         DispatchQueue.main.async {
             self.progressInfoBar?.setRightValue(value: String(format: "%d%%", Int(totalProgress * 100)))

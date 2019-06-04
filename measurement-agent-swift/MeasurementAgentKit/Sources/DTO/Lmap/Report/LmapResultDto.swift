@@ -16,9 +16,10 @@
  ******************************************************************************/
 
 import Foundation
+import CodableJSON
 
 /// This module defines a data model for a single reporting result, which is a part of a Large-Scale Measurement Platform (LMAP).
-class LmapResultDto<T: Codable>: Codable {
+class LmapResultDto: Codable {
 
     /// The name of the Schedule that produced the result.
     var schedule: String?
@@ -71,7 +72,7 @@ class LmapResultDto<T: Codable>: Codable {
     var conflict: [LmapConflictDto]?
 
     /// A list of results. Replaces the table list from LMAP
-    var results: [T]?
+    var results: [SubMeasurementResult]?
 
     ///
     enum CodingKeys: String, CodingKey {

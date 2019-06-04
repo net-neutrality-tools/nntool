@@ -1,4 +1,4 @@
-// MeasurementAgentKit: MeasurementTypeParametersDto.swift, created on 06.05.19
+// MeasurementAgentKit: SpeedMeasurementRawDataItemDto.swift, created on 15.05.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,22 +16,14 @@
  ******************************************************************************/
 
 import Foundation
-import CodableJSON
 
-public class QoSMeasurementTypeParametersDto: MeasurementTypeParametersDto {
-
-    public var objectives: [String: [[String: JSON]]]?
-
-    public required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        objectives = try container.decode([String: [[String: JSON]]].self, forKey: .objectives)
-
-        try super.init(from: decoder)
-    }
-
+/// Contains information about captured byte transfers during the speed measurement from a point of time on the measurement agent.
+public class SpeedMeasurementRawDataItemDto: Codable {
+    
+    
+    
     ///
-    enum CodingKeys: String, CodingKey {
-        case objectives
-    }
+    /*enum CodingKeys: String, CodingKey {
+        
+    }*/
 }

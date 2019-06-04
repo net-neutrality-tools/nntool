@@ -17,9 +17,10 @@
 
 import Foundation
 import MeasurementAgentKit
+import CodableJSON
 
 let MEASUREMENT_AGENT =
-    MeasurementAgentBuilder(controlServiceBaseUrl: "http://localhost:8080/api/v1")
+    MeasurementAgentBuilder(controlServiceBaseUrl: "http://localhost:18080/api/v1")
         .program(task: .speed, config: ProgramConfiguration(name: "IAS", version: "1.0.0") { (taskDto: LmapTaskDto) in
             let optionDict = taskDto.options?.reduce(into: [String: Any]()) { result, option in
                 guard let name = option.name else {
@@ -55,7 +56,7 @@ let MEASUREMENT_AGENT =
 
             let p = QoSProgram()
 
-            if var objectives: [String: [[String: Any]]] = ((optionDict?["parameters_qos"] as? MeasurementTypeParametersWrapperDto)?.content as? QoSMeasurementTypeParametersDto)?.objectives {
+            if var objectives: [String: [[String: JSON]]] = ((optionDict?["parameters_qos"] as? MeasurementTypeParametersWrapperDto)?.content as? QoSMeasurementTypeParametersDto)?.objectives {
 
                 if let serverAddr = optionDict?["server_addr"] as? String, let serverPort = optionDict?["server_port"] as? String {
 
@@ -64,8 +65,8 @@ let MEASUREMENT_AGENT =
 
                         for var (index, i) in v.enumerated() {
                             if i["server_addr"] == nil || i["server_port"] == nil {
-                                objectives[k]?[index]["server_addr"] = serverAddr
-                                objectives[k]?[index]["server_port"] = serverPort
+                                objectives[k]?[index]["server_addr"] = JSON(serverAddr)
+                                objectives[k]?[index]["server_port"] = JSON(serverPort)
                             }
                         }
                     }

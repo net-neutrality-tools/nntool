@@ -1,7 +1,8 @@
 import Foundation
+import CodableJSON
 
-public typealias QoSTaskConfiguration = [String: /*String*/Any]
-public typealias QoSTaskResult = [String: /*String*/Any]
+public typealias QoSTaskConfiguration = [String: JSON]
+public typealias QoSTaskResult = [String: JSON]
 public typealias QoSTaskCompletionCallback = (QoSTaskResult) -> Void
 
 class QoSTask: Operation, Codable {
@@ -34,27 +35,31 @@ class QoSTask: Operation, Codable {
     var result: QoSTaskResult {
         var r = QoSTaskResult()
 
-        r["qos_test_uid"] = "\(uid)"
-        r["test_type"] = type
-        r["duration_ns"] = "\(durationNs!)" // !
+        r["qos_test_uid"] = JSON(uid)
+        r["test_type"] = JSON(type)
+        r["duration_ns"] = JSON(durationNs)
 
-        r[statusKey] = status.rawValue
+        r[statusKey] = JSON(status.rawValue)
 
         return r
     }
 
     init?(config: QoSTaskConfiguration) {
-        guard let uidString = config[CodingKeys.uid.rawValue] as? String, let uid = UInt(uidString), uid > 0 else {
+        /*guard let uid = config[CodingKeys.uid.rawValue]?.uintValue, uid > 0 else {
+            logger.debug("uid nil")
+            return nil
+        }*/
+        guard let uidStr = config[CodingKeys.uid.rawValue]?.stringValue, let uid = UInt(uidStr), uid > 0 else {
             logger.debug("uid nil")
             return nil
         }
 
-        guard let cgString = config[CodingKeys.concurrencyGroup.rawValue] as? String, let concurrencyGroup = UInt(cgString), concurrencyGroup > 0 else {
+        guard let concurrencyGroup = config[CodingKeys.concurrencyGroup.rawValue]?.uintValue, concurrencyGroup > 0 else {
             logger.debug("concurrencyGroup nil")
             return nil
         }
 
-        guard let type = config[CodingKeys.type.rawValue] as? String else {
+        guard let type = config[CodingKeys.type.rawValue]?.stringValue else {
             logger.debug("type nil")
             return nil
         }
@@ -63,7 +68,7 @@ class QoSTask: Operation, Codable {
         self.concurrencyGroup = concurrencyGroup
         self.type = type
 
-        if let tNsString = config[CodingKeys.timeout.rawValue] as? String, let tNs = UInt64(tNsString) {
+        if let tNs = config[CodingKeys.timeout.rawValue]?.uint64Value {
             self.timeoutNs = tNs
         }
 
@@ -155,6 +160,6 @@ extension QoSTask {
 
 extension QoSTask: Comparable {
     static func < (lhs: QoSTask, rhs: QoSTask) -> Bool {
-        return (lhs.concurrencyGroup ?? 0) < (rhs.concurrencyGroup ?? 0)
+        return lhs.concurrencyGroup < rhs.concurrencyGroup
     }
 }

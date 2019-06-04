@@ -38,9 +38,9 @@ class RestApiService {
             switch response {
             case .success(let entity):
 
-                print("--- RESPONSE ---")
-                print(String(data: entity.content as? Data ?? Data(), encoding: .utf8)!)
-                print("--- /RESPONSE ---")
+                logger.debug("--- RESPONSE ---")
+                logger.debug(String(data: entity.content as? Data ?? Data(), encoding: .utf8)!)
+                logger.debug("--- /RESPONSE ---")
 
                 return response
             default:
@@ -63,23 +63,23 @@ class RestApiService {
                         let firstError = apiResponse.errors?.first
 
                         // debug print (TODO)
-                        XCGLogger.default.debugExec {
-                            XCGLogger.default.debug("--- REST API error ---")
-                            XCGLogger.default.debug(String(describing: firstError?.path))
-                            XCGLogger.default.debug(String(describing: firstError?.error))
-                            XCGLogger.default.debug(String(describing: firstError?.message))
-                            XCGLogger.default.debug(String(describing: firstError?.exception))
-                            XCGLogger.default.debug(String(describing: firstError?.trace))
-                            XCGLogger.default.debug("--- / REST API error ---")
+                        logger.debugExec {
+                            logger.debug("--- REST API error ---")
+                            logger.debug(String(describing: firstError?.path))
+                            logger.debug(String(describing: firstError?.error))
+                            logger.debug(String(describing: firstError?.message))
+                            logger.debug(String(describing: firstError?.exception))
+                            logger.debug(String(describing: firstError?.trace))
+                            logger.debug("--- / REST API error ---")
                         }
 
-                        print("--- REST API error ---")
+                        /*print("--- REST API error ---")
                         print(String(describing: firstError?.path))
                         print(String(describing: firstError?.error))
                         print(String(describing: firstError?.message))
                         print(String(describing: firstError?.exception))
                         print(String(describing: firstError?.trace))
-                        print("--- / REST API error ---")
+                        print("--- / REST API error ---")*/
 
                         if let firstMessage = firstError?.message {
                             error.userMessage = firstMessage
@@ -151,9 +151,9 @@ class RestApiService {
             return
         }
 
-        print("--- REQUEST BODY ---")
-        print(String(data: requestData, encoding: .utf8)!) // debug print
-        print("--- /REQUEST BODY ---")
+        logger.debug("--- REQUEST BODY ---")
+        logger.debug(String(data: requestData, encoding: .utf8)!) // debug print
+        logger.debug("--- /REQUEST BODY ---")
 
         let request = service
             .resource(path)

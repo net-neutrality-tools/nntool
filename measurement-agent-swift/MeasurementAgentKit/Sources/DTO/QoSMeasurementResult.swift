@@ -1,4 +1,4 @@
-// MeasurementAgentKit: MeasurementTypeParametersDto.swift, created on 06.05.19
+// MeasurementAgentKit: QoSMeasurementResult.swift, created on 15.05.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -18,20 +18,30 @@
 import Foundation
 import CodableJSON
 
-public class QoSMeasurementTypeParametersDto: MeasurementTypeParametersDto {
+/// This DTO contains the QoS measurement results from the measurement agent.
+public class QoSMeasurementResult: SubMeasurementResult {
 
-    public var objectives: [String: [[String: JSON]]]?
+    /// QoS measurement results
+    public var objectiveResults: [[String: JSON]]?
 
-    public required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
+    public override init() {
+        super.init()
+    }
 
-        objectives = try container.decode([String: [[String: JSON]]].self, forKey: .objectives)
+    required init(from decoder: Decoder) throws {
+        fatalError("init(from:) has not been implemented")
+    }
 
-        try super.init(from: decoder)
+    public override func encode(to encoder: Encoder) throws {
+        try super.encode(to: encoder)
+
+        var container = encoder.container(keyedBy: CodingKeys2.self)
+
+        try container.encode(objectiveResults, forKey: .objectiveResults)
     }
 
     ///
-    enum CodingKeys: String, CodingKey {
-        case objectives
+    enum CodingKeys2: String, CodingKey {
+        case objectiveResults = "results"
     }
 }

@@ -11,10 +11,9 @@ abstract_target 'All' do
   pod 'SwiftLint', '~> 0.31.0'
 
   pod 'CocoaAsyncSocket', '~> 7.6.3'
-
   pod 'Alamofire', '~> 4.8.2'
-
   pod 'XCGLogger', '~> 7.0.0'
+  pod 'CodableJSON', '~> 1.1.4'
 
   target 'QoSKit_iOS' do
 

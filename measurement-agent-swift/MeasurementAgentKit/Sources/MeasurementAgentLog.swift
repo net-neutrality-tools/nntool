@@ -1,4 +1,4 @@
-// MeasurementAgentKit: MeasurementTypeParametersDto.swift, created on 06.05.19
+// MeasurementAgentKit: MeasurementAgentLog.swift, created on 10.05.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,22 +16,7 @@
  ******************************************************************************/
 
 import Foundation
-import CodableJSON
+import XCGLogger
 
-public class QoSMeasurementTypeParametersDto: MeasurementTypeParametersDto {
-
-    public var objectives: [String: [[String: JSON]]]?
-
-    public required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        objectives = try container.decode([String: [[String: JSON]]].self, forKey: .objectives)
-
-        try super.init(from: decoder)
-    }
-
-    ///
-    enum CodingKeys: String, CodingKey {
-        case objectives
-    }
-}
+///
+var logger = XCGLogger.default

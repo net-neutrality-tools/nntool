@@ -1,4 +1,5 @@
 import Foundation
+import CodableJSON
 
 class UdpPortTask: QoSBidirectionalIpTask {
 
@@ -44,20 +45,21 @@ class UdpPortTask: QoSBidirectionalIpTask {
 
         switch direction {
         case .outgoing:
-            r["udp_result_out_num_packets"] = packetsReceivedServer
-            r["udp_result_out_response_num_packets"] = receivedSequences.count
-            r["udp_result_out_packet_loss_rate"] = plr
+            r["udp_result_out_num_packets"] = JSON(packetsReceivedServer)
+            r["udp_result_out_response_num_packets"] = JSON(receivedSequences.count)
+            r["udp_result_out_packet_loss_rate"] = JSON(plr)
 
-            r["udp_result_out_rtts_ns"] = rttsNs
-            r["udp_result_out_rtt_avg_ns"] = rttAvgNs
+            r["udp_result_out_rtts_ns"] = JSON(rttsNs?.mapValues { JSON($0) })
+            r["udp_result_out_rtt_avg_ns"] = JSON(rttAvgNs)
 
         case .incoming:
-            r["udp_result_in_num_packets"] = receivedSequences.count
-            r["udp_result_in_response_num_packets"] = packetsReceivedServer
-            r["udp_result_in_packet_loss_rate"] = plr
+            r["udp_result_in_num_packets"] = JSON(receivedSequences.count)
+            r["udp_result_in_response_num_packets"] = JSON(packetsReceivedServer)
+            r["udp_result_in_packet_loss_rate"] = JSON(plr)
 
-            r["udp_result_in_rtts_ns"] = rttsNs
-            r["udp_result_in_rtt_avg_ns"] = rttAvgNs
+            // TODO
+            r["udp_result_in_rtts_ns"] = JSON(rttsNs?.mapValues { JSON($0) })
+            r["udp_result_in_rtt_avg_ns"] = JSON(rttAvgNs)
 
         default:
             break
@@ -68,15 +70,15 @@ class UdpPortTask: QoSBidirectionalIpTask {
 
     ///
     override init?(config: QoSTaskConfiguration) {
-        if let packetCountOutString = config[CodingKeys4.packetCountOut.rawValue] as? String, let packetCountOut = Int(packetCountOutString) {
+        if let packetCountOut = config[CodingKeys4.packetCountOut.rawValue]?.intValue {
             self.packetCountOut = packetCountOut
         }
 
-        if let packetCountInString = config[CodingKeys4.packetCountIn.rawValue] as? String, let packetCountIn = Int(packetCountInString) {
+        if let packetCountIn = config[CodingKeys4.packetCountIn.rawValue]?.intValue {
             self.packetCountIn = packetCountIn
         }
 
-        if let delayNsString = config[CodingKeys4.delayNs.rawValue] as? String, let delayNs = UInt64(delayNsString) {
+        if let delayNs = config[CodingKeys4.delayNs.rawValue]?.uint64Value {
             self.delayNs = delayNs
         }
 

@@ -208,6 +208,7 @@ public class QoSTaskExecutor {
         stopObservingProgress()
         closeAllControlConnections()
 
+        delegate?.taskExecutorDidStop(self)
         // TODO: reset()
     }
 

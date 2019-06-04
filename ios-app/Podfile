@@ -1,5 +1,8 @@
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
+# Workaround for problems with new Xcode build system (see https://www.ralfebert.de/ios/blog/cocoapods-clean-input-output-files/)
+install! 'cocoapods', :disable_input_output_paths => true
+
 platform :ios, '10.0'
 
 use_frameworks!
@@ -12,7 +15,7 @@ abstract_target 'All' do
     pod 'SwiftLint', '~> 0.31.0'
     pod 'BartyCrouch', '~> 3.13.0'
     
-    pod 'WebBrowser', '~> 0.1.4'
+    pod 'WebBrowser', '~> 0.1.5'
     
     pod 'MeasurementAgentKit', :path => '../measurement-agent-swift'
     pod 'QoSKit', :path => '../qos-client-swift'

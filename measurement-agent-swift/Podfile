@@ -8,8 +8,8 @@ inhibit_all_warnings!
 abstract_target 'All' do
   pod 'SwiftLint', '~> 0.31.0'
 
+  pod 'CodableJSON', '~> 1.1.4'
   pod 'Siesta', '~> 1.4.3'
-
   pod 'XCGLogger', '~> 7.0.0'
 
   target 'MeasurementAgentKit_iOS' do

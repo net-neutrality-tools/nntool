@@ -10,15 +10,20 @@ class QoSControlConnectionTask: QoSTask {
     override init?(config: QoSTaskConfiguration) {
         logger.debug(config)
 
-        guard let host = config[CodingKeys2.host.rawValue] as? String, !host.isEmpty else {
+        guard let host = config[CodingKeys2.host.rawValue]?.stringValue, !host.isEmpty else {
             logger.debug("host nil")
             return nil
         }
 
-        guard let portString = config[CodingKeys2.port.rawValue] as? String, let port = UInt16(portString), port > 0 else {
+        guard let portStr = config[CodingKeys2.port.rawValue]?.stringValue, let port = UInt16(portStr), port > 0 else {
             logger.debug("port nil")
             return nil
         }
+
+        /*guard let port = config[CodingKeys2.port.rawValue]?.uint16Value, port > 0 else {
+            logger.debug("port nil")
+            return nil
+        }*/
 
         controlConnectionParams = ControlConnectionParameters(host: host, port: port)
 

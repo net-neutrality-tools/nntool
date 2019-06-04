@@ -34,7 +34,7 @@ class LmapReportDto: Codable {
     var measurementPoint: String?
 
     /// The list of Tasks for which results are reported.
-    //var results: [LmapResultDto]?
+    var results: [LmapResultDto]?
 
     /// Additional information that is sent by agent alongside the request.
     var additionalRequestInfo: ApiRequestInfo?
@@ -48,7 +48,7 @@ class LmapReportDto: Codable {
         case agentId = "agent-id"
         case groupId = "group-id"
         case measurementPoint = "measurement-point"
-        //case results
+        case results
         case additionalRequestInfo = "additional_request_info-point"
         case timeBasedResult = "time_based_result-point"
     }
