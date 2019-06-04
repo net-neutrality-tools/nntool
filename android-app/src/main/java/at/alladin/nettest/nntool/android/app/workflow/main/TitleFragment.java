@@ -24,8 +24,10 @@ import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
+import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
+import at.alladin.nettest.nntool.android.app.view.GeoLocationView;
 import at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
@@ -40,6 +42,8 @@ public class TitleFragment extends Fragment implements ServiceConnection {
     private InformationService informationService;
 
     private ProviderAndSignalView providerSignalView;
+
+    private GeoLocationView geoLocationView;
 
     /**
      *
@@ -80,6 +84,8 @@ public class TitleFragment extends Fragment implements ServiceConnection {
 
 
         providerSignalView = v.findViewById(R.id.view_provider_signal);
+
+        geoLocationView = v.findViewById(R.id.view_geo_location);
 
         return v;
     }
@@ -129,6 +135,11 @@ public class TitleFragment extends Fragment implements ServiceConnection {
             signalGatherer.addListener(providerSignalView);
         }
 
+        final GeoLocationGatherer geoLocationGatherer = informationService.getInformationProvider().getGatherer(GeoLocationGatherer.class);
+        if (geoLocationGatherer != null && geoLocationView != null) {
+            geoLocationGatherer.addListener(geoLocationView);
+        }
+
         Log.d(TAG, "InformationService connected");
     }
 
@@ -142,6 +153,11 @@ public class TitleFragment extends Fragment implements ServiceConnection {
         final SignalGatherer signalGatherer = informationService.getInformationProvider().getGatherer(SignalGatherer.class);
         if (signalGatherer != null && providerSignalView != null) {
             signalGatherer.removeListener(providerSignalView);
+        }
+
+        final GeoLocationGatherer geoLocationGatherer = informationService.getInformationProvider().getGatherer(GeoLocationGatherer.class);
+        if (geoLocationGatherer != null && geoLocationView != null) {
+            geoLocationGatherer.removeListener(geoLocationView);
         }
 
         informationService = null;
