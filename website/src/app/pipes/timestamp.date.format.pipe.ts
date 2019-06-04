@@ -1,16 +1,16 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {isValidDate} from "./utils";
+import {isValidDate} from './utils';
 
 
 @Pipe({name: 'formatDateTimestampToLocal'})
 export class TimestampLocalDateFormatPipe implements PipeTransform {
 
-    transform (value: string | number): string {
-        const errorResult: string = '';
+    transform(value: string | number): string {
+        const errorResult = '';
         if (value === undefined || value === null) {
             return errorResult;
         }
-        let temp: Date = new Date((<any>value));
+        let temp: Date = new Date((value as any));
         if (isValidDate(temp)) {
             return temp.toLocaleString();
         }

@@ -1,10 +1,10 @@
-import {Logger, LoggerService} from "../../../../services/log.service";
-import {GaugeUIState} from "../gauge-ui-state";
-import {GaugeUIStateEnum} from "../enums/gauge-ui-state.enum";
+import {Logger, LoggerService} from '../../../../services/log.service';
+import {GaugeUIState} from '../gauge-ui-state';
+import {GaugeUIStateEnum} from '../enums/gauge-ui-state.enum';
 
 
 export class Point {
-    constructor (public x: number, public y: number) {}
+    constructor(public x: number, public y: number) {}
 }
 
 
@@ -27,7 +27,6 @@ export enum StateView {
 
 /**
  * Lg of max speed in Mbit/s
- * @type {number}
  */
 export const  MAX_SPEED_LOG: number = Math.log10(1e3);
 // GAUGE_PARTS: number = 4.25;
@@ -36,82 +35,82 @@ export const GAUGE_PARTS: number = 2 * (MAX_SPEED_LOG - 1);
 
 export abstract class BaseMeasurementGauge {
 
-    protected logger: Logger = LoggerService.getLogger("BaseMeasurementGauge");
-    protected drawing: boolean = false;
+    protected logger: Logger = LoggerService.getLogger('BaseMeasurementGauge');
+    protected drawing = false;
     public currentState: GaugeUIState = null;
 
-    protected _value: number = 0;
-    protected _progress: number = 0;
+    protected _value = 0;
+    protected _progress = 0;
     protected _progressType: ProgressType = ProgressType.SPEED;
-    protected stateContent: string = "";
-    protected valueContent: string = "";
-    protected positionContent: string = "";
-    protected providerContent: string = "";
-    protected deviceContent: string = "";
-    protected technologyContent: string = "";
-    protected serverContent: string = "";
-    protected pingContent: string = "";
-    protected upContent: string = "";
-    protected downContent: string = "";
-    protected dirty: boolean = false;
+    protected stateContent = '';
+    protected valueContent = '';
+    protected positionContent = '';
+    protected providerContent = '';
+    protected deviceContent = '';
+    protected technologyContent = '';
+    protected serverContent = '';
+    protected pingContent = '';
+    protected upContent = '';
+    protected downContent = '';
+    protected dirty = false;
 
-    public get value (): number {
+    public get value(): number {
         return this._value;
     }
 
-    public set value (value: number) {
+    public set value(value: number) {
         if (this._value !== value) {
             this._value = value;
             this.dirty = true;
         }
     }
 
-    public get progress () {
+    public get progress() {
         return this._progress;
     }
 
-    public set progress (progress: number) {
+    public set progress(progress: number) {
         if (this._progress !== progress) {
             this._progress = progress;
             this.dirty = true;
         }
     }
 
-    public set progressType (progressType: ProgressType) {
+    public set progressType(progressType: ProgressType) {
         this._progressType = progressType;
         this._progress = 0;
         this.dirty = true;
     }
 
-    constructor (
+    constructor(
         public translations: {[key: string]: any}, public gaugeColors: {[key: string]: string} = null
     ) {}
 
-    public resizeEvent (): void {
+    public resizeEvent(): void {
 
     }
 
-    protected setStateView (value: StateView): void {
-        let newState: string = "";
+    protected setStateView(value: StateView): void {
+        let newState = '';
         switch (value) {
             case StateView.READY:
             case StateView.COMPLETE:
-                newState = "h";
+                newState = 'h';
                 break;
             case StateView.ERROR:
-                newState = "w";
+                newState = 'w';
                 break;
             case StateView.INIT:
-                newState = "q";
+                newState = 'q';
                 break;
             case StateView.PING:
-                newState = "q";
+                newState = 'q';
                 break;
             case StateView.DOWNLOAD:
-                newState = "r";
+                newState = 'r';
                 break;
             case StateView.UPLOAD:
-                newState = "s";
+                newState = 's';
                 break;
             case StateView.QOS:
                 newState = '\u00EB';
@@ -125,70 +124,70 @@ export abstract class BaseMeasurementGauge {
         }
     }
 
-    protected setValueView (value: string): void {
+    protected setValueView(value: string): void {
         if (this.valueContent !== value) {
             this.dirty = true;
             this.valueContent = value;
         }
     }
 
-    protected setPingView (value: string): void {
+    protected setPingView(value: string): void {
         if (this.pingContent !== value) {
             this.dirty = true;
             this.pingContent = value;
         }
     }
 
-    protected setDownloadView (value: string): void {
+    protected setDownloadView(value: string): void {
         if (this.downContent !== value) {
             this.dirty = true;
             this.downContent = value;
         }
     }
 
-    protected setUploadView (value: string): void {
+    protected setUploadView(value: string): void {
         if (this.upContent !== value) {
             this.dirty = true;
             this.upContent = value;
         }
     }
 
-    protected setPositionView (value: string): void {
+    protected setPositionView(value: string): void {
         if (this.positionContent !== value) {
             this.dirty = true;
             this.positionContent = value;
         }
     }
 
-    protected setProviderView (value: string): void {
+    protected setProviderView(value: string): void {
         if (this.providerContent !== value) {
             this.dirty = true;
             this.providerContent = value;
         }
     }
 
-    protected setDeviceView (value: string): void {
+    protected setDeviceView(value: string): void {
         if (this.deviceContent !== value) {
             this.dirty = true;
             this.deviceContent = value;
         }
     }
 
-    protected setTechnologyView (value: string): void {
+    protected setTechnologyView(value: string): void {
         if (this.technologyContent !== value) {
             this.dirty = true;
             this.technologyContent = value;
         }
     }
 
-    protected setServerView (value: string): void {
+    protected setServerView(value: string): void {
         if (this.serverContent !== value) {
             this.dirty = true;
             this.serverContent = value;
         }
     }
 
-    protected logSpeed (value: number): number {
+    protected logSpeed(value: number): number {
         // nettest/nettest-ios/blob/master/rmbt-ios-client/Sources/Speed.swift
         if (value < 1e5) {
             return 0;
@@ -196,32 +195,32 @@ export abstract class BaseMeasurementGauge {
         return ((GAUGE_PARTS - MAX_SPEED_LOG) + Math.log10(value / 1e6)) / GAUGE_PARTS;
     }
 
-    protected deg2rad (value: number): number {
+    protected deg2rad(value: number): number {
         return value * (Math.PI / 180);
     }
 
-    protected rad2deg (value: number): number {
+    protected rad2deg(value: number): number {
         return value / (Math.PI / 180);
     }
 
-    public abstract draw (): void;
+    public abstract draw(): void;
 
-    protected updateState (state: GaugeUIState): void {
+    protected updateState(state: GaugeUIState): void {
         // this.logger.debug('updateState', state, this.currentState);
         if (state == null) {
             // Reset values
-            this.setValueView("");
-            this.setPingView("-");
-            this.setDownloadView("-");
-            this.setUploadView("-");
-            this.setPositionView("-");
-            this.setProviderView("-");
-            this.setDeviceView("-");
-            this.setTechnologyView("-");
-            this.setServerView("-");
+            this.setValueView('');
+            this.setPingView('-');
+            this.setDownloadView('-');
+            this.setUploadView('-');
+            this.setPositionView('-');
+            this.setProviderView('-');
+            this.setDeviceView('-');
+            this.setTechnologyView('-');
+            this.setServerView('-');
             return;
         }
-        state.technology = "BROWSER";
+        state.technology = 'BROWSER';
         const noState: boolean = this.currentState == null;
         if (noState) {
             this.currentState = new GaugeUIState();
@@ -231,15 +230,15 @@ export abstract class BaseMeasurementGauge {
 
         if (noState || this.currentState.gaugeUIState !== state.gaugeUIState && state.gaugeUIState === GaugeUIStateEnum.READY) {
             // Reset values
-            this.setValueView("");
-            this.setPingView("-");
-            this.setDownloadView("-");
-            this.setUploadView("-");
-            this.setPositionView("-");
-            this.setProviderView("-");
-            this.setDeviceView("-");
-            this.setTechnologyView("-");
-            this.setServerView("-");
+            this.setValueView('');
+            this.setPingView('-');
+            this.setDownloadView('-');
+            this.setUploadView('-');
+            this.setPositionView('-');
+            this.setProviderView('-');
+            this.setDeviceView('-');
+            this.setTechnologyView('-');
+            this.setServerView('-');
         }
 
         if (progress == null) {
@@ -252,10 +251,10 @@ export abstract class BaseMeasurementGauge {
          * 3..up
          * (4..qos)
          */
-        const sectionPercent: number = 0.25;
+        const sectionPercent = 0.25;
         let section: number = Math.floor(progress / sectionPercent);
         let partProgress: number = null;
-        let numParts: number = 0;
+        let numParts = 0;
         if (section === 0) {
             numParts = 7;
         } else if (section !== 3) {
@@ -303,7 +302,7 @@ export abstract class BaseMeasurementGauge {
                 case GaugeUIStateEnum.UP_PRE:
                     section = 3;
                     partProgress = state.progress / numParts;
-                    //value = 0.0;
+                    // value = 0.0;
                     break;
                 case GaugeUIStateEnum.UP:
                     section = 3;
@@ -312,9 +311,10 @@ export abstract class BaseMeasurementGauge {
                 case GaugeUIStateEnum.SUBMIT:
                 case GaugeUIStateEnum.SUBMIT_OK:
                     state.upMBit = null;
+                    break;
                 case GaugeUIStateEnum.COMPLETE:
-                    //value = 0.0;
-                    //progress = 1.0;
+                    // value = 0.0;
+                    // progress = 1.0;
                     break;
             }
         }
@@ -325,56 +325,56 @@ export abstract class BaseMeasurementGauge {
 
         if (noState || this.currentState.ping !== state.ping) {
             if (state.ping != null) {
-                this.setPingView("" + state.ping + " " + this.translations['DURATION_MS']);
-                this.setValueView("" + state.ping + " " + this.translations['DURATION_MS']);
+                this.setPingView('' + state.ping + ' ' + this.translations.DURATION_MS);
+                this.setValueView('' + state.ping + ' ' + this.translations.DURATION_MS);
             }
         }
         if (noState || (this.currentState.downMBit !== state.downMBit && state.gaugeUIState === GaugeUIStateEnum.DOWN)) {
             if (state.downMBit != null) {
-                this.setDownloadView("" + state.downMBit + " " + this.translations['SPEED_MBPS']);
-                this.setValueView("" + state.downMBit + " " + this.translations['SPEED_MBPS']);
+                this.setDownloadView('' + state.downMBit + ' ' + this.translations.SPEED_MBPS);
+                this.setValueView('' + state.downMBit + ' ' + this.translations.SPEED_MBPS);
                 value = this.logSpeed(state.downBit);
             }
         }
         if (noState || (this.currentState.upMBit !== state.upMBit && state.gaugeUIState === GaugeUIStateEnum.UP)) {
             if (state.upMBit != null) {
-                this.setUploadView("" + state.upMBit + " " + this.translations['SPEED_MBPS']);
-                this.setValueView("" + state.upMBit + " " + this.translations['SPEED_MBPS']);
+                this.setUploadView('' + state.upMBit + ' ' + this.translations.SPEED_MBPS);
+                this.setValueView('' + state.upMBit + ' ' + this.translations.SPEED_MBPS);
                 value = this.logSpeed(state.upBit);
             }
         }
         if (noState || this.currentState.serverName !== state.serverName) {
             if (state.serverName != null) {
-                this.setServerView("" + state.serverName);
+                this.setServerView('' + state.serverName);
             }
         }
         if (noState || this.currentState.location !== state.location) {
             if (state.location != null) {
-                this.setPositionView(state.location.latitude + "\n" + state.location.longitude);
+                this.setPositionView(state.location.latitude + '\n' + state.location.longitude);
             }
         }
         if (noState || this.currentState.device !== state.device) {
             if (state.device != null) {
-                this.setDeviceView("" + state.device);
+                this.setDeviceView('' + state.device);
             }
         }
         if (noState || this.currentState.technology !== state.technology) {
             if (state.technology != null) {
-                this.setTechnologyView("" + state.technology);
+                this.setTechnologyView('' + state.technology);
             }
         }
         if (noState || this.currentState.provider !== state.provider) {
             if (state.provider != null) {
-                this.setTechnologyView("" + state.provider);
+                this.setTechnologyView('' + state.provider);
             }
         }
 
-        let info: string = "";
+        let info = '';
         if (this.currentState.uuid != null) {
-            info += this.currentState.uuid + "<br />";
+            info += this.currentState.uuid + '<br />';
         }
         if (this.currentState.remoteIp != null) {
-            info += this.currentState.remoteIp + "<br />";
+            info += this.currentState.remoteIp + '<br />';
         }
         /*
         if (noState || this.currentState.totalProgress !== state.totalProgress) {
@@ -402,6 +402,7 @@ export abstract class BaseMeasurementGauge {
                     break;
                 case GaugeUIStateEnum.DOWN_PRE_OK:
                     progress = sectionPercent * 1;
+                    /* falls through */ // TODO: is this the correct behaviour?
                 case GaugeUIStateEnum.PING:
                     this.setStateView(StateView.PING);
                     break;
@@ -415,14 +416,15 @@ export abstract class BaseMeasurementGauge {
                     break;
                 case GaugeUIStateEnum.UP_PRE:
                     this.setStateView(StateView.UPLOAD);
-                    this.setValueView("");
+                    this.setValueView('');
                     progress = sectionPercent * 3;
                     break;
                 case GaugeUIStateEnum.UP_OK:
                     this.setStateView(StateView.UPLOAD);
                     value = 0.0;
+                    /* falls through */ // TODO: is this the correct behaviour?
                 case GaugeUIStateEnum.SUBMIT:
-                    this.setValueView("");
+                    this.setValueView('');
                     progress = sectionPercent * 4;
                     break;
                 case GaugeUIStateEnum.SUBMIT_OK:
@@ -447,15 +449,15 @@ export abstract class BaseMeasurementGauge {
         }
     }
 
-    onStateChange (state: GaugeUIState): void {
+    onStateChange(state: GaugeUIState): void {
         this.updateState(state);
     }
 
-    onProgressChange (state: GaugeUIState): void {
+    onProgressChange(state: GaugeUIState): void {
         this.updateState(state);
     }
 
-    onValueChange (state: GaugeUIState): void {
+    onValueChange(state: GaugeUIState): void {
         this.updateState(state);
     }
 }

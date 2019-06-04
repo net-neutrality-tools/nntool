@@ -179,8 +179,8 @@ void AndroidConnector::callback(json11::Json::object& message) const {
         }
     }    
     
-    const jstring javaMsg = env->NewStringUTF("callback");//json11::Json(message).dump().c_str());
-    env->CallVoidMethod(jniCaller, callbackID, javaMsg);
+    //const jstring javaMsg = env->NewStringUTF("callback");//json11::Json(message).dump().c_str());
+    //env->CallVoidMethod(jniCaller, callbackID, javaMsg);
 
 }
 

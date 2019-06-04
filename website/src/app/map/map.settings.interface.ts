@@ -1,4 +1,4 @@
-import {SelectOption} from "../filters/select_option.interface";
+import {SelectOption} from '../filters/select_option.interface';
 
 
 export interface MapSelectMapOptions extends SelectOption {

@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
 declare let console: any;
 
 
@@ -6,36 +6,36 @@ export class Logger {
 
     name: string;
 
-    constructor (name?: string) {
+    constructor(name?: string) {
         this.name = name;
     }
 
-    error (...args: any[]) {
+    error(...args: any[]) {
         if (this.name) {
-            args.unshift(this.name + ":");
+            args.unshift(this.name + ':');
         }
         console.error(...args);
     }
 
-    warn (...args: any[]) {
+    warn(...args: any[]) {
         if (this.name) {
-            args.unshift(this.name + ":");
+            args.unshift(this.name + ':');
         }
         console.warn(...args);
     }
 
-    info (...args: any[]) {
+    info(...args: any[]) {
         console.info(...args);
     }
 
-    debug (...args: any[]) {
+    debug(...args: any[]) {
         if (this.name) {
-            args.unshift(this.name + ":");
+            args.unshift(this.name + ':');
         }
         console.debug(...args);
     }
 
-    trace (...args: any[]) {
+    trace(...args: any[]) {
         console.trace(...args);
     }
 }
@@ -44,7 +44,7 @@ export class Logger {
 @Injectable()
 export class LoggerService {
 
-    static getLogger (name?: string): Logger {
+    static getLogger(name?: string): Logger {
         return new Logger(name);
     }
 }

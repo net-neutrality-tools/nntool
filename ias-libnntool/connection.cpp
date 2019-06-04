@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-20
+ *      \date Last update: 2019-05-22
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -484,43 +484,80 @@ int CConnection::close()
 	return ::close(mSocket);
 }
 
-//int CConnection::connectTLS()
-//{
-//  	int ssl_error = 0;
-//
-//	OpenSSL_add_ssl_algorithms();
-//	method = TLS_client_method();
-//	SSL_load_error_strings();
-//	ctx = SSL_CTX_new (method);
-//
-//	ssl = SSL_new (ctx);
-//	SSL_set_fd(ssl, mSocket);
-//	ssl_error = SSL_connect(ssl);
-//
-//	if (ssl_error <= 0)
-//	{
-//		ssl_error = SSL_get_error(ssl, -1);
-//		TRC_ERR("SSL Error " + to_string(ssl_error) + " while negotiating TLS connection");
-//		return -1;
-//	}
-//	else
-//	{
-//		string subject_name = "";
-//		server_cert = SSL_get_peer_certificate (ssl);
-//		subject_name = X509_NAME_oneline (X509_get_subject_name (server_cert), 0, 0);
-//
-//		TRC_DEBUG("TLS Certificate Subject name: " + subject_name);
-//		TRC_DEBUG("TLS Subejct validation: " + mTlsSubjectValidation);
-//
-//		//check subject name
-//		if (mTlsSubjectValidation.compare("") != 1 && subject_name.find(mTlsSubjectValidation) == string::npos )
-//		{
-//			TRC_ERR("TLS Certificate Subject name validation failed ");
-//			return -1;
-//		}
-//
-//		TRC_INFO("TLS Connection established");
-//	}
-//
-//	return 0;
-//}
+static int tlsVerifyCertificateCallback(int ok, X509_STORE_CTX *store_ctx)
+{
+    int cert_error = X509_STORE_CTX_get_error(store_ctx);
+
+    switch (cert_error)
+	{
+		case X509_V_ERR_CERT_NOT_YET_VALID:
+		case X509_V_ERR_ERROR_IN_CERT_NOT_BEFORE_FIELD:
+		case X509_V_ERR_CERT_HAS_EXPIRED:
+		case X509_V_ERR_ERROR_IN_CERT_NOT_AFTER_FIELD:
+		{
+			TRC_ERR("TLS Certificate Validation failed with error: " + to_string(cert_error));
+			return -1;
+			break;
+		}
+	}
+
+    return(ok);
+}
+
+int CConnection::connectTLS()
+{
+  	int ssl_error = 0;
+/*
+	OpenSSL_add_ssl_algorithms();
+	method = TLS_client_method();
+	SSL_load_error_strings();
+	ctx = SSL_CTX_new (method);
+
+	ssl = SSL_new (ctx);
+	SSL_set_fd(ssl, mSocket);
+	ssl_error = SSL_connect(ssl);
+
+	if (ssl_error <= 0)
+	{
+		ssl_error = SSL_get_error(ssl, -1);
+		TRC_ERR("SSL Error " + to_string(ssl_error) + " while negotiating TLS connection");
+		return -1;
+	}
+	else
+	{
+		server_cert = SSL_get_peer_certificate (ssl);
+
+		//check certificate
+	    int ret;
+	    X509_STORE *store;
+	    X509_STORE_CTX *store_ctx;
+
+	    store = X509_STORE_new();
+	    X509_STORE_set_verify_cb(store, tlsVerifyCertificateCallback);
+	    X509_STORE_add_cert(store, server_cert);
+
+	    store_ctx = X509_STORE_CTX_new();
+	    X509_STORE_CTX_init(store_ctx, store, server_cert, NULL);
+
+	    if (X509_verify_cert(store_ctx) != 0)
+	    {
+			return -1;
+	    }
+
+		//check subject name
+		string subject_name = "";
+		subject_name = X509_NAME_oneline (X509_get_subject_name (server_cert), 0, 0);
+		TRC_DEBUG("TLS Certificate Subject name: " + subject_name);
+		TRC_DEBUG("TLS Subejct validation: " + mTlsSubjectValidation);
+		if (mTlsSubjectValidation.compare("") != 1 && subject_name.find(mTlsSubjectValidation) == string::npos )
+		{
+			TRC_ERR("TLS Certificate Subject name validation failed");
+			return -1;
+		}
+
+		TRC_INFO("TLS Connection established");
+	}
+	*/
+
+	return 0;
+}

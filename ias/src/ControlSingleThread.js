@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-0
+ *      \date Last update: 2019-05-29
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -40,8 +40,6 @@ function WSControlSingleThread()
     var wsFrames;
     var wsFramesTotal;
     var wsSpeedAvgBitS;
-    var wsSpeedMinBitS;
-    var wsSpeedMaxBitS;
     var wsOverhead;
     var wsOverheadTotal;
     var wsStartTime;
@@ -95,6 +93,8 @@ function WSControlSingleThread()
     var ulStartupData               = 0;
     var ulStartupFrames             = 0;
     var ulProtocol                  = 'upload';
+    var ulSampleRate                = 500;
+    var ulTailTime                  = 2000;
 
     var wsTargets;
     var wsTarget;
@@ -739,7 +739,11 @@ function WSControlSingleThread()
     function measurementReport()
     {
         wsEndTime = performance.now();
-        if (((wsEndTime - wsStartTime) > wsMeasurementRunningTime) || (wsRttValues.replies + wsRttValues.missing + wsRttValues.errors) === rttRequests)
+        if (
+            ((wsRttValues.replies + wsRttValues.missing + wsRttValues.errors) === rttRequests && wsTestCase === 'rtt')
+            || ((wsEndTime - wsStartTime) > wsMeasurementRunningTime && wsTestCase === 'download')
+            || ((wsEndTime - wsStartTime - ulTailTime) > wsMeasurementRunningTime && wsTestCase === 'upload')
+            )
         {
             clearInterval(wsInterval);
             wsCompleted = true;
@@ -833,22 +837,39 @@ function WSControlSingleThread()
         {
             var ulData = 0;
             var ulFrames = 0;
+            var ulTailData = 0;
+            var ulTailFrames = 0;
+            var keyCount = 0;
+
             for (var wsID = 0; wsID < wsWorkers.length; wsID++)
             {
                 var ulStreamReportDict = ulReportDict[wsID];
 
+                var keyCountStream = 0;
                 for (var streamKey in ulStreamReportDict)
                 {
-
-                    ulData      += ulStreamReportDict[streamKey].bRcv;
-                    ulFrames    += ulStreamReportDict[streamKey].hRcv;
+                    if (keyCountStream >= wsMeasurementRunningTime / ulSampleRate)
+                    {
+                        ulTailData      += ulStreamReportDict[streamKey].bRcv;
+                        ulTailFrames    += ulStreamReportDict[streamKey].hRcv;
+                    }
+                    else
+                    {
+                        ulData      += ulStreamReportDict[streamKey].bRcv;
+                        ulFrames    += ulStreamReportDict[streamKey].hRcv;
+                        keyCountStream++;
+                    }
                 }
+
+                keyCount = (keyCountStream > keyCount) ? keyCountStream : keyCount;
             }
 
             wsData          = ulData;
             wsFrames        = ulFrames;
-            wsDataTotal     = ulData    + ulStartupData;
-            wsFramesTotal   = ulFrames  + ulStartupFrames;
+            wsDataTotal     = ulData    + ulStartupData    + ulTailData;
+            wsFramesTotal   = ulFrames  + ulStartupFrames  + ulTailFrames;
+
+            wsMeasurementTime = keyCount * ulSampleRate;
 
             msg = 'ok';
         }
@@ -858,14 +879,6 @@ function WSControlSingleThread()
             wsOverhead           = (wsFrames * wsOverheadPerFrame);
             wsOverheadTotal      = (wsFramesTotal * wsOverheadPerFrame);
             wsSpeedAvgBitS       = (((wsData * 8) + (wsOverhead * 8)) / (Math.round(wsMeasurementTime) / 1000));
-
-            //set min/max rates
-            if (wsSpeedAvgBitS < wsSpeedMinBitS)
-                wsSpeedMinBitS = wsSpeedAvgBitS;
-            else if (wsSpeedMinBitS === 0)
-                wsSpeedMinBitS = wsSpeedAvgBitS;
-            if (wsSpeedAvgBitS > wsSpeedMaxBitS)
-                wsSpeedMaxBitS = wsSpeedAvgBitS;
         }
 
         var finishString     = '';
@@ -882,7 +895,7 @@ function WSControlSingleThread()
         if (logReports && wsTestCase === 'rtt')
         {
             console.log(finishString + 'Time:                   ' + wsRttValues.duration + ' ns');
-            console.log(finishString + 'RTT Avgerage:           ' + wsRttValues.avg + ' ns');
+            console.log(finishString + 'RTT Average:            ' + wsRttValues.avg + ' ns');
             console.log(finishString + 'RTT Median:             ' + wsRttValues.med + ' ns');
             console.log(finishString + 'RTT Min:                ' + wsRttValues.min + ' ns');
             console.log(finishString + 'RTT Max:                ' + wsRttValues.max + ' ns');
@@ -1008,7 +1021,7 @@ function WSControlSingleThread()
         report.frame_count                              = wsDownloadValues.frames;
         report.frame_count_including_slow_start         = wsDownloadValues.framesTotal;
         report.overhead                                 = wsDownloadValues.overhead;
-        report.overhead_per_frame_including_slow_start  = wsDownloadValues.overheadTotal;
+        report.overhead_including_slow_start            = wsDownloadValues.overheadTotal;
         report.overhead_per_frame                       = wsDownloadValues.overheadPerFrame;
 
         return report;
@@ -1033,7 +1046,7 @@ function WSControlSingleThread()
         report.frame_count                              = wsUploadValues.frames;
         report.frame_count_including_slow_start         = wsUploadValues.framesTotal;
         report.overhead                                 = wsUploadValues.overhead;
-        report.overhead_per_frame_including_slow_start  = wsUploadValues.overheadTotal;
+        report.overhead_including_slow_start            = wsUploadValues.overheadTotal;
         report.overhead_per_frame                       = wsUploadValues.overheadPerFrame;
         report.frames_per_call                          = wsUploadValues.framePerCall;
 
@@ -1105,8 +1118,6 @@ function WSControlSingleThread()
         wsFrames                    = 0;
         wsFramesTotal               = 0;
         wsSpeedAvgBitS              = 0;
-        wsSpeedMinBitS              = 0;
-        wsSpeedMaxBitS              = 0;
         wsOverhead                  = 0;
         wsOverheadTotal             = 0;
         wsStartTime                 = performance.now();

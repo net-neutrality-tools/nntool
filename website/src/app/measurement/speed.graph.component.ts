@@ -1,9 +1,8 @@
-import {Component, OnInit} from "@angular/core";
-
+import {Component} from '@angular/core';
 
 @Component({
-    selector: "speed-graph",
-    templateUrl: "./app/measurement/speed.graph.component.html"
+    selector: 'app-speed-graph',
+    templateUrl: './speed.graph.component.html'
 })
 export class SpeedGraphComponent {
 

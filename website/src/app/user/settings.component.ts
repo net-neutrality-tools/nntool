@@ -1,79 +1,79 @@
-import {Component, OnInit} from "@angular/core";
-import {Logger, LoggerService} from "../services/log.service";
-import {WebsiteSettings} from "../settings/settings.interface";
-import {ConfigService} from "../services/config.service";
-import {UserInfo, UserService} from "../services/user.service";
+import {Component, OnInit} from '@angular/core';
+import {Logger, LoggerService} from '../services/log.service';
+import {WebsiteSettings} from '../settings/settings.interface';
+import {ConfigService} from '../services/config.service';
+import {UserInfo, UserService} from '../services/user.service';
 
 
 @Component({
-    templateUrl: "./app/user/settings.component.html"
+    templateUrl: './settings.component.html'
 })
 export class SettingsComponent implements OnInit {
 
     // TODO i18n
-    private logger: Logger = LoggerService.getLogger("SettingsComponent");
+    private logger: Logger = LoggerService.getLogger('SettingsComponent');
     private settings: WebsiteSettings;
 
     private user: UserInfo;
 
-    get shown (): any {
+    get shown(): any {
         return this.settings.user.shown;
     }
 
-    get disassociated (): boolean {
+    get disassociated(): boolean {
         return this.user.disassociated;
     }
 
-    set disassociated (value: boolean) {
+    set disassociated(value: boolean) {
         this.user.disassociated = value;
         this.save();
     }
 
-    get invisible (): boolean {
+    get invisible(): boolean {
         return this.user.invisible;
     }
 
-    set invisible (value: boolean) {
+    set invisible(value: boolean) {
         this.user.invisible = value;
         this.save();
     }
 
-    get forceIp (): boolean {
+    get forceIp(): boolean {
         return this.user.forceIp;
     }
 
-    set forceIp (value: boolean) {
+    set forceIp(value: boolean) {
         this.user.forceIp = value;
         this.save();
     }
 
-    get disassociateBeforeDelete (): boolean {
+    get disassociateBeforeDelete(): boolean {
         return this.user.disassociateBeforeDelete;
     }
 
-    set disassociateBeforeDelete (value: boolean) {
+    set disassociateBeforeDelete(value: boolean) {
         this.user.disassociateBeforeDelete = value;
         this.save();
     }
 
-    get clientUuid (): string {
+    get clientUuid(): string {
         return this.user.uuid;
     }
 
 
-    constructor (
+    constructor(
         private configService: ConfigService,
         private userService: UserService
     ) {}
 
-    ngOnInit () {
+    ngOnInit() {
         this.settings = this.configService.getConfig();
         this.user = this.userService.user;
         console.log(this.user);
         this.userService.loadMeasurements(this.user).subscribe(
             () => {},
             (error: any) => {
-                this.logger.error("Failed to load settings", error);
+                this.logger.error('Failed to load settings', error);
             }
         );
     }
@@ -81,7 +81,7 @@ export class SettingsComponent implements OnInit {
     /**
      * Save/Apply settings
      */
-    save (): void {
+    save(): void {
         // Not necessary - same object?
         this.userService.user = this.user;
         this.userService.save();
@@ -90,18 +90,18 @@ export class SettingsComponent implements OnInit {
     /**
      * Clear all user data (Settings to default?)
      */
-    clear (): void {
-        this.logger.info("Deleting user");
+    clear(): void {
+        this.logger.info('Deleting user');
         if (this.user.disassociateBeforeDelete) {
             this.userService.disassociateAll(this.user).subscribe(
                 () => {
-                    this.logger.info("Disassociate for user " + this.user.uuid + " complete");
+                    this.logger.info('Disassociate for user ' + this.user.uuid + ' complete');
                     this.userService.user = new UserInfo();
                     this.userService.save();
                     this.user = this.userService.user;
                 },
                 (error: any) => {
-                    this.logger.error("Failed to disassociate all", error);
+                    this.logger.error('Failed to disassociate all', error);
                 }
             );
         } else {

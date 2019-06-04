@@ -1,6 +1,5 @@
 package at.alladin.nettest.service.statistic.web.api.v1;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 
@@ -182,7 +181,7 @@ public class ExportResource {
 	})
 	@GetMapping("/{openDataUuid:[^\\.]+}")
 	public void exportSingleMeasurement(@PathVariable String openDataUuid, HttpServletResponse response) {
-		exportSingleMeasurement(openDataUuid,  ExportExtension.CSV, response);
+		exportSingleMeasurement(openDataUuid, ExportExtension.CSV, response);
 	}
 	
 	private void exportSingleMeasurement(final String openDataUuid, final ExportExtension extension, HttpServletResponse response) {
@@ -196,7 +195,7 @@ public class ExportResource {
 		}
 	}
 	
-	private void exportMonthlyMeasurements (final int year, final int month, final ExportExtension extension, 
+	private void exportMonthlyMeasurements(final int year, final int month, final ExportExtension extension, 
 			final HttpServletResponse response, final boolean isCompress) {
 		try {
 			response.setContentType("text/" + extension.toString());
@@ -208,7 +207,7 @@ public class ExportResource {
 		}
 	}
 	
-	private void exportDailyMeasurement (final int day, final int month, final int year,
+	private void exportDailyMeasurement(final int day, final int month, final int year,
 			final ExportExtension extension, final HttpServletResponse response, final boolean isCompress) {
 		try {
 			response.setContentType("text/" + extension.toString());
@@ -219,5 +218,4 @@ public class ExportResource {
 			ex.printStackTrace();
 		}
 	}
-	
 }

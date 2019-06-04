@@ -1,5 +1,5 @@
-import {TestState} from "../test-state";
-import {PortBlockingTestTypeEnum} from "./enums/port-blocking-test-type";
+import {TestState} from '../test-state';
+import {PortBlockingTestTypeEnum} from './enums/port-blocking-test-type';
 
 export class PortBlockingTestState extends TestState {
     types: {

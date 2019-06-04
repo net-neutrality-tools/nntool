@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-10
+ *      \date Last update: 2019-05-29
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -34,7 +34,7 @@ Ping::~Ping()
 //! \brief
 //!	Ping init function. Copy information to local vars
 //! \param &settings
-Ping::Ping( CConfigManager *pConfig, CConfigManager *pXml, CConfigManager *pService, string sProvider )
+Ping::Ping( CConfigManager *pXml, CConfigManager *pService, string sProvider )
 {	
 	mClient = CTool::getIP( pService->readString("TAC51","LAN-IF","eth1"), pXml->readLong(sProvider, "NET_TYPE", 4) );
 	
@@ -54,7 +54,7 @@ Ping::Ping( CConfigManager *pConfig, CConfigManager *pXml, CConfigManager *pServ
 	//Create Socket Object
 	mSocket = new CConnection();
 	
-	mTimeDiff = 0;
+	mTimeDiff = 1;
 }
 
 //! \brief
@@ -78,10 +78,14 @@ int Ping::run()
 	
 	nHops = 0;
 	nSize = 0;
+	nError = 0;
+
+	#ifndef NNTOOL
 	int nReply = 0;
 	int nMissing = 0;
-	nError = 0;
+	#endif
 	
+	int timeout = 1000000;
 	system_availability  = 1;
 	service_availability = 0;
 	error = 0;
@@ -178,7 +182,7 @@ int Ping::run()
 		
 		//Set Timestamp T1
 		time1 = CTool::get_timestamp();
-		
+
 		if(ipv6)
 		{
 			mClientDataSizev6 = sizeof(mClientDatav6);
@@ -234,8 +238,9 @@ int Ping::run()
 			}
 		}
 		else
-			//Set to -1, then we can count Packetloss resp. Timeouts
-			mTimeDiff = -1;
+		{
+			mTimeDiff = 0;
+		}
 		
 		/*
 		CTool::logging( (
@@ -254,7 +259,7 @@ int Ping::run()
 		i++;
 		
 		//Sleep 1000ms
-		usleep(1000000);	
+		usleep(timeout);	
 	}
 	
 	#ifndef NNTOOL
@@ -271,7 +276,7 @@ int Ping::run()
 			//write to Global Object
 			measurements.ping.results[(*AI).first] += (*AI).second;
 			
-			if( (*AI).second < 0 )
+			if( (*AI).second == 0 )
 				nMissing++;
 			else
 				nReply++;
@@ -280,13 +285,13 @@ int Ping::run()
 		//---------------------------
 		
 		//Calculate Min, Avg, Max
-		CTool::calculateResults( measurements.ping );
+		CTool::calculateResults( measurements.ping, 1, 0 );
 			
 		//---------------------------
 	
 		measurements.ping.packetsize 	= nSize;
 		measurements.ping.hops			= nHops;
-		measurements.ping.requests 		= mPingQuery;
+		measurements.ping.requests 		= nReply + nMissing + nError;
 		measurements.ping.replies 		= nReply;
 		measurements.ping.missing 		= nMissing;
 		measurements.ping.errors 		= nError;

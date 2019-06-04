@@ -2,7 +2,7 @@ buildscript {
 	ext {
 		eclipse_project_prefix = 'nntool'
 	}
-    repositories {
+  	repositories {
         google()
 
         mavenLocal()
@@ -17,6 +17,12 @@ buildscript {
         classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: spring_boot_version
 
         classpath 'com.bmuschko:gradle-clover-plugin:2.2.1'
+
+        // Unfortunatly, just adding a dependency to jib-gradle-plugin breaks the Android build.
+        // Therefore, we can only include it if we don't build Android modules.
+        if (gradle.ext.includeJibGradlePlugin) {
+        	classpath 'gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.2.0'
+        }
     }
 }
 
@@ -53,11 +59,11 @@ allprojects { p ->
 
     apply plugin: 'eclipse' 
     eclipse.project.name = "${eclipse_project_prefix}-${p.name}"
-    
+
     apply plugin: 'net.ltgt.apt'
     apply plugin: 'net.ltgt.apt-eclipse'
     apply plugin: 'net.ltgt.apt-idea'
-    
+
     apply plugin: 'com.adarshr.test-logger'
 }
 
@@ -69,11 +75,11 @@ subprojects { p ->
 	if (System.getProperty('include-code-coverage') != null) {
 		apply from: "${project.rootDir}/gradle/clover.gradle"
 	}
-    
+
     // make root project clean task depend on (= execute) subproject clean tasks
 	rootProject.clean.dependsOn tasks.matching { it.name == "clean" }
-    
-    clean.doLast {
+
+	clean.doLast {
 		delete ".clover"
 	}
 }
