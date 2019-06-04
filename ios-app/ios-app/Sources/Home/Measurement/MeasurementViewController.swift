@@ -52,8 +52,11 @@ class MeasurementViewController: CustomNavigationBarViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.applyIconFontAttributes()
-
+        // Because the segue from HomeViewController to this view controller is not animated
+        // the navigation button item appearance doesn't work as expected (very odd behaviour...).
+        // As a workaround we change the title of this element after setting the appearance.
+        navigationItem.rightBarButtonItem?.icon = .help
+        
         speedMeasurementGaugeView?.startButtonActionCallback = {
             self.startMeasurement()
         }

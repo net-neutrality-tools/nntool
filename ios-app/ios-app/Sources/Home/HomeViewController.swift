@@ -27,11 +27,6 @@ class HomeViewController: CustomNavigationBarViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // view controllers in tabBar should not be customizable
-        tabBarController?.customizableViewControllers = []
-
-        navigationItem.applyIconFontAttributes()
-
         speedMeasurementGaugeView?.startButtonActionCallback = {
             self.performSegue(withIdentifier: "show_speed_measurement_view_controller", sender: self)
         }

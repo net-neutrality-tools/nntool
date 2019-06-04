@@ -206,7 +206,7 @@
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" title="BEREC nntool" id="hp5-mn-BBe">
-                        <barButtonItem key="rightBarButtonItem" title="m" id="QGO-Yk-GtN">
+                        <barButtonItem key="rightBarButtonItem" title="_" id="QGO-Yk-GtN">
                             <connections>
                                 <action selector="presentHelp" destination="l2h-VI-UHi" id="IxH-jb-LRh"/>
                             </connections>
@@ -650,10 +650,10 @@
             </objects>
             <point key="canvasLocation" x="1817" y="1487"/>
         </scene>
-        <!--View Controller-->
+        <!--Terms And Conditions Info View Controller-->
         <scene sceneID="7TL-gU-7XM">
             <objects>
-                <viewController id="aZD-Ce-Rn0" sceneMemberID="viewController">
+                <viewController id="aZD-Ce-Rn0" customClass="TermsAndConditionsInfoViewController" customModule="ios_app" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="UD6-Qq-LQD" customClass="TermsAndConditionsView" customModule="ios_app" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
