@@ -18,6 +18,7 @@
 
 #include "callback.h"
 
+#define __ANDROID__
 #ifdef __ANDROID__
     #include "android_connector.h"
 #endif
@@ -115,7 +116,7 @@ int CCallback::run()
             jMeasurementResults["msg"] = msg;
             jMeasurementResults["test_case"] = conf.sTestName;
 
-            const AndroidConnector &connector = AndroidConnector::getInstance();
+            AndroidConnector &connector = AndroidConnector::getInstance();
 
             if (error_code != 0)
             {
@@ -124,31 +125,31 @@ int CCallback::run()
                 TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
                 connector.callbackError(error_code, error_description);
             }
-
-            if (Json(jMeasurementResultsRttUdp).object_items().size() > 0)
-            {
-                jMeasurementResults["rtt_udp_info"] = Json(jMeasurementResultsRttUdp);
+			
+            if (jMeasurementResultsRttUdp.size() > 0) 
+			{
+				jMeasurementResults["rtt_udp_info"] = Json(jMeasurementResultsRttUdp);
             }
 
-            if (Json(jMeasurementResultsDownload).array_items().size() > 0)
-            {
+            if (jMeasurementResultsDownload.size() > 0)
+			{
                 jMeasurementResults["download_info"] = Json(jMeasurementResultsDownload);
             }
 
-            if (Json(jMeasurementResultsUpload).array_items().size() > 0)
+			if (jMeasurementResultsUpload.size())
             {
                 jMeasurementResults["upload_info"] = Json(jMeasurementResultsUpload);
             }
 
-            if (Json(jMeasurementResultsTime).object_items().size() > 0)
-            {
+            if (jMeasurementResultsTime.size())
+			{
                 jMeasurementResults["time_info"] = Json(jMeasurementResultsTime);
             }
 
             if (cmd == "completed") {
-                AndroidConnector::getInstance().callbackFinished(jMeasurementResults);
+                connector.callbackFinished(jMeasurementResults);
             } else {
-                AndroidConnector::getInstance().callback(jMeasurementResults);
+                connector.callback(jMeasurementResults);
             }
         }
 #else
