@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-08
+ *      \date Last update: 2019-05-29
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -170,13 +170,12 @@ void CCallback::rttUdpCallback(string cmd)
 		int nMissing = 0;
 		int nReply = 0;
 	
-		//Starting multiple Instances for every Probe
 		for(map<int, unsigned long long>::iterator AI = std::next(mPingResult.results.begin(),1); AI!= mPingResult.results.end(); ++AI)
 		{
 			//write to Global Object
 			tempMeasurement.ping.results[(*AI).first] += (*AI).second;
 			
-			if( (*AI).second < 0 )
+			if( (*AI).second == 0 )
 				nMissing++;
 			else
 				nReply++;
@@ -185,13 +184,13 @@ void CCallback::rttUdpCallback(string cmd)
 		//---------------------------
 		
 		//Calculate Min, Avg, Max
-		CTool::calculateResults( tempMeasurement.ping, 1, 0);
+		CTool::calculateResults( tempMeasurement.ping, 1, 0 );
 			
 		//---------------------------
 	
 		tempMeasurement.ping.packetsize 	= pingThread->nSize;
 		tempMeasurement.ping.hops			= pingThread->nHops;
-		tempMeasurement.ping.requests 		= pingThread->mPingQuery - 1;
+		tempMeasurement.ping.requests 		= nReply + nMissing + pingThread->nError;
 		tempMeasurement.ping.replies 		= nReply;
 		tempMeasurement.ping.missing 		= nMissing;
 		tempMeasurement.ping.errors 		= pingThread->nError;
@@ -209,7 +208,7 @@ void CCallback::rttUdpCallback(string cmd)
 		tempMeasurement.ping.ipversion 		= pingThread->ipversion;
 		
 		tempMeasurement.ping.system_availability 	= pingThread->system_availability;
-		
+
 		if( nMissing > 0 )
 		{
 			pingThread->service_availability 	= 0;
@@ -234,7 +233,7 @@ void CCallback::rttUdpCallback(string cmd)
 
 
 	Json::object jMeasurementResults;
-	jMeasurementResults["duration_ns"] = to_string(tempMeasurement.ping.duration_ns);
+	jMeasurementResults["duration_ns"] = to_string(tempMeasurement.ping.totaltime * 1000 * 1000);
 	jMeasurementResults["average_ns"] = to_string(tempMeasurement.ping.avg * 1000 * 1000);
 	jMeasurementResults["median_ns"] = to_string(tempMeasurement.ping.median_ns);
 	jMeasurementResults["min_ns"] = to_string(tempMeasurement.ping.min * 1000 * 1000);

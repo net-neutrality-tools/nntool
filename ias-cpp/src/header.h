@@ -77,6 +77,14 @@
 #include <cxxabi.h>
 
 
+//openssl
+#include <openssl/crypto.h>
+#include <openssl/x509.h>
+#include <openssl/pem.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
+
 //libnntool
 #include "../../ias-libnntool/json11.hpp"
 #include "../../ias-libnntool/typedef.h"
@@ -95,30 +103,9 @@ using namespace std;
 using namespace json11;
 
 
-//colors
-#define BLK "\x1b[0;30m"
-#define RED "\x1b[0;31m"
-#define GRN "\x1b[0;32m"
-#define BRN "\x1b[0;33m"
-#define BLU "\x1b[0;34m"
-#define MGN "\x1b[0;35m"
-#define CYA "\x1b[0;36m"
-#define NOR "\x1b[0;37m"
-#define GRA "\x1b[1;30m"
-#define LRD "\x1b[1;31m"
-#define LGN "\x1b[1;32m"
-#define YEL "\x1b[1;33m"
-#define LBL "\x1b[1;34m"
-#define PIN "\x1b[1;35m"
-#define LCY "\x1b[1;36m"
-#define BRI "\x1b[1;37m"
-#define RST "\x1b[0m"
-
-
 #define MAX_PACKET_SIZE 1500
 #define MAXBUFFER 1580
 #define MAX_NUM_THREADS 256
-#define ECHOMAX 64
 #define ECHO 64
 
 

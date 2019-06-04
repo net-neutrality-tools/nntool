@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-03-21
+ *      \date Last update: 2019-05-10
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -65,15 +65,6 @@ int CTcpServer::run()
         return EXIT_FAILURE;
     }
 
-/*
-	if( ( mSock = mSocket->tcp6SocketServer(mTargetPort) ) < 0 )
-	{
-		//Error
-		TRC_ERR("Creating socket failed - Could not establish connection");
-		return EXIT_FAILURE;
-	}
-*/
-
     string sTlsEnabled = "";
     if (mTlsSocket) sTlsEnabled = "TLS ";
     
@@ -113,7 +104,6 @@ int CTcpServer::run()
             else
             {
             	//start tcp traceroute handler
-            	//setsockopt(nSocket, IPPROTO_TCP, TCP_NODELAY, (void *)&on, sizeof(on));
             	CTcpTracerouteHandler *pTcpTracerouteHandler = new CTcpTracerouteHandler(nSocket, ip);
             	pTcpTracerouteHandler->handle_tcp_traceroute();
             }

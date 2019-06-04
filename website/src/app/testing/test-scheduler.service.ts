@@ -1,8 +1,8 @@
-import {Injectable} from "@angular/core";
-import {TestImplementation} from "./tests-implementation/test-implementation";
-import {TestConfig} from "./tests-implementation/test-config";
-import {TestState} from "./tests-implementation/test-state";
-import {Subject} from "rxjs";
+import {Injectable} from '@angular/core';
+import {TestImplementation} from './tests-implementation/test-implementation';
+import {TestConfig} from './tests-implementation/test-config';
+import {TestState} from './tests-implementation/test-state';
+import {Subject} from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -16,7 +16,7 @@ export class TestSchedulerService {
     }
 
     public register = (test: TestImplementation<TestConfig, TestState>, config: TestConfig, $state: Subject<TestState>) => {
-        this.impending.push({test: test, config: config, $state: $state});
+        this.impending.push({test, config, $state});
         if (this.impending.length === 1 && this.current === null) {
             this.startNextTest();
         }

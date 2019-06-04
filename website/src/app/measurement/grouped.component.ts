@@ -1,10 +1,8 @@
-import {Component, Input} from "@angular/core";
-
-import {ListGrouped} from "./measurement.model";
-
+import {Component, Input} from '@angular/core';
+import {ListGrouped} from './measurement.model';
 
 @Component({
-    selector: "measurement-grouped-list",
+    selector: 'app-measurement-grouped-list',
     template: ``
 })
 export class MeasurementGroupedComponent {

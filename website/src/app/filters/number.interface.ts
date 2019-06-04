@@ -1,6 +1,7 @@
-import {Input} from "./input.interface";
+/*import {Input} from './input.interface';
 
 export interface Number extends Input {
-    type: "number";
+    type: 'number';
     factor?: number;
 }
+*/

@@ -1,7 +1,3 @@
-import {GeoLocation} from "../api/request-info.api";
-import {PointInTimeValueAPI} from "./point-in-time-value.api";
-import {MeasurementResultNetworkPointInTimeAPI} from "./measurement-result-network-point-in-time.api";
-
 export class CellLocationAPI {
 
     /**
@@ -43,6 +39,4 @@ export class CellLocationAPI {
      * Geographic location longitude of this cell.
      */
     longitude: number;
-
 }
-

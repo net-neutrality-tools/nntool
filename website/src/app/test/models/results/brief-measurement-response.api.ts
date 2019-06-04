@@ -1,4 +1,4 @@
-import {GeoLocation, MeasurementAgentType} from "../api/request-info.api";
+import {GeoLocation, MeasurementAgentType} from '../api/request-info.api';
 
 export class BriefSubMeasurement {
     start_test: string; // TODO: change back to Date
@@ -94,7 +94,7 @@ export class BriefMeasurementResponseAPI {
 // SubMeasurement
 
     /**
-     * Map that contains available infor mation for each measurement type (Speed, QoS).
+     * Map that contains available information for each measurement type (Speed, QoS).
      * If map misses speed then no speed measurement was done, likewise for QoS, ...
      */
     measurements: {SPEED: BriefSubMeasurement, QOS: BriefSubMeasurement};

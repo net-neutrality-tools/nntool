@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-04-28
+ *      \date Last update: 2019-05-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -34,7 +34,8 @@ using namespace std;
 class CHttp
 {
 	private: 
-		int mSocket;
+		CConnection *mConnection;
+
 		string mType;
 		string mHostname;
 		
@@ -54,9 +55,9 @@ class CHttp
 		
 		virtual ~CHttp();
 		
-		CHttp( CConfigManager *pConfig, int nSocket );
+		CHttp( CConfigManager *pConfig, CConnection *nConnection );
 		
-		CHttp( CConfigManager *pConfig, int nSocket, string sType );
+		CHttp( CConfigManager *pConfig, CConnection *nConnection, string sType );
 		
 		int parseResponse();
 		

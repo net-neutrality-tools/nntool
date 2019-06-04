@@ -10,7 +10,7 @@ spring:
 
   couchdb:
     connection:
-      url: http://localhost:5984
+      url: http://localhost:15984
       #username:
       #password:
     databases:

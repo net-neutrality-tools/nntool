@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-03
+ *      \date Last update: 2019-05-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -28,7 +28,7 @@ Download::Download()
 //!	Virtual Destructor
 Download::~Download()
 {
-	delete(mSocket);
+	delete(mConnection);
 }
 
 //! \brief
@@ -45,6 +45,8 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 	mServer 	= pXml->readString(sProvider,"IP","1.1.1.1");
 	mPort   	= pXml->readLong(sProvider,"DL_PORT",80);
 
+	mTls		= pXml->readLong(sProvider,"TLS",0);
+
 	#ifndef NNTOOL
 	//Security Credentials
 	pConfig->writeString("security","user",pXml->readString(sProvider,"USER",""));
@@ -58,7 +60,7 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 		mLimit = 1000000;
 	
 	//Create Socket Object
-	mSocket = new CConnection();
+	mConnection = new CConnection();
 	
 	mConfig = pConfig;
 	
@@ -73,24 +75,37 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 //! \return 0
 int Download::run()
 {	
+	bool ipv6validated = false;
+
 	//Syslog Message
 	TRC_INFO( ("Starting Download Thread with PID: " + CTool::toString(syscall(SYS_gettid))).c_str() );
 
 	//Get Hostname and make DNS Request
 	TRC_DEBUG( ("Resolving Hostname for Measurement: "+mServerName).c_str() );
-	#ifndef NNTOOL
-	//MYSQL_LOG("Measurement-DL-Hostname",mServerName);
+
+	#ifdef NNTOOL
+	struct addrinfo *ips;
+	memset(&ips, 0, sizeof ips);
+
+	ips = CTool::getIpsFromHostname( mServerName, true );
+
+	char host[NI_MAXHOST];
+	
+	getnameinfo(ips->ai_addr, ips->ai_addrlen, host, sizeof host, NULL, 0, NI_NUMERICHOST);
+	mServer = string(host);
+	if (CTool::validateIp(mServer) == 6) ipv6validated = true; 
 	#endif
 
+	#ifndef NNTOOL
+	//MYSQL_LOG("Measurement-DL-Hostname",mServerName);
 	if( CTool::validateIp(mClient) == 6)
 		mServer = CTool::getIpFromHostname( mServerName, 6 );
 	else
 		mServer = CTool::getIpFromHostname( mServerName, 4 );
-	
-	TRC_DEBUG( ("Resolved Hostname for Measurement: "+mServer).c_str() );
-	#ifndef NNTOOL
 	//MYSQL_LOG("Measurement-DL-Server",mServer);
 	#endif
+
+	TRC_DEBUG( ("Resolved Hostname for Measurement: "+mServer).c_str() );
 
 	pid = syscall(SYS_gettid);
 	
@@ -114,14 +129,18 @@ int Download::run()
 	nHttpResponseDuration = 0;
 	nHttpResponseReportValue = 0;
 	
-	if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 )
+	#ifndef NNTOOL
+	if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 ) ipv6validated = true;
+	#endif
+
+	if (ipv6validated)
 	{	
 		//Create a TCP socket
-		if( ( mSock = mSocket->tcp6Socket(mClient, mServer, mPort) ) < 0 )
+		if( ( mConnection->tcp6Socket(mClient, mServer, mPort, mTls, mServerName) ) < 0 )
 		{
 			//Error
 			TRC_DEBUG("Creating socket failed - Could not establish connection");
-			return EXIT_FAILURE;
+			return -1;
 		}
 		
 		ipversion = 6;
@@ -132,11 +151,11 @@ int Download::run()
 	else
 	{
 		//Create a TCP socket
-		if( ( mSock = mSocket->tcpSocket(mClient, mServer, mPort) ) < 0 )
+		if( ( mConnection->tcpSocket(mClient, mServer, mPort, mTls, mServerName) ) < 0 )
 		{
 			//Error
 			TRC_DEBUG("Creating socket failed - Could not establish connection");
-			return EXIT_FAILURE;
+			return -1;
 		}
 		
 		ipversion = 4;
@@ -151,20 +170,20 @@ int Download::run()
 	tv.tv_sec = 5;
 	tv.tv_usec = 0;
 	
-	setsockopt( mSock, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval) );
-	setsockopt( mSock, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval) );
+	setsockopt( mConnection->mSocket, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval) );
+	setsockopt( mConnection->mSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval) );
 	
 	//Send Request and Authenticate Client
-	CHttp *pHttp = new CHttp( mConfig, mSock, mDownloadString );
+	CHttp *pHttp = new CHttp( mConfig, mConnection, mDownloadString );
 	if( pHttp->requestToReferenceServer() < 0 )
 	{
-		TRC_INFO("No valid credentials for this server: "+mServer);
+		TRC_INFO("No valid credentials for this server: " + mServer);
 
 		#ifndef NNTOOL
 		//MYSQL_LOG("Measurement-DL-Auth","No valid credentials for this server: "+mServer);
 		#endif
 		
-		close(mSock);
+		mConnection->close();
 		
 		free(rbuffer);
 		
@@ -189,7 +208,7 @@ int Download::run()
 	while( RUNNING && TIMER_ACTIVE && !TIMER_STOPPED && !m_fStop )
 	{
 		//Get data from socket
-		mResponse = recv(mSock, rbuffer, MAX_PACKET_SIZE, 0);
+		mResponse = mConnection->receive(rbuffer, MAX_PACKET_SIZE, 0);
 		
 		//Send signal, we are ready
 		syncing_threads[pid] = 1;
@@ -346,8 +365,7 @@ int Download::run()
 
 	delete( pHttp );
 	
-	close(mSock);
-	
+	mConnection->close();
 	free( rbuffer );
 		
 	//Syslog Message

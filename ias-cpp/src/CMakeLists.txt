@@ -12,7 +12,7 @@
 
 #/*!
 # *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2019-04-30
+# *      \date Last update: 2019-05-20
 # *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
 # */
 
@@ -46,6 +46,7 @@ add_executable(ias-client
 TARGET_LINK_LIBRARIES(ias-client 
 	${CMAKE_THREAD_LIBS_INIT} 
 	nntool
+	-lssl
 )
 
 INCLUDE(CPack)
