@@ -35,8 +35,7 @@ import static at.alladin.nettest.nntool.android.app.util.info.network.NetworkTyp
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  */
-public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent, SignalStrengthChangeListener>
-    implements GeoLocationChangeListener {
+public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent, SignalStrengthChangeListener> {
 
     private final static String TAG = SignalGatherer.class.getSimpleName();
 
@@ -59,11 +58,6 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
         int events = PhoneStateListener.LISTEN_SIGNAL_STRENGTHS;
         getTelephonyManager().listen(telephonyStateListener, events);
 
-        final GeoLocationGatherer geoLocationGatherer = getInformationProvider().getGatherer(GeoLocationGatherer.class);
-        if (geoLocationGatherer != null) {
-            geoLocationGatherer.addListener(this);
-        }
-
         try {
             CellLocation.requestLocationUpdate();
         }
@@ -76,11 +70,6 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
     public void onStop() {
         getInformationProvider().getContext().unregisterReceiver(networkStateBroadcastReceiver);
         getTelephonyManager().listen(telephonyStateListener, PhoneStateListener.LISTEN_NONE);
-
-        final GeoLocationGatherer geoLocationGatherer = getInformationProvider().getGatherer(GeoLocationGatherer.class);
-        if (geoLocationGatherer != null) {
-            geoLocationGatherer.addListener(this);
-        }
     }
 
     @Override
@@ -281,6 +270,7 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
         dispatchSignalStrengthChangedEvent(currentValue);
     }
 
+    /*
     @Override
     public void onLocationChanged(GeoLocationChangeEvent geoLocationChangeEvent) {
         Log.d(TAG, "Location change event: " + geoLocationChangeEvent);
@@ -291,4 +281,5 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
             networkStateBroadcastReceiver.onReceive(getInformationProvider().getContext(), intent);
         }
     }
+    */
 }

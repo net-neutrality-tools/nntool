@@ -152,7 +152,7 @@ public class CellSignalStrengthWrapper {
 		if (index >= 0) {
 			description = description.substring(index + field.length() + 1);
 			int ret = Integer.parseInt(description.split(" ")[0]);
-			return CellIdentityWrapper.maxIntegerToNull(ret);
+			return CellInfoWrapper.maxIntegerToNull(ret);
 		}
 
 		return null;

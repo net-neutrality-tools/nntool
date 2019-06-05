@@ -57,11 +57,11 @@ public class CellIdentityWrapper {
 		wrapper.setCellInfoType(CellType.MOBILE_LTE);
 
 		final CellIdentityLte cellIdentity = cellInfo.getCellIdentity();
-		wrapper.setAreaCode(maxIntegerToNull(cellIdentity.getTac()));
-		wrapper.setCellId(maxIntegerToNull(cellIdentity.getCi()));
-		wrapper.setMcc(maxIntegerToNull(cellIdentity.getMcc()));
-		wrapper.setMnc(maxIntegerToNull(cellIdentity.getMnc()));
-		wrapper.setPhysicalCellId(maxIntegerToNull(cellIdentity.getPci()));
+		wrapper.setAreaCode(CellInfoWrapper.maxIntegerToNull(cellIdentity.getTac()));
+		wrapper.setCellId(CellInfoWrapper.maxIntegerToNull(cellIdentity.getCi()));
+		wrapper.setMcc(CellInfoWrapper.maxIntegerToNull(cellIdentity.getMcc()));
+		wrapper.setMnc(CellInfoWrapper.maxIntegerToNull(cellIdentity.getMnc()));
+		wrapper.setPhysicalCellId(CellInfoWrapper.maxIntegerToNull(cellIdentity.getPci()));
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 			wrapper.setFrequency(cellIdentity.getEarfcn());
@@ -75,10 +75,10 @@ public class CellIdentityWrapper {
 		wrapper.setCellInfoType(CellType.MOBILE_GSM);
 
 		final CellIdentityGsm cellIdentity = cellInfo.getCellIdentity();
-		wrapper.setAreaCode(maxIntegerToNull(cellIdentity.getLac()));
-		wrapper.setCellId(maxIntegerToNull(cellIdentity.getCid()));
-		wrapper.setMcc(maxIntegerToNull(cellIdentity.getMcc()));
-		wrapper.setMnc(maxIntegerToNull(cellIdentity.getMnc()));
+		wrapper.setAreaCode(CellInfoWrapper.maxIntegerToNull(cellIdentity.getLac()));
+		wrapper.setCellId(CellInfoWrapper.maxIntegerToNull(cellIdentity.getCid()));
+		wrapper.setMcc(CellInfoWrapper.maxIntegerToNull(cellIdentity.getMcc()));
+		wrapper.setMnc(CellInfoWrapper.maxIntegerToNull(cellIdentity.getMnc()));
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 			wrapper.setFrequency(cellIdentity.getArfcn());
@@ -92,7 +92,7 @@ public class CellIdentityWrapper {
 		wrapper.setCellInfoType(CellType.MOBILE_CDMA);
 
 		final CellIdentityCdma cellIdentity = cellInfo.getCellIdentity();
-		wrapper.setCellId(maxIntegerToNull(cellIdentity.getBasestationId()));
+		wrapper.setCellId(CellInfoWrapper.maxIntegerToNull(cellIdentity.getBasestationId()));
 		return wrapper;
 	}
 
@@ -101,11 +101,11 @@ public class CellIdentityWrapper {
 		wrapper.setCellInfoType(CellType.MOBILE_WCDMA);
 
 		final CellIdentityWcdma cellIdentity = cellInfo.getCellIdentity();
-		wrapper.setAreaCode(maxIntegerToNull(cellIdentity.getLac()));
-		wrapper.setCellId(maxIntegerToNull(cellIdentity.getCid()));
-		wrapper.setMcc(maxIntegerToNull(cellIdentity.getMcc()));
-		wrapper.setMnc(maxIntegerToNull(cellIdentity.getMnc()));
-		wrapper.setScramblingCode(maxIntegerToNull(cellIdentity.getPsc()));
+		wrapper.setAreaCode(CellInfoWrapper.maxIntegerToNull(cellIdentity.getLac()));
+		wrapper.setCellId(CellInfoWrapper.maxIntegerToNull(cellIdentity.getCid()));
+		wrapper.setMcc(CellInfoWrapper.maxIntegerToNull(cellIdentity.getMcc()));
+		wrapper.setMnc(CellInfoWrapper.maxIntegerToNull(cellIdentity.getMnc()));
+		wrapper.setScramblingCode(CellInfoWrapper.maxIntegerToNull(cellIdentity.getPsc()));
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 			wrapper.setFrequency(cellIdentity.getUarfcn());
@@ -118,17 +118,13 @@ public class CellIdentityWrapper {
 		final CellIdentityWrapper wrapper = new CellIdentityWrapper();
 		wrapper.setRegistered(true);
 		wrapper.setCellInfoType(CellType.WIFI);
-		wrapper.setFrequency(maxIntegerToNull(wifiInfo.getFrequency()));
+		wrapper.setFrequency(CellInfoWrapper.maxIntegerToNull(wifiInfo.getFrequency()));
 		return wrapper;
 	}
 
 	public static CellIdentityWrapper fromSignalItem(final SignalItem signalItem) {
 		final CellIdentityWrapper wrapper = new CellIdentityWrapper();
 		return wrapper;
-	}
-
-	public static Integer maxIntegerToNull(final Integer i) {
-		return i == null ? null : (i != Integer.MAX_VALUE) ? i : null;
 	}
 
 	public void setFrequency(Integer frequency) {

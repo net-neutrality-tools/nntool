@@ -18,4 +18,11 @@ public class SignalStrengthChangeEvent {
     public void setCurrentSignalStrength(CurrentSignalStrength currentSignalStrength) {
         this.currentSignalStrength = currentSignalStrength;
     }
+
+    @Override
+    public String toString() {
+        return "SignalStrengthChangeEvent{" +
+                "currentSignalStrength=" + currentSignalStrength +
+                '}';
+    }
 }

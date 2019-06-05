@@ -22,6 +22,8 @@ public class ProviderAndSignalView extends RelativeLayout implements NetworkChan
     TextView providerText;
     TextView signalText;
 
+    NetworkChangeEvent lastNetworkChangeEvent;
+
     public ProviderAndSignalView(Context context) {
         super(context);
         init();
@@ -45,16 +47,31 @@ public class ProviderAndSignalView extends RelativeLayout implements NetworkChan
 
     @Override
     public void onNetworkChange(NetworkChangeEvent event) {
+        lastNetworkChangeEvent = event;
         if (event != null) {
-            Log.i(TAG, event.toString());
-            providerText.setText(event.getOperatorName());
+            Log.d(TAG, event.toString());
+            if (NetworkChangeEvent.NetworkChangeEventType.NO_CONNECTION.equals(lastNetworkChangeEvent.getEventType())) {
+                providerText.setText("-");
+                signalText.setText("-");
+            }
+            else {
+                providerText.setText(event.getOperatorName());
+            }
         }
     }
 
     @Override
     public void onSignalStrengthChange(SignalStrengthChangeEvent event) {
         if (event != null) {
-            signalText.setText(event.getCurrentSignalStrength().toString());
+            Log.d(TAG, event.toString());
+            if (lastNetworkChangeEvent != null
+                    && NetworkChangeEvent.NetworkChangeEventType.NO_CONNECTION.equals(lastNetworkChangeEvent.getEventType())) {
+                providerText.setText("-");
+                signalText.setText("-");
+            }
+            else {
+                signalText.setText(event.getCurrentSignalStrength().toString());
+            }
         }
     }
 }

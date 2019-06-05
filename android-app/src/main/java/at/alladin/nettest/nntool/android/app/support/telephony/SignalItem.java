@@ -36,15 +36,15 @@ public class SignalItem {
                        final int lteRsrq, final int lteRssnr, final int lteCqi) {
         this.timeStampMillis = System.currentTimeMillis();
         this.timeStampNano = System.nanoTime();
-        this.networkId = CellIdentityWrapper.maxIntegerToNull(networkId);
-        this.signalStrength = CellIdentityWrapper.maxIntegerToNull(signalStrength);
-        this.gsmBitErrorRate = CellIdentityWrapper.maxIntegerToNull(gsmBitErrorRate);
-        this.wifiLinkSpeed = CellIdentityWrapper.maxIntegerToNull(wifiLinkSpeed);
-        this.wifiRssi = CellIdentityWrapper.maxIntegerToNull(wifiRssi);
-        this.lteRsrp = CellIdentityWrapper.maxIntegerToNull(lteRsrp);
-        this.lteRsrq = CellIdentityWrapper.maxIntegerToNull(lteRsrq);
-        this.lteRssnr = CellIdentityWrapper.maxIntegerToNull(lteRssnr);
-        this.lteCqi = CellIdentityWrapper.maxIntegerToNull(lteCqi);
+        this.networkId = CellInfoWrapper.minAndMaxIntegerToNull(networkId);
+        this.signalStrength = CellInfoWrapper.minAndMaxIntegerToNull(signalStrength);
+        this.gsmBitErrorRate = CellInfoWrapper.minAndMaxIntegerToNull(gsmBitErrorRate);
+        this.wifiLinkSpeed = CellInfoWrapper.minAndMaxIntegerToNull(wifiLinkSpeed);
+        this.wifiRssi = CellInfoWrapper.minAndMaxIntegerToNull(wifiRssi);
+        this.lteRsrp = CellInfoWrapper.minAndMaxIntegerToNull(lteRsrp);
+        this.lteRsrq = CellInfoWrapper.minAndMaxIntegerToNull(lteRsrq);
+        this.lteRssnr = CellInfoWrapper.minAndMaxIntegerToNull(lteRssnr);
+        this.lteCqi = CellInfoWrapper.minAndMaxIntegerToNull(lteCqi);
     }
 
     @Override

@@ -5,6 +5,11 @@ package at.alladin.nettest.nntool.android.app.util.info.network;
  */
 public final class NetworkChangeEvent implements OperatorInfo {
 
+    public static enum NetworkChangeEventType {
+        NO_CONNECTION,
+        SIGNAL_UPDATE
+    }
+
     /**
      * System.nanoTime()
      */
@@ -12,16 +17,20 @@ public final class NetworkChangeEvent implements OperatorInfo {
 
     private MobileOperator mobileOperator;
 
-    private final boolean isConnected;
-
     private final long timestampNs;
 
     private final Integer networkType;
 
-    public NetworkChangeEvent(final Integer networkType, final boolean isConnected) {
+    private NetworkChangeEventType eventType;
+
+    public NetworkChangeEvent(final Integer networkType) {
+        this(networkType, NetworkChangeEventType.SIGNAL_UPDATE);
+    }
+
+    public NetworkChangeEvent(final Integer networkType, NetworkChangeEventType type) {
         this.networkType = networkType;
         this.timestampNs = System.nanoTime();
-        this.isConnected = isConnected;
+        this.eventType = type;
     }
 
     public WifiOperator getWifiOperator() {
@@ -48,8 +57,12 @@ public final class NetworkChangeEvent implements OperatorInfo {
         return networkType;
     }
 
-    public boolean isConnected() {
-        return isConnected;
+    public void setEventType(NetworkChangeEventType eventType) {
+        this.eventType = eventType;
+    }
+
+    public NetworkChangeEventType getEventType() {
+        return eventType;
     }
 
     @Override
@@ -57,9 +70,9 @@ public final class NetworkChangeEvent implements OperatorInfo {
         return "NetworkChangeEvent{" +
                 "wifiOperator=" + wifiOperator +
                 ", mobileOperator=" + mobileOperator +
-                ", isConnected=" + isConnected +
                 ", timestampNs=" + timestampNs +
                 ", networkType=" + networkType +
+                ", eventType=" + eventType +
                 '}';
     }
 

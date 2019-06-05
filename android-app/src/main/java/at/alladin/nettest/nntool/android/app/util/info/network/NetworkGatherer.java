@@ -26,13 +26,16 @@ import at.alladin.nettest.nntool.android.app.util.info.ListenableGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeEvent;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeListener;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.signal.SignalStrengthChangeEvent;
+import at.alladin.nettest.nntool.android.app.util.info.signal.SignalStrengthChangeListener;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  */
 public class NetworkGatherer
         extends ListenableGatherer<NetworkChangeEvent, NetworkChangeListener>
-        implements NetworkTypeAware {
+        implements NetworkTypeAware, SignalStrengthChangeListener {
 
     private final static String TAG = NetworkGatherer.class.getSimpleName();
 
@@ -100,6 +103,11 @@ public class NetworkGatherer
 
         getConnectivityManager().registerNetworkCallback(request, networkCallback);
         */
+
+        final SignalGatherer gatherer = getInformationProvider().getGatherer(SignalGatherer.class);
+        if (gatherer != null) {
+            gatherer.addListener(this);
+        }
     }
 
     @Override
@@ -109,6 +117,11 @@ public class NetworkGatherer
         /*
         getConnectivityManager().unregisterNetworkCallback(networkCallback);
         */
+        final SignalGatherer gatherer = getInformationProvider().getGatherer(SignalGatherer.class);
+        if (gatherer != null) {
+            gatherer.removeListener(this);
+        }
+
     }
 
     @SuppressWarnings("deprecation")
@@ -186,8 +199,24 @@ public class NetworkGatherer
         }
 
         final NetworkChangeEvent event = getCurrentValue();
-        if (event == null || lastNetworkType.get() != result) {
-            final NetworkChangeEvent networkChangeEvent = new NetworkChangeEvent(result, isConnected());
+        final boolean isConnected = isConnected();
+
+        Log.d(TAG, "new network type: " + result
+                + ", old network type: " + lastNetworkType.get() + ", isConnected: " + isConnected);
+
+        boolean emitNewEvent = false;
+        final NetworkChangeEvent networkChangeEvent = new NetworkChangeEvent(result);
+
+        if (isConnected && (event == null || lastNetworkType.get() != result)) {
+            networkChangeEvent.setEventType(NetworkChangeEvent.NetworkChangeEventType.SIGNAL_UPDATE);
+            emitNewEvent = true;
+        }
+        else if (!isConnected) {
+            networkChangeEvent.setEventType(NetworkChangeEvent.NetworkChangeEventType.NO_CONNECTION);
+            emitNewEvent = true;
+        }
+
+        if (emitNewEvent) {
             if (getWifiManager() != null) {
                 final WifiInfo wifiInfo = getWifiManager().getConnectionInfo();
                 if (wifiInfo != null) {
@@ -244,5 +273,11 @@ public class NetworkGatherer
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             getNetwork();
         }
+    }
+
+    @Override
+    public void onSignalStrengthChange(SignalStrengthChangeEvent event) {
+        Log.d(TAG, event != null ? event.toString() : "SignalStrengthChangeEvent == null");
+        getNetwork();
     }
 }

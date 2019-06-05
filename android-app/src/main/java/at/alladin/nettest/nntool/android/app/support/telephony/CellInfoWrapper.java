@@ -40,6 +40,18 @@ public class CellInfoWrapper {
         return wrapper;
     }
 
+    public static Integer maxIntegerToNull(final Integer i) {
+        return i == null ? null : (i != Integer.MAX_VALUE) ? i : null;
+    }
+
+    public static Integer minIntegerToNull(final Integer i) {
+        return i == null ? null : (i != Integer.MIN_VALUE) ? i : null;
+    }
+
+    public static Integer minAndMaxIntegerToNull(final Integer i) {
+        return minIntegerToNull(maxIntegerToNull(i));
+    }
+
     public CellIdentityWrapper getCellIdentityWrapper() {
         return cellIdentityWrapper;
     }
