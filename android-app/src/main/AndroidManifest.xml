@@ -34,7 +34,10 @@
 
         <service android:enabled="true" android:name=".workflow.measurement.MeasurementService" android:exported="false" />
 
-        <service android:enabled="true" android:name=".util.info.InformationService" android:exported="false" />
+        <!--
+            TODO: not needed now, maybe in future?
+            <service android:enabled="true" android:name=".util.info.InformationService" android:exported="false" />
+        -->
     </application>
 
 </manifest>
