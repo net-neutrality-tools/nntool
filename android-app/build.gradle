@@ -26,10 +26,18 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
+            /*
+            moved to: res/config_functionality.xml
+
             buildConfigField "boolean", "MEASUREMENT_SHOW_DATA_CONSUMPTION_WARNING", "true"
+            */
         }
         debug {
+            /*
+            moved to: res/config_functionality.xml
+
             buildConfigField "boolean", "MEASUREMENT_SHOW_DATA_CONSUMPTION_WARNING", "true"
+            */
         }
     }
     compileOptions {

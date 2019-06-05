@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- if set to true show data consumption warning before each test -->
+    <bool name="functionality_data_consumption_warning_enabled">false</bool>
+
+    <!-- if functionality_data_consumption_warning_enabled is set to true, this message will be shown in the data consumption pop up -->
+    <string name="functionality_data_consumption_warning_message">@string/measurement_data_consumption_warning</string>
+</resources>

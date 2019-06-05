@@ -58,8 +58,8 @@ public class TitleFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (BuildConfig.MEASUREMENT_SHOW_DATA_CONSUMPTION_WARNING) {
-                    final String message = getResources().getString(R.string.measurement_data_consumption_warning);
+                if (getResources().getBoolean(R.bool.functionality_data_consumption_warning_enabled)) {
+                    final String message = getResources().getString(R.string.functionality_data_consumption_warning_message);
                     AlertDialog alert = new AlertDialog.Builder(getActivity())
                             .setPositiveButton(android.R.string.ok,
                                     (dialog, w) -> startMeasurement())
