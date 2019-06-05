@@ -93,7 +93,7 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
 
         @Override
         public void onReceive(final Context context, final Intent intent) {
-            System.out.println("WLAN CHANGE: " + intent + ", EXTRAS: " + intent.getExtras());
+            Log.d(TAG, "WLAN CHANGE: " + intent + ", EXTRAS: " + intent.getExtras());
             if (getNetwork() == NETWORK_WLAN) {
                 final WifiInfo wifiInfo = getWifiManager().getConnectionInfo();
                 final int rssi = wifiInfo.getRssi();
@@ -111,7 +111,7 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
 
         @Override
         public void onCellInfoChanged(List<CellInfo> cellInfoList) {
-            System.out.println("------- onCellInfoChanged ---------");
+            Log.d(TAG, "------- onCellInfoChanged ---------");
 
             if (cellInfoList == null) {
                 return;
