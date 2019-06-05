@@ -42,17 +42,21 @@ public class CurrentSignalStrength {
     }
 
     final SignalType signalType;
-    final Integer signal;
+    final Integer signalDbm;
     final Integer lteRsrq;
+    final CellInfoWrapper cellInfoWrapper;
 
-    public CurrentSignalStrength(final SignalType signalType, final Integer signal) {
-        this(signalType, signal, null);
+    public CurrentSignalStrength(final SignalType signalType, final Integer signalDbm,
+                                 final CellInfoWrapper wrapper) {
+        this(signalType, signalDbm, null, wrapper);
     }
 
-    public CurrentSignalStrength(final SignalType signalType, final Integer signal, final Integer lteRsrq) {
+    public CurrentSignalStrength(final SignalType signalType, final Integer signalDbm,
+                                 final Integer lteRsrq, final CellInfoWrapper wrapper) {
         this.signalType = signalType;
-        this.signal = signal;
+        this.signalDbm = signalDbm;
         this.lteRsrq = lteRsrq;
+        this.cellInfoWrapper = wrapper;
     }
 
     public static CurrentSignalStrength fromCellInfoWrapper(final CellInfoWrapper wrapper) {
@@ -76,7 +80,7 @@ public class CurrentSignalStrength {
             }
         }
 
-        final CurrentSignalStrength css = new CurrentSignalStrength(signalType, signal, signalRsrq);
+        final CurrentSignalStrength css = new CurrentSignalStrength(signalType, signal, signalRsrq, wrapper);
         return css;
     }
 
@@ -84,20 +88,25 @@ public class CurrentSignalStrength {
         return signalType;
     }
 
-    public int getSignal() {
-        return signal;
+    public int getSignalDbm() {
+        return signalDbm;
     }
 
     public int getLteRsrq() {
         return lteRsrq;
     }
 
+    public CellInfoWrapper getCellInfoWrapper() {
+        return cellInfoWrapper;
+    }
+
     @Override
     public String toString() {
         return "CurrentSignalStrength{" +
                 "signalType=" + signalType +
-                ", signal=" + signal +
+                ", signalDbm=" + signalDbm +
                 ", lteRsrq=" + lteRsrq +
+                ", cellInfoWrapper=" + cellInfoWrapper +
                 '}';
     }
 }

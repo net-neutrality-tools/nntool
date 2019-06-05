@@ -103,9 +103,10 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
                 final WifiInfo wifiInfo = getWifiManager().getConnectionInfo();
                 final int rssi = wifiInfo.getRssi();
                 if (rssi != -1 && rssi >= ACCEPT_WIFI_RSSI_MIN)  {
+                    final CellInfoWrapper cellInfoWrapper = CellInfoWrapper.fromWifiInfo(wifiInfo);
                     setCurrentValue(
                             new SignalStrengthChangeEvent(
-                                    new CurrentSignalStrength(CurrentSignalStrength.SignalType.WIFI, rssi)));
+                                    CurrentSignalStrength.fromCellInfoWrapper(cellInfoWrapper)));
                 }
             }
         }
@@ -148,7 +149,7 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
             int lteCqi = SignalItem.UNKNOWN;
             int errorRate = SignalItem.UNKNOWN;
 
-            // discard signal strength from GT-I9100G (Galaxy S II) - passes wrong info
+            // discard signalDbm strength from GT-I9100G (Galaxy S II) - passes wrong info
             if (android.os.Build.MODEL != null)  {
                 if (android.os.Build.MODEL.equals("GT-I9100G")
                         || android.os.Build.MODEL.equals("HUAWEI P2-6011")) {
@@ -222,15 +223,18 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
                         errorRate = signalStrength.getGsmBitErrorRate();
                     }
 
-                    if (lteRsrp != SignalItem.UNKNOWN) {
+                    final SignalItem signalItem = SignalItem.getCellSignalItem(network, strength, errorRate, lteRsrp, lteRsrq, lteRsssnr, lteCqi);
+                    final CellInfoWrapper cellInfoWrapper = CellInfoWrapper.fromSignalItem(signalItem);
+
+                    if (signalItem.lteRsrp != null) {
                         setCurrentValue(
                                 new SignalStrengthChangeEvent(
-                                        new CurrentSignalStrength(CurrentSignalStrength.SignalType.RSRP, lteRsrp, lteRsrq)));
+                                        CurrentSignalStrength.fromCellInfoWrapper(cellInfoWrapper)));
                     }
                     else {
                         setCurrentValue(
                                 new SignalStrengthChangeEvent(
-                                        new CurrentSignalStrength(CurrentSignalStrength.SignalType.MOBILE, strength)));
+                                        CurrentSignalStrength.fromCellInfoWrapper(cellInfoWrapper)));
                     }
                 }
 
@@ -261,7 +265,7 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
 
     public void setLastSignalItem(final CellSignalStrengthWrapper signalItem) {
         lastSignalItem.set(signalItem);
-        Log.d(TAG, "New signal item: " + lastSignalItem.get());
+        Log.d(TAG, "New signalDbm item: " + lastSignalItem.get());
     }
 
     @Override

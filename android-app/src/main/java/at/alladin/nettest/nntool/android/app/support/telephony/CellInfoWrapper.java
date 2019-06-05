@@ -34,7 +34,7 @@ public class CellInfoWrapper {
         return wrapper;
     }
 
-    public static CellInfoWrapper fromSignalItem(final SignalItem signalItem, final int networkId) {
+    public static CellInfoWrapper fromSignalItem(final SignalItem signalItem) {
         final CellInfoWrapper wrapper = new CellInfoWrapper(CellIdentityWrapper.fromSignalItem(signalItem),
                 CellSignalStrengthWrapper.fromSignalItem(signalItem));
         return wrapper;
