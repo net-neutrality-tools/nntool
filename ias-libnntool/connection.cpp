@@ -281,10 +281,10 @@ int CConnection::tcpSocket(string &interface, string &sServer, int &nPort, int n
 		return -1;
 	}
 
-	//if (mTls && connectTLS() != 0)
-	//{
-	//	return -1;
-	//}
+	if (mTls && connectTLS() != 0)
+	{
+		return -1;
+	}
 	
 	return mSocket;
 }
@@ -404,10 +404,10 @@ int CConnection::tcp6Socket(string &interface, string &sServer, int &nPort, int 
 		return -1;
 	}
 
-	//if (mTls && connectTLS() != 0)
-	//{
-	//	return -1;
-	//}
+	if (mTls && connectTLS() != 0)
+	{
+		return -1;
+	}
 
 	return mSocket;
 }
@@ -457,10 +457,10 @@ int CConnection::send(const void *buf, int num, int flags)
 	{
 		return ::send(mSocket, buf, num, flags);
 	}
-	//else if ( mTls == 1 )
-	//{
-	//	return SSL_write(ssl, buf, num);
-	//}
+	else if ( mTls == 1 )
+	{
+		return SSL_write(ssl, buf, num);
+	}
 
 	return -1;
 }
@@ -471,10 +471,10 @@ int CConnection::receive(void *buf, int num, int flags)
 	{
 		return ::recv(mSocket, buf, num, flags);
 	}
-	//else if ( mTls == 1 )
-	//{
-	//	return SSL_read(ssl, buf, num);
-	//}
+	else if ( mTls == 1 )
+	{
+		return SSL_read(ssl, buf, num);
+	}
 
 	return -1;
 }
@@ -484,7 +484,7 @@ int CConnection::close()
 	return ::close(mSocket);
 }
 
-/*
+
 static int tlsVerifyCertificateCallback(int ok, X509_STORE_CTX *store_ctx)
 {
 
@@ -506,9 +506,9 @@ static int tlsVerifyCertificateCallback(int ok, X509_STORE_CTX *store_ctx)
 
     return(ok);
 }
-*/
 
-/*
+
+
 int CConnection::connectTLS()
 {
   	int ssl_error = 0;
@@ -566,4 +566,4 @@ int CConnection::connectTLS()
 
 	return 0;
 }
-*/
+

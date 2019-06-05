@@ -52,6 +52,10 @@ android {
 
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -71,4 +75,19 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+task getBoringSsl {
+    //get the boring ssl sources
+    def f = new File('./ias-libnntool/libs/boringssl')
+    if (!f.exists()) {
+        f.mkdirs()
+
+        def proc = ["git", "clone", "https://boringssl.googlesource.com/boringssl", "./ias-libnntool/libs/boringssl"].execute()
+        def b = new StringBuffer()
+        proc.consumeProcessErrorStream(b)
+
+        println proc.text
+        println b.toString()
+    }
 }

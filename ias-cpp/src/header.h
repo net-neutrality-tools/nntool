@@ -79,7 +79,7 @@
     #include <ifaddrs.h>
 #endif
 
-//openssl
+//openssl is not used in ias-cpp
 //#include <openssl/crypto.h>
 //#include <openssl/x509.h>
 //#include <openssl/pem.h>
