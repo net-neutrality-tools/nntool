@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
+
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  *
@@ -114,5 +118,13 @@ public class InformationProvider {
 
     public LocationManager getLocationManager() {
         return locationManager;
+    }
+
+    public static InformationProvider createDefault(final Context context) {
+        final InformationProvider informationProvider = new InformationProvider(context);
+        informationProvider.registerGatherer(SignalGatherer.class);
+        informationProvider.registerGatherer(NetworkGatherer.class);
+        informationProvider.registerGatherer(GeoLocationGatherer.class);
+        return informationProvider;
     }
 }

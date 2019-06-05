@@ -14,7 +14,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -22,15 +21,11 @@ import at.alladin.nettest.nntool.android.app.support.telephony.CellInfoWrapper;
 import at.alladin.nettest.nntool.android.app.support.telephony.CellSignalStrengthWrapper;
 import at.alladin.nettest.nntool.android.app.support.telephony.SignalItem;
 import at.alladin.nettest.nntool.android.app.util.PermissionUtil;
-import at.alladin.nettest.nntool.android.app.util.info.Gatherer;
 import at.alladin.nettest.nntool.android.app.util.info.ListenableGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeEvent;
-import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeListener;
-import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkTypeAware;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 
-import static at.alladin.nettest.nntool.android.app.util.info.network.NetworkTypeAware.NETWORK_WIFI;
+import static at.alladin.nettest.nntool.android.app.util.info.network.NetworkTypeAware.NETWORK_WLAN;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
@@ -98,8 +93,8 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
 
         @Override
         public void onReceive(final Context context, final Intent intent) {
-            System.out.println("WIFI CHANGE: " + intent + ", EXTRAS: " + intent.getExtras());
-            if (getNetwork() == NETWORK_WIFI) {
+            System.out.println("WLAN CHANGE: " + intent + ", EXTRAS: " + intent.getExtras());
+            if (getNetwork() == NETWORK_WLAN) {
                 final WifiInfo wifiInfo = getWifiManager().getConnectionInfo();
                 final int rssi = wifiInfo.getRssi();
                 if (rssi != -1 && rssi >= ACCEPT_WIFI_RSSI_MIN)  {
@@ -158,7 +153,7 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
             }
 
             if (network != NetworkTypeAware.NETWORK_ETHERNET
-                    && network != NetworkTypeAware.NETWORK_WIFI
+                    && network != NetworkTypeAware.NETWORK_WLAN
                     && network != NetworkTypeAware.NETWORK_BLUETOOTH) {
 
                 if (signalStrength != null) {
@@ -236,12 +231,16 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
                                 new SignalStrengthChangeEvent(
                                         CurrentSignalStrength.fromCellInfoWrapper(cellInfoWrapper)));
                     }
+
+                    setLastSignalItem(cellInfoWrapper.getCellSignalStrengthWrapper());
                 }
 
+                /*
                 final SignalItem signalItem = SignalItem.getCellSignalItem(network, strength, errorRate, lteRsrp, lteRsrq, lteRsssnr, lteCqi);
                 final CellSignalStrengthWrapper signalStrengthWrapper = CellSignalStrengthWrapper.fromSignalItem(signalItem);
                 signalStrengthWrapper.setNetworkId(network);
                 setLastSignalItem(signalStrengthWrapper);
+                */
 
                 if (PermissionUtil.isLocationPermissionGranted(getInformationProvider().getContext())) {
                     onCellInfoChanged(getTelephonyManager().getAllCellInfo());

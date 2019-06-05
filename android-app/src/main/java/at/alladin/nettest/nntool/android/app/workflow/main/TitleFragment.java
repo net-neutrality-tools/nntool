@@ -125,14 +125,14 @@ public class TitleFragment extends Fragment {
 
     public void startInformationProvider() {
         if (informationProvider == null) {
-            informationProvider = new InformationProvider(getContext());
+            informationProvider = InformationProvider.createDefault(getContext());
         }
 
-        final NetworkGatherer networkGatherer = informationProvider.registerGatherer(NetworkGatherer.class);
-        final SignalGatherer signalGatherer = informationProvider.registerGatherer(SignalGatherer.class);
-        final GeoLocationGatherer geoLocationGatherer = informationProvider.registerGatherer(GeoLocationGatherer.class);
-
         informationProvider.start();
+
+        final NetworkGatherer networkGatherer = informationProvider.getGatherer(NetworkGatherer.class);
+        final SignalGatherer signalGatherer = informationProvider.getGatherer(SignalGatherer.class);
+        final GeoLocationGatherer geoLocationGatherer = informationProvider.getGatherer(GeoLocationGatherer.class);
 
         if (networkGatherer != null && providerSignalView != null) {
             networkGatherer.addListener(providerSignalView);

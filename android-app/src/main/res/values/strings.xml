@@ -36,4 +36,10 @@
     <string name="geo_location_dir_s">S</string>
     <string name="geo_location_dir_w">W</string>
 
+    <!-- Signal/Technology specific strings -->
+    <string name="technology_2g">2G</string>
+    <string name="technology_3g">3G</string>
+    <string name="technology_4g">4G/LTE</string>
+    <string name="technology_wlan">WLAN</string>
+    <string name="signal_info">%s at %d dBm</string>
 </resources>

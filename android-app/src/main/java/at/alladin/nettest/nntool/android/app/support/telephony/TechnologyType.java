@@ -7,5 +7,6 @@ public enum TechnologyType {
     TECH_2G,
     TECH_3G,
     TECH_4G,
-    TECH_WIFI
+    TECH_MOBILE_ANY,
+    TECH_WLAN
 }

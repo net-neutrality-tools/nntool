@@ -117,13 +117,25 @@ public class CellIdentityWrapper {
 	public static CellIdentityWrapper fromWifiInfo(final WifiInfo wifiInfo) {
 		final CellIdentityWrapper wrapper = new CellIdentityWrapper();
 		wrapper.setRegistered(true);
-		wrapper.setCellInfoType(CellType.WIFI);
+		wrapper.setCellInfoType(CellType.WLAN);
 		wrapper.setFrequency(CellInfoWrapper.maxIntegerToNull(wifiInfo.getFrequency()));
 		return wrapper;
 	}
 
 	public static CellIdentityWrapper fromSignalItem(final SignalItem signalItem) {
 		final CellIdentityWrapper wrapper = new CellIdentityWrapper();
+		wrapper.setRegistered(true);
+
+		if (signalItem.lteRsrp != null) {
+			wrapper.setCellInfoType(CellType.MOBILE_LTE);
+		}
+		else if (signalItem.wifiRssi != null) {
+			wrapper.setCellInfoType(CellType.WLAN);
+		}
+		else if (signalItem.networkId != null) {
+			wrapper.setCellInfoType(CellType.fromTelephonyNetworkTypeId(signalItem.networkId));
+		}
+
 		return wrapper;
 	}
 
@@ -197,5 +209,20 @@ public class CellIdentityWrapper {
 
 	public void setRegistered(boolean registered) {
 		isRegistered = registered;
+	}
+
+	@Override
+	public String toString() {
+		return "CellIdentityWrapper{" +
+				"cellInfoType=" + cellInfoType +
+				", cellId=" + cellId +
+				", physicalCellId=" + physicalCellId +
+				", areaCode=" + areaCode +
+				", scramblingCode=" + scramblingCode +
+				", mcc=" + mcc +
+				", mnc=" + mnc +
+				", frequency=" + frequency +
+				", isRegistered=" + isRegistered +
+				'}';
 	}
 }

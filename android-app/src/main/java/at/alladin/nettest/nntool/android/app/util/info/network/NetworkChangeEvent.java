@@ -78,7 +78,7 @@ public final class NetworkChangeEvent implements OperatorInfo {
 
     @Override
     public String getOperatorName() {
-        if (getNetworkType() == NetworkTypeAware.NETWORK_WIFI && getWifiOperator() != null) {
+        if (getNetworkType() == NetworkTypeAware.NETWORK_WLAN && getWifiOperator() != null) {
             return getWifiOperator().getOperatorName();
         } else if (getNetworkType() == NetworkTypeAware.NETWORK_ETHERNET) {
             return "Ethernet";

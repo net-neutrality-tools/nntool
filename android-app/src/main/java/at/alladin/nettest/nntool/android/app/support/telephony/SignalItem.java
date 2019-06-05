@@ -23,7 +23,7 @@ public class SignalItem {
     public final Integer lteCqi;
 
     public static SignalItem getWifiSignalItem(final int wifiLinkSpeed, final int wifiRssi) {
-        return new SignalItem(NetworkTypeAware.NETWORK_WIFI, UNKNOWN, UNKNOWN, wifiLinkSpeed, wifiRssi, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN);
+        return new SignalItem(NetworkTypeAware.NETWORK_WLAN, UNKNOWN, UNKNOWN, wifiLinkSpeed, wifiRssi, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN);
     }
 
     public static SignalItem getCellSignalItem(final int networkId, final int signalStrength, final int gsmBitErrorRate,

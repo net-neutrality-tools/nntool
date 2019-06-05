@@ -17,15 +17,9 @@ import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import at.alladin.nettest.nntool.android.app.util.info.Gatherer;
 import at.alladin.nettest.nntool.android.app.util.info.ListenableGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeEvent;
-import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeListener;
-import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalStrengthChangeEvent;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalStrengthChangeListener;
@@ -133,7 +127,7 @@ public class NetworkGatherer
             final int type = activeNetworkInfo.getType();
             switch (type) {
                 case ConnectivityManager.TYPE_WIFI:
-                    result = NetworkTypeAware.NETWORK_WIFI;
+                    result = NetworkTypeAware.NETWORK_WLAN;
                     break;
 
                 case ConnectivityManager.TYPE_BLUETOOTH:
@@ -171,7 +165,7 @@ public class NetworkGatherer
             final NetworkCapabilities networkCapabilities = getConnectivityManager().getNetworkCapabilities(activeNetwork);
             if (networkCapabilities != null) {
                 if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                    result = NetworkTypeAware.NETWORK_WIFI;
+                    result = NetworkTypeAware.NETWORK_WLAN;
                 } else if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
                     result = NetworkTypeAware.NETWORK_ETHERNET;
                 } else if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)) {

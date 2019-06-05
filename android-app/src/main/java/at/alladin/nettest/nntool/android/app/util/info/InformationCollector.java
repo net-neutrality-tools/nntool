@@ -1,5 +1,7 @@
 package at.alladin.nettest.nntool.android.app.util.info;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;

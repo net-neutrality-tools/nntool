@@ -7,8 +7,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.support.telephony.CellInfoWrapper;
+import at.alladin.nettest.nntool.android.app.support.telephony.TechnologyType;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkChangeEvent;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkChangeListener;
+import at.alladin.nettest.nntool.android.app.util.info.signal.CurrentSignalStrength;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalStrengthChangeEvent;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalStrengthChangeListener;
 
@@ -70,8 +73,36 @@ public class ProviderAndSignalView extends RelativeLayout implements NetworkChan
                 signalText.setText("-");
             }
             else {
-                signalText.setText(event.getCurrentSignalStrength().toString());
+                final CellInfoWrapper wrapper = event.getCurrentSignalStrength().getCellInfoWrapper();
+                final String signalInfo = getResources().getString(R.string.signal_info,
+                        getTechnologyString(event.getCurrentSignalStrength()),
+                        event.getCurrentSignalStrength().getSignalDbm());
+
+                signalText.setText(signalInfo);
             }
         }
+    }
+
+    private String getTechnologyString(final CurrentSignalStrength ss) {
+        final CellInfoWrapper wrapper = ss.getCellInfoWrapper();
+        if (wrapper != null && wrapper.getCellIdentityWrapper() != null
+                && wrapper.getCellIdentityWrapper().getCellInfoType() != null) {
+            final TechnologyType  technologyType = wrapper.getCellIdentityWrapper().getCellInfoType().getTechnologyType();
+            if (technologyType != null) {
+                Log.d(TAG,"CellInfoType: " + wrapper.getCellIdentityWrapper().getCellInfoType() + " techType: " + technologyType);
+                switch (technologyType) {
+                    case TECH_WLAN:
+                        return getResources().getString(R.string.technology_wlan);
+                    case TECH_4G:
+                        return getResources().getString(R.string.technology_4g);
+                    case TECH_3G:
+                        return getResources().getString(R.string.technology_3g);
+                    case TECH_2G:
+                        return getResources().getString(R.string.technology_2g);
+                }
+            }
+        }
+
+        return "";
     }
 }

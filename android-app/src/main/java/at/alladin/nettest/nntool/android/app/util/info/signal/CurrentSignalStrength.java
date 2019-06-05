@@ -25,7 +25,7 @@ public class CurrentSignalStrength {
                 case MOBILE_WCDMA:
                     return MOBILE;
 
-                case WIFI:
+                case WLAN:
                     return WIFI;
             }
 
@@ -88,11 +88,11 @@ public class CurrentSignalStrength {
         return signalType;
     }
 
-    public int getSignalDbm() {
+    public Integer getSignalDbm() {
         return signalDbm;
     }
 
-    public int getLteRsrq() {
+    public Integer getLteRsrq() {
         return lteRsrq;
     }
 
