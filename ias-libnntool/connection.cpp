@@ -484,8 +484,10 @@ int CConnection::close()
 	return ::close(mSocket);
 }
 
+/*
 static int tlsVerifyCertificateCallback(int ok, X509_STORE_CTX *store_ctx)
 {
+
     int cert_error = X509_STORE_CTX_get_error(store_ctx);
 
     switch (cert_error)
@@ -501,13 +503,16 @@ static int tlsVerifyCertificateCallback(int ok, X509_STORE_CTX *store_ctx)
 		}
 	}
 
+
     return(ok);
 }
+*/
 
+/*
 int CConnection::connectTLS()
 {
   	int ssl_error = 0;
-/*
+
 	OpenSSL_add_ssl_algorithms();
 	method = TLS_client_method();
 	SSL_load_error_strings();
@@ -557,7 +562,8 @@ int CConnection::connectTLS()
 
 		TRC_INFO("TLS Connection established");
 	}
-	*/
+
 
 	return 0;
 }
+*/
