@@ -221,7 +221,7 @@ void AndroidConnector::passJniSpeedState (JNIEnv* env, const MeasurementPhase& s
         obj = json["average_ns"];
         printLog(json.dump());
         if (obj.is_string()) {
-        //    env->SetLongField(toFill, fieldAverageMs, std::stoll(obj.string_value()) / 1e6);
+            env->SetLongField(toFill, fieldAverageMs, std::stoll(obj.string_value()) / 1e6);
         }
         break;
     case MeasurementPhase::DOWNLOAD:
