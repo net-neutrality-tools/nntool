@@ -16,20 +16,28 @@
 # *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
 # */
 
-set(CMAKE_BUILD_TYPE Release)
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
 
 #---------------------------------------------------------------------------------
 
+
 if (DEFINED ANDROID_ABI)
 
+    message ("building libnntool for android")
+
+    if (NOT DEFINED ANDROID_NDK)
+        MESSAGE(FATAL_ERROR "ERROR: 'ANDROID_NDK' not exported; export the path to the android ndk")
+    endif()
+
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/libs/boringssl/include)
 
     file (MAKE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/libs/boringssl/build)
 
     set(build_dir ${CMAKE_CURRENT_LIST_DIR}/libs/boringssl/build/${ANDROID_ABI})
 
     file(MAKE_DIRECTORY ${build_dir})
-
-    include_directories(${CMAKE_CURRENT_LIST_DIR}/libs/boringssl/include)
 
 if (NOT EXISTS "${build_dir}/ssl/libssl.a" OR NOT EXISTS "${build_dir}/crypto/libcrypto.a")
     execute_process(

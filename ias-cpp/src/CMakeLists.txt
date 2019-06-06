@@ -23,7 +23,9 @@ project(ias-client)
 
 #---------------------------------------------------------------------------------
 
-set(CMAKE_BUILD_TYPE Debug)
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
 
 #---------------------------------------------------------------------------------
 
@@ -36,7 +38,7 @@ include_directories(${libnntooldir})
 if (DEFINED ANDROID_ABI)
     message("Building library for android client")
 
-    include_directories(${libnntooldir}/include)
+    include_directories(${libnntooldir}/libs/boringssl/include)
 
     add_library(boringssl STATIC IMPORTED)
     set_target_properties(

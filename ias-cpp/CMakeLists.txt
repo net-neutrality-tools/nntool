@@ -31,14 +31,19 @@ ENDIF (NOT THREADS_FOUND)
 
 #---------------------------------------------------------------------------------
 
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
 set(dir ${CMAKE_CURRENT_SOURCE_DIR}/build)
 set(EXECUTABLE_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
 set(LIBRARY_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
  
 set ( CMAKE_VERBOSE_MAKEFILE true )
 add_definitions(-std=c++14)
-add_definitions ("-g")
-add_definitions ("-W")
+set(CMAKE_CXX_FLAGS "-W")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 add_definitions(-DNNTOOL)
 add_definitions(-DNNTOOL_CLIENT)
 
