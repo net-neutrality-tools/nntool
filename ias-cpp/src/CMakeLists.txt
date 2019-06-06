@@ -38,20 +38,20 @@ include_directories(${libnntooldir})
 if (DEFINED ANDROID_ABI)
     message("Building library for android client")
 
-    include_directories(${libnntooldir}/libs/boringssl/include)
+    include_directories(${libnntooldir}/build/boringssl/include)
 
     add_library(boringssl STATIC IMPORTED)
     set_target_properties(
         boringssl
         PROPERTIES IMPORTED_LOCATION
-        ${libnntooldir}/libs/boringssl/build/${ANDROID_ABI}/ssl/libssl.a
+        ${libnntooldir}/build/boringssl/build/${ANDROID_ABI}/ssl/libssl.a
     )
 
     add_library(crypto STATIC IMPORTED)
     set_target_properties(
         crypto
         PROPERTIES IMPORTED_LOCATION
-        ${libnntooldir}/libs/boringssl/build/${ANDROID_ABI}/crypto/libcrypto.a
+        ${libnntooldir}/build/boringssl/build/${ANDROID_ABI}/crypto/libcrypto.a
     )
 
     add_library(ias-client SHARED

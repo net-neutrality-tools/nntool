@@ -67,5 +67,6 @@ if (skipAndroid) {
 	include 'qos-client-android'
 
 	include 'android-demo'
+	include 'ias-libnntool'
 	include 'android-app'
 }

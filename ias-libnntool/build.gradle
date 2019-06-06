@@ -1,0 +1,36 @@
+apply plugin: 'java'
+defaultTasks 'getBoringSsl'
+
+tasks.matching { it.name != 'clean' && it.name != 'getBoringSsl' }.all { Task task ->
+    task.dependsOn 'getBoringSsl'
+}
+
+task getBoringSsl {
+    doFirst {
+        println "in get boring"
+        println "${buildDir}"
+
+    }
+    doLast {
+        println "in get boring do Last"
+        //get the boring ssl sources
+        def f = new File("${buildDir}/boringssl")
+        if (!f.exists()) {
+            println "fetch"
+            f.mkdirs()
+
+            def proc = ["git", "clone", "--depth", "1", "https://boringssl.googlesource.com/boringssl", "${buildDir}/boringssl"].execute()
+            def b = new StringBuffer()
+            proc.consumeProcessErrorStream(b)
+
+            println proc.text
+            println b.toString()
+        }
+    }
+}
+
+//clean {
+//    println "clean boringssl"
+//    println "${buildDir}"
+//    delete "${buildDir}"
+//}
