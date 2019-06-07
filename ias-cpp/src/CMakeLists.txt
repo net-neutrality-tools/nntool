@@ -16,7 +16,6 @@
 # *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
 # */
 
-
 cmake_minimum_required(VERSION 2.8.2)
 
 project(ias-client)
@@ -38,21 +37,7 @@ include_directories(${libnntooldir})
 if (DEFINED ANDROID_ABI)
     message("Building library for android client")
 
-    include_directories(${libnntooldir}/build/boringssl/include)
-
-    add_library(boringssl STATIC IMPORTED)
-    set_target_properties(
-        boringssl
-        PROPERTIES IMPORTED_LOCATION
-        ${libnntooldir}/build/boringssl/build/${ANDROID_ABI}/ssl/libssl.a
-    )
-
-    add_library(crypto STATIC IMPORTED)
-    set_target_properties(
-        crypto
-        PROPERTIES IMPORTED_LOCATION
-        ${libnntooldir}/build/boringssl/build/${ANDROID_ABI}/crypto/libcrypto.a
-    )
+    include_directories(${CMAKE_CURRENT_BINARY_DIR}/../ias-libnntool/boringssl/src/boringssl/include)
 
     add_library(ias-client SHARED
         iasclient.cpp
@@ -69,8 +54,6 @@ if (DEFINED ANDROID_ABI)
     TARGET_LINK_LIBRARIES(ias-client
         ${CMAKE_THREAD_LIBS_INIT}
         nntool
-        boringssl
-        crypto
         android
         log
     )
@@ -94,8 +77,6 @@ else()
         nntool
         -lssl
     )
-
-
 endif()
 
 INCLUDE(CPack)

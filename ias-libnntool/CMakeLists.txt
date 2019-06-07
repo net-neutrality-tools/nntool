@@ -22,9 +22,7 @@ endif()
 
 #---------------------------------------------------------------------------------
 
-
 if (DEFINED ANDROID_ABI)
-
     message ("building libnntool for android")
     message("${CMAKE_CURRENT_LIST_DIR}")
 
@@ -32,40 +30,8 @@ if (DEFINED ANDROID_ABI)
         MESSAGE(FATAL_ERROR "ERROR: 'ANDROID_NDK' not exported; export the path to the android ndk")
     endif()
 
-    include_directories(${CMAKE_CURRENT_LIST_DIR}/build/boringssl/include)
-
-    file (MAKE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/build/boringssl/build)
-
-    set(build_dir ${CMAKE_CURRENT_LIST_DIR}/build/boringssl/build/${ANDROID_ABI})
-
-    file(MAKE_DIRECTORY ${build_dir})
-
-    if (NOT EXISTS "${build_dir}/ssl/libssl.a" OR NOT EXISTS "${build_dir}/crypto/libcrypto.a")
-        execute_process(
-            COMMAND cmake -DANDROID_ABI=${ANDROID_ABI} -DCMAKE_TOOLCHAIN_FILE=${ANDROID_NDK}/build/cmake/android.toolchain.cmake -DANDROID_NATIVE_API_LEVEL=21 -GNinja ../..
-            WORKING_DIRECTORY ${build_dir}
-        )
-        execute_process(
-            COMMAND ninja
-            WORKING_DIRECTORY ${build_dir}
-        )
-        message ("boring ssl successfully built")
-    endif()
-
-    add_library(boringssl STATIC IMPORTED)
-    set_target_properties(
-        boringssl
-        PROPERTIES IMPORTED_LOCATION
-        ${build_dir}/ssl/libssl.a
-    )
-
-    add_library(crypto STATIC IMPORTED)
-    set_target_properties(
-        crypto
-        PROPERTIES IMPORTED_LOCATION
-        ${build_dir}/crypto/libcrypto.a
-    )
-
+    include(boringssl.cmake)
+    include_directories(${boringssl_INCLUDE_DIR})
 endif()
 
 add_library (nntool SHARED
@@ -77,13 +43,14 @@ add_library (nntool SHARED
 				http.cpp
 				json11.cpp
 				sha1.cpp
-) 
+)
 
 if (DEFINED ANDROID_ABI)
+    add_dependencies(nntool boringssl)
     target_link_libraries(
         nntool
-        boringssl
-        crypto
+        ${boringssl_BUILD}/ssl/libssl.a
+        ${boringssl_BUILD}/crypto/libcrypto.a
     )
 else()
     target_link_libraries(nntool)

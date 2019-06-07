@@ -4,21 +4,20 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath "com.android.tools.build:gradle:${android_gradle_plugin_version}"
     }
 }
-
 
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion Integer.parseInt(android_compile_sdk_version)
     defaultConfig {
         applicationId "at.alladin.nettest.nntool.android.app"
-        minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion Integer.parseInt(android_min_sdk_version)
+        targetSdkVersion Integer.parseInt(android_target_sdk_version)
+        versionCode Integer.parseInt(android_app_version_code)
+        versionName android_app_version_name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         externalNativeBuild {
@@ -26,7 +25,14 @@ android {
                 //targets "ias-client-android"
             }
         }
+
+        /*ndk {
+            // Use abiFilters to build only some architectures to speed up testing
+            //abiFilters 'x86', 'x86_64', 'armeabi', 'armeabi-v7a', 'arm64-v8a'
+            abiFilters 'x86_64'
+        }*/
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -39,17 +45,15 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    //Excluding the META-INF/DEPENDENCIES prevents a gradle error of "multiple META-INF/DEPENDENCIES
+    // Excluding the META-INF/DEPENDENCIES prevents a gradle error of "multiple META-INF/DEPENDENCIES
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
     }
 
     // Encapsulates your external native build configurations.
     externalNativeBuild {
-
         cmake {
             path file('../ias-cpp/CMakeLists.txt')
-
         }
     }
 
@@ -59,11 +63,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation project(':qos-client-android')
     implementation project(':nettest-shared')
-    implementation project(':ias-libnntool')
 
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
