@@ -16,6 +16,8 @@
 # *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
 # */
 
+cmake_minimum_required(VERSION 3.6)
+
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
@@ -53,5 +55,36 @@ if (DEFINED ANDROID_ABI)
         ${boringssl_BUILD}/crypto/libcrypto.a
     )
 else()
-    target_link_libraries(nntool)
+    # TODO: also build non-android version with boringssl (libssl-dev can then be removed from ci image)
+    target_link_libraries(
+        nntool
+        ssl
+        crypto
+    )
 endif()
+
+#---------------------------------------------------------------------------------
+
+#
+# Unit Tests with Catch2
+#
+
+# TODO: add flag to enable/disable unit tests
+# TODO: use something like https://github.com/eranpeer/FakeIt for mocking
+
+set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage -O0 ${CMAKE_CXX_FLAGS}")
+enable_testing()
+
+include_directories(external)
+
+add_executable(
+        nntool_test
+        libnntool_test.cpp
+        http_test.cpp
+        tool_test.cpp
+)
+
+target_link_libraries(
+    nntool_test
+    nntool
+)
