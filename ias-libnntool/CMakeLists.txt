@@ -36,15 +36,16 @@ if (DEFINED ANDROID_ABI)
     include_directories(${boringssl_INCLUDE_DIR})
 endif()
 
-add_library (nntool SHARED
-				tool.cpp
-				connection.cpp
-				configmanager.cpp 
-				basisthread.cpp
-				trace.cpp
-				http.cpp
-				json11.cpp
-				sha1.cpp
+add_library (
+    nntool SHARED
+    tool.cpp
+    connection.cpp
+    configmanager.cpp 
+    basisthread.cpp
+    trace.cpp
+    http.cpp
+    json11.cpp
+    sha1.cpp
 )
 
 if (DEFINED ANDROID_ABI)
@@ -78,10 +79,10 @@ enable_testing()
 include_directories(external)
 
 add_executable(
-        nntool_test
-        libnntool_test.cpp
-        http_test.cpp
-        tool_test.cpp
+    nntool_test
+    libnntool_test.cpp
+    http_test.cpp
+    tool_test.cpp
 )
 
 target_link_libraries(

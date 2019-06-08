@@ -16,7 +16,7 @@
 # *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
 # */
 
-cmake_minimum_required(VERSION 2.8.2)
+cmake_minimum_required(VERSION 3.6)
 
 project(ias-client)
 
@@ -62,7 +62,7 @@ else()
 
     add_executable(ias-client
         iasclient.cpp
-        type.cpp
+        #type.cpp
         callback.cpp
         timer.cpp
         measurement.cpp
@@ -80,3 +80,56 @@ else()
 endif()
 
 INCLUDE(CPack)
+
+#---------------------------------------------------------------------------------
+
+#
+# Unit Tests with Catch2
+#
+
+# TODO: add flag to enable/disable unit tests
+# TODO: use something like https://github.com/eranpeer/FakeIt for mocking
+
+set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage -O0 ${CMAKE_CXX_FLAGS}")
+enable_testing()
+
+include_directories(external)
+
+add_executable(
+    ias_client_test
+    iasclient_test.cpp
+    timer_test.cpp
+)
+
+if (DEFINED ANDROID_ABI)
+
+    target_link_libraries(
+        ias_client_test
+        ias-client
+    )
+
+else()
+
+    add_library(ias-client-lib SHARED
+        iasclient.cpp
+        #type.cpp
+        callback.cpp
+        timer.cpp
+        measurement.cpp
+        tests/ping.cpp
+        tests/download.cpp
+        tests/upload.cpp
+        tests/upload_sender.cpp
+    )
+
+    TARGET_LINK_LIBRARIES(ias-client-lib
+        ${CMAKE_THREAD_LIBS_INIT}
+        nntool
+    )
+
+    target_link_libraries(
+        ias_client_test
+        ias-client-lib
+    )
+
+endif()
