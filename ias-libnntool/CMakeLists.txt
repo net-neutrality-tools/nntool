@@ -70,29 +70,33 @@ endif()
 # Unit Tests with Catch2
 #
 
-# Build tests only if library is not included in other modules (e.g. ias-cpp or ias-server).
-# Therefore, check if both NNTOOL_SERVER and NNTOOL_CLIENT are not defined before adding tests.
-# TODO: add flag to enable/disable unit tests
+IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
 
-if (NOT DEFINED NNTOOL_SERVER AND NOT DEFINED NNTOOL_CLIENT)
+    # Build tests only if library is not included in other modules (e.g. ias-cpp or ias-server).
+    # Therefore, check if both NNTOOL_SERVER and NNTOOL_CLIENT are not defined before adding tests.
+    # TODO: add flag to enable/disable unit tests
 
-    # TODO: use something like https://github.com/eranpeer/FakeIt for mocking
+    if (NOT DEFINED NNTOOL_SERVER AND NOT DEFINED NNTOOL_CLIENT)
 
-    set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage -O0 ${CMAKE_CXX_FLAGS}")
-    enable_testing()
+        # TODO: use something like https://github.com/eranpeer/FakeIt for mocking
 
-    include_directories(external)
+        set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage -O0 ${CMAKE_CXX_FLAGS}")
+        enable_testing()
 
-    add_executable(
-        nntool_test
-        libnntool_test.cpp
-        http_test.cpp
-        tool_test.cpp
-    )
+        include_directories(external)
 
-    target_link_libraries(
-        nntool_test
-        nntool
-    )
+        add_executable(
+            nntool_test
+            libnntool_test.cpp
+            http_test.cpp
+            tool_test.cpp
+        )
 
-endif()
+        target_link_libraries(
+            nntool_test
+            nntool
+        )
+
+    endif()
+
+ENDIF(CMAKE_BUILD_TYPE MATCHES DEBUG)

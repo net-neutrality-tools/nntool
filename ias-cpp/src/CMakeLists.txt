@@ -87,49 +87,53 @@ INCLUDE(CPack)
 # Unit Tests with Catch2
 #
 
-# TODO: add flag to enable/disable unit tests
-# TODO: use something like https://github.com/eranpeer/FakeIt for mocking
+IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
 
-set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage -O0 ${CMAKE_CXX_FLAGS}")
-enable_testing()
+    # TODO: add flag to enable/disable unit tests
+    # TODO: use something like https://github.com/eranpeer/FakeIt for mocking
 
-include_directories(external)
+    set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage -O0 ${CMAKE_CXX_FLAGS}")
+    enable_testing()
 
-add_executable(
-    ias_client_test
-    iasclient_test.cpp
-    timer_test.cpp
-)
+    include_directories(external)
 
-if (DEFINED ANDROID_ABI)
-
-    target_link_libraries(
+    add_executable(
         ias_client_test
-        ias-client
+        iasclient_test.cpp
+        timer_test.cpp
     )
 
-else()
+    if (DEFINED ANDROID_ABI)
 
-    add_library(ias-client-lib SHARED
-        iasclient.cpp
-        #type.cpp
-        callback.cpp
-        timer.cpp
-        measurement.cpp
-        tests/ping.cpp
-        tests/download.cpp
-        tests/upload.cpp
-        tests/upload_sender.cpp
-    )
+        target_link_libraries(
+            ias_client_test
+            ias-client
+        )
 
-    TARGET_LINK_LIBRARIES(ias-client-lib
-        ${CMAKE_THREAD_LIBS_INIT}
-        nntool
-    )
+    else()
 
-    target_link_libraries(
-        ias_client_test
-        ias-client-lib
-    )
+        add_library(ias-client-lib SHARED
+            iasclient.cpp
+            #type.cpp
+            callback.cpp
+            timer.cpp
+            measurement.cpp
+            tests/ping.cpp
+            tests/download.cpp
+            tests/upload.cpp
+            tests/upload_sender.cpp
+        )
 
-endif()
+        TARGET_LINK_LIBRARIES(ias-client-lib
+            ${CMAKE_THREAD_LIBS_INIT}
+            nntool
+        )
+
+        target_link_libraries(
+            ias_client_test
+            ias-client-lib
+        )
+
+    endif()
+
+ENDIF(CMAKE_BUILD_TYPE MATCHES DEBUG)
