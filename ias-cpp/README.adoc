@@ -1,0 +1,28 @@
+== IAS C++ Client module
+
+=== Building
+
+==== Prerequisites
+
+Linux (any Version)
+
+- make or ninja
+- cmake
+- g++
+
+==== Build
+
+With fullfilled prerequisites perform the following steps:
+
+[source,bash]
+----
+cd <nntool_eu_directory>/ias-cpp
+mkdir build
+cd build
+cmake .. # add -DCMAKE_BUILD_TYPE="DEBUG" for debug build, add -GNinja for ninja
+make # or ninja
+----
+
+=== Execution
+
+Run `build/ias-client`.
