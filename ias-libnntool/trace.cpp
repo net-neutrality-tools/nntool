@@ -59,83 +59,88 @@ void CTrace::init(string sIniFileName, string sCategory)
 	log4cpp::PropertyConfigurator::configure( sIniFileName );
 }
 
-void CTrace::logCritical(string sMessage)
+#endif
+
+
+void CTrace::logCritical(const string &sMessage)
 {
+	#ifdef NNTOOL_CLIENT
+	logToPlatform("CRITICAL", sMessage);
+	#endif
+
+	#ifdef NNTOOL_SERVER
 	//Get Instance of Category
 	log4cpp::Category& cat = log4cpp::Category::getInstance( mCategory );
 	
 	//Save Message to Category
-	cat.crit( ("#" + CTool::toString(getpid()) +  " ["+CTool::toString(pthread_self())+"] "+sMessage).c_str() );
+	cat.crit( ("#" + CTool::toString(getpid()) +  " ["+CTool::toString(pthread_self())+"] "+sMessage).c_str());
+	#endif
 }
 
-void CTrace::logErr(string sMessage)
+void CTrace::logErr(const string &sMessage)
 {
+	#ifdef NNTOOL_CLIENT
+	logToPlatform("ERROR", sMessage);
+	#endif
+
+	#ifdef NNTOOL_SERVER
 	//Get Instance of Category
 	log4cpp::Category& cat = log4cpp::Category::getInstance( mCategory );
 	
 	//Save Message to Category
 	cat.error( ("#" + CTool::toString(getpid()) +  " ["+CTool::toString(pthread_self())+"] "+sMessage).c_str() );
+	#endif
 }
 
-void CTrace::logWarn(string sMessage)
+void CTrace::logWarn(const string &sMessage)
 {
+	#ifdef NNTOOL_CLIENT
+	logToPlatform("WARN", sMessage);
+	#endif
+
+	#ifdef NNTOOL_SERVER
 	//Get Instance of Category
 	log4cpp::Category& cat = log4cpp::Category::getInstance( mCategory );
 	
 	//Save Message to Category
 	cat.warn( ("#" + CTool::toString(getpid()) +  " ["+CTool::toString(pthread_self())+"] "+sMessage).c_str() );
+	#endif
 }
 
-void CTrace::logInfo(string sMessage)
+void CTrace::logInfo(const string &sMessage)
 {
+	#ifdef NNTOOL_CLIENT
+	logToPlatform("INFO", sMessage);
+	#endif
+
+	#ifdef NNTOOL_SERVER
 	//Get Instance of Category
 	log4cpp::Category& cat = log4cpp::Category::getInstance( mCategory );
 	
 	//Save Message to Category
 	cat.info( ("#" + CTool::toString(getpid()) +  " ["+CTool::toString(pthread_self())+"] "+sMessage).c_str() );
+	#endif
 }
 
-void CTrace::logDebug(string sMessage)
+void CTrace::logDebug(const string &sMessage)
 {
+	#ifdef NNTOOL_CLIENT
+	//if (DEBUG)
+	{
+	//	logToPlatform("DEBUG", sMessage);
+	}
+	#endif
+
+	#ifdef NNTOOL_SERVER
 	//Get Instance of Category
 	log4cpp::Category& cat = log4cpp::Category::getInstance( mCategory );
 	
 	//Save Message to Category
 	cat.debug( ("#" + CTool::toString(getpid()) +  " ["+CTool::toString(pthread_self())+"] "+sMessage).c_str() );
+	#endif
 }
-
-#endif
-
 
 #ifdef NNTOOL_CLIENT
-
-void CTrace::logCritical(const string &sMessage)
-{
-	logToPlatform("CRITICAL", sMessage);
-}
-
-void CTrace::logErr(const string &sMessage)
-{
-	logToPlatform("ERROR", sMessage);
-}
-
-void CTrace::logWarn(const string &sMessage)
-{
-	logToPlatform("WARN", sMessage);
-}
-
-void CTrace::logInfo(const string &sMessage)
-{
-	logToPlatform("INFO", sMessage);
-}
-
-void CTrace::logDebug(const string &sMessage)
-{
-	//if (DEBUG)
-	{
-	//	logToPlatform("DEBUG", sMessage);
-	}
-}
 
 void CTrace::logToPlatform(const string &category, const string &sMessage)
 {

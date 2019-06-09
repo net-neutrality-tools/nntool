@@ -70,22 +70,29 @@ endif()
 # Unit Tests with Catch2
 #
 
+# Build tests only if library is not included in other modules (e.g. ias-cpp or ias-server).
+# Therefore, check if both NNTOOL_SERVER and NNTOOL_CLIENT are not defined before adding tests.
 # TODO: add flag to enable/disable unit tests
-# TODO: use something like https://github.com/eranpeer/FakeIt for mocking
 
-set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage -O0 ${CMAKE_CXX_FLAGS}")
-enable_testing()
+if (NOT DEFINED NNTOOL_SERVER AND NOT DEFINED NNTOOL_CLIENT)
 
-include_directories(external)
+    # TODO: use something like https://github.com/eranpeer/FakeIt for mocking
 
-add_executable(
-    nntool_test
-    libnntool_test.cpp
-    http_test.cpp
-    tool_test.cpp
-)
+    set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage -O0 ${CMAKE_CXX_FLAGS}")
+    enable_testing()
 
-target_link_libraries(
-    nntool_test
-    nntool
-)
+    include_directories(external)
+
+    add_executable(
+        nntool_test
+        libnntool_test.cpp
+        http_test.cpp
+        tool_test.cpp
+    )
+
+    target_link_libraries(
+        nntool_test
+        nntool
+    )
+
+endif()

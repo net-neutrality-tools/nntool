@@ -16,9 +16,9 @@
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
-#ifndef NNTOOL_CLIENT
-#define NNTOOL_CLIENT
-#endif
+//#ifndef NNTOOL_CLIENT
+//#define NNTOOL_CLIENT
+//#endif
 
 #ifndef TRACE_H
 #define TRACE_H

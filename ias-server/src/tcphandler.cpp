@@ -880,10 +880,12 @@ int CTcpHandler::download(noPollCtx *ctx, noPollConn *conn)
 
     startTime = CTool::get_timestamp_sec();
 
-    const char *firstChar = randomDataValues.data();
+    /*const*/ char *firstChar = randomDataValues.data();
+    // 'const' commented out due to compile error:
+    // /nntool/ias-server/src/tcphandler.cpp:897:66: error: invalid conversion from ‘const char*’ to ‘char*’ [-fpermissive]
+    // nResponse = nopoll_conn_default_send(conn, firstChar + index, downloadFrameSize);
     do
     {
-
         if (index + downloadFrameSize > randomDataValues.size()) {
             index += downloadFrameSize - randomDataValues.size();
         }

@@ -17,7 +17,7 @@
 # */
 
 
-cmake_minimum_required(VERSION 2.8.2)
+cmake_minimum_required(VERSION 3.6)
 
 project(ias-server)
 
@@ -28,6 +28,9 @@ set(CMAKE_BUILD_TYPE Release)
 #---------------------------------------------------------------------------------
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+# include libnopoll headers
+include_directories(${libnopoll_INCLUDE_DIR}/nopoll)
 
 add_executable(ias-server
     iasserver.cpp
@@ -43,7 +46,7 @@ TARGET_LINK_LIBRARIES(ias-server
     -llog4cpp
     -lssl
     -lcrypto
-    -lnopoll
+    ${libnopoll_BUILD}/libnopoll.a
 )
 
 INCLUDE(CPack)

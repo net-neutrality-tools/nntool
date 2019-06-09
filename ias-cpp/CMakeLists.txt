@@ -47,6 +47,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 add_definitions(-DNNTOOL)
 add_definitions(-DNNTOOL_CLIENT)
 
+set(NNTOOL_CLIENT true)
+
 add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/../ias-libnntool ${CMAKE_CURRENT_BINARY_DIR}/ias-libnntool)
 add_subdirectory (src)
 
