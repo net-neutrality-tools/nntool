@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import at.alladin.nettest.nntool.android.app.R;
-import at.alladin.nettest.nntool.android.app.workflow.measurement.SpeedMeasurementState;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)

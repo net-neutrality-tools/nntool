@@ -254,9 +254,14 @@ void measurementStart(string measurementParameters)
 	#else
 	pXml->writeString(conf.sProvider, "DNS_HOSTNAME", jTargets[0].string_value() + "." + wsTLD);
 	#endif
+
 	jTargets = jMeasurementParameters["wsTargetsRtt"].array_items();
-	pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value() + "." + wsTLD);
-	
+	#ifdef __ANDROID__
+    pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value() /*+ "." + wsTLD*/);
+    #else
+    pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value() + "." + wsTLD);
+    #endif
+
 	pXml->writeString(conf.sProvider,"DL_PORT",jMeasurementParameters["wsTargetPort"].string_value());
 	pXml->writeString(conf.sProvider,"UL_PORT",jMeasurementParameters["wsTargetPort"].string_value());
 

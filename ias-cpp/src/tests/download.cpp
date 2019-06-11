@@ -43,7 +43,6 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 	mServerName = pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
 	mServer 	= pXml->readString(sProvider,"IP","1.1.1.1");
 	mPort   	= pXml->readLong(sProvider,"DL_PORT",80);
-	mPort = 8090;
 	mTls		= pXml->readLong(sProvider,"TLS",0);
 
 	#ifndef NNTOOL

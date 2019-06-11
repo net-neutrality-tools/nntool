@@ -41,14 +41,10 @@ Upload::Upload( CConfigManager *pConfig, CConfigManager *pXml, CConfigManager *p
 	mClient 	= CTool::getIP( pService->readString("TAC51","LAN-IF","eth1"), pXml->readLong(sProvider, "NET_TYPE", 4)  );
 	
 	mServerName = pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
-	mServerName = "10.0.2.2";
 	mServer 	= pXml->readString(sProvider,"IP","1.1.1.1");
-	mServer = "10.0.2.2";
 	mPort   	= pXml->readLong(sProvider,"DL_PORT",80);
-	mPort = 8090;
 	mTls		= pXml->readLong(sProvider,"TLS",0);
-	mTls = 0;
-	
+
 	#ifndef NNTOOL
 	//Security Credentials
 	pConfig->writeString("security","user",pXml->readString(sProvider,"USER",""));

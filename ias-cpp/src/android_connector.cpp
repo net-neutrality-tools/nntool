@@ -13,17 +13,17 @@ jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
 }
 
 extern "C" JNIEXPORT
-void JNICALL Java_at_alladin_nettest_nntool_android_app_workflow_measurement_jni_JniSpeedMeasurementClient_startMeasurement (JNIEnv* env, jobject thiz) {
+void JNICALL Java_at_alladin_nettest_nntool_android_speed_jni_JniSpeedMeasurementClient_startMeasurement (JNIEnv* env, jobject thiz) {
     AndroidConnector::getInstance().startMeasurement();
 }
 
 extern "C" JNIEXPORT
-void JNICALL Java_at_alladin_nettest_nntool_android_app_workflow_measurement_jni_JniSpeedMeasurementClient_stopMeasurement (JNIEnv* env, jobject thiz) {
-    //AndroidConnector::getInstance().stopMeasurement();
+void JNICALL Java_at_alladin_nettest_nntool_android_speed_jni_JniSpeedMeasurementClient_stopMeasurement (JNIEnv* env, jobject thiz) {
+    AndroidConnector::getInstance().stopMeasurement();
 }
 
 extern "C" JNIEXPORT
-void JNICALL Java_at_alladin_nettest_nntool_android_app_workflow_measurement_jni_JniSpeedMeasurementClient_shareMeasurementState (JNIEnv* env, jobject caller, jobject speedTaskDesc,
+void JNICALL Java_at_alladin_nettest_nntool_android_speed_jni_JniSpeedMeasurementClient_shareMeasurementState (JNIEnv* env, jobject caller, jobject speedTaskDesc,
                     jobject baseMeasurementState, jobject pingMeasurementState, jobject downloadMeasurementState, jobject uploadMeasurementState) {
     AndroidConnector &connector = AndroidConnector::getInstance();
     connector.registerSharedObject(env, caller, baseMeasurementState, pingMeasurementState, downloadMeasurementState, uploadMeasurementState);
@@ -31,7 +31,7 @@ void JNICALL Java_at_alladin_nettest_nntool_android_app_workflow_measurement_jni
 }
 
 extern "C" JNIEXPORT
-void JNICALL Java_at_alladin_nettest_nntool_android_app_workflow_measurement_jni_JniSpeedMeasurementClient_cleanUp (JNIEnv* env, jobject caller) {
+void JNICALL Java_at_alladin_nettest_nntool_android_speed_jni_JniSpeedMeasurementClient_cleanUp (JNIEnv* env, jobject caller) {
     AndroidConnector::getInstance().unregisterSharedObject();
 }
 
@@ -41,23 +41,23 @@ jint AndroidConnector::jniLoad(JavaVM* vm) {
         return JNI_ERR; // JNI version not supported.
     }
 
-    jclass clazz = env->FindClass("at/alladin/nettest/nntool/android/app/workflow/measurement/jni/JniSpeedMeasurementClient");
+    jclass clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/jni/JniSpeedMeasurementClient");
     jniHelperClass = (jclass) env->NewGlobalRef(clazz);
     callbackID = env->GetMethodID(jniHelperClass, "cppCallback", "(Ljava/lang/String;)V");
     cppCallbackFinishedID = env->GetMethodID(jniHelperClass, "cppCallbackFinished", "(Ljava/lang/String;)V");
 
     //get the fields for the SpeedphaseState
-    clazz = env->FindClass("at/alladin/nettest/nntool/android/app/workflow/measurement/SpeedMeasurementState$SpeedPhaseState");
+    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementState$SpeedPhaseState");
     fieldAvgThroughput = env->GetFieldID(clazz, "throughputAvgBps", "J");
     fieldDurationMsTotal = env->GetFieldID(clazz, "durationMsTotal", "J");
     fieldDurationMs = env->GetFieldID(clazz, "durationMs", "J");
 
     //get the fields for the PingPhaseState
-    clazz = env->FindClass("at/alladin/nettest/nntool/android/app/workflow/measurement/SpeedMeasurementState$PingPhaseState");
+    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementState$PingPhaseState");
     fieldAverageMs = env->GetFieldID(clazz, "averageMs", "J");
 
     //get the fields for the SpeedMeasurementState
-    clazz = env->FindClass("at/alladin/nettest/nntool/android/app/workflow/measurement/SpeedMeasurementState");
+    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementState");
     fieldProgress = env->GetFieldID(clazz, "progress", "F");
 
     setMeasurementPhaseByStringValueID = env->GetMethodID(clazz, "setMeasurementPhaseByStringValue", "(Ljava/lang/String;)V");
@@ -81,7 +81,7 @@ void AndroidConnector::registerSharedObject(JNIEnv* env, jobject caller, jobject
 }
 
 void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
-    const jclass clazz = env->FindClass("at/alladin/nettest/nntool/android/app/util/LmapUtil$SpeedTaskDesc");
+    const jclass clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedTaskDesc");
 
     jfieldID toParseId = env->GetFieldID(clazz, "speedServerAddrV4", "Ljava/lang/String;");
     const jstring serverUrl = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
@@ -299,7 +299,11 @@ void AndroidConnector::startMeasurement() {
 	measurementStart(jMeasurementParametersJson.dump());
 
     //end init from ias-client
-
-    AndroidConnector::unregisterSharedObject();
+    unregisterSharedObject();
 }
 
+
+void AndroidConnector::stopMeasurement() {
+    unregisterSharedObject();
+    measurementStop();
+}

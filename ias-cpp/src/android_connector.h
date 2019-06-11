@@ -80,6 +80,8 @@ class AndroidConnector {
 
         void startMeasurement();
 
+        void stopMeasurement();
+
         jint jniLoad(JavaVM* vm);
 
         void callback(json11::Json::object& message) const;

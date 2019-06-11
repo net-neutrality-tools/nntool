@@ -63,9 +63,11 @@ if (skipAndroid) {
 	println '*) Including Android apps'
 
 	//include 'android-common'
-	//include 'android-speed'
+	include 'android-speed'
 	include 'qos-client-android'
 
 	//include 'android-demo'
+
+	//include 'ias-libnntool'
 	include 'android-app'
 }

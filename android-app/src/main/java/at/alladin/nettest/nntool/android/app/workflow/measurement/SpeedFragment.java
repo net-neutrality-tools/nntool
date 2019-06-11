@@ -24,6 +24,7 @@ import at.alladin.nettest.nntool.android.app.view.AlladinTextView;
 import at.alladin.nettest.nntool.android.app.view.BottomMeasurementResultSummaryView;
 import at.alladin.nettest.nntool.android.app.view.CanvasArcDoubleGaugeWithLabels;
 import at.alladin.nettest.nntool.android.app.view.TopProgressBarView;
+import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)

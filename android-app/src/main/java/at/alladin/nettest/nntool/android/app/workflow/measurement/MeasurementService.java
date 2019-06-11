@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
-import at.alladin.nettest.nntool.android.app.workflow.measurement.jni.JniSpeedMeasurementClient;
+import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
+import at.alladin.nettest.nntool.android.speed.jni.JniSpeedMeasurementClient;
 import at.alladin.nettest.qos.android.QoSMeasurementClientAndroid;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.TaskDesc;
@@ -90,7 +91,7 @@ public class MeasurementService extends Service {
 
     public void startMeasurement(final Bundle options) {
         final String speedTaskCollectorUrl = options.getString(EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL);
-        final LmapUtil.SpeedTaskDesc speedTaskDesc = (LmapUtil.SpeedTaskDesc) options.getSerializable(EXTRAS_KEY_SPEED_TASK_DESC);
+        final SpeedTaskDesc speedTaskDesc = (SpeedTaskDesc) options.getSerializable(EXTRAS_KEY_SPEED_TASK_DESC);
         jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskCollectorUrl, speedTaskDesc);
         AsyncTask.execute(new Runnable() {
             @Override
