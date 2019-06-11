@@ -1,0 +1,25 @@
+{
+  "name": "ias",
+  "version": "0.0.1",
+  "scripts": {
+    "test": "npm run build:ias && karma start karma.conf.js",
+    "build:ias": "./build.sh"
+  },
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jasmine": "~3.3.8",
+    "@types/jasminewd2": "~2.0.3",
+    "@types/node": "~8.9.4",
+    "istanbul-instrumenter-loader": "^3.0.1",
+    "jasmine-core": "~3.4.0",
+    "jasmine-spec-reporter": "~4.2.1",
+    "karma": "^4.1.0",
+    "karma-chrome-launcher": "~2.2.0",
+    "karma-coverage-istanbul-reporter": "^2.0.5",
+    "karma-generic-preprocessor": "^1.1.1",
+    "karma-jasmine": "~2.0.1",
+    "karma-jasmine-html-reporter": "~1.4.0",
+    "uglify-es": "~3.3.9"
+  }
+}
