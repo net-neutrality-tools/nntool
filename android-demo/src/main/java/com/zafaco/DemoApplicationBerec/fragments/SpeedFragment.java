@@ -20,32 +20,29 @@ package com.zafaco.DemoApplicationBerec.fragments;
 
 import com.zafaco.DemoApplicationBerec.interfaces.FocusedFragment;
 import com.zafaco.moduleCommon.Common;
-import com.zafaco.moduleCommon.Database;
 import com.zafaco.moduleCommon.Tool;
-import com.zafaco.moduleSpeed.Speed;
 import com.zafaco.DemoApplicationBerec.R;
 import com.zafaco.DemoApplicationBerec.WSTool;
-import com.zafaco.moduleCommon.interfaces.GenericInterface;
 
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
-import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 
 import java.util.Objects;
+
+import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
+import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
+import at.alladin.nettest.nntool.android.speed.jni.JniSpeedMeasurementClient;
 
 /**
  * Class SpeedFragment
@@ -55,7 +52,13 @@ public class SpeedFragment extends Fragment implements FocusedFragment
     private WSTool wsTool = WSTool.getInstance();
     private Common mCommon = wsTool.getCommonObject();
     private Tool mTool = wsTool.getToolObject();
-    private Speed mSpeed = wsTool.getSpeedObject();
+    private JniSpeedMeasurementClient jniSpeedMeasurementClient;
+
+    private SpeedTaskDesc speedTaskDesc;
+
+    private SpeedMeasurementState currentMeasurementState;
+
+    private boolean running = false;
 
     private DecimalFormat f = new DecimalFormat("#0.00");
 
@@ -104,6 +107,14 @@ public class SpeedFragment extends Fragment implements FocusedFragment
         radioIP.setOnCheckedChangeListener(handleCheckMeasurementSettings);
         radioStream.setOnCheckedChangeListener(handleCheckMeasurementSettings);
 
+        //this contains the config
+        speedTaskDesc = new SpeedTaskDesc();
+        speedTaskDesc.setSpeedServerAddrV4("peer-ias-de-01.net-neutrality.tools");
+        speedTaskDesc.setSpeedServerPort(80);
+        speedTaskDesc.setDownloadStreams(4);
+        speedTaskDesc.setRttCount(11);
+        speedTaskDesc.setUploadStreams(4);
+
         return mView;
     }
 
@@ -143,24 +154,40 @@ public class SpeedFragment extends Fragment implements FocusedFragment
         {
             switch (v.getId())
             {
-                case R.id.buttonStart:      wsTool.setTestcaseAll();        break;
-                case R.id.buttonRTT:        wsTool.setTestcaseRTT();        break;
-                case R.id.buttonDownload:   wsTool.setTestcaseDownload();   break;
-                case R.id.buttonUpload:     wsTool.setTestcaseUpload();     break;
+                case R.id.buttonStart:
+                    speedTaskDesc.setPerformRtt(true);
+                    speedTaskDesc.setPerformDownload(true);
+                    speedTaskDesc.setPerformUpload(true);
+                    break;
+                case R.id.buttonRTT:
+                    speedTaskDesc.setPerformRtt(true);
+                    speedTaskDesc.setPerformDownload(false);
+                    speedTaskDesc.setPerformUpload(false);
+                    break;
+                case R.id.buttonDownload:
+                    speedTaskDesc.setPerformRtt(false);
+                    speedTaskDesc.setPerformDownload(true);
+                    speedTaskDesc.setPerformUpload(false);
+                    break;
+                case R.id.buttonUpload:
+                    speedTaskDesc.setPerformRtt(false);
+                    speedTaskDesc.setPerformDownload(false);
+                    speedTaskDesc.setPerformUpload(true);
+                    break;
             }
 
             wsTool.initSpeedParameter();
 
             //if running
-            if(mSpeed.getMeasurementRunning())
+            if(running)
             {
                 //Update Button Text
                 updateButtonUi(R.string.name_msetting_all, buttonStart);
 
                 //Start Measurement
-                mSpeed.stopMeasurement();
+                jniSpeedMeasurementClient.stopMeasurement();
 
-                mSpeed.setMeasurementRunning(false);
+                running = false;
 
                 buttonRtt.setEnabled(true);
                 buttonDownload.setEnabled(true);
@@ -174,9 +201,19 @@ public class SpeedFragment extends Fragment implements FocusedFragment
                 updateButtonUi(R.string.name_msetting_cancel, buttonStart);
 
                 //Start Measurement
-                mSpeed.startMeasurement(Objects.requireNonNull(getActivity()).getApplication(), interfaceCallback);
+                jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskDesc);
 
-                mSpeed.setMeasurementRunning(true);
+                //currentMeasurementState contains the intermediate results (if display is desired)
+                currentMeasurementState = jniSpeedMeasurementClient.getSpeedMeasurementState();
+
+                jniSpeedMeasurementClient.addMeasurementFinishedListener(measurementFinishedStringListener);
+
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        jniSpeedMeasurementClient.startMeasurement();
+                    }
+                });
 
                 buttonRtt.setEnabled(false);
                 buttonDownload.setEnabled(false);
@@ -228,138 +265,22 @@ public class SpeedFragment extends Fragment implements FocusedFragment
         }
     } ;
 
-    /**
-     * Interface interfaceCallback
-     */
-    private final GenericInterface interfaceCallback = new GenericInterface()
-    {
-        /**
-         * Method reportCallback
-         * @param jsonReport
-         */
+    private final JniSpeedMeasurementClient.MeasurementFinishedStringListener measurementFinishedStringListener = new JniSpeedMeasurementClient.MeasurementFinishedStringListener() {
         @Override
-        public void reportCallback(JSONObject jsonReport)
-        {
-            try
-            {
-                switch(jsonReport.getString("cmd"))
-                {
-                    //------------------------------------------------------------------------------
-                    case "info":
+        public void onMeasurementFinished(String result) {
 
-                        updateUi(jsonReport.getString("test_case")+": "+jsonReport.getString("msg"), (TextView) mView.findViewById(R.id.status));
+            updateButtonUi(R.string.name_msetting_all,buttonStart);
+            updateUi(result, (TextView) mView.findViewById(R.id.results));
 
-                        if(jsonReport.getString("test_case").equals("download") && jsonReport.getString("msg").equals("starting measurement"))
-                        {
-                            mSpeed.setDownloadStarted();
-                            mSpeed.performRouteToClientLookup(jsonReport);
-                        }
-
-                        if(jsonReport.getString("test_case").equals("upload") && jsonReport.getString("msg").equals("starting measurement"))
-                        {
-                            mSpeed.setUploadStarted();
-                        }
-
-                        break;
-                    //------------------------------------------------------------------------------
-                    case "error":
-                        break;
-                    //------------------------------------------------------------------------------
-                    case "finish":
-                        //Show Cancel Button
-                        updateButtonUi(R.string.name_msetting_cancel,(Button) mView.findViewById(R.id.buttonStart));
-                        //Show TestCase
-                        updateUi(jsonReport.getString("test_case")+": "+jsonReport.getString("msg"), (TextView) mView.findViewById(R.id.status));
-
-                        if(jsonReport.getString("test_case").equals("download"))
-                        {
-                            mSpeed.setDownloadStopped();
-                        }
-                        if(jsonReport.getString("test_case").equals("upload"))
-                        {
-                            mSpeed.setUploadStopped();
-                        }
-
-                        switch(jsonReport.getString("test_case"))
-                        {
-                            case "rtt":
-                                updateUi(f.format(jsonReport.getJSONObject("rtt_info").getDouble("average_ns")/1000)+" ms", (TextView) mView.findViewById(R.id.rtt));
-                                break;
-                            case "download":
-                                updateUi(f.format(jsonReport.getJSONObject("download_info").getDouble("throughput_avg_bps")/1000/1000)+" Mbit/s", (TextView) mView.findViewById(R.id.download));
-                                break;
-                            case "upload":
-
-                                updateUi(f.format(jsonReport.getJSONObject("upload_info").getDouble("throughput_avg_bps")/1000/1000)+" Mbit/s", (TextView) mView.findViewById(R.id.upload));
-                                break;
-                        }
-
-                        break;
-                    //------------------------------------------------------------------------------
-                    case "report":
-
-                        switch(jsonReport.getString("test_case"))
-                        {
-                            case "rtt":
-                                updateUi(f.format(jsonReport.getJSONObject("rtt_info").getDouble("average_ns")/1000)+" ms", (TextView) mView.findViewById(R.id.rtt));
-                                break;
-                            case "download":
-                                updateUi(f.format(jsonReport.getJSONObject("download_info").getDouble("throughput_avg_bps")/1000/1000)+" Mbit/s", (TextView) mView.findViewById(R.id.download));
-                                break;
-                            case "upload":
-
-                                updateUi(f.format(jsonReport.getJSONObject("upload_info").getDouble("throughput_avg_bps")/1000/1000)+" Mbit/s", (TextView) mView.findViewById(R.id.upload));
-                                break;
-                        }
-
-                        updateUi(jsonReport.toString(2), (TextView) mView.findViewById(R.id.results));
-
-                        break;
-                    //------------------------------------------------------------------------------
-                    case "completed":
-                        //Add Addtional KPIs
-                        JSONObject additionalKPIsFromUI = new JSONObject();
-                        additionalKPIsFromUI.put("app_version", wsTool.getVersion("app"));
-                        additionalKPIsFromUI.put("app_library_version", wsTool.getVersion("speed"));
-
-                        //Database
-                        Database mtdatabase = new Database(ctx, "measurements","speed");
-                        mtdatabase.createDB(Common.getJSONMTWSMeasurement());
-                        mtdatabase.insert(Common.getJSONMTWSMeasurement());
-
-                        //Update UI
-                        updateButtonUi(R.string.name_msetting_all,buttonStart);
-                        updateUi(jsonReport.getString("test_case")+": "+jsonReport.getString("msg"), (TextView) mView.findViewById(R.id.status));
-                        updateUi(Common.getJSONMTWSMeasurement().toString(2), (TextView) mView.findViewById(R.id.results));
-
-                        //Stop Listener
-                        mSpeed.stopMeasurement();
-
-                        mSpeed.setMeasurementRunning(false);
-
-                        buttonRtt.setEnabled(true);
-                        buttonDownload.setEnabled(true);
-                        buttonUpload.setEnabled(true);
-
-                        break;
-                    //------------------------------------------------------------------------------
-                    default:
-                        break;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    buttonRtt.setEnabled(true);
+                    buttonDownload.setEnabled(true);
+                    buttonUpload.setEnabled(true);
                 }
-            }
-            catch (Exception ex)
-            {
-                mTool.printTrace(ex);
-            }
-        }
+            });
 
-        /**
-         * Method consoleCallback
-         * @param message
-         */
-        @Override
-        public void consoleCallback(String message)
-        {
         }
     };
 

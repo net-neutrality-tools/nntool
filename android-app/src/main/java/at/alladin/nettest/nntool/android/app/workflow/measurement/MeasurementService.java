@@ -9,19 +9,18 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
+import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
+import at.alladin.nettest.nntool.android.speed.jni.JniSpeedMeasurementClient;
 import at.alladin.nettest.qos.android.QoSMeasurementClientAndroid;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.TaskDesc;
@@ -37,9 +36,13 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     public static String ACTION_START_QOS_MEASUREMENT = "at.alladin.nettest.nntool.android.app.startQosMeasurement";
 
-    public static String EXTRAS_KEY_QOS_TASK_DESK_LIST = "qos_task_desk_list";
+    public static String EXTRAS_KEY_QOS_TASK_DESC_LIST = "qos_task_desk_list";
 
     public static String EXTRAS_KEY_QOS_TASK_COLLECTOR_URL = "qos_task_collector_url";
+
+    public static String EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL = "speed_task_collector_url";
+
+    public static String EXTRAS_KEY_SPEED_TASK_DESC = "speed_task_desc";
 
     final MeasurementServiceBinder binder = new MeasurementServiceBinder();
 
@@ -48,6 +51,8 @@ public class MeasurementService extends Service implements ServiceConnection {
     QoSMeasurementClientAndroid qosMeasurementClient;
 
     InformationService informationService;
+
+    private JniSpeedMeasurementClient jniSpeedMeasurementClient;
 
     public class MeasurementServiceBinder extends Binder {
         public MeasurementService getService() {
@@ -95,8 +100,21 @@ public class MeasurementService extends Service implements ServiceConnection {
         return qosMeasurementClient;
     }
 
-    public void startMeasurement() {
+    public JniSpeedMeasurementClient getJniSpeedMeasurementClient() {
+        return jniSpeedMeasurementClient;
+    }
 
+    public void startMeasurement(final Bundle options) {
+        final String speedTaskCollectorUrl = options.getString(EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL);
+        final SpeedTaskDesc speedTaskDesc = (SpeedTaskDesc) options.getSerializable(EXTRAS_KEY_SPEED_TASK_DESC);
+        jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskDesc);
+        jniSpeedMeasurementClient.setCollectorUrl(speedTaskCollectorUrl);
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                jniSpeedMeasurementClient.startMeasurement();
+            }
+        });
     }
 
     public void startQosMeasurement(final Bundle options) {
@@ -111,7 +129,7 @@ public class MeasurementService extends Service implements ServiceConnection {
                 getResources().getIntArray(R.array.qos_echo_service_udp_ports));
                 */
 
-        final List<TaskDesc> taskDescList = (List<TaskDesc>) options.getSerializable(EXTRAS_KEY_QOS_TASK_DESK_LIST);
+        final List<TaskDesc> taskDescList = (List<TaskDesc>) options.getSerializable(EXTRAS_KEY_QOS_TASK_DESC_LIST);
         final String collectorUrl = options.getString(EXTRAS_KEY_QOS_TASK_COLLECTOR_URL);
         final ClientHolder client = ClientHolder.getInstance(taskDescList, collectorUrl);
         qosMeasurementClient = new QoSMeasurementClientAndroid(client, getApplicationContext());
@@ -134,7 +152,7 @@ public class MeasurementService extends Service implements ServiceConnection {
         if (intent != null) {
             Log.d(TAG, "Got intent with action: '" + intent.getAction() + "'");
             if (ACTION_START_SPEED_MEASUREMENT.equals(intent.getAction())) {
-                startMeasurement();
+                startMeasurement(intent.getExtras());
                 return START_STICKY;
             }
             else if (ACTION_START_QOS_MEASUREMENT.equals(intent.getAction())) {

@@ -36,15 +36,13 @@ Download::~Download()
 //! \param &settings
 //! \return 0
 Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManager *pService, string sProvider )
-{	
+{
 	//Get IPv6 or IPv4 Address of interface
 	mClient 	= CTool::getIP( pService->readString("TAC51","LAN-IF","eth1"), pXml->readLong(sProvider, "NET_TYPE", 4) );
-	
-	mServerName = pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
 
+	mServerName = pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
 	mServer 	= pXml->readString(sProvider,"IP","1.1.1.1");
 	mPort   	= pXml->readLong(sProvider,"DL_PORT",80);
-
 	mTls		= pXml->readLong(sProvider,"TLS",0);
 
 	#ifndef NNTOOL
@@ -54,16 +52,16 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 	#endif
 
 	//Set HTTP-Response Limt
-	if( pXml->readString(sProvider,"testname","dummy") == "http_down_dataload" ) 
+	if( pXml->readString(sProvider,"testname","dummy") == "http_down_dataload" )
 		mLimit = 5000000;
 	else
 		mLimit = 1000000;
-	
+
 	//Create Socket Object
 	mConnection = new CConnection();
-	
+
 	mConfig = pConfig;
-	
+
 	mDownloadString = "GET";
 }
 
@@ -74,7 +72,7 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 //! \param &syncing_thread
 //! \return 0
 int Download::run()
-{	
+{
 	bool ipv6validated = false;
 
 	//Syslog Message
@@ -84,16 +82,24 @@ int Download::run()
 	TRC_DEBUG( ("Resolving Hostname for Measurement: "+mServerName).c_str() );
 
 	#ifdef NNTOOL
-	struct addrinfo *ips;
-	memset(&ips, 0, sizeof ips);
+// TODO: readd for android
+//	struct addrinfo *ips;
+//	memset(&ips, 0, sizeof ips);
+//
+//	ips = CTool::getIpsFromHostname( mServerName, true );
+//
+//	char host[NI_MAXHOST];
+//
+//	getnameinfo(ips->ai_addr, ips->ai_addrlen, host, sizeof host, NULL, 0, NI_NUMERICHOST);
+//	mServer = string(host);
+	if( CTool::validateIp(mClient) == 6)
+		mServer = CTool::getIpFromHostname( mServerName, 6 );
+	else
+		mServer = CTool::getIpFromHostname( mServerName, 4 );
 
-	ips = CTool::getIpsFromHostname( mServerName, true );
+	TRC_DEBUG( ("Resolved Hostname for Measurement: "+mServer).c_str() );
 
-	char host[NI_MAXHOST];
-	
-	getnameinfo(ips->ai_addr, ips->ai_addrlen, host, sizeof host, NULL, 0, NI_NUMERICHOST);
-	mServer = string(host);
-	if (CTool::validateIp(mServer) == 6) ipv6validated = true; 
+	if (CTool::validateIp(mServer) == 6) ipv6validated = true;
 	#endif
 
 	#ifndef NNTOOL
@@ -108,33 +114,33 @@ int Download::run()
 	TRC_DEBUG( ("Resolved Hostname for Measurement: "+mServer).c_str() );
 
 	pid = syscall(SYS_gettid);
-	
+
 	measurementTimeStart 	= 0;
 	measurementTimeEnd 		= 0;
 	measurementTimeDuration	= 0;
-	
+
 	measurementTimeStart = CTool::get_timestamp();
-	
+
 	//Start syncing threads
 	syncing_threads[pid] = 0;
-	
+
 	char *rbuffer = (char *)malloc(MAX_PACKET_SIZE);
-		
+
 	//Default Values for the test
 	system_availability  = 1;
 	service_availability = 1;
 	error = 0;
 	error_description = "/";
-	
+
 	nHttpResponseDuration = 0;
 	nHttpResponseReportValue = 0;
-	
+
 	#ifndef NNTOOL
 	if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 ) ipv6validated = true;
 	#endif
 
 	if (ipv6validated)
-	{	
+	{
 		//Create a TCP socket
 		if( ( mConnection->tcp6Socket(mClient, mServer, mPort, mTls, mServerName) ) < 0 )
 		{
@@ -142,7 +148,7 @@ int Download::run()
 			TRC_DEBUG("Creating socket failed - Could not establish connection");
 			return -1;
 		}
-		
+
 		ipversion = 6;
 		#ifndef NNTOOL
 		//MYSQL_LOG("Measurement-DL-Socket","IPv6");
@@ -157,7 +163,7 @@ int Download::run()
 			TRC_DEBUG("Creating socket failed - Could not establish connection");
 			return -1;
 		}
-		
+
 		ipversion = 4;
 		#ifndef NNTOOL
 		//MYSQL_LOG("Measurement-DL-Socket","IPv4");
@@ -165,14 +171,14 @@ int Download::run()
 	}
 
 	bzero(rbuffer, MAX_PACKET_SIZE);
-	
+
 	timeval tv;
 	tv.tv_sec = 5;
 	tv.tv_usec = 0;
-	
+
 	setsockopt( mConnection->mSocket, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval) );
 	setsockopt( mConnection->mSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval) );
-	
+
 	//Send Request and Authenticate Client
 	CHttp *pHttp = new CHttp( mConfig, mConnection, mDownloadString );
 	if( pHttp->requestToReferenceServer() < 0 )
@@ -182,20 +188,20 @@ int Download::run()
 		#ifndef NNTOOL
 		//MYSQL_LOG("Measurement-DL-Auth","No valid credentials for this server: "+mServer);
 		#endif
-		
+
 		mConnection->close();
-		
+
 		free(rbuffer);
-		
+
 		delete( pHttp );
 
 		return 0;
 	}
-	
+
 	#ifndef NNTOOL
 	//MYSQL_LOG("Measurement-DL-Auth","ok");
 	#endif
-		
+
 	nHttpResponseDuration = pHttp->getHttpResponseDuration();
 	mServerHostname = pHttp->getHttpServerHostname();
 
@@ -209,31 +215,31 @@ int Download::run()
 	{
 		//Get data from socket
 		mResponse = mConnection->receive(rbuffer, MAX_PACKET_SIZE, 0);
-		
+
 		//Send signal, we are ready
 		syncing_threads[pid] = 1;
-		
+
 		//Got an error
 		if(mResponse == -1)
 		{
 			TRC_ERR("Received an Error: Download RECV == -1");
-			
+
 			//break to the end of the loop
 			break;
 		}
-		
+
 		//Got an error
 		if(mResponse == 0)
 		{
 			TRC_ERR("Received an Error: Download RECV == 0");
-			
+
 			//break to the end of the loop
 			break;
 		}
-	
+
 		//Zero buffer
 		bzero(rbuffer, MAX_PACKET_SIZE);
-		
+
 		mResponse = mResponse * 8;
 		mDownload.datasize_total += mResponse;
 
@@ -249,92 +255,92 @@ int Download::run()
 
 	#ifndef NNTOOL
 	measurementTimeEnd = CTool::get_timestamp();
-	
+
 	measurementTimeDuration = measurementTimeEnd - measurementTimeStart;
-		
+
 	//Lock Mutex
-	pthread_mutex_lock(&mutex);
-	
+	pthread_mutex_lock(&mutex1);
+
 		unsigned long long nDownload0 = mDownload.results.begin()->first;
-		
+
 		//Get Max T0
 		if( measurements.download.totime < nDownload0 )
 			measurements.download.totime = nDownload0;
-		
+
 		//Starting multiple Instances for every Probe
 		for(map<int, unsigned long long>::iterator AI = mDownload.results.begin(); AI!= mDownload.results.end(); ++AI)
 		{
 			//write to Global Object
 			measurements.download.results[(*AI).first] 	+= (*AI).second;
 			measurements.download.datasize  		+= (*AI).second;
-			
+
 			//TRC_DEBUG( ("Results ["+CTool::toString( (*AI).first )+"]: "+CTool::toString( (*AI).second ) ).c_str() );
 		}
-		
+
 		//Must be a valid value and non zero
 		if( nHttpResponseDuration != 0 )
-		{	
+		{
 			measurements.download.httpresponse[pid]		= nHttpResponseDuration;
 			//TRC_DEBUG( ("httpresponse ["+CTool::toString( pid )+"]: "+CTool::toString( nHttpResponseDuration ) ).c_str() );
 		}
-		
+
 		measurements.download.packetsize 		= MAX_PACKET_SIZE;
-		
+
 		measurements.download.starttime  		= measurementTimeStart;
 		measurements.download.endtime    		= measurementTimeEnd;
 		measurements.download.totaltime  		= measurementTimeDuration;
-		
+
 		measurements.download.client			= mClient;
 		measurements.download.server    		= mServer;
 		measurements.download.servername    	= mServerName;
 		measurements.download.serverhostname   	= mServerHostname;
-		
+
 		measurements.download.ipversion 		= ipversion;
-		
+
 		if( mLimit == 5000000 )
 			nHttpResponseReportValue =  CTool::calculateResultsAvg( measurements.download.httpresponse );
 		else
 			nHttpResponseReportValue =  CTool::calculateResultsMin( measurements.download.httpresponse );
-		
+
 		//Check min of http response of all values
 		if( nHttpResponseReportValue > mLimit )
 		{
 			//If an error occured twice
 			if( error != 0 )
 				error_description		+= "/";
-			
+
 			service_availability 		= 0;
 			error 						= 2;
 			error_description 			+= "HTTP Response > "+CTool::toString( (mLimit/1000000) )+"s";
 		}
-		
+
 		//Socket closed unexpectedly
 		if( mResponse == -1 )
 		{
 			//If an error occured twice
 			if( error != 0 )
 				error_description		+= "/";
-			
+
 			service_availability 		= 0;
 			error 						= 1;
 			error_description 			+= "Socket closed";
-		}	
-		
+		}
+
 		//No Data from Socket
 		if( mResponse == 0 )
 		{
 			//If an error occured twice
 			if( error != 0 )
 				error_description		+= "/";
-			
+
 			service_availability 		= 0;
 			error 						= 1;
 			error_description 			+= "No Data from Socket";
 		}
-		
+
 		measurements.download.system_availability 	= system_availability;
-		
-		//If one thread as finished with ok, then test is ok, 
+
+		//If one thread as finished with ok, then test is ok,
 		//or we detected a httpresponse above the limit
 		if( measurements.download.service_availability == 0 || measurements.download.error_code == 2 || error == 2 )
 		{
@@ -342,10 +348,10 @@ int Download::run()
 			measurements.download.error_code			= error;
 			measurements.download.error_description		= error_description;
 		}
-		
+
 		if( mResponse > 0 )
 			measurements.streams++;
-		
+
 		TRC_DEBUG(
 			(
 			"/sys:"+CTool::toString(system_availability)+
@@ -354,9 +360,9 @@ int Download::run()
 			"/err:"+CTool::toString(error)+
 			"/des:"+error_description
 			).c_str() );
-		
+
 	//Unlock Mutex
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&mutex1);
 	#endif
 
 	#ifdef NNTOOL
@@ -364,12 +370,12 @@ int Download::run()
 	#endif
 
 	delete( pHttp );
-	
+
 	mConnection->close();
 	free( rbuffer );
-		
+
 	//Syslog Message
 	TRC_DEBUG( ("Ending Download Thread with PID: " + CTool::toString(syscall(SYS_gettid))).c_str() );
-		
+
 	return 0;
 }

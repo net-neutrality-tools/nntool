@@ -62,7 +62,7 @@ android
         }
 
 dependencies {
-    api fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    //api fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
 
     api project(':android-common')
     api project(':android-speed')

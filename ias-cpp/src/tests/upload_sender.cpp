@@ -47,23 +47,23 @@ int CUploadSender::run()
 {
 	//Syslog Message
 	TRC_INFO( ("Starting Sender Thread with PID: " + CTool::toString(syscall(SYS_gettid))).c_str() );
-	
+
+    const char *firstChar = randomDataValues.data();
+
+    nPointer = 1;
 	//++++++MAIN++++++
 	//Measurement Loop
 	while( RUNNING )
 	{
-		vector<char> payload(&randomDataValues[nPointer], &randomDataValues[nPointer+MAX_PACKET_SIZE]);
-		nPointer += MAX_PACKET_SIZE;
-		
-		if (nPointer > randomDataValues.size())
-		{
-			nPointer = nPointer - randomDataValues.size();
 
-			vector<char> payload(&randomDataValues[nPointer], &randomDataValues[nPointer+MAX_PACKET_SIZE]);
-			nPointer += MAX_PACKET_SIZE;
+		if (nPointer + MAX_PACKET_SIZE > randomDataValues.size()) {
+		    nPointer += MAX_PACKET_SIZE;
+		    nPointer -= randomDataValues.size();
 		}
 		
-		mResponse = mConnection->send(payload.data(), MAX_PACKET_SIZE, 0);
+		mResponse = mConnection->send(firstChar + nPointer, MAX_PACKET_SIZE, 0);
+
+        nPointer += MAX_PACKET_SIZE;
 
 		//Got an error
 		if(mResponse == -1)

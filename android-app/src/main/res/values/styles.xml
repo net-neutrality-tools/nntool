@@ -120,4 +120,30 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <!-- Speed Measurement -->
+
+    <style name="Nettest.Measurement.StartButton.Text" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textColor">@color/title_page_start_button_fg</item>
+        <!--<item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>-->
+        <item name="android:textSize">68sp</item>
+    </style>
+
+    <!-- BOTTOM RESULT HEADER -->
+
+    <style name="Nettest.Measurement.Speed.Result.Overview.Icon" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/bottom_result_overview_icon</item>
+        <item name="android:textSize">38sp</item>
+    </style>
+
+    <style name="Nettest.Measurement.Speed.Result.Overview.Speed.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/bottom_result_overview_text</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="Nettest.Measurement.Speed.Result.Overview.Unit.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/bottom_result_overview_text</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>

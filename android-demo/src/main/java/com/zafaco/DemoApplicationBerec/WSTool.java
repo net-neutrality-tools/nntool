@@ -28,7 +28,6 @@ import com.zafaco.moduleCommon.Common;
 import com.zafaco.moduleCommon.Database;
 import com.zafaco.moduleCommon.Http;
 import com.zafaco.moduleCommon.Tool;
-import com.zafaco.moduleSpeed.Speed;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,7 +80,6 @@ public final class WSTool
 	private Common mCommon;
 	private Tool mTool;
 	private Http mHttp;
-	private Speed mSpeed;
 	private Database mDatabase;
 
 	private SharedPreferences appPref;
@@ -98,7 +96,10 @@ public final class WSTool
 		{
 			if (mInstance == null)
 			{
-				mInstance = new WSTool();
+				if (mInstance == null)
+				{
+					mInstance = new WSTool();
+				}
 			}
 		}
 		return mInstance;
@@ -141,7 +142,7 @@ public final class WSTool
 
         mCommon = new Common(ctx);
 
-		mSpeed = new Speed(ctx);
+		//mSpeed = new Speed(ctx);
 
 		mCommon.setDebug(DEBUG);
 	}
@@ -162,24 +163,6 @@ public final class WSTool
 	public Tool getToolObject()
 	{
 		return this.mTool;
-	}
-
-	/**
-	 * Method getSpeedObject
-	 * @return
-	 */
-	public Speed getSpeedObject()
-	{
-		return this.mSpeed;
-	}
-
-	/**
-	 * Method setSpeed
-	 * @param mSpeed
-	 */
-	public void setSpeed(Speed mSpeed)
-	{
-		this.mSpeed = mSpeed;
 	}
 
 	/**

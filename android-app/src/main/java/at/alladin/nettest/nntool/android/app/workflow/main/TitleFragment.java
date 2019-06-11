@@ -89,16 +89,21 @@ public class TitleFragment extends Fragment {
 
     private void startMeasurement() {
         final RequestMeasurementTask task = new RequestMeasurementTask(getContext(),
-                new OnTaskFinishedCallback<LmapUtil.LmapTaskDescWrapper>() {
+                new OnTaskFinishedCallback<LmapUtil.LmapTaskWrapper>() {
                     @Override
-                    public void onTaskFinished(LmapUtil.LmapTaskDescWrapper result) {
+                    public void onTaskFinished(LmapUtil.LmapTaskWrapper result) {
                         if (result != null && result.getTaskDescList() != null && result.getTaskDescList().size() > 0) {
                             final Bundle bundle = new Bundle();
-                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_DESK_LIST,
+                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_DESC_LIST,
                                     (Serializable) result.getTaskDescList());
                             bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_COLLECTOR_URL,
                                     result.getCollectorUrl());
-                            ((MainActivity) getActivity()).startMeasurement(MeasurementType.QOS, bundle);
+                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL,
+                                    result.getSpeedCollectorUrl());
+                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_DESC,
+                                    result.getSpeedTaskDesc());
+                            ((MainActivity) getActivity()).startMeasurement(MeasurementType.SPEED, bundle);
+                            //((MainActivity) getActivity()).startMeasurement(MeasurementType.QOS, bundle);
                         }
                     }
                 });

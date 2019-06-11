@@ -9,6 +9,7 @@
     android:layout_height="match_parent">
 
     <at.alladin.nettest.nntool.android.app.view.TopProgressBarView
+        android:id="@+id/top_progress_bar_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="invisible" />
@@ -26,7 +27,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <at.alladin.nettest.nntool.android.app.view.BottomMeasurementResultSummaryView
+        android:id="@+id/bottom_measurement_result_summary_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
     <at.alladin.nettest.nntool.android.app.view.MeasurementServerSelectionView
+        android:id="@+id/view_measurement_server_selection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
@@ -36,4 +44,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
+
+
 </LinearLayout>

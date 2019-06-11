@@ -42,4 +42,24 @@
     <string name="technology_4g">4G/LTE</string>
     <string name="technology_wlan">WLAN</string>
     <string name="signal_info">%s at %d dBm</string>
+
+    <!-- Gauge specific strings -->
+    <string name="top_progress_bar_view_speed_unit">Mbps</string>
+    <string name="top_progress_bar_view_ping_unit">ms</string>
+
+    <string name="bottom_measurement_result_summary_view_download_unit">Download (Mbps)</string>
+    <string name="bottom_measurement_result_summary_view_upload_unit">Upload (Mbps)</string>
+    <string name="bottom_measurement_result_summary_view_ping_unit">Ping (ms)</string>
+
+    <string name="measurement_gauge_label_init">init</string>
+    <string name="measurement_gauge_label_ping">ping</string>
+    <string name="measurement_gauge_label_down">down</string>
+    <string name="measurement_gauge_label_up">up</string>
+
+    <string name="measurement_gauge_speed_zero">0</string>
+    <string name="measurement_gauge_speed_one">1Mb</string>
+    <string name="measurement_gauge_speed_two">10Mb</string>
+    <string name="measurement_gauge_speed_three">100Mb</string>
+    <string name="measurement_gauge_speed_four">1Gb</string>
+
 </resources>

@@ -50,7 +50,6 @@
 #include <arpa/nameser.h>
 #include <netdb.h>
 #include <resolv.h>
-#include <ifaddrs.h>
 
 
 #include <cmath>
@@ -73,16 +72,19 @@
 #include <getopt.h>
 #include <getopt.h>
 #include <errno.h>
-#include <execinfo.h>
 #include <cxxabi.h>
 
+#ifndef __ANDROID__
+    #include <execinfo.h>
+    #include <ifaddrs.h>
+#endif
 
-//openssl
-#include <openssl/crypto.h>
-#include <openssl/x509.h>
-#include <openssl/pem.h>
-#include <openssl/ssl.h>
-#include <openssl/err.h>
+//openssl is not used in ias-cpp
+//#include <openssl/crypto.h>
+//#include <openssl/x509.h>
+//#include <openssl/pem.h>
+//#include <openssl/ssl.h>
+//#include <openssl/err.h>
 
 
 //libnntool
@@ -142,7 +144,7 @@ extern vector<char> randomDataValues;
 extern struct conf_data conf;
 extern struct measurement measurements;
 
-extern pthread_mutex_t mutex;
+extern pthread_mutex_t mutex1;
 extern map<int,int> syncing_threads;
 
 #endif

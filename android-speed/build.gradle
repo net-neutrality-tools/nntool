@@ -47,15 +47,20 @@ android
                     proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
                 }
     }
+
+    // Encapsulates your external native build configurations.
+    externalNativeBuild {
+        cmake {
+            path file('../ias-cpp/CMakeLists.txt')
+        }
+    }
 }
 
 dependencies
 {
-    debugImplementation "com.android.support:design:28.0.0"
-
     implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
 
-    implementation project(path: ':android-common')
+    //implementation project(path: ':android-common')
 
     implementation 'com.android.support:multidex:1.0.3'
 
@@ -65,10 +70,3 @@ dependencies
     api 'org.java-websocket:Java-WebSocket:1.3.8'
 }
 
-task copyNativeScript(type:Exec) {
-    environment "PROJECT_DIR", projectDir.getPath()
-    workingDir projectDir.getPath()+'/../ias-mobile'
-    commandLine './copy_app_android.sh'
-}
-
-preBuild.dependsOn(copyNativeScript)

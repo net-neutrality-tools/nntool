@@ -14,6 +14,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTas
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.QoSMeasurementTypeParameters;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.SpeedMeasurementTypeParameters;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.SpeedMeasurementTypeParameters.MeasurementServerConfig;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.SpeedMeasurementTypeParameters.SpeedMeasurementConfiguration;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.SpeedMeasurementTypeParameters.SpeedMeasurementConfiguration.SpeedMeasurementClass;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
@@ -57,10 +58,11 @@ public interface LmapTaskMapper {
 	
 	@Mappings({
 		@Mapping(target="options",
-				expression= "java( buildOptionSpeedList(settings) )"
-				)
+				expression= "java( buildOptionSpeedList(settings, measurementServer) )"
+				),
+		@Mapping(target="name", source="name")
 	})
-	LmapTaskDto map(Settings settings, String name);
+	LmapTaskDto map(Settings settings, MeasurementServer measurementServer, String name);
 	
 	@Mappings({
 //		@Mapping(target="uploadClassList", source="uploadClassList"),
@@ -88,12 +90,25 @@ public interface LmapTaskMapper {
 		return ret;
 	}
 	
-	default List<LmapOptionDto> buildOptionSpeedList(final Settings settings) {
+	default List<LmapOptionDto> buildOptionSpeedList(final Settings settings, final MeasurementServer server) {
 		final List<LmapOptionDto> ret = new ArrayList<>();
 		
 		if (settings != null && settings.getUrls() != null && settings.getUrls().getCollectorService() != null) {
 			ret.add(generateOption(RESULT_COLLECTOR_URL, settings.getUrls().getCollectorService()));
 		}
+		
+		if (server != null) {
+			if (server.getAddressIpv4() != null) {
+				ret.add(generateOption(SERVER_ADDRESS, server.getAddressIpv4()));
+			}
+			if (server.getAddressIpv6() != null) {
+				ret.add(generateOption(SERVER_ADDRESS_IPV6, server.getAddressIpv6()));
+			}
+			if (server.getPort() != null) {
+				ret.add(generateOption(SERVER_PORT, server.getPort().toString()));
+			}
+		}
+		
 		if (settings.getMeasurements() != null) {
 			final SpeedMeasurementSettings speedSettings = (SpeedMeasurementSettings) settings.getMeasurements().get(MeasurementTypeDto.SPEED);
 			if (speedSettings != null) {
@@ -125,9 +140,8 @@ public interface LmapTaskMapper {
 			if (measurementServer.getPort() != null) {
 				ret.add(generateOption(SERVER_PORT, measurementServer.getPort().toString()));
 			}
-			
-			
 		}
+		
 		final LmapOptionDto measurementOption = new LmapOptionDto();
 		if (qosObjectiveList != null) {
 			measurementOption.setMeasurementParameters(createQoSParameters(qosObjectiveList));
