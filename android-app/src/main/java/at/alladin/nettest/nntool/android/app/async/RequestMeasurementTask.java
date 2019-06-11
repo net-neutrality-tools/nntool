@@ -2,6 +2,10 @@ package at.alladin.nettest.nntool.android.app.async;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.dialog.BlockingProgressDialog;
@@ -15,6 +19,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCon
  * @author Felix Kendlbacher (fk@alladin.at)
  */
 public class RequestMeasurementTask extends AsyncTask<Void, Void, LmapControlDto> {
+
+    private final static String TAG = RequestMeasurementTask.class.getSimpleName();
 
     private final Context context;
 
@@ -45,9 +51,15 @@ public class RequestMeasurementTask extends AsyncTask<Void, Void, LmapControlDto
 
     @Override
     protected void onPostExecute(LmapControlDto result) {
-        final LmapUtil.LmapTaskWrapper taskDescWrapper = LmapUtil.extractQosTaskDescList(result);
+        final LmapUtil.LmapTaskWrapper taskWrapper = LmapUtil.extractQosTaskDescList(result);
+        try {
+            Log.d(TAG, new ObjectMapper().writeValueAsString(taskWrapper));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
         if (callback != null) {
-            callback.onTaskFinished(taskDescWrapper);
+            callback.onTaskFinished(taskWrapper);
         }
 
         if (progressDialog != null) {
