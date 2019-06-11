@@ -2,6 +2,10 @@ package at.alladin.nettest.nntool.android.app.async;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
@@ -18,6 +22,8 @@ import at.alladin.nntool.client.v2.task.TaskDesc;
  * @author Felix Kendlbacher (fk@alladin.at)
  */
 public class RequestMeasurementTask extends AsyncTask<Void, Void, LmapControlDto> {
+
+    private final static String TAG = RequestMeasurementTask.class.getSimpleName();
 
     private final Context context;
 
@@ -49,6 +55,11 @@ public class RequestMeasurementTask extends AsyncTask<Void, Void, LmapControlDto
     @Override
     protected void onPostExecute(LmapControlDto result) {
         final LmapUtil.LmapTaskDescWrapper taskDescWrapper = LmapUtil.extractQosTaskDescList(result);
+        try {
+            Log.d(TAG, new ObjectMapper().writeValueAsString(taskDescWrapper));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         if (callback != null) {
             callback.onTaskFinished(taskDescWrapper);
         }

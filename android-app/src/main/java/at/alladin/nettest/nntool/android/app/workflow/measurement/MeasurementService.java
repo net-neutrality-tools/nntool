@@ -5,17 +5,23 @@ package at.alladin.nettest.nntool.android.app.workflow.measurement;
  */
 
 import android.app.Service;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.util.info.InformationService;
 import at.alladin.nettest.qos.android.QoSMeasurementClientAndroid;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.TaskDesc;
@@ -23,7 +29,7 @@ import at.alladin.nntool.client.v2.task.TaskDesc;
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
  */
-public class MeasurementService extends Service {
+public class MeasurementService extends Service implements ServiceConnection {
 
     final static String TAG = MeasurementService.class.getSimpleName();
 
@@ -41,6 +47,8 @@ public class MeasurementService extends Service {
 
     QoSMeasurementClientAndroid qosMeasurementClient;
 
+    InformationService informationService;
+
     public class MeasurementServiceBinder extends Binder {
         public MeasurementService getService() {
             return MeasurementService.this;
@@ -50,6 +58,16 @@ public class MeasurementService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG, "onCreate");
+        final Intent serviceIntent = new Intent(this, InformationService.class);
+        bindService(serviceIntent, this, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        unbindService(this);
+        super.onDestroy();
     }
 
     @Override
@@ -78,7 +96,7 @@ public class MeasurementService extends Service {
     }
 
     public void startMeasurement() {
-        //TODO: speed measurement
+
     }
 
     public void startQosMeasurement(final Bundle options) {
@@ -97,7 +115,15 @@ public class MeasurementService extends Service {
         final String collectorUrl = options.getString(EXTRAS_KEY_QOS_TASK_COLLECTOR_URL);
         final ClientHolder client = ClientHolder.getInstance(taskDescList, collectorUrl);
         qosMeasurementClient = new QoSMeasurementClientAndroid(client, getApplicationContext());
-        qosMeasurementClient.start();
+        final Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //startMeasurement();
+                qosMeasurementClient.run();
+            }
+        });
+
+        t.start();
     }
 
     public void cancelMeasurement() {
@@ -118,5 +144,15 @@ public class MeasurementService extends Service {
         }
 
         return START_NOT_STICKY;
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        Log.d(TAG, "Service Connected " + name);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        Log.d(TAG, "Service Disconnected " + name);
     }
 }

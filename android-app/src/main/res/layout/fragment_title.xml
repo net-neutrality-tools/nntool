@@ -19,4 +19,21 @@
         <include layout="@layout/start_test_view" />
     </RelativeLayout>
 
+    <at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView
+        android:layout_marginTop="-120dp"
+        android:id="@+id/view_provider_signal"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <at.alladin.nettest.nntool.android.app.view.MeasurementServerSelectionView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <at.alladin.nettest.nntool.android.app.view.GeoLocationView
+        android:id="@+id/view_geo_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 </LinearLayout>

@@ -2,6 +2,7 @@ package at.alladin.nettest.nntool.android.app.async;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.M
  */
 public class SendReportTask extends AsyncTask<Void, Void, MeasurementResultResponse> {
 
+    private final static String TAG = SendReportTask.class.getSimpleName();
+
     private final Context context;
     private final OnTaskFinishedCallback<MeasurementResultResponse> callback;
     private BlockingProgressDialog progressDialog;
@@ -31,7 +34,7 @@ public class SendReportTask extends AsyncTask<Void, Void, MeasurementResultRespo
         this.collectorUrl = collectorUrl;
         this.reportDto = reportDto;
         try {
-            System.out.println(new ObjectMapper().writeValueAsString(reportDto));
+            Log.d(TAG, new ObjectMapper().writeValueAsString(reportDto));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
