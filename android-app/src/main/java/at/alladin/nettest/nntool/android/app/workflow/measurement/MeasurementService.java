@@ -107,7 +107,8 @@ public class MeasurementService extends Service implements ServiceConnection {
     public void startMeasurement(final Bundle options) {
         final String speedTaskCollectorUrl = options.getString(EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL);
         final SpeedTaskDesc speedTaskDesc = (SpeedTaskDesc) options.getSerializable(EXTRAS_KEY_SPEED_TASK_DESC);
-        jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskCollectorUrl, speedTaskDesc);
+        jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskDesc);
+        jniSpeedMeasurementClient.setCollectorUrl(speedTaskCollectorUrl);
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {

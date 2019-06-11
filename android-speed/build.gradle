@@ -47,6 +47,13 @@ android
                     proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
                 }
     }
+
+    // Encapsulates your external native build configurations.
+    externalNativeBuild {
+        cmake {
+            path file('../ias-cpp/CMakeLists.txt')
+        }
+    }
 }
 
 dependencies

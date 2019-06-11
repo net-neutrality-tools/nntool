@@ -28,8 +28,7 @@ public class JniSpeedMeasurementClient {
 
     private List<MeasurementFinishedStringListener> finishedStringListeners = new ArrayList<>();
 
-    public JniSpeedMeasurementClient(final String collectorUrl, final SpeedTaskDesc speedTaskDesc) {
-        this.collectorUrl = collectorUrl;
+    public JniSpeedMeasurementClient(final SpeedTaskDesc speedTaskDesc) {
         this.speedTaskDesc = speedTaskDesc;
         speedMeasurementState = new SpeedMeasurementState();
         shareMeasurementState(speedTaskDesc, speedMeasurementState, speedMeasurementState.getPingMeasurement(), speedMeasurementState.getDownloadMeasurement(), speedMeasurementState.getUploadMeasurement());
@@ -43,6 +42,9 @@ public class JniSpeedMeasurementClient {
     @Keep
     public void cppCallbackFinished (final String message) {
         Log.d(TAG, message);
+        for (MeasurementFinishedStringListener l : finishedStringListeners) {
+            l.onMeasurementFinished(message);
+        }
     }
 
     public SpeedMeasurementState getSpeedMeasurementState() {
@@ -66,6 +68,22 @@ public class JniSpeedMeasurementClient {
 
     public void removeMeasurementFinishedListener(final MeasurementFinishedStringListener listener) {
         finishedStringListeners.remove(listener);
+    }
+
+    public String getCollectorUrl() {
+        return collectorUrl;
+    }
+
+    public void setCollectorUrl(String collectorUrl) {
+        this.collectorUrl = collectorUrl;
+    }
+
+    public SpeedTaskDesc getSpeedTaskDesc() {
+        return speedTaskDesc;
+    }
+
+    public void setSpeedTaskDesc(SpeedTaskDesc speedTaskDesc) {
+        this.speedTaskDesc = speedTaskDesc;
     }
 
     public interface MeasurementFinishedStringListener {
