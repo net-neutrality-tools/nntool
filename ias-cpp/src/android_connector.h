@@ -130,10 +130,16 @@ class AndroidConnector {
         jfieldID fieldAverageMs;
 
         //the settings from the SpeedTaskDesc
-        std::string measurementServerUrl;
+        std::string measurementServerUrlV4;
+        std::string measurementServerUrlV6;
         int rttCount;
         int downloadStreams;
         int uploadStreams;
+        int speedServerPort;
+        bool performDownload;
+        bool performUpload;
+        bool performRtt;
+
 
         AndroidConnector() {};
 

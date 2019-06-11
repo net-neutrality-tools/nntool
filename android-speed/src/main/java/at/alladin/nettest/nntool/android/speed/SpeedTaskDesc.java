@@ -11,13 +11,19 @@ public class SpeedTaskDesc implements Serializable {
 
     private String speedServerAddrV6;
 
-    private Integer speedServerPort;
+    private int speedServerPort = 80;
 
     private int rttCount;
 
     private int downloadStreams;
 
     private int uploadStreams;
+
+    private boolean performDownload = true;
+
+    private boolean performUpload = true;
+
+    private boolean performRtt = true;
 
     public int getRttCount() {
         return rttCount;
@@ -59,12 +65,36 @@ public class SpeedTaskDesc implements Serializable {
         this.speedServerAddrV6 = speedServerAddrV6;
     }
 
-    public Integer getSpeedServerPort() {
+    public int getSpeedServerPort() {
         return speedServerPort;
     }
 
-    public void setSpeedServerPort(Integer speedServerPort) {
+    public void setSpeedServerPort(int speedServerPort) {
         this.speedServerPort = speedServerPort;
+    }
+
+    public boolean isPerformDownload() {
+        return performDownload;
+    }
+
+    public void setPerformDownload(boolean performDownload) {
+        this.performDownload = performDownload;
+    }
+
+    public boolean isPerformUpload() {
+        return performUpload;
+    }
+
+    public void setPerformUpload(boolean performUpload) {
+        this.performUpload = performUpload;
+    }
+
+    public boolean isPerformRtt() {
+        return performRtt;
+    }
+
+    public void setPerformRtt(boolean performRtt) {
+        this.performRtt = performRtt;
     }
 
     @Override
@@ -76,6 +106,9 @@ public class SpeedTaskDesc implements Serializable {
                 ", rttCount=" + rttCount +
                 ", downloadStreams=" + downloadStreams +
                 ", uploadStreams=" + uploadStreams +
+                ", performDownload=" + performDownload +
+                ", performUpload=" + performUpload +
+                ", performRtt=" + performRtt +
                 '}';
     }
 }

@@ -3,6 +3,9 @@ package at.alladin.nettest.nntool.android.speed.jni;
 import android.support.annotation.Keep;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
 
@@ -22,6 +25,8 @@ public class JniSpeedMeasurementClient {
     private String collectorUrl;
 
     private SpeedTaskDesc speedTaskDesc;
+
+    private List<MeasurementFinishedStringListener> finishedStringListeners = new ArrayList<>();
 
     public JniSpeedMeasurementClient(final String collectorUrl, final SpeedTaskDesc speedTaskDesc) {
         this.collectorUrl = collectorUrl;
@@ -55,4 +60,17 @@ public class JniSpeedMeasurementClient {
     private native void shareMeasurementState(final SpeedTaskDesc speedTaskDesc, final SpeedMeasurementState speedMeasurementState, final SpeedMeasurementState.PingPhaseState pingMeasurementState,
                                               final SpeedMeasurementState.SpeedPhaseState downloadMeasurementState, final SpeedMeasurementState.SpeedPhaseState uploadMeasurementState);
 
+    public void addMeasurementFinishedListener(final MeasurementFinishedStringListener listener) {
+        finishedStringListeners.add(listener);
+    }
+
+    public void removeMeasurementFinishedListener(final MeasurementFinishedStringListener listener) {
+        finishedStringListeners.remove(listener);
+    }
+
+    public interface MeasurementFinishedStringListener {
+
+        public void onMeasurementFinished (final String result);
+
+    }
 }

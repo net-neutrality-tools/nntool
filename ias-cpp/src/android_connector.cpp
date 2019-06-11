@@ -84,9 +84,18 @@ void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
     const jclass clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedTaskDesc");
 
     jfieldID toParseId = env->GetFieldID(clazz, "speedServerAddrV4", "Ljava/lang/String;");
-    const jstring serverUrl = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
-    const char *url = env->GetStringUTFChars(serverUrl, NULL);
-    measurementServerUrl = std::string(url);
+    jstring serverUrl = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
+    if (serverUrl != nullptr) {
+        const char * url = env->GetStringUTFChars(serverUrl, NULL);
+        measurementServerUrlV4 = std::string(url);
+    }
+
+    toParseId = env->GetFieldID(clazz, "speedServerAddrV6", "Ljava/lang/String;");
+    serverUrl = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
+    if (serverUrl != nullptr) {
+        const char * urlv6 = env->GetStringUTFChars(serverUrl, NULL);
+        measurementServerUrlV6 = std::string(urlv6);
+    }
 
     toParseId = env->GetFieldID(clazz, "rttCount", "I");
     rttCount = (int) env->GetIntField(speedTaskDesc, toParseId);
@@ -96,6 +105,19 @@ void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
 
     toParseId = env->GetFieldID(clazz, "uploadStreams", "I");
     uploadStreams = (int) env->GetIntField(speedTaskDesc, toParseId);
+
+    toParseId = env->GetFieldID(clazz, "speedServerPort", "I");
+    speedServerPort = (int) env->GetIntField(speedTaskDesc, toParseId);
+
+    toParseId = env->GetFieldID(clazz, "performDownload", "Z");
+    performDownload = (int) env->GetBooleanField(speedTaskDesc, toParseId);
+
+    toParseId = env->GetFieldID(clazz, "performUpload", "Z");
+    performUpload = (int) env->GetBooleanField(speedTaskDesc, toParseId);
+
+    toParseId = env->GetFieldID(clazz, "performRtt", "Z");
+    performRtt = (int) env->GetBooleanField(speedTaskDesc, toParseId);
+
 }
 
 void AndroidConnector::unregisterSharedObject() {
@@ -259,9 +281,9 @@ void AndroidConnector::startMeasurement() {
     ::DEBUG 			= false;
 	::RUNNING 			= true;
 
-	::RTT				= true;
-	::DOWNLOAD 			= true;
-	::UPLOAD 			= true;
+	::RTT				= performRtt;
+	::DOWNLOAD 			= performDownload;
+	::UPLOAD 			= performUpload;
 
 	json11::Json::object jRttParameters;
 	json11::Json::object jDownloadParameters;
@@ -284,13 +306,14 @@ void AndroidConnector::startMeasurement() {
 	jMeasurementParameters["platform"] = "desktop";
 	jMeasurementParameters["clientos"] = "linux";
 	jMeasurementParameters["wsTLD"] = "net-neutrality.tools";
-	jMeasurementParameters["wsTargetPort"] = "80";
+	jMeasurementParameters["wsTargetPort"] = std::to_string(speedServerPort);
 	jMeasurementParameters["wsWss"] = "0";
 	jMeasurementParameters["wsAuthToken"] = "placeholderToken";
 	jMeasurementParameters["wsAuthTimestamp"] = "placeholderTimestamp";
 
 	json11::Json::array jTargets;
-	jTargets.push_back(measurementServerUrl);
+	jTargets.push_back(measurementServerUrlV4);
+	jTargets.push_back(measurementServerUrlV6);
 	jMeasurementParameters["wsTargets"] = json11::Json(jTargets);
 	jMeasurementParameters["wsTargetsRtt"] = json11::Json(jTargets);
 
