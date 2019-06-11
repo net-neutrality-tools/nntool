@@ -13,12 +13,13 @@ Linux (any Version)
 - libssl-dev
 - libtool
 - automake
+- lcov
 
 For a Debian based Linux run the following command as root:
 
 [source,bash]
 ----
-apt install build-essential make cmake automake g++ libtool liblog4cpp5-dev libssl-dev
+apt install build-essential make cmake automake g++ libtool liblog4cpp5-dev libssl-dev lcov
 ----
 
 ==== Build
@@ -40,6 +41,34 @@ make
 3. Copy trace.ini to `/etc/ias-server/`
 4. Customize and copy `config.json` to `/etc/ias-server/`
 5. Create dir `/var/log/ias-server/`
+
+==== Unit Tests
+
+To execute the included unit tests execute the following commands:
+
+[source,bash]
+----
+cd <nntool_eu_directory>/ias-server
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE="DEBUG"
+make
+./ias_server_test
+----
+
+To generate the code coverage reports run the following commands after running the unit tests:
+
+[source,bash]
+----
+lcov --capture --directory . --output-file coverage.info
+lcov --remove coverage.info '/usr/*' --output-file coverage.info
+lcov --remove coverage.info '*external/*' --output-file coverage.info
+lcov --remove coverage.info '*ias-libnntool/*' --output-file coverage.info
+genhtml coverage.info --branch-coverage --output-directory ./coverage_report/
+lcov --list coverage.info
+----
+
+The HTML code coverage report will be generated into directory `ias-server/build/coverage_report`.
 
 === Execution
 Run `build/ias-server`. Add the `-d` option for daemon mode.

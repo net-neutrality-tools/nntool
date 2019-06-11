@@ -1,4 +1,4 @@
-== IAS C++ Client module
+== IAS libnntool module
 
 === Building
 
@@ -6,11 +6,20 @@
 
 Linux (any Version)
 
-- make or ninja
+- ninja
 - cmake
 - g++
+- liblog4cpp5-dev
 - libssl-dev
+- golang
 - lcov
+
+For a Debian based Linux run the following command as root:
+
+[source,bash]
+----
+apt install build-essential ninja cmake g++ liblog4cpp5-dev libssl-dev golang lcov
+----
 
 ==== Build
 
@@ -18,11 +27,11 @@ With fullfilled prerequisites perform the following steps:
 
 [source,bash]
 ----
-cd <nntool_eu_directory>/ias-cpp
+cd <nntool_eu_directory>/ias-libnntool
 mkdir build
 cd build
-cmake .. # add -DCMAKE_BUILD_TYPE="DEBUG" for debug build, add -GNinja for ninja
-make # or ninja
+cmake .. -GNinja # add -DCMAKE_BUILD_TYPE="DEBUG" for debug build
+ninja
 ----
 
 ==== Unit Tests
@@ -31,12 +40,12 @@ To execute the included unit tests execute the following commands:
 
 [source,bash]
 ----
-cd <nntool_eu_directory>/ias-cpp
+cd <nntool_eu_directory>/ias-libnntool
 mkdir build
 cd build
 cmake .. -GNinja -DCMAKE_BUILD_TYPE="DEBUG"
 ninja
-./ias_client_test
+./nntool_test
 ----
 
 To generate the code coverage reports run the following commands after running the unit tests:
@@ -46,14 +55,9 @@ To generate the code coverage reports run the following commands after running t
 lcov --capture --directory . --output-file coverage.info
 lcov --remove coverage.info '/usr/*' --output-file coverage.info
 lcov --remove coverage.info '*external/*' --output-file coverage.info
-lcov --remove coverage.info '*ias-libnntool/*' --output-file coverage.info
 genhtml coverage.info --branch-coverage --output-directory ./coverage_report/
 lcov --list coverage.info
 ----
 
-The HTML code coverage report will be generated into directory `ias-cpp/build/coverage_report`.
-
-=== Execution
-
-Run `build/ias-client`.
+The HTML code coverage report will be generated into directory `ias-libnntool/build/coverage_report`.
 
