@@ -31,6 +31,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurem
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementServerRepository;
@@ -188,7 +189,11 @@ public class CouchDbStorageService implements StorageService {
 			
 			switch (type) {
 			case SPEED:
-				return lmapTaskMapper.map(settings, type.toString());
+				final SpeedMeasurementSettings speedSettings = (SpeedMeasurementSettings) settings.getMeasurements().get(type);
+				//TODO: load balancing needs to select correct measurement server
+				final LmapTaskDto ret = lmapTaskMapper.map(settings, 
+						measurementServerRepository.findByUuid(speedSettings.getSpeedMeasurementServerUuid()), type.toString());
+				return ret;
 			case QOS:
 				final List<QoSMeasurementObjective> qosObjectiveList = qosMeasurementObjectiveRepository.findAllByEnabled(true);
 				

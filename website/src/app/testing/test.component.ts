@@ -1,12 +1,12 @@
-import {TestImplementation} from "./tests-implementation/test-implementation";
-import {UIState} from "./tests-ui/ui-state";
-import {TestState} from "./tests-implementation/test-state";
-import {merge, Observable, Subject} from "rxjs";
-import {filter, map, tap} from "rxjs/operators";
-import {EventEmitter, Input, OnChanges, OnInit, Output} from "@angular/core";
-import {BasicTestState} from "./enums/basic-test-state.enum";
-import {TestConfig} from "./tests-implementation/test-config";
-import {TestComponentStatus} from "./enums/test-component-status.enum";
+import {TestImplementation} from './tests-implementation/test-implementation';
+import {UIState} from './tests-ui/ui-state';
+import {TestState} from './tests-implementation/test-state';
+import {merge, Observable, Subject} from 'rxjs';
+import {filter, map, tap} from 'rxjs/operators';
+import {EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {BasicTestState} from './enums/basic-test-state.enum';
+import {TestConfig} from './tests-implementation/test-config';
+import {TestComponentStatus} from './enums/test-component-status.enum';
 
 
 export abstract class StartableTest {
@@ -21,6 +21,16 @@ export abstract class Test<
     TC extends TestConfig,
     TS extends TestState
     > extends StartableTest implements OnInit, OnChanges {
+
+    protected constructor(testImplementation: T) {
+        super();
+        this.state = this.$state.asObservable().pipe(
+            map(this.testStateToUIStateWrapper)
+        );
+        // this.onChangedRunningState.subscribe(() => {});
+        // subscribed to trigger emitting "finished" output if there is no test-series parent
+        this.testImplementation = testImplementation;
+    }
 
     @Input()
     protected config?: TC;
@@ -37,7 +47,7 @@ export abstract class Test<
     private testImplementation: T;
     private $state: Subject<TS> = new Subject<TS>();
     protected state: Observable<US>;
-    protected manualStartShouldBeDisabled: boolean = false;
+    protected manualStartShouldBeDisabled = false;
 
     private $onStatusNotWaiting: Subject<TestComponentStatus.REQUESTS_CONFIG | TestComponentStatus.WORKING> =
         new Subject<TestComponentStatus.REQUESTS_CONFIG | TestComponentStatus.WORKING>();
@@ -57,15 +67,7 @@ export abstract class Test<
     private status: TestComponentStatus = TestComponentStatus.WAITING;
     public onChangedRunningState: Observable<TestComponentStatus> = merge(this.$onStatusNotWaiting.asObservable(), this.onStatusWaiting$);
 
-    protected constructor(testImplementation: T) {
-        super();
-        this.state = this.$state.asObservable().pipe(
-            map(this.testStateToUIStateWrapper)
-        );
-        //this.onChangedRunningState.subscribe(() => {});
-        // subscribed to trigger emitting "finished" output if there is no test-series parent
-        this.testImplementation = testImplementation;
-    }
+    protected abstract testStateToUIState: (state: TS) => US;
 
     ngOnInit(): void {
         this.setActive(false);
@@ -96,8 +98,6 @@ export abstract class Test<
             this.testImplementation.register(this.config, this.$state);
         }
     }
-
-    protected abstract testStateToUIState: (state: TS) => US;
 
     // WRAPPER NEEDED, since testStateToUIState can not be used in the constructor
     private testStateToUIStateWrapper: (state: TS) => US = (state: TS) => {

@@ -77,9 +77,13 @@
 #include <getopt.h>
 #include <getopt.h>
 #include <errno.h>
-#include <execinfo.h>
 #include <cxxabi.h>
 
+#ifndef __ANDROID__
+
+    #include <execinfo.h>
+
+#endif
 
 //openssl
 #include <openssl/crypto.h>
@@ -87,7 +91,6 @@
 #include <openssl/pem.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
-
 
 #define MAX_PACKET_SIZE 1500
 #define MAXBUFFER 1580

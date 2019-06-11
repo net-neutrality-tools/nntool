@@ -30,15 +30,15 @@ export class SignalAPI {
      */
     signal_strength_2g3g_dbm: number;
 
-//	/**
-//	 * The bit error rate as defined in (ETSI) TS 27.007 8.5 (If available).
-//	 */
-//	@io.swagger.annotations.ApiModelProperty("The bit error rate as defined in (ETSI) TS 27.007 8.5 (If available).")
-//	@JsonPropertyDescription("The bit error rate as defined in (ETSI) TS 27.007 8.5 (If available).")
-//	@Expose
-//	@SerializedName("gsm_bit_error_rate")
-//	@JsonProperty("gsm_bit_error_rate")
-//	private Integer gsmBitErrorRate;
+// 	/**
+// 	 * The bit error rate as defined in (ETSI) TS 27.007 8.5 (If available).
+// 	 */
+// 	@io.swagger.annotations.ApiModelProperty("The bit error rate as defined in (ETSI) TS 27.007 8.5 (If available).")
+// 	@JsonPropertyDescription("The bit error rate as defined in (ETSI) TS 27.007 8.5 (If available).")
+// 	@Expose
+// 	@SerializedName("gsm_bit_error_rate")
+// 	@JsonProperty("gsm_bit_error_rate")
+// 	private Integer gsmBitErrorRate;
 
     /**
      * The LTE reference signal received power, in dBm (If available).

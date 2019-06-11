@@ -23,7 +23,10 @@
 #---------------------------------------------------------
 
 #create dir structure
-rm -R build
+
+if [ -d "build" ]; then
+    rm -R build
+fi
 
 mkdir build
 mkdir build/plain
@@ -49,6 +52,7 @@ fi
 #build core
 cp src/*.js build/plain/core/
 cp -R src/modules build/plain/core/
+find build/plain/core -type f -name "*.spec.js" -exec rm -f {} \;
 
 if [ -z $1 ]; then
     cd build/plain/core/

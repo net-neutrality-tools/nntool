@@ -1,12 +1,14 @@
-import {TestImplementation} from "../test-implementation";
-import {Logger, LoggerService} from "../../../services/log.service";
-import {Injectable, NgZone} from "@angular/core";
-import {Subject} from "rxjs";
-import {PortBlockingTestState} from "./port-blocking-test-state";
-import {BasicTestState} from "../../enums/basic-test-state.enum";
-import {PortBlockingTestTypeEnum} from "./enums/port-blocking-test-type";
-import {PortBlockingTestConfig} from "./port-blocking-test-config";
-import {TestSchedulerService} from "../../test-scheduler.service";
+import {TestImplementation} from '../test-implementation';
+import {Logger, LoggerService} from '../../../services/log.service';
+import {Injectable, NgZone} from '@angular/core';
+import {Subject} from 'rxjs';
+import {PortBlockingTestState} from './port-blocking-test-state';
+import {BasicTestState} from '../../enums/basic-test-state.enum';
+import {PortBlockingTestTypeEnum} from './enums/port-blocking-test-type';
+import {PortBlockingTestConfig} from './port-blocking-test-config';
+import {TestSchedulerService} from '../../test-scheduler.service';
+
+declare var PortBlocking: any;
 
 @Injectable({
     providedIn: 'root',
@@ -24,7 +26,7 @@ export class PortBlockingTestImplementation extends TestImplementation<PortBlock
         timeout: 5000
     };
 
-    protected logger: Logger = LoggerService.getLogger("PortBlockingImplementation");
+    protected logger: Logger = LoggerService.getLogger('PortBlockingImplementation');
     private $state: Subject<PortBlockingTestState>;
     private portBlocking: any;
 
@@ -34,8 +36,8 @@ export class PortBlockingTestImplementation extends TestImplementation<PortBlock
 
     protected generateInitState = (config: PortBlockingTestConfig) => {
 
-        const portInformation: {port: number, uid: string}[] = config["UDP"].map(
-            (settings: any) => ({port: parseInt(settings["out_port"], 10), uid: settings["qos_test_uid"]})
+        const portInformation: {port: number, uid: string}[] = config.UDP.map(
+            (settings: any) => ({port: parseInt(settings.out_port, 10), uid: settings.qos_test_uid})
         );
 
         const state: PortBlockingTestState = new PortBlockingTestState();
@@ -64,8 +66,8 @@ export class PortBlockingTestImplementation extends TestImplementation<PortBlock
 
 
         const extendedConfig = PortBlockingTestImplementation.BASE_CONFIG;
-        extendedConfig.ports = config["UDP"].map(
-            (settings: any) => parseInt(settings["out_port"], 10)
+        extendedConfig.ports = config.UDP.map(
+            (settings: any) => parseInt(settings.out_port, 10)
         );
 
 
@@ -73,17 +75,17 @@ export class PortBlockingTestImplementation extends TestImplementation<PortBlock
         this.zone.runOutsideAngular(() => {
             const state = this.generateInitState(config);
 
-            window.measurementCallback = (data: any) => { // TODO: inject window object properly
+            (window as any).measurementCallback = (data: any) => { // TODO: inject window object properly
                 if (!this.$state) {
                     return;
                 }
                 const currentState = JSON.parse(data);
                 switch (currentState.cmd) {
-                    case "report": {
+                    case 'report': {
                         state.basicState = BasicTestState.RUNNING;
                         break;
                     }
-                    case "completed": {
+                    case 'completed': {
                         state.basicState = BasicTestState.ENDED;
                         break;
                     }

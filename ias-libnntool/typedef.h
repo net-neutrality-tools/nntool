@@ -70,6 +70,8 @@ class measurement_data
 		int system_availability;
 		int error_code;
 		string error_description;
+
+		float measurement_phase_progress;
 };
 
 /*!

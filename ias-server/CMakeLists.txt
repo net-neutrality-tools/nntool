@@ -17,7 +17,7 @@
 # */
 
 
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.6)
 
 project(ias-server)
 
@@ -31,41 +31,44 @@ ENDIF (NOT THREADS_FOUND)
 
 #---------------------------------------------------------------------------------
 
-MESSAGE(STATUS "Looking for pkg-config")
-FIND_PROGRAM(PKG_CONFIG NAMES pkg-config PATHS /usr/bin/)
-IF (${PKG_CONFIG} STREQUAL PKG_CONFIG-NOTFOUND)
-	MESSAGE(FATAL_ERROR "ERROR: try -> apt install pkg-config")
-ENDIF (${PKG_CONFIG} STREQUAL PKG_CONFIG-NOTFOUND)
+# libnopoll
+
+include (ExternalProject)
+
+set(libnopoll_BUILD ${CMAKE_CURRENT_BINARY_DIR}/libnopoll/src/libnopoll-build)
+set(libnopoll_INCLUDE_DIR ${libnopoll_BUILD}/include)
+
+ExternalProject_Add(libnopoll
+	PREFIX libnopoll
+	URL ${CMAKE_CURRENT_SOURCE_DIR}/../libnopoll
+	#GIT_REPOSITORY https://github.com/ASPLes/nopoll
+	#GIT_TAG origin/master
+	BUILD_IN_SOURCE 1
+	CONFIGURE_COMMAND COMMAND <SOURCE_DIR>/autogen.sh --prefix=${libnopoll_BUILD}
+													  --includedir=${libnopoll_INCLUDE_DIR}
+													  --libdir=${libnopoll_BUILD}
+)
 
 #---------------------------------------------------------------------------------
 
-MESSAGE(STATUS "Looking for libnopoll")
-FIND_PROGRAM(LIBNOPOLL NAMES libnopoll.so PATHS /usr/local/lib/)
-IF (${LIBNOPOLL} STREQUAL LIBNOPOLL-NOTFOUND)
-	MESSAGE(FATAL_ERROR "ERROR: libnopoll missing")
-ENDIF (${LIBNOPOLL} STREQUAL LIBNOPOLL-NOTFOUND)
-
-#---------------------------------------------------------------------------------
-
-set(dir ${CMAKE_CURRENT_SOURCE_DIR}/build)
-set(EXECUTABLE_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
-set(LIBRARY_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} CACHE PATH "Build directory" FORCE)
+set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} CACHE PATH "Build directory" FORCE)
 
 set ( CMAKE_VERBOSE_MAKEFILE true )
-add_definitions(-std=c++11)
+add_definitions(-std=c++14)
 add_definitions(-g)
 add_definitions(-Wall)
 add_definitions(-Wextra)
 add_definitions(-DNNTOOL)
 add_definitions(-DNNTOOL_SERVER)
-add_definitions("$$(pkg-config nopoll --cflags)")
-add_definitions("$$(pkg-config nopoll --libs)")
+
+set(NNTOOL_SERVER true)
 
 add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/../ias-libnntool ${CMAKE_CURRENT_BINARY_DIR}/ias-libnntool)
 add_subdirectory (src)
 
-INSTALL(PROGRAMS build/ias-server DESTINATION bin )
-INSTALL(PROGRAMS build/libnntool.so DESTINATION /usr/lib )
+INSTALL(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/ias-server DESTINATION bin )
+INSTALL(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/libnntool.so DESTINATION /usr/lib )
 
 INCLUDE (InstallRequiredSystemLibraries)
 SET (CPACK_COMPONENTS_ALL Libraries ApplicationData)

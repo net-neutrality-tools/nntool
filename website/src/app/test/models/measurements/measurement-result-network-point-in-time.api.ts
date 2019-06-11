@@ -1,5 +1,5 @@
-import {GeoLocation} from "../api/request-info.api";
-import {PointInTimeValueAPI} from "./point-in-time-value.api";
+import {GeoLocation} from '../api/request-info.api';
+import {PointInTimeValueAPI} from './point-in-time-value.api';
 
 export class MeasurementResultNetworkPointInTimeAPI {
     /**

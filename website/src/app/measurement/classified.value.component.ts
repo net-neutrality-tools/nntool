@@ -1,9 +1,8 @@
-import {Component, Input} from "@angular/core";
-import {ClassifiedValue} from "./measurement.model";
-
+import {Component, Input} from '@angular/core';
+import {ClassifiedValue} from './measurement.model';
 
 @Component({
-    selector: "measurement-value-classified",
+    selector: 'app-measurement-value-classified',
     template: ``
 })
 export class MeasurementClassifiedValueComponent {

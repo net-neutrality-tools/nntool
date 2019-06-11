@@ -70,7 +70,7 @@ int CConnection::udpSocket(string &interface)
 	sockinfo_in.sin_addr.s_addr 	= inet_addr(interface.c_str());
 
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in)) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in)) == -1 )
 	{
 		TRC_ERR("Error [udpSocket]: Could not bind socket to interface" );
 		return -1;
@@ -116,7 +116,7 @@ int CConnection::udpSocketServer(int &nPort, string sIp)
 	}
 	
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in)) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in)) == -1 )
 	{
 		TRC_ERR("Error [udpSocket]: Could not bind socket to interface" );
 		return -1;
@@ -152,7 +152,7 @@ int CConnection::udp6Socket(string &interface)
 	(void) inet_pton (AF_INET6, interface.c_str(), sockinfo_in6.sin6_addr.s6_addr);
 	
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
 	{
 		TRC_ERR("Error [udp6Socket]: Could not bind socket to interface" );
 		return -1;
@@ -200,7 +200,7 @@ int CConnection::udp6SocketServer(int &nPort, string sIp)
 	setsockopt(mSocket, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&no, sizeof(no));
 		
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
 	{
 		TRC_ERR("Error [udp6Socket]: Could not bind socket to interface" );
 		return -1;
@@ -247,7 +247,7 @@ int CConnection::tcpSocket(string &interface, string &sServer, int &nPort, int n
 	sockinfo_in.sin_addr.s_addr = inet_addr(interface.c_str());
 	
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in) ) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in) ) == -1 )
 	{
 		TRC_ERR( "Error [tcpSocket]: Could not bind socket to interface" );
 		return -1;
@@ -314,7 +314,7 @@ int CConnection::tcpSocketServer( int &nPort )
 	setsockopt(mSocket, SOL_SOCKET,SO_REUSEADDR,(const char *) &on, sizeof(on));
 	
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in) ) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in) ) == -1 )
 	{
 		TRC_ERR( "Error [tcpSocketServer]: Could not bind socket to interface" );
 		return -1;
@@ -370,7 +370,7 @@ int CConnection::tcp6Socket(string &interface, string &sServer, int &nPort, int 
 	setsockopt(mSocket, SOL_SOCKET,SO_REUSEADDR,(const char *) &on, sizeof(on));
 	
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
 	{
 		TRC_ERR("Error [tcp6Socket]: Could not bind socket to interface" );
 		return -1;
@@ -440,7 +440,7 @@ int CConnection::tcp6SocketServer( int &nPort )
 	setsockopt(mSocket, SOL_SOCKET,SO_REUSEADDR,(const char *) &on, sizeof(on));
 	
 	//Bind Socket to Interface
-	if( bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
 	{
 		TRC_ERR("Error [tcp6SocketServer]: Could not bind socket to interface" );
 		return -1;
@@ -459,7 +459,7 @@ int CConnection::send(const void *buf, int num, int flags)
 	}
 	else if ( mTls == 1 )
 	{
-		return SSL_write(ssl, buf, num); 
+		return SSL_write(ssl, buf, num);
 	}
 
 	return -1;
@@ -484,8 +484,10 @@ int CConnection::close()
 	return ::close(mSocket);
 }
 
+
 static int tlsVerifyCertificateCallback(int ok, X509_STORE_CTX *store_ctx)
 {
+
     int cert_error = X509_STORE_CTX_get_error(store_ctx);
 
     switch (cert_error)
@@ -501,8 +503,11 @@ static int tlsVerifyCertificateCallback(int ok, X509_STORE_CTX *store_ctx)
 		}
 	}
 
+
     return(ok);
 }
+
+
 
 int CConnection::connectTLS()
 {
@@ -558,5 +563,7 @@ int CConnection::connectTLS()
 		TRC_INFO("TLS Connection established");
 	}
 
+
 	return 0;
 }
+

@@ -24,7 +24,7 @@ public class CollectorConnection extends AbstractConnection<CollectorService> {
 
     public MeasurementResultResponse sendMeasurementReport(final LmapReportDto reportDto) {
         try {
-            return getControllerService().postMeasurementRequest(reportDto).execute().body().getData();
+            return getControllerService().postMeasurementRequest(reportDto, "").execute().body().getData();
         }
         catch (final Exception e) {
             e.printStackTrace();

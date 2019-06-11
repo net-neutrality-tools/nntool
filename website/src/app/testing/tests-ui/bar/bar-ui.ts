@@ -1,53 +1,63 @@
-import {AfterViewInit, Component} from "@angular/core";
-import {TestState} from "../../tests-implementation/test-state";
-import {TestImplementation} from "../../tests-implementation/test-implementation";
-import {Test} from "../../test.component";
-import {ConfigService} from "../../../services/config.service";
-import {TranslateService} from "@ngx-translate/core";
-import {BarUIState} from "./bar-ui-state";
-import {BarUIShowableTestTypeEnum} from "./enums/bar-ui-showable-test-type.enum";
-import {TestConfig} from "../../tests-implementation/test-config";
+import {AfterViewInit, Component} from '@angular/core';
+import {TestState} from '../../tests-implementation/test-state';
+import {TestImplementation} from '../../tests-implementation/test-implementation';
+import {Test} from '../../test.component';
+import {ConfigService} from '../../../services/config.service';
+import {TranslateService} from '@ngx-translate/core';
+import {BarUIState} from './bar-ui-state';
+import {BarUIShowableTestTypeEnum} from './enums/bar-ui-showable-test-type.enum';
+import {TestConfig} from '../../tests-implementation/test-config';
 
 class Point {
-    constructor (public x: number, public y: number) {}
+    constructor(public x: number, public y: number) {}
 }
 
 @Component({
-    templateUrl: "./app/testing/tests-ui/bar/bar-ui.template.html",
+    templateUrl: './bar-ui.template.html',
 })
-export abstract class BarUI<T extends TestImplementation<TC, TS>, TC extends TestConfig, TS extends TestState>
+export abstract class BarUIComponent<T extends TestImplementation<TC, TS>, TC extends TestConfig, TS extends TestState>
     extends Test<BarUIState, T, TC, TS>
     implements AfterViewInit {
 
-    private resolutionScaleFactor: number = 2; // read window.devicePixelRatio (inject window object properly)
+    private resolutionScaleFactor = 2;
     private canvas: HTMLCanvasElement;
     private canvasContext: CanvasRenderingContext2D;
     private currentState: BarUIState;
     private barWidth: number;
     private barLength: number;
-    private drawing: boolean = false;
+    private drawing = false;
     private active: boolean;
 
     private translations: {[key: string]: any};
     private barColors: {[key: string]: string};
     private font: string;
 
-    protected constructor(testImplementation: T, configService: ConfigService, protected translateService: TranslateService) {
+    protected constructor(
+        testImplementation: T,
+        configService: ConfigService,
+        protected translateService: TranslateService,
+        private window: Window
+    ) {
         super(testImplementation);
+
+        if (this.window && this.window.devicePixelRatio) {
+            this.resolutionScaleFactor = this.window.devicePixelRatio;
+        }
+
         this.state.subscribe(this.handleState);
         this.configureBarUI(configService.getConfig());
     }
 
     private configureBarUI(config: any) {
         this.translations = {
-            UDP: "UDP"
+            UDP: 'UDP'
         };
 
         this.barColors = {
-            baseColor: "#EEEEEE",
-            valueColor: "#878787",
-            progressColor: "#911232",
-            fontColor: "#FFFFFF"
+            baseColor: '#EEEEEE',
+            valueColor: '#878787',
+            progressColor: '#911232',
+            fontColor: '#FFFFFF'
         };
 
         this.font = null;
@@ -66,8 +76,8 @@ export abstract class BarUI<T extends TestImplementation<TC, TS>, TC extends Tes
         }
     }
 
-    ngAfterViewInit () {
-        this.canvas = <HTMLCanvasElement>document.getElementById("nettest-bar");
+    ngAfterViewInit() {
+        this.canvas = document.getElementById('nettest-bar') as HTMLCanvasElement;
         this.canvasContext = this.canvas.getContext('2d');
         this.addResize();
         this.setCanvas();
@@ -91,7 +101,7 @@ export abstract class BarUI<T extends TestImplementation<TC, TS>, TC extends Tes
 
     private draw = (state: BarUIState) => {
         if (this.drawing) {
-            //console.debug("Already drawing..");
+            // console.debug("Already drawing..");
             setTimeout(() => {
                 this.draw(state);
             }, 100);
@@ -109,9 +119,9 @@ export abstract class BarUI<T extends TestImplementation<TC, TS>, TC extends Tes
                 }[]
             }) => {
                 if (type.key === BarUIShowableTestTypeEnum.UDP) {
-                    this.drawBar(1, this.barColors['baseColor']);
-                    this.drawBar(this.calculateProgressOfTestType(type), this.barColors['valueColor']);
-                    this.drawBarName(this.translations[type.key], this.barColors['fontColor']);
+                    this.drawBar(1, this.barColors.baseColor);
+                    this.drawBar(this.calculateProgressOfTestType(type), this.barColors.valueColor);
+                    this.drawBarName(this.translations[type.key], this.barColors.fontColor);
                 }
             });
         }
@@ -123,7 +133,7 @@ export abstract class BarUI<T extends TestImplementation<TC, TS>, TC extends Tes
     private drawBar = (progress: number, color: string): void => {
         this.canvasContext.lineWidth = this.barWidth;
         this.canvasContext.strokeStyle = color;
-        this.canvasContext.lineCap = "round";
+        this.canvasContext.lineCap = 'round';
 
         const center = this.getCenter(this.canvas);
 
@@ -146,16 +156,16 @@ export abstract class BarUI<T extends TestImplementation<TC, TS>, TC extends Tes
     }
 
 
-    private addResize (): void {
+    private addResize(): void {
         if (this.canvas.addEventListener) {
             // > IE8
-            window.addEventListener("resize", () => { this.resizeEvent(); });
+            window.addEventListener('resize', () => { this.resizeEvent(); });
         } else {
-            (<any>window).attachEvent("onresize", () => { this.resizeEvent(); });
+            (window as any).attachEvent('onresize', () => { this.resizeEvent(); });
         }
     }
 
-    private resizeEvent () {
+    private resizeEvent() {
         if (this.drawing) {
             return;
         }
@@ -164,11 +174,11 @@ export abstract class BarUI<T extends TestImplementation<TC, TS>, TC extends Tes
         this.draw(this.currentState);
     }
 
-    private clear () {
+    private clear() {
         this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    private setCanvas (minVal: number = 400) {
+    private setCanvas(minVal: number = 400) {
         this.canvas.width = Math.max(this.canvas.clientWidth, minVal) * this.resolutionScaleFactor;
         this.canvas.height = Math.max(this.canvas.clientHeight, minVal) * this.resolutionScaleFactor;
 
@@ -176,7 +186,7 @@ export abstract class BarUI<T extends TestImplementation<TC, TS>, TC extends Tes
         this.barLength = this.canvas.width * 0.9;
     }
 
-    private getCenter (canvas: HTMLCanvasElement): Point {
+    private getCenter(canvas: HTMLCanvasElement): Point {
         return new Point(canvas.width / 2, canvas.height / 2);
     }
 
@@ -188,7 +198,7 @@ export abstract class BarUI<T extends TestImplementation<TC, TS>, TC extends Tes
             finished: boolean;
         }[]
     }): number => {
-        let numberOfPortsToTest = type.ports.length;
+        const numberOfPortsToTest = type.ports.length;
         let numberOfTestedPorts = 0;
 
         type.ports.forEach((port: {

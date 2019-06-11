@@ -1,4 +1,4 @@
-import {GeoLocation} from "../api/request-info.api";
+import {GeoLocation} from '../api/request-info.api';
 
 export class PointInTimeValueAPI<T> {
 

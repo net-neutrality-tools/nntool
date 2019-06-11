@@ -1,70 +1,70 @@
-import {Routes, RouterModule} from "@angular/router";
-import {ModuleWithProviders} from "@angular/core";
+import {Routes, RouterModule} from '@angular/router';
+import {ModuleWithProviders} from '@angular/core';
 
-import {StatisticsComponent} from "./statistics/statistics.component";
-import {MapComponent} from "./map/map.component";
-import {NetTestComponent, TestGuard} from "./test/test.component";
-import {AboutComponent} from "./about/about.component";
-import {HistoryComponent} from "./history/history.component";
-import {HelpComponent} from "./help/help.component";
-import {Guard} from "./services/guard.service";
-import {NotFoundComponent} from "./404/notfound.component";
-import {ResultListComponent} from "./result-list/result_list.component";
-import {OpendataComponent} from "./opendata/opendata.component";
-import {TCComponent} from "./tc/tc.component";
-import {HomeComponent} from "./home/home.component";
-import {HistoryDetailViewComponent} from "./history/view-detail.component";
-import {HistoryViewComponent} from "./history/view.component";
-import {OpentestViewComponent} from "./result/view.component";
-import {OpentestDetailViewComponent} from "./result/view-detail.component";
-import {SettingsComponent} from "./user/settings.component";
-import {DocuComponent} from "./docu/docu.component";
+import {StatisticsComponent} from './statistics/statistics.component';
+import {MapComponent} from './map/map.component';
+import {NetTestComponent, TestGuard} from './test/test.component';
+import {AboutComponent} from './about/about.component';
+import {HistoryComponent} from './history/history.component';
+import {HelpComponent} from './help/help.component';
+import {Guard} from './services/guard.service';
+import {NotFoundComponent} from './404/notfound.component';
+import {ResultListComponent} from './result-list/result_list.component';
+import {OpendataComponent} from './opendata/opendata.component';
+import {TCComponent} from './tc/tc.component';
+import {HomeComponent} from './home/home.component';
+import {HistoryDetailViewComponent} from './history/view-detail.component';
+import {HistoryViewComponent} from './history/view.component';
+import {OpentestViewComponent} from './result/view.component';
+import {OpentestDetailViewComponent} from './result/view-detail.component';
+import {SettingsComponent} from './user/settings.component';
+import {DocuComponent} from './docu/docu.component';
 
 
 export const routes: Routes = [{
-    path: "",
+    path: '',
     canActivate: [Guard],
     canActivateChild: [Guard],
     runGuardsAndResolvers: 'always',
     children: [
         {
-            path: "home",
+            path: 'home',
             component: HomeComponent
         },
         {
-            path: "tc",
+            path: 'tc',
             component: TCComponent
         },
         {
-            path: "statistics",
+            path: 'statistics',
             component: StatisticsComponent
         },
         {
-            path: "opendata",
+            path: 'opendata',
             component: OpendataComponent
         },
         {
-            path: "map",
+            path: 'map',
             component: MapComponent
         },
         {
-            path: "testresults",
+            path: 'testresults',
             children: [
                 {
-                    path: "",
+                    path: '',
                     component: ResultListComponent,
-                    pathMatch: "full"
+                    pathMatch: 'full'
                 },
                 {
-                    path: ":uuid",
+                    path: ':uuid',
                     children: [
                         {
-                            path: "",
+                            path: '',
                             component: OpentestViewComponent,
-                            pathMatch: "full"
+                            pathMatch: 'full'
                         },
                         {
-                            path: "details",
+                            path: 'details',
                             component: OpentestDetailViewComponent
                         }
                     ]
@@ -72,36 +72,36 @@ export const routes: Routes = [{
             ]
         },
         {
-            path: "nettest",
+            path: 'nettest',
             component: NetTestComponent,
             canDeactivate: [TestGuard]
         },
         {
-            path: "about",
+            path: 'about',
             component: AboutComponent
         },
         {
-            path: "docu",
+            path: 'docu',
             component: DocuComponent
         },
         {
-            path: "history",
+            path: 'history',
             children: [
                 {
-                    path: "",
+                    path: '',
                     component: HistoryComponent,
-                    pathMatch: "full"
+                    pathMatch: 'full'
                 },
                 {
-                    path: ":uuid",
+                    path: ':uuid',
                     children: [
                         {
-                            path: "",
+                            path: '',
                             component: HistoryViewComponent,
-                            pathMatch: "full"
+                            pathMatch: 'full'
                         },
                         {
-                            path: "details",
+                            path: 'details',
                             component: HistoryDetailViewComponent
                         }
                     ]
@@ -109,20 +109,20 @@ export const routes: Routes = [{
             ]
         },
         {
-            path: "help",
+            path: 'help',
             component: HelpComponent
         },
         {
-            path: "settings",
+            path: 'settings',
             component: SettingsComponent
         }
     ]
 }, {
-    path: "404",
+    path: '404',
     component: NotFoundComponent
 }, {
-    path: "**",
-    redirectTo: "404"
+    path: '**',
+    redirectTo: '404'
 }
 ];
 

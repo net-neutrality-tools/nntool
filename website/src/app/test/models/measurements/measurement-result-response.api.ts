@@ -1,4 +1,4 @@
-import {BasicResponseAPI} from "../basic-response.api";
+import {BasicResponseAPI} from '../basic-response.api';
 
 export class MeasurementResultResponseAPI extends BasicResponseAPI {
 

@@ -866,42 +866,40 @@ int CTcpHandler::download(noPollCtx *ctx, noPollConn *conn)
     
     vector<char>randomDataValues;
     randomDataValues.clear();
+    randomDataValues.reserve(downloadRandomDataSize);
     CTool::randomData(randomDataValues, downloadRandomDataSize);
 
     unsigned long long index = 0;
-    
+
     unsigned long long startTime    = 0;
-    unsigned long long endTime      = CTool::get_timestamp();
     unsigned long long runningTime  = 0;
-    unsigned long long currentTime  = endTime / 100000;
-    
+
     int nResponse = 0;
-    
+
     usleep(500000);
-    
+
     startTime = CTool::get_timestamp_sec();
-    
+
+    /*const*/ char *firstChar = randomDataValues.data();
+    // 'const' commented out due to compile error:
+    // /nntool/ias-server/src/tcphandler.cpp:897:66: error: invalid conversion from ‘const char*’ to ‘char*’ [-fpermissive]
+    // nResponse = nopoll_conn_default_send(conn, firstChar + index, downloadFrameSize);
     do
     {
-        vector<char> payload(&randomDataValues[index], &randomDataValues[index+downloadFrameSize]);
-        index += downloadFrameSize;
-        
-        if (index > randomDataValues.size())
-        {
-            index = index - randomDataValues.size();
-            
-            vector<char> payload(&randomDataValues[index], &randomDataValues[index+downloadFrameSize]);
-            index += downloadFrameSize;
+        if (index + downloadFrameSize > randomDataValues.size()) {
+            index += downloadFrameSize - randomDataValues.size();
         }
-        
+
         if (connectionIsValidWebSocket)
         {
-            nResponse = nopoll_conn_send_binary(conn, payload.data(), downloadFrameSize);
+            nResponse = nopoll_conn_send_binary(conn, firstChar + index, downloadFrameSize);
         }
         else if (connectionIsValidHttp)
         {
-            nResponse = nopoll_conn_default_send(conn, payload.data(), downloadFrameSize);
+            nResponse = nopoll_conn_default_send(conn, firstChar + index, downloadFrameSize);
         }
+
+        index += downloadFrameSize;
                 
         if (nResponse <= 0)
         {
@@ -909,14 +907,6 @@ int CTcpHandler::download(noPollCtx *ctx, noPollConn *conn)
             break;
         }
 
-        if ((endTime - (currentTime * 100000)) > 500000)
-        {
-            currentTime = formatCurrentTime(endTime, currentTime);
-            
-            //printTcpMetrics();
-        }
-        
-        endTime = CTool::get_timestamp();
         runningTime = CTool::get_timestamp_sec() - startTime;
              
     } while (nResponse > 0 && runningTime < tcpTimeout && downloadRunning);

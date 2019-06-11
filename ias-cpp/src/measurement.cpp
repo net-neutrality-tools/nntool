@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-06
+ *      \date Last update: 2019-05-29
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -92,7 +92,7 @@ int CMeasurement::startMeasurement()
 	{
 		// PING
 		case 2:
-			ping = new Ping(mConfig, mXml, mService, mProvider );
+			ping = new Ping( mXml, mService, mProvider );
 			ping->createThread();
 
 			mCallback->pingThread = ping;

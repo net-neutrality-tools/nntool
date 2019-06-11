@@ -1,8 +1,8 @@
-import {TestState} from "./test-state";
-import {Subject, Subscription} from "rxjs";
-import {TestConfig} from "./test-config";
-import {TestSchedulerService} from "../test-scheduler.service";
-import {BasicTestState} from "../enums/basic-test-state.enum";
+import {TestState} from './test-state';
+import {Subject, Subscription} from 'rxjs';
+import {TestConfig} from './test-config';
+import {TestSchedulerService} from '../test-scheduler.service';
+import {BasicTestState} from '../enums/basic-test-state.enum';
 
 export abstract class TestImplementation<TC extends TestConfig, TS extends TestState> {
 

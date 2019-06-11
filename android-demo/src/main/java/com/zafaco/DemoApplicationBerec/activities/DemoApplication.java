@@ -42,7 +42,6 @@ import android.widget.Toast;
 
 import com.zafaco.DemoApplicationBerec.interfaces.FocusedFragment;
 import com.zafaco.moduleCommon.Tool;
-import com.zafaco.moduleSpeed.Speed;
 import com.zafaco.DemoApplicationBerec.R;
 import com.zafaco.DemoApplicationBerec.WSTool;
 import com.zafaco.DemoApplicationBerec.fragments.*;
@@ -59,7 +58,6 @@ public class DemoApplication extends AppCompatActivity
 
     private WSTool wsTool = WSTool.getInstance();
     private Tool mTool = wsTool.getToolObject();
-    private Speed mSpeed = wsTool.getSpeedObject();
 
     /**************************** Variables ****************************/
 

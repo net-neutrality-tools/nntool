@@ -12,11 +12,15 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-08
+ *      \date Last update: 2019-05-29
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
 #include "callback.h"
+
+#ifdef __ANDROID__
+    #include "android_connector.h"
+#endif
 
 //! \brief
 //!	Standard Destructor
@@ -56,106 +60,196 @@ int CCallback::run()
 	return 0;
 }
 
-void CCallback::callback(string cmd, string msg, int error_code, string error_description)
-{
-	TRC_DEBUG("Callback Received: cmd: " + cmd + ", msg: " + msg);
+#ifdef __ANDROID__
 
-	if (cmd.compare("report") == 0 || cmd.compare("finish") == 0)
-	{
-		if (mTestCase == 2)
-		{
-			rttUdpCallback(cmd);
+    void CCallback::callback(string cmd, string msg, int error_code, string error_description)
+        {
+            TRC_DEBUG("Callback Received: cmd: " + cmd + ", msg: " + msg);
 
-			if (cmd.compare("finish") == 0)
+            if (cmd.compare("report") == 0 || cmd.compare("finish") == 0)
+            {
+                if (mTestCase == 2)
+                {
+                    rttUdpCallback(cmd);
+
+                    if (cmd.compare("finish") == 0)
+                    {
+                        PERFORMED_RTT = true;
+                    }
+                }
+
+                if (mTestCase == 3)
+                {
+                    downloadCallback(cmd);
+
+                    if (cmd.compare("finish") == 0)
+                    {
+                        PERFORMED_DOWNLOAD = true;
+                    }
+                }
+
+                if (mTestCase == 4)
+                {
+                    uploadCallback(cmd);
+
+                    if (cmd.compare("finish") == 0)
+                    {
+                        PERFORMED_UPLOAD = true;
+                    }
+                }
+            }
+
+            callbackToPlatform(cmd, msg, error_code, error_description);
+
+            if (cmd.compare("finish") == 0 && ::RTT == PERFORMED_RTT && ::DOWNLOAD == PERFORMED_DOWNLOAD && ::UPLOAD == PERFORMED_UPLOAD)
+            {
+                callbackToPlatform("completed", msg, error_code, error_description);
+            }
+        }
+
+        void CCallback::callbackToPlatform(string cmd, string msg, int error_code, string error_description)
+        {
+            //construct JSON callback
+            jMeasurementResults = Json::object{};
+            jMeasurementResults["cmd"] = cmd;
+            jMeasurementResults["msg"] = msg;
+            jMeasurementResults["test_case"] = conf.sTestName;
+
+            AndroidConnector &connector = AndroidConnector::getInstance();
+
+            if (error_code != 0)
+            {
+                jMeasurementResults["error_code"] = error_code;
+                jMeasurementResults["error_description"] = error_description;
+                TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
+                connector.callbackError(error_code, error_description);
+            }
+			
+            if (jMeasurementResultsRttUdp.size() > 0) 
 			{
-				PERFORMED_RTT = true;
-			}
-		}
+				jMeasurementResults["rtt_udp_info"] = Json(jMeasurementResultsRttUdp);
+            }
 
-		if (mTestCase == 3)
-		{
-			downloadCallback(cmd);
-
-			if (cmd.compare("finish") == 0)
+            if (jMeasurementResultsDownload.size() > 0)
 			{
-				PERFORMED_DOWNLOAD = true;
-			}
-		}
+                jMeasurementResults["download_info"] = Json(jMeasurementResultsDownload);
+            }
 
-		if (mTestCase == 4)
-		{
-			uploadCallback(cmd);
+			if (jMeasurementResultsUpload.size())
+            {
+                jMeasurementResults["upload_info"] = Json(jMeasurementResultsUpload);
+            }
 
-			if (cmd.compare("finish") == 0)
+            if (jMeasurementResultsTime.size())
 			{
-				PERFORMED_UPLOAD = true;
-			}
-		}
-	}
+                jMeasurementResults["time_info"] = Json(jMeasurementResultsTime);
+            }
 
-	callbackToPlatform(cmd, msg, error_code, error_description);
+            if (cmd == "completed") {
+                connector.callbackFinished(jMeasurementResults);
+            } else {
+                connector.callback(jMeasurementResults);
+            }
+        }
+#else
 
-	if (cmd.compare("finish") == 0 && ::RTT == PERFORMED_RTT && ::DOWNLOAD == PERFORMED_DOWNLOAD && ::UPLOAD == PERFORMED_UPLOAD)
-	{
-		callbackToPlatform("completed", msg, error_code, error_description);
-	}
-}
+    void CCallback::callback(string cmd, string msg, int error_code, string error_description)
+    {
+        TRC_DEBUG("Callback Received: cmd: " + cmd + ", msg: " + msg);
 
-void CCallback::callbackToPlatform(string cmd, string msg, int error_code, string error_description)
-{
-	//construct JSON callback
-	jMeasurementResults = Json::object{};
-	jMeasurementResults["cmd"] = cmd;
-	jMeasurementResults["msg"] = msg;
-	jMeasurementResults["test_case"] = conf.sTestName;
+        if (cmd.compare("report") == 0 || cmd.compare("finish") == 0)
+        {
+            if (mTestCase == 2)
+            {
+                rttUdpCallback(cmd);
 
-	if (error_code != 0)
-	{
-		jMeasurementResults["error_code"] = error_code;
-		jMeasurementResults["error_description"] = error_description;
-		TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
-	}
+                if (cmd.compare("finish") == 0)
+                {
+                    PERFORMED_RTT = true;
+                }
+            }
 
-	if (Json(jMeasurementResultsRttUdp).object_items().size() > 0)
-	{
-		jMeasurementResults["rtt_udp_info"] = Json(jMeasurementResultsRttUdp);
-	}
+            if (mTestCase == 3)
+            {
+                downloadCallback(cmd);
 
-	if (Json(jMeasurementResultsDownload).array_items().size() > 0)
-	{
-		jMeasurementResults["download_info"] = Json(jMeasurementResultsDownload);
-	}
+                if (cmd.compare("finish") == 0)
+                {
+                    PERFORMED_DOWNLOAD = true;
+                }
+            }
 
-	if (Json(jMeasurementResultsUpload).array_items().size() > 0)
-	{
-		jMeasurementResults["upload_info"] = Json(jMeasurementResultsUpload);
-	}
+            if (mTestCase == 4)
+            {
+                uploadCallback(cmd);
 
-	if (Json(jMeasurementResultsTime).object_items().size() > 0)
-	{
-		jMeasurementResults["time_info"] = Json(jMeasurementResultsTime);
-	}
-	
-	string platform = ::PLATFORM;
-	string clientos = ::CLIENT_OS;
+                if (cmd.compare("finish") == 0)
+                {
+                    PERFORMED_UPLOAD = true;
+                }
+            }
+        }
 
-	if (platform.compare("desktop") == 0 && clientos.compare("linux") == 0)
-	{
-		TRC_DEBUG("Callback: " + Json(jMeasurementResults).dump());
-	}
-	if (platform.compare("mobile") == 0 && clientos.compare("android") == 0)
-	{
-		//android callback hookup
-		//callback Json(jMeasurementResults).dump() via ndk
-	}
-}
+        callbackToPlatform(cmd, msg, error_code, error_description);
+
+        if (cmd.compare("finish") == 0 && ::RTT == PERFORMED_RTT && ::DOWNLOAD == PERFORMED_DOWNLOAD && ::UPLOAD == PERFORMED_UPLOAD)
+        {
+            callbackToPlatform("completed", msg, error_code, error_description);
+        }
+    }
+
+    void CCallback::callbackToPlatform(string cmd, string msg, int error_code, string error_description)
+    {
+        //construct JSON callback
+        jMeasurementResults = Json::object{};
+        jMeasurementResults["cmd"] = cmd;
+        jMeasurementResults["msg"] = msg;
+        jMeasurementResults["test_case"] = conf.sTestName;
+
+        if (error_code != 0)
+        {
+            jMeasurementResults["error_code"] = error_code;
+            jMeasurementResults["error_description"] = error_description;
+            TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
+        }
+
+        if (Json(jMeasurementResultsRttUdp).object_items().size() > 0)
+        {
+            jMeasurementResults["rtt_udp_info"] = Json(jMeasurementResultsRttUdp);
+        }
+
+        if (Json(jMeasurementResultsDownload).array_items().size() > 0)
+        {
+            jMeasurementResults["download_info"] = Json(jMeasurementResultsDownload);
+        }
+
+        if (Json(jMeasurementResultsUpload).array_items().size() > 0)
+        {
+            jMeasurementResults["upload_info"] = Json(jMeasurementResultsUpload);
+        }
+
+        if (Json(jMeasurementResultsTime).object_items().size() > 0)
+        {
+            jMeasurementResults["time_info"] = Json(jMeasurementResultsTime);
+        }
+
+        string platform = ::PLATFORM;
+        string clientos = ::CLIENT_OS;
+
+        if (platform.compare("desktop") == 0 && clientos.compare("linux") == 0)
+        {
+        	TRC_DEBUG("Callback: " + Json(jMeasurementResults).dump());
+        }
+    }
+
+#endif
 
 void CCallback::rttUdpCallback(string cmd)
 {
 	struct measurement tempMeasurement;
 
 	//Lock Mutex
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&mutex1);
 
 		struct measurement_data mPingResult = pingThread->mPingResult;
 
@@ -170,13 +264,12 @@ void CCallback::rttUdpCallback(string cmd)
 		int nMissing = 0;
 		int nReply = 0;
 	
-		//Starting multiple Instances for every Probe
 		for(map<int, unsigned long long>::iterator AI = std::next(mPingResult.results.begin(),1); AI!= mPingResult.results.end(); ++AI)
 		{
 			//write to Global Object
 			tempMeasurement.ping.results[(*AI).first] += (*AI).second;
 			
-			if( (*AI).second < 0 )
+			if( (*AI).second == 0 )
 				nMissing++;
 			else
 				nReply++;
@@ -185,16 +278,18 @@ void CCallback::rttUdpCallback(string cmd)
 		//---------------------------
 		
 		//Calculate Min, Avg, Max
-		CTool::calculateResults( tempMeasurement.ping, 1, 0);
+		CTool::calculateResults( tempMeasurement.ping, 1, 0 );
 			
 		//---------------------------
 	
 		tempMeasurement.ping.packetsize 	= pingThread->nSize;
 		tempMeasurement.ping.hops			= pingThread->nHops;
-		tempMeasurement.ping.requests 		= pingThread->mPingQuery - 1;
+		tempMeasurement.ping.requests 		= nReply + nMissing + pingThread->nError;
 		tempMeasurement.ping.replies 		= nReply;
 		tempMeasurement.ping.missing 		= nMissing;
 		tempMeasurement.ping.errors 		= pingThread->nError;
+
+		tempMeasurement.ping.measurement_phase_progress = (tempMeasurement.ping.replies + tempMeasurement.ping.missing) / ((float) pingThread->mPingQuery);
 		
 		tempMeasurement.ping.starttime  	= pingThread->measurementTimeStart;
 		tempMeasurement.ping.endtime    	= pingThread->measurementTimeEnd;
@@ -209,7 +304,7 @@ void CCallback::rttUdpCallback(string cmd)
 		tempMeasurement.ping.ipversion 		= pingThread->ipversion;
 		
 		tempMeasurement.ping.system_availability 	= pingThread->system_availability;
-		
+
 		if( nMissing > 0 )
 		{
 			pingThread->service_availability 	= 0;
@@ -228,13 +323,13 @@ void CCallback::rttUdpCallback(string cmd)
 		tempMeasurement.ping.error_description		= pingThread->error_description;
 			
 	//Unlock Mutex
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&mutex1);
 
 	TRC_INFO( ("RTT UDP: " + CTool::toString(tempMeasurement.ping.avg )).c_str());
 
 
 	Json::object jMeasurementResults;
-	jMeasurementResults["duration_ns"] = to_string(tempMeasurement.ping.duration_ns);
+	jMeasurementResults["duration_ns"] = to_string(tempMeasurement.ping.totaltime * 1000 * 1000);
 	jMeasurementResults["average_ns"] = to_string(tempMeasurement.ping.avg * 1000 * 1000);
 	jMeasurementResults["median_ns"] = to_string(tempMeasurement.ping.median_ns);
 	jMeasurementResults["min_ns"] = to_string(tempMeasurement.ping.min * 1000 * 1000);
@@ -246,8 +341,10 @@ void CCallback::rttUdpCallback(string cmd)
 	jMeasurementResults["packet_size"] = to_string(tempMeasurement.ping.packetsize);
 	jMeasurementResults["standard_deviation_ns"] = to_string(tempMeasurement.ping.standard_deviation_ns);
 	jMeasurementResults["peer"] = tempMeasurement.ping.servername;
+	jMeasurementResults["progress"] = tempMeasurement.ping.measurement_phase_progress;
 
 	jMeasurementResultsRttUdp = jMeasurementResults;
+	
 }
 
 void CCallback::downloadCallback(string cmd)
@@ -260,7 +357,7 @@ void CCallback::downloadCallback(string cmd)
 	for(vector<Download*>::iterator itThread = vDownloadThreads.begin(); itThread != vDownloadThreads.end(); ++itThread)
 	{
 		//Lock Mutex
-		pthread_mutex_lock(&mutex);
+		pthread_mutex_lock(&mutex1);
 
 			struct measurement_data mDownload = (*itThread)->mDownload;
 
@@ -303,7 +400,7 @@ void CCallback::downloadCallback(string cmd)
 			tempMeasurement.download.endtime    		= (*itThread)->measurementTimeEnd;
 			tempMeasurement.download.totaltime  		= (*itThread)->measurementTimeDuration;
 			
-			jMeasurementResultsTime["download_start"] = to_string(tempMeasurement.download.starttime * 1000);
+ 			jMeasurementResultsTime["download_start"] = to_string(tempMeasurement.download.starttime * 1000);
 
 			//Socket closed unexpectedly
 			if( (*itThread)->mResponse == -1 )
@@ -344,7 +441,7 @@ void CCallback::downloadCallback(string cmd)
 				tempMeasurement.streams++;
 
 		//Unlock Mutex
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&mutex1);
 	}
 
 	map<int, unsigned long long> mTmpMap;
@@ -382,6 +479,9 @@ void CCallback::downloadCallback(string cmd)
 
 	TRC_INFO( ("DOWNLOAD: " + CTool::toString(tempMeasurement.download.avg )).c_str());
 
+	//measurement duration is given in seconds
+	tempMeasurement.download.measurement_phase_progress = tempMeasurement.download.duration_ns / (MEASUREMENT_DURATION * 1e9);
+
 	Json::object jMeasurementResults = getMeasurementResults(tempMeasurement, tempMeasurement.download, cmd);
 
 	jMeasurementResultsDownload.push_back(jMeasurementResults);
@@ -407,7 +507,7 @@ void CCallback::uploadCallback(string cmd)
 		}
 		
 		//Lock Mutex
-		pthread_mutex_lock(&mutex);
+		pthread_mutex_lock(&mutex1);
 		
 			unsigned long long nUploadt0 = mUpload.results.begin()->first;
 			
@@ -480,7 +580,7 @@ void CCallback::uploadCallback(string cmd)
 				tempMeasurement.streams++;
 			
 		//Unlock Mutex
-		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&mutex1);
 	}
 
 	map<int, unsigned long long> mTmpMap;
@@ -521,6 +621,9 @@ void CCallback::uploadCallback(string cmd)
 	//Calculate Min, Avg, Max
 	CTool::calculateResults( tempMeasurement.upload, 0.5, 0 );
 
+	//measurement duration is given in seconds
+	tempMeasurement.upload.measurement_phase_progress = tempMeasurement.upload.duration_ns / (MEASUREMENT_DURATION * 1e9);
+
 	TRC_INFO( ("UPLOAD: " + CTool::toString(tempMeasurement.upload.avg )).c_str());
 
 	Json::object jMeasurementResults = getMeasurementResults(tempMeasurement, tempMeasurement.upload, cmd);
@@ -537,6 +640,7 @@ Json::object CCallback::getMeasurementResults(struct measurement tempMeasurement
 	jMeasurementResults["duration_ns"] = to_string(data.duration_ns);
 	jMeasurementResults["duration_ns_total"] = to_string(data.totaltime * 1000);
 	jMeasurementResults["num_streams_start"] = to_string(tempMeasurement.streams);
+	jMeasurementResults["progress"] = data.measurement_phase_progress;
 
 	if (cmd.compare("finish") == 0)
 	{

@@ -294,6 +294,16 @@ public class Settings {
 	@JsonClassDescription("Settings applicable only to conducted speed measurements.")
 	public class SpeedMeasurementSettings extends SubMeasurementSettings {
 
+		//TODO: this will be replaced by load balancing logic
+		/**
+		 * The uuid of the speed measurement server to be used during speed measurements.
+		 */
+		@JsonPropertyDescription("The uuid of the speed measurement server to be used during speed measurements.")
+		@Expose
+		@SerializedName("speed_measurement_server_uuid")
+		@JsonProperty("speed_measurement_server_uuid")
+		private String speedMeasurementServerUuid;
+
 		/**
 		 * Contains all measurement class configurations for the upload test.
 		 */
@@ -328,12 +338,18 @@ public class Settings {
 			this.downloadClassList = downloadClassList;
 		}
 
+		public String getSpeedMeasurementServerUuid() {
+			return speedMeasurementServerUuid;
+		}
+
+		public void setSpeedMeasurementServerUuid(String speedMeasurementServerUuid) {
+			this.speedMeasurementServerUuid = speedMeasurementServerUuid;
+		}
+
 		@Override
 		public String toString() {
-			return "SpeedMeasurementSettings{" +
-					"uploadClassList=" + uploadClassList +
-					", downloadClassList=" + downloadClassList +
-					"} " + super.toString();
+			return "SpeedMeasurementSettings [speedMeasurementServerUuid=" + speedMeasurementServerUuid
+					+ ", uploadClassList=" + uploadClassList + ", downloadClassList=" + downloadClassList + "]";
 		}
 
 		/**

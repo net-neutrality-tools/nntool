@@ -162,7 +162,7 @@ public class ExportResource {
 	})
 	@GetMapping("/{openDataUuid:[^\\.]+}")
 	public void exportSingleMeasurement(@PathVariable String openDataUuid, HttpServletResponse response) {
-		exportSingleMeasurement(openDataUuid,  ExportExtension.CSV, response);
+		exportSingleMeasurement(openDataUuid, ExportExtension.CSV, response);
 	}
 	
 	////

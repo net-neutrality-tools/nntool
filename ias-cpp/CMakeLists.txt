@@ -17,7 +17,7 @@
 # */
 
 
-cmake_minimum_required(VERSION 2.8.2)
+cmake_minimum_required(VERSION 3.6)
 
 project(ias-client)
 
@@ -31,17 +31,23 @@ ENDIF (NOT THREADS_FOUND)
 
 #---------------------------------------------------------------------------------
 
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
 set(dir ${CMAKE_CURRENT_SOURCE_DIR}/build)
 set(EXECUTABLE_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
 set(LIBRARY_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
  
 set ( CMAKE_VERBOSE_MAKEFILE true )
-add_definitions(-std=c++11)
-add_definitions ("-g")
-add_definitions ("-Wall")
-add_definitions ("-Wextra")
+add_definitions(-std=c++14)
+set(CMAKE_CXX_FLAGS "-W")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 add_definitions(-DNNTOOL)
 add_definitions(-DNNTOOL_CLIENT)
+
+set(NNTOOL_CLIENT true)
 
 add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/../ias-libnntool ${CMAKE_CURRENT_BINARY_DIR}/ias-libnntool)
 add_subdirectory (src)

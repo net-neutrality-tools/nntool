@@ -1,5 +1,5 @@
-import {TestState} from "../test-state";
-import {SpeedTestStateEnum} from "./enums/speed-test-state.enum";
+import {TestState} from '../test-state';
+import {SpeedTestStateEnum} from './enums/speed-test-state.enum';
 
 export class SpeedTestState extends TestState {
     speedTestState: SpeedTestStateEnum;

@@ -59,15 +59,15 @@ gradle.ext.includeJibGradlePlugin = skipAndroid
 
 if (skipAndroid) {
 	println '*) Skipping Android projects because: ' + skipMsg
-  println '*) Including jib-gradle-plugin'
+	println '*) Including jib-gradle-plugin'
 } else {
 	println '*) Including Android apps'
 
 	include 'android-common'
 	include 'android-speed'
 	include 'qos-client-android'
-	
-  include 'android-demo'
-  include 'android-app'
-}
 
+	include 'android-demo'
+
+	include 'android-app'
+}

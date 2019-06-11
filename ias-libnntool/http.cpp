@@ -92,7 +92,7 @@ int CHttp::parseResponse()
 	
 	buffer = string(rbuffer);
 	
-	if(DEBUG)
+	//if(DEBUG)
 	{
 		cout<<endl<<"Received ("<<recv_len<<")--------------------------------"<<endl;
 		cout<<buffer<<endl;
@@ -202,7 +202,7 @@ int CHttp::responseForbidden()
 	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
 
 	
-	if(DEBUG)
+	//if(DEBUG)
 	{
 		cout<<"SEND-Buffer ("<<send_len<<")----------------------"<<endl;
 		cout<<send_init<<endl;
@@ -233,7 +233,7 @@ int CHttp::responseNotFound()
 	//String to Server
 	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
 	
-	if(DEBUG)
+	//if(DEBUG)
 	{
 		cout<<"SEND-Buffer ("<<send_len<<")----------------------"<<endl;
 		cout<<send_init<<endl;
@@ -295,7 +295,7 @@ int CHttp::responseOk()
 	//String to Server
 	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
 	
-	if(DEBUG)
+	//if(DEBUG)
 	{
 		cout<<"SEND-Buffer ("<<send_len<<")----------------------"<<endl;
 		cout<<send_init<<endl;
@@ -318,7 +318,7 @@ int CHttp::requestToReferenceServer()
 	//String to Server
 	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
 	
-	if(DEBUG)
+	//if(DEBUG)
 	{
 		cout<<"SEND-Buffer ("<<send_len<<")----------------------"<<endl;
 		cout<<send_init<<endl;

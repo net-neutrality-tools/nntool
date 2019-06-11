@@ -6,6 +6,8 @@ ias-desktop/modules/index.html
 ias-desktop/modules/JSTool.js
 ias-desktop/modules/Worker.js
 
+ias-cpp/ias-libnntool
+
 ### Android ###
 # Built application files
 *.apk
@@ -198,8 +200,8 @@ fabric.properties
 *.pdb
 
 # Kernel Module Compile Results
-*.mod*
-!*.modulemap
+# Rule *.mod* also excludes files like *.module.ts, *.model.ts, see issue #73
+#*.mod*
 *.cmd
 .tmp_versions/
 modules.order
