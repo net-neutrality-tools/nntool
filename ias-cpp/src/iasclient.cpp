@@ -66,6 +66,7 @@ CMeasurement* pMeasurement;
 
 MeasurementPhase currentTestPhase = MeasurementPhase::INIT;
 
+std::function<void(int)> signalFunction = nullptr;
 
 /*--------------Forward declarations--------------*/
 
@@ -395,10 +396,13 @@ static void signal_handler(int signal)
 	CTool::print_stacktrace();
 	
     ::RUNNING = false;
-    sleep(1);
-    #ifdef __ANDROID__
 
-    #else
+    if (signalFunction != nullptr) {
+        signalFunction(signal);
+    }
+
+    #ifndef __ANDROID__
+        sleep(1);
         exit(signal);
     #endif
 

@@ -225,7 +225,7 @@ int Ping::run()
 		
 			//Cut String out of Response from Server
 			string sResponse(rbuffer,find( rbuffer, rbuffer + mResponse,  ';'));
-			
+
 			//Split String in different String and save in Vector
 			CTool::tokenize(sResponse, vResponse, delimiter);
 			
@@ -330,7 +330,8 @@ int Ping::run()
 	#endif
 
 	#ifdef NNTOOL
-	usleep(100000);
+	//the timer would be waiting the full MEASUREMENT_DURATION even if all the pings arrived => tell the timer to stop!
+	TIMER_STOPPED = true;
 	#endif
 
 	close(mSock);

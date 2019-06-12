@@ -112,7 +112,11 @@ public class MeasurementService extends Service implements ServiceConnection {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                jniSpeedMeasurementClient.startMeasurement();
+                try {
+                    jniSpeedMeasurementClient.startMeasurement();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
     }

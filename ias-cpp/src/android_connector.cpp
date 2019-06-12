@@ -46,6 +46,9 @@ jint AndroidConnector::jniLoad(JavaVM* vm) {
     callbackID = env->GetMethodID(jniHelperClass, "cppCallback", "(Ljava/lang/String;)V");
     cppCallbackFinishedID = env->GetMethodID(jniHelperClass, "cppCallbackFinished", "(Ljava/lang/String;)V");
 
+    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/jni/exception/AndroidJniCppException");
+    jniExceptionClass = (jclass) env->NewGlobalRef(clazz);
+
     //get the fields for the SpeedphaseState
     clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementState$SpeedPhaseState");
     fieldAvgThroughput = env->GetFieldID(clazz, "throughputAvgBps", "J");
@@ -121,19 +124,20 @@ void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
 }
 
 void AndroidConnector::unregisterSharedObject() {
-    JNIEnv* env;
-    jint err = javaVM->GetEnv((void**)&env, JNI_VERSION_1_6);
-    if (err == JNI_EDETACHED) {
-        //std::cout << "GetEnv: not attached" << std::endl;
-        if (javaVM->AttachCurrentThread(&env, NULL) != 0) {
-            return;
-            //std::cout << "Failed to attach" << std::endl;
-        }
-    } else if (err != JNI_OK) {
+    JNIEnv* env = getJniEnv();
+    if (env == nullptr) {
         return;
     }
 
     //clean up the global jni references
+    if (jniExceptionClass != nullptr) {
+        env->DeleteGlobalRef(jniExceptionClass);
+        jniExceptionClass = nullptr;
+    }
+    if (jniHelperClass != nullptr) {
+        env->DeleteGlobalRef(jniHelperClass);
+        jniHelperClass = nullptr;
+    }
     if (baseMeasurementState != nullptr) {
         env->DeleteGlobalRef(baseMeasurementState);
         baseMeasurementState = nullptr;
@@ -157,13 +161,8 @@ void AndroidConnector::unregisterSharedObject() {
 }
 
 void AndroidConnector::callback(json11::Json::object& message) const {
-    JNIEnv* env;
-    jint err = javaVM->GetEnv((void**)&env, JNI_VERSION_1_6);
-    if (err == JNI_EDETACHED) {
-        if (javaVM->AttachCurrentThread(&env, NULL) != 0) {
-            return;
-        }
-    } else if (err != JNI_OK) {
+    JNIEnv* env = getJniEnv();
+    if (env == nullptr) {
         return;
     }
 
@@ -206,13 +205,8 @@ void AndroidConnector::callback(json11::Json::object& message) const {
 
 void AndroidConnector::callbackFinished (const json11::Json::object& message) {
 
-    JNIEnv* env;
-    jint err = javaVM->GetEnv((void**)&env, JNI_VERSION_1_6);
-    if (err == JNI_EDETACHED) {
-        if (javaVM->AttachCurrentThread(&env, NULL) != 0) {
-            return;
-        }
-    } else if (err != JNI_OK) {
+    JNIEnv* env = getJniEnv();
+    if (env == nullptr) {
         return;
     }
 
@@ -227,8 +221,13 @@ void AndroidConnector::callbackFinished (const json11::Json::object& message) {
     unregisterSharedObject();
 }
 
-void AndroidConnector::callbackError(const int errorCode, const std::string &errorMessage) const {
-    //TODO: error handling
+void AndroidConnector::callbackError(int const errorCode) const {
+
+    JNIEnv* env = getJniEnv();
+    if (env == nullptr) {
+        return;
+    }
+    env->ThrowNew(jniExceptionClass, "Cpp error with signal code : " + errorCode);
 }
 
 void AndroidConnector::passJniSpeedState (JNIEnv* env, const MeasurementPhase& speedStateToSet, const json11::Json& json) const {
@@ -272,6 +271,7 @@ void AndroidConnector::printLog(const std::string& message) const {
 
 void AndroidConnector::startMeasurement() {
     CTrace::setLogFunction(std::bind(&AndroidConnector::printLog, this, std::placeholders::_1));
+    signalFunction = std::function<void(int)>(std::bind(&AndroidConnector::callbackError, this, std::placeholders::_1));
 
     //init from ias-client
 

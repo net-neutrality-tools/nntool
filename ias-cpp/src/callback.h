@@ -63,6 +63,18 @@ class CCallback
 		virtual ~CCallback();
 		
 		void callback(string cmd, string msg, int error_code, string error_description);
+
+		inline bool isPerformedRtt() const {
+		    return PERFORMED_RTT;
+		}
+
+		inline bool isPerformedDownload() const {
+            return PERFORMED_DOWNLOAD;
+        }
+
+        inline bool isPerformedUpload() const {
+            return PERFORMED_UPLOAD;
+        }
 };
 
 #endif

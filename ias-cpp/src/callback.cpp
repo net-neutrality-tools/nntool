@@ -96,7 +96,7 @@ CCallback::~CCallback()
                 jMeasurementResults["error_code"] = error_code;
                 jMeasurementResults["error_description"] = error_description;
                 TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
-                connector.callbackError(error_code, error_description);
+                connector.callbackError(error_code);
             }
 			
             if (jMeasurementResultsRttUdp.size() > 0) 
@@ -224,8 +224,6 @@ void CCallback::rttUdpCallback(string cmd)
 
 	//Lock Mutex
 	pthread_mutex_lock(&mutex1);
-
-        
 
 		struct measurement_data mPingResult = pingThread->mPingResult;
 

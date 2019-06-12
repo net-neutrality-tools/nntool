@@ -98,6 +98,12 @@ int CMeasurement::startMeasurement()
 			mCallback->pingThread = ping;
 			
 			ping->waitForEnd();
+
+            //the Ping * MUST NOT be deleted before the finished callback has happened!
+			while (!mCallback->isPerformedRtt()) {
+			    //Sleep 100ms
+                usleep(100000);
+			}
 			
 			delete( ping );
 
@@ -128,8 +134,17 @@ int CMeasurement::startMeasurement()
 			for(vector<Download*>::iterator itThread = vDownloadThreads.begin(); itThread != vDownloadThreads.end(); ++itThread)
 			{
 				(*itThread)->waitForEnd();
-				delete( *itThread );
 			}
+
+			while (!mCallback->isPerformedDownload()) {
+                //Sleep 100ms
+                usleep(100000);
+            }
+
+            for(vector<Download*>::iterator itThread = vDownloadThreads.begin(); itThread != vDownloadThreads.end(); ++itThread)
+            {
+                delete( *itThread );
+            }
 
 			break;
 		
@@ -160,8 +175,17 @@ int CMeasurement::startMeasurement()
 			for(vector<Upload*>::iterator itThread = vUploadThreads.begin(); itThread != vUploadThreads.end(); ++itThread)
 			{
 				(*itThread)->waitForEnd();
-				delete( *itThread );
 			}
+
+			while (!mCallback->isPerformedUpload()) {
+                //Sleep 100ms
+                usleep(100000);
+            }
+
+			for(vector<Upload*>::iterator itThread = vUploadThreads.begin(); itThread != vUploadThreads.end(); ++itThread)
+            {
+                delete( *itThread );
+            }
 
 			break;
 	}

@@ -6,8 +6,10 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.alladin.nettest.nntool.android.speed.SpeedMeasurementResult;
 import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
+import at.alladin.nettest.nntool.android.speed.jni.exception.AndroidJniCppException;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
@@ -28,6 +30,8 @@ public class JniSpeedMeasurementClient {
 
     private List<MeasurementFinishedStringListener> finishedStringListeners = new ArrayList<>();
 
+    private List<MeasurementFinishedListener> finishedListeners = new ArrayList<>();
+
     public JniSpeedMeasurementClient(final SpeedTaskDesc speedTaskDesc) {
         this.speedTaskDesc = speedTaskDesc;
         speedMeasurementState = new SpeedMeasurementState();
@@ -44,6 +48,9 @@ public class JniSpeedMeasurementClient {
         Log.d(TAG, message);
         for (MeasurementFinishedStringListener l : finishedStringListeners) {
             l.onMeasurementFinished(message);
+        }
+        for (MeasurementFinishedListener l : finishedListeners) {
+            l.onMeasurementFinished(null);
         }
     }
 
@@ -66,8 +73,16 @@ public class JniSpeedMeasurementClient {
         finishedStringListeners.add(listener);
     }
 
+    public void addMeasurementFinishedListener(final MeasurementFinishedListener listener) {
+        finishedListeners.add(listener);
+    }
+
     public void removeMeasurementFinishedListener(final MeasurementFinishedStringListener listener) {
         finishedStringListeners.remove(listener);
+    }
+
+    public void removeMeasurementFinishedListener(final MeasurementFinishedListener listener) {
+        finishedListeners.remove(listener);
     }
 
     public String getCollectorUrl() {
@@ -88,7 +103,12 @@ public class JniSpeedMeasurementClient {
 
     public interface MeasurementFinishedStringListener {
 
-        public void onMeasurementFinished (final String result);
+        void onMeasurementFinished (final String result);
 
+    }
+
+    public interface MeasurementFinishedListener {
+
+        void onMeasurementFinished (final SpeedMeasurementResult result);
     }
 }
