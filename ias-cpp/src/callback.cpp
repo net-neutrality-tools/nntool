@@ -34,32 +34,6 @@ CCallback::~CCallback()
 {
 }
 
-//! \brief
-//!    Run-Function
-//! \return 0
-int CCallback::run()
-{
-	//Log Message
-	TRC_INFO( ("Starting Callback Thread with PID: " + CTool::toString(syscall(SYS_gettid))).c_str() );
-
-	//++++++MAIN++++++
-	
-	while( RUNNING && !m_fStop)
-	{
-		//Sleep 10ms
-		usleep(1000);
-
-		if( m_fStop )
-			break;
-	}	
-	
-	//++++++END+++++++
-
-	//Log Message
-	TRC_INFO( ("Ending Callback Thread with PID: " + CTool::toString(syscall(SYS_gettid))).c_str() );
-	return 0;
-}
-
 #ifdef __ANDROID__
 
     void CCallback::callback(string cmd, string msg, int error_code, string error_description)
@@ -213,7 +187,7 @@ int CCallback::run()
             TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
         }
 
-        if (Json(jMeasurementResultsRttUdp).object_items().size() > 0)
+        if (Json(jMeasurementResultsRttUdp).array_items().size() > 0)
         {
             jMeasurementResults["rtt_udp_info"] = Json(jMeasurementResultsRttUdp);
         }
@@ -250,6 +224,8 @@ void CCallback::rttUdpCallback(string cmd)
 
 	//Lock Mutex
 	pthread_mutex_lock(&mutex1);
+
+        
 
 		struct measurement_data mPingResult = pingThread->mPingResult;
 
@@ -289,7 +265,7 @@ void CCallback::rttUdpCallback(string cmd)
 		tempMeasurement.ping.missing 		= nMissing;
 		tempMeasurement.ping.errors 		= pingThread->nError;
 
-		tempMeasurement.ping.measurement_phase_progress = (tempMeasurement.ping.replies + tempMeasurement.ping.missing) / ((float) pingThread->mPingQuery);
+		tempMeasurement.ping.measurement_phase_progress = (tempMeasurement.ping.replies + tempMeasurement.ping.missing) / ((float) (pingThread->mPingQuery - 1));
 		
 		tempMeasurement.ping.starttime  	= pingThread->measurementTimeStart;
 		tempMeasurement.ping.endtime    	= pingThread->measurementTimeEnd;
@@ -343,7 +319,7 @@ void CCallback::rttUdpCallback(string cmd)
 	jMeasurementResults["peer"] = tempMeasurement.ping.servername;
 	jMeasurementResults["progress"] = tempMeasurement.ping.measurement_phase_progress;
 
-	jMeasurementResultsRttUdp = jMeasurementResults;
+	jMeasurementResultsRttUdp.push_back(jMeasurementResults);
 	
 }
 

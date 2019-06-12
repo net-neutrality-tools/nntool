@@ -77,8 +77,6 @@ void		shutdown			();
 static void signal_handler  	(int signal);
 
 
-
-
 /*--------------Beginning of Program--------------*/
 
 int main(int argc, char** argv)
@@ -285,11 +283,6 @@ void measurementStart(string measurementParameters)
 
 
 	pCallback = new CCallback();
-	if( pCallback->createThread() != 0 )
-	{
-		TRC_ERR( "Error: Failure while creating the Thread - Callback!" );
-		shutdown();
-	}
 
     if (!::RTT && !::DOWNLOAD && !::UPLOAD)
     {
@@ -367,15 +360,15 @@ void shutdown()
 	delete(pXml);
 	delete(pConfig);
 
-	pCallback->stopThread();
-	pCallback->waitForEnd();
 	delete(pCallback);
 
 	TRC_INFO("Status: ias-client stopped");
 
 	delete(pTrace);
 
-	//exit(EXIT_SUCCESS);
+    #ifndef __ANDROID__
+        exit(EXIT_SUCCESS);
+	#endif
 }
 
 void show_usage(char* argv0)
@@ -403,5 +396,10 @@ static void signal_handler(int signal)
 	
     ::RUNNING = false;
     sleep(1);
-    //exit(signal);
+    #ifdef __ANDROID__
+
+    #else
+        exit(signal);
+    #endif
+
 }

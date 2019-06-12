@@ -110,13 +110,13 @@ void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
     speedServerPort = (int) env->GetIntField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "performDownload", "Z");
-    performDownload = (int) env->GetBooleanField(speedTaskDesc, toParseId);
+    performDownload = env->GetBooleanField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "performUpload", "Z");
-    performUpload = (int) env->GetBooleanField(speedTaskDesc, toParseId);
+    performUpload = env->GetBooleanField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "performRtt", "Z");
-    performRtt = (int) env->GetBooleanField(speedTaskDesc, toParseId);
+    performRtt = env->GetBooleanField(speedTaskDesc, toParseId);
 
 }
 
@@ -171,8 +171,9 @@ void AndroidConnector::callback(json11::Json::object& message) const {
 
     //parse the json for now
     if (currentTestPhase == MeasurementPhase::PING) {
-        if (message["rtt_udp_info"].is_object()) {
-            const json11::Json recentResult = message["rtt_udp_info"];
+        if (message["rtt_udp_info"].is_array()) {
+            json11::Json::array const rttInfo = message["rtt_udp_info"].array_items();
+            json11::Json const recentResult = rttInfo.at(rttInfo.size() - 1);
             passJniSpeedState(env, MeasurementPhase::PING, recentResult);
         } else {
             env->SetFloatField(baseMeasurementState, fieldProgress, 0.0f);
@@ -200,9 +201,6 @@ void AndroidConnector::callback(json11::Json::object& message) const {
             env->SetFloatField(baseMeasurementState, fieldProgress, 0.0f);
         }
     }    
-    
-    //const jstring javaMsg = env->NewStringUTF("callback");//json11::Json(message).dump().c_str());
-    //env->CallVoidMethod(jniCaller, callbackID, javaMsg);
 
 }
 
@@ -241,9 +239,8 @@ void AndroidConnector::passJniSpeedState (JNIEnv* env, const MeasurementPhase& s
     case MeasurementPhase::PING:
         toFill = pingMeasurementState;
         obj = json["average_ns"];
-        printLog(json.dump());
         if (obj.is_string()) {
-            env->SetLongField(toFill, fieldAverageMs, std::stoll(obj.string_value()) / 1e6);
+            env->SetLongField(toFill, fieldAverageMs, std::stoll(obj.string_value()) / 1e9);
         }
         break;
     case MeasurementPhase::DOWNLOAD:
