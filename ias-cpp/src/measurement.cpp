@@ -80,10 +80,7 @@ int CMeasurement::startMeasurement()
 	
 	vector<string> vString;
 	vector<string>::iterator iString;
-	
-	vector<Download*> vDownloadThreads;
-	vector<Upload*> vUploadThreads;
-	
+
 	measurements.streams = 0;
 	
 	map<int, unsigned long long> mTmpMap;
@@ -92,10 +89,11 @@ int CMeasurement::startMeasurement()
 	{
 		// PING
 		case 2:
-			ping = new Ping( mXml, mService, mProvider );
+		{
+			std::unique_ptr<Ping> ping = std::make_unique<Ping>(mXml, mService, mProvider);
 			ping->createThread();
 
-			mCallback->pingThread = ping;
+			mCallback->pingThread = ping.get();
 			
 			ping->waitForEnd();
 
@@ -104,13 +102,14 @@ int CMeasurement::startMeasurement()
 			    //Sleep 100ms
                 usleep(100000);
 			}
-			
-			delete( ping );
 
+        }
 			break;
 
 		// DOWNLOAD
-		case 3:		
+		case 3:
+		{
+		    std::vector<Download *> vDownloadThreads;
 			//Set Measurement Duration for Timer - Download
 			if( mXml->readString(mProvider,"testname","dummy") == "http_down_dataload" ) 
 				MEASUREMENT_DURATION = mXml->readLong(mProvider,"DL_DURATION_DL",10);
@@ -119,7 +118,7 @@ int CMeasurement::startMeasurement()
 				
 			for(int i = 0; i < conf.instances; i++)
 			{
-				download = new Download( mConfig, mXml, mService, mProvider );
+				Download * download = new Download( mConfig, mXml, mService, mProvider );
 				if( download->createThread() != 0 )
 				{
 					TRC_ERR( "Error: Failure while creating the Thread - DownloadThread!" );
@@ -145,11 +144,13 @@ int CMeasurement::startMeasurement()
             {
                 delete( *itThread );
             }
-
+        }
 			break;
 		
 		// Upload
 		case 4:
+		{
+		    std::vector<Upload *> vUploadThreads;
 			//Set Measurement Duration for Timer - Upload
 			if( mXml->readString(mProvider,"testname","dummy") == "http_up_dataload" ) 
 				MEASUREMENT_DURATION = mXml->readLong(mProvider,"UL_DURATION_DL",10)+2;
@@ -160,7 +161,7 @@ int CMeasurement::startMeasurement()
 			
 			for(int i = 0; i < conf.instances; i++)
 			{
-				upload = new Upload( mConfig, mXml, mService, mProvider );
+				Upload * upload = new Upload( mConfig, mXml, mService, mProvider );
 				if( upload->createThread() != 0 )
 				{
 					TRC_ERR( "Error: Failure while creating the Thread - UploadThread!" );
@@ -186,7 +187,7 @@ int CMeasurement::startMeasurement()
             {
                 delete( *itThread );
             }
-
+    }
 			break;
 	}
 	
