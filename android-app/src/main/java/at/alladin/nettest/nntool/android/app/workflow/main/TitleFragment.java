@@ -20,6 +20,7 @@ import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.interfaces.TrafficGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
 import at.alladin.nettest.nntool.android.app.view.GeoLocationView;
@@ -129,9 +130,7 @@ public class TitleFragment extends Fragment {
     }
 
     public void startInformationProvider() {
-        if (informationProvider == null) {
-            informationProvider = InformationProvider.createDefault(getContext());
-        }
+        informationProvider = InformationProvider.createDefault(getContext());
 
         informationProvider.start();
 
