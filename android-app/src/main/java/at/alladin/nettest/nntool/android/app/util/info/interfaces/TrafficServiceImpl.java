@@ -17,12 +17,15 @@ public class TrafficServiceImpl implements TrafficService {
 
     private long trafficTxEnd = -1;
 
+    private long durationNs = 0;
+
     /*
      * (non-Javadoc)
      * @see at.alladin.rmbt.client.v2.task.service.TrafficService#start()
      */
     @Override
     public int start() {
+        durationNs = System.nanoTime();
         if ((trafficRxStart = TrafficStats.getTotalRxBytes()) == TrafficStats.UNSUPPORTED) {
             return SERVICE_NOT_SUPPORTED;
         }
@@ -54,6 +57,7 @@ public class TrafficServiceImpl implements TrafficService {
      */
     @Override
     public void stop() {
+        durationNs = System.nanoTime() - durationNs;
         trafficTxEnd = TrafficStats.getTotalTxBytes();
         trafficRxEnd = TrafficStats.getTotalRxBytes();
     }
@@ -74,5 +78,13 @@ public class TrafficServiceImpl implements TrafficService {
     @Override
     public long getTotalRxBytes() {
         return TrafficStats.getTotalRxBytes();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public long getDurationNs() {
+        return durationNs;
     }
 }

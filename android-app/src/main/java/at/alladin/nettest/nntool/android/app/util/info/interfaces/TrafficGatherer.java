@@ -45,7 +45,8 @@ public class TrafficGatherer
         if (trafficService != null) {
             trafficService.stop();
             final CurrentInterfaceTraffic currentInterfaceTraffic =
-                    new CurrentInterfaceTraffic(trafficService.getRxBytes(), trafficService.getTxBytes());
+                    new CurrentInterfaceTraffic(trafficService.getRxBytes(),
+                            trafficService.getTxBytes(), trafficService.getDurationNs());
             setCurrentValue(currentInterfaceTraffic);
             emitUpdateEvent(currentInterfaceTraffic);
             trafficService.start();
