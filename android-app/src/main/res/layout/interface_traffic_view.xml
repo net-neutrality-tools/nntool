@@ -14,21 +14,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <at.alladin.nettest.nntool.android.app.view.AlladinTextView
-                android:id="@+id/nerdmode_traffic_in_arrow_2"
+                android:id="@+id/interface_traffic_in_arrow_2"
                 android:paddingRight="3dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ifont_traffic_in"
                 style="@style/Nettest.Title.InterfaceTraffic.Arrow" />
             <at.alladin.nettest.nntool.android.app.view.AlladinTextView
-                android:id="@+id/nerdmode_traffic_in_arrow_1"
+                android:id="@+id/interface_traffic_in_arrow_1"
                 android:paddingRight="3dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ifont_traffic_in"
                 style="@style/Nettest.Title.InterfaceTraffic.Arrow" />
             <at.alladin.nettest.nntool.android.app.view.AlladinTextView
-                android:id="@+id/nerdmode_traffic_in_arrow_0"
+                android:id="@+id/interface_traffic_in_arrow_0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ifont_traffic_in"
@@ -36,7 +36,7 @@
 
         </LinearLayout>
         <TextView
-            android:id="@+id/nerdmode_bg_traffic_in"
+            android:id="@+id/interface_traffic_in"
             android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,20 +60,20 @@
             android:layout_height="wrap_content">
 
             <at.alladin.nettest.nntool.android.app.view.AlladinTextView
-                android:id="@+id/nerdmode_traffic_out_arrow_0"
+                android:id="@+id/interface_traffic_out_arrow_0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ifont_traffic_out"
                 style="@style/Nettest.Title.InterfaceTraffic.Arrow" />
             <at.alladin.nettest.nntool.android.app.view.AlladinTextView
-                android:id="@+id/nerdmode_traffic_out_arrow_1"
+                android:id="@+id/interface_traffic_out_arrow_1"
                 android:paddingLeft="3dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ifont_traffic_out"
                 style="@style/Nettest.Title.InterfaceTraffic.Arrow" />
             <at.alladin.nettest.nntool.android.app.view.AlladinTextView
-                android:id="@+id/nerdmode_traffic_out_arrow_2"
+                android:id="@+id/interface_traffic_out_arrow_2"
                 android:paddingLeft="3dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
                 style="@style/Nettest.Title.InterfaceTraffic.Arrow" />
         </LinearLayout>
         <TextView
-            android:id="@+id/nerdmode_bg_traffic_out"
+            android:id="@+id/interface_traffic_out"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
