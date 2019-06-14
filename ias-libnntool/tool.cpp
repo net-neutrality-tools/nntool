@@ -37,7 +37,7 @@ CTool::~CTool()
 //! \return 0
 int CTool::logging( string sValue )
 {
-	if(DEBUG)
+	if(::DEBUG)
 	{
 		cout<<sValue<<endl;
 	}
@@ -52,7 +52,7 @@ int CTool::logging( string sValue )
 //! \return 0
 int CTool::logging( string sKey, string sValue )
 {
-	if(DEBUG)
+	if(::DEBUG)
 	{
 		cout<<"DEBUG -> "<<sKey<<": "<<sValue<<endl;
 	}

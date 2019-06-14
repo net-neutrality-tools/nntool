@@ -125,7 +125,7 @@ void CTrace::logInfo(const string &sMessage)
 void CTrace::logDebug(const string &sMessage)
 {
 	#ifdef NNTOOL_CLIENT
-	if (DEBUG)
+	if (::DEBUG)
 	{
 		logToPlatform("DEBUG", sMessage);
 	}
