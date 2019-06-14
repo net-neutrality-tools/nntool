@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-17
+ *      \date Last update: 2019-06-12
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -271,6 +271,10 @@ int start_daemon(int nochdir, int noclose)
 
 static void signal_handler(int signal)
 {
+    TRC_ERR("Error signal received " + std::to_string(signal));
+
+    CTool::print_stacktrace();
+    
     ::RUNNING = false;
     sleep(1);
     exit(signal);
