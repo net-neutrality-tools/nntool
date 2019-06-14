@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-10
+ *      \date Last update: 2019-06-12
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -79,10 +79,6 @@ class CTool
 		static string getSystemInfoOSVersion();
 		
 		static int validateIp( const string &ipAddress );
-		
-		static string getIP( string sInterface );
-		
-		static string getIP( string sInterface, int nType );
 		
 		//! Get Timestamps in ms
 		static int get_timestamp_usec();
