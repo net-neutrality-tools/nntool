@@ -25,6 +25,9 @@
 
     <string name="measurement_data_consumption_warning">I am a data consumption warning!</string>
 
+    <string name="interface_traffic_in">Traffic in</string>
+    <string name="interface_traffic_out">Traffic out</string>
+
     <!-- Geo-location specific strings -->
     <string name="geo_location_km_h">km/h</string>
     <string name="geo_location_m">m</string>
