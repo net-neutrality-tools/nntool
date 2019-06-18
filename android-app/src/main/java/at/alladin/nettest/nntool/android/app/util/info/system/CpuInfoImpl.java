@@ -50,7 +50,7 @@ public class CpuInfoImpl extends CpuStat {
         }
     }
 
-    private final static String PROC_PATH = "/proc/";
+    private final static String CPUSTAT_PATH = "/proc/stat";
 
     private final static Pattern CPU_PATTERN = Pattern.compile("cpu[^0-9]([\\s0-9]*)");
 
@@ -59,7 +59,7 @@ public class CpuInfoImpl extends CpuStat {
     public CpuUsage getCurrentCpuUsage(boolean getByCore) {
         CpuUsage cpuUsage = new CpuUsage();
 
-        String stat = ToolUtils.readFromProc(PROC_PATH + "stat");
+        String stat = ToolUtils.readFromProc(CPUSTAT_PATH);
 
         if (getByCore) {
             Matcher m = CPU_CORE_PATTERN.matcher(stat);

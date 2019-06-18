@@ -34,5 +34,7 @@ public interface MemInfo {
 	
 	public Long getFreeMem();
 
+    public float calculateMemoryUsage();
+
     public Long getValue(final MemInfoType memInfoType);
 }

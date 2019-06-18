@@ -15,6 +15,8 @@ public class MemInfoImpl implements MemInfo {
 
     private final static Pattern MEMINFO_PATTERN = Pattern.compile("([a-zA-Z]*)\\:\\s*([0-9]*)\\s*([a-zA-Z]*)");
 
+    private final static String MEMINFO_PATH = "/proc/meminfo";
+
     private Map<String, Long> memoryMap;
 
     public enum MemInfoTypeEnum implements MemInfoType {
@@ -123,7 +125,7 @@ public class MemInfoImpl implements MemInfo {
 
     public synchronized void update() {
         memoryMap = new HashMap<>();
-        String memInfo = ToolUtils.readFromProc("/proc/meminfo");
+        String memInfo = ToolUtils.readFromProc(MEMINFO_PATH);
         Matcher m = MEMINFO_PATTERN.matcher(memInfo);
         while (m.find()) {
             String type = m.group(1);
