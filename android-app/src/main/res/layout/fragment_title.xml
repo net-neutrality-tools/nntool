@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
-    <at.alladin.nettest.nntool.android.app.workflow.measurement.InterfaceTrafficView
+    <at.alladin.nettest.nntool.android.app.view.InterfaceTrafficView
         android:layout_marginTop="3dp"
         android:id="@+id/view_interface_traffic"
         android:layout_width="match_parent"
