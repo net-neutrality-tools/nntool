@@ -110,7 +110,7 @@ int CTimer::run()
 				TIMER_DURATION = time_diff;
 				
 				//if we reached the time, stop immediately
-				if( MEASUREMENT_DURATION == (unsigned long long)(time_diff/1000000) )
+				if( MEASUREMENT_DURATION <= (unsigned long long)(time_diff/1000000) )
 				{
 					//Stop timer
 					TIMER_STOPPED = true;	

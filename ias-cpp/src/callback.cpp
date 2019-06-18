@@ -289,7 +289,7 @@ void CCallback::rttUdpCallback(string cmd)
 		tempMeasurement.ping.missing 		= nMissing;
 		tempMeasurement.ping.errors 		= pingThread->nError;
 
-		tempMeasurement.ping.measurement_phase_progress = (tempMeasurement.ping.replies + tempMeasurement.ping.missing) / ((float) pingThread->mPingQuery);
+		tempMeasurement.ping.measurement_phase_progress = (tempMeasurement.ping.replies + tempMeasurement.ping.missing) / ((float) pingThread->nPingTarget);
 		
 		tempMeasurement.ping.starttime  	= pingThread->measurementTimeStart;
 		tempMeasurement.ping.endtime    	= pingThread->measurementTimeEnd;
@@ -344,7 +344,6 @@ void CCallback::rttUdpCallback(string cmd)
 	jMeasurementResults["progress"] = tempMeasurement.ping.measurement_phase_progress;
 
 	jMeasurementResultsRttUdp = jMeasurementResults;
-	
 }
 
 void CCallback::downloadCallback(string cmd)
