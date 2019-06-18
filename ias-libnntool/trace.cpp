@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-14
+ *      \date Last update: 2019-06-18
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -124,7 +124,7 @@ void CTrace::logInfo(const string &sMessage)
 
 void CTrace::logDebug(const string &sMessage)
 {
-	#ifdef NNTOOL_CLIENT
+	#if defined(NNTOOL_CLIENT) && !defined(__ANDROID__)
 	if (::DEBUG)
 	{
 		logToPlatform("DEBUG", sMessage);

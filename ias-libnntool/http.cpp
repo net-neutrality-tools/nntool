@@ -92,9 +92,7 @@ int CHttp::parseResponse()
 	
 	buffer = string(rbuffer);
 	
-	#ifndef __ANDROID__
 	TRC_DEBUG("Received: (" + to_string(recv_len) + ") --------------------------------" + "\r\n" + buffer);
-	#endif
 	
 	if( buffer.find(ok) != string::npos )
 	{
@@ -199,9 +197,7 @@ int CHttp::responseForbidden()
 	//String to Server
 	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
 
-	#ifndef __ANDROID__
 	TRC_DEBUG("SEND-Buffer: (" + to_string(send_len) + ") --------------------------------" + "\r\n" + send_init);
-	#endif
 		
 	return 403;
 }
@@ -228,9 +224,7 @@ int CHttp::responseNotFound()
 	//String to Server
 	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
 	
-	#ifndef __ANDROID__
 	TRC_DEBUG("SEND-Buffer: (" + to_string(send_len) + ") --------------------------------" + "\r\n" + send_init);
-	#endif
 		
 	return 404;
 }
@@ -288,9 +282,7 @@ int CHttp::responseOk()
 	//String to Server
 	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
 	
-	#ifndef __ANDROID__
 	TRC_DEBUG("SEND-Buffer: (" + to_string(send_len) + ") --------------------------------" + "\r\n" + send_init);
-	#endif
 		
 	return ret;
 }
@@ -309,9 +301,7 @@ int CHttp::requestToReferenceServer()
 	//String to Server
 	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
 	
-	#ifndef __ANDROID__
 	TRC_DEBUG("SEND-Buffer: (" + to_string(send_len) + ") --------------------------------" + "\r\n" + send_init);
-	#endif
 		
 	return parseResponse();
 }
