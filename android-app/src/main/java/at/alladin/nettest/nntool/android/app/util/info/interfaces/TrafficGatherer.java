@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 
 import at.alladin.nettest.nntool.android.app.util.info.ListenableGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.RunnableGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.signal.CurrentSignalStrength;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
