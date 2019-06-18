@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-29
+ *      \date Last update: 2019-06-18
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
  
@@ -28,24 +28,19 @@ CUdpListener::CUdpListener()
 //!	Virtual Destructor
 CUdpListener::~CUdpListener()
 {
-	delete(mConnectionUdp4Send);
-	delete(mConnectionUdp6Send);
-	delete(mConnectionRawRecv);
 }
 
 //! \brief
 //!	Standard Constructor
 CUdpListener::CUdpListener(int nPort)
 {
-	mPort = nPort;
+	mPort 				= nPort;
 	
-	mClient = "-";
-	
-	//Create Socket Objects
-	mConnectionUdp4Send = new CConnection();
-	mConnectionUdp6Send = new CConnection();
-	mConnectionRawRecv 	= new CConnection();
-	
+	mClient 			= "-";
+
+	mConnectionUdp4Send = std::make_unique<CConnection>();
+	mConnectionUdp6Send = std::make_unique<CConnection>();
+	mConnectionRawRecv 	= std::make_unique<CConnection>();
 }
 
 //! \brief

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-29
+ *      \date Last update: 2019-06-18
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -30,10 +30,10 @@ class CUdpListener : public CBasisThread
 		
 		string mClient;
 		
-		CConnection *mConnectionUdp4Send;
-		CConnection *mConnectionUdp6Send;
-		CConnection *mConnectionRawRecv;
-		
+		std::unique_ptr<CConnection> mConnectionUdp4Send;
+		std::unique_ptr<CConnection> mConnectionUdp6Send;
+		std::unique_ptr<CConnection> mConnectionRawRecv;
+
 	public:
 		CUdpListener();
 		

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-03-21
+ *      \date Last update: 2019-06-18
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -40,7 +40,7 @@ class CTcpServer : public CBasisThread
         
         int mSock;
         
-        CConnection *mSocket;
+        std::unique_ptr<CConnection> mSocket;
 	
 	public:
 		CTcpServer();
