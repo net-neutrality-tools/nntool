@@ -90,7 +90,7 @@ class AndroidConnector {
 
         void callbackError(int const errorCode) const;
 
-        void callbackFinished (const json11::Json::object& message);
+        void callbackFinished (json11::Json::object& message);
         /*
         * The method forwarded to the trace to allow for easy android printing
         */
@@ -103,6 +103,17 @@ class AndroidConnector {
     private:
 
         static const char* TAG;
+
+        struct JavaParseInformation {
+            jclass longClass;
+            jmethodID staticLongValueOf;
+
+            jclass intClass;
+            jmethodID staticIntValueOf;
+
+            jclass floatClass;
+            jmethodID staticFloatValueOf;
+        };
 
         JavaVM *javaVM;
         jclass jniHelperClass;
@@ -144,8 +155,16 @@ class AndroidConnector {
         bool performUpload;
         bool performRtt;
 
+        //the classes for the final result
+        jclass speedMeasurementResultClazz;
+        jclass resultUdpClazz;
+        jclass resultBandwidthClazz;
+        jclass timeClazz;
+
 
         AndroidConnector() {};
+
+        void setBandwidthResult (JNIEnv * env, json11::Json const & jsonItems, jobject & result, JavaParseInformation & parseInfo);
 
         inline JNIEnv * getJniEnv() const {
             if (javaVM != nullptr) {
@@ -180,9 +199,6 @@ class AndroidConnector {
                 
             }
         }
-
-//TODO: get the compiling to use basic cpp instructions as well
-
 
 };
 

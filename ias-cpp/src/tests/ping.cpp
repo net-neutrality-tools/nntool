@@ -28,7 +28,6 @@ Ping::Ping()
 //!	Virtual Destructor
 Ping::~Ping()
 {
-	delete(mSocket);
 }
 
 //! \brief
@@ -52,7 +51,7 @@ Ping::Ping( CConfigManager *pXml, CConfigManager *pService, string sProvider )
 	#endif
 
 	//Create Socket Object
-	mSocket = new CConnection();
+	mSocket = std::make_unique<CConnection>();
 	
 	mTimeDiff = 1;
 }

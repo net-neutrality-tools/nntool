@@ -401,7 +401,7 @@ int Upload::run()
 	#endif
 	
 	#ifdef NNTOOL
-	usleep(100000);
+	//usleep(100000);
 	#endif
 
 	delete( pHttp );

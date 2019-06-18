@@ -22,13 +22,16 @@
 //!	Standard Constructor
 CUdpListener::CUdpListener()
 {
+    mSocket = nullptr;
 }
 
 //! \brief
 //!	Virtual Destructor
 CUdpListener::~CUdpListener()
 {
-	delete(mSocket);
+    if (mSocket != nullptr) {
+        delete(mSocket);
+    }
 }
 
 //! \brief

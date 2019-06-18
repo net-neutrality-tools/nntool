@@ -98,8 +98,8 @@ CCallback::~CCallback()
                 TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
                 connector.callbackError(error_code);
             }
-			
-            if (jMeasurementResultsRttUdp.size() > 0) 
+
+            if (jMeasurementResultsRttUdp.size() > 0)
 			{
 				jMeasurementResults["rtt_udp_info"] = Json(jMeasurementResultsRttUdp);
             }
@@ -570,9 +570,9 @@ void CCallback::uploadCallback(string cmd)
 	tempMeasurement.upload.datasize = 0;
 	
 	unsigned int addedTimer = TIMER_DURATION/500000;
-	if (addedTimer > (MEASUREMENT_DURATION-2)*2)
+	if (addedTimer > (MEASUREMENT_DURATION)*2)
 	{
-		addedTimer = (MEASUREMENT_DURATION-2)*2;
+		addedTimer = (MEASUREMENT_DURATION)*2;
 	}
 	for( unsigned int i = tempMeasurement.upload.totime; i < tempMeasurement.upload.totime + addedTimer*5; i+=5 )
 	{

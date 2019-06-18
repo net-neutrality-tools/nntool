@@ -44,14 +44,15 @@ public class JniSpeedMeasurementClient {
     }
 
     @Keep
-    public void cppCallbackFinished (final String message) {
+    public void cppCallbackFinished (final String message, final SpeedMeasurementResult result) {
         Log.d(TAG, message);
         for (MeasurementFinishedStringListener l : finishedStringListeners) {
             l.onMeasurementFinished(message);
         }
         for (MeasurementFinishedListener l : finishedListeners) {
-            l.onMeasurementFinished(null);
+            l.onMeasurementFinished(result);
         }
+        Log.d(TAG, result.toString());
     }
 
     public SpeedMeasurementState getSpeedMeasurementState() {

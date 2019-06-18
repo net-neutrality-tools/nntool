@@ -28,7 +28,6 @@ Download::Download()
 //!	Virtual Destructor
 Download::~Download()
 {
-	delete(mConnection);
 }
 
 //! \brief
@@ -58,7 +57,7 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 		mLimit = 1000000;
 
 	//Create Socket Object
-	mConnection = new CConnection();
+	mConnection = std::make_unique<CConnection>();
 
 	mConfig = pConfig;
 
@@ -180,7 +179,7 @@ int Download::run()
 	setsockopt( mConnection->mSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval) );
 
 	//Send Request and Authenticate Client
-	CHttp *pHttp = new CHttp( mConfig, mConnection, mDownloadString );
+	std::unique_ptr<CHttp> pHttp = std::make_unique<CHttp>( mConfig, mConnection.get(), mDownloadString );
 	if( pHttp->requestToReferenceServer() < 0 )
 	{
 		TRC_INFO("No valid credentials for this server: " + mServer);
@@ -192,8 +191,6 @@ int Download::run()
 		mConnection->close();
 
 		free(rbuffer);
-
-		delete( pHttp );
 
 		return 0;
 	}
@@ -366,10 +363,8 @@ int Download::run()
 	#endif
 
 	#ifdef NNTOOL
-	usleep(100000);
+	//usleep(100000);
 	#endif
-
-	delete( pHttp );
 
 	mConnection->close();
 	free( rbuffer );

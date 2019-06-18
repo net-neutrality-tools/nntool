@@ -1,5 +1,7 @@
 package at.alladin.nettest.nntool.android.speed;
 
+import android.support.annotation.Keep;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,44 +11,70 @@ import java.util.List;
  */
 public class SpeedMeasurementResult {
 
-    private List<BandwidthResult> downloadInfo = new ArrayList<>();
+    private List<BandwidthResult> downloadInfoList = new ArrayList<>();
 
-    private List<BandwidthResult> uploadInfo = new ArrayList<>();
+    private List<BandwidthResult> uploadInfoList = new ArrayList<>();
 
-    private RttUdpInfo rttUdpInfo;
+    private List<RttUdpInfo> rttUdpInfoList = new ArrayList<>();
 
     private TimeInfo timeInfo;
 
-    public List<BandwidthResult> getDownloadInfo() {
-        return downloadInfo;
+    public List<BandwidthResult> getDownloadInfoList() {
+        return downloadInfoList;
     }
 
-    public void setDownloadInfo(List<BandwidthResult> downloadInfo) {
-        this.downloadInfo = downloadInfo;
+    public void setDownloadInfoList(List<BandwidthResult> downloadInfoList) {
+        this.downloadInfoList = downloadInfoList;
     }
 
-    public List<BandwidthResult> getUploadInfo() {
-        return uploadInfo;
+    public List<BandwidthResult> getUploadInfoList() {
+        return uploadInfoList;
     }
 
-    public void setUploadInfo(List<BandwidthResult> uploadInfo) {
-        this.uploadInfo = uploadInfo;
+    public void setUploadInfoList(List<BandwidthResult> uploadInfoList) {
+        this.uploadInfoList = uploadInfoList;
     }
 
-    public RttUdpInfo getRttUdpInfo() {
-        return rttUdpInfo;
+    public List<RttUdpInfo> getRttUdpInfoList() {
+        return rttUdpInfoList;
     }
 
-    public void setRttUdpInfo(RttUdpInfo rttUdpInfo) {
-        this.rttUdpInfo = rttUdpInfo;
+    public void setRttUdpInfoList(List<RttUdpInfo> rttUdpInfoList) {
+        this.rttUdpInfoList = rttUdpInfoList;
+    }
+
+    @Keep
+    public void addDownloadInfo(final BandwidthResult downloadResult) {
+        this.downloadInfoList.add(downloadResult);
+    }
+
+    @Keep
+    public void addUploadInfo(final BandwidthResult uploadResult) {
+        this.uploadInfoList.add(uploadResult);
+    }
+
+    @Keep
+    public void addRttUdpInfo(final RttUdpInfo rttResult) {
+        rttUdpInfoList.add(rttResult);
     }
 
     public TimeInfo getTimeInfo() {
         return timeInfo;
     }
 
+    @Keep
     public void setTimeInfo(TimeInfo timeInfo) {
         this.timeInfo = timeInfo;
+    }
+
+    @Override
+    public String toString() {
+        return "SpeedMeasurementResult{" +
+                "downloadInfoList=" + downloadInfoList +
+                ", uploadInfoList=" + uploadInfoList +
+                ", rttUdpInfoList=" + rttUdpInfoList +
+                ", timeInfo=" + timeInfo +
+                '}';
     }
 
     public static class BandwidthResult {
@@ -71,6 +99,7 @@ public class SpeedMeasurementResult {
             return bytes;
         }
 
+        @Keep
         public void setBytes(Long bytes) {
             this.bytes = bytes;
         }
@@ -79,6 +108,7 @@ public class SpeedMeasurementResult {
             return bytesIncludingSlowStart;
         }
 
+        @Keep
         public void setBytesIncludingSlowStart(Long bytesIncludingSlowStart) {
             this.bytesIncludingSlowStart = bytesIncludingSlowStart;
         }
@@ -87,6 +117,7 @@ public class SpeedMeasurementResult {
             return durationNs;
         }
 
+        @Keep
         public void setDurationNs(Long durationNs) {
             this.durationNs = durationNs;
         }
@@ -95,6 +126,7 @@ public class SpeedMeasurementResult {
             return durationNsTotal;
         }
 
+        @Keep
         public void setDurationNsTotal(Long durationNsTotal) {
             this.durationNsTotal = durationNsTotal;
         }
@@ -103,6 +135,7 @@ public class SpeedMeasurementResult {
             return numStreamsEnd;
         }
 
+        @Keep
         public void setNumStreamsEnd(Integer numStreamsEnd) {
             this.numStreamsEnd = numStreamsEnd;
         }
@@ -111,6 +144,7 @@ public class SpeedMeasurementResult {
             return numStreamsStart;
         }
 
+        @Keep
         public void setNumStreamsStart(Integer numStreamsStart) {
             this.numStreamsStart = numStreamsStart;
         }
@@ -119,6 +153,7 @@ public class SpeedMeasurementResult {
             return progress;
         }
 
+        @Keep
         public void setProgress(Float progress) {
             this.progress = progress;
         }
@@ -127,8 +162,23 @@ public class SpeedMeasurementResult {
             return throughputAvgBps;
         }
 
+        @Keep
         public void setThroughputAvgBps(Long throughputAvgBps) {
             this.throughputAvgBps = throughputAvgBps;
+        }
+
+        @Override
+        public String toString() {
+            return "BandwidthResult{" +
+                    "bytes=" + bytes +
+                    ", bytesIncludingSlowStart=" + bytesIncludingSlowStart +
+                    ", durationNs=" + durationNs +
+                    ", durationNsTotal=" + durationNsTotal +
+                    ", numStreamsEnd=" + numStreamsEnd +
+                    ", numStreamsStart=" + numStreamsStart +
+                    ", progress=" + progress +
+                    ", throughputAvgBps=" + throughputAvgBps +
+                    '}';
         }
     }
 
@@ -155,12 +205,15 @@ public class SpeedMeasurementResult {
 
         private String peer;
 
+        private Float progress;
+
         private Long standardDeviationNs;
 
         public Long getAverageNs() {
             return averageNs;
         }
 
+        @Keep
         public void setAverageNs(Long averageNs) {
             this.averageNs = averageNs;
         }
@@ -169,6 +222,7 @@ public class SpeedMeasurementResult {
             return durationNs;
         }
 
+        @Keep
         public void setDurationNs(Long durationNs) {
             this.durationNs = durationNs;
         }
@@ -177,6 +231,7 @@ public class SpeedMeasurementResult {
             return maxNs;
         }
 
+        @Keep
         public void setMaxNs(Long maxNs) {
             this.maxNs = maxNs;
         }
@@ -185,6 +240,7 @@ public class SpeedMeasurementResult {
             return medianNs;
         }
 
+        @Keep
         public void setMedianNs(Long medianNs) {
             this.medianNs = medianNs;
         }
@@ -193,6 +249,7 @@ public class SpeedMeasurementResult {
             return minNs;
         }
 
+        @Keep
         public void setMinNs(Long minNs) {
             this.minNs = minNs;
         }
@@ -201,6 +258,7 @@ public class SpeedMeasurementResult {
             return numError;
         }
 
+        @Keep
         public void setNumError(Integer numError) {
             this.numError = numError;
         }
@@ -209,6 +267,7 @@ public class SpeedMeasurementResult {
             return numMissing;
         }
 
+        @Keep
         public void setNumMissing(Integer numMissing) {
             this.numMissing = numMissing;
         }
@@ -217,6 +276,7 @@ public class SpeedMeasurementResult {
             return numReceived;
         }
 
+        @Keep
         public void setNumReceived(Integer numReceived) {
             this.numReceived = numReceived;
         }
@@ -225,6 +285,7 @@ public class SpeedMeasurementResult {
             return numSent;
         }
 
+        @Keep
         public void setNumSent(Integer numSent) {
             this.numSent = numSent;
         }
@@ -233,6 +294,7 @@ public class SpeedMeasurementResult {
             return packetSize;
         }
 
+        @Keep
         public void setPacketSize(Integer packetSize) {
             this.packetSize = packetSize;
         }
@@ -241,6 +303,7 @@ public class SpeedMeasurementResult {
             return peer;
         }
 
+        @Keep
         public void setPeer(String peer) {
             this.peer = peer;
         }
@@ -249,8 +312,37 @@ public class SpeedMeasurementResult {
             return standardDeviationNs;
         }
 
+        @Keep
         public void setStandardDeviationNs(Long standardDeviationNs) {
             this.standardDeviationNs = standardDeviationNs;
+        }
+
+        public Float getProgress() {
+            return progress;
+        }
+
+        @Keep
+        public void setProgress(Float progress) {
+            this.progress = progress;
+        }
+
+        @Override
+        public String toString() {
+            return "RttUdpInfo{" +
+                    "averageNs=" + averageNs +
+                    ", durationNs=" + durationNs +
+                    ", maxNs=" + maxNs +
+                    ", medianNs=" + medianNs +
+                    ", minNs=" + minNs +
+                    ", numError=" + numError +
+                    ", numMissing=" + numMissing +
+                    ", numReceived=" + numReceived +
+                    ", numSent=" + numSent +
+                    ", packetSize=" + packetSize +
+                    ", peer='" + peer + '\'' +
+                    ", progress=" + progress +
+                    ", standardDeviationNs=" + standardDeviationNs +
+                    '}';
         }
     }
 
@@ -271,6 +363,7 @@ public class SpeedMeasurementResult {
             return downloadStart;
         }
 
+        @Keep
         public void setDownloadStart(Long downloadStart) {
             this.downloadStart = downloadStart;
         }
@@ -279,6 +372,7 @@ public class SpeedMeasurementResult {
             return downloadEnd;
         }
 
+        @Keep
         public void setDownloadEnd(Long downloadEnd) {
             this.downloadEnd = downloadEnd;
         }
@@ -287,6 +381,7 @@ public class SpeedMeasurementResult {
             return rttUdpStart;
         }
 
+        @Keep
         public void setRttUdpStart(Long rttUdpStart) {
             this.rttUdpStart = rttUdpStart;
         }
@@ -295,6 +390,7 @@ public class SpeedMeasurementResult {
             return rttUdpEnd;
         }
 
+        @Keep
         public void setRttUdpEnd(Long rttUdpEnd) {
             this.rttUdpEnd = rttUdpEnd;
         }
@@ -303,6 +399,7 @@ public class SpeedMeasurementResult {
             return uploadStart;
         }
 
+        @Keep
         public void setUploadStart(Long uploadStart) {
             this.uploadStart = uploadStart;
         }
@@ -311,8 +408,21 @@ public class SpeedMeasurementResult {
             return uploadEnd;
         }
 
+        @Keep
         public void setUploadEnd(Long uploadEnd) {
             this.uploadEnd = uploadEnd;
+        }
+
+        @Override
+        public String toString() {
+            return "TimeInfo{" +
+                    "downloadStart=" + downloadStart +
+                    ", downloadEnd=" + downloadEnd +
+                    ", rttUdpStart=" + rttUdpStart +
+                    ", rttUdpEnd=" + rttUdpEnd +
+                    ", uploadStart=" + uploadStart +
+                    ", uploadEnd=" + uploadEnd +
+                    '}';
         }
     }
 

@@ -31,8 +31,6 @@ CMeasurement::~CMeasurement()
 {
 	mTimer->stopThread();
 	mTimer->waitForEnd();
-	
-	delete( mTimer );
 }
 
 //! \brief
@@ -62,7 +60,7 @@ CMeasurement::CMeasurement( CConfigManager *pConfig, CConfigManager *pXml,  CCon
 			break;
 	}
 	
-	mTimer = new CTimer( conf.instances, mCallback );
+	mTimer = std::make_unique<CTimer>( conf.instances, mCallback );
 	
 	if( mTimer->createThread() != 0 )
 	{
@@ -153,9 +151,9 @@ int CMeasurement::startMeasurement()
 		    std::vector<Upload *> vUploadThreads;
 			//Set Measurement Duration for Timer - Upload
 			if( mXml->readString(mProvider,"testname","dummy") == "http_up_dataload" ) 
-				MEASUREMENT_DURATION = mXml->readLong(mProvider,"UL_DURATION_DL",10)+2;
+				MEASUREMENT_DURATION = mXml->readLong(mProvider,"UL_DURATION_DL",10);
 			else
-				MEASUREMENT_DURATION = mXml->readLong(mProvider,"UL_DURATION",10)+2;
+				MEASUREMENT_DURATION = mXml->readLong(mProvider,"UL_DURATION",10);
 			
 			measurements.upload.datasize = 0;
 			
