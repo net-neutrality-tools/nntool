@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-12
+ *      \date Last update: 2019-06-18
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -29,35 +29,6 @@ CTool::CTool()
 //!	Virtual Destructor
 CTool::~CTool()
 {
-}
-
-//! \brief
-//!	Syslog Function for generally logging
-//! \param message
-//! \return 0
-int CTool::logging( string sValue )
-{
-	if(::DEBUG)
-	{
-		cout<<sValue<<endl;
-	}
-	
-	return 0;
-}
-
-
-//! \brief
-//!	Syslog Function for generally logging
-//! \param message
-//! \return 0
-int CTool::logging( string sKey, string sValue )
-{
-	if(::DEBUG)
-	{
-		cout<<"DEBUG -> "<<sKey<<": "<<sValue<<endl;
-	}
-
-	return 0;
 }
 
 //! \brief
