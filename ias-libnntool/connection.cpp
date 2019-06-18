@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-22
+ *      \date Last update: 2019-06-18
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -533,7 +533,6 @@ int CConnection::connectTLS()
 		server_cert = SSL_get_peer_certificate (ssl);
 
 		//check certificate
-	    int ret;
 	    X509_STORE *store;
 	    X509_STORE_CTX *store_ctx;
 
