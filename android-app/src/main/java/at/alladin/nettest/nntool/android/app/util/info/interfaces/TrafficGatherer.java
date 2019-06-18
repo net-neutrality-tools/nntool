@@ -16,6 +16,8 @@ public class TrafficGatherer
 
     private final static String TAG = TrafficGatherer.class.getSimpleName();
 
+    private final static Interval INTERVAL = new Interval(2, TimeUnit.SECONDS);
+
     private final TrafficServiceImpl trafficService = new TrafficServiceImpl();
 
     @Override
@@ -36,7 +38,7 @@ public class TrafficGatherer
 
     @Override
     public Interval getInterval() {
-        return new Interval(1000, TimeUnit.MILLISECONDS);
+        return INTERVAL;
     }
 
     @Override
