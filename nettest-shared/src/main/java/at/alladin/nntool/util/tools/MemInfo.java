@@ -19,12 +19,20 @@ package at.alladin.nntool.util.tools;
 import java.util.Map;
 
 public interface MemInfo {
-	
+
+    public interface MemInfoType {
+        public Long getMemoryValue(final MemInfo memInfo);
+    }
+
+	public final static Long UNKNOWN = null;
+
 	public void update();
 	
 	public Map<String, Long> getMemoryMap();
 	
-	public long getTotalMem();
+	public Long getTotalMem();
 	
-	public long getFreeMem();
+	public Long getFreeMem();
+
+    public Long getValue(final MemInfoType memInfoType);
 }
