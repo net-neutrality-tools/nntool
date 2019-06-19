@@ -10,6 +10,7 @@ import at.alladin.nettest.nntool.android.app.support.telephony.CellInfoWrapper;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeEvent;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeListener;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.interfaces.TrafficGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkChangeEvent;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkChangeListener;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
@@ -29,6 +30,7 @@ public class InformationCollector
     private final AtomicBoolean isCollecting = new AtomicBoolean(false);
 
     private final List<CellInfoWrapper> cellInfoList = new ArrayList<>();
+
     private final List<GeoLocationDto> geoLocationList = new ArrayList<>();
 
     public InformationCollector(final InformationProvider informationProvider) {

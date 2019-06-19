@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-03
+ *      \date Last update: 2019-06-14
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -78,13 +78,6 @@
     #include <execinfo.h>
     #include <ifaddrs.h>
 #endif
-
-//openssl is not used in ias-cpp
-//#include <openssl/crypto.h>
-//#include <openssl/x509.h>
-//#include <openssl/pem.h>
-//#include <openssl/ssl.h>
-//#include <openssl/err.h>
 
 
 //libnntool

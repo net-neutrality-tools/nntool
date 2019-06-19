@@ -20,10 +20,14 @@ import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.interfaces.CurrentInterfaceTraffic;
+import at.alladin.nettest.nntool.android.app.util.info.interfaces.InterfaceTrafficUpdateListener;
+import at.alladin.nettest.nntool.android.app.util.info.interfaces.TrafficGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
 import at.alladin.nettest.nntool.android.app.view.GeoLocationView;
 import at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView;
+import at.alladin.nettest.nntool.android.app.workflow.measurement.InterfaceTrafficView;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
 
@@ -39,6 +43,8 @@ public class TitleFragment extends Fragment {
     private GeoLocationView geoLocationView;
 
     private InformationProvider informationProvider;
+
+    private InterfaceTrafficView interfaceTrafficView;
 
     /**
      *
@@ -77,13 +83,13 @@ public class TitleFragment extends Fragment {
             }
         });
 
-
         providerSignalView = v.findViewById(R.id.view_provider_signal);
 
         geoLocationView = v.findViewById(R.id.view_geo_location);
 
-        Log.i(TAG, "onCreateView");
+        interfaceTrafficView = v.findViewById(R.id.view_interface_traffic);
 
+        //Log.i(TAG, "onCreateView");
         return v;
     }
 
@@ -115,29 +121,28 @@ public class TitleFragment extends Fragment {
     public void onResume() {
         super.onResume();
         startInformationProvider();
-        Log.i(TAG, "onResume");
+        //Log.i(TAG, "onResume");
         //final Intent serviceIntent = new Intent(getContext(), InformationService.class);
         //getContext().bindService(serviceIntent, this, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     public void onPause() {
-        Log.i(TAG, "onPause");
-        stopInformationProvider();
+        //Log.i(TAG, "onPause");
         //getContext().unbindService(this);
+        stopInformationProvider();
         super.onPause();
     }
 
     public void startInformationProvider() {
-        if (informationProvider == null) {
-            informationProvider = InformationProvider.createDefault(getContext());
-        }
+        informationProvider = InformationProvider.createDefault(getContext());
 
         informationProvider.start();
 
         final NetworkGatherer networkGatherer = informationProvider.getGatherer(NetworkGatherer.class);
         final SignalGatherer signalGatherer = informationProvider.getGatherer(SignalGatherer.class);
         final GeoLocationGatherer geoLocationGatherer = informationProvider.getGatherer(GeoLocationGatherer.class);
+        final TrafficGatherer trafficGatherer = informationProvider.getGatherer(TrafficGatherer.class);
 
         if (networkGatherer != null && providerSignalView != null) {
             networkGatherer.addListener(providerSignalView);
@@ -149,6 +154,10 @@ public class TitleFragment extends Fragment {
 
         if (geoLocationGatherer != null && geoLocationView != null) {
             geoLocationGatherer.addListener(geoLocationView);
+        }
+
+        if (trafficGatherer != null && interfaceTrafficView != null) {
+            trafficGatherer.addListener(interfaceTrafficView);
         }
     }
 
@@ -172,6 +181,11 @@ public class TitleFragment extends Fragment {
         final GeoLocationGatherer geoLocationGatherer = informationProvider.getGatherer(GeoLocationGatherer.class);
         if (geoLocationGatherer != null && geoLocationView != null) {
             geoLocationGatherer.removeListener(geoLocationView);
+        }
+
+        final TrafficGatherer trafficGatherer = informationProvider.getGatherer(TrafficGatherer.class);
+        if (trafficGatherer != null && interfaceTrafficView != null) {
+            trafficGatherer.removeListener(interfaceTrafficView);
         }
     }
 }

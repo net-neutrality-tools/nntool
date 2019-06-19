@@ -11,8 +11,9 @@
  */
 
 /*!
+
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-29
+ *      \date Last update: 2019-06-14
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -34,20 +35,18 @@ Ping::~Ping()
 //!	Ping init function. Copy information to local vars
 //! \param &settings
 Ping::Ping( CConfigManager *pXml, CConfigManager *pService, string sProvider )
-{	
-	mClient = CTool::getIP( pService->readString("TAC51","LAN-IF","eth1"), pXml->readLong(sProvider, "NET_TYPE", 4) );
-	
-	#ifdef NNTOOL
-	mServerName = pXml->readString(sProvider,"DNS_HOSTNAME_RTT","default.com");
-	#endif
-
-	mServer = pXml->readString(sProvider,"PING_DESTINATION","1.1.1.1");	
-	
-	mPingQuery = pXml->readLong(sProvider,"PING_QUERY",30);
-	mPingPort = pXml->readLong(sProvider,"PING_PORT",80);
+{		
+	mServerName	= pXml->readString(sProvider,"DNS_HOSTNAME_RTT","default.com");
+	mServer 	= pXml->readString(sProvider,"PING_DESTINATION","1.1.1.1");	
+	mClient 	= "0.0.0.0";
+	mPingQuery 	= pXml->readLong(sProvider,"PING_QUERY",30);
+	mPingQuery++;
+	nPingTarget	= mPingQuery -1;
+	mPingPort 	= pXml->readLong(sProvider,"PING_PORT",80);
 	
 	#ifndef NNTOOL
-	CTool::logging( ( "Ping: "+mServer+" from: "+mClient+" Query: "+CTool::toString(mPingQuery)+" Port: "+CTool::toString(mPingPort)).c_str() );
+	mClient = CTool::getIP( pService->readString("TAC51","LAN-IF","eth1"), pXml->readLong(sProvider, "NET_TYPE", 4) );
+	CTool::logging( ( "Ping: "+mServer+" from: "+mClient+" Query: "+CTool::toString(nPingTarget)+" Port: "+CTool::toString(mPingPort)).c_str() );
 	#endif
 
 	//Create Socket Object
@@ -99,32 +98,34 @@ int Ping::run()
 	vector<string> vResponse;
 	string delimiter = ",";
 
-	#ifdef NNTOOL
+	//Get Hostname and make DNS Request
 	TRC_DEBUG( ("Resolving Hostname for Measurement: "+mServerName).c_str() );
-    //TODO: readd code for android
 
-//	struct addrinfo *ips;
-//	memset(&ips, 0, sizeof ips);
-//
-//	ips = CTool::getIpsFromHostname( mServerName, true );
-//
-//	char host[NI_MAXHOST];
-//
-//	getnameinfo(ips->ai_addr, ips->ai_addrlen, host, sizeof host, NULL, 0, NI_NUMERICHOST);
-//	mServer = string(host);
-
+	#if defined(NNTOOL) && defined(__ANDROID__)
 	if( CTool::validateIp(mClient) == 6)
 		mServer = CTool::getIpFromHostname( mServerName, 6 );
 	else
 		mServer = CTool::getIpFromHostname( mServerName, 4 );
+	#endif
 
-	TRC_DEBUG( ("Resolved Hostname for Measurement: "+mServer).c_str() );
-	int pid = syscall(SYS_gettid);
+	#if defined(NNTOOL) && !defined(__ANDROID__)
+	struct addrinfo *ips;
+	memset(&ips, 0, sizeof ips);
+
+	ips = CTool::getIpsFromHostname( mServerName, true );
+
+	char host[NI_MAXHOST];
 	
-	::MEASUREMENT_DURATION = (int)mPingQuery * 1.5 * 1.1;
+	getnameinfo(ips->ai_addr, ips->ai_addrlen, host, sizeof host, NULL, 0, NI_NUMERICHOST);
+	mServer = string(host);
+	#endif
+
+	#ifdef NNTOOL
+ 	::MEASUREMENT_DURATION = (int)mPingQuery * 1.5 * 1.1;
 
 	TRC_DEBUG( ("Resolved Hostname for Measurement: "+mServer).c_str() );
-	if (CTool::validateIp(mServer) == 6) ipv6validated = true; 
+
+ 	if (CTool::validateIp(mServer) == 6) ipv6validated = true; 
 	#endif
 
 	#ifndef NNTOOL
@@ -260,6 +261,8 @@ int Ping::run()
 		//Sleep 1000ms
 		usleep(timeout);	
 	}
+
+	RUNNING = false;
 	
 	#ifndef NNTOOL
 	measurementTimeEnd = CTool::get_timestamp();

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-20
+ *      \date Last update: 2019-06-14
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -37,15 +37,15 @@ Upload::~Upload()
 //! \param &settings
 //! \return 0
 Upload::Upload( CConfigManager *pConfig, CConfigManager *pXml, CConfigManager *pService, string sProvider )
-{
-	mClient 	= CTool::getIP( pService->readString("TAC51","LAN-IF","eth1"), pXml->readLong(sProvider, "NET_TYPE", 4)  );
-	
+{	
 	mServerName = pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
 	mServer 	= pXml->readString(sProvider,"IP","1.1.1.1");
+	mClient 	= "0.0.0.0";
 	mPort   	= pXml->readLong(sProvider,"DL_PORT",80);
 	mTls		= pXml->readLong(sProvider,"TLS",0);
 
 	#ifndef NNTOOL
+	mClient 	= CTool::getIP( pService->readString("TAC51","LAN-IF","eth1"), pXml->readLong(sProvider, "NET_TYPE", 4)  );
 	//Security Credentials
 	pConfig->writeString("security","user",pXml->readString(sProvider,"USER",""));
 	pConfig->writeString("security","psw",pXml->readString(sProvider,"PSW",""));
@@ -81,30 +81,29 @@ int Upload::run()
 	//Get Hostname and make DNS Request
 	TRC_DEBUG( ("Resolving Hostname for Measurement: "+mServerName).c_str() );
 
-	#ifdef NNTOOL
-// TODO: readd for android
-//	struct addrinfo *ips;
-//	memset(&ips, 0, sizeof ips);
-//
-//	ips = CTool::getIpsFromHostname( mServerName, true );
-//
-//	char host[NI_MAXHOST];
-//
-//	getnameinfo(ips->ai_addr, ips->ai_addrlen, host, sizeof host, NULL, 0, NI_NUMERICHOST);
-//	mServer = string(host);
+#if defined(NNTOOL) && defined(__ANDROID__)
 	if( CTool::validateIp(mClient) == 6)
 		mServer = CTool::getIpFromHostname( mServerName, 6 );
 	else
 		mServer = CTool::getIpFromHostname( mServerName, 4 );
-
-	if (CTool::validateIp(mServer) == 6) ipv6validated = true;
 	#endif
 
-	#ifndef NNTOOL
-	if( CTool::validateIp(mClient) == 6)
-		mServer = CTool::getIpFromHostname( mServerName, 6 );
-	else
-		mServer = CTool::getIpFromHostname( mServerName, 4 );
+	#if defined(NNTOOL) && !defined(__ANDROID__)
+	struct addrinfo *ips;
+	memset(&ips, 0, sizeof ips);
+
+	ips = CTool::getIpsFromHostname( mServerName, true );
+
+	char host[NI_MAXHOST];
+	
+	getnameinfo(ips->ai_addr, ips->ai_addrlen, host, sizeof host, NULL, 0, NI_NUMERICHOST);
+	mServer = string(host);
+	#endif
+
+	#ifdef NNTOOL
+	TRC_DEBUG( ("Resolved Hostname for Measurement: "+mServer).c_str() );
+
+ 	if (CTool::validateIp(mServer) == 6) ipv6validated = true; 
 	#endif
 
 	TRC_DEBUG( ("Resolved Hostname for Measurement: "+mServer).c_str() );

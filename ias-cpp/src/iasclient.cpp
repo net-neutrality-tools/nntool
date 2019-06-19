@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-20
+ *      \date Last update: 2019-06-14
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -140,13 +140,6 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
 	}
 
-    //Signal Handler
-//    signal(SIGINT, signal_handler);
-//	signal(SIGFPE, signal_handler);
-//	signal(SIGABRT, signal_handler);
-//	signal(SIGSEGV, signal_handler);
-//	signal(SIGCHLD, signal_handler);
-
 	Json::object jRttParameters;
 	Json::object jDownloadParameters;
 	Json::object jUploadParameters;
@@ -248,6 +241,7 @@ void measurementStart(string measurementParameters)
 
 	Json::array jTargets = jMeasurementParameters["wsTargets"].array_items();
 	string wsTLD = jMeasurementParameters["wsTLD"].string_value();
+
 	#ifdef __ANDROID__
 	pXml->writeString(conf.sProvider, "DNS_HOSTNAME", jTargets[0].string_value() /* + "." + wsTLD*/);
 	#else
@@ -255,6 +249,7 @@ void measurementStart(string measurementParameters)
 	#endif
 
 	jTargets = jMeasurementParameters["wsTargetsRtt"].array_items();
+	
 	#ifdef __ANDROID__
     pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value() /*+ "." + wsTLD*/);
     #else
@@ -280,7 +275,7 @@ void measurementStart(string measurementParameters)
 	::UPLOAD = jUpload["performMeasurement"].bool_value();
 	pXml->writeString(conf.sProvider,"UL_STREAMS", jUpload["streams"].string_value());
 
-	pXml->writeString(conf.sProvider,"PING_QUERY","11");
+	pXml->writeString(conf.sProvider,"PING_QUERY","10");
 
 
 	pCallback = new CCallback();
