@@ -9,13 +9,13 @@ import java.util.List;
  * @author Felix Kendlbacher (alladin-IT GmbH)
  * Complete result as reported by ias-cpp
  */
-public class SpeedMeasurementResult {
+public class JniSpeedMeasurementResult {
 
     private List<BandwidthResult> downloadInfoList = new ArrayList<>();
 
     private List<BandwidthResult> uploadInfoList = new ArrayList<>();
 
-    private List<RttUdpInfo> rttUdpInfoList = new ArrayList<>();
+    private List<RttUdpResult> rttUdpResultList = new ArrayList<>();
 
     private TimeInfo timeInfo;
 
@@ -35,12 +35,12 @@ public class SpeedMeasurementResult {
         this.uploadInfoList = uploadInfoList;
     }
 
-    public List<RttUdpInfo> getRttUdpInfoList() {
-        return rttUdpInfoList;
+    public List<RttUdpResult> getRttUdpResultList() {
+        return rttUdpResultList;
     }
 
-    public void setRttUdpInfoList(List<RttUdpInfo> rttUdpInfoList) {
-        this.rttUdpInfoList = rttUdpInfoList;
+    public void setRttUdpResultList(List<RttUdpResult> rttUdpResultList) {
+        this.rttUdpResultList = rttUdpResultList;
     }
 
     @Keep
@@ -54,8 +54,8 @@ public class SpeedMeasurementResult {
     }
 
     @Keep
-    public void addRttUdpInfo(final RttUdpInfo rttResult) {
-        rttUdpInfoList.add(rttResult);
+    public void addRttUdpResult(final RttUdpResult rttResult) {
+        rttUdpResultList.add(rttResult);
     }
 
     public TimeInfo getTimeInfo() {
@@ -72,7 +72,7 @@ public class SpeedMeasurementResult {
         return "SpeedMeasurementResult{" +
                 "downloadInfoList=" + downloadInfoList +
                 ", uploadInfoList=" + uploadInfoList +
-                ", rttUdpInfoList=" + rttUdpInfoList +
+                ", rttUdpInfoList=" + rttUdpResultList +
                 ", timeInfo=" + timeInfo +
                 '}';
     }
@@ -182,7 +182,7 @@ public class SpeedMeasurementResult {
         }
     }
 
-    public static class RttUdpInfo {
+    public static class RttUdpResult {
         private Long averageNs;
 
         private Long durationNs;

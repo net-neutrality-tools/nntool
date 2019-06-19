@@ -154,6 +154,7 @@ class AndroidConnector {
         bool performDownload;
         bool performUpload;
         bool performRtt;
+        bool isEncrypted;
 
         //the classes for the final result
         jclass speedMeasurementResultClazz;

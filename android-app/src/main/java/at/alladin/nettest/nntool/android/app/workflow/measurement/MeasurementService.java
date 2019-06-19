@@ -19,9 +19,11 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
+import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
 import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
 import at.alladin.nettest.nntool.android.speed.jni.JniSpeedMeasurementClient;
 import at.alladin.nettest.qos.android.QoSMeasurementClientAndroid;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.TaskDesc;
 
@@ -109,6 +111,13 @@ public class MeasurementService extends Service implements ServiceConnection {
         final SpeedTaskDesc speedTaskDesc = (SpeedTaskDesc) options.getSerializable(EXTRAS_KEY_SPEED_TASK_DESC);
         jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskDesc);
         jniSpeedMeasurementClient.setCollectorUrl(speedTaskCollectorUrl);
+        jniSpeedMeasurementClient.addMeasurementFinishedListener(new JniSpeedMeasurementClient.MeasurementFinishedListener() {
+            @Override
+            public void onMeasurementFinished(JniSpeedMeasurementResult result, SpeedTaskDesc taskDesc) {
+                final SpeedMeasurementResult speedRes = ResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
+                Log.d(TAG, speedRes.toString());
+            }
+        });
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {

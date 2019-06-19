@@ -6,10 +6,9 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.alladin.nettest.nntool.android.speed.SpeedMeasurementResult;
+import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
 import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
-import at.alladin.nettest.nntool.android.speed.jni.exception.AndroidJniCppException;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
@@ -26,7 +25,7 @@ public class JniSpeedMeasurementClient {
 
     private String collectorUrl;
 
-    private SpeedTaskDesc speedTaskDesc;
+    private final SpeedTaskDesc speedTaskDesc;
 
     private List<MeasurementFinishedStringListener> finishedStringListeners = new ArrayList<>();
 
@@ -44,13 +43,13 @@ public class JniSpeedMeasurementClient {
     }
 
     @Keep
-    public void cppCallbackFinished (final String message, final SpeedMeasurementResult result) {
+    public void cppCallbackFinished (final String message, final JniSpeedMeasurementResult result) {
         Log.d(TAG, message);
         for (MeasurementFinishedStringListener l : finishedStringListeners) {
             l.onMeasurementFinished(message);
         }
         for (MeasurementFinishedListener l : finishedListeners) {
-            l.onMeasurementFinished(result);
+            l.onMeasurementFinished(result, speedTaskDesc);
         }
         Log.d(TAG, result.toString());
     }
@@ -94,14 +93,6 @@ public class JniSpeedMeasurementClient {
         this.collectorUrl = collectorUrl;
     }
 
-    public SpeedTaskDesc getSpeedTaskDesc() {
-        return speedTaskDesc;
-    }
-
-    public void setSpeedTaskDesc(SpeedTaskDesc speedTaskDesc) {
-        this.speedTaskDesc = speedTaskDesc;
-    }
-
     public interface MeasurementFinishedStringListener {
 
         void onMeasurementFinished (final String result);
@@ -110,6 +101,6 @@ public class JniSpeedMeasurementClient {
 
     public interface MeasurementFinishedListener {
 
-        void onMeasurementFinished (final SpeedMeasurementResult result);
+        void onMeasurementFinished (final JniSpeedMeasurementResult result, final SpeedTaskDesc taskDesc);
     }
 }

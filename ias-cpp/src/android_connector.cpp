@@ -51,7 +51,7 @@ jint AndroidConnector::jniLoad(JavaVM* vm) {
     jclass clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/jni/JniSpeedMeasurementClient");
     jniHelperClass = (jclass) env->NewGlobalRef(clazz);
     callbackID = env->GetMethodID(jniHelperClass, "cppCallback", "(Ljava/lang/String;)V");
-    cppCallbackFinishedID = env->GetMethodID(jniHelperClass, "cppCallbackFinished", "(Ljava/lang/String;Lat/alladin/nettest/nntool/android/speed/SpeedMeasurementResult;)V");
+    cppCallbackFinishedID = env->GetMethodID(jniHelperClass, "cppCallbackFinished", "(Ljava/lang/String;Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult;)V");
 
     clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/jni/exception/AndroidJniCppException");
     jniExceptionClass = (jclass) env->NewGlobalRef(clazz);
@@ -72,13 +72,13 @@ jint AndroidConnector::jniLoad(JavaVM* vm) {
 
     setMeasurementPhaseByStringValueID = env->GetMethodID(clazz, "setMeasurementPhaseByStringValue", "(Ljava/lang/String;)V");
 
-    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementResult");
+    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult");
     speedMeasurementResultClazz = (jclass) env->NewGlobalRef(clazz);
-    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementResult$RttUdpInfo");
+    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$RttUdpResult");
     resultUdpClazz = (jclass) env->NewGlobalRef(clazz);
-    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementResult$BandwidthResult");
+    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$BandwidthResult");
     resultBandwidthClazz = (jclass) env->NewGlobalRef(clazz);
-    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementResult$TimeInfo");
+    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$TimeInfo");
     timeClazz = (jclass) env->NewGlobalRef(clazz);
 
     //according to the google examples, we can keep the reference to the javaVM until android takes it away from us
@@ -135,6 +135,9 @@ void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
 
     toParseId = env->GetFieldID(clazz, "performRtt", "Z");
     performRtt = env->GetBooleanField(speedTaskDesc, toParseId);
+
+    toParseId = env->GetFieldID(clazz, "useEncryption", "Z");
+    isEncrypted = env->GetBooleanField(speedTaskDesc, toParseId);
 
 }
 
@@ -258,7 +261,7 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
     parse.staticFloatValueOf = env->GetStaticMethodID(parse.floatClass, "valueOf", "(F)Ljava/lang/Float;");
 
     if (message["rtt_udp_info"].is_array()) {
-        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "addRttUdpInfo", "(Lat/alladin/nettest/nntool/android/speed/SpeedMeasurementResult$RttUdpInfo;)V");
+        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "addRttUdpResult", "(Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$RttUdpResult;)V");
         initId = env->GetMethodID(resultUdpClazz, "<init>", "()V");
 
         for (Json const & rttEntry : message["rtt_udp_info"].array_items()) {
@@ -308,7 +311,7 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
     }
 
     if (message["download_info"].is_array()) {
-        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "addDownloadInfo", "(Lat/alladin/nettest/nntool/android/speed/SpeedMeasurementResult$BandwidthResult;)V");
+        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "addDownloadInfo", "(Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$BandwidthResult;)V");
         initId = env->GetMethodID(resultBandwidthClazz, "<init>", "()V");
 
         for (Json const & downloadEntry : message["download_info"].array_items()) {
@@ -319,7 +322,7 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
     }
 
     if (message["upload_info"].is_array()) {
-        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "addUploadInfo", "(Lat/alladin/nettest/nntool/android/speed/SpeedMeasurementResult$BandwidthResult;)V");
+        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "addUploadInfo", "(Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$BandwidthResult;)V");
         initId = env->GetMethodID(resultBandwidthClazz, "<init>", "()V");
 
         for (Json const & downloadEntry : message["upload_info"].array_items()) {
@@ -331,7 +334,7 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
 
     if (message["time_info"].is_object()) {
         Json const & timeEntry = message["time_info"];
-        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "setTimeInfo", "(Lat/alladin/nettest/nntool/android/speed/SpeedMeasurementResult$TimeInfo;)V");
+        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "setTimeInfo", "(Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$TimeInfo;)V");
 
         initId = env->GetMethodID(timeClazz, "<init>", "()V");
         jobject timeObj = env->NewObject(timeClazz, initId);
@@ -477,7 +480,7 @@ void AndroidConnector::startMeasurement() {
 	jMeasurementParameters["clientos"] = "linux";
 	jMeasurementParameters["wsTLD"] = "net-neutrality.tools";
 	jMeasurementParameters["wsTargetPort"] = std::to_string(speedServerPort);
-	jMeasurementParameters["wsWss"] = "0";
+	jMeasurementParameters["wsWss"] = isEncrypted ? "1" : "0";
 	jMeasurementParameters["wsAuthToken"] = "placeholderToken";
 	jMeasurementParameters["wsAuthTimestamp"] = "placeholderTimestamp";
 
