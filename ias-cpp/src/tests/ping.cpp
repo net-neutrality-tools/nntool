@@ -262,8 +262,6 @@ int Ping::run()
 		usleep(timeout);	
 	}
 
-	RUNNING = false;
-	
 	#ifndef NNTOOL
 	measurementTimeEnd = CTool::get_timestamp();
 		
@@ -333,7 +331,7 @@ int Ping::run()
 
 	#ifdef NNTOOL
 	//the timer would be waiting the full MEASUREMENT_DURATION even if all the pings arrived => tell the timer to stop!
-	TIMER_STOPPED = true;
+	::TIMER_STOPPED = true;
 	#endif
 
 	close(mSock);
