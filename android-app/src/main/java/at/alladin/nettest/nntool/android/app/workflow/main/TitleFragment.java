@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import java.io.Serializable;
 
-import at.alladin.nettest.nntool.android.app.BuildConfig;
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
@@ -20,14 +19,12 @@ import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.interfaces.CurrentInterfaceTraffic;
-import at.alladin.nettest.nntool.android.app.util.info.interfaces.InterfaceTrafficUpdateListener;
 import at.alladin.nettest.nntool.android.app.util.info.interfaces.TrafficGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
 import at.alladin.nettest.nntool.android.app.view.GeoLocationView;
 import at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView;
-import at.alladin.nettest.nntool.android.app.workflow.measurement.InterfaceTrafficView;
+import at.alladin.nettest.nntool.android.app.view.InterfaceTrafficView;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
 
