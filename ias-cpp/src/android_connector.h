@@ -61,6 +61,8 @@ extern class CMeasurement* pMeasurement;
 
 extern MeasurementPhase currentTestPhase;
 
+extern std::function<void(int)> signalFunction;
+
 class AndroidConnector {
 
 
@@ -86,9 +88,9 @@ class AndroidConnector {
 
         void callback(json11::Json::object& message) const;
 
-        void callbackError(const int errorCode, const std::string &errorMessage) const;
+        void callbackError(int const errorCode) const;
 
-        void callbackFinished (const json11::Json::object& message);
+        void callbackFinished (json11::Json::object& message);
         /*
         * The method forwarded to the trace to allow for easy android printing
         */
@@ -102,9 +104,22 @@ class AndroidConnector {
 
         static const char* TAG;
 
+        struct JavaParseInformation {
+            jclass longClass;
+            jmethodID staticLongValueOf;
+
+            jclass intClass;
+            jmethodID staticIntValueOf;
+
+            jclass floatClass;
+            jmethodID staticFloatValueOf;
+        };
+
         JavaVM *javaVM;
         jclass jniHelperClass;
         jobject jniCaller;
+
+        jclass jniExceptionClass;
 
         //the method to be sending the callback to
         jmethodID callbackID;
@@ -139,9 +154,34 @@ class AndroidConnector {
         bool performDownload;
         bool performUpload;
         bool performRtt;
+        bool isEncrypted;
+
+        //the classes for the final result
+        jclass speedMeasurementResultClazz;
+        jclass resultUdpClazz;
+        jclass resultBandwidthClazz;
+        jclass timeClazz;
 
 
         AndroidConnector() {};
+
+        void setBandwidthResult (JNIEnv * env, json11::Json const & jsonItems, jobject & result, JavaParseInformation & parseInfo);
+
+        inline JNIEnv * getJniEnv() const {
+            if (javaVM != nullptr) {
+                JNIEnv* env;
+                jint err = javaVM->GetEnv((void**)&env, JNI_VERSION_1_6);
+                if (err == JNI_EDETACHED) {
+                    if (javaVM->AttachCurrentThread(&env, NULL) != 0) {
+                        return nullptr;
+                    }
+                } else if (err != JNI_OK) {
+                    return nullptr;
+                }
+                return env;
+            }
+            return nullptr;
+        }
 
         void passJniSpeedState (JNIEnv *env, const MeasurementPhase& speedStateToSet, const json11::Json& json) const;
 
@@ -160,9 +200,6 @@ class AndroidConnector {
                 
             }
         }
-
-//TODO: get the compiling to use basic cpp instructions as well
-
 
 };
 

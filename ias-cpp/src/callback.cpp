@@ -34,32 +34,6 @@ CCallback::~CCallback()
 {
 }
 
-//! \brief
-//!    Run-Function
-//! \return 0
-int CCallback::run()
-{
-	//Log Message
-	TRC_INFO( ("Starting Callback Thread with PID: " + CTool::toString(syscall(SYS_gettid))).c_str() );
-
-	//++++++MAIN++++++
-	
-	while( RUNNING && !m_fStop)
-	{
-		//Sleep 10ms
-		usleep(1000);
-
-		if( m_fStop )
-			break;
-	}	
-	
-	//++++++END+++++++
-
-	//Log Message
-	TRC_INFO( ("Ending Callback Thread with PID: " + CTool::toString(syscall(SYS_gettid))).c_str() );
-	return 0;
-}
-
 #ifdef __ANDROID__
 
     void CCallback::callback(string cmd, string msg, int error_code, string error_description)
@@ -122,10 +96,10 @@ int CCallback::run()
                 jMeasurementResults["error_code"] = error_code;
                 jMeasurementResults["error_description"] = error_description;
                 TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
-                connector.callbackError(error_code, error_description);
+                connector.callbackError(error_code);
             }
-			
-            if (jMeasurementResultsRttUdp.size() > 0) 
+
+            if (jMeasurementResultsRttUdp.size() > 0)
 			{
 				jMeasurementResults["rtt_udp_info"] = Json(jMeasurementResultsRttUdp);
             }
@@ -213,7 +187,7 @@ int CCallback::run()
             TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
         }
 
-        if (Json(jMeasurementResultsRttUdp).object_items().size() > 0)
+        if (Json(jMeasurementResultsRttUdp).array_items().size() > 0)
         {
             jMeasurementResults["rtt_udp_info"] = Json(jMeasurementResultsRttUdp);
         }
@@ -343,7 +317,8 @@ void CCallback::rttUdpCallback(string cmd)
 	jMeasurementResults["peer"] = tempMeasurement.ping.servername;
 	jMeasurementResults["progress"] = tempMeasurement.ping.measurement_phase_progress;
 
-	jMeasurementResultsRttUdp = jMeasurementResults;
+	jMeasurementResultsRttUdp.push_back(jMeasurementResults);
+	
 }
 
 void CCallback::downloadCallback(string cmd)
@@ -595,9 +570,9 @@ void CCallback::uploadCallback(string cmd)
 	tempMeasurement.upload.datasize = 0;
 	
 	unsigned int addedTimer = TIMER_DURATION/500000;
-	if (addedTimer > (MEASUREMENT_DURATION-2)*2)
+	if (addedTimer > (MEASUREMENT_DURATION)*2)
 	{
-		addedTimer = (MEASUREMENT_DURATION-2)*2;
+		addedTimer = (MEASUREMENT_DURATION)*2;
 	}
 	for( unsigned int i = tempMeasurement.upload.totime; i < tempMeasurement.upload.totime + addedTimer*5; i+=5 )
 	{

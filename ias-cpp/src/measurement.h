@@ -40,16 +40,12 @@ class CMeasurement
 	private:
 		string mProvider;
 		int mTestCase;
-		
-		Ping *ping;
-		Download *download;
-		Upload *upload;
-		
+
 		CConfigManager *mConfig;
 		CConfigManager *mXml;
 		CConfigManager *mService;
 		CCallback *mCallback;
-		CTimer *mTimer;
+		std::unique_ptr<CTimer> mTimer;
 		
 		int nResponse;
 	

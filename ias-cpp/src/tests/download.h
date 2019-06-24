@@ -41,7 +41,7 @@ class Download : public CBasisThread
 		
 		int ipversion;
 		
-		CConnection *mConnection;
+		std::unique_ptr<CConnection> mConnection;
 		
 		CConfigManager *mConfig;	
 	public:

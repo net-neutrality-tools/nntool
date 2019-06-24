@@ -29,7 +29,6 @@ Ping::Ping()
 //!	Virtual Destructor
 Ping::~Ping()
 {
-	delete(mSocket);
 }
 
 //! \brief
@@ -51,7 +50,7 @@ Ping::Ping( CConfigManager *pXml, CConfigManager *pService, string sProvider )
 	#endif
 
 	//Create Socket Object
-	mSocket = new CConnection();
+	mSocket = std::make_unique<CConnection>();
 	
 	mTimeDiff = 1;
 }
@@ -226,7 +225,7 @@ int Ping::run()
 		
 			//Cut String out of Response from Server
 			string sResponse(rbuffer,find( rbuffer, rbuffer + mResponse,  ';'));
-			
+
 			//Split String in different String and save in Vector
 			CTool::tokenize(sResponse, vResponse, delimiter);
 			
@@ -263,8 +262,6 @@ int Ping::run()
 		usleep(timeout);	
 	}
 
-	RUNNING = false;
-	
 	#ifndef NNTOOL
 	measurementTimeEnd = CTool::get_timestamp();
 		
@@ -333,7 +330,8 @@ int Ping::run()
 	#endif
 
 	#ifdef NNTOOL
-	usleep(100000);
+	//the timer would be waiting the full MEASUREMENT_DURATION even if all the pings arrived => tell the timer to stop!
+	::TIMER_STOPPED = true;
 	#endif
 
 	close(mSock);

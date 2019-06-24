@@ -43,7 +43,7 @@ class Ping : public CBasisThread
 		socklen_t mClientDataSizev6;
 		socklen_t mClientDataSizev4;
 		
-		CConnection *mSocket;
+		std::unique_ptr<CConnection> mSocket;
 		
 		unsigned long long time1;
 		unsigned long long time2;

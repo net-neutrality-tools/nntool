@@ -66,6 +66,7 @@ CMeasurement* pMeasurement;
 
 MeasurementPhase currentTestPhase = MeasurementPhase::INIT;
 
+std::function<void(int)> signalFunction = nullptr;
 
 /*--------------Forward declarations--------------*/
 
@@ -75,8 +76,6 @@ void		measurementStop		();
 void 		startTestCase		(int nTestCase);
 void		shutdown			();
 static void signal_handler  	(int signal);
-
-
 
 
 /*--------------Beginning of Program--------------*/
@@ -280,11 +279,6 @@ void measurementStart(string measurementParameters)
 
 
 	pCallback = new CCallback();
-	if( pCallback->createThread() != 0 )
-	{
-		TRC_ERR( "Error: Failure while creating the Thread - Callback!" );
-		shutdown();
-	}
 
     if (!::RTT && !::DOWNLOAD && !::UPLOAD)
     {
@@ -362,15 +356,15 @@ void shutdown()
 	delete(pXml);
 	delete(pConfig);
 
-	pCallback->stopThread();
-	pCallback->waitForEnd();
 	delete(pCallback);
 
 	TRC_INFO("Status: ias-client stopped");
 
 	delete(pTrace);
 
-	//exit(EXIT_SUCCESS);
+    #ifndef __ANDROID__
+        exit(EXIT_SUCCESS);
+	#endif
 }
 
 void show_usage(char* argv0)
@@ -397,6 +391,14 @@ static void signal_handler(int signal)
 	CTool::print_stacktrace();
 	
     ::RUNNING = false;
-    sleep(1);
-    //exit(signal);
+
+    if (signalFunction != nullptr) {
+        signalFunction(signal);
+    }
+
+    #ifndef __ANDROID__
+        sleep(1);
+        exit(signal);
+    #endif
+
 }

@@ -92,6 +92,7 @@ public class LmapUtil {
         String speedServerAddrV4 = null;
         String speedServerAddrV6 = null;
         Integer speedServerPort = null;
+        Boolean speedEncryption = false;
         SpeedTaskDesc speedTaskDesc = null;
 
         try {
@@ -183,6 +184,9 @@ public class LmapUtil {
                                     case SERVER_ADDR_IPV6:
                                         speedServerAddrV6 = option.getValue();
                                         break;
+                                    case ENCRYPTION:
+                                        speedEncryption = Boolean.valueOf(option.getValue());
+                                        break;
                                     case SERVER_PORT:
                                         speedServerPort = Integer.valueOf(option.getValue());
                                         break;
@@ -206,6 +210,7 @@ public class LmapUtil {
             speedTaskDesc.setSpeedServerAddrV4(speedServerAddrV4);
             speedTaskDesc.setSpeedServerAddrV6(speedServerAddrV6);
             speedTaskDesc.setSpeedServerPort(speedServerPort);
+            speedTaskDesc.setUseEncryption(speedEncryption);
         }
         wrapper.setSpeedTaskDesc(speedTaskDesc);
 

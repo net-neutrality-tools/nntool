@@ -20,6 +20,16 @@ import com.google.gson.annotations.SerializedName;
 public class RttInfoDto {
 
 	/**
+	 * The address of the measurement server.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "The address of the rtt server.")
+	@JsonPropertyDescription("The address of the rtt server.")
+	@Expose
+	@SerializedName("address")
+	@JsonProperty(required = true, value = "address")
+	private String address;
+
+	/**
 	 * List of all measured RTTs.
 	 */
 	@io.swagger.annotations.ApiModelProperty("List of all measured RTTs.")
@@ -89,6 +99,56 @@ public class RttInfoDto {
 	@JsonProperty(required = true, value = "packet_size")
 	private Integer packetSize;
 
+		/**
+     * Average rtt in nanoseconds
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "Average rtt in nanoseconds.")
+	@JsonPropertyDescription("Average rtt in nanoseconds.")
+    @Expose
+    @SerializedName("average_ns")
+    @JsonProperty(required = true, value = "average_ns")
+    private Long averageNs;
+
+	/**
+     * Maximum rtt in nanoseconds
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "Maximum rtt in nanoseconds.")
+	@JsonPropertyDescription("Maximum rtt in nanoseconds.")
+    @Expose
+    @SerializedName("maximum_ns")
+    @JsonProperty(required = true, value = "maximum_ns")
+	private Long maximumNs;
+	
+	/**
+     * Median rtt in nanoseconds
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "Median rtt in nanoseconds.")
+	@JsonPropertyDescription("Median rtt in nanoseconds.")
+    @Expose
+    @SerializedName("median_ns")
+    @JsonProperty(required = true, value = "median_ns")
+	private Long medianNs;
+		
+	/**
+     * Minimum rtt in nanoseconds
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "Minimum rtt in nanoseconds.")
+	@JsonPropertyDescription("Minimum rtt in nanoseconds.")
+    @Expose
+    @SerializedName("minimum_ns")
+    @JsonProperty(required = true, value = "minimum_ns")
+	private Long minimumNs;
+	
+	/**
+     * Standard deviation rtt in nanoseconds
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "Standard deviation rtt in nanoseconds.")
+	@JsonPropertyDescription("Standard deviation rtt in nanoseconds.")
+    @Expose
+    @SerializedName("standard_deviation_ns")
+    @JsonProperty(required = true, value = "standard_deviation_ns")
+	private Long standardDeviationNs;
+
 	public List<RttDto> getRtts() {
 		return rtts;
 	}
@@ -143,5 +203,53 @@ public class RttInfoDto {
 
 	public void setPacketSize(Integer packetSize) {
 		this.packetSize = packetSize;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public Long getAverageNs() {
+		return averageNs;
+	}
+
+	public void setAverageNs(Long averageNs) {
+		this.averageNs = averageNs;
+	}
+
+	public Long getMaximumNs() {
+		return maximumNs;
+	}
+
+	public void setMaximumNs(Long maximumNs) {
+		this.maximumNs = maximumNs;
+	}
+
+	public Long getMedianNs() {
+		return medianNs;
+	}
+
+	public void setMedianNs(Long medianNs) {
+		this.medianNs = medianNs;
+	}
+
+	public Long getMinimumNs() {
+		return minimumNs;
+	}
+
+	public void setMinimumNs(Long minimumNs) {
+		this.minimumNs = minimumNs;
+	}
+
+	public Long getStandardDeviationNs() {
+		return standardDeviationNs;
+	}
+
+	public void setStandardDeviationNs(Long standardDeviationNs) {
+		this.standardDeviationNs = standardDeviationNs;
 	}
 }

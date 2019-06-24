@@ -32,7 +32,7 @@ using namespace std;
 \class CTimer
 \brief Thread CTimer
 */
-class CCallback : public CBasisThread
+class CCallback
 {
 	private:
 		void callbackToPlatform(string cmd, string msg, int error_code, string error_description);
@@ -43,7 +43,7 @@ class CCallback : public CBasisThread
 
 		Json::object jMeasurementResults;
 		Json::object jMeasurementResultsTime;
-		Json::object jMeasurementResultsRttUdp;
+		Json::array jMeasurementResultsRttUdp;
 		Json::array jMeasurementResultsDownload;
 		Json::array jMeasurementResultsUpload;
 
@@ -62,9 +62,19 @@ class CCallback : public CBasisThread
 		
 		virtual ~CCallback();
 		
-		int run();
-
 		void callback(string cmd, string msg, int error_code, string error_description);
+
+		inline bool isPerformedRtt() const {
+		    return PERFORMED_RTT;
+		}
+
+		inline bool isPerformedDownload() const {
+            return PERFORMED_DOWNLOAD;
+        }
+
+        inline bool isPerformedUpload() const {
+            return PERFORMED_UPLOAD;
+        }
 };
 
 #endif
