@@ -8,6 +8,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 
+    <string name="not_available_short">n/a</string>
 
     <!-- CUSTOM VIEWS -->
     <string name="measurement_server_selection_default_server">Default</string>
@@ -27,6 +28,9 @@
 
     <string name="interface_traffic_in">Traffic in</string>
     <string name="interface_traffic_out">Traffic out</string>
+
+    <string name="cpu_text">CPU</string>
+    <string name="ram_text">RAM</string>
 
     <!-- Geo-location specific strings -->
     <string name="geo_location_km_h">km/h</string>
