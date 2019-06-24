@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import java.io.Serializable;
 
-import at.alladin.nettest.nntool.android.app.BuildConfig;
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
@@ -20,14 +19,15 @@ import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.interfaces.CurrentInterfaceTraffic;
-import at.alladin.nettest.nntool.android.app.util.info.interfaces.InterfaceTrafficUpdateListener;
 import at.alladin.nettest.nntool.android.app.util.info.interfaces.TrafficGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.system.SystemInfoGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.system.SystemInfoListener;
+import at.alladin.nettest.nntool.android.app.view.CpuAndRamView;
 import at.alladin.nettest.nntool.android.app.view.GeoLocationView;
 import at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView;
-import at.alladin.nettest.nntool.android.app.workflow.measurement.InterfaceTrafficView;
+import at.alladin.nettest.nntool.android.app.view.InterfaceTrafficView;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
 
@@ -45,6 +45,8 @@ public class TitleFragment extends Fragment {
     private InformationProvider informationProvider;
 
     private InterfaceTrafficView interfaceTrafficView;
+
+    private CpuAndRamView cpuAndRamView;
 
     /**
      *
@@ -88,6 +90,8 @@ public class TitleFragment extends Fragment {
         geoLocationView = v.findViewById(R.id.view_geo_location);
 
         interfaceTrafficView = v.findViewById(R.id.view_interface_traffic);
+
+        cpuAndRamView = v.findViewById(R.id.view_cpu_ram);
 
         //Log.i(TAG, "onCreateView");
         return v;
@@ -143,6 +147,7 @@ public class TitleFragment extends Fragment {
         final SignalGatherer signalGatherer = informationProvider.getGatherer(SignalGatherer.class);
         final GeoLocationGatherer geoLocationGatherer = informationProvider.getGatherer(GeoLocationGatherer.class);
         final TrafficGatherer trafficGatherer = informationProvider.getGatherer(TrafficGatherer.class);
+        final SystemInfoGatherer systemInfoGatherer = informationProvider.getGatherer(SystemInfoGatherer.class);
 
         if (networkGatherer != null && providerSignalView != null) {
             networkGatherer.addListener(providerSignalView);
@@ -158,6 +163,10 @@ public class TitleFragment extends Fragment {
 
         if (trafficGatherer != null && interfaceTrafficView != null) {
             trafficGatherer.addListener(interfaceTrafficView);
+        }
+
+        if (systemInfoGatherer != null && cpuAndRamView != null) {
+            systemInfoGatherer.addListener(cpuAndRamView);
         }
     }
 
@@ -186,6 +195,11 @@ public class TitleFragment extends Fragment {
         final TrafficGatherer trafficGatherer = informationProvider.getGatherer(TrafficGatherer.class);
         if (trafficGatherer != null && interfaceTrafficView != null) {
             trafficGatherer.removeListener(interfaceTrafficView);
+        }
+
+        final SystemInfoGatherer systemInfoGatherer = informationProvider.getGatherer(SystemInfoGatherer.class);
+        if (systemInfoGatherer != null && cpuAndRamView != null) {
+            systemInfoGatherer.removeListener(cpuAndRamView);
         }
     }
 }

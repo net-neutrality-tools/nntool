@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 
 import at.alladin.nettest.nntool.android.app.util.info.ListenableGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.RunnableGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.signal.CurrentSignalStrength;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
@@ -16,6 +15,8 @@ public class TrafficGatherer
         implements RunnableGatherer {
 
     private final static String TAG = TrafficGatherer.class.getSimpleName();
+
+    private final static Interval INTERVAL = new Interval(2, TimeUnit.SECONDS);
 
     private final TrafficServiceImpl trafficService = new TrafficServiceImpl();
 
@@ -37,7 +38,7 @@ public class TrafficGatherer
 
     @Override
     public Interval getInterval() {
-        return new Interval(1000, TimeUnit.MILLISECONDS);
+        return INTERVAL;
     }
 
     @Override

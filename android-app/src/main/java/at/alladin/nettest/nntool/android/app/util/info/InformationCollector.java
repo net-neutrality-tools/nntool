@@ -1,7 +1,5 @@
 package at.alladin.nettest.nntool.android.app.util.info;
 
-import android.content.Context;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -10,7 +8,6 @@ import at.alladin.nettest.nntool.android.app.support.telephony.CellInfoWrapper;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeEvent;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeListener;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.interfaces.TrafficGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkChangeEvent;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkChangeListener;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;

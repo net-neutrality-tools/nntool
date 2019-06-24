@@ -1,13 +1,11 @@
-package at.alladin.nettest.nntool.android.app.workflow.measurement;
+package at.alladin.nettest.nntool.android.app.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import at.alladin.nettest.nntool.android.app.R;
-import at.alladin.nettest.nntool.android.app.util.info.InformationServiceListener;
 import at.alladin.nettest.nntool.android.app.util.info.interfaces.CurrentInterfaceTraffic;
 import at.alladin.nettest.nntool.android.app.util.info.interfaces.InterfaceTrafficUpdateListener;
 
