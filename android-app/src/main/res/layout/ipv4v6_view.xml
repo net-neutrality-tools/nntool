@@ -16,15 +16,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".4"
-            android:text="@string/cpu_text" />
+            android:text="@string/ipv4_text" />
 
-        <TextView
-            android:id="@+id/cpu_status_text"
+        <at.alladin.nettest.nntool.android.app.view.AlladinTextView
+            android:id="@+id/ipv4_status_text"
             style="@style/Nettest.Title.CpuRam.Text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".6"
-            android:text="100%" />
+            android:text="@string/ifont_check" />
     </LinearLayout>
 
     <LinearLayout
@@ -37,15 +37,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".4"
-            android:text="@string/ram_text" />
+            android:text="@string/ipv6_text" />
 
-        <TextView
-            android:id="@+id/ram_status_text"
+        <at.alladin.nettest.nntool.android.app.view.AlladinTextView
+            android:id="@+id/ipv6_status_text"
             style="@style/Nettest.Title.CpuRam.Text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".6"
 
-            android:text="100%" />
+            android:text="@string/ifont_close" />
     </LinearLayout>
 </LinearLayout>

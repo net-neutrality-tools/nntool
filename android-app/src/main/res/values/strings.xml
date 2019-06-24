@@ -32,6 +32,9 @@
     <string name="cpu_text">CPU</string>
     <string name="ram_text">RAM</string>
 
+    <string name="ipv4_text">IPv4</string>
+    <string name="ipv6_text">IPv6</string>
+
     <!-- Geo-location specific strings -->
     <string name="geo_location_km_h">km/h</string>
     <string name="geo_location_m">m</string>
