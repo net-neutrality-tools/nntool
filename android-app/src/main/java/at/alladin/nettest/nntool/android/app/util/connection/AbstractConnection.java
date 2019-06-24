@@ -1,5 +1,6 @@
 package at.alladin.nettest.nntool.android.app.util.connection;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -41,24 +42,35 @@ public abstract class AbstractConnection<T> {
                 .protocols(protocols)
                 .build();
 
-        Retrofit r = new Retrofit.Builder()
-                .baseUrl(url)
-                .addConverterFactory(JacksonConverterFactory.create())
-                .client(httpClient)
-                .build();
 
-        System.out.println("BASE URL: " + r.baseUrl().toString());
-        controllerService = r.create(serviceClazz);
+        try {
+            Retrofit r = new Retrofit.Builder()
+                    .baseUrl(url)
+                    .addConverterFactory(JacksonConverterFactory.create())
+                    .client(httpClient)
+                    .build();
+
+            System.out.println("BASE URL: " + r.baseUrl().toString());
+            controllerService = r.create(serviceClazz);
+        }
+        catch (final Exception e) {
+            e.printStackTrace();
+        }
 
 
-        Retrofit r6 = new Retrofit.Builder()
-                .baseUrl(url6 == null ? url : url6)
-                .addConverterFactory(JacksonConverterFactory.create())
-                .client(httpClient)
-                .build();
+        try {
+            Retrofit r6 = new Retrofit.Builder()
+                    .baseUrl(url6 == null ? url : url6)
+                    .addConverterFactory(JacksonConverterFactory.create())
+                    .client(httpClient)
+                    .build();
 
-        System.out.println("BASE URL v6: " + r6.baseUrl().toString());
-        controllerService6 = r6.create(serviceClazz);
+            System.out.println("BASE URL v6: " + r6.baseUrl().toString());
+            controllerService6 = r6.create(serviceClazz);
+        }
+        catch (final Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public T getControllerService() {

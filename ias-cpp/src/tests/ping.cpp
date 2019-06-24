@@ -102,15 +102,25 @@ int Ping::run()
 
 	#ifdef NNTOOL
 	TRC_DEBUG( ("Resolving Hostname for Measurement: "+mServerName).c_str() );
-	struct addrinfo *ips;
-	memset(&ips, 0, sizeof ips);
+    //TODO: readd code for android
 
-	ips = CTool::getIpsFromHostname( mServerName, true );
+//	struct addrinfo *ips;
+//	memset(&ips, 0, sizeof ips);
+//
+//	ips = CTool::getIpsFromHostname( mServerName, true );
+//
+//	char host[NI_MAXHOST];
+//
+//	getnameinfo(ips->ai_addr, ips->ai_addrlen, host, sizeof host, NULL, 0, NI_NUMERICHOST);
+//	mServer = string(host);
 
-	char host[NI_MAXHOST];
-	
-	getnameinfo(ips->ai_addr, ips->ai_addrlen, host, sizeof host, NULL, 0, NI_NUMERICHOST);
-	mServer = string(host);
+	if( CTool::validateIp(mClient) == 6)
+		mServer = CTool::getIpFromHostname( mServerName, 6 );
+	else
+		mServer = CTool::getIpFromHostname( mServerName, 4 );
+
+	TRC_DEBUG( ("Resolved Hostname for Measurement: "+mServer).c_str() );
+	int pid = syscall(SYS_gettid);
 	
 	::MEASUREMENT_DURATION = (int)mPingQuery * 1.5 * 1.1;
 
@@ -258,7 +268,7 @@ int Ping::run()
 	measurementTimeDuration = measurementTimeEnd - measurementTimeStart;
 
 	//Lock Mutex
-	pthread_mutex_lock(&mutex);
+	pthread_mutex_lock(&mutex1);
 	
 		//Starting multiple Instances for every Probe
 		for(map<int, unsigned long long>::iterator AI = mPingResult.results.begin(); AI!= mPingResult.results.end(); ++AI)
@@ -316,7 +326,7 @@ int Ping::run()
 		measurements.ping.error_description		= error_description;
 			
 	//Unlock Mutex
-	pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&mutex1);
 	#endif
 
 	#ifdef NNTOOL

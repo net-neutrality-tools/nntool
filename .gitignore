@@ -6,6 +6,8 @@ ias-desktop/modules/index.html
 ias-desktop/modules/JSTool.js
 ias-desktop/modules/Worker.js
 
+ias-cpp/ias-libnntool
+
 ### Android ###
 # Built application files
 *.apk

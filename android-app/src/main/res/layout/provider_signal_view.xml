@@ -1,0 +1,25 @@
+<RelativeLayout android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp">
+
+    <TextView
+        style="@style/Nettest.Title.Provider.Text"
+        android:text="Provider"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/text_title_provider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_marginTop="-3dp"
+        android:layout_below="@+id/text_title_provider"
+        style="@style/Nettest.Title.Signal.Text"
+        android:text="Mobile at -114 dBm"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/text_title_signal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

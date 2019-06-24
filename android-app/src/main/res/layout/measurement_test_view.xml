@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <at.alladin.nettest.nntool.android.app.view.CanvasArcDoubleGaugeWithLabels
+        android:id="@+id/canvas_arc_double_gauge_with_labels"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gauge_phase_indicator" >
+
+        <at.alladin.nettest.nntool.android.app.view.AlladinTextView
+            style="@style/Nettest.Measurement.StartButton.Text"
+            android:id="@+id/gauge_phase_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:text="@string/ifont_hourglass" />
+    </RelativeLayout>
+</merge>

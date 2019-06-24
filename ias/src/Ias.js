@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-03-20
+ *      \date Last update: 2019-06-12
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -591,8 +591,9 @@ function Ias()
 
             classIndexUsed.push(classIndexCurrent);
 
-            wsMeasurementParameters[measurementType].streams    = wsMeasurementParameters[measurementType].classes[classIndexCurrent].streams;
-            wsMeasurementParameters[measurementType].frameSize  = wsMeasurementParameters[measurementType].classes[classIndexCurrent].frameSize;
+            wsMeasurementParameters[measurementType].streams          = wsMeasurementParameters[measurementType].classes[classIndexCurrent].streams;
+            wsMeasurementParameters[measurementType].frameSize        = wsMeasurementParameters[measurementType].classes[classIndexCurrent].frameSize;
+            wsMeasurementParameters[measurementType].framesPerCall    = wsMeasurementParameters[measurementType].classes[classIndexCurrent].framesPerCall;
         }
         else
         {

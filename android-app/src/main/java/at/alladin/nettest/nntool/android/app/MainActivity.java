@@ -7,14 +7,18 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import at.alladin.nettest.nntool.android.app.async.RegisterMeasurementAgentTask;
+import at.alladin.nettest.nntool.android.app.util.PermissionUtil;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
+import at.alladin.nettest.nntool.android.app.util.info.InformationService;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.app.workflow.history.HistoryFragment;
 import at.alladin.nettest.nntool.android.app.workflow.map.MapFragment;
+import at.alladin.nettest.nntool.android.app.workflow.measurement.SpeedFragment;
 import at.alladin.nettest.nntool.android.app.workflow.settings.SettingsFragment;
 import at.alladin.nettest.nntool.android.app.workflow.main.TitleFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
@@ -27,6 +31,8 @@ import at.alladin.nettest.nntool.android.app.workflow.tc.TermsAndConditionsFragm
  * @author Lukasz Budryk (alladin-IT GmbH)
  */
 public class MainActivity extends AppCompatActivity {
+
+    private final static String TAG = MainActivity.class.getSimpleName();
 
     BottomNavigationView navigation;
 
@@ -65,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
             case TITLE:
                 targetFragment = TitleFragment.newInstance();
                 break;
+            case MEASUREMENT_SPEED:
+                isBottomNavigationVisible = false;
+                targetFragment = SpeedFragment.newInstance();
+                break;
             case MEASUREMENT_QOS:
                 isBottomNavigationVisible = false;
                 targetFragment = QosFragment.newInstance();
@@ -95,6 +105,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void startMeasurement(final MeasurementType measurementType, final Bundle options) {
         switch (measurementType) {
+            case SPEED:
+                navigateTo(WorkflowTarget.MEASUREMENT_SPEED);
+                final Intent speedIntent = new Intent(MeasurementService.ACTION_START_SPEED_MEASUREMENT,
+                        null, this, MeasurementService.class);
+                speedIntent.putExtras(options);
+                startService(speedIntent);
+                break;
             case QOS:
                 navigateTo(WorkflowTarget.MEASUREMENT_QOS);
                 final Intent intent = new Intent(MeasurementService.ACTION_START_QOS_MEASUREMENT,
@@ -103,6 +120,17 @@ public class MainActivity extends AppCompatActivity {
                 startService(intent);
                 break;
         }
+    }
+
+    public void startInformationService() {
+        final Intent intent = new Intent(InformationService.ACTION_START_INFORMATION_SERVICE,
+                null, this, InformationService.class);
+        startService(intent);
+    }
+
+    public void stopInformationService() {
+        final Intent intent = new Intent(this, InformationService.class);
+        stopService(intent);
     }
 
     public void setBottomNavigationVisible(final boolean isVisible) {
@@ -130,13 +158,41 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             registerMeasurementAgent();
+            PermissionUtil.requestLocationPermission(this);
         }
 
         getSupportActionBar().setElevation(0f);
+
+    }
+
+    @Override
+    protected void onPause() {
+        stopInformationService();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startInformationService();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case PermissionUtil.REQUEST_CODE_LOCATION:
+                Log.d(TAG, "Granted FINE LOCATION permission!");
+                break;
+            default:
+                break;
+        }
     }
 
     public void registerMeasurementAgent() {
         RegisterMeasurementAgentTask task = new RegisterMeasurementAgentTask(this, null);
         task.execute();
     }
+
 }

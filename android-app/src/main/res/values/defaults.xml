@@ -2,7 +2,7 @@
     <string translatable="false" name="default_speed_configuration_version">1.0.0</string>
     <string translatable="false" name="default_qos_configuration_version">1.0.0</string>
 
-    <string translatable="false" name="default_qos_control_host">10.9.8.36</string>
+    <string translatable="false" name="default_qos_control_host">10.9.8.39</string>
 
     <integer name="default_qos_control_port">5233</integer>
     <integer-array name="qos_tcp_test_port_list">

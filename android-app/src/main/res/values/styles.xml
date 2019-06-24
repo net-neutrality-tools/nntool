@@ -46,11 +46,44 @@
         <item name="android:windowExitAnimation">@anim/slide_down</item> -->
     </style>
 
+    <!-- TITLE -->
+
     <style name="Nettest.Title.StartButton.Text" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/title_page_start_button_fg</item>
         <item name="android:typeface">sans</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">48sp</item>
+    </style>
+
+    <style name="Nettest.MeasurementServerSelection.Title" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="Nettest.MeasurementServerSelection.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Nettest.Title.Provider.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Nettest.Title.Signal.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Nettest.Title.GeoLocation.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">19sp</item>
+    </style>
+
+    <style name="Nettest.Title.GeoLocation.Accuracy.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <!-- TOP PROGRESS BAR -->
@@ -74,6 +107,43 @@
     <style name="Nettest.Measurement.Qos.Progress.Text" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/qos_measurement_progress_item_text_fg</item>
         <item name="android:textSize">20sp</item>
+    </style>
+
+    <!-- SERVER SELECTION LIST -->
+    <style name="Nettest.ServerSelection.Item.Name" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="Nettest.ServerSelection.Item.Country" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <!-- Speed Measurement -->
+
+    <style name="Nettest.Measurement.StartButton.Text" parent="TextAppearance.AppCompat.Large">
+        <item name="android:textColor">@color/title_page_start_button_fg</item>
+        <!--<item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>-->
+        <item name="android:textSize">68sp</item>
+    </style>
+
+    <!-- BOTTOM RESULT HEADER -->
+
+    <style name="Nettest.Measurement.Speed.Result.Overview.Icon" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/bottom_result_overview_icon</item>
+        <item name="android:textSize">38sp</item>
+    </style>
+
+    <style name="Nettest.Measurement.Speed.Result.Overview.Speed.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/bottom_result_overview_text</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="Nettest.Measurement.Speed.Result.Overview.Unit.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/bottom_result_overview_text</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>

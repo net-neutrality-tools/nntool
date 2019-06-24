@@ -72,4 +72,12 @@ class measurement
 		map<string, string> message;
 };
 
+enum class MeasurementPhase {
+    INIT,
+    PING,
+    DOWNLOAD,
+    UPLOAD,
+    END
+};
+
 #endif

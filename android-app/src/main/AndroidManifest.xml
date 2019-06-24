@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="at.alladin.nettest.nntool.android.app">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -27,6 +33,11 @@
         </activity>
 
         <service android:enabled="true" android:name=".workflow.measurement.MeasurementService" android:exported="false" />
+
+        <!--
+            TODO: not needed now, maybe in future?
+            <service android:enabled="true" android:name=".util.info.InformationService" android:exported="false" />
+        -->
     </application>
 
 </manifest>

@@ -12,8 +12,10 @@ import at.alladin.nettest.nntool.android.app.R;
  */
 public class TopProgressBarView extends RelativeLayout {
 
-    TextView leftText;
-    TextView rightText;
+    private TextView leftText;
+    private TextView rightText;
+    private AlladinTextView leftIcon;
+    private AlladinTextView rightIcon;
 
     public TopProgressBarView(Context context) {
         super(context);
@@ -34,6 +36,8 @@ public class TopProgressBarView extends RelativeLayout {
         inflate(getContext(), R.layout.top_progress_bar_view, this);
         leftText = findViewById(R.id.top_progress_bar_view_left_text);
         rightText = findViewById(R.id.top_progress_bar_view_right_text);
+        leftIcon = findViewById(R.id.top_progress_bar_view_left_icon);
+        rightIcon = findViewById(R.id.top_progress_bar_view_right_icon);
     }
 
     public void setLeftText(final String text) {
@@ -45,6 +49,18 @@ public class TopProgressBarView extends RelativeLayout {
     public void setRightText(final String text) {
         if (rightText != null) {
             rightText.setText(text);
+        }
+    }
+
+    public void setLeftIcon(final String text) {
+        if (leftIcon != null) {
+            leftIcon.setText(text);
+        }
+    }
+
+    public void setRightIcon(final String text) {
+        if (rightIcon != null) {
+            rightIcon.setText(text);
         }
     }
 }

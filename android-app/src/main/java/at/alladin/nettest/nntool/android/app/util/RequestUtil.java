@@ -5,6 +5,9 @@ import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.text.TextUtils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
@@ -100,6 +103,12 @@ public class RequestUtil {
         capabilityTask.setVersion(context.getResources().getString(R.string.default_qos_configuration_version));
         capabilityTask.setTaskName(MeasurementTypeDto.QOS.toString());
         capabilityTaskDtoList.add(capabilityTask);
+
+        try {
+            System.out.println(new ObjectMapper().writeValueAsString(request));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
 
         return request;
     }

@@ -51,7 +51,7 @@ struct measurement measurements;
 
 vector<char> randomDataValues;
 
-pthread_mutex_t mutex;
+pthread_mutex_t mutex1;
 
 map<int,int> syncing_threads;
 
@@ -64,7 +64,7 @@ CConfigManager* pService;
 CCallback *pCallback;
 CMeasurement* pMeasurement;
 
-
+MeasurementPhase currentTestPhase = MeasurementPhase::INIT;
 
 
 /*--------------Forward declarations--------------*/
@@ -89,7 +89,7 @@ int main(int argc, char** argv)
 	::RTT				= false;
 	::DOWNLOAD 			= false;
 	::UPLOAD 			= false;
-	
+
 	long int opt;
 	int tls = 0;
 	string tcp_target_port = "80";
@@ -124,7 +124,7 @@ int main(int argc, char** argv)
                 return EXIT_SUCCESS;
 			case 'v':
 				cout << "ias client" << endl;
-				cout << "Version: " << VERSION << endl;	
+				cout << "Version: " << VERSION << endl;
 				return 0;
 			case '?':
 			default:
@@ -142,11 +142,11 @@ int main(int argc, char** argv)
 	}
 
     //Signal Handler
-    signal(SIGINT, signal_handler);
-	signal(SIGFPE, signal_handler);
-	signal(SIGABRT, signal_handler);
-	signal(SIGSEGV, signal_handler);
-	signal(SIGCHLD, signal_handler);
+//    signal(SIGINT, signal_handler);
+//	signal(SIGFPE, signal_handler);
+//	signal(SIGABRT, signal_handler);
+//	signal(SIGSEGV, signal_handler);
+//	signal(SIGCHLD, signal_handler);
 
 	Json::object jRttParameters;
 	Json::object jDownloadParameters;
@@ -181,6 +181,11 @@ int main(int argc, char** argv)
 
 	Json jMeasurementParametersJson = jMeasurementParameters;
 
+    #ifdef NNTOOL_CLIENT
+    //register callback
+    CTrace::setLogFunction([] (const std::string &s) { std::cout << s; });
+    #endif
+
 	measurementStart(jMeasurementParametersJson.dump());
 }
 
@@ -192,6 +197,13 @@ int main(int argc, char** argv)
  */
 void measurementStart(string measurementParameters)
 {
+    //Signal Handler
+    signal(SIGINT, signal_handler);
+    signal(SIGFPE, signal_handler);
+    signal(SIGABRT, signal_handler);
+    signal(SIGSEGV, signal_handler);
+    signal(SIGCHLD, signal_handler);
+
 	//android api hookup
 	//call with json measurementParameters via ndk
 
@@ -237,10 +249,19 @@ void measurementStart(string measurementParameters)
 
 	Json::array jTargets = jMeasurementParameters["wsTargets"].array_items();
 	string wsTLD = jMeasurementParameters["wsTLD"].string_value();
+	#ifdef __ANDROID__
+	pXml->writeString(conf.sProvider, "DNS_HOSTNAME", jTargets[0].string_value() /* + "." + wsTLD*/);
+	#else
 	pXml->writeString(conf.sProvider, "DNS_HOSTNAME", jTargets[0].string_value() + "." + wsTLD);
+	#endif
+
 	jTargets = jMeasurementParameters["wsTargetsRtt"].array_items();
-	pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value() + "." + wsTLD);
-	
+	#ifdef __ANDROID__
+    pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value() /*+ "." + wsTLD*/);
+    #else
+    pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value() + "." + wsTLD);
+    #endif
+
 	pXml->writeString(conf.sProvider,"DL_PORT",jMeasurementParameters["wsTargetPort"].string_value());
 	pXml->writeString(conf.sProvider,"UL_PORT",jMeasurementParameters["wsTargetPort"].string_value());
 
@@ -284,6 +305,7 @@ void measurementStart(string measurementParameters)
 		conf.nTestCase = 2;
 		conf.sTestName = "rtt_udp";
 		TRC_INFO( ("Taking Testcase RTT UDP ("+CTool::toString(conf.nTestCase)+")").c_str() );
+		currentTestPhase = MeasurementPhase::PING;
 		startTestCase(conf.nTestCase);
 	}
 
@@ -293,6 +315,7 @@ void measurementStart(string measurementParameters)
 		conf.nTestCase = 3;
 		conf.sTestName = "download";
 		TRC_INFO( ("Taking Testcase DOWNLOAD ("+CTool::toString(conf.nTestCase)+")").c_str() );
+		currentTestPhase = MeasurementPhase::DOWNLOAD;
 		startTestCase(conf.nTestCase);
 	}
 
@@ -303,8 +326,11 @@ void measurementStart(string measurementParameters)
 		conf.nTestCase = 4;
 		conf.sTestName = "upload";
 		TRC_INFO( ("Taking Testcase UPLOAD ("+CTool::toString(conf.nTestCase)+")").c_str() );
+		currentTestPhase = MeasurementPhase::UPLOAD;
 		startTestCase(conf.nTestCase);
 	}
+
+	currentTestPhase = MeasurementPhase::END;
 
 	shutdown();
 }
@@ -349,7 +375,7 @@ void shutdown()
 
 	delete(pTrace);
 
-	exit(EXIT_SUCCESS);
+	//exit(EXIT_SUCCESS);
 }
 
 void show_usage(char* argv0)
@@ -371,9 +397,11 @@ void show_usage(char* argv0)
 
 static void signal_handler(int signal)
 {
+	TRC_ERR("Error signal received " + std::to_string(signal));
+
 	CTool::print_stacktrace();
 	
     ::RUNNING = false;
     sleep(1);
-    exit(signal);
+    //exit(signal);
 }
