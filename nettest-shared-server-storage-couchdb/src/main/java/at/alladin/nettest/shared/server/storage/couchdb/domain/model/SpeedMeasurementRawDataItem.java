@@ -42,6 +42,15 @@ public class SpeedMeasurementRawDataItem {
     @JsonProperty("bytes")
     private Long bytes;
 
+	/**
+	 * Bytes transmitted or received since start of the speed measurement, including the slow start phase.
+	 */
+	@JsonPropertyDescription("Bytes transmitted or received since start of the speed measurement, including the slow start phase.")
+	@Expose
+	@SerializedName("bytes_including_slow_start")
+	@JsonProperty("bytes_including_slow_start")
+	private Long bytesIncludingSlowStart;
+
 	public Integer getStreamId() {
 		return streamId;
 	}
@@ -64,5 +73,13 @@ public class SpeedMeasurementRawDataItem {
 
 	public void setBytes(Long bytes) {
 		this.bytes = bytes;
+	}
+
+	public Long getBytesIncludingSlowStart() {
+		return bytesIncludingSlowStart;
+	}
+
+	public void setBytesIncludingSlowStart(Long bytesIncludingSlowStart) {
+		this.bytesIncludingSlowStart = bytesIncludingSlowStart;
 	}
 }

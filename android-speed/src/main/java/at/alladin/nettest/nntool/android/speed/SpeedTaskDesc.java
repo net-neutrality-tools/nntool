@@ -25,6 +25,8 @@ public class SpeedTaskDesc implements Serializable {
 
     private boolean performRtt = true;
 
+    private boolean useEncryption = false;
+
     public int getRttCount() {
         return rttCount;
     }
@@ -97,6 +99,14 @@ public class SpeedTaskDesc implements Serializable {
         this.performRtt = performRtt;
     }
 
+    public boolean isUseEncryption() {
+        return useEncryption;
+    }
+
+    public void setUseEncryption(boolean useEncryption) {
+        this.useEncryption = useEncryption;
+    }
+
     @Override
     public String toString() {
         return "SpeedTaskDesc{" +
@@ -109,6 +119,7 @@ public class SpeedTaskDesc implements Serializable {
                 ", performDownload=" + performDownload +
                 ", performUpload=" + performUpload +
                 ", performRtt=" + performRtt +
+                ", useEncryption=" + useEncryption +
                 '}';
     }
 }

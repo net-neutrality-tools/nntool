@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-17
+ *      \date Last update: 2019-06-12
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -809,11 +809,6 @@ void CTcpHandler::setRoundTripTimeKPIs()
         }
         
         //calc population standard deviation (analog to freeBSD 4.3)
-        /*
-         * note: currently, the linux iputils package suffers from a precision loss 
-         * which leads to wrong population standard deviation results. A github issue 
-         * and pull request were issued
-        */
         double variancePopulation = (double)rttSumSq / (double)rttReplies - rttAvg * rttAvg;
         rttStdDevPop = sqrt(variancePopulation);
     }
@@ -880,10 +875,8 @@ int CTcpHandler::download(noPollCtx *ctx, noPollConn *conn)
 
     startTime = CTool::get_timestamp_sec();
 
-    /*const*/ char *firstChar = randomDataValues.data();
-    // 'const' commented out due to compile error:
-    // /nntool/ias-server/src/tcphandler.cpp:897:66: error: invalid conversion from ‘const char*’ to ‘char*’ [-fpermissive]
-    // nResponse = nopoll_conn_default_send(conn, firstChar + index, downloadFrameSize);
+    char *firstChar = randomDataValues.data();
+
     do
     {
         if (index + downloadFrameSize > randomDataValues.size()) {

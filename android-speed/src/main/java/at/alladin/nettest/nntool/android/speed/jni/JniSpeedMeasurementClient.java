@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
 import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
 
@@ -24,9 +25,11 @@ public class JniSpeedMeasurementClient {
 
     private String collectorUrl;
 
-    private SpeedTaskDesc speedTaskDesc;
+    private final SpeedTaskDesc speedTaskDesc;
 
     private List<MeasurementFinishedStringListener> finishedStringListeners = new ArrayList<>();
+
+    private List<MeasurementFinishedListener> finishedListeners = new ArrayList<>();
 
     public JniSpeedMeasurementClient(final SpeedTaskDesc speedTaskDesc) {
         this.speedTaskDesc = speedTaskDesc;
@@ -40,11 +43,15 @@ public class JniSpeedMeasurementClient {
     }
 
     @Keep
-    public void cppCallbackFinished (final String message) {
+    public void cppCallbackFinished (final String message, final JniSpeedMeasurementResult result) {
         Log.d(TAG, message);
         for (MeasurementFinishedStringListener l : finishedStringListeners) {
             l.onMeasurementFinished(message);
         }
+        for (MeasurementFinishedListener l : finishedListeners) {
+            l.onMeasurementFinished(result, speedTaskDesc);
+        }
+        Log.d(TAG, result.toString());
     }
 
     public SpeedMeasurementState getSpeedMeasurementState() {
@@ -66,8 +73,16 @@ public class JniSpeedMeasurementClient {
         finishedStringListeners.add(listener);
     }
 
+    public void addMeasurementFinishedListener(final MeasurementFinishedListener listener) {
+        finishedListeners.add(listener);
+    }
+
     public void removeMeasurementFinishedListener(final MeasurementFinishedStringListener listener) {
         finishedStringListeners.remove(listener);
+    }
+
+    public void removeMeasurementFinishedListener(final MeasurementFinishedListener listener) {
+        finishedListeners.remove(listener);
     }
 
     public String getCollectorUrl() {
@@ -78,17 +93,14 @@ public class JniSpeedMeasurementClient {
         this.collectorUrl = collectorUrl;
     }
 
-    public SpeedTaskDesc getSpeedTaskDesc() {
-        return speedTaskDesc;
-    }
-
-    public void setSpeedTaskDesc(SpeedTaskDesc speedTaskDesc) {
-        this.speedTaskDesc = speedTaskDesc;
-    }
-
     public interface MeasurementFinishedStringListener {
 
-        public void onMeasurementFinished (final String result);
+        void onMeasurementFinished (final String result);
 
+    }
+
+    public interface MeasurementFinishedListener {
+
+        void onMeasurementFinished (final JniSpeedMeasurementResult result, final SpeedTaskDesc taskDesc);
     }
 }

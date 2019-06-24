@@ -3,6 +3,7 @@
     <color name="theme_primary_color">#921f56</color>
     <color name="theme_secondary_color">#29348a</color>
     <color name="theme_tertiary_color">#efefef</color>
+    <color name="theme_border_color">#d0d0d0</color>
     <color name="theme_app_bg">#fafafa</color>
     <color name="theme_action_bar_bg">@color/theme_app_bg</color>
     <color name="theme_text_color">@color/black</color>
@@ -32,4 +33,6 @@
     <color name="bottom_result_overview_icon">@color/theme_primary_color</color>
     <color name="bottom_result_overview_text">@color/theme_text_color</color>
 
+    <color name="interface_traffic_arrow_inactive">@color/theme_border_color</color>
+    <color name="interface_traffic_arrow_active">@color/theme_primary_color</color>
 </resources>

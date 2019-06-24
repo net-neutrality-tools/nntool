@@ -86,6 +86,17 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="Nettest.Title.InterfaceTraffic.Arrow" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/interface_traffic_arrow_inactive</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="Nettest.Title.InterfaceTraffic.Label" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <!-- TOP PROGRESS BAR -->
     <style name="Nettest.TopProgressBar.Text" parent="TextAppearance.AppCompat.Medium">
         <item name="android:typeface">sans</item>

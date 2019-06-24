@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-10
+ *      \date Last update: 2019-06-18
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -39,12 +39,6 @@ class CTool
 
 		//! Standard Destructor
 		virtual ~CTool();
-
-		//! Syslog Function for generally logging
-		static int logging( string sValue );
-		
-		//! Syslog Function for generally logging
-		static int logging( string sKey, string sValue );
 
 		//! Convert String to Int
 		static int toInt(string s);
@@ -79,10 +73,6 @@ class CTool
 		static string getSystemInfoOSVersion();
 		
 		static int validateIp( const string &ipAddress );
-		
-		static string getIP( string sInterface );
-		
-		static string getIP( string sInterface, int nType );
 		
 		//! Get Timestamps in ms
 		static int get_timestamp_usec();

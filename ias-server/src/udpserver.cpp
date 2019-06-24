@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-17
+ *      \date Last update: 2019-06-18
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
  
@@ -28,20 +28,19 @@ CUdpListener::CUdpListener()
 //!	Virtual Destructor
 CUdpListener::~CUdpListener()
 {
-	delete(mSocket);
 }
 
 //! \brief
 //!	Standard Constructor
 CUdpListener::CUdpListener(int nPort)
 {
-	mPort = nPort;
+	mPort 				= nPort;
 	
-	mClient = "-";
-	
-	//Create Socket Object
-	mSocket = new CConnection();
-	
+	mClient 			= "-";
+
+	mConnectionUdp4Send = std::make_unique<CConnection>();
+	mConnectionUdp6Send = std::make_unique<CConnection>();
+	mConnectionRawRecv 	= std::make_unique<CConnection>();
 }
 
 //! \brief
@@ -78,19 +77,19 @@ int CUdpListener::run()
 	//if no ip bindings are configured, bind on ::
 	if (::CONFIG["ip_bindings"]["v4"].string_value().compare("") == 0 && ::CONFIG["ip_bindings"]["v6"].string_value().compare("") == 0)
 	{
-		if( ( mUdp6SendSocket = mSocket->udp6SocketServer(mPort) < 0 ) )
+		if( mConnectionUdp6Send->udp6SocketServer(mPort) < 0 )
 		{
 			TRC_CRIT("Socket creation failed - Could not establish connection on Port: " + to_string(mPort));
 		}
 	} 
 	else
 	{
-		if( ::CONFIG["ip_bindings"]["v4"].string_value().compare("") != 0 && ( mUdp4SendSocket = mSocket->udpSocketServer(mPort, ::CONFIG["ip_bindings"]["v4"].string_value()) ) < 0 )
+		if( ::CONFIG["ip_bindings"]["v4"].string_value().compare("") != 0 && ( mConnectionUdp4Send->udpSocketServer(mPort, ::CONFIG["ip_bindings"]["v4"].string_value()) ) < 0 )
 		{
 			TRC_CRIT("Socket creation failed - Could not establish connection on Port: " + to_string(mPort));
 		}
 
-		if( ::CONFIG["ip_bindings"]["v6"].string_value().compare("") != 0 && ( mUdp6SendSocket = mSocket->udp6SocketServer(mPort, ::CONFIG["ip_bindings"]["v6"].string_value()) ) < 0 )
+		if( ::CONFIG["ip_bindings"]["v6"].string_value().compare("") != 0 && ( mConnectionUdp6Send->udp6SocketServer(mPort, ::CONFIG["ip_bindings"]["v6"].string_value()) ) < 0 )
 		{
 			TRC_CRIT("Socket creation failed - Could not establish connection on Port: " + to_string(mPort));
 		}
@@ -98,7 +97,7 @@ int CUdpListener::run()
 	
 	
 	//Create a RAW socket
-	if( ( mRecvSocket = mSocket->rawSocketEth() ) < 0 )
+	if( ( mConnectionRawRecv->rawSocketEth() ) < 0 )
 	{
 		//Error
 		TRC_CRIT("Socket creation failed - Could not establish RAW Socket connection");
@@ -111,7 +110,7 @@ int CUdpListener::run()
 	//While Loop for listening
 	while(RUNNING)
 	{
-		nResponse = recvfrom(mRecvSocket, buffer, MAX_PACKET_SIZE, 0, (struct sockaddr *)&client, &clientlen);
+		nResponse = recvfrom(mConnectionRawRecv->mSocket, buffer, MAX_PACKET_SIZE, 0, (struct sockaddr *)&client, &clientlen);
 		
 		//--------------------------------------------------------------------------------
 		
@@ -186,7 +185,7 @@ int CUdpListener::run()
 			clientv4.sin_port 	= htons(nUdpSrcPort);
 			
 			// send the sResponse to the client
-			nResponse = sendto(mUdp4SendSocket, sResponse.c_str(), sResponse.size(), 0, (struct sockaddr *)&clientv4, sizeof(clientv4));
+			nResponse = sendto(mConnectionUdp4Send->mSocket, sResponse.c_str(), sResponse.size(), 0, (struct sockaddr *)&clientv4, sizeof(clientv4));
 		}
 		if( eth_proto == 0x86dd )
 		{
@@ -196,7 +195,7 @@ int CUdpListener::run()
 			clientv6.sin6_port 	= htons(nUdpSrcPort);
 			
 			// send the sResponse to the client
-			nResponse = sendto(mUdp6SendSocket, sResponse.c_str(), sResponse.size(), 0, (struct sockaddr *)&clientv6, sizeof(clientv6));
+			nResponse = sendto(mConnectionUdp6Send->mSocket, sResponse.c_str(), sResponse.size(), 0, (struct sockaddr *)&clientv6, sizeof(clientv6));
 		}
 		
 		//on Error
@@ -208,9 +207,9 @@ int CUdpListener::run()
         TRC_INFO("Socket: udpListener: Connection Shutdown for Client IP: " +CTool::toString(ip_saddr) + " on Port: " + CTool::toString(nUdpSrcPort));
     }
 
-    close(mUdp4SendSocket);
-    close(mUdp6SendSocket);
-    close(mRecvSocket);
+    close(mConnectionUdp4Send->mSocket);
+    close(mConnectionUdp6Send->mSocket);
+    close(mConnectionRawRecv->mSocket);
 
     TRC_DEBUG("End Thread: UDP Listener with PID: " + std::to_string(syscall(SYS_gettid)));
 	
