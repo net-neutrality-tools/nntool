@@ -88,7 +88,7 @@ void CCallback::callbackToPlatform(string cmd, string msg, int error_code, strin
     jMeasurementResults["test_case"] = conf.sTestName;
 
     #ifdef __ANDROID__
-    AndroidConnector &connector = AndroidConnector::getInstance();
+    	AndroidConnector &connector = AndroidConnector::getInstance();
     #endif
 
     if (error_code != 0)
@@ -98,7 +98,7 @@ void CCallback::callbackToPlatform(string cmd, string msg, int error_code, strin
         TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
 
         #ifdef __ANDROID__
-        connector.callbackError(error_code);
+        	connector.callbackError(error_code);
         #endif
     }
 
@@ -123,22 +123,22 @@ void CCallback::callbackToPlatform(string cmd, string msg, int error_code, strin
     }
 
     #ifdef __ANDROID__
-    if (cmd == "completed") 
-
-        connector.callbackFinished(jMeasurementResults);
-    } 
-    else
-    {
-        connector.callback(jMeasurementResults);
-    }
+	    if (cmd == "completed") 
+	    {
+	        connector.callbackFinished(jMeasurementResults);
+	    } 
+	    else
+	    {
+	        connector.callback(jMeasurementResults);
+	    }
     #else
-    string platform = ::PLATFORM;
-    string clientos = ::CLIENT_OS;
+	    string platform = ::PLATFORM;
+	    string clientos = ::CLIENT_OS;
 
-    if (platform.compare("desktop") == 0 && clientos.compare("linux") == 0)
-    {
-    	TRC_DEBUG("Callback: " + Json(jMeasurementResults).dump());
-    }
+	    if (platform.compare("desktop") == 0 && clientos.compare("linux") == 0)
+	    {
+	    	TRC_DEBUG("Callback: " + Json(jMeasurementResults).dump());
+	    }
     #endif
 }
 
