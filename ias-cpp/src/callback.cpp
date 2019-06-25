@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-29
+ *      \date Last update: 2019-06-25
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -257,7 +257,6 @@ void CCallback::rttUdpCallback(string cmd)
 		//---------------------------
 	
 		tempMeasurement.ping.packetsize 	= pingThread->nSize;
-		tempMeasurement.ping.hops			= pingThread->nHops;
 		tempMeasurement.ping.requests 		= nReply + nMissing + pingThread->nError;
 		tempMeasurement.ping.replies 		= nReply;
 		tempMeasurement.ping.missing 		= nMissing;
@@ -318,7 +317,6 @@ void CCallback::rttUdpCallback(string cmd)
 	jMeasurementResults["progress"] = tempMeasurement.ping.measurement_phase_progress;
 
 	jMeasurementResultsRttUdp.push_back(jMeasurementResults);
-	
 }
 
 void CCallback::downloadCallback(string cmd)
@@ -570,9 +568,10 @@ void CCallback::uploadCallback(string cmd)
 	tempMeasurement.upload.datasize = 0;
 	
 	unsigned int addedTimer = TIMER_DURATION/500000;
-	if (addedTimer > (MEASUREMENT_DURATION)*2)
+	//subtract UPLOAD_ADDITIONAL_MEASUREMENT_DURATION required for server response receive
+	if (addedTimer > (MEASUREMENT_DURATION-UPLOAD_ADDITIONAL_MEASUREMENT_DURATION)*2)
 	{
-		addedTimer = (MEASUREMENT_DURATION)*2;
+		addedTimer = (MEASUREMENT_DURATION-UPLOAD_ADDITIONAL_MEASUREMENT_DURATION)*2;
 	}
 	for( unsigned int i = tempMeasurement.upload.totime; i < tempMeasurement.upload.totime + addedTimer*5; i+=5 )
 	{
@@ -595,8 +594,8 @@ void CCallback::uploadCallback(string cmd)
 	//Calculate Min, Avg, Max
 	CTool::calculateResults( tempMeasurement.upload, 0.5, 0 );
 
-	//measurement duration is given in seconds
-	tempMeasurement.upload.measurement_phase_progress = tempMeasurement.upload.duration_ns / (MEASUREMENT_DURATION * 1e9);
+	//calculcate progress based on TIMER_DURATION to account for UPLOAD_ADDITIONAL_MEASUREMENT_DURATION required for server response receive
+	tempMeasurement.upload.measurement_phase_progress = (TIMER_DURATION - (TIMER_DURATION % 500000)) / (MEASUREMENT_DURATION * 1e6);
 
 	TRC_INFO( ("UPLOAD: " + CTool::toString(tempMeasurement.upload.avg )).c_str());
 

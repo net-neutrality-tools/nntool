@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-14
+ *      \date Last update: 2019-06-24
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -28,7 +28,6 @@ Upload::Upload()
 //!	Virtual Destructor
 Upload::~Upload()
 {
-	delete(mConnection);
 }
 
 //! \brief
@@ -58,7 +57,7 @@ Upload::Upload( CConfigManager *pConfig, CConfigManager *pXml, CConfigManager *p
 		mLimit = 1000000;
 	
 	//Create Socket Object
-	mConnection = new CConnection();
+	mConnection = std::make_unique<CConnection>();
 		
 	mConfig = pConfig;
 	
@@ -177,7 +176,7 @@ int Upload::run()
 	setsockopt( mConnection->mSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval) );
 	
 	//Send Request and Authenticate Client
-	CHttp *pHttp = new CHttp( mConfig, mConnection, mUploadString );
+	std::unique_ptr<CHttp> pHttp = std::make_unique<CHttp>( mConfig, mConnection.get(), mUploadString );
 	if( pHttp->requestToReferenceServer() < 0 )
 	{
 		TRC_INFO("No valid credentials for this server: " + mServer);
@@ -191,7 +190,7 @@ int Upload::run()
 	mServerHostname = pHttp->getHttpServerHostname();
 
 	//Start Upload Receiver Thread
-	CUploadSender* pUploadSender = new CUploadSender(mConnection);
+	std::unique_ptr<CUploadSender>  pUploadSender = std::make_unique<CUploadSender>(mConnection.get());
 	pUploadSender->createThread();
 
 	mUpload.datasize_total = 0;
@@ -400,11 +399,8 @@ int Upload::run()
 	#endif
 	
 	#ifdef NNTOOL
-	//usleep(100000);
+	usleep(100000);
 	#endif
-
-	delete( pHttp );
-	delete( pUploadSender );
 	
 	mConnection->close();
 	free(rbuffer);

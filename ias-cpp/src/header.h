@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-14
+ *      \date Last update: 2019-06-25
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -102,6 +102,7 @@ using namespace json11;
 #define MAXBUFFER 1580
 #define MAX_NUM_THREADS 256
 #define ECHO 64
+#define UPLOAD_ADDITIONAL_MEASUREMENT_DURATION 2
 
 
 #define TRC_DEBUG(s)  CTrace::getInstance()->logDebug(s)

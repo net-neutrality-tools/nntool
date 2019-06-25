@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-29
+ *      \date Last update: 2019-06-25
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -95,14 +95,14 @@ int CMeasurement::startMeasurement()
 			
 			ping->waitForEnd();
 
-            //the Ping * MUST NOT be deleted before the finished callback has happened!
-			while (!mCallback->isPerformedRtt()) {
-			    //Sleep 100ms
+			while (!mCallback->isPerformedRtt())
+			{
+				//Sleep 100ms
                 usleep(100000);
 			}
 
-        }
 			break;
+        }
 
 		// DOWNLOAD
 		case 3:
@@ -133,7 +133,8 @@ int CMeasurement::startMeasurement()
 				(*itThread)->waitForEnd();
 			}
 
-			while (!mCallback->isPerformedDownload()) {
+			while (!mCallback->isPerformedDownload())
+			{
                 //Sleep 100ms
                 usleep(100000);
             }
@@ -142,18 +143,20 @@ int CMeasurement::startMeasurement()
             {
                 delete( *itThread );
             }
-        }
+
 			break;
+		}
 		
 		// Upload
 		case 4:
 		{
 		    std::vector<Upload *> vUploadThreads;
-			//Set Measurement Duration for Timer - Upload
+			/*Set Measurement Duration for Timer - Upload. Add an additional UPLOAD_ADDITIONAL_MEASUREMENT_DURATION to 
+			allow the client to receive all responses which were sent by the server during TCP_STARTUP + UL_DURATION*/
 			if( mXml->readString(mProvider,"testname","dummy") == "http_up_dataload" ) 
-				MEASUREMENT_DURATION = mXml->readLong(mProvider,"UL_DURATION_DL",10);
+				MEASUREMENT_DURATION = mXml->readLong(mProvider,"UL_DURATION_DL",10)+UPLOAD_ADDITIONAL_MEASUREMENT_DURATION;
 			else
-				MEASUREMENT_DURATION = mXml->readLong(mProvider,"UL_DURATION",10);
+				MEASUREMENT_DURATION = mXml->readLong(mProvider,"UL_DURATION",10)+UPLOAD_ADDITIONAL_MEASUREMENT_DURATION;
 			
 			measurements.upload.datasize = 0;
 			
@@ -176,8 +179,9 @@ int CMeasurement::startMeasurement()
 				(*itThread)->waitForEnd();
 			}
 
-			while (!mCallback->isPerformedUpload()) {
-                //Sleep 100ms
+			while (!mCallback->isPerformedUpload())
+			{
+				//Sleep 100ms
                 usleep(100000);
             }
 
@@ -185,8 +189,9 @@ int CMeasurement::startMeasurement()
             {
                 delete( *itThread );
             }
-    }
+
 			break;
+		}
 	}
 	
 	return 0;
