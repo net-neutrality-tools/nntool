@@ -131,6 +131,10 @@ extern int TIMER_INDEX;
 extern int TIMER_DURATION;
 extern unsigned long long MEASUREMENT_DURATION;
 
+extern bool PERFORMED_RTT;
+extern bool PERFORMED_DOWNLOAD;
+extern bool PERFORMED_UPLOAD;
+
 extern int INSTANCE;
 
 extern vector<char> randomDataValues;

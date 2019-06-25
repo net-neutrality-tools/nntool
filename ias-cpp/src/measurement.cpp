@@ -95,7 +95,7 @@ int CMeasurement::startMeasurement()
 			
 			ping->waitForEnd();
 
-			while (!mCallback->isPerformedRtt())
+			while (!PERFORMED_RTT)
 			{
 				//Sleep 100ms
                 usleep(100000);
@@ -133,7 +133,7 @@ int CMeasurement::startMeasurement()
 				(*itThread)->waitForEnd();
 			}
 
-			while (!mCallback->isPerformedDownload())
+			while (!PERFORMED_DOWNLOAD)
 			{
                 //Sleep 100ms
                 usleep(100000);
@@ -179,7 +179,7 @@ int CMeasurement::startMeasurement()
 				(*itThread)->waitForEnd();
 			}
 
-			while (!mCallback->isPerformedUpload())
+			while (!PERFORMED_UPLOAD)
 			{
 				//Sleep 100ms
                 usleep(100000);
