@@ -13,7 +13,7 @@
 /*!
 
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-24
+ *      \date Last update: 2019-06-25
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -249,8 +249,6 @@ int Ping::run()
 		//Sleep 1000ms
 		usleep(timeout);	
 	}
-
-	RUNNING = false;
 	
 	#ifndef NNTOOL
 	measurementTimeEnd = CTool::get_timestamp();
@@ -319,8 +317,11 @@ int Ping::run()
 	#endif
 
 	#ifdef NNTOOL
-	//wait for the timer thread to collect the final results before exiting the thread  
-	usleep(100000);
+	::TIMER_STOPPED = true;
+	while (!PERFORMED_RTT)
+	{
+		usleep(100000);
+	}
 	#endif
 
 	close(mSock);
