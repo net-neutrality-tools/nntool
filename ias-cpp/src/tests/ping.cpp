@@ -13,7 +13,7 @@
 /*!
 
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-14
+ *      \date Last update: 2019-06-24
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -74,8 +74,7 @@ int Ping::run()
 	char *sbuffer = (char *)malloc(ECHO);
 	char *rbuffer = (char *)malloc(ECHO);
 	
-	nHops = 0;
-	nSize = 0;
+	nSize = ECHO;
 	nError = 0;
 
 	#ifndef NNTOOL
@@ -95,9 +94,6 @@ int Ping::run()
 
 	bool ipv6validated = false;
 	
-	vector<string> vResponse;
-	string delimiter = ",";
-
 	//Get Hostname and make DNS Request
 	TRC_DEBUG( ("Resolving Hostname for Measurement: "+mServerName).c_str() );
 
@@ -139,6 +135,10 @@ int Ping::run()
 		{
 			//Error
 			TRC_ERR("Creating socket failed - socket()");
+
+			free(sbuffer);
+			free(rbuffer);
+
 			return -1;
 		}
 		
@@ -152,6 +152,10 @@ int Ping::run()
 		{
 			//Error
 			TRC_ERR("Creating socket failed - socket()");
+
+			free(sbuffer);
+			free(rbuffer);
+
 			return -1;
 		}
 		
@@ -222,34 +226,18 @@ int Ping::run()
 		
 			//Calculate timediff
 			mTimeDiff = time2 - time1;
-		
-			//Cut String out of Response from Server
-			string sResponse(rbuffer,find( rbuffer, rbuffer + mResponse,  ';'));
-
-			//Split String in different String and save in Vector
-			CTool::tokenize(sResponse, vResponse, delimiter);
 			
-			//check if Vector has at min 1 entries
-			if( vResponse.size() > 1 )
+			//check for mirrored payload
+			if (string(rbuffer).compare(string(sbuffer)) != 0)
 			{
-				//Save Values from Vector to Variable
-				nHops = CTool::toULL(vResponse[0]);
-				nSize = CTool::toULL(vResponse[1]);
+				TRC_ERR("Ping payload mismatch");
+				mTimeDiff = 0;
 			}
 		}
 		else
 		{
 			mTimeDiff = 0;
 		}
-		
-		/*
-		CTool::logging( (
-				" - No.: "+CTool::toString(i)+
-				" - Hops: "+CTool::toString(nHops)+
-				" - Size: "+CTool::toString(nSize)+
-				" - Time: "+CTool::toString(mTimeDiff)
-				).c_str() );
-		*/
 		
 		if(mPingResult.results.find(i) == mPingResult.results.end())
 			mPingResult.results[i] = mTimeDiff;
@@ -262,6 +250,8 @@ int Ping::run()
 		usleep(timeout);	
 	}
 
+	RUNNING = false;
+	
 	#ifndef NNTOOL
 	measurementTimeEnd = CTool::get_timestamp();
 		
@@ -290,7 +280,6 @@ int Ping::run()
 		//---------------------------
 	
 		measurements.ping.packetsize 	= nSize;
-		measurements.ping.hops			= nHops;
 		measurements.ping.requests 		= nReply + nMissing + nError;
 		measurements.ping.replies 		= nReply;
 		measurements.ping.missing 		= nMissing;
@@ -330,8 +319,8 @@ int Ping::run()
 	#endif
 
 	#ifdef NNTOOL
-	//the timer would be waiting the full MEASUREMENT_DURATION even if all the pings arrived => tell the timer to stop!
-	::TIMER_STOPPED = true;
+	//wait for the timer thread to collect the final results before exiting the thread  
+	usleep(100000);
 	#endif
 
 	close(mSock);
