@@ -78,6 +78,8 @@ public class ResultParseUtil {
 
         if (result.getRttUdpResultList() != null && result.getRttUdpResultList().size() > 0) {
             final JniSpeedMeasurementResult.RttUdpResult lastRttResult = result.getRttUdpResultList().get(result.getRttUdpResultList().size() - 1);
+            ret.setDurationRttNs(lastRttResult.getDurationNs());
+
             rttInfoDto.setNumSent(lastRttResult.getNumSent());
             rttInfoDto.setNumReceived(lastRttResult.getNumReceived());
             rttInfoDto.setNumError(lastRttResult.getNumError());
@@ -90,12 +92,8 @@ public class ResultParseUtil {
             rttInfoDto.setMinimumNs(lastRttResult.getMinNs());
             rttInfoDto.setStandardDeviationNs(lastRttResult.getStandardDeviationNs());
 
-            final List<RttDto> rttList = new ArrayList<>();
-            rttInfoDto.setRtts(rttList);
+            rttInfoDto.setRtts(parseRttListForSingleEntries(result.getRttUdpResultList()));
 
-            for (JniSpeedMeasurementResult.RttUdpResult rtt : result.getRttUdpResultList()) {
-                rttList.add(parseRttUdpResultIntoRttDto(rtt));
-            }
         }
 
         if (timeInfo != null) {
@@ -113,21 +111,63 @@ public class ResultParseUtil {
         return ret;
     }
 
-    private static RttDto parseRttUdpResultIntoRttDto (JniSpeedMeasurementResult.RttUdpResult rtt) {
-        final RttDto ret = new RttDto();
+    private static List<RttDto> parseRttListForSingleEntries(final List<JniSpeedMeasurementResult.RttUdpResult> rttResults) {
+        final List<RttDto> ret = new ArrayList<>();
+        boolean foundFirstEntry = false;
+        int lastCount = 0;
+        long previousAvgSum = 0;
+        for (JniSpeedMeasurementResult.RttUdpResult res : rttResults) {
+            //if we have less than 4 received rtts, we can reconstruct single values
+            if (!foundFirstEntry && res.getNumReceived() < 4) {
+                foundFirstEntry = true;
+                lastCount = res.getNumReceived();
+                switch (res.getNumReceived()) {
+                    case 1:
+                    case 3: {
+                        final RttDto rtt = new RttDto();
+                        rtt.setRttNs(res.getAverageNs());
+                        rtt.setRelativeTimeNs(res.getDurationNs());
+                        ret.add(rtt);
+                        if (res.getNumReceived() == 1) {
+                            break;
+                        }
+                    }
+                    case 2: {
+                        RttDto rtt = new RttDto();
+                        rtt.setRttNs(res.getMaxNs());
+                        rtt.setRelativeTimeNs(res.getDurationNs());
+                        ret.add(rtt);
 
-        ret.setRelativeTimeNs(rtt.getDurationNs());
-        ret.setNumSent(rtt.getNumSent());
-        ret.setNumReceived(rtt.getNumReceived());
-        ret.setNumError(rtt.getNumError());
-        ret.setNumMissing(rtt.getNumMissing());
-        ret.setAverageNs(rtt.getAverageNs());
-        ret.setMaximumNs(rtt.getMaxNs());
-        ret.setMedianNs(rtt.getMedianNs());
-        ret.setMinimumNs(rtt.getMinNs());
-        ret.setStandardDeviationNs(rtt.getStandardDeviationNs());
-        ret.setProgress(rtt.getProgress());
+                        rtt = new RttDto();
+                        rtt.setRttNs(res.getMinNs());
+                        rtt.setRelativeTimeNs(res.getDurationNs());
+                        ret.add(rtt);
+                        break;
+                    }
+                }
+                previousAvgSum = res.getAverageNs();
+            } else if (foundFirstEntry && lastCount != res.getNumReceived()) {
 
+                int newRtts = res.getNumReceived() - lastCount;
+                /*
+                 * the newest (n-th) rtt is given as
+                 * rtt_n = (CurrentAverage * CurrentNumReceived) - (PreviousAverage * PreviousNumReceived)
+                 *
+                 * depending on the number of newly received rtts, we divide to get the specific results
+                 *
+                 */
+                long rttVal = (res.getAverageNs() * res.getNumReceived() - (previousAvgSum * lastCount)) / newRtts;
+                for (int i = 0; i < newRtts; ++i) {
+                    final RttDto rtt = new RttDto();
+                    rtt.setRttNs(rttVal);
+                    rtt.setRelativeTimeNs(res.getDurationNs());
+                    ret.add(rtt);
+                }
+
+                lastCount = res.getNumReceived();
+                previousAvgSum = res.getAverageNs();
+            }
+        }
         return ret;
     }
 }
