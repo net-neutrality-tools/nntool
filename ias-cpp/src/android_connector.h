@@ -2,6 +2,7 @@
 #define CPP_CLIENT_ANDROID_INTERFACE_H
 
 #include <string>
+#include <vector>
 #include <map>
 #include <jni.h>
 #include <iostream>
@@ -34,6 +35,8 @@ extern bool TIMER_ACTIVE;
 extern bool TIMER_RUNNING;
 extern bool TIMER_STOPPED;
 
+extern bool hasError;
+
 extern int TIMER_INDEX;
 extern int TIMER_DURATION;
 extern unsigned long long MEASUREMENT_DURATION;
@@ -65,12 +68,13 @@ extern std::function<void(int)> signalFunction;
 
 class AndroidConnector {
 
-
     public:
         static AndroidConnector& getInstance() {
             static AndroidConnector instance;
             return instance;
         }
+
+        static const char* TAG;
 
         void registerSharedObject(JNIEnv* env, jobject caller, jobject baseMeasurementState, jobject pingMeasurementState, jobject downloadMeasurementState, jobject uploadMeasurementState);
 
@@ -88,7 +92,7 @@ class AndroidConnector {
 
         void callback(json11::Json::object& message) const;
 
-        void callbackError(int const errorCode) const;
+        void callbackError(std::string message);
 
         void callbackFinished (json11::Json::object& message);
         /*
@@ -96,13 +100,16 @@ class AndroidConnector {
         */
         void printLog(const std::string& message) const;
 
+        inline void detachCurrentThreadFromJvm() const {
+            javaVM->DetachCurrentThread();
+        }
+
         AndroidConnector(AndroidConnector const&) = delete;
         void operator=(AndroidConnector const&) = delete;
         AndroidConnector(AndroidConnector const&&) = delete;
         void operator=(AndroidConnector const&&) = delete;
-    private:
 
-        static const char* TAG;
+    private:
 
         struct JavaParseInformation {
             jclass longClass;
@@ -124,6 +131,7 @@ class AndroidConnector {
         //the method to be sending the callback to
         jmethodID callbackID;
         jmethodID cppCallbackFinishedID;
+        jmethodID cppErrorID;
         jmethodID setMeasurementPhaseByStringValueID;
 
         //the object to set the current progress state in
@@ -161,6 +169,8 @@ class AndroidConnector {
         jclass resultUdpClazz;
         jclass resultBandwidthClazz;
         jclass timeClazz;
+
+        std::vector<std::string> pendingErrorMessages;
 
 
         AndroidConnector() {};

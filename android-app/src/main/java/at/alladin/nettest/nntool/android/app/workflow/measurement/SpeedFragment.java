@@ -95,7 +95,7 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
 
     @Override
     public void onPause() {
-        //handler.removeCallbacks(updateUiRunnable);
+        handler.removeCallbacks(updateUiRunnable);
         getContext().unbindService(this);
         super.onPause();
     }
