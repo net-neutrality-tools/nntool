@@ -131,7 +131,6 @@ class AndroidConnector {
         //the method to be sending the callback to
         jmethodID callbackID;
         jmethodID cppCallbackFinishedID;
-        jmethodID cppErrorID;
         jmethodID setMeasurementPhaseByStringValueID;
 
         //the object to set the current progress state in

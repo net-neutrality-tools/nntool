@@ -53,7 +53,6 @@ jint AndroidConnector::jniLoad(JavaVM* vm) {
     jniHelperClass = (jclass) env->NewGlobalRef(clazz);
     callbackID = env->GetMethodID(jniHelperClass, "cppCallback", "(Ljava/lang/String;)V");
     cppCallbackFinishedID = env->GetMethodID(jniHelperClass, "cppCallbackFinished", "(Ljava/lang/String;Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult;)V");
-    cppErrorID = env->GetMethodID(jniHelperClass, "cppError", "(Ljava/lang/String;)V");
 
     clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/jni/exception/AndroidJniCppException");
     jniExceptionClass = (jclass) env->NewGlobalRef(clazz);
@@ -380,9 +379,7 @@ void AndroidConnector::callbackError(std::string message) {
     if (env->ExceptionCheck()) {
         pendingErrorMessages.push_back(message);
     } else {
-        printLog("I'm about to throw the exception");
-        //jint throwRes = env->ThrowNew(jniExceptionClass, message.c_str());
-        env->CallVoidMethod(jniCaller, cppErrorID, env->NewStringUTF(message.c_str()));
+        env->ThrowNew(jniExceptionClass, message.c_str());
     }
 }
 

@@ -55,11 +55,6 @@ public class JniSpeedMeasurementClient {
         Log.d(TAG, result.toString());
     }
 
-    @Keep
-    public void cppError(final String message) throws AndroidJniCppException {
-        throw new AndroidJniCppException(message);
-    }
-
     public SpeedMeasurementState getSpeedMeasurementState() {
         return speedMeasurementState;
     }
