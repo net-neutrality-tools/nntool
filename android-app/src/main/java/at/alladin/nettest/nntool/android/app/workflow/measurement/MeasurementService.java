@@ -15,17 +15,29 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import at.alladin.nettest.nntool.android.app.MainActivity;
+import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
+import at.alladin.nettest.nntool.android.app.async.SendReportTask;
+import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
+import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
+import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
 import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
 import at.alladin.nettest.nntool.android.speed.jni.JniSpeedMeasurementClient;
+import at.alladin.nettest.qos.QoSMeasurementClientControlAdapter;
 import at.alladin.nettest.qos.android.QoSMeasurementClientAndroid;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.TaskDesc;
+import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -46,6 +58,8 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     public static String EXTRAS_KEY_SPEED_TASK_DESC = "speed_task_desc";
 
+    public static String EXTRAS_KEY_FOLLOW_UP_ACTIONS = "measurement_follow_up_actions";
+
     final MeasurementServiceBinder binder = new MeasurementServiceBinder();
 
     final AtomicBoolean isBound = new AtomicBoolean(false);
@@ -56,7 +70,14 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     private JniSpeedMeasurementClient jniSpeedMeasurementClient;
 
-    private SpeedMeasurementResult speedMeasurementResult;
+    private List<SubMeasurementResult> subMeasurementResultList = new ArrayList<>();
+
+    //TODO: instead of the qos result collectors, store submeasurementresults
+    private List<QoSResultCollector> qosMeasurementResultList = new ArrayList<>();
+
+    private Bundle bundle;
+
+    private ArrayList<MeasurementType> followUpActions;
 
     public class MeasurementServiceBinder extends Binder {
         public MeasurementService getService() {
@@ -109,6 +130,8 @@ public class MeasurementService extends Service implements ServiceConnection {
     }
 
     public void startMeasurement(final Bundle options) {
+        this.bundle = options;
+        followUpActions = (ArrayList<MeasurementType>) options.getSerializable(EXTRAS_KEY_FOLLOW_UP_ACTIONS);
         final String speedTaskCollectorUrl = options.getString(EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL);
         final SpeedTaskDesc speedTaskDesc = (SpeedTaskDesc) options.getSerializable(EXTRAS_KEY_SPEED_TASK_DESC);
         jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskDesc);
@@ -116,8 +139,9 @@ public class MeasurementService extends Service implements ServiceConnection {
         jniSpeedMeasurementClient.addMeasurementFinishedListener(new JniSpeedMeasurementClient.MeasurementFinishedListener() {
             @Override
             public void onMeasurementFinished(JniSpeedMeasurementResult result, SpeedTaskDesc taskDesc) {
-                speedMeasurementResult = ResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
+                final SpeedMeasurementResult speedMeasurementResult = ResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
                 Log.d(TAG, speedMeasurementResult.toString());
+                subMeasurementResultList.add(speedMeasurementResult);
             }
         });
         AsyncTask.execute(new Runnable() {
@@ -143,11 +167,18 @@ public class MeasurementService extends Service implements ServiceConnection {
                 getResources().getIntArray(R.array.qos_echo_service_tcp_ports),
                 getResources().getIntArray(R.array.qos_echo_service_udp_ports));
                 */
-
+        this.bundle = options;
+        followUpActions = (ArrayList<MeasurementType>) options.getSerializable(EXTRAS_KEY_FOLLOW_UP_ACTIONS);
         final List<TaskDesc> taskDescList = (List<TaskDesc>) options.getSerializable(EXTRAS_KEY_QOS_TASK_DESC_LIST);
         final String collectorUrl = options.getString(EXTRAS_KEY_QOS_TASK_COLLECTOR_URL);
         final ClientHolder client = ClientHolder.getInstance(taskDescList, collectorUrl);
         qosMeasurementClient = new QoSMeasurementClientAndroid(client, getApplicationContext());
+        qosMeasurementClient.addControlListener(new QoSMeasurementClientControlAdapter() {
+            @Override
+            public void onMeasurementError(Exception e) {
+                //TODO: handle error
+            }
+        });
         final Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -189,4 +220,65 @@ public class MeasurementService extends Service implements ServiceConnection {
         Log.d(TAG, "Service Disconnected " + name);
     }
 
+    /**
+     *
+     * @return true if a follow up action (e.g. QOS, SPEED) to the current measurement is desired
+     */
+    public boolean hasFollowUpAction () {
+        return followUpActions != null && followUpActions.size() > 0;
+    }
+
+    /**
+     * Starts the next follow up action (e.g. QOS, SPEED) from the MainActivity
+     * passes along the previous bundle, but removes the currently executed action from the follow up actions
+     * @param activity
+     */
+    public void executeFollowUpAction (final MainActivity activity) {
+        if (!hasFollowUpAction()) {
+            return;
+        }
+        final MeasurementType typeToExecute = followUpActions.get(0);
+        followUpActions.remove(0);
+        bundle.putSerializable(EXTRAS_KEY_FOLLOW_UP_ACTIONS, followUpActions);
+        activity.startMeasurement(typeToExecute, bundle);
+    }
+
+    public SendReportTask generateSendReportTask(final String collectorUrl, final MainActivity activity) {
+        return new SendReportTask(activity,
+                RequestUtil.prepareLmapReportForMeasurement(qosMeasurementResultList, subMeasurementResultList, activity),
+                collectorUrl, new OnTaskFinishedCallback<MeasurementResultResponse>() {
+            @Override
+            public void onTaskFinished(MeasurementResultResponse result) {
+                if (result == null) {
+                    AlertDialogUtil.showAlertDialog(activity,
+                            R.string.alert_send_measurement_result_title,
+                            R.string.alert_send_measurement_results_error);
+                }
+                //if the result has been sent, reset the list of previous measurements
+                qosMeasurementResultList.clear();
+                subMeasurementResultList.clear();
+                activity.navigateTo(WorkflowTarget.TITLE);
+            }
+        });
+    }
+
+    public String getSpeedCollectorUrl () {
+        return jniSpeedMeasurementClient.getCollectorUrl();
+    }
+
+    public List<SubMeasurementResult> getSubMeasurementResultList() {
+        return subMeasurementResultList;
+    }
+
+    public void setSubMeasurementResultList(List<SubMeasurementResult> subMeasurementResultList) {
+        this.subMeasurementResultList = subMeasurementResultList;
+    }
+
+    public List<QoSResultCollector> getQosMeasurementResultList() {
+        return qosMeasurementResultList;
+    }
+
+    public void setQosMeasurementResultList(List<QoSResultCollector> qosMeasurementResultList) {
+        this.qosMeasurementResultList = qosMeasurementResultList;
+    }
 }

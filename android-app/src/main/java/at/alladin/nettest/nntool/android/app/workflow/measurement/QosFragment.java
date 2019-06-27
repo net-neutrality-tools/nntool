@@ -10,13 +10,13 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -132,11 +132,6 @@ public class QosFragment extends Fragment implements ServiceConnection {
                         }
                     }
                 }
-                else if (qosTest == null) {
-                    topProgressBarView.setLeftText("100%");
-                    topProgressBarView.setRightText("100%");
-                    postResultRunnable = true;
-                }
 
             }
 
@@ -153,24 +148,17 @@ public class QosFragment extends Fragment implements ServiceConnection {
         @Override
         public void run() {
             final QoSResultCollector qoSResultCollector = measurementService.getQosMeasurementClient().getQosResult();
+            measurementService.getQosMeasurementResultList().add(qoSResultCollector);
             final String collectorUrl = measurementService.getQosMeasurementClient().getCollectorUrl();
             final MainActivity activity = (MainActivity) getActivity();
-            final SendReportTask task = new SendReportTask(getContext(),
-                    RequestUtil.prepareLmapReportForQosMeasurement(qoSResultCollector, getContext()),
-                    collectorUrl, new OnTaskFinishedCallback<MeasurementResultResponse>() {
-                        @Override
-                        public void onTaskFinished(MeasurementResultResponse result) {
-                            if (result == null) {
-                                AlertDialogUtil.showAlertDialog(activity,
-                                        R.string.alert_send_measurement_result_title,
-                                        R.string.alert_send_measurement_results_error);
-                            }
-                            activity.navigateTo(WorkflowTarget.TITLE);
-                        }
-                    });
+            if (measurementService.hasFollowUpAction()) {
+                measurementService.executeFollowUpAction(activity);
+            } else {
+                final SendReportTask task = measurementService.generateSendReportTask(collectorUrl, activity);
 
-            if (!sendingResults.getAndSet(true)) {
-                task.execute();
+                if (!sendingResults.getAndSet(true)) {
+                    task.execute();
+                }
             }
         }
     };

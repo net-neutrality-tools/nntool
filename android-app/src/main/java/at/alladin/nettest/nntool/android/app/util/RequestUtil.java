@@ -26,6 +26,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapRepo
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapResultDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.QoSMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
 import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
@@ -109,23 +111,52 @@ public class RequestUtil {
         return request;
     }
 
-    public static LmapReportDto prepareLmapReportForQosMeasurement(final QoSResultCollector qoSResultCollector, final Context context) {
+    public static LmapReportDto prepareLmapReportForMeasurement(final List<QoSResultCollector> qoSResultCollectorList, final List<SubMeasurementResult> subMeasurementResultList, final Context context) {
         final LmapReportDto report = new LmapReportDto();
 
         report.setAdditionalRequestInfo(prepareApiRequestInfo(context));
         report.setAgentId(report.getAdditionalRequestInfo().getAgentId());
-        if (qoSResultCollector != null && qoSResultCollector.getResults() != null) {
-            final QoSMeasurementResult qoSMeasurementResult = new QoSMeasurementResult();
-            final LmapResultDto<QoSMeasurementResult> lmapResult = new LmapResultDto<>();
 
-            report.setResults(new ArrayList<>());
-            report.getResults().add(lmapResult);
+        if (qoSResultCollectorList != null && qoSResultCollectorList.size() > 0) {
+            for (QoSResultCollector qoSResultCollector : qoSResultCollectorList) {
+                if (qoSResultCollector != null && qoSResultCollector.getResults() != null) {
+                    final QoSMeasurementResult qoSMeasurementResult = new QoSMeasurementResult();
+                    final LmapResultDto<QoSMeasurementResult> lmapResult = new LmapResultDto<>();
 
-            lmapResult.setResults(new ArrayList<>());
-            lmapResult.getResults().add(qoSMeasurementResult);
-            qoSMeasurementResult.setObjectiveResults(new ArrayList<>());
-            for (final QoSTestResult qosResult : qoSResultCollector.getResults()) {
-                qoSMeasurementResult.getObjectiveResults().add(qosResult.getResultMap());
+                    if (report.getResults() == null) {
+                        report.setResults(new ArrayList<>());
+                    }
+                    report.getResults().add(lmapResult);
+
+                    lmapResult.setResults(new ArrayList<>());
+                    lmapResult.getResults().add(qoSMeasurementResult);
+                    qoSMeasurementResult.setObjectiveResults(new ArrayList<>());
+                    for (final QoSTestResult qosResult : qoSResultCollector.getResults()) {
+                        qoSMeasurementResult.getObjectiveResults().add(qosResult.getResultMap());
+                    }
+                }
+            }
+        }
+
+        if (subMeasurementResultList != null && subMeasurementResultList.size() > 0) {
+            for (SubMeasurementResult subMeasurementResult : subMeasurementResultList) {
+                if (subMeasurementResult != null) {
+                    LmapResultDto<?> lmapResult = null;
+                    if (subMeasurementResult instanceof SpeedMeasurementResult) {
+                        lmapResult = new LmapResultDto<SpeedMeasurementResult>();
+                    } else if (subMeasurementResult instanceof QoSMeasurementResult) {
+                        lmapResult = new LmapResultDto<QoSMeasurementResult>();
+                    }
+
+                    if (lmapResult != null) {
+                        if (report.getResults() == null) {
+                            report.setResults(new ArrayList<>());
+                        }
+                        report.getResults().add(lmapResult);
+                        lmapResult.setResults(new ArrayList<>());
+                        lmapResult.getResults().add(subMeasurementResult);
+                    }
+                }
             }
         }
 

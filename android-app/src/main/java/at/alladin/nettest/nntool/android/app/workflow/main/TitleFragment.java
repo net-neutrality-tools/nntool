@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
@@ -23,7 +24,6 @@ import at.alladin.nettest.nntool.android.app.util.info.interfaces.TrafficGathere
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.system.SystemInfoGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.system.SystemInfoListener;
 import at.alladin.nettest.nntool.android.app.view.CpuAndRamView;
 import at.alladin.nettest.nntool.android.app.view.GeoLocationView;
 import at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView;
@@ -112,6 +112,9 @@ public class TitleFragment extends Fragment {
                                     result.getSpeedCollectorUrl());
                             bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_DESC,
                                     result.getSpeedTaskDesc());
+                            final ArrayList<MeasurementType> followUpActions = new ArrayList<>();
+                            followUpActions.add(MeasurementType.QOS);
+                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_FOLLOW_UP_ACTIONS, followUpActions);
                             ((MainActivity) getActivity()).startMeasurement(MeasurementType.SPEED, bundle);
                             //((MainActivity) getActivity()).startMeasurement(MeasurementType.QOS, bundle);
                         }

@@ -17,17 +17,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
+import at.alladin.nettest.nntool.android.app.async.SendReportTask;
+import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
+import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.view.AlladinTextView;
 import at.alladin.nettest.nntool.android.app.view.BottomMeasurementResultSummaryView;
 import at.alladin.nettest.nntool.android.app.view.CanvasArcDoubleGaugeWithLabels;
 import at.alladin.nettest.nntool.android.app.view.TopProgressBarView;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
@@ -204,7 +210,15 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
         @Override
         public void run() {
             final MainActivity activity = (MainActivity) getActivity();
-            activity.navigateTo(WorkflowTarget.TITLE);
+            if (measurementService.hasFollowUpAction()) {
+                measurementService.executeFollowUpAction(activity);
+            } else {
+                final SendReportTask task = measurementService.generateSendReportTask(measurementService.getSpeedCollectorUrl(), activity);
+
+                if (!sendingResults.getAndSet(true)) {
+                    task.execute();
+                }
+            }
         }
     };
 
