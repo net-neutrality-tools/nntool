@@ -43,6 +43,7 @@ import java.util.Objects;
 import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
 import at.alladin.nettest.nntool.android.speed.jni.JniSpeedMeasurementClient;
+import at.alladin.nettest.nntool.android.speed.jni.exception.AndroidJniCppException;
 
 /**
  * Class SpeedFragment
@@ -185,7 +186,11 @@ public class SpeedFragment extends Fragment implements FocusedFragment
                 updateButtonUi(R.string.name_msetting_all, buttonStart);
 
                 //Start Measurement
-                jniSpeedMeasurementClient.stopMeasurement();
+                try {
+                    jniSpeedMeasurementClient.stopMeasurement();
+                } catch (AndroidJniCppException ex) {
+                    ex.printStackTrace();
+                }
 
                 running = false;
 
@@ -211,7 +216,11 @@ public class SpeedFragment extends Fragment implements FocusedFragment
                 AsyncTask.execute(new Runnable() {
                     @Override
                     public void run() {
-                        jniSpeedMeasurementClient.startMeasurement();
+                        try {
+                            jniSpeedMeasurementClient.startMeasurement();
+                        } catch (AndroidJniCppException ex) {
+                            ex.printStackTrace();
+                        }
                     }
                 });
 
