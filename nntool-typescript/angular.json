@@ -1,0 +1,462 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "",
+  "projects": {
+    "libs": {
+      "root": "libs",
+      "sourceRoot": "libs",
+      "projectType": "library",
+      "prefix": "nntool",
+      "architect": {
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "testing/test.libs.ts",
+            "tsConfig": "testing/tsconfig.libs.spec.json",
+            "karmaConfig": "testing/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "testing/tsconfig.libs.json",
+              "testing/tsconfig.libs.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "xplat": {
+      "root": "xplat",
+      "sourceRoot": "xplat",
+      "projectType": "library",
+      "prefix": "nntool",
+      "architect": {
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "testing/test.xplat.ts",
+            "tsConfig": "testing/tsconfig.xplat.spec.json",
+            "karmaConfig": "testing/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "testing/tsconfig.xplat.json",
+              "testing/tsconfig.xplat.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "web-nntool": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/workspace:component": {
+          "style": "less"
+        }
+      },
+      "root": "apps/web-nntool",
+      "sourceRoot": "apps/web-nntool/src",
+      "prefix": "nntool",
+      "architect": {
+        "build": {
+          "___builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
+          "options": {
+            "customWebpackConfig": {
+              "path": "apps/web-nntool/extra-webpack.config.js",
+              "mergeStrategies": { "externals": "replace" }
+            },
+            "outputPath": "dist/apps/web-nntool",
+            "index": "apps/web-nntool/src/index.html",
+            "main": "apps/web-nntool/src/main.ts",
+            "polyfills": "apps/web-nntool/src/polyfills.ts",
+            "tsConfig": "apps/web-nntool/tsconfig.app.json",
+            "assets": [
+              "apps/web-nntool/src/favicon.ico",
+              "apps/web-nntool/src/assets"
+            ],
+            "styles": [
+              "apps/web-nntool/src/assets/css/normalize.css",
+              "apps/web-nntool/src/less/client.less"
+            ],
+            "scripts": [
+              { "input": "../ias/build/uglified/web/ias.web.js", "bundleName": "ias.web" },
+              { "input": "../ias/build/uglified/web/Worker.js", "bundleName": "Worker" },
+              { "input": "../ias/build/uglified/web/Tool.js", "bundleName": "Tool" }
+            ]
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/web-nntool/src/environments/environment.ts",
+                  "with": "apps/web-nntool/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            },
+            "serve": {
+              "extractCss": true,
+              "sourceMap": true,
+              "namedChunks": true,
+              "vendorChunk": true,
+              "commonChunk": true,
+              "verbose": true
+            }
+          }
+        },
+        "serve": {
+          "____builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
+          "options": {
+            "customWebpackConfig": {
+              "path": "apps/web-nntool/extra-webpack.config.js",
+              "mergeStrategies": { "externals": "replace" }
+            },
+            "browserTarget": "web-nntool:build:serve"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "web-nntool:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "web-nntool:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/web-nntool/tsconfig.app.json",
+              "apps/web-nntool/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "apps/web-nntool/src/test.ts",
+            "tsConfig": "apps/web-nntool/tsconfig.spec.json",
+            "karmaConfig": "apps/web-nntool/karma.conf.js",
+            "polyfills": "apps/web-nntool/src/polyfills.ts",
+            "assets": [
+              "apps/web-nntool/src/favicon.ico",
+              "apps/web-nntool/src/assets"
+            ],
+            "styles": [
+              "apps/web-nntool/src/assets/css/normalize.css",
+              "apps/web-nntool/src/less/client.less"
+            ],
+            "scripts": [
+              { "input": "../ias/build/uglified/web/ias.web.js", "bundleName": "ias.web" },
+              { "input": "../ias/build/uglified/web/Worker.js", "bundleName": "Worker" },
+              { "input": "../ias/build/uglified/web/Tool.js", "bundleName": "Tool" }
+            ] 
+          }
+        }
+      }
+    },
+    "web-nntool-e2e": {
+      "root": "apps/web-nntool-e2e",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "apps/web-nntool-e2e/protractor.conf.js",
+            "devServerTarget": "web-nntool:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "web-nntool:serve:production"
+            },
+            "ci": {
+              "protractorConfig": "apps/web-nntool-e2e/protractor.headless.js"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "apps/web-nntool-e2e/tsconfig.e2e.json",
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "web-portal": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/workspace:component": {
+          "style": "less"
+        }
+      },
+      "root": "apps/web-portal",
+      "sourceRoot": "apps/web-portal/src",
+      "prefix": "nntool",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/web-portal",
+            "index": "apps/web-portal/src/index.html",
+            "main": "apps/web-portal/src/main.ts",
+            "polyfills": "apps/web-portal/src/polyfills.ts",
+            "tsConfig": "apps/web-portal/tsconfig.app.json",
+            "assets": [
+              "apps/web-portal/src/favicon.ico",
+              "apps/web-portal/src/assets"
+            ],
+            "styles": [
+              "xplat/web/scss/_index.scss",
+              "apps/web-portal/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/web-portal/src/environments/environment.ts",
+                  "with": "apps/web-portal/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            },
+            "serve": {
+              "extractCss": true,
+              "sourceMap": true,
+              "namedChunks": true,
+              "vendorChunk": true,
+              "commonChunk": true,
+              "verbose": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "web-portal:build:serve"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "web-portal:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "web-portal:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/web-portal/tsconfig.app.json",
+              "apps/web-portal/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "apps/web-portal/src/test.ts",
+            "tsConfig": "apps/web-portal/tsconfig.spec.json",
+            "karmaConfig": "apps/web-portal/karma.conf.js",
+            "polyfills": "apps/web-portal/src/polyfills.ts",
+            "styles": [],
+            "scripts": [],
+            "assets": []
+          }
+        }
+      }
+    },
+    "web-portal-e2e": {
+      "root": "apps/web-portal-e2e",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "apps/web-portal-e2e/protractor.conf.js",
+            "devServerTarget": "web-portal:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "web-portal:serve:production"
+            },
+            "ci": {
+              "protractorConfig": "apps/web-portal-e2e/protractor.headless.js"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "apps/web-portal-e2e/tsconfig.e2e.json",
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "electron-nntool": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/workspace:component": {
+          "style": "less"
+        }
+      },
+      "root": "apps/web-nntool",
+      "sourceRoot": "apps/web-nntool/src",
+      "prefix": "nntool",
+      "architect": {
+        "build": {
+          "____builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
+          "options": {
+            "customWebpackConfig": {
+              "path": "apps/web-nntool/extra-webpack.config.js",
+              "mergeStrategies": { "externals": "replace" }
+            },
+            "outputPath": "dist/apps/electron-nntool",
+            "index": "apps/web-nntool/src/index.html",
+            "main": "apps/web-nntool/src/main.electron.ts",
+            "polyfills": "apps/web-nntool/src/polyfills.ts",
+            "tsConfig": "apps/web-nntool/tsconfig.app.json",
+            "assets": [
+              "apps/web-nntool/src/favicon.ico",
+              "apps/web-nntool/src/assets",
+              {
+                "glob": "**/*",
+                "input": "apps/electron-nntool/src/",
+                "ignore": ["**/*.ts"],
+                "output": ""
+              }
+            ],
+            "styles": [
+              "apps/web-nntool/src/assets/css/normalize.css",
+              "apps/web-nntool/src/less/client.less"
+            ],
+            "scripts": [
+              { "input": "../ias/build/uglified/desktop/ias.desktop.js", "bundleName": "ias.web" },
+              { "input": "../ias/build/uglified/desktop/Worker.js", "bundleName": "Worker" },
+              { "input": "../ias/build/uglified/desktop/JSTool.js", "bundleName": "Tool" }
+            ]
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/web-nntool/src/environments/environment.ts",
+                  "with": "apps/web-nntool/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            },
+            "serve": {
+              "extractCss": true,
+              "sourceMap": true,
+              "namedChunks": true,
+              "vendorChunk": true,
+              "commonChunk": true,
+              "verbose": true
+            }
+          }
+        },
+        "serve": {
+          "____builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
+          "options": {
+            "customWebpackConfig": {
+              "path": "apps/web-nntool/extra-webpack.config.js",
+              "mergeStrategies": { "externals": "replace" }
+            },
+            "browserTarget": "electron-nntool:build:serve"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "electron-nntool:build:production"
+            }
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "warnings": {
+      "typescriptMismatch": false,
+      "versionMismatch": false
+    },
+    "defaultCollection": "@nstudio/schematics"
+  },
+  "schematics": {
+    "@nrwl/angular:application": {
+      "unitTestRunner": "karma",
+      "e2eTestRunner": "protractor"
+    },
+    "@nrwl/angular:library": {
+      "unitTestRunner": "karma"
+    }
+  }
+}

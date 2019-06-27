@@ -1,0 +1,33 @@
+{
+  "npmScope": "nntool-typescript",
+  "implicitDependencies": {
+    "angular.json": "*",
+    "package.json": "*",
+    "tsconfig.json": "*",
+    "tslint.json": "*",
+    "nx.json": "*"
+  },
+  "projects": {
+    "libs": {
+      "tags": []
+    },
+    "xplat": {
+      "tags": []
+    },
+    "web-nntool": {
+      "tags": []
+    },
+    "web-nntool-e2e": {
+      "tags": []
+    },
+    "web-portal": {
+      "tags": []
+    },
+    "web-portal-e2e": {
+      "tags": []
+    },
+    "electron-nntool": {
+      "tags": []
+    }
+  }
+}
