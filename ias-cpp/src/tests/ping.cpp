@@ -13,7 +13,7 @@
 /*!
 
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-25
+ *      \date Last update: 2019-06-27
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -71,8 +71,8 @@ int Ping::run()
 	measurementTimeStart = CTool::get_timestamp();
 	
 	//Create Buffer for sending data
-	char *sbuffer = (char *)malloc(ECHO);
-	char *rbuffer = (char *)malloc(ECHO);
+	char sbuffer[ECHO];
+    char rbuffer[ECHO];
 	
 	nSize = ECHO;
 	nError = 0;
@@ -136,12 +136,10 @@ int Ping::run()
 			//Error
 			TRC_ERR("Creating socket failed - socket()");
 
-			free(sbuffer);
-			free(rbuffer);
-
 			return -1;
 		}
 		
+		ipv4 = false;
 		ipv6 = true;
 		ipversion = 6;
 	}
@@ -153,13 +151,11 @@ int Ping::run()
 			//Error
 			TRC_ERR("Creating socket failed - socket()");
 
-			free(sbuffer);
-			free(rbuffer);
-
 			return -1;
 		}
 		
 		ipv4 = true;
+		ipv6 = false;
 		ipversion = 4;
 	}
 	
@@ -178,8 +174,8 @@ int Ping::run()
 		syncing_threads[syscall(SYS_gettid)] = 1;
 		#endif
 
-		//Zero Buffer
-		bzero(sbuffer, ECHO);
+		memset(sbuffer, 0, sizeof(sbuffer));
+		memset(rbuffer, 0, sizeof(rbuffer));
 		
 		//Get Random Data with defined payload size
 		CTool::randomData(sbuffer,ECHO);
@@ -187,13 +183,28 @@ int Ping::run()
 		//Set Timestamp T1
 		time1 = CTool::get_timestamp();
 
+		if(ipv4)
+		{
+			mClientDataSizev4 = sizeof(mClientDatav4);
+			
+			/* Construct the server address structure */
+			memset(&mClientDatav4, 0, sizeof(mClientDatav4));		/* Zero out structure */
+			mClientDatav4.sin_family 		= AF_INET;				/* Internet addr family */
+			mClientDatav4.sin_port			= htons(mPingPort);
+			mClientDatav4.sin_addr.s_addr 	= inet_addr(mServer.c_str());
+			
+			//Send the string to the server
+			mResponse = sendto(mSock, sbuffer, ECHO, 0, (struct sockaddr *) &mClientDatav4, sizeof(mClientDatav4));
+			
+			mResponse = recvfrom(mSock, rbuffer, ECHO, 0, (struct sockaddr *) &mClientDatav4, &mClientDataSizev4);
+		}
 		if(ipv6)
 		{
 			mClientDataSizev6 = sizeof(mClientDatav6);
 			
 			/* Construct the server address structure */
-			memset(&mClientDatav6, 0, sizeof(mClientDatav6));			/* Zero out structure */
-			mClientDatav6.sin6_family 	= AF_INET6;				/* Internet addr family */
+			memset(&mClientDatav6, 0, sizeof(mClientDatav6));		/* Zero out structure */
+			mClientDatav6.sin6_family 	= AF_INET6;					/* Internet addr family */
 			mClientDatav6.sin6_port		= htons(mPingPort);
 			(void) inet_pton (AF_INET6, mServer.c_str(), mClientDatav6.sin6_addr.s6_addr);
 			
@@ -201,21 +212,6 @@ int Ping::run()
 			mResponse = sendto(mSock, sbuffer, ECHO, 0, (struct sockaddr *) &mClientDatav6, sizeof(mClientDatav6));
 			
 			mResponse = recvfrom(mSock, rbuffer, ECHO, 0, (struct sockaddr *) &mClientDatav6, &mClientDataSizev6);
-		}
-		if(ipv4)
-		{
-			mClientDataSizev4 = sizeof(mClientDatav4);
-			
-			/* Construct the server address structure */
-			memset(&mClientDatav4, 0, sizeof(mClientDatav4));			/* Zero out structure */
-			mClientDatav4.sin_family 	= AF_INET;				/* Internet addr family */
-			mClientDatav4.sin_port		= htons(mPingPort);
-			mClientDatav4.sin_addr.s_addr 	= inet_addr(mServer.c_str());
-			
-			//Send the string to the server
-			mResponse = sendto(mSock, sbuffer, ECHO, 0, (struct sockaddr *) &mClientDatav4, sizeof(mClientDatav4));
-			
-			mResponse = recvfrom(mSock, rbuffer, ECHO, 0, (struct sockaddr *) &mClientDatav4, &mClientDataSizev4);
 		}
 		
 		//Check size of response, because when we get a timeout, mResponse will be -1
@@ -226,12 +222,16 @@ int Ping::run()
 		
 			//Calculate timediff
 			mTimeDiff = time2 - time1;
-			
+
 			//check for mirrored payload
-			if (string(rbuffer).compare(string(sbuffer)) != 0)
+			for(int i=0;i<mResponse;i++)
 			{
-				TRC_ERR("Ping payload mismatch");
-				mTimeDiff = 0;
+				if (static_cast<short int>(rbuffer[i]) != static_cast<short int>(sbuffer[i]))
+				{
+					TRC_ERR("Ping payload mismatch");
+					mTimeDiff = 0;
+					break;
+				}
 			}
 		}
 		else
@@ -325,9 +325,6 @@ int Ping::run()
 	#endif
 
 	close(mSock);
-	
-	free(sbuffer);
-	free(rbuffer);
 	
 	//Syslog Message
 	TRC_DEBUG( ("Ending Ping Thread with PID: " + CTool::toString(syscall(SYS_gettid))).c_str() );
