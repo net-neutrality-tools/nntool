@@ -7,20 +7,21 @@
 const char* AndroidConnector::TAG = "cpp";
 
 extern "C" JNIEXPORT
-jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
-
+jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
+    __android_log_write(ANDROID_LOG_DEBUG, AndroidConnector::TAG, "jni on load executed");
     return AndroidConnector::getInstance().jniLoad(vm);
 }
 
 extern "C" JNIEXPORT
 void JNICALL JNI_OnUnload(JavaVM* vm, void* reserved) {
-
+    __android_log_write(ANDROID_LOG_DEBUG, AndroidConnector::TAG, "jni on unload executed");
     return AndroidConnector::getInstance().unregisterSharedObject();
 }
 
 extern "C" JNIEXPORT
 void JNICALL Java_at_alladin_nettest_nntool_android_speed_jni_JniSpeedMeasurementClient_startMeasurement (JNIEnv* env, jobject thiz) {
-    AndroidConnector::getInstance().startMeasurement();
+    AndroidConnector &inst = AndroidConnector::getInstance();
+    inst.startMeasurement();
 }
 
 extern "C" JNIEXPORT
@@ -83,8 +84,6 @@ jint AndroidConnector::jniLoad(JavaVM* vm) {
 
     //according to the google examples, we can keep the reference to the javaVM until android takes it away from us
     javaVM = vm;
-
-    __android_log_write(ANDROID_LOG_DEBUG, TAG, std::string("Jni on load called").c_str());
 
     return JNI_VERSION_1_6;
 }
@@ -370,13 +369,18 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
 
 }
 
-void AndroidConnector::callbackError(int const errorCode) const {
+void AndroidConnector::callbackError(std::string message) {
 
     JNIEnv* env = getJniEnv();
     if (env == nullptr) {
         return;
     }
-    env->ThrowNew(jniExceptionClass, "Cpp error with signal code : " + errorCode);
+    env->ExceptionClear();
+    if (env->ExceptionCheck()) {
+        pendingErrorMessages.push_back(message);
+    } else {
+        env->ThrowNew(jniExceptionClass, message.c_str());
+    }
 }
 
 void AndroidConnector::passJniSpeedState (JNIEnv* env, const MeasurementPhase& speedStateToSet, const json11::Json& json) const {
@@ -446,60 +450,72 @@ void AndroidConnector::printLog(const std::string& message) const {
 
 
 void AndroidConnector::startMeasurement() {
-    CTrace::setLogFunction(std::bind(&AndroidConnector::printLog, this, std::placeholders::_1));
-    signalFunction = std::function<void(int)>(std::bind(&AndroidConnector::callbackError, this, std::placeholders::_1));
+    try {
+        CTrace::setLogFunction(std::bind(&AndroidConnector::printLog, this, std::placeholders::_1));
+//        signalFunction = std::function<void(int)>(std::bind(&AndroidConnector::callbackError, this, std::placeholders::_1));
 
-    //init from ias-client
+    /*
+            JNIEnv* env = getJniEnv();
+            if (env == nullptr) {
+                return;
+            }
+            env->ThrowNew(jniExceptionClass, "Cpp error with signal code");
+    */
 
-    ::DEBUG 			= false;
-	::RUNNING 			= true;
+        //init from ias-client
 
-	::RTT				= performRtt;
-	::DOWNLOAD 			= performDownload;
-	::UPLOAD 			= performUpload;
+        ::DEBUG 			= false;
+        ::RUNNING 			= true;
 
-	json11::Json::object jRttParameters;
-	json11::Json::object jDownloadParameters;
-	json11::Json::object jUploadParameters;
+        ::RTT				= performRtt;
+        ::DOWNLOAD 			= performDownload;
+        ::UPLOAD 			= performUpload;
 
-	json11::Json::object jMeasurementParameters;
+        json11::Json::object jRttParameters;
+        json11::Json::object jDownloadParameters;
+        json11::Json::object jUploadParameters;
 
-	//set requested test cases
-	jRttParameters["performMeasurement"] = ::RTT;
-	jDownloadParameters["performMeasurement"] = ::DOWNLOAD;
-	jUploadParameters["performMeasurement"] = ::UPLOAD;
+        json11::Json::object jMeasurementParameters;
 
-	//set default measurement parameters
-	jDownloadParameters["streams"] = std::to_string(downloadStreams);
-	jUploadParameters["streams"] = std::to_string(uploadStreams);
-	jMeasurementParameters["rtt"] = json11::Json(jRttParameters);
-	jMeasurementParameters["download"] = json11::Json(jDownloadParameters);
-	jMeasurementParameters["upload"] = json11::Json(jUploadParameters);
+        //set requested test cases
+        jRttParameters["performMeasurement"] = ::RTT;
+        jDownloadParameters["performMeasurement"] = ::DOWNLOAD;
+        jUploadParameters["performMeasurement"] = ::UPLOAD;
 
-	jMeasurementParameters["platform"] = "desktop";
-	jMeasurementParameters["clientos"] = "linux";
-	jMeasurementParameters["wsTLD"] = "net-neutrality.tools";
-	jMeasurementParameters["wsTargetPort"] = std::to_string(speedServerPort);
-	jMeasurementParameters["wsWss"] = isEncrypted ? "1" : "0";
-	jMeasurementParameters["wsAuthToken"] = "placeholderToken";
-	jMeasurementParameters["wsAuthTimestamp"] = "placeholderTimestamp";
+        //set default measurement parameters
+        jDownloadParameters["streams"] = std::to_string(downloadStreams);
+        jUploadParameters["streams"] = std::to_string(uploadStreams);
+        jMeasurementParameters["rtt"] = json11::Json(jRttParameters);
+        jMeasurementParameters["download"] = json11::Json(jDownloadParameters);
+        jMeasurementParameters["upload"] = json11::Json(jUploadParameters);
 
-	json11::Json::array jTargets;
-	jTargets.push_back(measurementServerUrlV4);
-	jTargets.push_back(measurementServerUrlV6);
-	jMeasurementParameters["wsTargets"] = json11::Json(jTargets);
-	jMeasurementParameters["wsTargetsRtt"] = json11::Json(jTargets);
+        jMeasurementParameters["platform"] = "desktop";
+        jMeasurementParameters["clientos"] = "linux";
+        jMeasurementParameters["wsTLD"] = "net-neutrality.tools";
+        jMeasurementParameters["wsTargetPort"] = std::to_string(speedServerPort);
+        jMeasurementParameters["wsWss"] = isEncrypted ? "1" : "0";
+        jMeasurementParameters["wsAuthToken"] = "placeholderToken";
+        jMeasurementParameters["wsAuthTimestamp"] = "placeholderTimestamp";
 
-	json11::Json jMeasurementParametersJson = jMeasurementParameters;
+        json11::Json::array jTargets;
+        jTargets.push_back(measurementServerUrlV4);
+        jTargets.push_back(measurementServerUrlV6);
+        jMeasurementParameters["wsTargets"] = json11::Json(jTargets);
+        jMeasurementParameters["wsTargetsRtt"] = json11::Json(jTargets);
 
-	measurementStart(jMeasurementParametersJson.dump());
+        json11::Json jMeasurementParametersJson = jMeasurementParameters;
+        measurementStart(jMeasurementParametersJson.dump());
+    } catch (std::exception & ex) {
+        JNIEnv* env = getJniEnv();
+        if (env == nullptr) {
+            return;
+        }
+        env->ThrowNew(jniExceptionClass, ex.what());
+    }
 
-    //end init from ias-client
-    unregisterSharedObject();
 }
 
 
 void AndroidConnector::stopMeasurement() {
-    unregisterSharedObject();
     measurementStop();
 }

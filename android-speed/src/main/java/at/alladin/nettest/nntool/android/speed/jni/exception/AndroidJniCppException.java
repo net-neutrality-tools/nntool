@@ -3,7 +3,7 @@ package at.alladin.nettest.nntool.android.speed.jni.exception;
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
  */
-public class AndroidJniCppException extends RuntimeException {
+public class AndroidJniCppException extends Exception {
     public AndroidJniCppException() {
         super();
     }

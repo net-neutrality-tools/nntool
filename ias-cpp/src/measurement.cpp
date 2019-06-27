@@ -96,7 +96,7 @@ int CMeasurement::startMeasurement()
 			ping->waitForEnd();
 
             //the Ping * MUST NOT be deleted before the finished callback has happened!
-			while (!mCallback->isPerformedRtt()) {
+			while (!mCallback->isPerformedRtt() && !::hasError && ::RUNNING) {
 			    //Sleep 100ms
                 usleep(100000);
 			}
@@ -133,7 +133,7 @@ int CMeasurement::startMeasurement()
 				(*itThread)->waitForEnd();
 			}
 
-			while (!mCallback->isPerformedDownload()) {
+			while (!mCallback->isPerformedDownload() && !::hasError && ::RUNNING) {
                 //Sleep 100ms
                 usleep(100000);
             }
@@ -176,7 +176,7 @@ int CMeasurement::startMeasurement()
 				(*itThread)->waitForEnd();
 			}
 
-			while (!mCallback->isPerformedUpload()) {
+			while (!mCallback->isPerformedUpload() && !::hasError && ::RUNNING) {
                 //Sleep 100ms
                 usleep(100000);
             }
@@ -185,7 +185,7 @@ int CMeasurement::startMeasurement()
             {
                 delete( *itThread );
             }
-    }
+        }
 			break;
 	}
 	

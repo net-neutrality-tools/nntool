@@ -38,6 +38,12 @@ CCallback::~CCallback()
 
     void CCallback::callback(string cmd, string msg, int error_code, string error_description)
         {
+
+            if (::hasError) {
+                AndroidConnector::getInstance().detachCurrentThreadFromJvm();
+                return;
+            }
+
             TRC_DEBUG("Callback Received: cmd: " + cmd + ", msg: " + msg);
 
             if (cmd.compare("report") == 0 || cmd.compare("finish") == 0)
@@ -96,7 +102,11 @@ CCallback::~CCallback()
                 jMeasurementResults["error_code"] = error_code;
                 jMeasurementResults["error_description"] = error_description;
                 TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
-                connector.callbackError(error_code);
+                connector.callbackError(error_description);
+                if(!::hasError) {
+                    ::hasError = true;
+                    ::recentException = std::exception();
+                }
             }
 
             if (jMeasurementResultsRttUdp.size() > 0)
@@ -121,6 +131,7 @@ CCallback::~CCallback()
 
             if (cmd == "completed") {
                 connector.callbackFinished(jMeasurementResults);
+                connector.detachCurrentThreadFromJvm();
             } else {
                 connector.callback(jMeasurementResults);
             }

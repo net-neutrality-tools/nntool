@@ -9,6 +9,7 @@ import java.util.List;
 import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
 import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
+import at.alladin.nettest.nntool.android.speed.jni.exception.AndroidJniCppException;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
@@ -58,9 +59,9 @@ public class JniSpeedMeasurementClient {
         return speedMeasurementState;
     }
 
-    public native void startMeasurement();
+    public native void startMeasurement() throws AndroidJniCppException;
 
-    public native void stopMeasurement();
+    public native void stopMeasurement() throws AndroidJniCppException;
 
     /**
      * Call this method before starting a test to allow the cpp impl to write the current state into the passed JniSpeedMeasurementState obj
