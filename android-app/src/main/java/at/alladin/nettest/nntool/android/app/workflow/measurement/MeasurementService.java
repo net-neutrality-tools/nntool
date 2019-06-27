@@ -56,6 +56,8 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     private JniSpeedMeasurementClient jniSpeedMeasurementClient;
 
+    private SpeedMeasurementResult speedMeasurementResult;
+
     public class MeasurementServiceBinder extends Binder {
         public MeasurementService getService() {
             return MeasurementService.this;
@@ -114,8 +116,8 @@ public class MeasurementService extends Service implements ServiceConnection {
         jniSpeedMeasurementClient.addMeasurementFinishedListener(new JniSpeedMeasurementClient.MeasurementFinishedListener() {
             @Override
             public void onMeasurementFinished(JniSpeedMeasurementResult result, SpeedTaskDesc taskDesc) {
-                final SpeedMeasurementResult speedRes = ResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
-                Log.d(TAG, speedRes.toString());
+                speedMeasurementResult = ResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
+                Log.d(TAG, speedMeasurementResult.toString());
             }
         });
         AsyncTask.execute(new Runnable() {
@@ -186,4 +188,5 @@ public class MeasurementService extends Service implements ServiceConnection {
     public void onServiceDisconnected(ComponentName name) {
         Log.d(TAG, "Service Disconnected " + name);
     }
+
 }

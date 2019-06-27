@@ -14,7 +14,7 @@ jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
 
 extern "C" JNIEXPORT
 void JNICALL JNI_OnUnload(JavaVM* vm, void* reserved) {
-
+    __android_log_write(ANDROID_LOG_DEBUG, "cpp", std::string("Jni on unload called").c_str());
     return AndroidConnector::getInstance().unregisterSharedObject();
 }
 
@@ -493,13 +493,9 @@ void AndroidConnector::startMeasurement() {
 	json11::Json jMeasurementParametersJson = jMeasurementParameters;
 
 	measurementStart(jMeasurementParametersJson.dump());
-
-    //end init from ias-client
-    unregisterSharedObject();
 }
 
 
 void AndroidConnector::stopMeasurement() {
-    unregisterSharedObject();
     measurementStop();
 }

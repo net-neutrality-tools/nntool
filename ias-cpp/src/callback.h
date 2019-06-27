@@ -47,9 +47,9 @@ class CCallback
 		Json::array jMeasurementResultsDownload;
 		Json::array jMeasurementResultsUpload;
 
-		bool PERFORMED_RTT;
-		bool PERFORMED_DOWNLOAD;
-		bool PERFORMED_UPLOAD;
+		bool PERFORMED_RTT = false;
+		bool PERFORMED_DOWNLOAD = false;
+		bool PERFORMED_UPLOAD = false;
 	
 	public:
 		int mTestCase;

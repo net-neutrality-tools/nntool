@@ -265,7 +265,7 @@ public class ResultParseUtilTest {
 
     @Test
     public void parseBasicCompleteResult () {
-        SpeedMeasurementResult result = ResultParseUtil.parseIntoSpeedMeasurementResult(jniSpeedResult, taskDesc);
+        final SpeedMeasurementResult result = ResultParseUtil.parseIntoSpeedMeasurementResult(jniSpeedResult, taskDesc);
 
         Assert.assertEquals("unexpected task description", "peer-ias-de-01.net-neutrality.tools", result.getConnectionInfo().getAddress());
         Assert.assertEquals("unexpected task description", 80, result.getConnectionInfo().getPort().intValue());
@@ -294,5 +294,39 @@ public class ResultParseUtilTest {
         Assert.assertEquals("unexpected number of download entries", 5, result.getDownloadRawData().size());
         Assert.assertEquals("unexpected number of upload entries", 4, result.getUploadRawData().size());
 
+    }
+
+    @Test
+    public void parsePartialResultContainingAvailableResults () {
+        jniSpeedResult.setDownloadInfoList(null);
+        jniSpeedResult.setRttUdpResultList(null);
+        SpeedMeasurementResult result = ResultParseUtil.parseIntoSpeedMeasurementResult(jniSpeedResult, taskDesc);
+
+        Assert.assertEquals("unexpected task description", "peer-ias-de-01.net-neutrality.tools", result.getConnectionInfo().getAddress());
+        Assert.assertEquals("unexpected task description", 80, result.getConnectionInfo().getPort().intValue());
+        Assert.assertEquals("unexpected task description", 4, result.getConnectionInfo().getRequestedNumStreamsDownload().intValue());
+        Assert.assertEquals("unexpected task description", 4, result.getConnectionInfo().getRequestedNumStreamsUpload().intValue());
+        Assert.assertNull("unexpected task description", result.getConnectionInfo().getActualNumStreamsDownload());
+        Assert.assertEquals("unexpected task description", 4, result.getConnectionInfo().getActualNumStreamsUpload().intValue());
+        Assert.assertFalse("unexpected task description", result.getConnectionInfo().isEncrypted());
+
+
+        Assert.assertNull("unexpected download bytes", result.getBytesDownload());
+        Assert.assertNull("unexpected download bytes", result.getBytesDownloadIncludingSlowStart());
+
+        Assert.assertEquals("unexpected upload bytes", lastBytesUpload, result.getBytesUpload().longValue());
+        Assert.assertEquals("unexpected upload bytes", lastBytesUploadIncludingSlowStart, result.getBytesUploadIncludingSlowStart().longValue());
+
+        Assert.assertNull("unexpected duration", result.getDurationRttNs());
+        Assert.assertNull("unexpected duration", result.getDurationDownloadNs());
+        Assert.assertEquals("unexpected duration", lastDurationUploadNs, result.getDurationUploadNs().longValue());
+
+        Assert.assertEquals("unexpected relative start time", 0, result.getRelativeStartTimeRttNs().longValue());
+        Assert.assertEquals("unexpected relative start time", downloadStart - rttUdpStart, result.getRelativeStartTimeDownloadNs().longValue());
+        Assert.assertEquals("unexpected relative start time", uploadStart - rttUdpStart, result.getRelativeStartTimeUploadNs().longValue());
+
+        Assert.assertNull("unexpected number of rtts", result.getRttInfo().getRtts());
+        Assert.assertNull("unexpected number of download entries", result.getDownloadRawData());
+        Assert.assertEquals("unexpected number of upload entries", 4, result.getUploadRawData().size());
     }
 }

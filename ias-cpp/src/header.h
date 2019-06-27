@@ -93,23 +93,11 @@
 //project
 #include "type.h"
 
-
 using namespace std;
 using namespace json11;
 
-
-#define MAX_PACKET_SIZE 1500
-#define MAXBUFFER 1580
 #define MAX_NUM_THREADS 256
 #define ECHO 64
-
-
-#define TRC_DEBUG(s)  CTrace::getInstance()->logDebug(s)
-#define TRC_INFO(s)   CTrace::getInstance()->logInfo(s)
-#define TRC_WARN(s)   CTrace::getInstance()->logWarn(s)
-#define TRC_ERR(s)    CTrace::getInstance()->logErr(s)
-#define TRC_CRIT(s)   CTrace::getInstance()->logCritical(s)
-
 
 extern bool DEBUG;
 extern bool RUNNING;

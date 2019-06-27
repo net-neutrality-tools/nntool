@@ -55,8 +55,6 @@ pthread_mutex_t mutex1;
 
 map<int,int> syncing_threads;
 
-CTrace* pTrace;
-
 CConfigManager* pConfig;
 CConfigManager* pXml;
 CConfigManager* pService;
@@ -230,8 +228,6 @@ void measurementStart(string measurementParameters)
     ::PLATFORM = jMeasurementParameters["platform"].string_value().c_str();
     ::CLIENT_OS = jMeasurementParameters["clientos"].string_value().c_str();
 
-	pTrace = CTrace::getInstance(); 
-	
 	TRC_INFO("Status: ias-client started");
 
 	//map measurement parameters to internal variables
@@ -359,8 +355,6 @@ void shutdown()
 	delete(pCallback);
 
 	TRC_INFO("Status: ias-client stopped");
-
-	delete(pTrace);
 
     #ifndef __ANDROID__
         exit(EXIT_SUCCESS);

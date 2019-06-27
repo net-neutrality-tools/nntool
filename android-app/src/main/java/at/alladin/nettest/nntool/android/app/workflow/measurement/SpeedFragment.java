@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +20,13 @@ import android.widget.TextView;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.view.AlladinTextView;
 import at.alladin.nettest.nntool.android.app.view.BottomMeasurementResultSummaryView;
 import at.alladin.nettest.nntool.android.app.view.CanvasArcDoubleGaugeWithLabels;
 import at.alladin.nettest.nntool.android.app.view.TopProgressBarView;
+import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 
 /**
@@ -76,11 +79,11 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
         getView().setOnKeyListener((v, keyCode, event) -> {
-            /*
+
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 return true;
             }
-            */
+
             return false;
         });
 
@@ -151,6 +154,7 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
                         break;
                     case END:
                         progress = 1.0f;
+                        postResultRunnable = true;
                         break;
                 }
                 progress += 0.25 * speedMeasurementState.getProgress();
@@ -190,8 +194,18 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
                 handler.postDelayed(this, 50);
             }
             else {
-                //handler.postDelayed(showResultsRunnable, 1000);
+                Log.d(TAG, "post result runnable started");
+                handler.postDelayed(showResultsRunnable, 1000);
             }
         }
     };
+
+    final Runnable showResultsRunnable = new Runnable() {
+        @Override
+        public void run() {
+            final MainActivity activity = (MainActivity) getActivity();
+            activity.navigateTo(WorkflowTarget.TITLE);
+        }
+    };
+
 }

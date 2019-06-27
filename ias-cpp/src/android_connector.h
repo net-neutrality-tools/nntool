@@ -50,8 +50,6 @@ extern pthread_mutex_t mutex1;
 
 extern std::map<int,int> syncing_threads;
 
-extern class CTrace* pTrace;
-
 extern class CConfigManager* pConfig;
 extern class CConfigManager* pXml;
 extern class CConfigManager* pService;
@@ -77,6 +75,7 @@ class AndroidConnector {
         void setSpeedSettings(JNIEnv* env, jobject speedTaskDesc);
         /**
         *   resets state and releases global java references made during setup
+        *   this function is automatically called from the jni.onUnload event
         */
         void unregisterSharedObject();
 
