@@ -114,6 +114,9 @@ extern bool TIMER_ACTIVE;
 extern bool TIMER_RUNNING;
 extern bool TIMER_STOPPED;
 
+extern bool hasError;
+extern std::exception recentException;
+
 extern int TIMER_INDEX;
 extern int TIMER_DURATION;
 extern unsigned long long MEASUREMENT_DURATION;
