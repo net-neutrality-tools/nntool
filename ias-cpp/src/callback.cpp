@@ -314,11 +314,11 @@ void CCallback::rttUdpCallback(string cmd)
 
 
 	Json::object jMeasurementResults;
-	jMeasurementResults["duration_ns"] = to_string(tempMeasurement.ping.totaltime * 1000 * 1000);
-	jMeasurementResults["average_ns"] = to_string(tempMeasurement.ping.avg * 1000 * 1000);
+	jMeasurementResults["duration_ns"] = to_string(tempMeasurement.ping.totaltime * 1000);
+	jMeasurementResults["average_ns"] = to_string(tempMeasurement.ping.avg * 1000);
 	jMeasurementResults["median_ns"] = to_string(tempMeasurement.ping.median_ns);
-	jMeasurementResults["min_ns"] = to_string(tempMeasurement.ping.min * 1000 * 1000);
-	jMeasurementResults["max_ns"] = to_string(tempMeasurement.ping.max * 1000 * 1000);
+	jMeasurementResults["min_ns"] = to_string(tempMeasurement.ping.min * 1000);
+	jMeasurementResults["max_ns"] = to_string(tempMeasurement.ping.max * 1000);
 	jMeasurementResults["num_sent"] = to_string(tempMeasurement.ping.requests );
 	jMeasurementResults["num_received"] = to_string(tempMeasurement.ping.replies);
 	jMeasurementResults["num_error"] = to_string(tempMeasurement.ping.errors);
