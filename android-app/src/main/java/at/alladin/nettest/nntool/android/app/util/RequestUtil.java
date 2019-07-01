@@ -14,6 +14,10 @@ import java.util.TimeZone;
 
 import at.alladin.nettest.nntool.android.app.BuildConfig;
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.support.telephony.CellIdentityWrapper;
+import at.alladin.nettest.nntool.android.app.support.telephony.CellInfoWrapper;
+import at.alladin.nettest.nntool.android.app.support.telephony.CellSignalStrengthWrapper;
+import at.alladin.nettest.nntool.android.app.util.info.InformationCollector;
 import at.alladin.nettest.nntool.android.app.workflow.tc.TermsAndConditionsFragment;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequestInfo;
@@ -28,6 +32,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.Measurem
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.QoSMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.TimeBasedResultDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellLocationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
 import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
@@ -111,7 +117,7 @@ public class RequestUtil {
         return request;
     }
 
-    public static LmapReportDto prepareLmapReportForMeasurement(final List<QoSResultCollector> qoSResultCollectorList, final List<SubMeasurementResult> subMeasurementResultList, final Context context) {
+    public static LmapReportDto prepareLmapReportForMeasurement(final List<QoSResultCollector> qoSResultCollectorList, final List<SubMeasurementResult> subMeasurementResultList, final InformationCollector informationCollector, final Context context) {
         final LmapReportDto report = new LmapReportDto();
 
         report.setAdditionalRequestInfo(prepareApiRequestInfo(context));
@@ -160,6 +166,48 @@ public class RequestUtil {
             }
         }
 
+        if (informationCollector != null) {
+            final TimeBasedResultDto timeBasedResultDto = new TimeBasedResultDto();
+            timeBasedResultDto.setGeoLocations(informationCollector.getGeoLocationList());
+
+            if (informationCollector.getCellInfoList() != null && informationCollector.getCellInfoList().size() > 0) {
+                final List<CellLocationDto> cellLocationDtoList = new ArrayList<>();
+                for (CellInfoWrapper ciWrap : informationCollector.getCellInfoList()) {
+                    final CellLocationDto locationDto = cellInfoWrapperToCellLocationDto(ciWrap);
+                    if (locationDto != null) {
+                        cellLocationDtoList.add(locationDto);
+                    }
+                }
+            }
+        }
+
         return report;
+    }
+
+    private static CellLocationDto cellInfoWrapperToCellLocationDto (final CellInfoWrapper cellInfoWrapper) {
+        if (cellInfoWrapper == null) {
+            return null;
+        }
+        final CellLocationDto ret = new CellLocationDto();
+        if (cellInfoWrapper.getCellIdentityWrapper() != null) {
+            final CellIdentityWrapper iWrap = cellInfoWrapper.getCellIdentityWrapper();
+            ret.setAreaCode(iWrap.getAreaCode());
+            ret.setCellId(iWrap.getCellId());
+            ret.setPrimaryScramblingCode(iWrap.getScramblingCode());
+            ret.setArfcn(iWrap.getFrequency());
+        }
+        if (cellInfoWrapper.getCellSignalStrengthWrapper() != null) {
+            final CellSignalStrengthWrapper cWrap = cellInfoWrapper.getCellSignalStrengthWrapper();
+        }
+        //TODO: parse the other information into the
+        /*
+        ret.setLongitude();
+        ret.setLatitude();
+        ret.setArfcn();
+        ret.setTime();
+        ret.setRelativeTimeNs();
+        */
+
+        return ret;
     }
 }

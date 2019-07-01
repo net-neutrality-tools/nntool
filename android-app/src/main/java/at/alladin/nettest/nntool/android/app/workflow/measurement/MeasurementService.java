@@ -4,6 +4,7 @@ package at.alladin.nettest.nntool.android.app.workflow.measurement;
  * @author Lukasz Budryk (lb@alladin.at)
  */
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.telephony.CellInfo;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -23,8 +25,13 @@ import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.SendReportTask;
+import at.alladin.nettest.nntool.android.app.support.telephony.CellIdentityWrapper;
+import at.alladin.nettest.nntool.android.app.support.telephony.CellInfoWrapper;
+import at.alladin.nettest.nntool.android.app.support.telephony.CellSignalStrengthWrapper;
 import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
 import at.alladin.nettest.nntool.android.app.util.RequestUtil;
+import at.alladin.nettest.nntool.android.app.util.info.InformationCollector;
+import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
@@ -32,9 +39,13 @@ import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
 import at.alladin.nettest.nntool.android.speed.jni.JniSpeedMeasurementClient;
 import at.alladin.nettest.qos.QoSMeasurementClientControlAdapter;
 import at.alladin.nettest.qos.android.QoSMeasurementClientAndroid;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.TimeBasedResultDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellLocationDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.TaskDesc;
 import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
@@ -64,9 +75,15 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     final AtomicBoolean isBound = new AtomicBoolean(false);
 
+    /**
+     *  Boolean indicating if the currently started submeasurement is a follow up measurement to another (already executed) sub-measurement (true)
+     *  or if the currently started submeasurement is the first (false)
+    */
+    private final AtomicBoolean isFollowUpAction = new AtomicBoolean(false);
+
     QoSMeasurementClientAndroid qosMeasurementClient;
 
-    InformationService informationService;
+    InformationCollector informationCollector;
 
     private JniSpeedMeasurementClient jniSpeedMeasurementClient;
 
@@ -91,6 +108,7 @@ public class MeasurementService extends Service implements ServiceConnection {
         Log.d(TAG, "onCreate");
         final Intent serviceIntent = new Intent(this, InformationService.class);
         bindService(serviceIntent, this, Context.BIND_AUTO_CREATE);
+        informationCollector = new InformationCollector(new InformationProvider(getApplicationContext()));
     }
 
     @Override
@@ -196,6 +214,10 @@ public class MeasurementService extends Service implements ServiceConnection {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
+            //if this is the first action of the current total measurement start the listeners
+            if (!isFollowUpAction.getAndSet(true)) {
+                informationCollector.start();
+            }
             Log.d(TAG, "Got intent with action: '" + intent.getAction() + "'");
             if (ACTION_START_SPEED_MEASUREMENT.equals(intent.getAction())) {
                 startMeasurement(intent.getExtras());
@@ -221,6 +243,46 @@ public class MeasurementService extends Service implements ServiceConnection {
     }
 
     /**
+     * sends the results of all executed sub-measurements
+     * @param mainActivity
+     * @return true if the task has been executed, false if the results have already been sent
+     */
+    public boolean sendResults(final MainActivity mainActivity, final AtomicBoolean sendingResults) {
+        if (!sendingResults.getAndSet(true)) {
+            isFollowUpAction.set(false);
+            //stop collecting information and allow new measurements to start as not followupaction
+            informationCollector.stop();
+            final List<CellInfoWrapper> cellInfoList = informationCollector.getCellInfoList();
+            final List<GeoLocationDto> geoLocationList = informationCollector.getGeoLocationList();
+            final LmapReportDto r = new LmapReportDto();
+            final TimeBasedResultDto tb = new TimeBasedResultDto();
+            r.setTimeBasedResult(tb);
+            tb.setGeoLocations(geoLocationList);
+            tb.setSignals(new ArrayList<>());
+            final SendReportTask task = new SendReportTask(mainActivity,
+                    RequestUtil.prepareLmapReportForMeasurement(qosMeasurementResultList, subMeasurementResultList, informationCollector, mainActivity),
+                    getSpeedCollectorUrl(), new OnTaskFinishedCallback<MeasurementResultResponse>() {
+                @Override
+                public void onTaskFinished(MeasurementResultResponse result) {
+                    if (result == null) {
+                        AlertDialogUtil.showAlertDialog(mainActivity,
+                                R.string.alert_send_measurement_result_title,
+                                R.string.alert_send_measurement_results_error);
+                    }
+                    //if the result has been sent, reset the list of previous measurements
+                    qosMeasurementResultList.clear();
+                    subMeasurementResultList.clear();
+                    sendingResults.set(false);
+                    mainActivity.navigateTo(WorkflowTarget.TITLE);
+                }
+            });
+            task.execute();
+            return true;
+        }
+        return false;
+    }
+
+    /**
      *
      * @return true if a follow up action (e.g. QOS, SPEED) to the current measurement is desired
      */
@@ -243,25 +305,6 @@ public class MeasurementService extends Service implements ServiceConnection {
         activity.startMeasurement(typeToExecute, bundle);
     }
 
-    public SendReportTask generateSendReportTask(final String collectorUrl, final MainActivity activity) {
-        return new SendReportTask(activity,
-                RequestUtil.prepareLmapReportForMeasurement(qosMeasurementResultList, subMeasurementResultList, activity),
-                collectorUrl, new OnTaskFinishedCallback<MeasurementResultResponse>() {
-            @Override
-            public void onTaskFinished(MeasurementResultResponse result) {
-                if (result == null) {
-                    AlertDialogUtil.showAlertDialog(activity,
-                            R.string.alert_send_measurement_result_title,
-                            R.string.alert_send_measurement_results_error);
-                }
-                //if the result has been sent, reset the list of previous measurements
-                qosMeasurementResultList.clear();
-                subMeasurementResultList.clear();
-                activity.navigateTo(WorkflowTarget.TITLE);
-            }
-        });
-    }
-
     public String getSpeedCollectorUrl () {
         return jniSpeedMeasurementClient.getCollectorUrl();
     }
@@ -281,4 +324,5 @@ public class MeasurementService extends Service implements ServiceConnection {
     public void setQosMeasurementResultList(List<QoSResultCollector> qosMeasurementResultList) {
         this.qosMeasurementResultList = qosMeasurementResultList;
     }
+
 }

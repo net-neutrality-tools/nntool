@@ -213,11 +213,7 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
             if (measurementService.hasFollowUpAction()) {
                 measurementService.executeFollowUpAction(activity);
             } else {
-                final SendReportTask task = measurementService.generateSendReportTask(measurementService.getSpeedCollectorUrl(), activity);
-
-                if (!sendingResults.getAndSet(true)) {
-                    task.execute();
-                }
+                measurementService.sendResults(activity, sendingResults);
             }
         }
     };

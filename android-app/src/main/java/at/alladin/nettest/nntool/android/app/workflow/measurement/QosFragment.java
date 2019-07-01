@@ -149,16 +149,11 @@ public class QosFragment extends Fragment implements ServiceConnection {
         public void run() {
             final QoSResultCollector qoSResultCollector = measurementService.getQosMeasurementClient().getQosResult();
             measurementService.getQosMeasurementResultList().add(qoSResultCollector);
-            final String collectorUrl = measurementService.getQosMeasurementClient().getCollectorUrl();
             final MainActivity activity = (MainActivity) getActivity();
             if (measurementService.hasFollowUpAction()) {
                 measurementService.executeFollowUpAction(activity);
             } else {
-                final SendReportTask task = measurementService.generateSendReportTask(collectorUrl, activity);
-
-                if (!sendingResults.getAndSet(true)) {
-                    task.execute();
-                }
+                measurementService.sendResults(activity, sendingResults);
             }
         }
     };
