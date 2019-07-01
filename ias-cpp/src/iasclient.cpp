@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-14
+ *      \date Last update: 2019-07-01
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -48,6 +48,9 @@ int TIMER_INDEX;
 int TIMER_DURATION;
 unsigned long long MEASUREMENT_DURATION;
 
+bool PERFORMED_RTT;
+bool PERFORMED_DOWNLOAD;
+bool PERFORMED_UPLOAD;
 
 struct conf_data conf;
 struct measurement measurements;

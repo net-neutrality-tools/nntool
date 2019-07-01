@@ -338,23 +338,45 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
         initId = env->GetMethodID(timeClazz, "<init>", "()V");
         jobject timeObj = env->NewObject(timeClazz, initId);
 
-        jmethodID setId = env->GetMethodID(timeClazz, "setDownloadStart", "(Ljava/lang/Long;)V");
-        env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["download_start"].string_value())));
+        jmethodID setId = 0;
 
-        setId = env->GetMethodID(timeClazz, "setDownloadEnd", "(Ljava/lang/Long;)V");
-        env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["download_end"].string_value())));
+        if( timeEntry.object_items().count("download_start") != 0)
+        {
+            setId = env->GetMethodID(timeClazz, "setDownloadStart", "(Ljava/lang/Long;)V");
+            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["download_start"].string_value())));
+        }
 
-        setId = env->GetMethodID(timeClazz, "setRttUdpStart", "(Ljava/lang/Long;)V");
-        env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["rtt_udp_start"].string_value())));
 
-        setId = env->GetMethodID(timeClazz, "setRttUdpEnd", "(Ljava/lang/Long;)V");
-        env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["rtt_udp_end"].string_value())));
+        if( timeEntry.object_items().count("download_end") != 0)
+        {
+            setId = env->GetMethodID(timeClazz, "setDownloadEnd", "(Ljava/lang/Long;)V");
+            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass,parse.staticLongValueOf,std::stoll(timeEntry["download_end"].string_value())));
+        }
 
-        setId = env->GetMethodID(timeClazz, "setUploadStart", "(Ljava/lang/Long;)V");
-        env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["upload_start"].string_value())));
+        if( timeEntry.object_items().count("rtt_udp_start") != 0)
+        {
+            setId = env->GetMethodID(timeClazz, "setRttUdpStart", "(Ljava/lang/Long;)V");
+            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["rtt_udp_start"].string_value())));
+        }
 
-        setId = env->GetMethodID(timeClazz, "setUploadEnd", "(Ljava/lang/Long;)V");
-        env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["upload_end"].string_value())));
+        if( timeEntry.object_items().count("rtt_udp_end") != 0)
+        {
+            setId = env->GetMethodID(timeClazz, "setRttUdpEnd", "(Ljava/lang/Long;)V");
+            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["rtt_udp_end"].string_value())));
+        }
+
+        if( timeEntry.object_items().count("upload_start") != 0)
+        {
+            setId = env->GetMethodID(timeClazz, "setUploadStart", "(Ljava/lang/Long;)V");
+            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["upload_start"].string_value())));
+        }
+
+        if( timeEntry.object_items().count("upload_end") != 0)
+        {
+            setId = env->GetMethodID(timeClazz, "setUploadEnd", "(Ljava/lang/Long;)V");
+            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["upload_end"].string_value())));
+        }
+
 
         env->CallVoidMethod(speedMeasurementResult, addMethod, timeObj);
     }
