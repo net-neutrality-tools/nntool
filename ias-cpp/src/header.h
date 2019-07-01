@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-25
+ *      \date Last update: 2019-07-01
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -126,6 +126,9 @@ extern bool UPLOAD;
 extern bool TIMER_ACTIVE;
 extern bool TIMER_RUNNING;
 extern bool TIMER_STOPPED;
+
+extern bool hasError;
+extern std::exception recentException;
 
 extern int TIMER_INDEX;
 extern int TIMER_DURATION;

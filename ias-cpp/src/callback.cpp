@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-25
+ *      \date Last update: 2019-07-01
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -36,6 +36,14 @@ CCallback::~CCallback()
 
 void CCallback::callback(string cmd, string msg, int error_code, string error_description)
 {
+    #ifdef __ANDROID__
+	    if (::hasError)
+	    {
+	    	AndroidConnector::getInstance().detachCurrentThreadFromJvm();
+	    	return;
+		}
+	#endif
+
     TRC_DEBUG("Callback Received: cmd: " + cmd + ", msg: " + msg);
 
     if (cmd.compare("report") == 0 || cmd.compare("finish") == 0)
@@ -98,7 +106,12 @@ void CCallback::callbackToPlatform(string cmd, string msg, int error_code, strin
         TRC_ERR("Error: " + error_description + ", code: " + to_string(error_code));
 
         #ifdef __ANDROID__
-        	connector.callbackError(error_code);
+            connector.callbackError(error_description);
+            if(!::hasError)
+            {
+                ::hasError = true;
+                ::recentException = std::exception();
+            }
         #endif
     }
 
@@ -126,6 +139,7 @@ void CCallback::callbackToPlatform(string cmd, string msg, int error_code, strin
 	    if (cmd == "completed") 
 	    {
 	        connector.callbackFinished(jMeasurementResults);
+	        connector.detachCurrentThreadFromJvm();
 	    } 
 	    else
 	    {

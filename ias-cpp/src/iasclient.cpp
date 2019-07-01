@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-24
+ *      \date Last update: 2019-07-01
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -36,6 +36,9 @@ unsigned long long TCP_STARTUP;
 bool RTT;
 bool DOWNLOAD;
 bool UPLOAD;
+
+bool hasError = false;
+std::exception recentException;
 
 bool TIMER_ACTIVE;
 bool TIMER_RUNNING;
@@ -293,7 +296,6 @@ void measurementStart(string measurementParameters)
 	//perform requested test cases
 	if (::RTT)
 	{
-		usleep(1000000);
 		conf.nTestCase = 2;
 		conf.sTestName = "rtt_udp";
 		TRC_INFO( ("Taking Testcase RTT UDP ("+CTool::toString(conf.nTestCase)+")").c_str() );
@@ -301,9 +303,12 @@ void measurementStart(string measurementParameters)
 		startTestCase(conf.nTestCase);
 	}
 
+	if (::hasError) {
+        throw ::recentException;
+	}
+
 	if (::DOWNLOAD)
 	{
-		usleep(1000000);
 		conf.nTestCase = 3;
 		conf.sTestName = "download";
 		TRC_INFO( ("Taking Testcase DOWNLOAD ("+CTool::toString(conf.nTestCase)+")").c_str() );
@@ -311,16 +316,23 @@ void measurementStart(string measurementParameters)
 		startTestCase(conf.nTestCase);
 	}
 
+	if (::hasError) {
+        throw ::recentException;
+    }
+
 	if (::UPLOAD)
 	{
 		CTool::randomData( randomDataValues, 1123457*10 );
-		usleep(1000000);
 		conf.nTestCase = 4;
 		conf.sTestName = "upload";
 		TRC_INFO( ("Taking Testcase UPLOAD ("+CTool::toString(conf.nTestCase)+")").c_str() );
 		currentTestPhase = MeasurementPhase::UPLOAD;
 		startTestCase(conf.nTestCase);
 	}
+
+    if (::hasError) {
+        throw ::recentException;
+    }
 
 	currentTestPhase = MeasurementPhase::END;
 
@@ -389,9 +401,13 @@ void show_usage(char* argv0)
 
 static void signal_handler(int signal)
 {
+    hasError = true;
+
 	TRC_ERR("Error signal received " + std::to_string(signal));
 
-	CTool::print_stacktrace();
+    #ifndef __ANDROID__
+	    CTool::print_stacktrace();
+	#endif
 	
     ::RUNNING = false;
 

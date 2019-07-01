@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-25
+ *      \date Last update: 2019-07-01
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -94,8 +94,7 @@ int CMeasurement::startMeasurement()
 			mCallback->pingThread = ping.get();
 			
 			ping->waitForEnd();
-
-			while (!PERFORMED_RTT)
+			while (!::PERFORMED_RTT && !::hasError && ::RUNNING)
 			{
 				//Sleep 100ms
                 usleep(100000);
@@ -133,7 +132,7 @@ int CMeasurement::startMeasurement()
 				(*itThread)->waitForEnd();
 			}
 
-			while (!PERFORMED_DOWNLOAD)
+			while (!::PERFORMED_DOWNLOAD && !::hasError && ::RUNNING)
 			{
                 //Sleep 100ms
                 usleep(100000);
@@ -179,7 +178,7 @@ int CMeasurement::startMeasurement()
 				(*itThread)->waitForEnd();
 			}
 
-			while (!PERFORMED_UPLOAD)
+			while (!::PERFORMED_UPLOAD && !::hasError && ::RUNNING)
 			{
 				//Sleep 100ms
                 usleep(100000);
