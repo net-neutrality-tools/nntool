@@ -404,7 +404,7 @@ void AndroidConnector::passJniSpeedState (JNIEnv* env, const MeasurementPhase& s
         toFill = pingMeasurementState;
         obj = json["average_ns"];
         if (obj.is_string()) {
-            env->SetLongField(toFill, fieldAverageMs, std::stoll(obj.string_value()) / 1e9);
+            env->SetLongField(toFill, fieldAverageMs, std::stoll(obj.string_value()) / 1e6);
         }
         break;
     case MeasurementPhase::DOWNLOAD:
