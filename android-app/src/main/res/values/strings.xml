@@ -72,4 +72,7 @@
     <string name="measurement_gauge_speed_three">100Mb</string>
     <string name="measurement_gauge_speed_four">1Gb</string>
 
+    <!-- History specific strings -->
+    <string name="history_no_results_found">No results found.</string>
+
 </resources>
