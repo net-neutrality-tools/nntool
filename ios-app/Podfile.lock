@@ -10,8 +10,13 @@ PODS:
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
   - MeasurementAgentKit (0.0.1):
-    - CodableJSON (~> 1.1.4)
+    - nntool-shared-swift (~> 0.0.1)
+    - ReachabilitySwift (~> 5.0.0-beta1)
     - Siesta (~> 1.4.3)
+  - nntool-shared-swift (0.0.1):
+    - CodableJSON (~> 1.1.4)
+    - Repeat (~> 0.5.7)
+    - SwiftLint (~> 0.31.0)
     - XCGLogger (~> 7.0.0)
   - ObjcExceptionBridging (1.0.1):
     - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
@@ -28,8 +33,9 @@ PODS:
   - QoSKit (0.0.1):
     - Alamofire (~> 4.8.2)
     - CocoaAsyncSocket (~> 7.6.3)
-    - CodableJSON (~> 1.1.4)
-    - XCGLogger (~> 7.0.0)
+    - nntool-shared-swift (~> 0.0.1)
+  - ReachabilitySwift (5.0.0-beta1)
+  - Repeat (0.5.7)
   - Siesta (1.4.3):
     - Siesta/Core (= 1.4.3)
   - Siesta/Core (1.4.3)
@@ -46,10 +52,10 @@ DEPENDENCIES:
   - CocoaLumberjack (>= 3.4.2)
   - FMDB (>= 2.7.2)
   - MeasurementAgentKit (from `../measurement-agent-swift`)
+  - nntool-shared-swift (from `../nntool-shared-swift`)
   - PocketSocket (from `../PocketSocket`)
   - QoSKit (from `../qos-client-swift`)
   - SwiftGen (~> 6.1.0)
-  - SwiftLint (~> 0.31.0)
   - WebBrowser (~> 0.1.5)
 
 SPEC REPOS:
@@ -61,6 +67,8 @@ SPEC REPOS:
     - CodableJSON
     - FMDB
     - ObjcExceptionBridging
+    - ReachabilitySwift
+    - Repeat
     - Siesta
     - SwiftGen
     - SwiftLint
@@ -70,6 +78,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   MeasurementAgentKit:
     :path: "../measurement-agent-swift"
+  nntool-shared-swift:
+    :path: "../nntool-shared-swift"
   PocketSocket:
     :path: "../PocketSocket"
   QoSKit:
@@ -82,16 +92,19 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
   CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  MeasurementAgentKit: c06ac85d6550f229d85facd3ed58b0f9bcb1409d
+  MeasurementAgentKit: ee7929596184ed2f8e1f1c00882ead4298f965d7
+  nntool-shared-swift: 7955a6c51917bcf2f42316eb259da095c80a7398
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   PocketSocket: 9c6867d66fb4f962af96b9b07f4b45bb561b2c2a
-  QoSKit: 8086bd5406760ce215bf8816a39606d70b9f9329
+  QoSKit: d85bee1116e983af2b481d9cb3458ed71244ba41
+  ReachabilitySwift: 93a5956ef3f076d7e24bc65bfb1c5042e69b7276
+  Repeat: 73c5ee602aed8f3c7bf1aa12d4cd0d3dc3edea0a
   Siesta: 83795fdf6a43232d1d2909e1a3dfb92ab5916d26
   SwiftGen: f872ca75cbd17bf7103c17f13dcfa0d9a15667b0
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
   WebBrowser: 0248873c77f54e2ac504ece7c2bc8eeb710b5a4f
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: 45ff12ac800ff964f46704ef592ce1d85e4d946b
+PODFILE CHECKSUM: 3e54cbf59608e34ac3f14b8e485db675b49ac00b
 
 COCOAPODS: 1.7.1

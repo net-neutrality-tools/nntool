@@ -4,6 +4,7 @@ PODS:
   - CocoaLumberjack (3.5.2):
     - CocoaLumberjack/Core (= 3.5.2)
   - CocoaLumberjack/Core (3.5.2)
+  - CodableJSON (1.1.4)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -22,6 +23,7 @@ PODS:
   - QoSKit (0.0.1):
     - Alamofire (~> 4.8.2)
     - CocoaAsyncSocket (~> 7.6.3)
+    - CodableJSON (~> 1.1.4)
     - XCGLogger (~> 7.0.0)
   - XCGLogger (7.0.0):
     - XCGLogger/Core (= 7.0.0)
@@ -39,6 +41,7 @@ SPEC REPOS:
     - Alamofire
     - CocoaAsyncSocket
     - CocoaLumberjack
+    - CodableJSON
     - FMDB
     - ObjcExceptionBridging
     - XCGLogger
@@ -53,12 +56,13 @@ SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
+  CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   PocketSocket: 9c6867d66fb4f962af96b9b07f4b45bb561b2c2a
-  QoSKit: 08c162a7212e936aa9017f057550dde425faeb3f
+  QoSKit: 8086bd5406760ce215bf8816a39606d70b9f9329
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
 PODFILE CHECKSUM: 835e91dfcd89a2a0ad0cf924eeb97fdbe93fa3bc
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.7.1

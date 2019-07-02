@@ -18,6 +18,7 @@
 import Foundation
 import Siesta
 import XCGLogger
+import nntool_shared_swift
 
 ///
 class RestApiService {

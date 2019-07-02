@@ -1,4 +1,4 @@
-// MeasurementAgentKit: MemoryUsageInformationCollector.swift, created on 13.06.19
+// MeasurementAgentKit: GpsLocationInformationCollector.swift, created on 13.06.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,43 +16,110 @@
  ******************************************************************************/
 
 import Foundation
+import CoreLocation
+import nntool_shared_swift
 
-class MemoryUsageInformationCollector: InformationCollector {
+class GpsLocationInformationCollector: NSObject, InformationCollector {
 
-    private let totalMemoryBytes = Double(ProcessInfo.processInfo.physicalMemory)
+    private var locationManager: CLLocationManager?
 
+    private var latestReportedLocation: CLLocation?
+
+    private var timeBasedResult: TimeBasedResultDto?
+    private var startNs: UInt64?
+
+    func start(_ timeBasedResult: TimeBasedResultDto, startNs: UInt64) {
+        self.timeBasedResult = timeBasedResult
+        self.startNs = startNs
+
+        DispatchQueue.main.async {
+            self.locationManager = CLLocationManager()
+            self.locationManager?.delegate = self
+
+            if CLLocationManager.authorizationStatus() == .notDetermined {
+                self.locationManager?.requestWhenInUseAuthorization()
+            }
+
+            self.locationManager?.distanceFilter = 3.0
+            self.locationManager?.desiredAccuracy = kCLLocationAccuracyBest
+
+            //self.locationManager?.allowsBackgroundLocationUpdates = true
+            //self.locationManager?.pausesLocationUpdatesAutomatically = false
+        }
+    }
+
+    func stop() {
+        DispatchQueue.main.async {
+            self.locationManager?.stopUpdatingLocation()
+            self.locationManager = nil
+        }
+    }
+
+    // GPS location collector should always collect if there's an update and not be triggered by 1 second interval!
     func collect(into timeBasedResult: TimeBasedResultDto) {
-        let result = PointInTimeValueDto<Double>()
-        result.value = getCurrentMemoryUsagePercent()
-        //result.relativeTimeNs = nanoTime()
 
-        logger.debug("MEM: \(result.value)")
+    }
+    
+    func locationAlreadyStored(_ location: CLLocation) -> Bool {
+        guard let lrl = latestReportedLocation else {
+            return false
+        }
+        
+        return  lrl.coordinate.latitude == location.coordinate.latitude &&
+                lrl.coordinate.longitude == location.coordinate.longitude &&
+                lrl.altitude == location.altitude &&
+                lrl.course == location.course &&
+                lrl.horizontalAccuracy == location.horizontalAccuracy &&
+                lrl.speed == location.speed
+    }
+}
 
-        timeBasedResult.memUsage?.append(result)
+extension GpsLocationInformationCollector: CLLocationManagerDelegate {
+
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedWhenInUse || status == .authorizedAlways {
+            DispatchQueue.main.async {
+                self.locationManager?.startUpdatingLocation()
+                //self.locationManager?.startUpdatingHeading()
+            }
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        DispatchQueue.global(qos: .background).async {
+            guard let lastLocation = locations.last, CLLocationCoordinate2DIsValid(lastLocation.coordinate) else {
+                return
+            }
+
+            // don't add same location twice
+            if self.locationAlreadyStored(lastLocation) {
+                return
+            }
+
+            let geoLocation = GeoLocationDto()
+
+            geoLocation.accuracy = lastLocation.horizontalAccuracy
+            //lastLocation.verticalAccuracy?
+            geoLocation.altitude = lastLocation.altitude
+            geoLocation.heading = lastLocation.course
+            geoLocation.latitude = lastLocation.coordinate.latitude
+            geoLocation.longitude = lastLocation.coordinate.longitude
+            geoLocation.provider = "GPS"
+            geoLocation.speed = lastLocation.speed
+
+            geoLocation.time = lastLocation.timestamp
+            if let ns = self.startNs {
+                geoLocation.relativeTimeNs = TimeHelper.currentTimeNs() - ns
+            }
+
+            logger.debug("GEOLOCATION: \(geoLocation.debugDescription)")
+            
+            self.latestReportedLocation = lastLocation
+            self.timeBasedResult?.geoLocations?.append(geoLocation)
+        }
     }
 
-    // TODO: we could also report actual value instead of just percent
-
-    func getCurrentMemoryUsagePercent() -> Double? {
-        var hostSize = mach_msg_type_number_t(MemoryLayout<vm_statistics_data_t>.stride / MemoryLayout<integer_t>.stride)
-
-        let hostPort = mach_host_self()
-        var pagesize: vm_size_t = 0
-
-        host_page_size(hostPort, &pagesize)
-
-        var vmStat = vm_statistics_data_t()
-        let ret: kern_return_t = withUnsafeMutableBytes(of: &vmStat) {
-            let boundBuffer = $0.bindMemory(to: Int32.self)
-            return host_statistics(hostPort, HOST_VM_INFO, boundBuffer.baseAddress, &hostSize)
-        }
-
-        if ret != KERN_SUCCESS {
-            return nil
-        }
-
-        let memUsed = Double(vmStat.active_count + vmStat.inactive_count + vmStat.wire_count) * Double(pagesize)
-
-        return memUsed / totalMemoryBytes
-    }
+    /*func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+     
+    }*/
 }

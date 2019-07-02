@@ -18,41 +18,50 @@
 import Foundation
 
 ///
-class JsonHelper {
-
+public class JsonHelper {
+    
     ///
-    class func getPreconfiguredJSONDecoder() -> JSONDecoder {
+    public class func getPreconfiguredJSONDecoder() -> JSONDecoder {
         let decoder = JSONDecoder()
-
+        
         // Unfortunately, .iso8601 doesn't support every format from RFC 3339
         //decoder.dateDecodingStrategy = .iso8601
-
+        
         decoder.dateDecodingStrategy = .formatted(getIso8601DateFormatter())
-
+        
         return decoder
     }
-
+    
     ///
-    class func getPreconfiguredJSONEncoder() -> JSONEncoder {
+    public class func getPreconfiguredJSONEncoder() -> JSONEncoder {
         let encoder = JSONEncoder()
-
+        
         // Unfortunately, .iso8601 doesn't support every format from RFC 3339
         //encoder.dateEncodingStrategy = .iso8601
-
+        
         encoder.dateEncodingStrategy = .formatted(getIso8601DateFormatter())
-
+        
         encoder.outputFormatting = .prettyPrinted
-
+        
         return encoder
     }
-
+    
     private class func getIso8601DateFormatter() -> DateFormatter {
         let dateFormatter = DateFormatter()
         //dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
-
+        
         // TODO: maybe use approach from https://stackoverflow.com/a/46538676
-
+        
         return dateFormatter
+    }
+    
+    public class func debugPrintObject<T: Encodable>(_ obj: T) -> String {
+        do {
+            let data = try JSONEncoder().encode(obj)
+            return String(data: data, encoding: .utf8) ?? "-encoding failed-"
+        } catch {
+            return "-encoding failed-"
+        }
     }
 }

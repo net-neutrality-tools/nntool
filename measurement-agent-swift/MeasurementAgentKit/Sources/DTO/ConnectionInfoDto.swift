@@ -19,13 +19,13 @@ import Foundation
 
 /// Holds information about the received and transmitted amount of data on the measurement agent.
 public class TrafficDto: Codable {
-    
+
     /// Bytes received.
     public var bytesRx: UInt64?
-    
+
     /// Bytes transmitted.
     public var bytesTx: UInt64?
-    
+
     ///
     enum CodingKeys: String, CodingKey {
         case bytesRx = "bytes_rx"
@@ -38,52 +38,52 @@ public class ConnectionInfoDto: Codable {
 
     /// The address of the measurement server.
     public var address: String?
-    
+
     /// Port used for the communication.
     public var port: Int?
-    
+
     /// Indicates if the communication with the measurement server will be encrypted.
     public var encrypted: Bool?
-    
+
     /// Cryptographic protocol and cipher suite used for encrypted communication, if available. E.g. TLSv1.2 (TLS_RSA_WITH_AES_128_GCM_SHA256).
     public var encryptionInfo: String?
-    
+
     /// Contains information about total bytes transferred during the speed measurement, as reported by the measurement agent's interface, if available.
     public var agentInterfaceTotalTraffic: TrafficDto?
-    
+
     /// Contains information about bytes transferred during the download measurement, as reported by the measurement agent's interface, if available.
     public var agentInterfaceDownloadMeasurementTraffic: TrafficDto?
-    
+
     /// Contains information about bytes transferred during the upload measurement, as reported by the measurement agent's interface, if available.
     public var agentInterfaceUploadMeasurementTraffic: TrafficDto?
-    
+
     /// The requested number of streams for the download measurement.
     public var requestedNumStreamsDownload: Int?
-    
+
     /// The requested number of streams for the upload measurement.
     public var requestedNumStreamsUpload: Int?
-    
+
     /// The actual number of streams used by the download measurement.
     public var actualNumStreamsDownload: Int?
-    
+
     /// The actual number of streams used by the upload measurement.
     public var actualNumStreamsUpload: Int?
-    
+
     /// Flag if TCP SACK (Selective Acknowledgement) is enabled/requested.
     public var tcpOptSackRequested: Bool?
-    
+
     /// Flag if the TCP window scale options are requested.
     public var tcpOptWscaleRequested: Bool?
-    
+
     /// Maximum Segment Size (MSS) value from the server-side.
     public var serverMss: Int?
-    
+
     /// Maximum Transmission Unit (MTU) value from the server-side.
     public var serverMtu: Int?
-    
+
     /// @see WebSocketInfo
     public var webSocketInfoDownload: WebSocketInfoDto?
-    
+
     /// @see WebSocketInfo
     public var webSocketInfoUpload: WebSocketInfoDto?
 

@@ -1,4 +1,4 @@
-// MeasurementAgentKit: InformationCollector.swift, created on 13.06.19
+// MeasurementAgentKit: DTO+DebugExtensions.swift, created on 01.07.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,13 +16,18 @@
  ******************************************************************************/
 
 import Foundation
+import nntool_shared_swift
 
-protocol InformationCollector: class {
+extension GeoLocationDto: CustomDebugStringConvertible {
 
-    func start(_ timeBasedResult: TimeBasedResultDto, startNs: UInt64)
+    var debugDescription: String {
+        return JsonHelper.debugPrintObject(self)
+    }
+}
 
-    func stop()
+extension MeasurementResultNetworkPointInTimeDto: CustomDebugStringConvertible {
 
-    func collect(into timeBasedResult: TimeBasedResultDto)
-
+    var debugDescription: String {
+        return JsonHelper.debugPrintObject(self)
+    }
 }

@@ -49,7 +49,7 @@ class LmapReportDto: Codable {
         case groupId = "group-id"
         case measurementPoint = "measurement-point"
         case results
-        case additionalRequestInfo = "additional_request_info-point"
-        case timeBasedResult = "time_based_result-point"
+        case additionalRequestInfo = "additional_request_info"
+        case timeBasedResult = "time_based_result"
     }
 }

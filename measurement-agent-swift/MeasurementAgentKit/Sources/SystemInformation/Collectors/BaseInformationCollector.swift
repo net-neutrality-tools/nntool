@@ -16,3 +16,32 @@
  ******************************************************************************/
 
 import Foundation
+import nntool_shared_swift
+
+class BaseInformationCollector: InformationCollector {
+
+    private var timeBasedResult: TimeBasedResultDto?
+
+    private var startNs: UInt64?
+
+    func start(_ timeBasedResult: TimeBasedResultDto, startNs: UInt64) {
+        self.timeBasedResult = timeBasedResult
+        self.startNs = startNs
+    }
+
+    func stop() {
+
+    }
+
+    func collect(into timeBasedResult: TimeBasedResultDto) {
+
+    }
+
+    func currentRelativeTimeNs() -> UInt64? {
+        guard let ns = startNs else {
+            return nil
+        }
+        
+        return TimeHelper.currentTimeNs() - ns
+    }
+}

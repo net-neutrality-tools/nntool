@@ -3,12 +3,18 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		53BD18F682BE646F2DFBC336 /* Pods_All_MeasurementAgentKitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C682F72910A176E058DDC7C1 /* Pods_All_MeasurementAgentKitTests.framework */; };
 		5FF324BB37BAC3DF4012226C /* Pods_All_MeasurementAgentKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DFE748A7D3CD3A25F24E12E /* Pods_All_MeasurementAgentKit_iOS.framework */; };
+		B141590D22B2B4EB00DD5C96 /* SystemInformationCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B141590C22B2B4EB00DD5C96 /* SystemInformationCollector.swift */; };
+		B141591622B2C0EF00DD5C96 /* InformationCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B141591522B2C0EF00DD5C96 /* InformationCollector.swift */; };
+		B141591922B2C11900DD5C96 /* CpuUsageInformationCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B141591822B2C11900DD5C96 /* CpuUsageInformationCollector.swift */; };
+		B141591B22B2C46E00DD5C96 /* MemoryUsageInformationCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B141591A22B2C46E00DD5C96 /* MemoryUsageInformationCollector.swift */; };
+		B141591D22B2E20D00DD5C96 /* GpsLocationInformationCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B141591C22B2E20D00DD5C96 /* GpsLocationInformationCollector.swift */; };
+		B141591F22B79A3400DD5C96 /* BaseInformationCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B141591E22B79A3400DD5C96 /* BaseInformationCollector.swift */; };
 		B180E1202284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B180E11F2284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift */; };
 		B1C649602285FD40007506A6 /* MeasurementAgentLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C6495F2285FD40007506A6 /* MeasurementAgentLog.swift */; };
 		B1C64964228C17DE007506A6 /* SubMeasurementResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C64963228C17DE007506A6 /* SubMeasurementResult.swift */; };
@@ -72,8 +78,9 @@
 		E0B9A41C224E6860002AB640 /* ApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A41B224E6860002AB640 /* ApiResponse.swift */; };
 		E0B9A41E224E6910002AB640 /* VersionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A41D224E6910002AB640 /* VersionResponse.swift */; };
 		E0B9A421224EB2ED002AB640 /* VersionResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A420224EB2ED002AB640 /* VersionResponseTests.swift */; };
+		E0C451F922CA35B200FA4B44 /* NetworkInformationCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C451F822CA35B200FA4B44 /* NetworkInformationCollector.swift */; };
+		E0C4522B22CA6B6300FA4B44 /* DTO+DebugExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C4522A22CA6B6300FA4B44 /* DTO+DebugExtensions.swift */; };
 		E0CE899A2253D57F009C1E25 /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CE89992253D57F009C1E25 /* ApiError.swift */; };
-		E0CE89A02253E17E009C1E25 /* JsonHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CE899F2253E17E009C1E25 /* JsonHelper.swift */; };
 		E0CE89A22253FC31009C1E25 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CE89A12253FC31009C1E25 /* ApiRequest.swift */; };
 		E0EA84E022806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84DF22806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift */; };
 		E0EA84E222807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84E122807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift */; };
@@ -94,6 +101,12 @@
 		56B22020D9F21525F333997C /* Pods-All-MeasurementAgentKit_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-MeasurementAgentKit_iOS.release.xcconfig"; path = "Target Support Files/Pods-All-MeasurementAgentKit_iOS/Pods-All-MeasurementAgentKit_iOS.release.xcconfig"; sourceTree = "<group>"; };
 		5DFE748A7D3CD3A25F24E12E /* Pods_All_MeasurementAgentKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_MeasurementAgentKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C785EEC28EAFE68CB3B6981 /* Pods-All-MeasurementAgentKit_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-MeasurementAgentKit_iOS.debug.xcconfig"; path = "Target Support Files/Pods-All-MeasurementAgentKit_iOS/Pods-All-MeasurementAgentKit_iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		B141590C22B2B4EB00DD5C96 /* SystemInformationCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInformationCollector.swift; sourceTree = "<group>"; };
+		B141591522B2C0EF00DD5C96 /* InformationCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationCollector.swift; sourceTree = "<group>"; };
+		B141591822B2C11900DD5C96 /* CpuUsageInformationCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CpuUsageInformationCollector.swift; sourceTree = "<group>"; };
+		B141591A22B2C46E00DD5C96 /* MemoryUsageInformationCollector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryUsageInformationCollector.swift; sourceTree = "<group>"; };
+		B141591C22B2E20D00DD5C96 /* GpsLocationInformationCollector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GpsLocationInformationCollector.swift; sourceTree = "<group>"; };
+		B141591E22B79A3400DD5C96 /* BaseInformationCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseInformationCollector.swift; sourceTree = "<group>"; };
 		B180E11F2284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IasMeasurementTypeParametersDto.swift; sourceTree = "<group>"; };
 		B1C6495F2285FD40007506A6 /* MeasurementAgentLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementAgentLog.swift; sourceTree = "<group>"; };
 		B1C64963228C17DE007506A6 /* SubMeasurementResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubMeasurementResult.swift; sourceTree = "<group>"; };
@@ -116,7 +129,7 @@
 		E00F4AFC2266218400EAD0C0 /* AnyProgram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyProgram.swift; sourceTree = "<group>"; };
 		E00F4B0422676BCF00EAD0C0 /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
 		E01DEE822253B5AC00983B1C /* MeasurementResultResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasurementResultResponse.swift; sourceTree = "<group>"; };
-		E0692792225CA1F600E028CA /* MeasurementAgentKit.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeasurementAgentKit.podspec; sourceTree = "<group>"; };
+		E0692792225CA1F600E028CA /* MeasurementAgentKit.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeasurementAgentKit.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		E0B9A3AC224D3EAB002AB640 /* MeasurementAgentKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MeasurementAgentKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0B9A3AF224D3EAB002AB640 /* MeasurementAgentKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeasurementAgentKit.h; sourceTree = "<group>"; };
 		E0B9A3B0224D3EAB002AB640 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -162,8 +175,9 @@
 		E0B9A41B224E6860002AB640 /* ApiResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiResponse.swift; sourceTree = "<group>"; };
 		E0B9A41D224E6910002AB640 /* VersionResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersionResponse.swift; sourceTree = "<group>"; };
 		E0B9A420224EB2ED002AB640 /* VersionResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionResponseTests.swift; sourceTree = "<group>"; };
+		E0C451F822CA35B200FA4B44 /* NetworkInformationCollector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkInformationCollector.swift; sourceTree = "<group>"; };
+		E0C4522A22CA6B6300FA4B44 /* DTO+DebugExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DTO+DebugExtensions.swift"; sourceTree = "<group>"; };
 		E0CE89992253D57F009C1E25 /* ApiError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
-		E0CE899F2253E17E009C1E25 /* JsonHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonHelper.swift; sourceTree = "<group>"; };
 		E0CE89A12253FC31009C1E25 /* ApiRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
 		E0EA84DF22806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSMeasurementTypeParametersDto.swift; sourceTree = "<group>"; };
 		E0EA84E122807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementTypeParametersWrapperDto.swift; sourceTree = "<group>"; };
@@ -209,6 +223,28 @@
 				5DFE748A7D3CD3A25F24E12E /* Pods_All_MeasurementAgentKit_iOS.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B141590B22B2B4D100DD5C96 /* SystemInformation */ = {
+			isa = PBXGroup;
+			children = (
+				B141591722B2C10200DD5C96 /* Collectors */,
+				B141590C22B2B4EB00DD5C96 /* SystemInformationCollector.swift */,
+				B141591522B2C0EF00DD5C96 /* InformationCollector.swift */,
+			);
+			path = SystemInformation;
+			sourceTree = "<group>";
+		};
+		B141591722B2C10200DD5C96 /* Collectors */ = {
+			isa = PBXGroup;
+			children = (
+				B141591822B2C11900DD5C96 /* CpuUsageInformationCollector.swift */,
+				E0C451F822CA35B200FA4B44 /* NetworkInformationCollector.swift */,
+				B141591A22B2C46E00DD5C96 /* MemoryUsageInformationCollector.swift */,
+				B141591C22B2E20D00DD5C96 /* GpsLocationInformationCollector.swift */,
+				B141591E22B79A3400DD5C96 /* BaseInformationCollector.swift */,
+			);
+			path = Collectors;
 			sourceTree = "<group>";
 		};
 		E00F48CA225F71E400EAD0C0 /* Program */ = {
@@ -275,6 +311,7 @@
 		E0B9A3C6224D4076002AB640 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				B141590B22B2B4D100DD5C96 /* SystemInformation */,
 				B1C6495F2285FD40007506A6 /* MeasurementAgentLog.swift */,
 				E00F48CA225F71E400EAD0C0 /* Program */,
 				E0B9A3CA224D4113002AB640 /* MeasurementAgent.swift */,
@@ -282,7 +319,6 @@
 				E00F4AEE2264B41C00EAD0C0 /* MeasurementAgentConfiguration.swift */,
 				E00F4AFA22660B2B00EAD0C0 /* MeasurementRunner.swift */,
 				E00F4AF02264B51300EAD0C0 /* MeasurementRunnerDelegate.swift */,
-				E0CE899F2253E17E009C1E25 /* JsonHelper.swift */,
 				E0B9A408224E6321002AB640 /* Servers */,
 				E0B9A3E9224D574A002AB640 /* DTO */,
 			);
@@ -365,6 +401,7 @@
 				B180E11F2284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift */,
 				E00F48C8225F3BDF00EAD0C0 /* MeasurementTypeDto.swift */,
 				E0B9A3CC224D4131002AB640 /* Lmap */,
+				E0C4522A22CA6B6300FA4B44 /* DTO+DebugExtensions.swift */,
 			);
 			path = DTO;
 			sourceTree = "<group>";
@@ -627,6 +664,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B141591D22B2E20D00DD5C96 /* GpsLocationInformationCollector.swift in Sources */,
 				E00F4B0522676BD100EAD0C0 /* Program.swift in Sources */,
 				B1C64968228C1844007506A6 /* QoSMeasurementResult.swift in Sources */,
 				E0B9A3F3224D5B28002AB640 /* LmapAgentDto.swift in Sources */,
@@ -638,10 +676,10 @@
 				E00F4AFB22660B2B00EAD0C0 /* MeasurementRunner.swift in Sources */,
 				E0B9A3DC224D4CF8002AB640 /* CellLocationDto.swift in Sources */,
 				B180E1202284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift in Sources */,
+				B141591B22B2C46E00DD5C96 /* MemoryUsageInformationCollector.swift in Sources */,
 				E0B9A3F9224D5F5C002AB640 /* LmapStopDto.swift in Sources */,
 				E0B9A41C224E6860002AB640 /* ApiResponse.swift in Sources */,
 				E00F48CC225F72B300EAD0C0 /* ProgramProtocol.swift in Sources */,
-				E0CE89A02253E17E009C1E25 /* JsonHelper.swift in Sources */,
 				E0B9A3D6224D46FC002AB640 /* GeoLocationDto.swift in Sources */,
 				B1C64970228C3B79007506A6 /* SpeedMeasurementRawDataItemDto.swift in Sources */,
 				E0B9A3D8224D4872002AB640 /* TimeBasedResultDto.swift in Sources */,
@@ -660,6 +698,7 @@
 				E0B9A3DA224D4B65002AB640 /* SignalDto.swift in Sources */,
 				B1C6496A228C36BB007506A6 /* RttInfoDto.swift in Sources */,
 				B1C64964228C17DE007506A6 /* SubMeasurementResult.swift in Sources */,
+				E0C4522B22CA6B6300FA4B44 /* DTO+DebugExtensions.swift in Sources */,
 				E00F4AF72265F24200EAD0C0 /* MeasurementAgentBuilder.swift in Sources */,
 				E0B9A413224E65BF002AB640 /* IpResponse.swift in Sources */,
 				E0B9A403224D6426002AB640 /* SuppressionStateDto.swift in Sources */,
@@ -670,9 +709,11 @@
 				E0B9A416224E66B7002AB640 /* RegistrationResponse.swift in Sources */,
 				E0CE89A22253FC31009C1E25 /* ApiRequest.swift in Sources */,
 				E0B9A3F7224D5D5E002AB640 /* LmapScheduleDto.swift in Sources */,
+				B141590D22B2B4EB00DD5C96 /* SystemInformationCollector.swift in Sources */,
 				E0B9A3E2224D50E1002AB640 /* LmapResultDto.swift in Sources */,
 				E0B9A3E8224D5497002AB640 /* LmapConflictDto.swift in Sources */,
 				E0B9A3FB224D5FA9002AB640 /* ExecutionModeDto.swift in Sources */,
+				E0C451F922CA35B200FA4B44 /* NetworkInformationCollector.swift in Sources */,
 				E0B9A3FF224D60B0002AB640 /* LmapActionDto.swift in Sources */,
 				E0B9A401224D6313002AB640 /* LmapSuppressionDto.swift in Sources */,
 				E0B9A410224E645B002AB640 /* RestApiService.swift in Sources */,
@@ -682,9 +723,12 @@
 				E0B9A3D0224D428D002AB640 /* LmapReportDto.swift in Sources */,
 				E0B9A405224D648D002AB640 /* LmapEventDto.swift in Sources */,
 				B1C6496E228C3AC1007506A6 /* WebSocketInfoDto.swift in Sources */,
+				B141591622B2C0EF00DD5C96 /* InformationCollector.swift in Sources */,
 				E00F4AF52265DC3E00EAD0C0 /* ProgramConfiguration.swift in Sources */,
 				E00F4AF12264B51300EAD0C0 /* MeasurementRunnerDelegate.swift in Sources */,
+				B141591F22B79A3400DD5C96 /* BaseInformationCollector.swift in Sources */,
 				E0B9A3E6224D544B002AB640 /* MeasurementTypeParametersDto.swift in Sources */,
+				B141591922B2C11900DD5C96 /* CpuUsageInformationCollector.swift in Sources */,
 				E0B9A418224E66FB002AB640 /* SettingsResponse.swift in Sources */,
 				E0B9A40A224E634D002AB640 /* ControlService.swift in Sources */,
 				E00F48C7225F340000EAD0C0 /* RegistrationRequest.swift in Sources */,

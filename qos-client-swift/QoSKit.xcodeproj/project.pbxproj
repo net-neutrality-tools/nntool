@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		B180E11E22849CA4000CF9E2 /* QoSBidirectionalIpTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = B180E11D22849CA4000CF9E2 /* QoSBidirectionalIpTask.swift */; };
-		B1C649622288488C007506A6 /* JSON+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C649612288488C007506A6 /* JSON+Optional.swift */; };
 		E02D191A1CF598A4002A02FE /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E02D19191CF598A4002A02FE /* libresolv.tbd */; };
 		E02D191C1CF598B1002A02FE /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E02D191B1CF598B1002A02FE /* CoreTelephony.framework */; };
 		E02D191E1CF598DE002A02FE /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E02D191D1CF598DE002A02FE /* MobileCoreServices.framework */; };
@@ -91,7 +90,6 @@
 		114F7D4D1BAD1E3E433F65C3 /* Pods_All_QoSKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_QoSKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C8C283F3ADDF29FAC8A7F46 /* Pods-All-QoSKitUnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-QoSKitUnitTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-All-QoSKitUnitTests/Pods-All-QoSKitUnitTests.release.xcconfig"; sourceTree = "<group>"; };
 		B180E11D22849CA4000CF9E2 /* QoSBidirectionalIpTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSBidirectionalIpTask.swift; sourceTree = "<group>"; };
-		B1C649612288488C007506A6 /* JSON+Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSON+Optional.swift"; sourceTree = "<group>"; };
 		E02D19191CF598A4002A02FE /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libresolv.tbd; sourceTree = DEVELOPER_DIR; };
 		E02D191B1CF598B1002A02FE /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/CoreTelephony.framework; sourceTree = DEVELOPER_DIR; };
 		E02D191D1CF598DE002A02FE /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/MobileCoreServices.framework; sourceTree = DEVELOPER_DIR; };
@@ -363,7 +361,6 @@
 				E0EA84C422804CE100EB73BF /* QoSTaskStatus.swift */,
 				E05D32F921F7741F005E77F1 /* QoSLog.swift */,
 				E05D331921FA0255005E77F1 /* TaskType.swift */,
-				B1C649612288488C007506A6 /* JSON+Optional.swift */,
 				E0EA84C722804CE200EB73BF /* Tasks */,
 				E0F5B7A821FE2C2B007AE378 /* Util */,
 				E0F5B7A721FE2C1E007AE378 /* Control */,
@@ -662,7 +659,9 @@
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/CodableJSON/CodableJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/ObjcExceptionBridging/ObjcExceptionBridging.framework",
+				"${BUILT_PRODUCTS_DIR}/Repeat/Repeat.framework",
 				"${BUILT_PRODUCTS_DIR}/XCGLogger/XCGLogger.framework",
+				"${BUILT_PRODUCTS_DIR}/nntool-shared-swift/nntool_shared_swift.framework",
 				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -671,7 +670,9 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CodableJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjcExceptionBridging.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Repeat.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XCGLogger.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nntool_shared_swift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -740,7 +741,6 @@
 				E0EA84D322804CE200EB73BF /* DnsTask.swift in Sources */,
 				E05D32A921F0EED2005E77F1 /* TcpPortTaskConfiguration.swift in Sources */,
 				E0EA84DD22804D0100EB73BF /* RequireControlConnection.swift in Sources */,
-				B1C649622288488C007506A6 /* JSON+Optional.swift in Sources */,
 				E0EA84D522804CE200EB73BF /* TcpPortTask.swift in Sources */,
 				E05D330621F79C20005E77F1 /* BuilderProtocol.swift in Sources */,
 				E0EA84D122804CE200EB73BF /* OperationGroup.swift in Sources */,

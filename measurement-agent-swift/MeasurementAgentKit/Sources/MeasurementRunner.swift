@@ -17,6 +17,7 @@
 
 import Foundation
 import CodableJSON
+import nntool_shared_swift
 
 ///
 public class MeasurementRunner {
@@ -114,8 +115,11 @@ public class MeasurementRunner {
         }
 
         startTime = Date()
-        //startTimeNs = // TODO
+        startTimeNs = TimeHelper.currentTimeNs()
 
+        let informationCollector = SystemInformationCollector.defaultCollector()
+        informationCollector.start(startNs: startTimeNs!) // !
+        
         var taskResultDict = [MeasurementTypeDto: SubMeasurementResult]()
 
         for task in tasks {
@@ -124,6 +128,7 @@ public class MeasurementRunner {
             if isCanceled {
                 logger.info("measurement runner is cancelled")
 
+                informationCollector.stop()
                 finish() // TODO: stop? fail?
                 return
             }
@@ -164,8 +169,10 @@ public class MeasurementRunner {
             currentProgram = nil
         }
 
+        informationCollector.stop()
+
         logger.info("-- all finished")
-        
+
         // TODO: measurement finished vs results submitted -> add additional state
 
         // send_results
@@ -213,17 +220,11 @@ public class MeasurementRunner {
 
         ////
 
-        let timeBasedResult = TimeBasedResultDto()
+        let timeBasedResult = informationCollector.getResult()
 
-        timeBasedResult.cellLocations = nil // not available on iOS
-        timeBasedResult.cpuUsage = nil // TODO
-        //timeBasedResult.durationNs
-        timeBasedResult.endTime = Date()
-        timeBasedResult.geoLocations = nil // TODO
-        timeBasedResult.memUsage = nil
-        timeBasedResult.networkPointsInTime = nil
-        timeBasedResult.signals = nil // not available on iOS
         timeBasedResult.startTime = startTime
+        timeBasedResult.endTime = Date()
+        //timeBasedResult.durationNs
 
         reportModel.timeBasedResult = timeBasedResult
 

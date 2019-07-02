@@ -1,4 +1,5 @@
 import Foundation
+import nntool_shared_swift
 
 class QoSBidirectionalIpTask: QoSControlConnectionTask {
 

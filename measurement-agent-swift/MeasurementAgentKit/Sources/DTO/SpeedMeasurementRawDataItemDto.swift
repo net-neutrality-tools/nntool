@@ -19,9 +19,7 @@ import Foundation
 
 /// Contains information about captured byte transfers during the speed measurement from a point of time on the measurement agent.
 public class SpeedMeasurementRawDataItemDto: Codable {
-    
-    
-    
+
     ///
     /*enum CodingKeys: String, CodingKey {
         

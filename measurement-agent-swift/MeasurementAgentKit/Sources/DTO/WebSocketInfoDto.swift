@@ -19,25 +19,25 @@ import Foundation
 
 /// This class contains additional information gathered from the WebSocket protocol.
 public class WebSocketInfoDto: Codable {
-    
+
     /// Size of a transmitted frame over the WebSocket protocol.
     public var frameSize: Int? // *load_frame_size
-    
+
     /// Number of frames sent over the WebSocket protocol during measurement excluding slow-start phase.
     public var frameCount: Int? // *load_frames
-    
+
     /// Number of frames sent over the WebSocket protocol during measurement including slow-start phase.
     public var frameCountIncludingSlowStart: Int? // *load_frames_total
-    
+
     /// The overhead sent during the communication via the WebSocket protocol excluding slow-start phase.
     public var overhead: Int? // *load_overhead
-    
+
     /// The overhead sent during the communication via the WebSocket protocol including slow-start phase.
     public var overheadIncludingSlowStart: Int? // *load_overhead_total
-    
+
     /// The protocol overhead of a single WebSocket frame.
     public var overheadPerFrame: Int? // *load_overhead_per_frame
-    
+
     ///
     enum CodingKeys: String, CodingKey {
         case frameSize = "frame_size"

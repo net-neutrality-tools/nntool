@@ -16,6 +16,8 @@ Pod::Spec.new do |s|
     s.source_files = 'MeasurementAgentKit/Sources/**/*.swift'
 
     s.dependency 'Siesta', '~> 1.4.3'
-    s.dependency 'XCGLogger', '~> 7.0.0'
-    s.dependency 'CodableJSON', '~> 1.1.4'
+    s.dependency 'ReachabilitySwift', '~> 5.0.0-beta1'
+    s.dependency 'nntool-shared-swift', '~> 0.0.1'
+    
+    s.frameworks = 'CoreLocation', 'SystemConfiguration'
 end
