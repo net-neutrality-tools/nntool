@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.temporal.ChronoUnit;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -27,7 +28,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurem
  * @author alladin-IT GmbH (bp@alladin.at)
  *
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", imports = ChronoUnit.class)
 public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 	
 	public static final String QOS_TEST_UID_KEY = "qos_test_uid";
@@ -116,7 +117,10 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		
 		@Mapping(source = "timeBasedResult.startTime", 	target = "measurementTime.startTime"),
 		@Mapping(source = "timeBasedResult.endTime", 	target = "measurementTime.endTime"),
-		@Mapping(source = "timeBasedResult.durationNs", target = "measurementTime.durationNs"),
+		@Mapping(target = "measurementTime.durationNs", expression="java(measurementTime == null ?"
+				+ " null : measurementTime.getStartTime() == null ?"
+				+ " null : measurementTime.getEndTime() == null ?"
+				+ " null : ChronoUnit.NANOS.between(measurementTime.getStartTime(), measurementTime.getEndTime()))"),
 		
 		@Mapping(source = "timeBasedResult.geoLocations", target = "geoLocationInfo.geoLocations"),
 //		//@Mapping(source = "timeBasedResult.cpuUsage", target = "deviceInfo.osInfo.cpuUsage"),
@@ -133,6 +137,10 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 	@Mappings ({
 		@Mapping(source="relativeStartTimeNs", target="measurementTime.relativeStartTimeNs"),
 		@Mapping(source="relativeEndTimeNs", target="measurementTime.relativeEndTimeNs"),
+		@Mapping(target = "measurementTime.durationNs", expression="java(speedMeasurementResult == null ?"
+				+ " null : speedMeasurementResult.getRelativeStartTimeNs() == null ?"
+				+ " null : speedMeasurementResult.getRelativeEndTimeNs() == null ?"
+				+ " null : speedMeasurementResult.getRelativeEndTimeNs() - speedMeasurementResult.getRelativeStartTimeNs())"),
 		@Mapping(source="downloadRawData", target="speedRawData.download"),
 		@Mapping(source="uploadRawData", target="speedRawData.upload"),
 		@Mapping(source="status", target="statusInfo"),
@@ -144,6 +152,10 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 	@Mappings ({
 		@Mapping(source="relativeStartTimeNs", target="measurementTime.relativeStartTimeNs"),
 		@Mapping(source="relativeEndTimeNs", target="measurementTime.relativeEndTimeNs"),
+		@Mapping(target = "measurementTime.durationNs", expression="java(qoSMeasurementResult == null ?"
+				+ " null : qoSMeasurementResult.getRelativeStartTimeNs() == null ?"
+				+ " null : qoSMeasurementResult.getRelativeEndTimeNs() == null ?"
+				+ " null : qoSMeasurementResult.getRelativeEndTimeNs() - qoSMeasurementResult.getRelativeStartTimeNs())"),
 		@Mapping(source="status", target="statusInfo"),
 		@Mapping(expression="java(parseQoSResult(subMeasurementResult))", target="results")
 	})
