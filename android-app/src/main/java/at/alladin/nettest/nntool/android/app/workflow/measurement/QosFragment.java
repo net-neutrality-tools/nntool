@@ -120,7 +120,8 @@ public class QosFragment extends Fragment implements ServiceConnection {
                             if (progress >= 1f) {
                                 qosProgressView.finishQosType(e.getKey());
                             }
-                            topProgressBarView.setLeftText((int)(qosTest.getTotalProgress() * 100) + "%");
+                            //the total progress (if QoS is enabled) is only from 0.8 to 1.0
+                            topProgressBarView.setLeftText((int)((qosTest.getTotalProgress() * 0.2 + 0.8) * 100) + "%");
                             topProgressBarView.setRightText((int)(qosTest.getTotalProgress() * 100) + "%");
                         }
                         else if (QoSTestEnum.QOS_FINISHED.equals(qosTest.getStatus()) ||

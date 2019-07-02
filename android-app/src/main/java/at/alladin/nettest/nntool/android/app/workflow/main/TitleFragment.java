@@ -18,6 +18,7 @@ import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
+import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.interfaces.TrafficGatherer;
@@ -92,14 +93,17 @@ public class TitleFragment extends Fragment {
                                     result.getSpeedCollectorUrl());
                             bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_DESC,
                                     result.getSpeedTaskDesc());
-                            final ArrayList<MeasurementType> followUpActions = new ArrayList<>();
-                            followUpActions.add(MeasurementType.QOS);
-                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_FOLLOW_UP_ACTIONS, followUpActions);
+
+                            if (PreferencesUtil.isQoSEnabled(getContext())) {
+                                final ArrayList<MeasurementType> followUpActions = new ArrayList<>();
+                                followUpActions.add(MeasurementType.QOS);
+                                bundle.putSerializable(MeasurementService.EXTRAS_KEY_FOLLOW_UP_ACTIONS, followUpActions);
+                            }
+
                             ((MainActivity) getActivity()).startMeasurement(MeasurementType.SPEED, bundle);
-                            //((MainActivity) getActivity()).startMeasurement(MeasurementType.QOS, bundle);
+                            }
                         }
-                    }
-                });
+                    });
 
         task.execute();
     }

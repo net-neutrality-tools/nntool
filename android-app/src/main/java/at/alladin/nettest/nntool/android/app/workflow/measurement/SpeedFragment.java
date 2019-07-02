@@ -26,6 +26,7 @@ import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.SendReportTask;
 import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
+import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.view.AlladinTextView;
 import at.alladin.nettest.nntool.android.app.view.BottomMeasurementResultSummaryView;
@@ -42,6 +43,8 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
 
     private final static String TAG = "SPEED_FRAGMENT";
 
+    private final static float baseProgressPercentage = 0.25f;
+
     private MeasurementService measurementService;
 
     private SpeedMeasurementState speedMeasurementState;
@@ -55,6 +58,8 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
     private AlladinTextView gaugePhaseIndicator;
 
     private AtomicBoolean sendingResults = new AtomicBoolean(false);
+
+    private boolean isQoSEnabled = true;
 
     public static SpeedFragment newInstance() {
         final SpeedFragment fragment = new SpeedFragment();
@@ -73,6 +78,8 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
         bottomMeasurementResultSummary = view.findViewById(R.id.bottom_measurement_result_summary_view);
         bottomMeasurementResultSummary.setVisibility(View.VISIBLE);
         gaugePhaseIndicator = view.findViewById(R.id.gauge_phase_indicator);
+
+        isQoSEnabled = PreferencesUtil.isQoSEnabled(getContext());
 
         return view;
     }
@@ -142,24 +149,24 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
                         break;
                     case PING:
                         pingAverage = speedMeasurementState.getPingMeasurement().getAverageMs();
-                        progress = 0.25f;
+                        progress = baseProgressPercentage * 1;
                         gaugePhaseIndicator.setText(getResources().getString(R.string.ifont_ping));
                         topProgressBarView.setRightIcon(getResources().getString(R.string.ifont_ping));
                         break;
                     case DOWNLOAD:
                         speed = speedMeasurementState.getDownloadMeasurement().getThroughputAvgBps() / 1e6;
-                        progress = 0.5f;
+                        progress = baseProgressPercentage * 2;
                         gaugePhaseIndicator.setText(getResources().getString(R.string.ifont_down));
                         topProgressBarView.setRightIcon(getResources().getString(R.string.ifont_down));
                         break;
                     case UPLOAD:
                         speed = speedMeasurementState.getUploadMeasurement().getThroughputAvgBps() / 1e6;
-                        progress = 0.75f;
+                        progress = baseProgressPercentage * 3;
                         gaugePhaseIndicator.setText(getResources().getString(R.string.ifont_up));
                         topProgressBarView.setRightIcon(getResources().getString(R.string.ifont_up));
                         break;
                     case END:
-                        progress = 1.0f;
+                        progress = baseProgressPercentage * 4;
                         postResultRunnable = true;
                         break;
                 }
@@ -173,7 +180,9 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
                 }
 
                 if (topProgressBarView != null) {
-                    topProgressBarView.setLeftText(String.format(Locale.getDefault(), "%d %%", Math.min(100, (int) (progress * 100))));
+                    //the upper left text needs to display the correct number (depending on whether QoS is enabled or not
+                    topProgressBarView.setLeftText(String.format(Locale.getDefault(), "%d %%", Math.min(100, (int)
+                            (isQoSEnabled ? progress * 100 * 0.8 : progress * 100))));
                     if (currentPhase == SpeedMeasurementState.MeasurementPhase.PING) {
                         topProgressBarView.setRightText(String.format(Locale.getDefault(), "%d " + getResources().getString(R.string.top_progress_bar_view_ping_unit), pingAverage));
                     } else {
