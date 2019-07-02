@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-18
+ *      \date Last update: 2019-06-24
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -27,19 +27,19 @@ class CUdpListener : public CBasisThread
 {
 	private:
 		int mPort;
+		int mIpType;
+		string mBindIp;
 		
 		string mClient;
 		
-		std::unique_ptr<CConnection> mConnectionUdp4Send;
-		std::unique_ptr<CConnection> mConnectionUdp6Send;
-		std::unique_ptr<CConnection> mConnectionRawRecv;
+		std::unique_ptr<CConnection> mConnection;
 
 	public:
 		CUdpListener();
 		
 		virtual ~CUdpListener();
 
-		CUdpListener(int nPort);
+		CUdpListener(int nPort, int nIpType, string sBindIp);
 		
 		int run();
 };

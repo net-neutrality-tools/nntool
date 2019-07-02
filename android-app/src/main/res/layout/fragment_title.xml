@@ -41,19 +41,38 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
-    <at.alladin.nettest.nntool.android.app.workflow.measurement.InterfaceTrafficView
+    <LinearLayout
         android:layout_marginTop="3dp"
+        android:weightSum="2"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <at.alladin.nettest.nntool.android.app.view.CpuAndRamView
+            android:id="@+id/view_cpu_ram"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+        <at.alladin.nettest.nntool.android.app.view.Ipv4v6View
+            android:id="@+id/view_ipv4v6_status"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <at.alladin.nettest.nntool.android.app.view.InterfaceTrafficView
+        android:layout_marginTop="3dp"
+        android:background="@drawable/border_top"
         android:id="@+id/view_interface_traffic"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_height="wrap_content" />
 
     <at.alladin.nettest.nntool.android.app.view.GeoLocationView
         android:layout_marginTop="3dp"
         android:background="@drawable/border_top"
         android:id="@+id/view_geo_location"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -1,14 +1,11 @@
 package at.alladin.nettest.nntool.android.app.util;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.text.TextUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +29,6 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.Q
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
 import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import okhttp3.Request;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)

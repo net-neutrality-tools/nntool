@@ -1,7 +1,6 @@
 package at.alladin.nettest.nntool.android.app.util.connection;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import retrofit2.Call;

@@ -22,8 +22,8 @@ import at.alladin.nettest.nntool.android.app.support.telephony.CellSignalStrengt
 import at.alladin.nettest.nntool.android.app.support.telephony.SignalItem;
 import at.alladin.nettest.nntool.android.app.util.PermissionUtil;
 import at.alladin.nettest.nntool.android.app.util.info.ListenableGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.network.NetworkTypeAware;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.network.NetworkTypeAware;
 
 import static at.alladin.nettest.nntool.android.app.util.info.network.NetworkTypeAware.NETWORK_WLAN;
 

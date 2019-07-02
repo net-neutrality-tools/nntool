@@ -1,11 +1,5 @@
 package at.alladin.nettest.nntool.android.app.util.connection;
 
-import java.util.stream.Collectors;
-
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 

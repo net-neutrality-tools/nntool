@@ -1,0 +1,51 @@
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            style="@style/Nettest.Title.CpuRam.Text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".4"
+            android:text="@string/ipv4_text" />
+
+        <at.alladin.nettest.nntool.android.app.view.AlladinTextView
+            android:id="@+id/ipv4_status_text"
+            style="@style/Nettest.Title.CpuRam.Text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".6"
+            android:text="@string/ifont_check" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            style="@style/Nettest.Title.CpuRam.Text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".4"
+            android:text="@string/ipv6_text" />
+
+        <at.alladin.nettest.nntool.android.app.view.AlladinTextView
+            android:id="@+id/ipv6_status_text"
+            style="@style/Nettest.Title.CpuRam.Text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".6"
+
+            android:text="@string/ifont_close" />
+    </LinearLayout>
+</LinearLayout>

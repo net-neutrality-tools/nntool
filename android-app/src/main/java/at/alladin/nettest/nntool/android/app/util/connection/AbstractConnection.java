@@ -1,14 +1,9 @@
 package at.alladin.nettest.nntool.android.app.util.connection;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import retrofit2.Retrofit;

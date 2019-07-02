@@ -143,7 +143,9 @@ int CTimer::run()
 			break;
 	}
 
-	mCallback->callback("finish", "measurement completed", 0, "");
+    if (::RUNNING) {
+	    mCallback->callback("finish", "measurement completed", 0, "");
+	}
 	
 	TIMER_ACTIVE = false;
 	
