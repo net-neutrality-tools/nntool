@@ -59,8 +59,6 @@ jint AndroidConnector::jniLoad(JavaVM* vm) {
     //get the fields for the SpeedphaseState
     clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementState$SpeedPhaseState");
     fieldAvgThroughput = env->GetFieldID(clazz, "throughputAvgBps", "J");
-    fieldDurationMsTotal = env->GetFieldID(clazz, "durationMsTotal", "J");
-    fieldDurationMs = env->GetFieldID(clazz, "durationMs", "J");
 
     //get the fields for the PingPhaseState
     clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementState$PingPhaseState");
@@ -416,7 +414,7 @@ void AndroidConnector::passJniSpeedState (JNIEnv* env, const MeasurementPhase& s
         //they're all strings
         obj = json["throughput_avg_bps"];
         if (obj.is_string()) {
-            env->SetLongField(toFill, fieldAvgThroughput, std::stoll(obj.string_value()) / 1e6);
+            env->SetLongField(toFill, fieldAvgThroughput, std::stoll(obj.string_value()));
         }
 
         break;

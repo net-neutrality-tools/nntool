@@ -144,8 +144,6 @@ class AndroidConnector {
         
         //speedMeasurementFields
         jfieldID fieldAvgThroughput;
-        jfieldID fieldDurationMsTotal;
-        jfieldID fieldDurationMs;
 
         //pingMeasurementFields
         jfieldID fieldAverageMs;
@@ -169,7 +167,6 @@ class AndroidConnector {
         jclass timeClazz;
 
         std::vector<std::string> pendingErrorMessages;
-
 
         AndroidConnector() {};
 

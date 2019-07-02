@@ -147,13 +147,13 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
                         topProgressBarView.setRightIcon(getResources().getString(R.string.ifont_ping));
                         break;
                     case DOWNLOAD:
-                        speed = speedMeasurementState.getDownloadMeasurement().getThroughputAvgBps();
+                        speed = speedMeasurementState.getDownloadMeasurement().getThroughputAvgBps() / 1e6;
                         progress = 0.5f;
                         gaugePhaseIndicator.setText(getResources().getString(R.string.ifont_down));
                         topProgressBarView.setRightIcon(getResources().getString(R.string.ifont_down));
                         break;
                     case UPLOAD:
-                        speed = speedMeasurementState.getUploadMeasurement().getThroughputAvgBps();
+                        speed = speedMeasurementState.getUploadMeasurement().getThroughputAvgBps() / 1e6;
                         progress = 0.75f;
                         gaugePhaseIndicator.setText(getResources().getString(R.string.ifont_up));
                         topProgressBarView.setRightIcon(getResources().getString(R.string.ifont_up));
@@ -185,9 +185,9 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
                     switch (currentPhase) {
                         case END:
                         case UPLOAD:
-                            bottomMeasurementResultSummary.setUploadText(String.valueOf(speedMeasurementState.getUploadMeasurement().getThroughputAvgBps()));
+                            bottomMeasurementResultSummary.setUploadText(String.format(Locale.getDefault(), "%.2f", speedMeasurementState.getUploadMeasurement().getThroughputAvgBps() / 1e6));
                         case DOWNLOAD:
-                            bottomMeasurementResultSummary.setDownloadText(String.valueOf(speedMeasurementState.getDownloadMeasurement().getThroughputAvgBps()));
+                            bottomMeasurementResultSummary.setDownloadText(String.format(Locale.getDefault(), "%.2f", speedMeasurementState.getDownloadMeasurement().getThroughputAvgBps() / 1e6));
                         case PING:
                             bottomMeasurementResultSummary.setPingText(String.valueOf(speedMeasurementState.getPingMeasurement().getAverageMs()));
                             break;

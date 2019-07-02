@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Locale;
+
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.view.BottomMeasurementResultSummaryView;
 import at.alladin.nettest.nntool.android.app.view.MeasurementRecentResultSelectorView;
@@ -72,13 +74,13 @@ public class TitleWithRecentResultFragment extends TitleFragment implements Serv
         }
 
         if (recentSpeedMeasurementState.getDownloadMeasurement() != null) {
-            bottomMeasurementResultSummaryView.setDownloadText(String.valueOf(recentSpeedMeasurementState.getDownloadMeasurement().getThroughputAvgBps()));
+            bottomMeasurementResultSummaryView.setDownloadText(String.format(Locale.getDefault(), "%.2f", recentSpeedMeasurementState.getDownloadMeasurement().getThroughputAvgBps() / 1e6));
         } else {
             bottomMeasurementResultSummaryView.setDownloadText(getString(R.string.bottom_measurement_result_summary_view_download_not_available));
         }
 
         if (recentSpeedMeasurementState.getUploadMeasurement() != null) {
-            bottomMeasurementResultSummaryView.setUploadText(String.valueOf(recentSpeedMeasurementState.getUploadMeasurement().getThroughputAvgBps()));
+            bottomMeasurementResultSummaryView.setUploadText(String.format(Locale.getDefault(), "%.2f", recentSpeedMeasurementState.getUploadMeasurement().getThroughputAvgBps() / 1e6));
         } else {
             bottomMeasurementResultSummaryView.setUploadText(getString(R.string.bottom_measurement_result_summary_view_upload_not_available));
         }
