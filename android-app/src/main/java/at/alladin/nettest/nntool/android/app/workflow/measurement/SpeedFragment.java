@@ -183,14 +183,13 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
 
                 if (bottomMeasurementResultSummary != null) {
                     switch (currentPhase) {
-                        case PING:
-                            bottomMeasurementResultSummary.setPingText(String.valueOf(pingAverage));
-                            break;
-                        case DOWNLOAD:
-                            bottomMeasurementResultSummary.setDownloadText(String.valueOf(speed));
-                            break;
+                        case END:
                         case UPLOAD:
-                            bottomMeasurementResultSummary.setUploadText(String.valueOf(speed));
+                            bottomMeasurementResultSummary.setUploadText(String.valueOf(speedMeasurementState.getUploadMeasurement().getThroughputAvgBps()));
+                        case DOWNLOAD:
+                            bottomMeasurementResultSummary.setDownloadText(String.valueOf(speedMeasurementState.getDownloadMeasurement().getThroughputAvgBps()));
+                        case PING:
+                            bottomMeasurementResultSummary.setPingText(String.valueOf(speedMeasurementState.getPingMeasurement().getAverageMs()));
                             break;
                     }
                 }

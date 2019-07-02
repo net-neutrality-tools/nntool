@@ -162,4 +162,11 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <!-- VIEW YOUR RECENT MEASUREMENT BUTTON -->
+
+    <style name="Nettest.Measurement.Result.View.Recent.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/title_page_start_button_fg</item>
+    </style>
+
 </resources>

@@ -19,6 +19,7 @@ import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.app.workflow.history.HistoryFragment;
 import at.alladin.nettest.nntool.android.app.workflow.map.MapFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.SpeedFragment;
+import at.alladin.nettest.nntool.android.app.workflow.measurement.TitleWithRecentResultFragment;
 import at.alladin.nettest.nntool.android.app.workflow.settings.SettingsFragment;
 import at.alladin.nettest.nntool.android.app.workflow.main.TitleFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
@@ -26,6 +27,7 @@ import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementTyp
 import at.alladin.nettest.nntool.android.app.workflow.measurement.QosFragment;
 import at.alladin.nettest.nntool.android.app.workflow.statistics.StatisticsFragment;
 import at.alladin.nettest.nntool.android.app.workflow.tc.TermsAndConditionsFragment;
+import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -41,22 +43,21 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    navigateTo(WorkflowTarget.TITLE);
+                    navigateToTarget(WorkflowTarget.TITLE);
                     return true;
                 case R.id.navigation_history:
-                    navigateTo(WorkflowTarget.HISTORY);
+                    navigateToTarget(WorkflowTarget.HISTORY);
                     return true;
                 case R.id.navigation_map:
-                    navigateTo(WorkflowTarget.MAP);
+                    navigateToTarget(WorkflowTarget.MAP);
                     return true;
                 case R.id.navigation_settings:
-                    navigateTo(WorkflowTarget.SETTINGS);
+                    navigateToTarget(WorkflowTarget.SETTINGS);
                     return true;
                 case R.id.navigation_statistics:
-                    navigateTo(WorkflowTarget.STATISTICS);
+                    navigateToTarget(WorkflowTarget.STATISTICS);
                     return true;
             }
             return false;
@@ -64,6 +65,32 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void navigateTo(final WorkflowTarget target) {
+        switch (target) {
+            case TITLE:
+                navigation.setSelectedItemId(R.id.navigation_home);
+                break;
+            //no need to select the item from the measurement speed or measurement qos target (they can only be started from the title anyway)
+            case MEASUREMENT_SPEED:
+            case MEASUREMENT_QOS:
+            case MEASUREMENT_RECENT_RESULT:
+                navigateToTarget(target);
+                break;
+            case SETTINGS:
+                navigation.setSelectedItemId(R.id.navigation_settings);
+                break;
+            case MAP:
+                navigation.setSelectedItemId(R.id.navigation_map);
+                break;
+            case HISTORY:
+                navigation.setSelectedItemId(R.id.navigation_history);
+                break;
+            case STATISTICS:
+                navigation.setSelectedItemId(R.id.navigation_statistics);
+                break;
+        }
+    }
+
+    private void navigateToTarget(final WorkflowTarget target) {
         Fragment targetFragment = null;
         boolean isBottomNavigationVisible = true;
 
@@ -78,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
             case MEASUREMENT_QOS:
                 isBottomNavigationVisible = false;
                 targetFragment = QosFragment.newInstance();
+                break;
+            case MEASUREMENT_RECENT_RESULT:
+                targetFragment = TitleWithRecentResultFragment.newInstance();
                 break;
             case SETTINGS:
                 targetFragment = SettingsFragment.newInstance();

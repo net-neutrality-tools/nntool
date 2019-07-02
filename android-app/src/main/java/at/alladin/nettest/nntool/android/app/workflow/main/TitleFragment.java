@@ -42,11 +42,11 @@ public class TitleFragment extends Fragment {
 
     private GeoLocationView geoLocationView;
 
-    private InformationProvider informationProvider;
-
     private InterfaceTrafficView interfaceTrafficView;
 
     private CpuAndRamView cpuAndRamView;
+
+    private InformationProvider informationProvider;
 
     /**
      *
@@ -63,27 +63,7 @@ public class TitleFragment extends Fragment {
         final View v = inflater.inflate(R.layout.fragment_title, container, false);
 
         final View startButton = v.findViewById(R.id.title_page_start_button);
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getResources().getBoolean(R.bool.functionality_data_consumption_warning_enabled)) {
-                    final String message = getResources().getString(R.string.functionality_data_consumption_warning_message);
-                    AlertDialog alert = new AlertDialog.Builder(getActivity())
-                            .setPositiveButton(android.R.string.ok,
-                                    (dialog, w) -> startMeasurement())
-                            .setNegativeButton(android.R.string.cancel,
-                                    (dialog, w) -> Log.d(TAG, "Data consumption warning declined"))
-                            .setMessage(message)
-                            .setCancelable(false)
-                            .create();
-
-                    alert.show();
-                }
-                else {
-                    startMeasurement();
-                }
-            }
-        });
+        startButton.setOnClickListener(getNewOnClickListener());
 
         providerSignalView = v.findViewById(R.id.view_provider_signal);
 
@@ -204,5 +184,29 @@ public class TitleFragment extends Fragment {
         if (systemInfoGatherer != null && cpuAndRamView != null) {
             systemInfoGatherer.removeListener(cpuAndRamView);
         }
+    }
+
+    protected View.OnClickListener getNewOnClickListener () {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getResources().getBoolean(R.bool.functionality_data_consumption_warning_enabled)) {
+                    final String message = getResources().getString(R.string.functionality_data_consumption_warning_message);
+                    AlertDialog alert = new AlertDialog.Builder(getActivity())
+                            .setPositiveButton(android.R.string.ok,
+                                    (dialog, w) -> startMeasurement())
+                            .setNegativeButton(android.R.string.cancel,
+                                    (dialog, w) -> Log.d(TAG, "Data consumption warning declined"))
+                            .setMessage(message)
+                            .setCancelable(false)
+                            .create();
+
+                    alert.show();
+                }
+                else {
+                    startMeasurement();
+                }
+            }
+        };
     }
 }

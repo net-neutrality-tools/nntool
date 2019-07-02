@@ -7,6 +7,8 @@ import android.support.annotation.Keep;
  */
 public class SpeedMeasurementState {
 
+    private String measurementUuid;
+
     private SpeedPhaseState downloadMeasurement = new SpeedPhaseState();
 
     private SpeedPhaseState uploadMeasurement = new SpeedPhaseState();
@@ -69,11 +71,23 @@ public class SpeedMeasurementState {
         this.measurementPhase = measurementPhase;
     }
 
+    public String getMeasurementUuid() {
+        return measurementUuid;
+    }
+
+    public void setMeasurementUuid(String measurementUuid) {
+        this.measurementUuid = measurementUuid;
+    }
+
     @Override
     public String toString() {
-        return "JniSpeedMeasurementState{" +
-                "downloadMeasurement=" + downloadMeasurement +
+        return "SpeedMeasurementState{" +
+                "measurementUuid='" + measurementUuid + '\'' +
+                ", downloadMeasurement=" + downloadMeasurement +
                 ", uploadMeasurement=" + uploadMeasurement +
+                ", pingMeasurement=" + pingMeasurement +
+                ", progress=" + progress +
+                ", measurementPhase=" + measurementPhase +
                 '}';
     }
 

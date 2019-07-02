@@ -35,6 +35,7 @@ import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
+import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
 import at.alladin.nettest.nntool.android.speed.jni.JniSpeedMeasurementClient;
 import at.alladin.nettest.qos.QoSMeasurementClientControlAdapter;
@@ -268,12 +269,13 @@ public class MeasurementService extends Service implements ServiceConnection {
                         AlertDialogUtil.showAlertDialog(mainActivity,
                                 R.string.alert_send_measurement_result_title,
                                 R.string.alert_send_measurement_results_error);
+                    } else {
+                        jniSpeedMeasurementClient.getSpeedMeasurementState().setMeasurementUuid(result.getUuid());
                     }
                     //if the result has been sent, reset the list of previous measurements
                     qosMeasurementResultList.clear();
                     subMeasurementResultList.clear();
-                    sendingResults.set(false);
-                    mainActivity.navigateTo(WorkflowTarget.TITLE);
+                    mainActivity.navigateTo(WorkflowTarget.MEASUREMENT_RECENT_RESULT);
                 }
             });
             task.execute();
