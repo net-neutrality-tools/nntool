@@ -275,7 +275,7 @@ public class CouchDbStorageService implements StorageService {
 		if (!agentUuid.equals(measurement.getAgentInfo().getUuid())) {
 			throw new StorageServiceException("Invalid agent/measurement uuid pair");
 		}
-		anonymizeMeasurement(measurement);
+		disassociateMeasurement(measurement);
 		try {
 			measurementRepository.save(measurement);
 		} catch (Exception ex) {
@@ -288,7 +288,7 @@ public class CouchDbStorageService implements StorageService {
 	public DisassociateResponse disassociateAllMeasurements(final String agentUuid) throws StorageServiceException {
 		try {
 			final List<Measurement> measurementList = measurementRepository.findByAgentInfoUuid(agentUuid);
-			measurementList.forEach(m -> anonymizeMeasurement(m));
+			measurementList.forEach(m -> disassociateMeasurement(m));
 			measurementRepository.saveAll(measurementList);
 		} catch (Exception ex) {
 			throw new StorageServiceException(ex);
@@ -296,8 +296,7 @@ public class CouchDbStorageService implements StorageService {
 		return new DisassociateResponse();
 	}
 	
-	private void anonymizeMeasurement (final Measurement toAnonymize) {
-		//TODO: do we anonymize anything else?
+	private void disassociateMeasurement (final Measurement toAnonymize) {
 		if (toAnonymize.getAgentInfo() != null) {
 			toAnonymize.getAgentInfo().setUuid(null);
 		}

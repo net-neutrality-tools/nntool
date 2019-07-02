@@ -3,8 +3,10 @@ package at.alladin.nettest.shared.berec.collector.api.v1.dto;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -26,6 +28,7 @@ public class ApiPagination<T> {
 	@Expose
 	@SerializedName("content")
 	@JsonProperty(required = true, value = "content")
+	@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="deserialize_type")
 	private final List<T> content;
 	
 	/**
@@ -72,7 +75,12 @@ public class ApiPagination<T> {
 	 * 
 	 * @param page
 	 */
-	public ApiPagination(List<T> content, int pageNumber, int pageSize, int totalPages, long totalElements) {
+	@JsonCreator
+	public ApiPagination(@JsonProperty("content") List<T> content, 
+			@JsonProperty("page_number") int pageNumber, 
+			@JsonProperty("page_size") int pageSize, 
+			@JsonProperty("total_pages") int totalPages, 
+			@JsonProperty("total_elements") long totalElements) {
 		this.content = content;
 		this.pageNumber = pageNumber;
 		this.pageSize = pageSize;
