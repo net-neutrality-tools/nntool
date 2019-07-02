@@ -35,9 +35,6 @@ public class MeasurementRunner {
 
     ////
 
-    private var startTime: Date?
-    private var startTimeNs: UInt64?
-
     init(controlService: ControlService, agentUuid: String, programOrder: [MeasurementTypeDto], programs: [MeasurementTypeDto: ProgramConfiguration]) {
         self.controlService = controlService
         self.agentUuid = agentUuid
@@ -114,29 +111,33 @@ public class MeasurementRunner {
             return
         }
 
-        startTime = Date()
-        startTimeNs = TimeHelper.currentTimeNs()
+        let startTime = Date()
+        let startTimeNs = TimeHelper.currentTimeNs()
 
         let informationCollector = SystemInformationCollector.defaultCollector()
-        informationCollector.start(startNs: startTimeNs!) // !
-        
+        informationCollector.start(startNs: startTimeNs)
+
         var taskResultDict = [MeasurementTypeDto: SubMeasurementResult]()
 
         for task in tasks {
-            logger.info("run task \(task.name), \(task.options)")
-
             if isCanceled {
-                logger.info("measurement runner is cancelled")
+                logger.info("Measurement runner is cancelled.")
 
                 informationCollector.stop()
                 finish() // TODO: stop? fail?
                 return
             }
 
-            //task.name
-            //task.options
+            guard let taskName = task.name else {
+                logger.info("Skipping task because name is not set.")
+                continue
+            }
 
-            let taskType = MeasurementTypeDto(rawValue: task.name!)! // TODO: !, !
+            logger.info("Running task \(taskName) with options \(task.options).")
+
+            guard let taskType = MeasurementTypeDto(rawValue: taskName) else {
+                continue
+            }
 
             guard let programConfiguration = programs[taskType] else {
                 // TODO: should we fail if we don't have the requested program?
@@ -150,21 +151,21 @@ public class MeasurementRunner {
 
             currentProgram = programInstance
 
-            delegate?.measurementRunner(self, willStartProgramWithName: task.name!, implementation: programInstance) // TODO: !
+            delegate?.measurementRunner(self, willStartProgramWithName: taskName, implementation: programInstance)
 
             do {
                 // TODO: how to cancel measurement?
                 let result = try programInstance.run()
-                logger.debug(":: program \(task.name!) returned result:")
+                logger.debug(":: program \(taskName) returned result:")
                 logger.debug(result)
                 logger.debug(":: -------")
 
                 taskResultDict[taskType] = result
             } catch {
-                // TODO
+                // TODO: fail whole measurement or just submeasurement?
             }
 
-            delegate?.measurementRunner(self, didFinishProgramWithName: task.name!, implementation: programInstance) // !
+            delegate?.measurementRunner(self, didFinishProgramWithName: taskName, implementation: programInstance)
 
             currentProgram = nil
         }
@@ -173,34 +174,38 @@ public class MeasurementRunner {
 
         logger.info("-- all finished")
 
+        let endTime = Date()
+        let endTimeNs = TimeHelper.currentTimeNs()
+
         // TODO: measurement finished vs results submitted -> add additional state
 
         // send_results
-        // TODO: send results
-
-        // TODO: get collector service url from LMAP control model
-        var collectorService: CollectorService?
-        DispatchQueue.main.sync {
-             collectorService = CollectorService(baseURL: "http://localhost:18081/api/v1")
-        }
 
         let reportModel = LmapReportDto()
 
         reportModel.agentId = agentUuid
-        reportModel.groupId = "TODO"
-        reportModel.measurementPoint = "TODO"
+        //reportModel.groupId = "" // TODO
+        //reportModel.measurementPoint = "" // TODO
         reportModel.date = Date()
+
+        let timeBasedResult = informationCollector.getResult()
+
+        timeBasedResult.startTime = startTime
+        timeBasedResult.endTime = endTime
+        timeBasedResult.durationNs = endTimeNs - startTimeNs
+
+        reportModel.timeBasedResult = timeBasedResult
 
         let apiRequestInfo = ApiRequestInfo()
 
         apiRequestInfo.agentId = agentUuid
         apiRequestInfo.agentType = .mobile
-        apiRequestInfo.apiLevel = "Swift 5" // ?
-        apiRequestInfo.appGitRevision = "TODO"
-        apiRequestInfo.appVersionCode = nil
-        apiRequestInfo.appVersionName = "TODO"
+        //apiRequestInfo.apiLevel = "Swift 5" // TODO: read from bundle
+        //apiRequestInfo.appGitRevision = "" // TODO: read from bundle
+        //apiRequestInfo.appVersionCode = nil // TODO: read from bundle
+        //apiRequestInfo.appVersionName = "" // TODO: read from bundle
         apiRequestInfo.codeName = UIDevice.current.model
-        apiRequestInfo.geoLocation = nil
+        //apiRequestInfo.geoLocation = timeBasedResult.geoLocations?.first // TODO
         apiRequestInfo.language = {
             let preferredLanguages = Locale.preferredLanguages
 
@@ -211,7 +216,7 @@ public class MeasurementRunner {
             let sep = preferredLanguages[0].components(separatedBy: "-")
             return sep[0]
         }()
-        apiRequestInfo.model = "TODO"//UIDevice.current.model
+        apiRequestInfo.model = UIDevice.current.model
         apiRequestInfo.osName = UIDevice.current.systemName
         apiRequestInfo.osVersion = UIDevice.current.systemVersion
         apiRequestInfo.timezone = TimeZone.current.identifier
@@ -220,40 +225,44 @@ public class MeasurementRunner {
 
         ////
 
-        let timeBasedResult = informationCollector.getResult()
-
-        timeBasedResult.startTime = startTime
-        timeBasedResult.endTime = Date()
-        //timeBasedResult.durationNs
-
-        reportModel.timeBasedResult = timeBasedResult
-
         logger.debug(taskResultDict)
 
         reportModel.results = []
 
         for task in tasks {
+            guard let taskName = task.name, let taskType = MeasurementTypeDto(rawValue: taskName) else {
+                continue
+            }
+
             let taskResult = LmapResultDto()
 
-            taskResult.task = task.name
-
-            let taskType = MeasurementTypeDto(rawValue: task.name!)!
+            taskResult.task = taskName
 
             if let r = taskResultDict[taskType] {
-                logger.debug("!!!!---!!!")
-                logger.debug((r as? QoSMeasurementResult)?.objectiveResults)
+                //logger.debug("!!!!---!!!")
+                //logger.debug((r as? QoSMeasurementResult)?.objectiveResults)
                 taskResult.results = [ r ]
             }
 
             reportModel.results?.append(taskResult)
         }
 
-        logger.debug((reportModel.results?.first?.results?.first as? QoSMeasurementResult)?.objectiveResults)
+        //logger.debug((reportModel.results?.first?.results?.first as? QoSMeasurementResult)?.objectiveResults)
 
         ////
 
+        guard let collectorUrl = extractFirstValidCollectorUrlFromTaskOptions(tasks) else {
+            logger.error("No collector URL provieded, aborting measurement.")
+            self.fail()
+            return
+        }
+
+        logger.info("Found collector URL: \(collectorUrl)")
+
         DispatchQueue.main.sync {
-            collectorService?.storeMeasurement(reportDto: reportModel, onSuccess: { _ in
+            let collectorService = CollectorService(baseURL: collectorUrl)
+
+            collectorService.storeMeasurement(reportDto: reportModel, onSuccess: { _ in
                 self.finish()
             }, onFailure: { error in
                 print(error)
@@ -262,8 +271,6 @@ public class MeasurementRunner {
         }
 
         // /send_results
-
-        //finish() // TODO: remove if submission works
     }
 
     private func finish() {
@@ -278,5 +285,26 @@ public class MeasurementRunner {
 
     private func stop() {
         delegate?.measurementDidStop(self)
+    }
+}
+
+extension MeasurementRunner {
+
+    func extractFirstValidCollectorUrlFromTaskOptions(_ tasks: [LmapTaskDto]) -> String? {
+        for task in tasks {
+            guard let url = task.getOptionByName("result_collector_base_url") else {
+                continue
+            }
+
+            // check if url is valid
+            guard URL(string: url) != nil else {
+                continue
+            }
+
+            // return first valid url
+            return url
+        }
+
+        return nil
     }
 }

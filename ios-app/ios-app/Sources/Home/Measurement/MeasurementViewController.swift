@@ -56,7 +56,7 @@ class MeasurementViewController: CustomNavigationBarViewController {
         // the navigation button item appearance doesn't work as expected (very odd behaviour...).
         // As a workaround we change the title of this element after setting the appearance.
         navigationItem.rightBarButtonItem?.icon = .help
-        
+
         speedMeasurementGaugeView?.startButtonActionCallback = {
             self.startMeasurement()
         }
@@ -82,7 +82,7 @@ class MeasurementViewController: CustomNavigationBarViewController {
 
     @IBAction func viewMeasurementResultButtonTapped() {
         //performSegue(withIdentifier: "TODO_measurement_result_view", sender: nil) // TODO
-        print("--> viewMeasurementResultButtonTapped")
+        logger.debug("--> viewMeasurementResultButtonTapped")
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -183,7 +183,7 @@ class MeasurementViewController: CustomNavigationBarViewController {
 extension MeasurementViewController: MeasurementRunnerDelegate {
 
     func measurementWillStartRequestingControlModel(_ runner: MeasurementRunner) {
-        print("!^! measurementWillStartRequestingControlModel")
+        logger.debug("!^! measurementWillStartRequestingControlModel")
 
         DispatchQueue.main.async {
             self.progressAlert = UIAlertController.createLoadingAlert(title: "Initiating measurement")
@@ -192,7 +192,7 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
     }
 
     func measurementDidReceiveControlModel(_ runner: MeasurementRunner) {
-        print("!^! measurementDidReceiveControlModel")
+        logger.debug("!^! measurementDidReceiveControlModel")
 
         DispatchQueue.main.async {
             self.progressAlert?.dismiss(animated: false) {
@@ -202,7 +202,7 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
     }
 
     func measurementDidStart(_ runner: MeasurementRunner) {
-        print("!^! did start")
+        logger.debug("!^! did start")
 
         isRunning = true
     }
@@ -223,7 +223,7 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
     }
 
     func measurementDidFinish(_ runner: MeasurementRunner) {
-        print("!^! did finish")
+        logger.debug("!^! did finish")
 
         isRunning = false
 
@@ -237,7 +237,7 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
     }
 
     func measurementDidFail(_ runner: MeasurementRunner) {
-        print("!^! did fail")
+        logger.debug("!^! did fail")
 
         isRunning = false
 
@@ -258,7 +258,7 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
     }
 
     func measurementRunner(_ runner: MeasurementRunner, willStartProgramWithName name: String, implementation: /*AnyProgram<Any>*/ProgramProtocol) {
-        print("!^! willStart program \(name)")
+        logger.debug("!^! willStart program \(name)")
 
         (implementation as? IASProgram)?.delegate = self
         (implementation as? QoSProgram)?.forwardDelegate = self
@@ -272,7 +272,7 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
     }
 
     func measurementRunner(_ runner: MeasurementRunner, didFinishProgramWithName name: String, implementation: /*AnyProgram<Any>*/ProgramProtocol) {
-        print("!^! didFinish program \(name)")
+        logger.debug("!^! didFinish program \(name)")
 
         (implementation as? IASProgram)?.delegate = nil
         (implementation as? QoSProgram)?.forwardDelegate = nil
@@ -298,7 +298,7 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
 extension MeasurementViewController: IASProgramDelegate {
 
     func iasMeasurement(_ ias: IASProgram, didStartPhase phase: SpeedMeasurementPhase) {
-        print("did start phase: \(phase)")
+        logger.debug("did start phase: \(phase)")
 
         DispatchQueue.main.async {
             self.progressInfoBar?.setRightValue(value: "", newIcon: phase.icon)

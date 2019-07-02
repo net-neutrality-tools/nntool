@@ -40,7 +40,7 @@ class QoSProgram: ProgramProtocol {
 
     func run() throws -> SubMeasurementResult {
         let res = QoSMeasurementResult()
-        
+
         guard let objtvs = objectives else {
             res.status = .failed
             return res // or throw?
@@ -51,22 +51,22 @@ class QoSProgram: ProgramProtocol {
 
         qosTaskExecutor?.startWithObjectives(objtvs, token: "bbd1ee96-0779-4619-b993-bb4bf7089754_1528136454_3gr2gw9lVhtVONV0XO62Vamu/uw=") // TODO
 
-        print("before wait")
+        logger.debug("before wait")
 
         semaphore.wait()
 
-        print("after wait")
+        logger.debug("after wait")
 
         guard let r = result else {
             res.status = .failed
             return res // or throw?
         }
-        
+
         res.status = .finished
-        
+
         res.objectiveResults = r
-        print(res.objectiveResults)
-        
+        logger.debug(res.objectiveResults)
+
         return res
     }
 
@@ -78,13 +78,13 @@ class QoSProgram: ProgramProtocol {
 extension QoSProgram: QoSTaskExecutorDelegate {
 
     func taskExecutorDidStart(_ taskExecutor: QoSTaskExecutor, withTaskGroups groups: [QoSTaskGroup]) {
-        print("QOS -- START with: \(groups)")
+        logger.debug("QOS -- START with: \(groups)")
 
         forwardDelegate?.taskExecutorDidStart(taskExecutor, withTaskGroups: groups)
     }
 
     func taskExecutorDidFail(_ taskExecutor: QoSTaskExecutor, withError error: Error?) {
-        print("QOS -- ERROR: \(error)")
+        logger.debug("QOS -- ERROR: \(error)")
 
         forwardDelegate?.taskExecutorDidFail(taskExecutor, withError: error)
 
@@ -97,13 +97,13 @@ extension QoSProgram: QoSTaskExecutorDelegate {
     }
 
     func taskExecutorDidUpdateProgress(_ progress: Double, ofGroup group: QoSTaskGroup, totalProgress: Double) {
-        print("QOS -- UPDATE PROGRESS: \(progress), \(group), total: \(totalProgress)")
+        logger.debug("QOS -- UPDATE PROGRESS: \(progress), \(group), total: \(totalProgress)")
 
         forwardDelegate?.taskExecutorDidUpdateProgress(progress, ofGroup: group, totalProgress: totalProgress)
     }
 
     func taskExecutorDidFinishWithResult(_ result: [QoSTaskResult]) {
-        print("QOS -- finish! \(result)")
+        logger.debug("QOS -- finish! \(result)")
 
         self.result = result
 

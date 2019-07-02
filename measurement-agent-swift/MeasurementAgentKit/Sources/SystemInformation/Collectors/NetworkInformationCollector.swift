@@ -78,23 +78,23 @@ class NetworkInformationCollector: BaseInformationCollector {
         guard let interfaceNames = CNCopySupportedInterfaces() as? [String] else {
             return
         }
-        
+
         for name in interfaceNames {
             guard let interface = CNCopyCurrentNetworkInfo(name as CFString) as? [String: AnyObject] else {
                 continue
             }
-            
+
             guard let ssid = interface[kCNNetworkInfoKeySSID as String] as? String,
                 let bssid = interface[kCNNetworkInfoKeyBSSID as String] as? String else {
-                    
+
                     continue
             }
-            
+
             dto.ssid = ssid
             dto.bssid = bssid
-            
+
             dto.networkTypeId = 99
-            
+
             break
         }
         #endif

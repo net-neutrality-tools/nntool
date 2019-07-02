@@ -21,9 +21,6 @@ import Speed
 
 ///
 class IASProgram: NSObject, ProgramProtocol {
-    //typealias Delegate = IASProgramDelegate
-
-    //var delegate: /*IASProgramDelegate*/Any?
 
     var programDelegate: ProgramDelegate?
 
@@ -42,8 +39,6 @@ class IASProgram: NSObject, ProgramProtocol {
     func run() throws -> SubMeasurementResult {
         speed.speedDelegate = self
 
-        //let tool = Tool()
-
         speed.measurementLoad()
 
         ////
@@ -52,6 +47,7 @@ class IASProgram: NSObject, ProgramProtocol {
 
         speed.targets = ["peer-ias-de-01-ipv4"]
         speed.targetsRtt = ["peer-ias-de-01-ipv4"]
+        speed.targetsPort = "80"
 
         speed.performRttMeasurement      = true
         speed.performDownloadMeasurement = true
@@ -59,14 +55,12 @@ class IASProgram: NSObject, ProgramProtocol {
         speed.performRouteToClientLookup = false
         speed.performGeolocationLookup   = false
 
-        speed.parallelStreamsDownload = 4
-        speed.frameSizeDownload = 32768
+        //speed.parallelStreamsDownload = 4
+        //speed.frameSizeDownload = 32768
 
-        speed.parallelStreamsUpload = 4
-        speed.frameSizeUpload = 32768
+        //speed.parallelStreamsUpload = 4
+        //speed.frameSizeUpload = 32768
 
-        let res = IasMeasurementResult()
-        
         let encoder = JSONEncoder()
 
         // add speed classes (need to transform to Dictionary until Speed library works with objects)
@@ -84,14 +78,92 @@ class IASProgram: NSObject, ProgramProtocol {
             }
         }
 
-        _ = measurementFinishedSemaphore.wait(timeout: DispatchTime.distantFuture) // TODO: result; timeout
+        let semaphoreResult = measurementFinishedSemaphore.wait(timeout: DispatchTime.distantFuture) // TODO: timeout
+        if semaphoreResult == .timedOut {
+            cancel()
+            // TODO: mark measurement as timed out
+        }
+
+        let res = IasMeasurementResult()
 
         guard let r = result else {
+            // TODO: status/reason
+
+            res.status = .failed // or .aborted
             return res
         }
 
+        if let rttInfo = r["rtt_info"] as? [AnyHashable: Any] {
+            res.durationRttNs = rttInfo["duration_ns"] as? UInt64
+
+            res.rttInfo = RttInfoDto()
+
+            res.rttInfo?.numError = rttInfo["num_error"] as? Int
+            res.rttInfo?.numMissing = rttInfo["num_missing"] as? Int
+            res.rttInfo?.numReceived = rttInfo["num_received"] as? Int
+            res.rttInfo?.numSent = rttInfo["num_sent"] as? Int
+            res.rttInfo?.packetSize = rttInfo["packet_size"] as? Int
+            res.rttInfo?.requestedNumPackets = 10 // TODO
+
+            res.rttInfo?.rtts = [RttDto]() // TODO
+        }
+
+        res.connectionInfo = ConnectionInfoDto()
+
+        if let lastDownloadInfo = (r["download_info"] as? [[AnyHashable: Any]])?.last {
+            res.bytesDownload = lastDownloadInfo["bytes"] as? UInt64
+            res.bytesDownloadIncludingSlowStart = lastDownloadInfo["bytes_including_slow_start"] as? UInt64
+            res.durationDownloadNs = lastDownloadInfo["duration_ns_total"] as? UInt64
+            //res.relativeStartTimeDownloadNs
+
+            res.connectionInfo?.actualNumStreamsDownload = lastDownloadInfo["num_streams_end"] as? Int // TODO: this might not be correct
+            //res.connectionInfo?.agentInterfaceDownloadMeasurementTraffic // TODO
+            res.connectionInfo?.requestedNumStreamsDownload = lastDownloadInfo["num_streams_start"] as? Int // TODO: this might not be correct
+
+            res.connectionInfo?.webSocketInfoDownload = WebSocketInfoDto()
+            res.connectionInfo?.webSocketInfoDownload?.frameCount = lastDownloadInfo["frame_count"] as? Int
+            res.connectionInfo?.webSocketInfoDownload?.frameCountIncludingSlowStart = lastDownloadInfo["frame_count_including_slow_start"] as? Int
+            res.connectionInfo?.webSocketInfoDownload?.frameSize = lastDownloadInfo["frame_size"] as? Int
+            res.connectionInfo?.webSocketInfoDownload?.overhead = lastDownloadInfo["overhead"] as? Int
+            res.connectionInfo?.webSocketInfoDownload?.overheadIncludingSlowStart = lastDownloadInfo["overhead_including_slow_start"] as? Int
+            res.connectionInfo?.webSocketInfoDownload?.overheadPerFrame = lastDownloadInfo["overhead_per_frame"] as? Int
+        }
+
+        if let lastUploadInfo = (r["upload_info"] as? [[AnyHashable: Any]])?.last {
+            res.bytesUpload = lastUploadInfo["bytes"] as? UInt64
+            res.bytesUploadIncludingSlowStart = lastUploadInfo["bytes_including_slow_start"] as? UInt64
+            res.durationUploadNs = lastUploadInfo["duration_ns_total"] as? UInt64
+            //res.relativeStartTimeUploadNs
+
+            res.connectionInfo?.actualNumStreamsUpload = lastUploadInfo["num_streams_end"] as? Int // TODO: this might not be correct
+            //res.connectionInfo?.agentInterfaceUploadMeasurementTraffic // TODO
+            res.connectionInfo?.requestedNumStreamsUpload = lastUploadInfo["num_streams_start"] as? Int // TODO: this might not be correct
+
+            res.connectionInfo?.webSocketInfoUpload = WebSocketInfoDto()
+            res.connectionInfo?.webSocketInfoUpload?.frameCount = lastUploadInfo["frame_count"] as? Int
+            res.connectionInfo?.webSocketInfoUpload?.frameCountIncludingSlowStart = lastUploadInfo["frame_count_including_slow_start"] as? Int
+            res.connectionInfo?.webSocketInfoUpload?.frameSize = lastUploadInfo["frame_size"] as? Int
+            res.connectionInfo?.webSocketInfoUpload?.overhead = lastUploadInfo["overhead"] as? Int
+            res.connectionInfo?.webSocketInfoUpload?.overheadIncludingSlowStart = lastUploadInfo["overhead_including_slow_start"] as? Int
+            res.connectionInfo?.webSocketInfoUpload?.overheadPerFrame = lastUploadInfo["overhead_per_frame"] as? Int
+        }
+
+        if let timeInfo = r["time_info"] as? [AnyHashable: UInt64] {
+            res.relativeStartTimeRttNs = timeInfo["rtt_start"]
+            res.relativeStartTimeDownloadNs = timeInfo["download_start"]
+            res.relativeStartTimeUploadNs = timeInfo["upload_start"]
+        }
+
+        //res.connectionInfo
+        //res.reason
+        //res.relativeEndTimeNs
+        //res.relativeStartTimeNs
+        //res.status
+
         // TODO
-        
+
+        res.status = .finished
+
         return res
     }
 
@@ -103,16 +175,16 @@ class IASProgram: NSObject, ProgramProtocol {
 extension IASProgram: SpeedDelegate {
 
     func showKpisFromResponse(response: [AnyHashable: Any]!) {
-        //print(response.description)
+        //logger.debug(response.description)
 
-        print("showKpisFromResponse (delegate: \(delegate))")
+        logger.debug("showKpisFromResponse (delegate: \(delegate))")
 
-        print(response["cmd"])
-        print(response["test_case"])
-        /*print(response["msg"])
-        print("-----")
-        print(response)
-        print("-----")*/
+        logger.debug(response["cmd"])
+        logger.debug(response["test_case"])
+        /*logger.debug(response["msg"])
+        logger.debug("-----")
+        logger.debug(response)
+        logger.debug("-----")*/
 
         if let cmd = response["cmd"] as? String {
             switch cmd {
@@ -125,7 +197,7 @@ extension IASProgram: SpeedDelegate {
             case "report":
                 if let primaryValue: Double = {
                     switch currentPhase {
-                    case .rtt: return (response["rtt_info"] as? [AnyHashable: Any])?["min_ns"] as? Double
+                    case .rtt: return (response["rtt_info"] as? [AnyHashable: Any])?[/*"min_ns"*/"average_ns"] as? Double
                     case .download: return (response["download_info"] as? [[AnyHashable: Any]])?.last?["throughput_avg_bps"] as? Double
                     case .upload: return (response["upload_info"] as? [[AnyHashable: Any]])?.last?["throughput_avg_bps"] as? Double
                     default:
@@ -144,7 +216,14 @@ extension IASProgram: SpeedDelegate {
                     if  let rttInfo = response["rtt_info"] as? [String: Any],
                         let numReceived = rttInfo["num_received"] as? Int,
                         let numMissing = rttInfo["num_missing"] as? Int,
-                        let numError = rttInfo["num_error"] as? Int {
+                        let numError = rttInfo["num_error"] as? Int//,
+
+                        /*let minNs = rttInfo["min_ns"] as? Double,
+                        let maxNs = rttInfo["max_ns"] as? Double,
+                        let medianNs = rttInfo["median_ns"] as? Double*/ {
+
+                        // TODO: single rtt values
+                        logger.debug("--!!-- RTT: \(rttInfo["min_ns"]), \(rttInfo["max_ns"]), \(rttInfo["median_ns"]), \(numReceived)")
 
                         phaseProgress = Double(numReceived + numMissing + numError) / 10.0 // TODO: rtt config packet count?
                     }
@@ -165,7 +244,7 @@ extension IASProgram: SpeedDelegate {
                 }
 
                 if let pp = phaseProgress {
-                    print("PHASE_PROGRESS: \(phaseProgress)")
+                    logger.debug("PHASE_PROGRESS: \(phaseProgress)")
                     delegate?.iasMeasurement(self, didUpdateProgress: pp, inPhase: currentPhase)
                 }
             case "finish":
@@ -177,10 +256,10 @@ extension IASProgram: SpeedDelegate {
     }
 
     func measurementDidLoad(withResponse response: [AnyHashable: Any]!, withError error: Error!) {
-        //print(response)
-        //print(error)
+        //logger.debug(response)
+        //logger.debug(error)
 
-        print("measurementDidLoad")
+        logger.debug("measurementDidLoad")
 
         speed.measurementStart()
         delegate?.iasMeasurement(self, didStartPhase: .initialize)
@@ -189,27 +268,32 @@ extension IASProgram: SpeedDelegate {
     func measurementCallback(withResponse response: [AnyHashable: Any]!) {
         showKpisFromResponse(response: response)
 
-        print("measurementCallback")
+        logger.debug("measurementCallback")
     }
 
     func measurementDidComplete(withResponse response: [AnyHashable: Any]!, withError error: Error!) {
         showKpisFromResponse(response: response)
-        print(error)
+        logger.debug(error)
 
-        print("FIN")
+        logger.debug("FIN")
 
         result = response
+
+        logger.debugExec {
+            let res = try? String(data: JSONSerialization.data(withJSONObject: result, options: .prettyPrinted), encoding: .utf8)!
+            logger.debug(res)
+        }
 
         measurementFinishedSemaphore.signal()
     }
 
     func measurementDidStop() {
-        print("STOP")
+        logger.debug("STOP")
 
         measurementFinishedSemaphore.signal()
     }
 
     func measurementDidClearCache() {
-        print("CLEAR CACHE")
+        logger.debug("CLEAR CACHE")
     }
 }

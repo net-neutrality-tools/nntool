@@ -1,4 +1,4 @@
-// MeasurementAgentKit: CollectorService.swift, created on 29.03.19
+// ios-app: LogConfig.swift, created on 02.07.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,19 +16,6 @@
  ******************************************************************************/
 
 import Foundation
-import Siesta
+import XCGLogger
 
-///
-class CollectorService: RestApiService {
-
-    init(baseURL: URLConvertible = "http://localhost:8081/api/v1/measurements") {
-        super.init(baseURL: baseURL)
-
-        configureTransformer("/", forType: ApiResponse<MeasurementResultResponse>.self)
-    }
-
-    ///
-    func storeMeasurement(reportDto: LmapReportDto, onSuccess: SuccessCallback<MeasurementResultResponse>?, onFailure: FailureCallback?) {
-        request("/", method: .post, requestEntity: reportDto, wrapInApiRequest: false, responseEntityType: MeasurementResultResponse.self, onSuccess: onSuccess, onFailure: onFailure)
-    }
-}
+var logger = XCGLogger.default

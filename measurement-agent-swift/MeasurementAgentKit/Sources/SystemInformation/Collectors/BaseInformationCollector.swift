@@ -41,7 +41,7 @@ class BaseInformationCollector: InformationCollector {
         guard let ns = startNs else {
             return nil
         }
-        
+
         return TimeHelper.currentTimeNs() - ns
     }
 }

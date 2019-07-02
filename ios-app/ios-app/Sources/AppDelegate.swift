@@ -60,7 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Refresh MeasurementAgent settings after App launch
         if MEASUREMENT_AGENT.isRegistered() {
-            print("reloading settings (newlyLaunched: \(isNewlyLaunched))")
+            logger.debug("reloading settings (newlyLaunched: \(isNewlyLaunched))")
             MEASUREMENT_AGENT.updateSettings()
         }
     }

@@ -38,6 +38,10 @@ public class WebSocketInfoDto: Codable {
     /// The protocol overhead of a single WebSocket frame.
     public var overheadPerFrame: Int? // *load_overhead_per_frame
 
+    public init() {
+
+    }
+
     ///
     enum CodingKeys: String, CodingKey {
         case frameSize = "frame_size"

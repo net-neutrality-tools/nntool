@@ -59,12 +59,12 @@ class GpsLocationInformationCollector: NSObject, InformationCollector {
     func collect(into timeBasedResult: TimeBasedResultDto) {
 
     }
-    
+
     func locationAlreadyStored(_ location: CLLocation) -> Bool {
         guard let lrl = latestReportedLocation else {
             return false
         }
-        
+
         return  lrl.coordinate.latitude == location.coordinate.latitude &&
                 lrl.coordinate.longitude == location.coordinate.longitude &&
                 lrl.altitude == location.altitude &&
@@ -84,7 +84,7 @@ extension GpsLocationInformationCollector: CLLocationManagerDelegate {
             }
         }
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         DispatchQueue.global(qos: .background).async {
             guard let lastLocation = locations.last, CLLocationCoordinate2DIsValid(lastLocation.coordinate) else {
@@ -113,7 +113,7 @@ extension GpsLocationInformationCollector: CLLocationManagerDelegate {
             }
 
             logger.debug("GEOLOCATION: \(geoLocation.debugDescription)")
-            
+
             self.latestReportedLocation = lastLocation
             self.timeBasedResult?.geoLocations?.append(geoLocation)
         }
