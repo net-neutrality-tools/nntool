@@ -152,14 +152,14 @@ describe('Tool', function () {
             }
         })
 
-        xit('sets cookie with expire date', function () {
+        it('sets cookie with expire date', function () {
             var thirtyDaysBeforeNow = new Date();
             thirtyDaysBeforeNow.setTime(thirtyDaysBeforeNow.getTime() - (30 * 24 * 60 * 60 * 1000));
             jasmine.clock().mockDate(thirtyDaysBeforeNow);
             tool.setCookie('31_days', 'cookie', 31);
             tool.setCookie('29_days', 'cookie', 29)
 
-            expect(document.cookie).toBe('31_days=cookie');
+            expect(tool.getCookie('29_days')).toBe(false);
 
             jasmine.clock().uninstall();
             tool.setCookie('31_days', 'cookie', 31);
@@ -208,7 +208,7 @@ describe('Tool', function () {
         });
 
     })
-    
+
     describe('detect device KPIs', function () {
         it('uses browser.report on desktop and web', function () {
             spyOn(tool, 'getBrowserReport').and.callThrough();
