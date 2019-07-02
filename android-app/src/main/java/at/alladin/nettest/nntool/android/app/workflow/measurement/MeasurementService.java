@@ -4,7 +4,6 @@ package at.alladin.nettest.nntool.android.app.workflow.measurement;
  * @author Lukasz Budryk (lb@alladin.at)
  */
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,8 +13,10 @@ import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.telephony.CellInfo;
 import android.util.Log;
+
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +26,7 @@ import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.SendReportTask;
-import at.alladin.nettest.nntool.android.app.support.telephony.CellIdentityWrapper;
 import at.alladin.nettest.nntool.android.app.support.telephony.CellInfoWrapper;
-import at.alladin.nettest.nntool.android.app.support.telephony.CellSignalStrengthWrapper;
 import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
 import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationCollector;
@@ -35,7 +34,6 @@ import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
-import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
 import at.alladin.nettest.nntool.android.speed.jni.JniSpeedMeasurementClient;
 import at.alladin.nettest.qos.QoSMeasurementClientControlAdapter;
@@ -45,11 +43,9 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.M
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.TimeBasedResultDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellLocationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.TaskDesc;
-import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -76,6 +72,14 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     final AtomicBoolean isBound = new AtomicBoolean(false);
 
+    private Long overallStartTime;
+
+    private Long startTime;
+
+    private LocalDateTime startDateTime;
+
+    private LocalDateTime endDateTime;
+
     /**
      *  Boolean indicating if the currently started submeasurement is a follow up measurement to another (already executed) sub-measurement (true)
      *  or if the currently started submeasurement is the first (false)
@@ -89,9 +93,6 @@ public class MeasurementService extends Service implements ServiceConnection {
     private JniSpeedMeasurementClient jniSpeedMeasurementClient;
 
     private List<SubMeasurementResult> subMeasurementResultList = new ArrayList<>();
-
-    //TODO: instead of the qos result collectors, store submeasurementresults
-    private List<QoSResultCollector> qosMeasurementResultList = new ArrayList<>();
 
     private Bundle bundle;
 
@@ -151,16 +152,22 @@ public class MeasurementService extends Service implements ServiceConnection {
     public void startMeasurement(final Bundle options) {
         this.bundle = options;
         followUpActions = (ArrayList<MeasurementType>) options.getSerializable(EXTRAS_KEY_FOLLOW_UP_ACTIONS);
+        overallStartTime = System.nanoTime();
+        startTime = overallStartTime;
+        startDateTime = LocalDateTime.now(DateTimeZone.UTC);
+
         final String speedTaskCollectorUrl = options.getString(EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL);
         final SpeedTaskDesc speedTaskDesc = (SpeedTaskDesc) options.getSerializable(EXTRAS_KEY_SPEED_TASK_DESC);
+
         jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskDesc);
         jniSpeedMeasurementClient.setCollectorUrl(speedTaskCollectorUrl);
         jniSpeedMeasurementClient.addMeasurementFinishedListener(new JniSpeedMeasurementClient.MeasurementFinishedListener() {
             @Override
             public void onMeasurementFinished(JniSpeedMeasurementResult result, SpeedTaskDesc taskDesc) {
                 final SpeedMeasurementResult speedMeasurementResult = ResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
+                speedMeasurementResult.setRelativeStartTimeNs(overallStartTime);
                 Log.d(TAG, speedMeasurementResult.toString());
-                subMeasurementResultList.add(speedMeasurementResult);
+                addSubMeasurementResult(speedMeasurementResult);
             }
         });
         AsyncTask.execute(new Runnable() {
@@ -170,6 +177,7 @@ public class MeasurementService extends Service implements ServiceConnection {
                     jniSpeedMeasurementClient.startMeasurement();
                 } catch (Exception ex) {
                     ex.printStackTrace();
+                    //TODO: handle errors during measurement
                 }
             }
         });
@@ -188,6 +196,8 @@ public class MeasurementService extends Service implements ServiceConnection {
                 */
         this.bundle = options;
         followUpActions = (ArrayList<MeasurementType>) options.getSerializable(EXTRAS_KEY_FOLLOW_UP_ACTIONS);
+        startTime = System.nanoTime();
+
         final List<TaskDesc> taskDescList = (List<TaskDesc>) options.getSerializable(EXTRAS_KEY_QOS_TASK_DESC_LIST);
         final String collectorUrl = options.getString(EXTRAS_KEY_QOS_TASK_COLLECTOR_URL);
         final ClientHolder client = ClientHolder.getInstance(taskDescList, collectorUrl);
@@ -250,18 +260,20 @@ public class MeasurementService extends Service implements ServiceConnection {
      */
     public boolean sendResults(final MainActivity mainActivity, final AtomicBoolean sendingResults) {
         if (!sendingResults.getAndSet(true)) {
+            endDateTime = LocalDateTime.now(DateTimeZone.UTC);
             isFollowUpAction.set(false);
             //stop collecting information and allow new measurements to start as not followupaction
             informationCollector.stop();
-            final List<CellInfoWrapper> cellInfoList = informationCollector.getCellInfoList();
-            final List<GeoLocationDto> geoLocationList = informationCollector.getGeoLocationList();
-            final LmapReportDto r = new LmapReportDto();
-            final TimeBasedResultDto tb = new TimeBasedResultDto();
-            r.setTimeBasedResult(tb);
-            tb.setGeoLocations(geoLocationList);
-            tb.setSignals(new ArrayList<>());
+            final LmapReportDto reportDto = RequestUtil.prepareLmapReportForMeasurement(subMeasurementResultList, informationCollector, mainActivity);
+            if (reportDto.getTimeBasedResult() == null) {
+                reportDto.setTimeBasedResult(new TimeBasedResultDto());
+            }
+            //TODO: leave for now, deserialize issues
+            //reportDto.getTimeBasedResult().setStartTime(startDateTime);
+            //reportDto.getTimeBasedResult().setEndTime(endDateTime);
+
             final SendReportTask task = new SendReportTask(mainActivity,
-                    RequestUtil.prepareLmapReportForMeasurement(qosMeasurementResultList, subMeasurementResultList, informationCollector, mainActivity),
+                    reportDto,
                     getSpeedCollectorUrl(), new OnTaskFinishedCallback<MeasurementResultResponse>() {
                 @Override
                 public void onTaskFinished(MeasurementResultResponse result) {
@@ -273,7 +285,6 @@ public class MeasurementService extends Service implements ServiceConnection {
                         jniSpeedMeasurementClient.getSpeedMeasurementState().setMeasurementUuid(result.getUuid());
                     }
                     //if the result has been sent, reset the list of previous measurements
-                    qosMeasurementResultList.clear();
                     subMeasurementResultList.clear();
                     mainActivity.navigateTo(WorkflowTarget.MEASUREMENT_RECENT_RESULT);
                 }
@@ -307,24 +318,19 @@ public class MeasurementService extends Service implements ServiceConnection {
         activity.startMeasurement(typeToExecute, bundle);
     }
 
+    /**
+     * Adds the given submeasurementresult to the list of executed submeasurements
+     * additionally adds time information to the submeasurement results
+     * @param result
+     */
+    public void addSubMeasurementResult(final SubMeasurementResult result) {
+        result.setRelativeStartTimeNs(startTime - overallStartTime);
+        result.setRelativeEndTimeNs(System.nanoTime() - overallStartTime);
+        subMeasurementResultList.add(result);
+    }
+
     public String getSpeedCollectorUrl () {
         return jniSpeedMeasurementClient.getCollectorUrl();
-    }
-
-    public List<SubMeasurementResult> getSubMeasurementResultList() {
-        return subMeasurementResultList;
-    }
-
-    public void setSubMeasurementResultList(List<SubMeasurementResult> subMeasurementResultList) {
-        this.subMeasurementResultList = subMeasurementResultList;
-    }
-
-    public List<QoSResultCollector> getQosMeasurementResultList() {
-        return qosMeasurementResultList;
-    }
-
-    public void setQosMeasurementResultList(List<QoSResultCollector> qosMeasurementResultList) {
-        this.qosMeasurementResultList = qosMeasurementResultList;
     }
 
 }

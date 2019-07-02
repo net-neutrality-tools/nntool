@@ -117,32 +117,11 @@ public class RequestUtil {
         return request;
     }
 
-    public static LmapReportDto prepareLmapReportForMeasurement(final List<QoSResultCollector> qoSResultCollectorList, final List<SubMeasurementResult> subMeasurementResultList, final InformationCollector informationCollector, final Context context) {
+    public static LmapReportDto prepareLmapReportForMeasurement(final List<SubMeasurementResult> subMeasurementResultList, final InformationCollector informationCollector, final Context context) {
         final LmapReportDto report = new LmapReportDto();
 
         report.setAdditionalRequestInfo(prepareApiRequestInfo(context));
         report.setAgentId(report.getAdditionalRequestInfo().getAgentId());
-
-        if (qoSResultCollectorList != null && qoSResultCollectorList.size() > 0) {
-            for (QoSResultCollector qoSResultCollector : qoSResultCollectorList) {
-                if (qoSResultCollector != null && qoSResultCollector.getResults() != null) {
-                    final QoSMeasurementResult qoSMeasurementResult = new QoSMeasurementResult();
-                    final LmapResultDto<QoSMeasurementResult> lmapResult = new LmapResultDto<>();
-
-                    if (report.getResults() == null) {
-                        report.setResults(new ArrayList<>());
-                    }
-                    report.getResults().add(lmapResult);
-
-                    lmapResult.setResults(new ArrayList<>());
-                    lmapResult.getResults().add(qoSMeasurementResult);
-                    qoSMeasurementResult.setObjectiveResults(new ArrayList<>());
-                    for (final QoSTestResult qosResult : qoSResultCollector.getResults()) {
-                        qoSMeasurementResult.getObjectiveResults().add(qosResult.getResultMap());
-                    }
-                }
-            }
-        }
 
         if (subMeasurementResultList != null && subMeasurementResultList.size() > 0) {
             for (SubMeasurementResult subMeasurementResult : subMeasurementResultList) {

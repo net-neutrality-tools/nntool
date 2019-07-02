@@ -5,16 +5,30 @@ import java.util.List;
 
 import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
 import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.QoSMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.RttDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.RttInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.SpeedMeasurementRawDataItemDto;
+import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
+import at.alladin.nntool.client.v2.task.result.QoSTestResult;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
  */
 public class ResultParseUtil {
+
+    public static QoSMeasurementResult parseIntoQosMeasurementResult(final QoSResultCollector qoSResultCollector) {
+        final QoSMeasurementResult ret = new QoSMeasurementResult();
+
+        ret.setObjectiveResults(new ArrayList<>());
+        for (final QoSTestResult qosResult : qoSResultCollector.getResults()) {
+            ret.getObjectiveResults().add(qosResult.getResultMap());
+        }
+
+        return ret;
+    }
 
     public static SpeedMeasurementResult parseIntoSpeedMeasurementResult(final JniSpeedMeasurementResult result, final SpeedTaskDesc speedTaskDesc) {
         final SpeedMeasurementResult ret = new SpeedMeasurementResult();
