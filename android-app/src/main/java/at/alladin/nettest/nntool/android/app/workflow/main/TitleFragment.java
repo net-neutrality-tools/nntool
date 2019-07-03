@@ -83,7 +83,8 @@ public class TitleFragment extends Fragment {
                 new OnTaskFinishedCallback<LmapUtil.LmapTaskWrapper>() {
                     @Override
                     public void onTaskFinished(LmapUtil.LmapTaskWrapper result) {
-                        if (result != null && result.getTaskDescList() != null && result.getTaskDescList().size() > 0) {
+                        if (result != null &&
+                                (result.getSpeedTaskDesc() != null || (result.getTaskDescList() != null && result.getTaskDescList().size() > 0))){
                             final Bundle bundle = new Bundle();
                             bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_DESC_LIST,
                                     (Serializable) result.getTaskDescList());

@@ -270,7 +270,6 @@ public class MeasurementService extends Service implements ServiceConnection {
             if (reportDto.getTimeBasedResult() == null) {
                 reportDto.setTimeBasedResult(new TimeBasedResultDto());
             }
-            //TODO: leave for now, deserialize issues
             reportDto.getTimeBasedResult().setStartTime(startDateTime);
             reportDto.getTimeBasedResult().setEndTime(endDateTime);
 

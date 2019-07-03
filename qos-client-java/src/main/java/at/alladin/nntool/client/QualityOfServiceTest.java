@@ -342,7 +342,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 							for (QoSMeasurementClientProgressListener l : progressListeners) {
 								l.onQoSTypeProgress(type, prog);
 							}
-							if (prog == 1) {
+							if (prog >= 1) {
 								for (QoSMeasurementClientProgressListener l : progressListeners) {
 									l.onQoSTypeFinished(type);
 								}

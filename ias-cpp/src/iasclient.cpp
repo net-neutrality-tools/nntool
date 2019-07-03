@@ -275,7 +275,11 @@ void measurementStart(string measurementParameters)
 	::UPLOAD = jUpload["performMeasurement"].bool_value();
 	pXml->writeString(conf.sProvider,"UL_STREAMS", jUpload["streams"].string_value());
 
-	pXml->writeString(conf.sProvider,"PING_QUERY","10");
+    #ifdef __ANDROID__
+        pXml->writeString(conf.sProvider,"PING_QUERY",jRtt["ping_query"].string_value());
+    #else
+	    pXml->writeString(conf.sProvider,"PING_QUERY","10");
+	#endif
 
 
 	pCallback = new CCallback();

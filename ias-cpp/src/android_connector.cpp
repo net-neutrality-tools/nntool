@@ -495,12 +495,13 @@ void AndroidConnector::startMeasurement() {
         //set default measurement parameters
         jDownloadParameters["streams"] = std::to_string(downloadStreams);
         jUploadParameters["streams"] = std::to_string(uploadStreams);
+        jRttParameters["ping_query"] = std::to_string(rttCount);
         jMeasurementParameters["rtt"] = json11::Json(jRttParameters);
         jMeasurementParameters["download"] = json11::Json(jDownloadParameters);
         jMeasurementParameters["upload"] = json11::Json(jUploadParameters);
 
-        jMeasurementParameters["platform"] = "desktop";
-        jMeasurementParameters["clientos"] = "linux";
+        jMeasurementParameters["platform"] = "mobile";
+        jMeasurementParameters["clientos"] = "android";
         jMeasurementParameters["wsTLD"] = "net-neutrality.tools";
         jMeasurementParameters["wsTargetPort"] = std::to_string(speedServerPort);
         jMeasurementParameters["wsWss"] = isEncrypted ? "1" : "0";
