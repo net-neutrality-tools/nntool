@@ -45,6 +45,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Log.d(TAG, "onNavigationItemSelected");
+            if (navigation.getSelectedItemId() == item.getItemId()) {
+                return true;
+            }
+
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     navigateToTarget(WorkflowTarget.TITLE);
@@ -67,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void navigateTo(final WorkflowTarget target) {
+        Log.d(TAG, "navigateTo");
         switch (target) {
             case TITLE:
                 navigation.setSelectedItemId(R.id.navigation_home);
@@ -93,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void navigateToTarget(final WorkflowTarget target) {
+        Log.d(TAG, "navigateToTarget");
         Fragment targetFragment = null;
         boolean isBottomNavigationVisible = true;
 
