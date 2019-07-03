@@ -162,4 +162,10 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <!-- History Fragment -->
+    <style name="Nettest.History.Error.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
 </resources>

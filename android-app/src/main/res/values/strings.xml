@@ -73,6 +73,12 @@
     <string name="measurement_gauge_speed_four">1Gb</string>
 
     <!-- History specific strings -->
+    <string name="history_header_unit_ms">(ms)</string>
+    <string name="history_header_unit_mbps">(Mbps)</string>
+    <string name="history_header_date">Date</string>
+    <string name="history_header_ping">Ping</string>
+    <string name="history_header_down">Down</string>
+    <string name="history_header_up">Up</string>
     <string name="history_no_results_found">No results found.</string>
 
 </resources>
