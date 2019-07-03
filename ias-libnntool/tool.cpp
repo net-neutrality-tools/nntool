@@ -238,16 +238,16 @@ int CTool::calculateResults(struct measurement_data &sMeasurement, double increm
         
         if (samples%2 == 0)
         {
-            sMeasurement.median_ns  = ((medianVector[samples/2-1] + medianVector[samples/2])/2) * 1000 * 1000;
+            sMeasurement.median_ns  = ((medianVector[samples/2-1] + medianVector[samples/2])/2) * 1000;
         }
         else
         {
-            sMeasurement.median_ns  = medianVector[samples/2] * 1000 * 1000;
+            sMeasurement.median_ns  = medianVector[samples/2] * 1000;
         }
 
         //calculate population standard deviation
         double variancePopulation = (double)sumSq / (double)count - avgDouble * avgDouble;
-        sMeasurement.standard_deviation_ns = sqrt(variancePopulation) * 1000 * 1000;
+        sMeasurement.standard_deviation_ns = sqrt(variancePopulation) * 1000;
 		#endif
 	}
 	

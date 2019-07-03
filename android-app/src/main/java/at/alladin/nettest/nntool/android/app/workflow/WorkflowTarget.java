@@ -7,6 +7,7 @@ public enum WorkflowTarget {
     TITLE,
     MEASUREMENT_SPEED,
     MEASUREMENT_QOS,
+    MEASUREMENT_RECENT_RESULT, //the title screen w/the added "View Your Measurement Report" button
     HISTORY,
     MAP,
     STATISTICS,

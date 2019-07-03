@@ -32,19 +32,16 @@ using namespace std;
 class CTrace
 {	
 	private:
-		string mCategory;
+	    #ifdef NNTOOL_SERVER
+		    string mCategory;
+		#endif
 
 		static std::function<void(std::string)> logFunction;
-		
-		static CTrace* global_pHandlerTrace;
-		static pthread_mutex_t global_mutexCreateTrace;
 		
 		CTrace();
 	public:
 	
-		virtual ~CTrace();
-		
-		static CTrace* getInstance();
+		static CTrace& getInstance();
 
 		static void setLogFunction(std::function<void(std::string)> func) {
 			CTrace::logFunction = func;
