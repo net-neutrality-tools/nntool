@@ -20,8 +20,7 @@ void JNICALL JNI_OnUnload(JavaVM* vm, void* reserved) {
 
 extern "C" JNIEXPORT
 void JNICALL Java_at_alladin_nettest_nntool_android_speed_jni_JniSpeedMeasurementClient_startMeasurement (JNIEnv* env, jobject thiz) {
-    AndroidConnector &inst = AndroidConnector::getInstance();
-    inst.startMeasurement();
+    AndroidConnector::getInstance().startMeasurement();
 }
 
 extern "C" JNIEXPORT
@@ -60,8 +59,6 @@ jint AndroidConnector::jniLoad(JavaVM* vm) {
     //get the fields for the SpeedphaseState
     clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementState$SpeedPhaseState");
     fieldAvgThroughput = env->GetFieldID(clazz, "throughputAvgBps", "J");
-    fieldDurationMsTotal = env->GetFieldID(clazz, "durationMsTotal", "J");
-    fieldDurationMs = env->GetFieldID(clazz, "durationMs", "J");
 
     //get the fields for the PingPhaseState
     clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementState$PingPhaseState");
@@ -337,24 +334,37 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
 
         initId = env->GetMethodID(timeClazz, "<init>", "()V");
         jobject timeObj = env->NewObject(timeClazz, initId);
+        jmethodID setId;
 
-        jmethodID setId = env->GetMethodID(timeClazz, "setDownloadStart", "(Ljava/lang/Long;)V");
-        env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["download_start"].string_value())));
+        if (timeEntry["download_start"].is_string()) {
+            setId = env->GetMethodID(timeClazz, "setDownloadStart", "(Ljava/lang/Long;)V");
+            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["download_start"].string_value())));
+        }
 
-        setId = env->GetMethodID(timeClazz, "setDownloadEnd", "(Ljava/lang/Long;)V");
-        env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["download_end"].string_value())));
+        if (timeEntry["download_end"].is_string()) {
+            setId = env->GetMethodID(timeClazz, "setDownloadEnd", "(Ljava/lang/Long;)V");
+            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["download_end"].string_value())));
+        }
 
-        setId = env->GetMethodID(timeClazz, "setRttUdpStart", "(Ljava/lang/Long;)V");
-        env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["rtt_udp_start"].string_value())));
+        if (timeEntry["rtt_udp_start"].is_string()) {
+            setId = env->GetMethodID(timeClazz, "setRttUdpStart", "(Ljava/lang/Long;)V");
+            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["rtt_udp_start"].string_value())));
+        }
 
-        setId = env->GetMethodID(timeClazz, "setRttUdpEnd", "(Ljava/lang/Long;)V");
-        env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["rtt_udp_end"].string_value())));
+        if (timeEntry["rtt_udp_end"].is_string()) {
+            setId = env->GetMethodID(timeClazz, "setRttUdpEnd", "(Ljava/lang/Long;)V");
+            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["rtt_udp_end"].string_value())));
+        }
 
-        setId = env->GetMethodID(timeClazz, "setUploadStart", "(Ljava/lang/Long;)V");
-        env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["upload_start"].string_value())));
+        if (timeEntry["upload_start"].is_string()) {
+            setId = env->GetMethodID(timeClazz, "setUploadStart", "(Ljava/lang/Long;)V");
+            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["upload_start"].string_value())));
+        }
 
-        setId = env->GetMethodID(timeClazz, "setUploadEnd", "(Ljava/lang/Long;)V");
-        env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["upload_end"].string_value())));
+        if (timeEntry["upload_end"].is_string()) {
+            setId = env->GetMethodID(timeClazz, "setUploadEnd", "(Ljava/lang/Long;)V");
+            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["upload_end"].string_value())));
+        }
 
         env->CallVoidMethod(speedMeasurementResult, addMethod, timeObj);
     }
@@ -392,7 +402,7 @@ void AndroidConnector::passJniSpeedState (JNIEnv* env, const MeasurementPhase& s
         toFill = pingMeasurementState;
         obj = json["average_ns"];
         if (obj.is_string()) {
-            env->SetLongField(toFill, fieldAverageMs, std::stoll(obj.string_value()) / 1e9);
+            env->SetLongField(toFill, fieldAverageMs, std::stoll(obj.string_value()) / 1e6);
         }
         break;
     case MeasurementPhase::DOWNLOAD:
@@ -404,7 +414,7 @@ void AndroidConnector::passJniSpeedState (JNIEnv* env, const MeasurementPhase& s
         //they're all strings
         obj = json["throughput_avg_bps"];
         if (obj.is_string()) {
-            env->SetLongField(toFill, fieldAvgThroughput, std::stoll(obj.string_value()) / 1e6);
+            env->SetLongField(toFill, fieldAvgThroughput, std::stoll(obj.string_value()));
         }
 
         break;
@@ -485,12 +495,13 @@ void AndroidConnector::startMeasurement() {
         //set default measurement parameters
         jDownloadParameters["streams"] = std::to_string(downloadStreams);
         jUploadParameters["streams"] = std::to_string(uploadStreams);
+        jRttParameters["ping_query"] = std::to_string(rttCount);
         jMeasurementParameters["rtt"] = json11::Json(jRttParameters);
         jMeasurementParameters["download"] = json11::Json(jDownloadParameters);
         jMeasurementParameters["upload"] = json11::Json(jUploadParameters);
 
-        jMeasurementParameters["platform"] = "desktop";
-        jMeasurementParameters["clientos"] = "linux";
+        jMeasurementParameters["platform"] = "mobile";
+        jMeasurementParameters["clientos"] = "android";
         jMeasurementParameters["wsTLD"] = "net-neutrality.tools";
         jMeasurementParameters["wsTargetPort"] = std::to_string(speedServerPort);
         jMeasurementParameters["wsWss"] = isEncrypted ? "1" : "0";

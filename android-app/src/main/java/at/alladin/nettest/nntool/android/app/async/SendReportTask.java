@@ -6,6 +6,8 @@ import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.dialog.BlockingProgressDialog;
@@ -34,7 +36,10 @@ public class SendReportTask extends AsyncTask<Void, Void, MeasurementResultRespo
         this.collectorUrl = collectorUrl;
         this.reportDto = reportDto;
         try {
-            Log.d(TAG, new ObjectMapper().writeValueAsString(reportDto));
+            Log.d(TAG, new ObjectMapper()
+                    .registerModule(new JodaModule())
+                    .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                    .writeValueAsString(reportDto));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

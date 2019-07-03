@@ -7,6 +7,8 @@ import android.support.annotation.Keep;
  */
 public class SpeedMeasurementState {
 
+    private String measurementUuid;
+
     private SpeedPhaseState downloadMeasurement = new SpeedPhaseState();
 
     private SpeedPhaseState uploadMeasurement = new SpeedPhaseState();
@@ -69,11 +71,23 @@ public class SpeedMeasurementState {
         this.measurementPhase = measurementPhase;
     }
 
+    public String getMeasurementUuid() {
+        return measurementUuid;
+    }
+
+    public void setMeasurementUuid(String measurementUuid) {
+        this.measurementUuid = measurementUuid;
+    }
+
     @Override
     public String toString() {
-        return "JniSpeedMeasurementState{" +
-                "downloadMeasurement=" + downloadMeasurement +
+        return "SpeedMeasurementState{" +
+                "measurementUuid='" + measurementUuid + '\'' +
+                ", downloadMeasurement=" + downloadMeasurement +
                 ", uploadMeasurement=" + uploadMeasurement +
+                ", pingMeasurement=" + pingMeasurement +
+                ", progress=" + progress +
+                ", measurementPhase=" + measurementPhase +
                 '}';
     }
 
@@ -98,67 +112,7 @@ public class SpeedMeasurementState {
     }
 
     public class SpeedPhaseState {
-        private long bytes;
-
-        private long bytesIncludingSlowStart;
-
-        private long durationMs;
-
-        private long durationMsTotal;
-
-        private int numStreamsEnd;
-
-        private int numStreamsStart;
-
         private long throughputAvgBps;
-
-        public long getBytes() {
-            return bytes;
-        }
-
-        public void setBytes(long bytes) {
-            this.bytes = bytes;
-        }
-
-        public long getBytesIncludingSlowStart() {
-            return bytesIncludingSlowStart;
-        }
-
-        public void setBytesIncludingSlowStart(long bytesIncludingSlowStart) {
-            this.bytesIncludingSlowStart = bytesIncludingSlowStart;
-        }
-
-        public long getDurationMs() {
-            return durationMs;
-        }
-
-        public void setDurationMs(long durationMs) {
-            this.durationMs = durationMs;
-        }
-
-        public long getDurationMsTotal() {
-            return durationMsTotal;
-        }
-
-        public void setDurationMsTotal(long durationMsTotal) {
-            this.durationMsTotal = durationMsTotal;
-        }
-
-        public int getNumStreamsEnd() {
-            return numStreamsEnd;
-        }
-
-        public void setNumStreamsEnd(int numStreamsEnd) {
-            this.numStreamsEnd = numStreamsEnd;
-        }
-
-        public int getNumStreamsStart() {
-            return numStreamsStart;
-        }
-
-        public void setNumStreamsStart(int numStreamsStart) {
-            this.numStreamsStart = numStreamsStart;
-        }
 
         public long getThroughputAvgBps() {
             return throughputAvgBps;
@@ -171,13 +125,7 @@ public class SpeedMeasurementState {
         @Override
         public String toString() {
             return "JniSpeedState{" +
-                    "bytes=" + bytes +
-                    ", bytesIncludingSlowStart=" + bytesIncludingSlowStart +
-                    ", durationMs=" + durationMs +
-                    ", durationMsTotal=" + durationMsTotal +
-                    ", numStreamsEnd=" + numStreamsEnd +
-                    ", numStreamsStart=" + numStreamsStart +
-                    ", throughputAvgBps=" + throughputAvgBps +
+                    "throughputAvgBps=" + throughputAvgBps +
                     '}';
         }
     }

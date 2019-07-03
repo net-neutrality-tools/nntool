@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/measurement_recent_result_view"
+    android:paddingBottom="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/theme_app_bg"
+    android:orientation="horizontal"
+    android:gravity="center">
+
+    <TextView
+        style="@style/Nettest.Measurement.Result.View.Recent.Text"
+        android:text="@string/measurement_recent_result_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/measurement_recent_result_selector"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        />
+
+</LinearLayout>

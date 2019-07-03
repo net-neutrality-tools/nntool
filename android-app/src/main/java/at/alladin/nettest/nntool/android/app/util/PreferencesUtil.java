@@ -16,6 +16,7 @@ public class PreferencesUtil {
 
     private final static String SETTING_TC_VERSION_ACCEPTED = "setting_nettest_tc_version_accepted";
     private final static String SETTING_AGENT_UUID = "setting_nettest_agent_uuid";
+    private final static String SETTING_QOS_ENABLED = "setting_nettest_execute_qos_test";
 
     private final static String SETTINGS_URLS_RESULT_SERVICE_BASE_URL = "settings_urls_result_service_base_url";
     private final static String SETTINGS_URLS_STATISTICS_SERVICE_BASE_URL = "settings_urls_statistics_service_base_url";
@@ -60,6 +61,14 @@ public class PreferencesUtil {
         }
 
         return getDefaultPreferences(context).getString(SETTING_AGENT_UUID, null);
+    }
+
+    public static boolean isQoSEnabled(final Context context) {
+        return getDefaultPreferences(context).getBoolean(SETTING_QOS_ENABLED, true);
+    }
+
+    public static void setQoSEnabled(final Context context, final boolean isQoSEnabled) {
+        getDefaultPreferences(context).edit().putBoolean(SETTING_QOS_ENABLED, isQoSEnabled).commit();
     }
 
     public static void setSettingsUrls(final Context context, final SettingsResponse.Urls urls) {

@@ -39,21 +39,21 @@ public class InformationCollector
     }
 
     public void start() {
-        final SignalGatherer signalGatherer = this.informationProvider.getGatherer(SignalGatherer.class);
-        final GeoLocationGatherer geoLocationGatherer = this.informationProvider.getGatherer(GeoLocationGatherer.class);
-        final NetworkGatherer networkGatherer = this.informationProvider.getGatherer(NetworkGatherer.class);
+        if (!this.isCollecting.getAndSet(true)) {
+            final SignalGatherer signalGatherer = this.informationProvider.getGatherer(SignalGatherer.class);
+            final GeoLocationGatherer geoLocationGatherer = this.informationProvider.getGatherer(GeoLocationGatherer.class);
+            final NetworkGatherer networkGatherer = this.informationProvider.getGatherer(NetworkGatherer.class);
 
-        if (signalGatherer != null) {
-            signalGatherer.addListener(this);
+            if (signalGatherer != null) {
+                signalGatherer.addListener(this);
+            }
+            if (geoLocationGatherer != null) {
+                geoLocationGatherer.addListener(this);
+            }
+            if (networkGatherer != null) {
+                networkGatherer.addListener(this);
+            }
         }
-        if (geoLocationGatherer != null) {
-            geoLocationGatherer.addListener(this);
-        }
-        if (networkGatherer != null) {
-            networkGatherer.addListener(this);
-        }
-
-        this.isCollecting.set(true);
     }
 
     public void stop() {

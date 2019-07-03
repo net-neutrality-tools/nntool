@@ -14,6 +14,7 @@
     <string name="measurement_server_selection_default_server">Default</string>
     <string name="measurement_server_selection_title">Select a Measurement Server</string>
     <string name="measurement_server_selection_default_server_selected">Default server selected.</string>
+    <string name="measurement_recent_result_title">View Your Measurement Report</string>
 
     <string name="geo_location_accuracy">Location ± {}</string>
 
@@ -58,8 +59,11 @@
     <string name="top_progress_bar_view_ping_unit">ms</string>
 
     <string name="bottom_measurement_result_summary_view_download_unit">Download (Mbps)</string>
+    <string name="bottom_measurement_result_summary_view_download_not_available">-</string>
     <string name="bottom_measurement_result_summary_view_upload_unit">Upload (Mbps)</string>
+    <string name="bottom_measurement_result_summary_view_upload_not_available">-</string>
     <string name="bottom_measurement_result_summary_view_ping_unit">Ping (ms)</string>
+    <string name="bottom_measurement_result_summary_view_ping_not_available">-</string>
 
     <string name="measurement_gauge_label_init">init</string>
     <string name="measurement_gauge_label_ping">ping</string>

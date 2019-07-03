@@ -6,6 +6,16 @@ The android application module can be found in the `android-app` directory.
 
 == Prerequisites
 
+When building from the android studio IDE, the following steps are recommended:
+
+* Open the settings menu (ctrl + alt + s)
+* Select: "Appearance and Behaviour" -> "System Settings" -> "Android Sdk"
+* Select the "Sdk Tools" tab
+* Make sure Cmake, NDK and LLDB are installed (have a checkmark next to them)
+
+The ninja build system and all prerequisites of the ias-cpp module are required.
+Execute `apt install ninja-build golang lcov libssl-dev`.
+
 Before running the application, it is recommended to set up both the controller and the collector service.
 
 == Controller service settings
