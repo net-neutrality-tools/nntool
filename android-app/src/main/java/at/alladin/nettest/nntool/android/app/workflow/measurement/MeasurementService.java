@@ -44,6 +44,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.S
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.TimeBasedResultDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.TaskDesc;
 
@@ -166,6 +167,7 @@ public class MeasurementService extends Service implements ServiceConnection {
             public void onMeasurementFinished(JniSpeedMeasurementResult result, SpeedTaskDesc taskDesc) {
                 final SpeedMeasurementResult speedMeasurementResult = ResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
                 speedMeasurementResult.setRelativeStartTimeNs(overallStartTime);
+                speedMeasurementResult.setStatus(StatusDto.FINISHED);
                 Log.d(TAG, speedMeasurementResult.toString());
                 addSubMeasurementResult(speedMeasurementResult);
             }
@@ -269,8 +271,8 @@ public class MeasurementService extends Service implements ServiceConnection {
                 reportDto.setTimeBasedResult(new TimeBasedResultDto());
             }
             //TODO: leave for now, deserialize issues
-            //reportDto.getTimeBasedResult().setStartTime(startDateTime);
-            //reportDto.getTimeBasedResult().setEndTime(endDateTime);
+            reportDto.getTimeBasedResult().setStartTime(startDateTime);
+            reportDto.getTimeBasedResult().setEndTime(endDateTime);
 
             final SendReportTask task = new SendReportTask(mainActivity,
                     reportDto,
