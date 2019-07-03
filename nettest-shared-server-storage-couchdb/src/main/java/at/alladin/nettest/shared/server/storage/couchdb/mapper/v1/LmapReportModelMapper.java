@@ -16,12 +16,16 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.Measurem
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.QoSMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.TrafficDto;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ConnectionInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Traffic;
 
 /**
  * 
@@ -143,15 +147,23 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 				+ " null : speedMeasurementResult.getRelativeEndTimeNs() - speedMeasurementResult.getRelativeStartTimeNs())"),
 		@Mapping(source="downloadRawData", target="speedRawData.download"),
 		@Mapping(source="uploadRawData", target="speedRawData.upload"),
-		@Mapping(source="status", target="statusInfo"),
+		@Mapping(source="connectionInfo", target="connectionInfo"),
+		@Mapping(source="status", target="statusInfo.status"),
+		@Mapping(source="reason", target="statusInfo.reason"),
 		@Mapping(expression="java(parseAverageDownload(subMeasurementResult))", target="throughputAvgDownloadBps"),
-		@Mapping(expression="java(parseAverageUpload(subMeasurementResult))", target="throughputAvgUploadBps")
+		@Mapping(expression="java(parseAverageUpload(subMeasurementResult))", target="throughputAvgUploadBps"),
+		@Mapping(expression="java(speedMeasurement.getThroughputAvgDownloadBps() == null ? "
+				+ "null : Math.log10(speedMeasurement.getThroughputAvgDownloadBps()))", target="throughputAvgDownloadLog"),
+		@Mapping(expression="java(speedMeasurement.getThroughputAvgUploadBps() == null ? "
+				+ "null : Math.log10(speedMeasurement.getThroughputAvgUploadBps()))", target="throughputAvgUploadLog"),
 	})
 	SpeedMeasurement map (SpeedMeasurementResult subMeasurementResult);
 	
 	@Mappings ({
 		@Mapping(source="relativeStartTimeNs", target="measurementTime.relativeStartTimeNs"),
 		@Mapping(source="relativeEndTimeNs", target="measurementTime.relativeEndTimeNs"),
+		@Mapping(source="status", target="statusInfo.status"),
+		@Mapping(source="reason", target="statusInfo.reason"),
 		@Mapping(target = "measurementTime.durationNs", expression="java(qoSMeasurementResult == null ?"
 				+ " null : qoSMeasurementResult.getRelativeStartTimeNs() == null ?"
 				+ " null : qoSMeasurementResult.getRelativeEndTimeNs() == null ?"
@@ -160,6 +172,19 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		@Mapping(expression="java(parseQoSResult(subMeasurementResult))", target="results")
 	})
 	QoSMeasurement map (QoSMeasurementResult subMeasurementResult);
+	
+	@Mappings ({
+		@Mapping(source="agentInterfaceTotalTraffic", target="clientInterfaceTotalTraffic"),
+		@Mapping(source="agentInterfaceDownloadMeasurementTraffic", target="clientInterfaceDownloadMeasurementTraffic"),
+		@Mapping(source="agentInterfaceUploadMeasurementTraffic", target="clientInterfaceUploadMeasurementTraffic"),
+		@Mapping(source="requestedNumStreamsDownload", target="numStreamsInfo.requestedNumStreamsDownload"),
+		@Mapping(source="requestedNumStreamsUpload", target="numStreamsInfo.requestedNumStreamsUpload"),
+		@Mapping(source="actualNumStreamsDownload", target="numStreamsInfo.actualNumStreamsDownload"),
+		@Mapping(source="actualNumStreamsUpload", target="numStreamsInfo.actualNumStreamsUpload"),
+	})
+	ConnectionInfo map (ConnectionInfoDto connectionInfoDto);
+	
+	Traffic map (TrafficDto trafficDto);
 	
 	default Long parseAverageDownload (final SpeedMeasurementResult result) {
 		if (result.getBytesDownload() == null || result.getDurationDownloadNs() == null) {
