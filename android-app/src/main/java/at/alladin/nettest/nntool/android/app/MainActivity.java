@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        navigateTo(WorkflowTarget.TITLE);
+        navigateToTarget(WorkflowTarget.TITLE);
 
         if (!PreferencesUtil.isTermsAndConditionsAccepted(this, TermsAndConditionsFragment.TERMS_AND_CONDITIONS_VERSION)) {
             TermsAndConditionsFragment f = TermsAndConditionsFragment.newInstance();
