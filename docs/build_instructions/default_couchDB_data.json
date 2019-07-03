@@ -273,7 +273,7 @@
             "uuid": "qos_server",
             "type": "QOS",
             "name": "qos_server",
-            "port": "5233",
+            "port_tls": "5233",
             "address_ipv4": "127.0.0.1"
         },
         {

@@ -90,24 +90,14 @@ public interface LmapTaskMapper {
 		return ret;
 	}
 	
-	default List<LmapOptionDto> buildOptionSpeedList(final Settings settings, final MeasurementServer server) {
+	default List<LmapOptionDto> buildOptionSpeedList(final Settings settings, final MeasurementServer measurementServer) {
 		final List<LmapOptionDto> ret = new ArrayList<>();
 		
 		if (settings != null && settings.getUrls() != null && settings.getUrls().getCollectorService() != null) {
 			ret.add(generateOption(RESULT_COLLECTOR_URL, settings.getUrls().getCollectorService()));
 		}
 		
-		if (server != null) {
-			if (server.getAddressIpv4() != null) {
-				ret.add(generateOption(SERVER_ADDRESS, server.getAddressIpv4()));
-			}
-			if (server.getAddressIpv6() != null) {
-				ret.add(generateOption(SERVER_ADDRESS_IPV6, server.getAddressIpv6()));
-			}
-			if (server.getPort() != null) {
-				ret.add(generateOption(SERVER_PORT, server.getPort().toString()));
-			}
-		}
+		addMeasurementServerOptionsToList(ret, measurementServer);
 		
 		if (settings.getMeasurements() != null) {
 			final SpeedMeasurementSettings speedSettings = (SpeedMeasurementSettings) settings.getMeasurements().get(MeasurementTypeDto.SPEED);
@@ -130,17 +120,7 @@ public interface LmapTaskMapper {
 			ret.add(generateOption(RESULT_COLLECTOR_URL, settings.getUrls().getCollectorService()));
 		}
 		
-		if (measurementServer != null) {
-			if (measurementServer.getAddressIpv4() != null) {
-				ret.add(generateOption(SERVER_ADDRESS, measurementServer.getAddressIpv4()));
-			}
-			if (measurementServer.getAddressIpv6() != null) {
-				ret.add(generateOption(SERVER_ADDRESS_IPV6, measurementServer.getAddressIpv6()));
-			}
-			if (measurementServer.getPort() != null) {
-				ret.add(generateOption(SERVER_PORT, measurementServer.getPort().toString()));
-			}
-		}
+		addMeasurementServerOptionsToList(ret, measurementServer);
 		
 		final LmapOptionDto measurementOption = new LmapOptionDto();
 		if (qosObjectiveList != null) {
@@ -158,6 +138,24 @@ public interface LmapTaskMapper {
 		option.setName(name);
 		option.setValue(value);
 		return option;
+	}
+	
+	default void addMeasurementServerOptionsToList(final List<LmapOptionDto> optionList, final MeasurementServer measurementServer) {
+		if (measurementServer != null) {
+			if (measurementServer.getAddressIpv4() != null) {
+				optionList.add(generateOption(SERVER_ADDRESS, measurementServer.getAddressIpv4()));
+			}
+			if (measurementServer.getAddressIpv6() != null) {
+				optionList.add(generateOption(SERVER_ADDRESS_IPV6, measurementServer.getAddressIpv6()));
+			}
+			if (measurementServer.getPort() != null) {
+				optionList.add(generateOption(SERVER_PORT, measurementServer.getPort().toString()));
+			}
+			if (measurementServer.getPortTls() != null) {
+				optionList.add(generateOption(SERVER_PORT, measurementServer.getPortTls().toString()));
+				optionList.add(generateOption(ENCRYPTION, "true"));
+			}
+		}
 	}
 	
 }

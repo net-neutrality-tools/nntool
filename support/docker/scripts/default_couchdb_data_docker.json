@@ -272,7 +272,15 @@
             "uuid": "qos_server",
             "type": "QOS",
             "name": "qos_server",
-            "port": "5235",
+            "port_tls": "5235",
+            "address_ipv4": "127.0.0.1"
+        },
+        {
+            "docType": "MeasurementServer",
+            "uuid": "speed_server",
+            "type": "SPEED",
+            "name": "speed_server",
+            "port": "80",
             "address_ipv4": "127.0.0.1"
         }
     ]
