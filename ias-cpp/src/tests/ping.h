@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-14
+ *      \date Last update: 2019-06-24
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -67,7 +67,6 @@ class Ping : public CBasisThread
 
 		int nPingTarget;
 
-		int nHops;
 		int nSize;
 		int nError;
 		

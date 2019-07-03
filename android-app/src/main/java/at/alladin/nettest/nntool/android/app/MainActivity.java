@@ -2,10 +2,12 @@ package at.alladin.nettest.nntool.android.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceCategory;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.res.ConfigurationHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -221,7 +223,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void registerMeasurementAgent() {
-        RegisterMeasurementAgentTask task = new RegisterMeasurementAgentTask(this, null);
+        RegisterMeasurementAgentTask task = new RegisterMeasurementAgentTask(this, r -> {
+            if (r == null && getResources().getBoolean(R.bool.debug_functionality_reset_uuid_if_not_in_database_and_retry)) {
+                Log.d(TAG, "Measurement agent registration request failed. Deleting agent uuid and retrying.");
+                PreferencesUtil.setAgentUuid(MainActivity.this, null);
+                final RegisterMeasurementAgentTask retryTask = new RegisterMeasurementAgentTask(MainActivity.this, null);
+                retryTask.execute();
+            }
+        });
         task.execute();
     }
 

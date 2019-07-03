@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-08
+ *      \date Last update: 2019-06-25
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -46,10 +46,6 @@ class CCallback
 		Json::array jMeasurementResultsRttUdp;
 		Json::array jMeasurementResultsDownload;
 		Json::array jMeasurementResultsUpload;
-
-		bool PERFORMED_RTT = false;
-		bool PERFORMED_DOWNLOAD = false;
-		bool PERFORMED_UPLOAD = false;
 	
 	public:
 		int mTestCase;
@@ -63,18 +59,6 @@ class CCallback
 		virtual ~CCallback();
 		
 		void callback(string cmd, string msg, int error_code, string error_description);
-
-		inline bool isPerformedRtt() const {
-		    return PERFORMED_RTT;
-		}
-
-		inline bool isPerformedDownload() const {
-            return PERFORMED_DOWNLOAD;
-        }
-
-        inline bool isPerformedUpload() const {
-            return PERFORMED_UPLOAD;
-        }
 };
 
 #endif

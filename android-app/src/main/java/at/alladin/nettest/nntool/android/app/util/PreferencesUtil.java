@@ -30,7 +30,12 @@ public class PreferencesUtil {
     }
 
     public static void setAgentUuid(final Context context, final String uuid) {
-        getDefaultPreferences(context).edit().putString(SETTING_AGENT_UUID, uuid).commit();
+        if (uuid != null) {
+            getDefaultPreferences(context).edit().putString(SETTING_AGENT_UUID, uuid).commit();
+        }
+        else{
+            getDefaultPreferences(context).edit().remove(SETTING_AGENT_UUID).commit();
+        }
     }
 
     public static String getAgentUuid(final Context context) {

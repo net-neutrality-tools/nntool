@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- if set to true reset client UUID and retry registration process -->
+    <bool name="debug_functionality_reset_uuid_if_not_in_database_and_retry">true</bool>
+</resources>
