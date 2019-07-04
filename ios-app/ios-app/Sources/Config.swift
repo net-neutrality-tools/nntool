@@ -92,3 +92,7 @@ let BEREC_RED        = UIColor(rgb: 0x921F56)
 ////
 
 let APP_TINT_COLOR = BEREC_DARK_GRAY
+
+////
+
+let MEASUREMENT_TRAFFIC_WARNING_ENABLED = false

@@ -27,8 +27,12 @@ class HomeViewController: CustomNavigationBarViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        speedMeasurementGaugeView?.startButtonActionCallback = {
-            self.performSegue(withIdentifier: "show_speed_measurement_view_controller", sender: self)
+        if MEASUREMENT_TRAFFIC_WARNING_ENABLED {
+            speedMeasurementGaugeView?.startButtonActionCallback = displayPreMeasurementWarningAlert
+        } else {
+            speedMeasurementGaugeView?.startButtonActionCallback = {
+                self.performSegue(withIdentifier: R.segue.homeViewController.show_speed_measurement_view_controller, sender: self)
+            }
         }
     }
 
@@ -37,7 +41,20 @@ class HomeViewController: CustomNavigationBarViewController {
         super.viewDidAppear(animated)
 
         if !MEASUREMENT_AGENT.isRegistered() {
-            performSegue(withIdentifier: "present_modally_terms_and_conditions", sender: self)
+            performSegue(withIdentifier: R.segue.homeViewController.present_modally_terms_and_conditions, sender: self)
         }
+    }
+
+    func displayPreMeasurementWarningAlert() {
+        // TODO: add localization
+        let alert = UIAlertController(title: "Pre Measurement Alert", message: "Traffic Warning", preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "Abort", style: .default))
+
+        alert.addAction(UIAlertAction(title: "Continue", style: .destructive) { _ in
+            self.performSegue(withIdentifier: R.segue.homeViewController.show_speed_measurement_view_controller, sender: self)
+        })
+
+        present(alert, animated: true, completion: nil)
     }
 }
