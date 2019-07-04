@@ -18,7 +18,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasur
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
 
 @Mapper(componentModel = "spring")
-public interface FullMeasurementResponseMapper extends DateTimeMapper {
+public interface FullMeasurementResponseMapper extends DateTimeMapper, ConnectionInfoMapper {
 
 	@Mappings({
 		@Mapping(source="measurementTime.startTime", target="startTime"),
