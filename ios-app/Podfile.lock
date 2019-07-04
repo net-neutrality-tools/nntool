@@ -34,6 +34,9 @@ PODS:
     - Alamofire (~> 4.8.2)
     - CocoaAsyncSocket (~> 7.6.3)
     - nntool-shared-swift (~> 0.0.1)
+  - R.swift (5.0.3):
+    - R.swift.Library (~> 5.0.0)
+  - R.swift.Library (5.0.1)
   - ReachabilitySwift (5.0.0-beta1)
   - Repeat (0.5.7)
   - Siesta (1.4.3):
@@ -55,6 +58,7 @@ DEPENDENCIES:
   - nntool-shared-swift (from `../nntool-shared-swift`)
   - PocketSocket (from `../PocketSocket`)
   - QoSKit (from `../qos-client-swift`)
+  - R.swift (~> 5.0.3)
   - SwiftGen (~> 6.1.0)
   - WebBrowser (~> 0.1.5)
 
@@ -67,6 +71,8 @@ SPEC REPOS:
     - CodableJSON
     - FMDB
     - ObjcExceptionBridging
+    - R.swift
+    - R.swift.Library
     - ReachabilitySwift
     - Repeat
     - Siesta
@@ -97,6 +103,8 @@ SPEC CHECKSUMS:
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   PocketSocket: 9c6867d66fb4f962af96b9b07f4b45bb561b2c2a
   QoSKit: d85bee1116e983af2b481d9cb3458ed71244ba41
+  R.swift: f5a87643b91ea569d23d6afb3eee9c743edde239
+  R.swift.Library: cfe85d569d9bae6cb262922db130e7c3a7a5fad1
   ReachabilitySwift: 93a5956ef3f076d7e24bc65bfb1c5042e69b7276
   Repeat: 73c5ee602aed8f3c7bf1aa12d4cd0d3dc3edea0a
   Siesta: 83795fdf6a43232d1d2909e1a3dfb92ab5916d26
@@ -105,6 +113,6 @@ SPEC CHECKSUMS:
   WebBrowser: 0248873c77f54e2ac504ece7c2bc8eeb710b5a4f
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: 3e54cbf59608e34ac3f14b8e485db675b49ac00b
+PODFILE CHECKSUM: 9feb7bdaac3976ea02549601b79f5ff10c77141c
 
 COCOAPODS: 1.7.1

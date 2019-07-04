@@ -84,6 +84,7 @@
 		E0B9A379224C0802002AB640 /* UIKit+IconFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A378224C0802002AB640 /* UIKit+IconFont.swift */; };
 		E0B9A37D224C1349002AB640 /* UIViewController+WebBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A37C224C1349002AB640 /* UIViewController+WebBrowser.swift */; };
 		E0C4526C22CB867600FA4B44 /* LogConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C4526B22CB867600FA4B44 /* LogConfig.swift */; };
+		E0C4527622CDFAA700FA4B44 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C4527522CDFAA700FA4B44 /* R.generated.swift */; };
 		E0E9BB10226F57DA00146699 /* SpeedMeasurementPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E9BB0F226F57DA00146699 /* SpeedMeasurementPhase.swift */; };
 		E0EA84E72282C1B000EB73BF /* SpeedHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84E62282C1B000EB73BF /* SpeedHelper.swift */; };
 		E860F5CA7C59FD468EEE2892 /* Pods_All_ios_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91316B94C5B307833124DBA0 /* Pods_All_ios_app.framework */; };
@@ -233,6 +234,7 @@
 		E0B9A378224C0802002AB640 /* UIKit+IconFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+IconFont.swift"; sourceTree = "<group>"; };
 		E0B9A37C224C1349002AB640 /* UIViewController+WebBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+WebBrowser.swift"; sourceTree = "<group>"; };
 		E0C4526B22CB867600FA4B44 /* LogConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogConfig.swift; sourceTree = "<group>"; };
+		E0C4527522CDFAA700FA4B44 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = "<group>"; };
 		E0E9BB0F226F57DA00146699 /* SpeedMeasurementPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedMeasurementPhase.swift; sourceTree = "<group>"; };
 		E0EA84E62282C1B000EB73BF /* SpeedHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedHelper.swift; sourceTree = "<group>"; };
 		FAC9DAE7413ECAE8092FFC80 /* Pods_All_Speed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_Speed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -436,6 +438,7 @@
 		E026A5B32241338800BACDB5 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				E0C4527422CDF8A200FA4B44 /* Generated */,
 				E00F4917225F7DC900EAD0C0 /* ias.mobile.js */,
 				E026A5812241271700BACDB5 /* AppDelegate.swift */,
 				E00F4AF22264B7C700EAD0C0 /* Config.swift */,
@@ -584,6 +587,14 @@
 			path = Configuration;
 			sourceTree = "<group>";
 		};
+		E0C4527422CDF8A200FA4B44 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				E0C4527522CDFAA700FA4B44 /* R.generated.swift */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -656,7 +667,7 @@
 			buildConfigurationList = E026A5A82241271A00BACDB5 /* Build configuration list for PBXNativeTarget "ios-app" */;
 			buildPhases = (
 				1AB73F8B8DD73C0088EF14CF /* [CP] Check Pods Manifest.lock */,
-				E0EA84E52280824600EB73BF /* Run swiftlint autocorrect */,
+				E0C4527322CDF87500FA4B44 /* Run R.swift */,
 				E026A57A2241271700BACDB5 /* Sources */,
 				E026A57B2241271700BACDB5 /* Frameworks */,
 				E026A57C2241271700BACDB5 /* Resources */,
@@ -950,7 +961,7 @@
 			shellPath = /bin/sh;
 			shellScript = "if which ${PODS_ROOT}/SwiftLint/swiftlint >/dev/null; then\n    ${PODS_ROOT}/SwiftLint/swiftlint\nelse\n    echo \"warning: SwiftLint is not installed, run pod install.\"\nfi\n";
 		};
-		E0EA84E52280824600EB73BF /* Run swiftlint autocorrect */ = {
+		E0C4527322CDF87500FA4B44 /* Run R.swift */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -958,15 +969,17 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$TEMP_DIR/rswift-lastrun",
 			);
-			name = "Run swiftlint autocorrect";
+			name = "Run R.swift";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$SRCROOT/ios-app/Sources/Generated/R.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#if which ${PODS_ROOT}/SwiftLint/swiftlint >/dev/null; then\n#  ${PODS_ROOT}/SwiftLint/swiftlint autocorrect\n#else\n#  echo \"warning: SwiftLint is not installed, run pod install.\"\n#fi\n";
+			shellScript = "\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/ios-app/Sources/Generated/R.generated.swift\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1034,6 +1047,7 @@
 				E0AF3DE922413B7C00FDBFD1 /* MapViewController.swift in Sources */,
 				E0B9A347224A62A3002AB640 /* CoreGraphicsHelper.swift in Sources */,
 				E0B9A377224C06A9002AB640 /* IconFont.swift in Sources */,
+				E0C4527622CDFAA700FA4B44 /* R.generated.swift in Sources */,
 				E0B9A355224AAC09002AB640 /* CustomNavigationBarViewController.swift in Sources */,
 				E00F4B012266235700EAD0C0 /* QoSProgramDelegate.swift in Sources */,
 				E0B9A33E224A5C24002AB640 /* ProgressInfoBar.swift in Sources */,

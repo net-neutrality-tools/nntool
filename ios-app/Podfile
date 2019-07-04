@@ -18,6 +18,7 @@ abstract_target 'All' do
     
     pod 'SwiftGen', '~> 6.1.0'
     pod 'BartyCrouch', '~> 3.13.0'
+    pod 'R.swift', '~> 5.0.3'
     
     pod 'WebBrowser', '~> 0.1.5'
   end
