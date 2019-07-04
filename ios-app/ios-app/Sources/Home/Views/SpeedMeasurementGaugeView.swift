@@ -29,7 +29,7 @@ import UIKit
 
     var startButtonActionCallback: (() -> Void)?
 
-    private static let iconFont = UIFont(name: "berec-icons", size: 50)
+    private static let iconFont = R.font.berecIcons(size: 50)
 
     private var startButtonSystemFont: UIFont?
 

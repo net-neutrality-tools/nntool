@@ -48,7 +48,7 @@ extension UIButton {
 extension UIBarButtonItem {
 
     private static let iconFontAttributes: [NSAttributedString.Key: Any] = [
-        NSAttributedString.Key.font: UIFont(name: "berec-icons", size: 32)!,
+        NSAttributedString.Key.font: R.font.berecIcons(size: 32)!, // !
         NSAttributedString.Key.foregroundColor: UINavigationBar.appearance().tintColor ?? UIColor.black
     ]
 

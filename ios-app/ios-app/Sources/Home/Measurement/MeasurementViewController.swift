@@ -91,7 +91,7 @@ class MeasurementViewController: CustomNavigationBarViewController {
         }
 
         switch identifier {
-        case "embed_qos_measurement_view_controller":
+        case R.segue.measurementViewController.embed_qos_measurement_view_controller:
             qosMeasurementViewController = segue.destination as? QoSMeasurementViewController
 
             // TODO: populate measurement result view controller
@@ -162,6 +162,8 @@ class MeasurementViewController: CustomNavigationBarViewController {
     private func showMeasurementFailureAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
 
+        // TODO: localization
+        
         alert.addAction(UIAlertAction(title: "Retry", style: .default) { _ in
             self.startMeasurement()
         })
@@ -186,7 +188,7 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
         logger.debug("!^! measurementWillStartRequestingControlModel")
 
         DispatchQueue.main.async {
-            self.progressAlert = UIAlertController.createLoadingAlert(title: "Initiating measurement")
+            self.progressAlert = UIAlertController.createLoadingAlert(title: "Initiating measurement") // TODO: localization
             self.present(self.progressAlert!, animated: true, completion: nil)
         }
     }
@@ -242,7 +244,7 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
         isRunning = false
 
         let presentFailureAlert = {
-            self.showMeasurementFailureAlert(title: "Error", message: "TODO: Measurement Error")
+            self.showMeasurementFailureAlert(title: "Error", message: "TODO: Measurement Error") // TODO: localization
         }
 
         DispatchQueue.main.async {
