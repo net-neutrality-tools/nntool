@@ -26,6 +26,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurem
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapper;
 import at.alladin.nntool.shared.db.QoSTestResult.TestType;
 import at.alladin.nntool.shared.qos.AbstractResult;
 import at.alladin.nntool.shared.qos.ResultComparer;
@@ -37,6 +38,9 @@ public class QoSEvaluationService {
 	
 	@Autowired
 	public QoSMeasurementObjectiveRepository qosMeasurementObjectiveRepository;
+	
+	@Autowired
+	private FullMeasurementResponseMapper fullMeasurementResponseMapper;
 
 	@Autowired
 	private GsonBuilder gsonBuilder;
@@ -56,7 +60,7 @@ public class QoSEvaluationService {
 			initMeasurementObjectiveMap();
 		}
 		
-		final FullQoSMeasurement ret = new FullQoSMeasurement();
+		final FullQoSMeasurement ret = fullMeasurementResponseMapper.map(measurement);
 		ret.setResults(new ArrayList<>());
 		
 		//start copying

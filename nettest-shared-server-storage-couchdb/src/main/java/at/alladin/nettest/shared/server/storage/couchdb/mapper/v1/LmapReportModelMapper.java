@@ -35,7 +35,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Traffic;
  *
  */
 @Mapper(componentModel = "spring", imports = ChronoUnit.class)
-public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
+public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttInfoDtoMapper {
 	
 	public static final String QOS_TEST_UID_KEY = "qos_test_uid";
 	public static final String QOS_TEST_TYPE_KEY = "test_type";
