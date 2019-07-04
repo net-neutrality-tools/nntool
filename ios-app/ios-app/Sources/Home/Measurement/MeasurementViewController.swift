@@ -91,7 +91,7 @@ class MeasurementViewController: CustomNavigationBarViewController {
         }
 
         switch identifier {
-        case R.segue.measurementViewController.embed_qos_measurement_view_controller:
+        case R.segue.measurementViewController.embed_qos_measurement_view_controller.identifier:
             qosMeasurementViewController = segue.destination as? QoSMeasurementViewController
 
             // TODO: populate measurement result view controller
