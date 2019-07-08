@@ -96,11 +96,11 @@ using namespace json11;
 #define MAXBUFFER 1580
 
 
-#define TRC_DEBUG(s)  CTrace::getInstance()->logDebug(s)
-#define TRC_INFO(s)   CTrace::getInstance()->logInfo(s)
-#define TRC_WARN(s)   CTrace::getInstance()->logWarn(s)
-#define TRC_ERR(s)    CTrace::getInstance()->logErr(s)
-#define TRC_CRIT(s)   CTrace::getInstance()->logCritical(s)
+#define TRC_DEBUG(s)  CTrace::getInstance().logDebug(s)
+#define TRC_INFO(s)   CTrace::getInstance().logInfo(s)
+#define TRC_WARN(s)   CTrace::getInstance().logWarn(s)
+#define TRC_ERR(s)    CTrace::getInstance().logErr(s)
+#define TRC_CRIT(s)   CTrace::getInstance().logCritical(s)
 
 
 //http header fields

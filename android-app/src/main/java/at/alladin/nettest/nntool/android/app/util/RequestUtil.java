@@ -14,6 +14,10 @@ import java.util.TimeZone;
 
 import at.alladin.nettest.nntool.android.app.BuildConfig;
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.support.telephony.CellIdentityWrapper;
+import at.alladin.nettest.nntool.android.app.support.telephony.CellInfoWrapper;
+import at.alladin.nettest.nntool.android.app.support.telephony.CellSignalStrengthWrapper;
+import at.alladin.nettest.nntool.android.app.util.info.InformationCollector;
 import at.alladin.nettest.nntool.android.app.workflow.tc.TermsAndConditionsFragment;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequestInfo;
@@ -26,6 +30,10 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapRepo
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapResultDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.QoSMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.TimeBasedResultDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellLocationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
 import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
@@ -109,26 +117,76 @@ public class RequestUtil {
         return request;
     }
 
-    public static LmapReportDto prepareLmapReportForQosMeasurement(final QoSResultCollector qoSResultCollector, final Context context) {
+    public static LmapReportDto prepareLmapReportForMeasurement(final List<SubMeasurementResult> subMeasurementResultList, final InformationCollector informationCollector, final Context context) {
         final LmapReportDto report = new LmapReportDto();
 
         report.setAdditionalRequestInfo(prepareApiRequestInfo(context));
         report.setAgentId(report.getAdditionalRequestInfo().getAgentId());
-        if (qoSResultCollector != null && qoSResultCollector.getResults() != null) {
-            final QoSMeasurementResult qoSMeasurementResult = new QoSMeasurementResult();
-            final LmapResultDto<QoSMeasurementResult> lmapResult = new LmapResultDto<>();
 
-            report.setResults(new ArrayList<>());
-            report.getResults().add(lmapResult);
+        if (subMeasurementResultList != null && subMeasurementResultList.size() > 0) {
+            for (SubMeasurementResult subMeasurementResult : subMeasurementResultList) {
+                if (subMeasurementResult != null) {
+                    LmapResultDto<?> lmapResult = null;
+                    if (subMeasurementResult instanceof SpeedMeasurementResult) {
+                        lmapResult = new LmapResultDto<SpeedMeasurementResult>();
+                    } else if (subMeasurementResult instanceof QoSMeasurementResult) {
+                        lmapResult = new LmapResultDto<QoSMeasurementResult>();
+                    }
 
-            lmapResult.setResults(new ArrayList<>());
-            lmapResult.getResults().add(qoSMeasurementResult);
-            qoSMeasurementResult.setObjectiveResults(new ArrayList<>());
-            for (final QoSTestResult qosResult : qoSResultCollector.getResults()) {
-                qoSMeasurementResult.getObjectiveResults().add(qosResult.getResultMap());
+                    if (lmapResult != null) {
+                        if (report.getResults() == null) {
+                            report.setResults(new ArrayList<>());
+                        }
+                        report.getResults().add(lmapResult);
+                        lmapResult.setResults(new ArrayList<>());
+                        lmapResult.getResults().add(subMeasurementResult);
+                    }
+                }
+            }
+        }
+
+        if (informationCollector != null) {
+            final TimeBasedResultDto timeBasedResultDto = new TimeBasedResultDto();
+            timeBasedResultDto.setGeoLocations(informationCollector.getGeoLocationList());
+
+            if (informationCollector.getCellInfoList() != null && informationCollector.getCellInfoList().size() > 0) {
+                final List<CellLocationDto> cellLocationDtoList = new ArrayList<>();
+                for (CellInfoWrapper ciWrap : informationCollector.getCellInfoList()) {
+                    final CellLocationDto locationDto = cellInfoWrapperToCellLocationDto(ciWrap);
+                    if (locationDto != null) {
+                        cellLocationDtoList.add(locationDto);
+                    }
+                }
             }
         }
 
         return report;
+    }
+
+    private static CellLocationDto cellInfoWrapperToCellLocationDto (final CellInfoWrapper cellInfoWrapper) {
+        if (cellInfoWrapper == null) {
+            return null;
+        }
+        final CellLocationDto ret = new CellLocationDto();
+        if (cellInfoWrapper.getCellIdentityWrapper() != null) {
+            final CellIdentityWrapper iWrap = cellInfoWrapper.getCellIdentityWrapper();
+            ret.setAreaCode(iWrap.getAreaCode());
+            ret.setCellId(iWrap.getCellId());
+            ret.setPrimaryScramblingCode(iWrap.getScramblingCode());
+            ret.setArfcn(iWrap.getFrequency());
+        }
+        if (cellInfoWrapper.getCellSignalStrengthWrapper() != null) {
+            final CellSignalStrengthWrapper cWrap = cellInfoWrapper.getCellSignalStrengthWrapper();
+        }
+        //TODO: parse the other information into the
+        /*
+        ret.setLongitude();
+        ret.setLatitude();
+        ret.setArfcn();
+        ret.setTime();
+        ret.setRelativeTimeNs();
+        */
+
+        return ret;
     }
 }

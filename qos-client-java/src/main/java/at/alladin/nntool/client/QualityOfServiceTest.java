@@ -261,6 +261,8 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
      * 
      */
 	public QoSResultCollector call() throws Exception {
+		//set the
+		qoSTestSettings.setStartTimeNs(System.nanoTime());
 		final int testSize = testCount.get();
 		for (QoSMeasurementClientProgressListener l : progressListeners) {
 			l.onQoSTestsDefined(testSize);
@@ -340,7 +342,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 							for (QoSMeasurementClientProgressListener l : progressListeners) {
 								l.onQoSTypeProgress(type, prog);
 							}
-							if (prog == 1) {
+							if (prog >= 1) {
 								for (QoSMeasurementClientProgressListener l : progressListeners) {
 									l.onQoSTypeFinished(type);
 								}

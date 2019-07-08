@@ -18,8 +18,6 @@
 
 #include "trace.h"
 
-CTrace* CTrace::global_pHandlerTrace = NULL;
-pthread_mutex_t CTrace::global_mutexCreateTrace = PTHREAD_MUTEX_INITIALIZER;
 std::function<void(std::string)> CTrace::logFunction = nullptr;
 
 //! \brief
@@ -28,25 +26,10 @@ CTrace::CTrace()
 {	
 }
 
-//! \brief
-//!	Standard Destructor
-CTrace::~CTrace()
+CTrace& CTrace::getInstance()
 {
-}
-
-CTrace* CTrace::getInstance()
-{
-	
-	pthread_mutex_lock(&global_mutexCreateTrace);
-	{
-		if ( global_pHandlerTrace == NULL)
-		{
-			global_pHandlerTrace = new CTrace();
-		}
-	}
-	pthread_mutex_unlock(&global_mutexCreateTrace);
-
-	return global_pHandlerTrace;
+    static CTrace instance;
+    return instance;
 }
 
 

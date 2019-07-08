@@ -10,13 +10,13 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -29,6 +29,8 @@ import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.view.TopProgressBarView;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.QoSTestEnum;
@@ -120,7 +122,8 @@ public class QosFragment extends Fragment implements ServiceConnection {
                             if (progress >= 1f) {
                                 qosProgressView.finishQosType(e.getKey());
                             }
-                            topProgressBarView.setLeftText((int)(qosTest.getTotalProgress() * 100) + "%");
+                            //the total progress (if QoS is enabled) is only from 0.8 to 1.0
+                            topProgressBarView.setLeftText((int)((qosTest.getTotalProgress() * 0.2 + 0.8) * 100) + "%");
                             topProgressBarView.setRightText((int)(qosTest.getTotalProgress() * 100) + "%");
                         }
                         else if (QoSTestEnum.QOS_FINISHED.equals(qosTest.getStatus()) ||
@@ -131,11 +134,6 @@ public class QosFragment extends Fragment implements ServiceConnection {
                             topProgressBarView.setRightText("100%");
                         }
                     }
-                }
-                else if (qosTest == null) {
-                    topProgressBarView.setLeftText("100%");
-                    topProgressBarView.setRightText("100%");
-                    postResultRunnable = true;
                 }
 
             }
@@ -153,24 +151,14 @@ public class QosFragment extends Fragment implements ServiceConnection {
         @Override
         public void run() {
             final QoSResultCollector qoSResultCollector = measurementService.getQosMeasurementClient().getQosResult();
-            final String collectorUrl = measurementService.getQosMeasurementClient().getCollectorUrl();
+            final SubMeasurementResult subMeasurementResult = ResultParseUtil.parseIntoQosMeasurementResult(qoSResultCollector);
+            subMeasurementResult.setStatus(StatusDto.FINISHED);
+            measurementService.addSubMeasurementResult(subMeasurementResult);
             final MainActivity activity = (MainActivity) getActivity();
-            final SendReportTask task = new SendReportTask(getContext(),
-                    RequestUtil.prepareLmapReportForQosMeasurement(qoSResultCollector, getContext()),
-                    collectorUrl, new OnTaskFinishedCallback<MeasurementResultResponse>() {
-                        @Override
-                        public void onTaskFinished(MeasurementResultResponse result) {
-                            if (result == null) {
-                                AlertDialogUtil.showAlertDialog(activity,
-                                        R.string.alert_send_measurement_result_title,
-                                        R.string.alert_send_measurement_results_error);
-                            }
-                            activity.navigateTo(WorkflowTarget.TITLE);
-                        }
-                    });
-
-            if (!sendingResults.getAndSet(true)) {
-                task.execute();
+            if (measurementService.hasFollowUpAction()) {
+                measurementService.executeFollowUpAction(activity);
+            } else {
+                measurementService.sendResults(activity, sendingResults);
             }
         }
     };

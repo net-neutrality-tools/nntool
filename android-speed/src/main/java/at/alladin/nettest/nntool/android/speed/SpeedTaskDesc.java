@@ -13,7 +13,7 @@ public class SpeedTaskDesc implements Serializable {
 
     private int speedServerPort = 80;
 
-    private int rttCount;
+    private int rttCount = 10;
 
     private int downloadStreams;
 

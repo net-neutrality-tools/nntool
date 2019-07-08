@@ -35,27 +35,12 @@ public abstract class TestResult {
      * External port (server) connected to
      */
     public int port_remote;
-    
-    /**
-     * Number of threads used
-     */
-    public int num_threads;
-    
+
     /**
      * "<Standard name for protocol> (<Name of cypher suite>)"
      */
     public String encryption = "NONE";
     
-    public long ping_shortest;
-    public long ping_median;
-    public String client_version;
-    
-    public final List<Ping> pings = new ArrayList<Ping>();
-    
-    public final List<SpeedItem> speedItems = new ArrayList<SpeedItem>();
-    
-    public static long getSpeedBitPerSec(final long bytes, final long nsec) {
-        return Math.round((double) bytes / (double) nsec * 1e9 * 8.0);
-    }
-    
+
+
 }

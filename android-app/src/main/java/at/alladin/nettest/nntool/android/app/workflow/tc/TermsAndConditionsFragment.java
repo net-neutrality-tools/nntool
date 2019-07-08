@@ -6,6 +6,7 @@ import android.webkit.WebView;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.util.PermissionUtil;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.dialog.AbstractFullScreenDialogFragment;
 
@@ -45,6 +46,7 @@ public class TermsAndConditionsFragment extends AbstractFullScreenDialogFragment
                 @Override
                 public void run() {
                     ((MainActivity) activity).registerMeasurementAgent();
+                    PermissionUtil.requestLocationPermission(activity);
                 }
             });
             dismiss();
