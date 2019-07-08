@@ -17,11 +17,14 @@ import at.alladin.nettest.nntool.android.app.async.RegisterMeasurementAgentTask;
 import at.alladin.nettest.nntool.android.app.util.PermissionUtil;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
+import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.app.workflow.history.HistoryFragment;
 import at.alladin.nettest.nntool.android.app.workflow.map.MapFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.SpeedFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.TitleWithRecentResultFragment;
+import at.alladin.nettest.nntool.android.app.workflow.result.ResultFragment;
+import at.alladin.nettest.nntool.android.app.workflow.result.WorkflowResultParameter;
 import at.alladin.nettest.nntool.android.app.workflow.settings.SettingsFragment;
 import at.alladin.nettest.nntool.android.app.workflow.main.TitleFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
@@ -30,6 +33,9 @@ import at.alladin.nettest.nntool.android.app.workflow.measurement.QosFragment;
 import at.alladin.nettest.nntool.android.app.workflow.statistics.StatisticsFragment;
 import at.alladin.nettest.nntool.android.app.workflow.tc.TermsAndConditionsFragment;
 import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
+
+import static at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget.HISTORY;
+import static at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget.RESULT;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -52,53 +58,27 @@ public class MainActivity extends AppCompatActivity {
 
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    navigateToTarget(WorkflowTarget.TITLE);
+                    navigateTo(WorkflowTarget.TITLE);
                     return true;
                 case R.id.navigation_history:
-                    navigateToTarget(WorkflowTarget.HISTORY);
+                    //navigateTo(RESULT);
+                    navigateTo(HISTORY);
                     return true;
                 case R.id.navigation_map:
-                    navigateToTarget(WorkflowTarget.MAP);
+                    navigateTo(WorkflowTarget.MAP);
                     return true;
                 case R.id.navigation_settings:
-                    navigateToTarget(WorkflowTarget.SETTINGS);
+                    navigateTo(WorkflowTarget.SETTINGS);
                     return true;
                 case R.id.navigation_statistics:
-                    navigateToTarget(WorkflowTarget.STATISTICS);
+                    navigateTo(WorkflowTarget.STATISTICS);
                     return true;
             }
             return false;
         }
     };
 
-    public void navigateTo(final WorkflowTarget target) {
-        Log.d(TAG, "navigateTo");
-        switch (target) {
-            case TITLE:
-                navigation.setSelectedItemId(R.id.navigation_home);
-                break;
-            //no need to select the item from the measurement speed or measurement qos target (they can only be started from the title anyway)
-            case MEASUREMENT_SPEED:
-            case MEASUREMENT_QOS:
-            case MEASUREMENT_RECENT_RESULT:
-                navigateToTarget(target);
-                break;
-            case SETTINGS:
-                navigation.setSelectedItemId(R.id.navigation_settings);
-                break;
-            case MAP:
-                navigation.setSelectedItemId(R.id.navigation_map);
-                break;
-            case HISTORY:
-                navigation.setSelectedItemId(R.id.navigation_history);
-                break;
-            case STATISTICS:
-                navigation.setSelectedItemId(R.id.navigation_statistics);
-                break;
-        }
-    }
-
-    private void navigateToTarget(final WorkflowTarget target) {
+    public void navigateTo(final WorkflowTarget target, final WorkflowParameter workflowParameter) {
         Log.d(TAG, "navigateToTarget");
         Fragment targetFragment = null;
         boolean isBottomNavigationVisible = true;
@@ -126,9 +106,24 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case HISTORY:
                 targetFragment = HistoryFragment.newInstance();
+                navigation.getMenu().findItem(R.id.navigation_history).setChecked(true);
                 break;
             case STATISTICS:
                 targetFragment = StatisticsFragment.newInstance();
+                break;
+            case RESULT:
+                if (workflowParameter != null) {
+                    ResultFragment resultFragment = ResultFragment.newInstance(workflowParameter);
+                    targetFragment = resultFragment;
+                } else {
+//                    final WorkflowResultParameter param = new WorkflowResultParameter();
+//                    param.setMeasurementUuid("52f24371-52d7-44c3-8268-1e56ce8494ec");
+//                    ResultFragment resultFragment = ResultFragment.newInstance(param);
+//                    targetFragment = resultFragment;
+                    //TODO: is fallback to history the right choice?
+                    targetFragment = HistoryFragment.newInstance();
+                }
+                navigation.getMenu().findItem(R.id.navigation_history).setChecked(true);
                 break;
         }
 
@@ -140,6 +135,11 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.main_fragment_layout, targetFragment)
                     .commit();
         }
+    }
+
+
+    public void navigateTo(final WorkflowTarget target) {
+        navigateTo(target, null);
     }
 
     public void startMeasurement(final MeasurementType measurementType, final Bundle options) {
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        navigateToTarget(WorkflowTarget.TITLE);
+        navigateTo(WorkflowTarget.TITLE);
 
         if (!PreferencesUtil.isTermsAndConditionsAccepted(this, TermsAndConditionsFragment.TERMS_AND_CONDITIONS_VERSION)) {
             TermsAndConditionsFragment f = TermsAndConditionsFragment.newInstance();

@@ -4,7 +4,9 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiPagination;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
+import retrofit2.Response;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
@@ -25,6 +27,16 @@ public class ResultConnection extends AbstractConnection<ResultService> {
         }
         catch (final Exception e) {
             e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public ApiResponse<DetailMeasurementResponse> requestGroupedDetails (final String agentUuid, final String measurementUuid) {
+        try {
+            return getControllerService().getGroupedDetailMeasurementRequest(agentUuid, measurementUuid).execute().body();
+        } catch (final Exception ex) {
+            ex.printStackTrace();
         }
 
         return null;

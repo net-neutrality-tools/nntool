@@ -4,6 +4,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiPagination;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -19,4 +20,7 @@ public interface ResultService {
 
     @GET("/api/v1/measurement-agents/{agentUuid}/measurements")
     Call<ApiResponse<ApiPagination<BriefMeasurementResponse>>> getMeasurementsRequest(@Path("agentUuid") String agentUuid);
+
+    @GET("/api/v1/measurement-agents/{agentUuid}/measurements/{measurementUuid}/details")
+    Call<ApiResponse<DetailMeasurementResponse>> getGroupedDetailMeasurementRequest(@Path("agentUuid") String agentUuid, @Path("measurementUuid") String measurementUuid);
 }

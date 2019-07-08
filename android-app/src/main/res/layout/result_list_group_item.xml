@@ -1,0 +1,44 @@
+<RelativeLayout android:layout_height="wrap_content"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
+    android:layout_width="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:background="@drawable/border_bottom"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true">
+        <TextView
+            android:layout_margin="1dp"
+            android:id="@+id/result_list_group_item_title"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="title"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true">
+        <TextView
+            android:layout_margin="1dp"
+            android:id="@+id/result_list_group_item_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="value"/>
+
+        <TextView
+            android:gravity="right"
+            android:layout_margin="1dp"
+            android:id="@+id/result_list_group_item_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""/>
+    </LinearLayout>
+
+</RelativeLayout>

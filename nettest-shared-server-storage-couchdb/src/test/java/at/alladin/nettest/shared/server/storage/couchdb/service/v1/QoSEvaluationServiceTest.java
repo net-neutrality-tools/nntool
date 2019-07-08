@@ -23,6 +23,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurem
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective.QoSTranslationKeys;
+import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapper;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
@@ -36,10 +37,14 @@ public class QoSEvaluationServiceTest {
 	@Injectable 
 	@Mocked 
 	private QoSMeasurementObjectiveRepository objectiveRepo;
-	
+
 	@Injectable
 	private GsonBuilder builder;
-	
+
+	@Injectable
+	@Mocked
+	private FullMeasurementResponseMapper fullMeasurementResponseMapper;
+
 	private QoSMeasurement qosMeasurement;
 	
 	private List<QoSMeasurementObjective> objectiveList;
@@ -104,6 +109,9 @@ public class QoSEvaluationServiceTest {
 		new Expectations() {{
 			objectiveRepo.findAllByEnabled(anyBoolean);
 			result = objectiveList;
+
+			fullMeasurementResponseMapper.map((QoSMeasurement) any);
+			result = new FullQoSMeasurement();
 		}};
 		
 		final FullQoSMeasurement res = evaluationService.evaluateQoSMeasurement(qosMeasurement);
@@ -155,6 +163,9 @@ public class QoSEvaluationServiceTest {
 		new Expectations() {{
 			objectiveRepo.findAllByEnabled(anyBoolean);
 			result = objectiveList;
+
+			fullMeasurementResponseMapper.map((QoSMeasurement) any);
+			result = new FullQoSMeasurement();
 		}};
 		
 		final FullQoSMeasurement res = evaluationService.evaluateQoSMeasurement(qosMeasurement);
@@ -258,6 +269,9 @@ public class QoSEvaluationServiceTest {
 		new Expectations() {{
 			objectiveRepo.findAllByEnabled(anyBoolean);
 			result = objectiveList;
+
+			fullMeasurementResponseMapper.map((QoSMeasurement) any);
+			result = new FullQoSMeasurement();
 		}};
 		
 		final FullQoSMeasurement fullMeasurement = evaluationService.evaluateQoSMeasurement(qosMeasurement);
