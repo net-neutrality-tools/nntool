@@ -15,6 +15,8 @@
 		E0C4522422CA60F500FA4B44 /* JsonHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C4522322CA60F500FA4B44 /* JsonHelper.swift */; };
 		E0C4522622CA613500FA4B44 /* JSON+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C4522522CA613500FA4B44 /* JSON+Optional.swift */; };
 		E0C4522822CA618500FA4B44 /* TimeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C4522722CA618500FA4B44 /* TimeHelper.swift */; };
+		E0C4527022CCDBFD00FA4B44 /* CommonCryptoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C4526F22CCDBFD00FA4B44 /* CommonCryptoHelper.swift */; };
+		E0C4527222CCF4A900FA4B44 /* OperationGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C4527122CCF4A900FA4B44 /* OperationGroup.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +46,8 @@
 		E0C4522522CA613500FA4B44 /* JSON+Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSON+Optional.swift"; sourceTree = "<group>"; };
 		E0C4522722CA618500FA4B44 /* TimeHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeHelper.swift; sourceTree = "<group>"; };
 		E0C4522922CA61EA00FA4B44 /* nntool-shared-swift.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = "nntool-shared-swift.podspec"; sourceTree = SOURCE_ROOT; };
+		E0C4526F22CCDBFD00FA4B44 /* CommonCryptoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonCryptoHelper.swift; sourceTree = "<group>"; };
+		E0C4527122CCF4A900FA4B44 /* OperationGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationGroup.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +137,8 @@
 				E0C4522322CA60F500FA4B44 /* JsonHelper.swift */,
 				E0C4522522CA613500FA4B44 /* JSON+Optional.swift */,
 				E0C4522722CA618500FA4B44 /* TimeHelper.swift */,
+				E0C4526F22CCDBFD00FA4B44 /* CommonCryptoHelper.swift */,
+				E0C4527122CCF4A900FA4B44 /* OperationGroup.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -314,6 +320,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E0C4522422CA60F500FA4B44 /* JsonHelper.swift in Sources */,
+				E0C4527022CCDBFD00FA4B44 /* CommonCryptoHelper.swift in Sources */,
+				E0C4527222CCF4A900FA4B44 /* OperationGroup.swift in Sources */,
 				E0C4522622CA613500FA4B44 /* JSON+Optional.swift in Sources */,
 				E0C4522822CA618500FA4B44 /* TimeHelper.swift in Sources */,
 			);

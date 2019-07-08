@@ -14,6 +14,10 @@
 		E02D19201CF598E8002A02FE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E02D191F1CF598E8002A02FE /* Foundation.framework */; };
 		E02D19221CF598F3002A02FE /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E02D19211CF598F3002A02FE /* CoreLocation.framework */; };
 		E02D19241CF59900002A02FE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E02D19231CF59900002A02FE /* SystemConfiguration.framework */; };
+		E044DDF022D37B9900BB70CE /* NonTransparentProxyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DDED22D379A900BB70CE /* NonTransparentProxyTask.swift */; };
+		E044DDF322D39FEE00BB70CE /* WebsiteRenderingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DDF122D39FBB00BB70CE /* WebsiteRenderingTask.swift */; };
+		E044DDF822D3A19500BB70CE /* WebsiteTaskRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DDF622D3A19200BB70CE /* WebsiteTaskRunner.swift */; };
+		E044DDF922D3A19900BB70CE /* WebsiteTaskUrlProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DDF422D3A15000BB70CE /* WebsiteTaskUrlProtocol.swift */; };
 		E05D32A921F0EED2005E77F1 /* TcpPortTaskConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D32A821F0EED2005E77F1 /* TcpPortTaskConfiguration.swift */; };
 		E05D32AB21F0EEED005E77F1 /* AbstractTaskConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D32AA21F0EEED005E77F1 /* AbstractTaskConfiguration.swift */; };
 		E05D32AF21F0F106005E77F1 /* AbstractTaskResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D32AE21F0F106005E77F1 /* AbstractTaskResult.swift */; };
@@ -57,9 +61,10 @@
 		E06951002110A6EB00CFA14B /* QoSKit.podspec.json in Resources */ = {isa = PBXBuildFile; fileRef = E06950FF2110A6EB00CFA14B /* QoSKit.podspec.json */; };
 		E08FC3552212DDC50018E747 /* SocketProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08FC3542212DDC50018E747 /* SocketProtocols.swift */; };
 		E0AAD03F1FE2BDFC0007ACE4 /* QoSKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E0B1C8131CF4AFFD00F19282 /* QoSKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E0C4526E22CCCAA800FA4B44 /* HttpProxyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C4526D22CCCAA800FA4B44 /* HttpProxyTask.swift */; };
+		E0C4527822CE0B5700FA4B44 /* QoSLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C4527722CE0B5700FA4B44 /* QoSLogger.swift */; };
 		E0EA84CF22804CE200EB73BF /* QoSTaskExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84C322804CE100EB73BF /* QoSTaskExecutor.swift */; };
 		E0EA84D022804CE200EB73BF /* QoSTaskStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84C422804CE100EB73BF /* QoSTaskStatus.swift */; };
-		E0EA84D122804CE200EB73BF /* OperationGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84C522804CE100EB73BF /* OperationGroup.swift */; };
 		E0EA84D222804CE200EB73BF /* QoSTaskGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84C622804CE200EB73BF /* QoSTaskGroup.swift */; };
 		E0EA84D322804CE200EB73BF /* DnsTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84C822804CE200EB73BF /* DnsTask.swift */; };
 		E0EA84D422804CE200EB73BF /* UdpPortTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84C922804CE200EB73BF /* UdpPortTask.swift */; };
@@ -70,7 +75,6 @@
 		E0EA84D922804CE200EB73BF /* QoSTaskExecutorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84CE22804CE200EB73BF /* QoSTaskExecutorDelegate.swift */; };
 		E0EA84DC22804D0100EB73BF /* ControlConnectionParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84DA22804D0100EB73BF /* ControlConnectionParameters.swift */; };
 		E0EA84DD22804D0100EB73BF /* RequireControlConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84DB22804D0100EB73BF /* RequireControlConnection.swift */; };
-		E0F5B7A621FE27B6007AE378 /* TimeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F5B7A521FE27B6007AE378 /* TimeHelper.swift */; };
 		F4811F60DED85159BABF53BA /* Pods_All_QoSKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 114F7D4D1BAD1E3E433F65C3 /* Pods_All_QoSKit_iOS.framework */; };
 		F94E822B8F7C493E828188B4 /* Pods_All_QoSKitUnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E73A07B37856DB8539662BA3 /* Pods_All_QoSKitUnitTests.framework */; };
 /* End PBXBuildFile section */
@@ -102,6 +106,10 @@
 		E02D19471CF5A3BE002A02FE /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		E02D19491CF5A3D2002A02FE /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		E02D194B1CF5A3D7002A02FE /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		E044DDED22D379A900BB70CE /* NonTransparentProxyTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonTransparentProxyTask.swift; sourceTree = "<group>"; };
+		E044DDF122D39FBB00BB70CE /* WebsiteRenderingTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsiteRenderingTask.swift; sourceTree = "<group>"; };
+		E044DDF422D3A15000BB70CE /* WebsiteTaskUrlProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsiteTaskUrlProtocol.swift; sourceTree = "<group>"; };
+		E044DDF622D3A19200BB70CE /* WebsiteTaskRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsiteTaskRunner.swift; sourceTree = "<group>"; };
 		E05D32A821F0EED2005E77F1 /* TcpPortTaskConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TcpPortTaskConfiguration.swift; sourceTree = "<group>"; };
 		E05D32AA21F0EEED005E77F1 /* AbstractTaskConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbstractTaskConfiguration.swift; sourceTree = "<group>"; };
 		E05D32AE21F0F106005E77F1 /* AbstractTaskResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbstractTaskResult.swift; sourceTree = "<group>"; };
@@ -155,9 +163,10 @@
 		E09255A92121DB5300326B48 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		E0B1C7DE1CF4ADBA00F19282 /* QoSKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = QoSKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0B1C8131CF4AFFD00F19282 /* QoSKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QoSKit.h; path = Sources/QoSKit.h; sourceTree = "<group>"; };
+		E0C4526D22CCCAA800FA4B44 /* HttpProxyTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpProxyTask.swift; sourceTree = "<group>"; };
+		E0C4527722CE0B5700FA4B44 /* QoSLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSLogger.swift; sourceTree = "<group>"; };
 		E0EA84C322804CE100EB73BF /* QoSTaskExecutor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSTaskExecutor.swift; sourceTree = "<group>"; };
 		E0EA84C422804CE100EB73BF /* QoSTaskStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSTaskStatus.swift; sourceTree = "<group>"; };
-		E0EA84C522804CE100EB73BF /* OperationGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperationGroup.swift; sourceTree = "<group>"; };
 		E0EA84C622804CE200EB73BF /* QoSTaskGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSTaskGroup.swift; sourceTree = "<group>"; };
 		E0EA84C822804CE200EB73BF /* DnsTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DnsTask.swift; sourceTree = "<group>"; };
 		E0EA84C922804CE200EB73BF /* UdpPortTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdpPortTask.swift; sourceTree = "<group>"; };
@@ -170,7 +179,6 @@
 		E0EA84DB22804D0100EB73BF /* RequireControlConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequireControlConnection.swift; sourceTree = "<group>"; };
 		E0F5B7A121FE2597007AE378 /* Pods-All-QoSKit_iOS.debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Pods-All-QoSKit_iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-All-QoSKit_iOS/Pods-All-QoSKit_iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		E0F5B7A221FE2597007AE378 /* Pods-All-QoSKit_iOS.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Pods-All-QoSKit_iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-All-QoSKit_iOS/Pods-All-QoSKit_iOS.release.xcconfig"; sourceTree = "<group>"; };
-		E0F5B7A521FE27B6007AE378 /* TimeHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeHelper.swift; sourceTree = "<group>"; };
 		E0FC4C311D6C815B00D5D236 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.2.sdk/usr/lib/libresolv.tbd; sourceTree = DEVELOPER_DIR; };
 		E0FC4C331D6C816800D5D236 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.2.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		E0FC4C351D6C817100D5D236 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.2.sdk/System/Library/Frameworks/CoreLocation.framework; sourceTree = DEVELOPER_DIR; };
@@ -354,7 +362,6 @@
 		E0B1C8061CF4AEFC00F19282 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				E0EA84C522804CE100EB73BF /* OperationGroup.swift */,
 				E0EA84C322804CE100EB73BF /* QoSTaskExecutor.swift */,
 				E0EA84CE22804CE200EB73BF /* QoSTaskExecutorDelegate.swift */,
 				E0EA84C622804CE200EB73BF /* QoSTaskGroup.swift */,
@@ -367,6 +374,7 @@
 				E0F5B7A921FE2C4B007AE378 /* Executor */,
 				E0F5B7AA21FE2C68007AE378 /* Configuration */,
 				E0F5B7AB21FE2C7B007AE378 /* Result */,
+				E0C4527722CE0B5700FA4B44 /* QoSLogger.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -375,8 +383,11 @@
 			isa = PBXGroup;
 			children = (
 				E0EA84C822804CE200EB73BF /* DnsTask.swift */,
+				E0C4526D22CCCAA800FA4B44 /* HttpProxyTask.swift */,
 				E0EA84C922804CE200EB73BF /* UdpPortTask.swift */,
 				E0EA84CA22804CE200EB73BF /* TcpPortTask.swift */,
+				E044DDED22D379A900BB70CE /* NonTransparentProxyTask.swift */,
+				E044DDF122D39FBB00BB70CE /* WebsiteRenderingTask.swift */,
 				E0EA84CB22804CE200EB73BF /* QoSTask.swift */,
 				E0EA84CC22804CE200EB73BF /* EchoProtocolTask.swift */,
 				E0EA84CD22804CE200EB73BF /* QoSControlConnectionTask.swift */,
@@ -398,10 +409,11 @@
 		E0F5B7A821FE2C2B007AE378 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				E0F5B7A521FE27B6007AE378 /* TimeHelper.swift */,
 				E05D32E621F61ED8005E77F1 /* TcpStreamUtil.swift */,
 				E05D331721F9FE2A005E77F1 /* UdpStreamUtil.swift */,
 				E08FC3542212DDC50018E747 /* SocketProtocols.swift */,
+				E044DDF422D3A15000BB70CE /* WebsiteTaskUrlProtocol.swift */,
+				E044DDF622D3A19200BB70CE /* WebsiteTaskRunner.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -700,13 +712,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E0F5B7A621FE27B6007AE378 /* TimeHelper.swift in Sources */,
 				E05D330A21F79ECC005E77F1 /* AbstractControlConnectionTaskConfigurationBuilder.swift in Sources */,
 				E05D32F421F63CAA005E77F1 /* ControlConnection.swift in Sources */,
 				E0EA84CF22804CE200EB73BF /* QoSTaskExecutor.swift in Sources */,
 				E05D331221F7A46F005E77F1 /* AbstractBidirectionalIpTaskExecutor.swift in Sources */,
 				E05D32FA21F7741F005E77F1 /* QoSLog.swift in Sources */,
 				E05D331821F9FE2A005E77F1 /* UdpStreamUtil.swift in Sources */,
+				E044DDF322D39FEE00BB70CE /* WebsiteRenderingTask.swift in Sources */,
+				E044DDF022D37B9900BB70CE /* NonTransparentProxyTask.swift in Sources */,
 				E05D32EE21F63811005E77F1 /* UdpPortTaskResult.swift in Sources */,
 				E05D32D721F5F20B005E77F1 /* EchoProtocolTaskResult.swift in Sources */,
 				E05D32B621F0F1DB005E77F1 /* AbstractTaskExecutor.swift in Sources */,
@@ -719,11 +732,13 @@
 				E08FC3552212DDC50018E747 /* SocketProtocols.swift in Sources */,
 				E05D32F621F74CD1005E77F1 /* AbstractControlConnectionTaskExecutor.swift in Sources */,
 				E05D32D321F5EFB5005E77F1 /* EchoProtocolTaskExecutor.swift in Sources */,
+				E0C4527822CE0B5700FA4B44 /* QoSLogger.swift in Sources */,
 				E05D32B121F0F15E005E77F1 /* TcpPortTaskResult.swift in Sources */,
 				E0EA84DC22804D0100EB73BF /* ControlConnectionParameters.swift in Sources */,
 				E05D330C21F79F57005E77F1 /* AbstractBidirectionalIpTaskConfigurationBuilder.swift in Sources */,
 				E05D32D121F5EE18005E77F1 /* TaskExecutorError.swift in Sources */,
 				E0EA84D922804CE200EB73BF /* QoSTaskExecutorDelegate.swift in Sources */,
+				E044DDF822D3A19500BB70CE /* WebsiteTaskRunner.swift in Sources */,
 				E0EA84D022804CE200EB73BF /* QoSTaskStatus.swift in Sources */,
 				E05D32F121F63848005E77F1 /* UdpPortTaskConfiguration.swift in Sources */,
 				E05D32AF21F0F106005E77F1 /* AbstractTaskResult.swift in Sources */,
@@ -741,14 +756,15 @@
 				E0EA84D322804CE200EB73BF /* DnsTask.swift in Sources */,
 				E05D32A921F0EED2005E77F1 /* TcpPortTaskConfiguration.swift in Sources */,
 				E0EA84DD22804D0100EB73BF /* RequireControlConnection.swift in Sources */,
+				E0C4526E22CCCAA800FA4B44 /* HttpProxyTask.swift in Sources */,
 				E0EA84D522804CE200EB73BF /* TcpPortTask.swift in Sources */,
 				E05D330621F79C20005E77F1 /* BuilderProtocol.swift in Sources */,
-				E0EA84D122804CE200EB73BF /* OperationGroup.swift in Sources */,
 				E05D330421F79BD4005E77F1 /* AbstractTaskConfigurationBuilder.swift in Sources */,
 				E0EA84D622804CE200EB73BF /* QoSTask.swift in Sources */,
 				E05D32E021F60472005E77F1 /* AbstractControlConnectionTaskConfiguration.swift in Sources */,
 				E0EA84D722804CE200EB73BF /* EchoProtocolTask.swift in Sources */,
 				E0EA84D822804CE200EB73BF /* QoSControlConnectionTask.swift in Sources */,
+				E044DDF922D3A19900BB70CE /* WebsiteTaskUrlProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

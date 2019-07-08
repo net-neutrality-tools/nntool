@@ -18,6 +18,7 @@
 import Foundation
 import MeasurementAgentKit
 import Speed
+import nntool_shared_swift
 
 ///
 class IASProgram: NSObject, ProgramProtocol {
@@ -35,6 +36,8 @@ class IASProgram: NSObject, ProgramProtocol {
     private var currentPhase = SpeedMeasurementPhase.initialize
 
     var result: [AnyHashable: Any]?
+
+    private var startTimeNs: UInt64?
 
     func run() throws -> SubMeasurementResult {
         speed.speedDelegate = self
@@ -84,10 +87,13 @@ class IASProgram: NSObject, ProgramProtocol {
             // TODO: mark measurement as timed out
         }
 
+        let endTimeNs = TimeHelper.currentTimeNs()
+
         let res = IasMeasurementResult()
 
         guard let r = result else {
-            // TODO: status/reason
+            // TODO: status
+            // TODO: reason
 
             res.status = .failed // or .aborted
             return res
@@ -114,7 +120,6 @@ class IASProgram: NSObject, ProgramProtocol {
             res.bytesDownload = lastDownloadInfo["bytes"] as? UInt64
             res.bytesDownloadIncludingSlowStart = lastDownloadInfo["bytes_including_slow_start"] as? UInt64
             res.durationDownloadNs = lastDownloadInfo["duration_ns_total"] as? UInt64
-            //res.relativeStartTimeDownloadNs
 
             res.connectionInfo?.actualNumStreamsDownload = lastDownloadInfo["num_streams_end"] as? Int // TODO: this might not be correct
             //res.connectionInfo?.agentInterfaceDownloadMeasurementTraffic // TODO
@@ -133,7 +138,6 @@ class IASProgram: NSObject, ProgramProtocol {
             res.bytesUpload = lastUploadInfo["bytes"] as? UInt64
             res.bytesUploadIncludingSlowStart = lastUploadInfo["bytes_including_slow_start"] as? UInt64
             res.durationUploadNs = lastUploadInfo["duration_ns_total"] as? UInt64
-            //res.relativeStartTimeUploadNs
 
             res.connectionInfo?.actualNumStreamsUpload = lastUploadInfo["num_streams_end"] as? Int // TODO: this might not be correct
             //res.connectionInfo?.agentInterfaceUploadMeasurementTraffic // TODO
@@ -154,11 +158,18 @@ class IASProgram: NSObject, ProgramProtocol {
             res.relativeStartTimeUploadNs = timeInfo["upload_start"]
         }
 
-        //res.connectionInfo
-        //res.reason
-        //res.relativeEndTimeNs
-        //res.relativeStartTimeNs
-        //res.status
+        //res.connectionInfo?.address
+        //res.connectionInfo?.encrypted
+        //res.connectionInfo?.encryptionInfo
+        //res.connectionInfo?.port
+        //res.connectionInfo?.serverMss
+        //res.connectionInfo?.serverMtu
+        //res.connectionInfo?.tcpOptSackRequested
+        //res.connectionInfo?.tcpOptWscaleRequested
+        //res.connectionInfo?.agentInterfaceTotalTraffic
+
+        res.relativeStartTimeNs = startTimeNs // TODO: relative to measurement start
+        res.relativeEndTimeNs = endTimeNs // TODO: relative to measurement start
 
         // TODO
 
@@ -260,6 +271,8 @@ extension IASProgram: SpeedDelegate {
         //logger.debug(error)
 
         logger.debug("measurementDidLoad")
+
+        startTimeNs = TimeHelper.currentTimeNs()
 
         speed.measurementStart()
         delegate?.iasMeasurement(self, didStartPhase: .initialize)

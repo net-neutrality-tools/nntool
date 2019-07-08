@@ -1,6 +1,7 @@
 // TODO: license
 
 import Foundation
+import nntool_shared_swift
 
 public typealias QoSObjectives = [String: [QoSTaskConfiguration]]
 
@@ -30,6 +31,19 @@ public class QoSTaskExecutor {
         queue = OperationQueue()
         queue.isSuspended = true
         queue.maxConcurrentOperationCount = 100 // 4?
+    }
+
+    public class func startWithObjectives(_ objectives: QoSObjectives, token: String? = "", success successCallback: (([QoSTaskResult]) -> Void)?, error errorCallback: ((Error?) -> Void)?) {
+
+        let executor = CallbackQoSTaskExecutor(successCallback: successCallback, errorCallback: errorCallback)
+        executor.startWithObjectives(objectives, token: token)
+
+        /*let delegate = CallbackDelegate(successCallback: successCallback, errorCallback: errorCallback)
+        
+        let executor = QoSTaskExecutor()
+        executor.delegate = delegate
+        
+        executor.startWithObjectives(objectives, token: token)*/
     }
 
     public func startWithObjectives(_ objectives: QoSObjectives, token: String? = "") {
@@ -188,6 +202,8 @@ public class QoSTaskExecutor {
         }
         queue.addOperation(finishOperation)
 
+        WebsiteTaskUrlProtocol.start()
+
         // start queue
         queue.isSuspended = false
     }
@@ -205,6 +221,8 @@ public class QoSTaskExecutor {
     }
 
     private func stop() {
+        WebsiteTaskUrlProtocol.stop()
+
         stopObservingProgress()
         closeAllControlConnections()
 
@@ -220,5 +238,40 @@ public class QoSTaskExecutor {
     private func closeAllControlConnections() {
         controlConnections.values.forEach { $0.disconnect() }
         controlConnections.removeAll()
+    }
+}
+
+private class CallbackQoSTaskExecutor: QoSTaskExecutor, QoSTaskExecutorDelegate {
+
+    private let successCallback: (([QoSTaskResult]) -> Void)?
+    private let errorCallback: ((Error?) -> Void)?
+
+    init(successCallback: (([QoSTaskResult]) -> Void)?, errorCallback: ((Error?) -> Void)?) {
+        self.successCallback = successCallback
+        self.errorCallback = errorCallback
+
+        super.init()
+
+        delegate = self
+    }
+
+    func taskExecutorDidStart(_ taskExecutor: QoSTaskExecutor, withTaskGroups groups: [QoSTaskGroup]) {
+
+    }
+
+    func taskExecutorDidFail(_ taskExecutor: QoSTaskExecutor, withError error: Error?) {
+        errorCallback?(error)
+    }
+
+    func taskExecutorDidStop(_ taskExecutor: QoSTaskExecutor) {
+
+    }
+
+    func taskExecutorDidUpdateProgress(_ progress: Double, ofGroup group: QoSTaskGroup, totalProgress: Double) {
+
+    }
+
+    func taskExecutorDidFinishWithResult(_ result: [QoSTaskResult]) {
+        successCallback?(result)
     }
 }

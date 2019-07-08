@@ -3,6 +3,7 @@
 
 import Foundation
 import CocoaAsyncSocket
+import nntool_shared_swift
 
 ///
 struct UdpStreamUtilConfiguration {

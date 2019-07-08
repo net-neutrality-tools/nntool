@@ -20,8 +20,8 @@ import Foundation
 public class EchoProtocolTaskConfiguration: AbstractTaskConfiguration {
 
     public enum ProtocolType: String, Codable {
-        case tcp = "tcp"
-        case udp = "udp"
+        case tcp
+        case udp
     }
 
     var host: String?

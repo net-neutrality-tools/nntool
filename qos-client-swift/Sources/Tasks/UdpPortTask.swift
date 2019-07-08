@@ -21,8 +21,12 @@ class UdpPortTask: QoSBidirectionalIpTask {
 
     private var rttsNs: [String: UInt64]?
 
-    override var statusKey: String {
+    override var statusKey: String? {
         return "udp_result_status" // TODO: not yet implemented on server
+    }
+
+    override var objectiveTimeoutKey: String? {
+        return "udp_objective_timeout"
     }
 
     override var result: QoSTaskResult {
@@ -43,8 +47,13 @@ class UdpPortTask: QoSBidirectionalIpTask {
             rttAvgNs = rtts.reduce(0) { $0 + $1.value } / UInt64(rtts.count)
         }
 
+        r["udp_objective_delay"] = JSON(delayNs)
+
         switch direction {
         case .outgoing:
+            r["udp_objective_out_port"] = JSON(portOut)
+            r["udp_objective_out_num_packets"] = JSON(packetCountOut)
+
             r["udp_result_out_num_packets"] = JSON(packetsReceivedServer)
             r["udp_result_out_response_num_packets"] = JSON(receivedSequences.count)
             r["udp_result_out_packet_loss_rate"] = JSON(plr)
@@ -53,6 +62,9 @@ class UdpPortTask: QoSBidirectionalIpTask {
             r["udp_result_out_rtt_avg_ns"] = JSON(rttAvgNs)
 
         case .incoming:
+            r["udp_objective_in_port"] = JSON(portIn)
+            r["udp_objective_in_num_packets"] = JSON(packetCountIn)
+
             r["udp_result_in_num_packets"] = JSON(receivedSequences.count)
             r["udp_result_in_response_num_packets"] = JSON(packetsReceivedServer)
             r["udp_result_in_packet_loss_rate"] = JSON(plr)

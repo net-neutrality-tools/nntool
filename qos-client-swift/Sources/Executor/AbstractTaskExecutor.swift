@@ -15,6 +15,7 @@
  ***************************************************************************/
 
 import Foundation
+import nntool_shared_swift
 
 ///
 public class AbstractTaskExecutor<C: AbstractTaskConfiguration, R: AbstractTaskResult>: Operation {

@@ -1,11 +1,14 @@
 import Foundation
 import CodableJSON
+import nntool_shared_swift
 
 public typealias QoSTaskConfiguration = [String: JSON]
 public typealias QoSTaskResult = [String: JSON]
 public typealias QoSTaskCompletionCallback = (QoSTaskResult) -> Void
 
 class QoSTask: Operation, Codable {
+
+    var taskLogger: QoSLogger?
 
     let progress = Progress(totalUnitCount: 100)
 
@@ -28,8 +31,12 @@ class QoSTask: Operation, Codable {
     var durationNs: UInt64?
 
     /// Override this property in a subclass to identify the key used for the status value.
-    var statusKey: String { // TODO: unify this on the server side (use status instead of tcp_result_out, ...)
-        return "status"
+    var statusKey: String? { // TODO: unify this on the server side (use status instead of tcp_result_out, ...)
+        return nil
+    }
+
+    var objectiveTimeoutKey: String? { // TODO: unify this on the server side
+        return nil
     }
 
     var result: QoSTaskResult {
@@ -39,7 +46,15 @@ class QoSTask: Operation, Codable {
         r["test_type"] = JSON(type)
         r["duration_ns"] = JSON(durationNs)
 
-        r[statusKey] = JSON(status.rawValue)
+        if let statusKey = statusKey {
+            r[statusKey] = JSON(status.rawValue)
+        }
+
+        if let objectiveTimeoutKey = objectiveTimeoutKey {
+            r[objectiveTimeoutKey] = JSON(timeoutNs)
+        }
+
+        taskLogger?.debug("RESULT")
 
         return r
     }
@@ -73,6 +88,8 @@ class QoSTask: Operation, Codable {
         }
 
         super.init()
+
+        taskLogger = QoSLogger(task: self)
     }
 
 // MARK: - Codeable
@@ -83,6 +100,10 @@ class QoSTask: Operation, Codable {
         uid = try container.decode(UInt.self, forKey: .uid)
         concurrencyGroup = try container.decode(UInt.self, forKey: .concurrencyGroup)
         type = try container.decode(String.self, forKey: .type)
+
+        super.init()
+
+        taskLogger = QoSLogger(task: self)
     }
 
     func encode(to encoder: Encoder) throws {
