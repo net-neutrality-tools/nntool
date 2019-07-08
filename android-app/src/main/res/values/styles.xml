@@ -169,6 +169,28 @@
         <item name="android:textColor">@color/title_page_start_button_fg</item>
     </style>
 
+    <!-- Result Fragment -->
+    <style name="Nettest.Result.Group.Icon" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="Nettest.Result.Group.Header" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="Nettest.Result.Group.Description" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Nettest.Result.Item" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <!-- History Fragment -->
     <style name="Nettest.History.Error.Text" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/theme_text_color</item>

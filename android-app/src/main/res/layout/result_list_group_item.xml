@@ -15,7 +15,7 @@
         <TextView
             android:layout_margin="1dp"
             android:id="@+id/result_list_group_item_title"
-            android:layout_weight="1"
+            style="@style/Nettest.Result.Item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="title"/>
@@ -28,6 +28,7 @@
         <TextView
             android:layout_margin="1dp"
             android:id="@+id/result_list_group_item_value"
+            style="@style/Nettest.Result.Item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="value"/>
@@ -36,6 +37,7 @@
             android:gravity="right"
             android:layout_margin="1dp"
             android:id="@+id/result_list_group_item_unit"
+            style="@style/Nettest.Result.Item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""/>

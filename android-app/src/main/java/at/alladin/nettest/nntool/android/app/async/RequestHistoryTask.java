@@ -4,21 +4,11 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import at.alladin.nettest.nntool.android.app.R;
-import at.alladin.nettest.nntool.android.app.dialog.BlockingProgressDialog;
 import at.alladin.nettest.nntool.android.app.util.ConnectionUtil;
-import at.alladin.nettest.nntool.android.app.util.LmapUtil;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
-import at.alladin.nettest.nntool.android.app.util.RequestUtil;
-import at.alladin.nettest.nntool.android.app.util.connection.ControllerConnection;
 import at.alladin.nettest.nntool.android.app.util.connection.ResultConnection;
-import at.alladin.nettest.nntool.android.app.util.connection.ResultService;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiPagination;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
 
 /**

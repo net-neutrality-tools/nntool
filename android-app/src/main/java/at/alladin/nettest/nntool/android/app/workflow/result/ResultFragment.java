@@ -5,15 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.RequestGroupedDetailMeasurementTask;
@@ -32,7 +29,7 @@ public class ResultFragment extends Fragment {
 
     private TextView errorText;
 
-    private ListView resultListView;
+    private ExpandableListView resultListView;
 
     public static ResultFragment newInstance() {
         final ResultFragment fragment = new ResultFragment();
@@ -73,17 +70,12 @@ public class ResultFragment extends Fragment {
                 final Context context = getContext();
                 if (context != null) {
                     resultListView.setAdapter(new ResultGroupAdapter(getContext(), result.getData().getGroups()));
+                    for (int i = 0; i < resultListView.getExpandableListAdapter().getGroupCount(); i++) {
+                        resultListView.expandGroup(i);
+                    }
                 }
             }
 
-            //TODO remove: (testing purpose)
-            try {
-                final String json = new ObjectMapper().writeValueAsString(result);
-                Log.d(TAG, json);
-            }
-            catch (final Exception e) {
-                e.printStackTrace();
-            }
         });
         measurementTask.execute();
         return v;

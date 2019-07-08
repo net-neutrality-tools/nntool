@@ -11,6 +11,7 @@ import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.dialog.BlockingProgressDialog;
 import at.alladin.nettest.nntool.android.app.util.ConnectionUtil;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
+import at.alladin.nettest.nntool.android.app.util.ObjectMapperUtil;
 import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.util.connection.ControllerConnection;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
@@ -53,7 +54,7 @@ public class RequestMeasurementTask extends AsyncTask<Void, Void, LmapControlDto
     protected void onPostExecute(LmapControlDto result) {
         final LmapUtil.LmapTaskWrapper taskWrapper = LmapUtil.extractQosTaskDescList(result);
         try {
-            Log.d(TAG, new ObjectMapper().writeValueAsString(taskWrapper));
+            Log.d(TAG, ObjectMapperUtil.createBasicObjectMapper().writeValueAsString(taskWrapper));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

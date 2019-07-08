@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.RequestHistoryTask;
+import at.alladin.nettest.nntool.android.app.util.ObjectMapperUtil;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -65,7 +66,7 @@ public class HistoryFragment extends Fragment {
 
             //TODO remove: (testing purpose)
             try {
-                final String json = new ObjectMapper().writeValueAsString(r);
+                final String json = ObjectMapperUtil.createBasicObjectMapper().writeValueAsString(r);
                 Log.d(TAG, json);
             }
             catch (final Exception e) {

@@ -109,7 +109,7 @@ public class RequestUtil {
         capabilityTaskDtoList.add(capabilityTask);
 
         try {
-            System.out.println(new ObjectMapper().writeValueAsString(request));
+            System.out.println(ObjectMapperUtil.createBasicObjectMapper().writeValueAsString(request));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

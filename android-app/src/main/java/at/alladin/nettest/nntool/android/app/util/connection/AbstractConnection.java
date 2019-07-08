@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import at.alladin.nettest.nntool.android.app.util.ObjectMapperUtil;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import retrofit2.Retrofit;
@@ -45,7 +46,7 @@ public abstract class AbstractConnection<T> {
         try {
             Retrofit r = new Retrofit.Builder()
                     .baseUrl(url)
-                    .addConverterFactory(JacksonConverterFactory.create(createObjectMapper()))
+                    .addConverterFactory(JacksonConverterFactory.create(ObjectMapperUtil.createBasicObjectMapper()))
                     .client(httpClient)
                     .build();
 
@@ -60,7 +61,7 @@ public abstract class AbstractConnection<T> {
         try {
             Retrofit r6 = new Retrofit.Builder()
                     .baseUrl(url6 == null ? url : url6)
-                    .addConverterFactory(JacksonConverterFactory.create(createObjectMapper()))
+                    .addConverterFactory(JacksonConverterFactory.create(ObjectMapperUtil.createBasicObjectMapper()))
                     .client(httpClient)
                     .build();
 
@@ -70,11 +71,6 @@ public abstract class AbstractConnection<T> {
         catch (final Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public ObjectMapper createObjectMapper() {
-        return new ObjectMapper().registerModule(new JodaModule())
-                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 
     public T getControllerService() {

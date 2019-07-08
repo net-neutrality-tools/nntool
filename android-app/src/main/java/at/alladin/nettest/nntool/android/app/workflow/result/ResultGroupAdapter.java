@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,31 +20,76 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.D
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
  */
-public class ResultGroupAdapter extends ArrayAdapter<DetailMeasurementGroup> {
+public class ResultGroupAdapter extends BaseExpandableListAdapter {
+
+    private final List<DetailMeasurementGroup> detailMeasurementGroupList;
+
+    private final Context context;
 
     public ResultGroupAdapter(Context context, List<DetailMeasurementGroup> objects) {
-        super(context, R.layout.result_list_group, objects);
+        this.detailMeasurementGroupList = objects;
+        this.context = context;
     }
 
     private class ViewHolder {
         AlladinTextView icon;
         TextView title;
         TextView description;
-        LinearLayout entries;
+    }
+
+    private class ItemViewHolder {
+        TextView title;
+        TextView value;
+        TextView unit;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final DetailMeasurementGroup item = getItem(position);
+    public int getGroupCount() {
+        return detailMeasurementGroupList == null ? 0 : detailMeasurementGroupList.size();
+    }
+
+    @Override
+    public int getChildrenCount(int groupPosition) {
+        return detailMeasurementGroupList == null || detailMeasurementGroupList.size() - 1 < groupPosition
+                ? 0 : detailMeasurementGroupList.get(groupPosition).getItems() == null
+                ? 0 : detailMeasurementGroupList.get(groupPosition).getItems().size();
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return childPosition;
+    }
+
+    @Override
+    public Object getGroup(int groupPosition) {
+        return detailMeasurementGroupList == null || detailMeasurementGroupList.size() - 1 < groupPosition ? null : detailMeasurementGroupList.get(groupPosition);
+    }
+
+    @Override
+    public Object getChild(int groupPosition, int childPosition) {
+        final DetailMeasurementGroup group = detailMeasurementGroupList == null || detailMeasurementGroupList.size() - 1 < groupPosition ? null : detailMeasurementGroupList.get(groupPosition);
+        if (group == null) {
+            return null;
+        }
+        return group.getItems() == null || group.getItems().size() - 1 < childPosition ? null : group.getItems().get(childPosition);
+    }
+
+    @Override
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        final DetailMeasurementGroup item = (DetailMeasurementGroup) getGroup(groupPosition);
 
         ResultGroupAdapter.ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.result_list_group, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.result_list_group, parent, false);
             viewHolder = new ResultGroupAdapter.ViewHolder();
             viewHolder.icon = convertView.findViewById(R.id.result_list_group_icon);
             viewHolder.title = convertView.findViewById(R.id.result_list_group_title);
             viewHolder.description = convertView.findViewById(R.id.result_list_group_description);
-            viewHolder.entries = convertView.findViewById(R.id.result_list_group_item_entries);
             convertView.setTag(viewHolder);
         }
         else {
@@ -52,36 +98,71 @@ public class ResultGroupAdapter extends ArrayAdapter<DetailMeasurementGroup> {
 
         if (item.getIconCharacter() != null) {
             viewHolder.icon.setText(item.getIconCharacter());
+        } else {
+            viewHolder.icon.setText("");
         }
 
         if (item.getTitle() != null) {
             viewHolder.title.setText(item.getTitle());
+        } else {
+            viewHolder.title.setText("");
         }
 
         if (item.getDescription() != null) {
             viewHolder.description.setText(item.getDescription());
-        }
-
-        if (item.getItems() != null && item.getItems().size() > 0 && viewHolder.entries.getChildCount() == 0) {
-            for (DetailMeasurementGroupItem e : item.getItems()) {
-                final RelativeLayout relativeLayout = (RelativeLayout) LayoutInflater.from(getContext()).inflate(R.layout.result_list_group_item, parent, false);
-
-                if (e.getTitle() != null) {
-                    ((TextView) relativeLayout.findViewById(R.id.result_list_group_item_title)).setText(e.getTitle());
-                }
-
-                if (e.getValue() != null) {
-                    ((TextView) relativeLayout.findViewById(R.id.result_list_group_item_value)).setText(e.getValue());
-                }
-
-                if (e.getUnit() != null) {
-                    ((TextView) relativeLayout.findViewById(R.id.result_list_group_item_unit)).setText(e.getUnit());
-                }
-
-                viewHolder.entries.addView(relativeLayout);
-            }
+        } else {
+            viewHolder.description.setText("");
         }
 
         return convertView;
     }
+
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        final DetailMeasurementGroupItem item = (DetailMeasurementGroupItem) getChild(groupPosition, childPosition);
+
+        ResultGroupAdapter.ItemViewHolder viewHolder;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.result_list_group_item, parent, false);
+            viewHolder = new ResultGroupAdapter.ItemViewHolder();
+            viewHolder.title = convertView.findViewById(R.id.result_list_group_item_title);
+            viewHolder.value = convertView.findViewById(R.id.result_list_group_item_value);
+            viewHolder.unit = convertView.findViewById(R.id.result_list_group_item_unit);
+            convertView.setTag(viewHolder);
+        }
+        else {
+            viewHolder = (ResultGroupAdapter.ItemViewHolder) convertView.getTag();
+        }
+
+        if (item.getTitle() != null) {
+            viewHolder.title.setText(item.getTitle());
+        } else {
+            viewHolder.title.setText("");
+        }
+
+        if (item.getValue() != null) {
+            viewHolder.value.setText(item.getValue());
+        } else {
+            viewHolder.value.setText("");
+        }
+
+        if (item.getUnit() != null) {
+            viewHolder.unit.setText(item.getUnit());
+        } else {
+            viewHolder.unit.setText("");
+        }
+
+        return convertView;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
+    @Override
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
+        return false;
+    }
+
 }
