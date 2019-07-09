@@ -108,6 +108,7 @@ public class TitleWithRecentResultFragment extends TitleFragment implements Serv
         if (bottomMeasurementResultSummaryView != null) {
             setMeasurementStateInBottomView();
             bottomMeasurementResultSummaryView.invalidate();
+            measurementRecentResultSelectorView.setMeasurementUuid(recentSpeedMeasurementState.getMeasurementUuid());
         }
 
     }
