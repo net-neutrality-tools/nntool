@@ -50,7 +50,7 @@ class SystemInformationCollector {
     private var timer: Repeater?
 
     func start(startNs: UInt64) {
-        if timer != nil {
+        guard timer == nil else {
             return // already started
         }
 
