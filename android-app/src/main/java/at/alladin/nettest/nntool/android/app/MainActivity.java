@@ -6,6 +6,7 @@ import android.preference.PreferenceCategory;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.res.ConfigurationHelper;
 import android.support.v7.app.AppCompatActivity;
@@ -61,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
                     navigateTo(WorkflowTarget.TITLE);
                     return true;
                 case R.id.navigation_history:
-                    //navigateTo(RESULT);
                     navigateTo(HISTORY);
                     return true;
                 case R.id.navigation_map:
@@ -113,13 +113,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case RESULT:
                 if (workflowParameter != null) {
-                    ResultFragment resultFragment = ResultFragment.newInstance(workflowParameter);
-                    targetFragment = resultFragment;
+                    targetFragment = ResultFragment.newInstance(workflowParameter);
                 } else {
-//                    final WorkflowResultParameter param = new WorkflowResultParameter();
-//                    param.setMeasurementUuid("52f24371-52d7-44c3-8268-1e56ce8494ec");
-//                    ResultFragment resultFragment = ResultFragment.newInstance(param);
-//                    targetFragment = resultFragment;
                     //TODO: is fallback to history the right choice?
                     targetFragment = HistoryFragment.newInstance();
                 }
@@ -130,10 +125,11 @@ public class MainActivity extends AppCompatActivity {
         setBottomNavigationVisible(isBottomNavigationVisible);
 
         if (targetFragment != null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.main_fragment_layout, targetFragment)
-                    .commit();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fragmentManager.beginTransaction()
+                .replace(R.id.main_fragment_layout, targetFragment)
+                .commit();
         }
     }
 

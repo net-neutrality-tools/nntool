@@ -9,15 +9,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.RequestHistoryTask;
 import at.alladin.nettest.nntool.android.app.util.ObjectMapperUtil;
+import at.alladin.nettest.nntool.android.app.workflow.result.ResultFragment;
+import at.alladin.nettest.nntool.android.app.workflow.result.WorkflowResultParameter;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -61,6 +63,18 @@ public class HistoryFragment extends Fragment {
                 final Context context = getContext();
                 if (context != null) {
                     historyListView.setAdapter(new HistoryListAdapter(getContext(), r.getData().getContent()));
+                    historyListView.setOnItemClickListener((parent, view, position, id) -> {
+                        final BriefMeasurementResponse response = (BriefMeasurementResponse) historyListView.getItemAtPosition(position);
+                        if (response != null) {
+                            final WorkflowResultParameter resultParameter = new WorkflowResultParameter();
+                            resultParameter.setMeasurementUuid(response.getUuid());
+                            getActivity().getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.main_fragment_layout, ResultFragment.newInstance(resultParameter))
+                                    .addToBackStack(null)
+                                    .commit();
+                        }
+                    });
                 }
             }
 
