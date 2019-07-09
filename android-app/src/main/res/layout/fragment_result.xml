@@ -9,7 +9,7 @@
         android:id="@+id/result_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:groupIndicator="@null"
+        android:layoutDirection="rtl"
         android:childIndicator="@null"
         />
 

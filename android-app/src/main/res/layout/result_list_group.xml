@@ -1,12 +1,13 @@
 <LinearLayout android:layout_height="wrap_content"
-    android:paddingTop="12dp"
-    android:paddingBottom="12dp"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
     android:layout_marginTop="3dp"
     android:layout_marginBottom="3dp"
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:descendantFocusability="blocksDescendants"
     android:background="@drawable/rectangle_fill"
+    android:layoutDirection="ltr"
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <LinearLayout
@@ -21,7 +22,7 @@
             android:layout_height="wrap_content"
             android:text="@string/ifont_hourglass"
             android:textSize="40sp"
-            android:paddingRight="5dp"/>
+            android:paddingEnd="5dp"/>
 
         <TextView
             android:id="@+id/result_list_group_title"
