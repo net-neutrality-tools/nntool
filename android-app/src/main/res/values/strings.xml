@@ -84,5 +84,6 @@
     <string name="history_header_down">Down</string>
     <string name="history_header_up">Up</string>
     <string name="history_no_results_found">No results found.</string>
+    <string name="history_disassociate_measurement">Disassociate this measurement</string>
 
 </resources>

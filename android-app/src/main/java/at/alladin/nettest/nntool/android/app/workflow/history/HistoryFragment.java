@@ -6,15 +6,19 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.async.DisassociateMeasurementTask;
 import at.alladin.nettest.nntool.android.app.async.RequestHistoryTask;
 import at.alladin.nettest.nntool.android.app.util.ObjectMapperUtil;
 import at.alladin.nettest.nntool.android.app.workflow.result.ResultFragment;
@@ -31,6 +35,8 @@ public class HistoryFragment extends Fragment {
     TextView errorText;
     ProgressBar loadingProgressBar;
     ListView historyListView;
+
+    private int selectedItem = -1;
 
     public static HistoryFragment newInstance() {
         final HistoryFragment fragment = new HistoryFragment();
@@ -63,6 +69,11 @@ public class HistoryFragment extends Fragment {
                 final Context context = getContext();
                 if (context != null) {
                     historyListView.setAdapter(new HistoryListAdapter(getContext(), r.getData().getContent()));
+
+                    //on long click a "disassociate measurement" option is shown
+                    //hereby we register that we want to open a context menu on long clicks
+                    registerForContextMenu(historyListView);
+                    //on normal click, the ResultFragment of the given measurement is shown
                     historyListView.setOnItemClickListener((parent, view, position, id) -> {
                         final BriefMeasurementResponse response = (BriefMeasurementResponse) historyListView.getItemAtPosition(position);
                         if (response != null) {
@@ -91,6 +102,51 @@ public class HistoryFragment extends Fragment {
         historyTask.execute();
 
         return v;
+    }
+
+    public void deleteSelectedItem() {
+        final BriefMeasurementResponse selectedMeasurement = (BriefMeasurementResponse) historyListView.getItemAtPosition(selectedItem);
+        if (selectedMeasurement != null && selectedMeasurement.getUuid() != null) {
+
+            if (loadingProgressBar != null) {
+                loadingProgressBar.setVisibility(View.VISIBLE);
+            }
+
+            Log.d(TAG, "Disassociating measurement w/uuid: " + selectedMeasurement.getUuid());
+
+            final DisassociateMeasurementTask disassociateTask = new DisassociateMeasurementTask(selectedMeasurement.getUuid(), getContext(), result -> {
+                if (result != null) {
+                    final ArrayAdapter<BriefMeasurementResponse> arrayAdapter = (ArrayAdapter<BriefMeasurementResponse>) historyListView.getAdapter();
+                    arrayAdapter.remove(arrayAdapter.getItem(selectedItem));
+                    arrayAdapter.notifyDataSetChanged();
+                }
+
+                if (loadingProgressBar != null) {
+                    loadingProgressBar.setVisibility(View.GONE);
+                }
+            });
+
+            disassociateTask.execute();
+
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        final AdapterView.AdapterContextMenuInfo contextMenu = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        selectedItem = contextMenu.position;
+        getActivity().getMenuInflater().inflate(R.menu.history_item_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.history_menu_delete:
+                deleteSelectedItem();
+                return true;
+        }
+        return super.onContextItemSelected(item);
     }
 
     @Override
