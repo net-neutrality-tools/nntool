@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,9 @@ public class ResultFragment extends Fragment {
         errorText = v.findViewById(R.id.result_loading_error_text);
         resultListView = v.findViewById(R.id.result_list_view);
 
+        final DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
         final RequestGroupedDetailMeasurementTask measurementTask = new RequestGroupedDetailMeasurementTask(workflowResultParameter.getMeasurementUuid(), getContext(), result -> {
             if (loadingProgressBar != null) {
                 loadingProgressBar.setVisibility(View.GONE);
@@ -69,6 +73,11 @@ public class ResultFragment extends Fragment {
             else {
                 final Context context = getContext();
                 if (context != null) {
+                    final int width = displayMetrics.widthPixels;
+                    resultListView.setIndicatorBoundsRelative(
+                            width - pixelOffsetToDps(60, displayMetrics.density),
+                            width - pixelOffsetToDps(20, displayMetrics.density)
+                    );
                     resultListView.setAdapter(new ResultGroupAdapter(getContext(), result.getData().getGroups()));
                     for (int i = 0; i < resultListView.getExpandableListAdapter().getGroupCount(); i++) {
                         resultListView.expandGroup(i);
@@ -78,7 +87,12 @@ public class ResultFragment extends Fragment {
 
         });
         measurementTask.execute();
+
         return v;
+    }
+
+    private int pixelOffsetToDps(int offsetPixels, float density) {
+        return (int) (offsetPixels * density + 0.5f);
     }
 
     public WorkflowResultParameter getWorkflowResultParameter() {
