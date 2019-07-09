@@ -21,7 +21,7 @@ import nntool_shared_swift
 
 class GpsLocationInformationCollector: NSObject, InformationCollector {
 
-    private var locationManager: CLLocationManager?
+    private let locationTracker = LocationTracker()
 
     private var latestReportedLocation: CLLocation?
 
@@ -32,65 +32,7 @@ class GpsLocationInformationCollector: NSObject, InformationCollector {
         self.timeBasedResult = timeBasedResult
         self.startNs = startNs
 
-        DispatchQueue.main.async {
-            self.locationManager = CLLocationManager()
-            self.locationManager?.delegate = self
-
-            if CLLocationManager.authorizationStatus() == .notDetermined {
-                self.locationManager?.requestWhenInUseAuthorization()
-            }
-
-            self.locationManager?.distanceFilter = 3.0
-            self.locationManager?.desiredAccuracy = kCLLocationAccuracyBest
-
-            //self.locationManager?.allowsBackgroundLocationUpdates = true
-            //self.locationManager?.pausesLocationUpdatesAutomatically = false
-        }
-    }
-
-    func stop() {
-        DispatchQueue.main.async {
-            self.locationManager?.stopUpdatingLocation()
-            self.locationManager = nil
-        }
-    }
-
-    // GPS location collector should always collect if there's an update and not be triggered by 1 second interval!
-    func collect(into timeBasedResult: TimeBasedResultDto) {
-
-    }
-
-    func locationAlreadyStored(_ location: CLLocation) -> Bool {
-        guard let lrl = latestReportedLocation else {
-            return false
-        }
-
-        return  lrl.coordinate.latitude == location.coordinate.latitude &&
-                lrl.coordinate.longitude == location.coordinate.longitude &&
-                lrl.altitude == location.altitude &&
-                lrl.course == location.course &&
-                lrl.horizontalAccuracy == location.horizontalAccuracy &&
-                lrl.speed == location.speed
-    }
-}
-
-extension GpsLocationInformationCollector: CLLocationManagerDelegate {
-
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedWhenInUse || status == .authorizedAlways {
-            DispatchQueue.main.async {
-                self.locationManager?.startUpdatingLocation()
-                //self.locationManager?.startUpdatingHeading()
-            }
-        }
-    }
-
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        DispatchQueue.global(qos: .background).async {
-            guard let lastLocation = locations.last, CLLocationCoordinate2DIsValid(lastLocation.coordinate) else {
-                return
-            }
-
+        locationTracker.start(updateLocationCallback: { lastLocation in
             // don't add same location twice
             if self.locationAlreadyStored(lastLocation) {
                 return
@@ -116,10 +58,28 @@ extension GpsLocationInformationCollector: CLLocationManagerDelegate {
 
             self.latestReportedLocation = lastLocation
             self.timeBasedResult?.geoLocations?.append(geoLocation)
-        }
+        })
     }
 
-    /*func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-     
-    }*/
+    func stop() {
+        locationTracker.stop()
+    }
+
+    // GPS location collector should always collect if there's an update and not be triggered by 1 second interval!
+    func collect(into timeBasedResult: TimeBasedResultDto) {
+
+    }
+
+    func locationAlreadyStored(_ location: CLLocation) -> Bool {
+        guard let lrl = latestReportedLocation else {
+            return false
+        }
+
+        return  lrl.coordinate.latitude == location.coordinate.latitude &&
+                lrl.coordinate.longitude == location.coordinate.longitude &&
+                lrl.altitude == location.altitude &&
+                lrl.course == location.course &&
+                lrl.horizontalAccuracy == location.horizontalAccuracy &&
+                lrl.speed == location.speed
+    }
 }
