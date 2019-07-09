@@ -36,6 +36,8 @@
 		E00F4AFD2266218400EAD0C0 /* AnyProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AFC2266218400EAD0C0 /* AnyProgram.swift */; };
 		E00F4B0522676BD100EAD0C0 /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4B0422676BCF00EAD0C0 /* Program.swift */; };
 		E01DEE832253B5AC00983B1C /* MeasurementResultResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01DEE822253B5AC00983B1C /* MeasurementResultResponse.swift */; };
+		E044DE0722D4896B00BB70CE /* CpuUsageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0622D4896B00BB70CE /* CpuUsageInfo.swift */; };
+		E044DE0922D489D700BB70CE /* MemoryUsageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0822D489D700BB70CE /* MemoryUsageInfo.swift */; };
 		E0B9A3B6224D3EAB002AB640 /* MeasurementAgentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0B9A3AC224D3EAB002AB640 /* MeasurementAgentKit.framework */; };
 		E0B9A3BB224D3EAB002AB640 /* MeasurementAgentKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3BA224D3EAB002AB640 /* MeasurementAgentKitTests.swift */; };
 		E0B9A3BD224D3EAB002AB640 /* MeasurementAgentKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E0B9A3AF224D3EAB002AB640 /* MeasurementAgentKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -129,6 +131,8 @@
 		E00F4AFC2266218400EAD0C0 /* AnyProgram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyProgram.swift; sourceTree = "<group>"; };
 		E00F4B0422676BCF00EAD0C0 /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
 		E01DEE822253B5AC00983B1C /* MeasurementResultResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasurementResultResponse.swift; sourceTree = "<group>"; };
+		E044DE0622D4896B00BB70CE /* CpuUsageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CpuUsageInfo.swift; sourceTree = "<group>"; };
+		E044DE0822D489D700BB70CE /* MemoryUsageInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryUsageInfo.swift; sourceTree = "<group>"; };
 		E0692792225CA1F600E028CA /* MeasurementAgentKit.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeasurementAgentKit.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		E0B9A3AC224D3EAB002AB640 /* MeasurementAgentKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MeasurementAgentKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0B9A3AF224D3EAB002AB640 /* MeasurementAgentKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeasurementAgentKit.h; sourceTree = "<group>"; };
@@ -228,6 +232,7 @@
 		B141590B22B2B4D100DD5C96 /* SystemInformation */ = {
 			isa = PBXGroup;
 			children = (
+				E044DE0522D488EF00BB70CE /* Helper */,
 				B141591722B2C10200DD5C96 /* Collectors */,
 				B141590C22B2B4EB00DD5C96 /* SystemInformationCollector.swift */,
 				B141591522B2C0EF00DD5C96 /* InformationCollector.swift */,
@@ -265,6 +270,15 @@
 				E01DEE822253B5AC00983B1C /* MeasurementResultResponse.swift */,
 			);
 			path = Collector;
+			sourceTree = "<group>";
+		};
+		E044DE0522D488EF00BB70CE /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				E044DE0622D4896B00BB70CE /* CpuUsageInfo.swift */,
+				E044DE0822D489D700BB70CE /* MemoryUsageInfo.swift */,
+			);
+			path = Helper;
 			sourceTree = "<group>";
 		};
 		E0B9A3A2224D3EAB002AB640 = {
@@ -680,6 +694,7 @@
 				E0B9A3F9224D5F5C002AB640 /* LmapStopDto.swift in Sources */,
 				E0B9A41C224E6860002AB640 /* ApiResponse.swift in Sources */,
 				E00F48CC225F72B300EAD0C0 /* ProgramProtocol.swift in Sources */,
+				E044DE0922D489D700BB70CE /* MemoryUsageInfo.swift in Sources */,
 				E0B9A3D6224D46FC002AB640 /* GeoLocationDto.swift in Sources */,
 				B1C64970228C3B79007506A6 /* SpeedMeasurementRawDataItemDto.swift in Sources */,
 				E0B9A3D8224D4872002AB640 /* TimeBasedResultDto.swift in Sources */,
@@ -726,6 +741,7 @@
 				B141591622B2C0EF00DD5C96 /* InformationCollector.swift in Sources */,
 				E00F4AF52265DC3E00EAD0C0 /* ProgramConfiguration.swift in Sources */,
 				E00F4AF12264B51300EAD0C0 /* MeasurementRunnerDelegate.swift in Sources */,
+				E044DE0722D4896B00BB70CE /* CpuUsageInfo.swift in Sources */,
 				B141591F22B79A3400DD5C96 /* BaseInformationCollector.swift in Sources */,
 				E0B9A3E6224D544B002AB640 /* MeasurementTypeParametersDto.swift in Sources */,
 				B141591922B2C11900DD5C96 /* CpuUsageInformationCollector.swift in Sources */,
