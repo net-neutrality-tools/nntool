@@ -894,7 +894,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 499LGG5WHR;
-				INFOPLIST_FILE = "$(SRCROOT)/demo/Info.plist";
+				INFOPLIST_FILE = demo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -919,7 +919,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: zafaco GmbH ";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 499LGG5WHR;
-				INFOPLIST_FILE = "$(SRCROOT)/demo/Info.plist";
+				INFOPLIST_FILE = demo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
