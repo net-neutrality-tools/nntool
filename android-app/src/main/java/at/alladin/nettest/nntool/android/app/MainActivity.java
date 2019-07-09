@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.res.ConfigurationHelper;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -25,7 +26,6 @@ import at.alladin.nettest.nntool.android.app.workflow.map.MapFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.SpeedFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.TitleWithRecentResultFragment;
 import at.alladin.nettest.nntool.android.app.workflow.result.ResultFragment;
-import at.alladin.nettest.nntool.android.app.workflow.result.WorkflowResultParameter;
 import at.alladin.nettest.nntool.android.app.workflow.settings.SettingsFragment;
 import at.alladin.nettest.nntool.android.app.workflow.main.TitleFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
@@ -33,10 +33,8 @@ import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementTyp
 import at.alladin.nettest.nntool.android.app.workflow.measurement.QosFragment;
 import at.alladin.nettest.nntool.android.app.workflow.statistics.StatisticsFragment;
 import at.alladin.nettest.nntool.android.app.workflow.tc.TermsAndConditionsFragment;
-import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 
 import static at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget.HISTORY;
-import static at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget.RESULT;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -181,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         navigateTo(WorkflowTarget.TITLE);
@@ -196,6 +194,8 @@ public class MainActivity extends AppCompatActivity {
             PermissionUtil.requestLocationPermission(this);
         }
 
+        final View actionView = getLayoutInflater().inflate(R.layout.action_bar, null, false);
+        getSupportActionBar().setCustomView(actionView);
         getSupportActionBar().setElevation(0f);
 
     }

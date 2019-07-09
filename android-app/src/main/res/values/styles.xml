@@ -162,7 +162,7 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-    <!-- VIEW YOUR RECENT MEASUREMENT BUTTON -->
+    <!-- View your recent measurement button -->
 
     <style name="Nettest.Measurement.Result.View.Recent.Text" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">20sp</item>
@@ -195,6 +195,17 @@
     <style name="Nettest.History.Error.Text" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/theme_text_color</item>
         <item name="android:textSize">20sp</item>
+    </style>
+
+    <!-- Custom Action Bar -->
+    <style name="Nettest.Custom.Action.Bar.Title" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="Nettest.Custom.Action.Bar.Icon" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">35dp</item>
     </style>
 
 </resources>
