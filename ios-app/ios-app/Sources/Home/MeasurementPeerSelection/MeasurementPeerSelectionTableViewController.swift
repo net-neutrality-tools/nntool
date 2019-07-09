@@ -1,4 +1,4 @@
-// ios-app: HomeScreenMeasurementPeerSelectionView.swift, created on 26.03.19
+// ios-app: MeasurementPeerSelectionTableViewController.swift, created on 16.04.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -19,6 +19,18 @@ import Foundation
 import UIKit
 
 ///
-@IBDesignable class HomeScreenMeasurementPeerSelectionView: NibView {
+class MeasurementPeerSelectionTableViewController: UITableViewController {
 
+    @IBAction func done() {
+        // TODO: save
+        dismiss()
+    }
+
+    @IBAction func cancel() {
+        dismiss()
+    }
+
+    private func dismiss() {
+        dismiss(animated: true, completion: nil)
+    }
 }

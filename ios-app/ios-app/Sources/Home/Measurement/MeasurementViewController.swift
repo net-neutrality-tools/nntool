@@ -163,7 +163,7 @@ class MeasurementViewController: CustomNavigationBarViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
 
         // TODO: localization
-        
+
         alert.addAction(UIAlertAction(title: "Retry", style: .default) { _ in
             self.startMeasurement()
         })

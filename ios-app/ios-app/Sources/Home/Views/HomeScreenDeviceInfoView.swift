@@ -1,4 +1,4 @@
-// ios-app: MeasurementPeerSelectionTableViewController.swift, created on 16.04.19
+// ios-app: HomeScreenDeviceInfoView.swift, created on 26.03.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -19,6 +19,31 @@ import Foundation
 import UIKit
 
 ///
-class MeasurementPeerSelectionTableViewController: UITableViewController {
+@IBDesignable class HomeScreenDeviceInfoView: NibView {
 
+    @IBOutlet var cpuValueLabel: UILabel?
+    @IBOutlet var memValueLabel: UILabel?
+
+    @IBOutlet var ipv4ValueLabel: UILabel?
+    @IBOutlet var ipv6ValueLabel: UILabel?
+
+    @IBOutlet var trafficInValueLabel: UILabel?
+    @IBOutlet var trafficOutValueLabel: UILabel?
+
+    @IBOutlet var locationLabel: UILabel?
+    @IBOutlet var locationInfoLabel: UILabel?
+
+    func reset() {
+        cpuValueLabel?.text = ""
+        memValueLabel?.text = ""
+
+        ipv4ValueLabel?.text = ""
+        ipv6ValueLabel?.text = ""
+
+        trafficInValueLabel?.text = ""
+        trafficOutValueLabel?.text = ""
+
+        locationLabel?.text = ""
+        locationInfoLabel?.text = ""
+    }
 }

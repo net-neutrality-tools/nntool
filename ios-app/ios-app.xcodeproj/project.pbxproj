@@ -36,7 +36,6 @@
 		E00F4AEC225F80D600EAD0C0 /* NativeScript.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E00F4ADE225F801400EAD0C0 /* NativeScript.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E00F4AED225F80D600EAD0C0 /* TNSWidgets.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E00F4ADF225F801400EAD0C0 /* TNSWidgets.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E00F4AF32264B7C700EAD0C0 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AF22264B7C700EAD0C0 /* Config.swift */; };
-		E00F4AF92266040900EAD0C0 /* MeasurementPeerSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AF82266040900EAD0C0 /* MeasurementPeerSelectionTableViewController.swift */; };
 		E00F4AFF2266234200EAD0C0 /* IASProgramDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AFE2266234200EAD0C0 /* IASProgramDelegate.swift */; };
 		E00F4B012266235700EAD0C0 /* QoSProgramDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4B002266235700EAD0C0 /* QoSProgramDelegate.swift */; };
 		E00F4B03226719DE00EAD0C0 /* UIAlertController+ProgressIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4B02226719DE00EAD0C0 /* UIAlertController+ProgressIndicator.swift */; };
@@ -46,6 +45,9 @@
 		E026A58E2241271900BACDB5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E026A58C2241271900BACDB5 /* LaunchScreen.storyboard */; };
 		E026A5992241271A00BACDB5 /* iosAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E026A5982241271A00BACDB5 /* iosAppTests.swift */; };
 		E026A5A42241271A00BACDB5 /* iosAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E026A5A32241271A00BACDB5 /* iosAppUITests.swift */; };
+		E044DE0222D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */; };
+		E044DE0E22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */; };
+		E044DE1022D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */; };
 		E0AF3DE922413B7C00FDBFD1 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DE822413B7C00FDBFD1 /* MapViewController.swift */; };
 		E0AF3DEB22413B9800FDBFD1 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DEA22413B9800FDBFD1 /* HomeViewController.swift */; };
 		E0AF3DF122413BF200FDBFD1 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF022413BF200FDBFD1 /* SettingsTableViewController.swift */; };
@@ -67,10 +69,8 @@
 		E0B9A351224A8F65002AB640 /* NibView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A350224A8F65002AB640 /* NibView.swift */; };
 		E0B9A353224A906E002AB640 /* CircularButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A352224A906E002AB640 /* CircularButton.swift */; };
 		E0B9A355224AAC09002AB640 /* CustomNavigationBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A354224AAC09002AB640 /* CustomNavigationBarViewController.swift */; };
-		E0B9A357224AAD62002AB640 /* HomeScreenDeviceInformationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A356224AAD62002AB640 /* HomeScreenDeviceInformationView.xib */; };
-		E0B9A359224AB092002AB640 /* HomeScreenDeviceInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A358224AB092002AB640 /* HomeScreenDeviceInformationView.swift */; };
-		E0B9A35B224AB2FE002AB640 /* HomeScreenMeasurementPeerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A35A224AB2FE002AB640 /* HomeScreenMeasurementPeerSelectionView.swift */; };
-		E0B9A35D224AB335002AB640 /* HomeScreenMeasurementPeerSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A35C224AB335002AB640 /* HomeScreenMeasurementPeerSelectionView.xib */; };
+		E0B9A359224AB092002AB640 /* HomeScreenDeviceInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A358224AB092002AB640 /* HomeScreenDeviceInfoView.swift */; };
+		E0B9A35B224AB2FE002AB640 /* MeasurementPeerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A35A224AB2FE002AB640 /* MeasurementPeerSelectionView.swift */; };
 		E0B9A35F224AB835002AB640 /* SpeedMeasurementBasicResultView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0B9A35E224AB835002AB640 /* SpeedMeasurementBasicResultView.xib */; };
 		E0B9A361224AB850002AB640 /* SpeedMeasurementBasicResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A360224AB850002AB640 /* SpeedMeasurementBasicResultView.swift */; };
 		E0B9A367224ABD25002AB640 /* QoSGroupProgressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A366224ABD25002AB640 /* QoSGroupProgressCell.swift */; };
@@ -180,7 +180,6 @@
 		E00F4AE1225F801400EAD0C0 /* NativeScript.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = NativeScript.framework; sourceTree = "<group>"; };
 		E00F4AE2225F801400EAD0C0 /* TNSWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TNSWidgets.framework; sourceTree = "<group>"; };
 		E00F4AF22264B7C700EAD0C0 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
-		E00F4AF82266040900EAD0C0 /* MeasurementPeerSelectionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementPeerSelectionTableViewController.swift; sourceTree = "<group>"; };
 		E00F4AFE2266234200EAD0C0 /* IASProgramDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IASProgramDelegate.swift; sourceTree = "<group>"; };
 		E00F4B002266235700EAD0C0 /* QoSProgramDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSProgramDelegate.swift; sourceTree = "<group>"; };
 		E00F4B02226719DE00EAD0C0 /* UIAlertController+ProgressIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+ProgressIndicator.swift"; sourceTree = "<group>"; };
@@ -196,6 +195,9 @@
 		E026A59F2241271A00BACDB5 /* ios-appUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ios-appUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E026A5A32241271A00BACDB5 /* iosAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosAppUITests.swift; sourceTree = "<group>"; };
 		E026A5A52241271A00BACDB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementPeerSelectionTableViewController.swift; sourceTree = "<group>"; };
+		E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeScreenDeviceInfoView.xib; sourceTree = "<group>"; };
+		E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Format.swift"; sourceTree = "<group>"; };
 		E0AF3DE822413B7C00FDBFD1 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		E0AF3DEA22413B9800FDBFD1 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		E0AF3DF022413BF200FDBFD1 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -217,10 +219,8 @@
 		E0B9A350224A8F65002AB640 /* NibView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NibView.swift; sourceTree = "<group>"; };
 		E0B9A352224A906E002AB640 /* CircularButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularButton.swift; sourceTree = "<group>"; };
 		E0B9A354224AAC09002AB640 /* CustomNavigationBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBarViewController.swift; sourceTree = "<group>"; };
-		E0B9A356224AAD62002AB640 /* HomeScreenDeviceInformationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeScreenDeviceInformationView.xib; sourceTree = "<group>"; };
-		E0B9A358224AB092002AB640 /* HomeScreenDeviceInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenDeviceInformationView.swift; sourceTree = "<group>"; };
-		E0B9A35A224AB2FE002AB640 /* HomeScreenMeasurementPeerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenMeasurementPeerSelectionView.swift; sourceTree = "<group>"; };
-		E0B9A35C224AB335002AB640 /* HomeScreenMeasurementPeerSelectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeScreenMeasurementPeerSelectionView.xib; sourceTree = "<group>"; };
+		E0B9A358224AB092002AB640 /* HomeScreenDeviceInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenDeviceInfoView.swift; sourceTree = "<group>"; };
+		E0B9A35A224AB2FE002AB640 /* MeasurementPeerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementPeerSelectionView.swift; sourceTree = "<group>"; };
 		E0B9A35E224AB835002AB640 /* SpeedMeasurementBasicResultView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SpeedMeasurementBasicResultView.xib; sourceTree = "<group>"; };
 		E0B9A360224AB850002AB640 /* SpeedMeasurementBasicResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedMeasurementBasicResultView.swift; sourceTree = "<group>"; };
 		E0B9A366224ABD25002AB640 /* QoSGroupProgressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSGroupProgressCell.swift; sourceTree = "<group>"; };
@@ -463,9 +463,8 @@
 				E026A58C2241271900BACDB5 /* LaunchScreen.storyboard */,
 				E0B9A33A224A5BCA002AB640 /* ProgressInfoBar.xib */,
 				E0B9A3382249826E002AB640 /* SpeedMeasurementGaugeView.xib */,
-				E0B9A356224AAD62002AB640 /* HomeScreenDeviceInformationView.xib */,
-				E0B9A35C224AB335002AB640 /* HomeScreenMeasurementPeerSelectionView.xib */,
 				E0B9A35E224AB835002AB640 /* SpeedMeasurementBasicResultView.xib */,
+				E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -475,12 +474,20 @@
 			children = (
 				E0B9A354224AAC09002AB640 /* CustomNavigationBarViewController.swift */,
 				E0AF3DEA22413B9800FDBFD1 /* HomeViewController.swift */,
-				E00F4AF82266040900EAD0C0 /* MeasurementPeerSelectionTableViewController.swift */,
+				E044DE0022D485F600BB70CE /* MeasurementPeerSelection */,
 				E0B9A33C224A5C16002AB640 /* Views */,
 				E0B9A33322498110002AB640 /* Measurement */,
 				E0AF3DFB224151EE00FDBFD1 /* TermsAndConditions */,
 			);
 			path = Home;
+			sourceTree = "<group>";
+		};
+		E044DE0022D485F600BB70CE /* MeasurementPeerSelection */ = {
+			isa = PBXGroup;
+			children = (
+				E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */,
+			);
+			path = MeasurementPeerSelection;
 			sourceTree = "<group>";
 		};
 		E0AF3DEC22413BB900FDBFD1 /* History */ = {
@@ -541,10 +548,10 @@
 			children = (
 				E0B9A33F224A5F5E002AB640 /* Gauge */,
 				E0B9A33D224A5C24002AB640 /* ProgressInfoBar.swift */,
+				E0B9A358224AB092002AB640 /* HomeScreenDeviceInfoView.swift */,
 				E0B9A34D224A8938002AB640 /* SpeedMeasurementGaugeView.swift */,
+				E0B9A35A224AB2FE002AB640 /* MeasurementPeerSelectionView.swift */,
 				E0B9A352224A906E002AB640 /* CircularButton.swift */,
-				E0B9A358224AB092002AB640 /* HomeScreenDeviceInformationView.swift */,
-				E0B9A35A224AB2FE002AB640 /* HomeScreenMeasurementPeerSelectionView.swift */,
 				E0B9A360224AB850002AB640 /* SpeedMeasurementBasicResultView.swift */,
 				E0B9A372224B9CD0002AB640 /* QoSProgressView.swift */,
 			);
@@ -575,6 +582,7 @@
 				E0B9A37C224C1349002AB640 /* UIViewController+WebBrowser.swift */,
 				E00F4B02226719DE00EAD0C0 /* UIAlertController+ProgressIndicator.swift */,
 				E0EA84E62282C1B000EB73BF /* SpeedHelper.swift */,
+				E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -796,10 +804,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E0B9A357224AAD62002AB640 /* HomeScreenDeviceInformationView.xib in Resources */,
 				E00F4918225F7DC900EAD0C0 /* ias.mobile.js in Resources */,
+				E044DE0E22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib in Resources */,
 				E026A58E2241271900BACDB5 /* LaunchScreen.storyboard in Resources */,
-				E0B9A35D224AB335002AB640 /* HomeScreenMeasurementPeerSelectionView.xib in Resources */,
 				E0B9A33B224A5BCA002AB640 /* ProgressInfoBar.xib in Resources */,
 				E0B9A3392249826E002AB640 /* SpeedMeasurementGaugeView.xib in Resources */,
 				E026A58B2241271900BACDB5 /* Assets.xcassets in Resources */,
@@ -1010,11 +1017,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				E00F48D3225F77C400EAD0C0 /* QoSProgram.swift in Sources */,
+				E044DE0222D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift in Sources */,
 				E0B9A379224C0802002AB640 /* UIKit+IconFont.swift in Sources */,
 				E0AF3DEB22413B9800FDBFD1 /* HomeViewController.swift in Sources */,
 				E0B9A373224B9CD0002AB640 /* QoSProgressView.swift in Sources */,
 				E0B9A345224A61DB002AB640 /* SpeedMeasurementGauge.swift in Sources */,
-				E0B9A359224AB092002AB640 /* HomeScreenDeviceInformationView.swift in Sources */,
+				E0B9A359224AB092002AB640 /* HomeScreenDeviceInfoView.swift in Sources */,
 				E0EA84E72282C1B000EB73BF /* SpeedHelper.swift in Sources */,
 				E0E9BB10226F57DA00146699 /* SpeedMeasurementPhase.swift in Sources */,
 				E0B9A343224A6017002AB640 /* AbstractTwoArcGaugeView.swift in Sources */,
@@ -1025,7 +1033,7 @@
 				E0AF3DFA22413C9500FDBFD1 /* HistoryTableViewController.swift in Sources */,
 				E0C4526C22CB867600FA4B44 /* LogConfig.swift in Sources */,
 				E00F4B03226719DE00EAD0C0 /* UIAlertController+ProgressIndicator.swift in Sources */,
-				E0B9A35B224AB2FE002AB640 /* HomeScreenMeasurementPeerSelectionView.swift in Sources */,
+				E0B9A35B224AB2FE002AB640 /* MeasurementPeerSelectionView.swift in Sources */,
 				E0B9A34A224A81CE002AB640 /* UIColor+RGB.swift in Sources */,
 				E0AF3DF522413C2B00FDBFD1 /* StatisticsViewController.swift in Sources */,
 				E0B9A36D224B9603002AB640 /* TermsAndConditionsView.swift in Sources */,
@@ -1033,7 +1041,6 @@
 				E00F4AF32264B7C700EAD0C0 /* Config.swift in Sources */,
 				E00F4AFF2266234200EAD0C0 /* IASProgramDelegate.swift in Sources */,
 				E0B9A353224A906E002AB640 /* CircularButton.swift in Sources */,
-				E00F4AF92266040900EAD0C0 /* MeasurementPeerSelectionTableViewController.swift in Sources */,
 				E0B9A361224AB850002AB640 /* SpeedMeasurementBasicResultView.swift in Sources */,
 				E0B9A34E224A8938002AB640 /* SpeedMeasurementGaugeView.swift in Sources */,
 				E0B9A36F224B96EF002AB640 /* UIView+InsertContentView.swift in Sources */,
@@ -1051,6 +1058,7 @@
 				E0B9A355224AAC09002AB640 /* CustomNavigationBarViewController.swift in Sources */,
 				E00F4B012266235700EAD0C0 /* QoSProgramDelegate.swift in Sources */,
 				E0B9A33E224A5C24002AB640 /* ProgressInfoBar.swift in Sources */,
+				E044DE1022D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift in Sources */,
 				E0AF3DF122413BF200FDBFD1 /* SettingsTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

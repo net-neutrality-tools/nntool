@@ -1,4 +1,4 @@
-// ios-app: HomeScreenDeviceInformationView.swift, created on 26.03.19
+// ios-app: CLLocationCoordinate2D+Format.swift, created on 09.07.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,21 +16,25 @@
  ******************************************************************************/
 
 import Foundation
-import UIKit
+import CoreLocation
 
 ///
-@IBDesignable class HomeScreenDeviceInformationView: NibView {
+extension CLLocationCoordinate2D {
 
-    @IBOutlet private var cpuValueLabel: UILabel?
-    @IBOutlet private var memValueLabel: UILabel?
+    public var dmFormattedString: String {
+        let latDirection = latitude >= 0 ? "N" : "S"
+        let lonDirection = longitude >= 0 ? "E" : "W"
 
-    @IBOutlet private var ipv4ValueLabel: UILabel?
-    @IBOutlet private var ipv6ValueLabel: UILabel?
+        let latDegrees = abs(Int(latitude))
+        let latMinutes = abs(Double((latitude * 3600).truncatingRemainder(dividingBy: 3600) / 60))
 
-    @IBOutlet private var trafficInValueLabel: UILabel?
-    @IBOutlet private var trafficOutValueLabel: UILabel?
+        let lonDegrees = abs(Int(longitude))
+        let lonMinutes = abs(Double((longitude * 3600).truncatingRemainder(dividingBy: 3600) / 60))
 
-    @IBOutlet private var locationLabel: UILabel?
-    @IBOutlet private var locationInfoLabel: UILabel?
-
+        return String(
+            format: "%d° %.3f' %@ %d° %.3f' %@",
+            latDegrees, latMinutes, latDirection,
+            lonDegrees, lonMinutes, lonDirection
+        )
+    }
 }
