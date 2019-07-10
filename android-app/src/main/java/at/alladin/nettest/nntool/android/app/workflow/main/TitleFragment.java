@@ -17,6 +17,7 @@ import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
+import at.alladin.nettest.nntool.android.app.async.RequestSpeedMeasurementPeersTask;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
@@ -27,6 +28,7 @@ import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.system.SystemInfoGatherer;
 import at.alladin.nettest.nntool.android.app.view.CpuAndRamView;
 import at.alladin.nettest.nntool.android.app.view.GeoLocationView;
+import at.alladin.nettest.nntool.android.app.view.MeasurementServerSelectionView;
 import at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView;
 import at.alladin.nettest.nntool.android.app.view.InterfaceTrafficView;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
@@ -48,6 +50,8 @@ public class TitleFragment extends Fragment {
     private CpuAndRamView cpuAndRamView;
 
     private InformationProvider informationProvider;
+
+    private MeasurementServerSelectionView measurementServerSelectionView;
 
     /**
      *
@@ -74,12 +78,25 @@ public class TitleFragment extends Fragment {
 
         cpuAndRamView = v.findViewById(R.id.view_cpu_ram);
 
+        measurementServerSelectionView = v.findViewById(R.id.view_measurement_server_selection);
+
+        final RequestSpeedMeasurementPeersTask measurementPeersTask = new RequestSpeedMeasurementPeersTask(getContext(), response -> {
+            if (response != null) {
+                measurementServerSelectionView.updateServerList(response);
+            } else {
+                ((MainActivity) getContext()).setSelectedMeasurementPeerIdentifier(null);
+                Log.e(TAG, "Failed to fetch measurement peers");
+            }
+        });
+
+        measurementPeersTask.execute();
+
         //Log.i(TAG, "onCreateView");
         return v;
     }
 
     private void startMeasurement() {
-        final RequestMeasurementTask task = new RequestMeasurementTask(getContext(),
+        final RequestMeasurementTask task = new RequestMeasurementTask(((MainActivity)getActivity()).getSelectedMeasurementPeerIdentifier(), getContext(),
                 new OnTaskFinishedCallback<LmapUtil.LmapTaskWrapper>() {
                     @Override
                     public void onTaskFinished(LmapUtil.LmapTaskWrapper result) {

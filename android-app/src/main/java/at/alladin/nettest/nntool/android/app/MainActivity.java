@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView navigation;
 
+    private String selectedMeasurementPeerIdentifier = null;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -237,4 +239,11 @@ public class MainActivity extends AppCompatActivity {
         task.execute();
     }
 
+    public String getSelectedMeasurementPeerIdentifier() {
+        return selectedMeasurementPeerIdentifier;
+    }
+
+    public void setSelectedMeasurementPeerIdentifier(String selectedMeasurementPeerIdentifier) {
+        this.selectedMeasurementPeerIdentifier = selectedMeasurementPeerIdentifier;
+    }
 }

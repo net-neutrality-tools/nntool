@@ -4,6 +4,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerRequest;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
@@ -29,6 +31,15 @@ public class ControllerConnection extends AbstractConnection<ControllerService> 
     public LmapControlDto requestMeasurement (final LmapControlDto request) {
         try {
             return getControllerService().postMeasurementRequest(request).execute().body();
+        } catch (final Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public SpeedMeasurementPeerResponse getMeasurementPeers(final ApiRequest<SpeedMeasurementPeerRequest> request) {
+        try {
+            return getControllerService().getMeasurementPeers().execute().body().getData();
         } catch (final Exception ex) {
             ex.printStackTrace();
         }

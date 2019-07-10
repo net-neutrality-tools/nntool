@@ -5,8 +5,10 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 /**
@@ -19,4 +21,7 @@ public interface ControllerService {
 
     @POST("api/v1/measurements")
     Call<LmapControlDto> postMeasurementRequest(@Body final LmapControlDto request);
+
+    @GET("api/v1/speed-measurement-peers")
+    Call<ApiResponse<SpeedMeasurementPeerResponse>> getMeasurementPeers();
 }
