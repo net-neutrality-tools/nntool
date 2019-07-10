@@ -10,6 +10,8 @@ public interface MeasurementPeerRepository extends CouchDbRepository<Measurement
 
 	MeasurementServer findByUuid(String uuid);
 	
+	MeasurementServer findByPublicIdentifier(String publicIdentifier);
+	
 	@MangoQuery("{\n" + 
 			"   \"selector\": {\n" + 
 			"      \"docType\": \"MeasurementServer\",\n" + 

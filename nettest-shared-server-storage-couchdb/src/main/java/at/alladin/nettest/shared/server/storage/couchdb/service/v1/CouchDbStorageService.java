@@ -15,6 +15,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
@@ -188,16 +189,28 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	@Override
-	public LmapTaskDto getTaskDto(final MeasurementTypeDto type, final String settingsUuid) {
+	public LmapTaskDto getTaskDto(final MeasurementTypeDto type, final LmapCapabilityTaskDto capability, final String settingsUuid) {
 		try {
 			final Settings settings = settingsRepository.findByUuid(settingsUuid);
 			
 			switch (type) {
 			case SPEED:
 				final SpeedMeasurementSettings speedSettings = (SpeedMeasurementSettings) settings.getMeasurements().get(type);
+				MeasurementServer server = null;
+				if (capability != null && capability.getSelectedMeasurementPeerIdentifier() != null) {
+					try {
+						server = measurementPeerRepository.findByPublicIdentifier(capability.getSelectedMeasurementPeerIdentifier());
+					} catch (Exception ex) {
+						System.out.println(String.format("Failure obtaining requested measurement peer %s. Falling back to default peer.",
+								capability.getSelectedMeasurementPeerIdentifier()));
+						ex.printStackTrace();
+					}
+				}
+				if (server == null) {
+					server = measurementPeerRepository.findByUuid(speedSettings.getSpeedMeasurementServerUuid());
+				}
 				//TODO: load balancing needs to select correct measurement server
-				final LmapTaskDto ret = lmapTaskMapper.map(settings, 
-						measurementPeerRepository.findByUuid(speedSettings.getSpeedMeasurementServerUuid()), type.toString());
+				final LmapTaskDto ret = lmapTaskMapper.map(settings, server, type.toString());
 				return ret;
 			case QOS:
 				final List<QoSMeasurementObjective> qosObjectiveList = qosMeasurementObjectiveRepository.findAllByEnabled(true);
