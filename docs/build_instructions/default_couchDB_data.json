@@ -324,16 +324,43 @@
             "uuid": "qos_server",
             "type": "QOS",
             "name": "qos_server",
-            "port_tls": "5233",
-            "address_ipv4": "127.0.0.1"
+            "port": "5233",
+            "address_ipv4": "127.0.0.1",
+            "enabled": true
         },
         {
             "docType": "MeasurementServer",
             "uuid": "speed_server",
+            "public_identifier": "_speed_server_1",
             "type": "SPEED",
             "name": "speed_server",
+            "description": "default server",
             "port": "80",
-            "address_ipv4": "127.0.0.1"
+            "address_ipv4": "peer-ias-de-01.net-neutrality.tools",
+            "default": true,
+            "enabled": true
+        },
+        {
+            "docType": "MeasurementServer",
+            "uuid": "speed_server_2",
+            "public_identifier": "_speed_server_2",
+            "type": "SPEED",
+            "name": "speed_server_2",
+            "description": "enabled but not default",
+            "port": "80",
+            "address_ipv4": "peer-ias-de-01.net-neutrality.tools",
+            "enabled": true
+        },
+        {
+            "docType": "MeasurementServer",
+            "uuid": "speed_server_3",
+            "public_identifier": "_speed_server_3",
+            "type": "SPEED",
+            "name": "speed_server_3",
+            "description": "not enabled",
+            "port": "8000",
+            "address_ipv4": "127.0.0.1",
+            "enabled": false
         }
     ]
 }

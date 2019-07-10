@@ -48,6 +48,15 @@ public class MeasurementServer {
 	private String uuid;
 	
 	/**
+	 * The public identifier of this measurement peer (e.g. used in speed measurement peer list).
+	 */
+	@JsonPropertyDescription("The public identifier of this measurement peer.")
+	@Expose
+	@SerializedName("public_identifier")
+	@JsonProperty("public_identifier")
+	private String publicIdentifier;
+	
+	/**
 	 * @see MeasurementServerType
 	 */
 	@JsonPropertyDescription("Measurement server type.")
@@ -64,6 +73,12 @@ public class MeasurementServer {
 	@SerializedName("name")
 	@JsonProperty("name")
 	private String name;
+	
+	@JsonPropertyDescription("Description of this measurement server.")
+	@Expose
+	@SerializedName("description")
+	@JsonProperty("description")
+	private String description;
 	
 	/**
 	 * Port used for non-encrypted communication.
@@ -118,6 +133,12 @@ public class MeasurementServer {
 	@SerializedName("enabled")
 	@JsonProperty("enabled")
 	private boolean enabled;
+	
+	@JsonPropertyDescription("Flag that indicates if this measurement server is the default.")
+	@Expose
+	@SerializedName("default")
+	@JsonProperty("default")
+	private boolean defaultPeer;
 
 	/**
 	 * The measurement server's secret key used to generate measurement tokens.
@@ -136,12 +157,28 @@ public class MeasurementServer {
 		this.uuid = uuid;
 	}
 
+	public String getPublicIdentifier() {
+		return publicIdentifier;
+	}
+	
+	public void setPublicIdentifier(String publicIdentifier) {
+		this.publicIdentifier = publicIdentifier;
+	}
+	
 	public MeasurementServerType getType() {
 		return type;
 	}
 
 	public void setType(MeasurementServerType type) {
 		this.type = type;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getName() {
@@ -198,6 +235,14 @@ public class MeasurementServer {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	
+	public boolean isDefaultPeer() {
+		return defaultPeer;
+	}
+	
+	public void setDefaultPeer(boolean defaultPeer) {
+		this.defaultPeer = defaultPeer;
 	}
 
 	public String getSecretKey() {
