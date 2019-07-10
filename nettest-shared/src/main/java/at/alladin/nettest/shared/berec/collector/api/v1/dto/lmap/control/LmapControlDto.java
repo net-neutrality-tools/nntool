@@ -92,7 +92,7 @@ public class LmapControlDto {
 	@JsonPropertyDescription("Additional information that is sent by agent alongside the request.")
 	@Expose
 	@SerializedName("additional-request-info")
-	@JsonProperty(required = true, value = "additional-request-info")	
+	@JsonProperty(required = true, value = "additional-request-info")
 	private ApiRequestInfo additionalRequestInfo;
 
 	public LmapCapabilityDto getCapabilities() {

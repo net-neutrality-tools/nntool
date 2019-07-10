@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -23,10 +24,14 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.disassoc
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerRequest;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse.SpeedMeasurementPeer;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgent;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementServer;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
@@ -34,7 +39,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.Qo
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementServerRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.BriefMeasurementResponseMapper;
@@ -65,7 +70,7 @@ public class CouchDbStorageService implements StorageService {
 	private QoSMeasurementObjectiveRepository qosMeasurementObjectiveRepository;
 	
 	@Autowired
-	private MeasurementServerRepository measurementServerRepository;
+	private MeasurementPeerRepository measurementPeerRepository;
 	
 	@Autowired
 	private QoSEvaluationService qosEvaluationService;
@@ -192,14 +197,14 @@ public class CouchDbStorageService implements StorageService {
 				final SpeedMeasurementSettings speedSettings = (SpeedMeasurementSettings) settings.getMeasurements().get(type);
 				//TODO: load balancing needs to select correct measurement server
 				final LmapTaskDto ret = lmapTaskMapper.map(settings, 
-						measurementServerRepository.findByUuid(speedSettings.getSpeedMeasurementServerUuid()), type.toString());
+						measurementPeerRepository.findByUuid(speedSettings.getSpeedMeasurementServerUuid()), type.toString());
 				return ret;
 			case QOS:
 				final List<QoSMeasurementObjective> qosObjectiveList = qosMeasurementObjectiveRepository.findAllByEnabled(true);
 				
 				if (settings.getMeasurements() != null && settings.getMeasurements().containsKey(MeasurementTypeDto.QOS)) {
 					final QoSMeasurementSettings qosSettings = (QoSMeasurementSettings) settings.getMeasurements().get(MeasurementTypeDto.QOS);
-					return lmapTaskMapper.map(settings, measurementServerRepository.findByUuid(
+					return lmapTaskMapper.map(settings, measurementPeerRepository.findByUuid(
 							qosSettings.getQosServerUuid()), qosObjectiveList, type.toString());
 				} else {
 					return lmapTaskMapper.map(settings, null, qosObjectiveList, type.toString());
@@ -315,5 +320,29 @@ public class CouchDbStorageService implements StorageService {
 			throw new StorageServiceException("No measurement for agent and uuid found.");
 		}
 		return measurement;
+	}
+	
+	public SpeedMeasurementPeerResponse getSpeedMeasurementPeers(ApiRequest<SpeedMeasurementPeerRequest> speedMeasurementPeerRequest) throws StorageServiceException {
+		final List<MeasurementServer> peers = measurementPeerRepository.getAvailableSpeedMeasurementPeers();
+		
+		final SpeedMeasurementPeerResponse response = new SpeedMeasurementPeerResponse();
+		
+		response.setSpeedMeasurementPeers(
+			peers
+				.stream()
+				.map(p -> {
+					final SpeedMeasurementPeer sp = new SpeedMeasurementPeer();
+					
+					sp.setIdentifier(p.getPublicIdentifier());
+					sp.setName(p.getName());
+					sp.setDescription(p.getDescription());
+					sp.setDefaultPeer(p.isDefaultPeer());
+					
+					return sp;
+				})
+				.collect(Collectors.toList())
+		);
+		
+		return response;
 	}
 }

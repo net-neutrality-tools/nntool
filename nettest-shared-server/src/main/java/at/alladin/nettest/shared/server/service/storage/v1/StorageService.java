@@ -16,6 +16,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.D
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.disassociate.DisassociateResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerRequest;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 
 /**
@@ -33,17 +35,18 @@ public interface StorageService {
 	
 	SettingsResponse getSettings(String settingsUuid) throws StorageServiceException; // TODO: custom exception
 	
-	LmapTaskDto getTaskDto (MeasurementTypeDto type, String settingsUuid) throws StorageServiceException; // TODO: add client info to fetch personalized settings 
+	LmapTaskDto getTaskDto(MeasurementTypeDto type, String settingsUuid) throws StorageServiceException; // TODO: add client info to fetch personalized settings 
 
-	FullMeasurementResponse getFullMeasurementByAgentAndMeasurementUuid (String measurementAgentUuid, String measurementUuid) throws StorageServiceException;
+	FullMeasurementResponse getFullMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid, String measurementUuid) throws StorageServiceException;
 	
-	DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid (String measurementAgentUuid, String measurementUuid, String settingsUuid) throws StorageServiceException;
+	DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid, String measurementUuid, String settingsUuid) throws StorageServiceException;
 	
-	List<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid (String measurementAgentUuid, 
+	List<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid(String measurementAgentUuid, 
 			Pageable pageable) throws StorageServiceException;
 	
-	DisassociateResponse disassociateMeasurement (String agentUuid, String measurementUuid) throws StorageServiceException;
+	DisassociateResponse disassociateMeasurement(String agentUuid, String measurementUuid) throws StorageServiceException;
 	
-	DisassociateResponse disassociateAllMeasurements (String agentUuid) throws StorageServiceException;
+	DisassociateResponse disassociateAllMeasurements(String agentUuid) throws StorageServiceException;
 	
+	SpeedMeasurementPeerResponse getSpeedMeasurementPeers(ApiRequest<SpeedMeasurementPeerRequest> speedMeasurementPeerRequest) throws StorageServiceException;
 }
