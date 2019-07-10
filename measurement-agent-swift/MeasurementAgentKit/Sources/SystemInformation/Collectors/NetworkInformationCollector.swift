@@ -18,21 +18,6 @@
 import Foundation
 import Reachability
 import CoreTelephony
-import SystemConfiguration.CaptiveNetwork
-
-private let cellularNetworkIdDictionary = [
-    CTRadioAccessTechnologyGPRS: 1,
-    CTRadioAccessTechnologyEdge: 2,
-    CTRadioAccessTechnologyWCDMA: 3,
-    CTRadioAccessTechnologyCDMA1x: 4,
-    CTRadioAccessTechnologyCDMAEVDORev0: 5,
-    CTRadioAccessTechnologyCDMAEVDORevA: 6,
-    CTRadioAccessTechnologyHSDPA: 8,
-    CTRadioAccessTechnologyHSUPA: 9,
-    CTRadioAccessTechnologyCDMAEVDORevB: 12,
-    CTRadioAccessTechnologyLTE: 13,
-    CTRadioAccessTechnologyeHRPD: 14
-]
 
 class NetworkInformationCollector: BaseInformationCollector {
 
@@ -72,34 +57,12 @@ class NetworkInformationCollector: BaseInformationCollector {
     }
 
     private func fillWifiInformation(dto: MeasurementResultNetworkPointInTimeDto) {
-        #if targetEnvironment(simulator)
-        logger.debug("running in simulator -> not possible to read wifi information")
-        #else
-        guard let interfaceNames = CNCopySupportedInterfaces() as? [String] else {
-            return
-        }
+        let (ssid, bssid) = NetworkInfo.getWifiInfo()
 
-        for name in interfaceNames {
-            guard let interface = CNCopyCurrentNetworkInfo(name as CFString) as? [String: AnyObject] else {
-                continue
-            }
+        dto.ssid = ssid
+        dto.bssid = bssid
 
-            guard let ssid = interface[kCNNetworkInfoKeySSID as String] as? String,
-                let bssid = interface[kCNNetworkInfoKeyBSSID as String] as? String else {
-
-                    continue
-            }
-
-            dto.ssid = ssid
-            dto.bssid = bssid
-
-            dto.networkTypeId = 99
-
-            break
-        }
-        #endif
-
-        // TODO: support multiple ssid/bssid?
+        dto.networkTypeId = 99
     }
 
     private func fillCellularInformation(dto: MeasurementResultNetworkPointInTimeDto ) {
@@ -120,7 +83,7 @@ class NetworkInformationCollector: BaseInformationCollector {
         dto.simOperatorName = carrier?.carrierName
 
         if let currentRadioAccessTechnology = telephonyNetworkInfo.currentRadioAccessTechnology {
-            dto.networkTypeId = cellularNetworkIdDictionary[currentRadioAccessTechnology]
+            dto.networkTypeId = NetworkInfo.getCellularNetworkType(currentRadioAccessTechnology)
         }
 
         // TODO: multi-sim support?

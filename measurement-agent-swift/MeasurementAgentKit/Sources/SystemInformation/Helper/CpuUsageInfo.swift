@@ -28,9 +28,9 @@ public class CpuUsageInfo {
     private var numPrevCpuInfo: mach_msg_type_number_t = 0
 
     public init() {
-        
+
     }
-    
+
     deinit {
         deallocatePrev()
     }

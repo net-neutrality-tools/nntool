@@ -36,9 +36,12 @@
 		E00F4AFD2266218400EAD0C0 /* AnyProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AFC2266218400EAD0C0 /* AnyProgram.swift */; };
 		E00F4B0522676BD100EAD0C0 /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4B0422676BCF00EAD0C0 /* Program.swift */; };
 		E01DEE832253B5AC00983B1C /* MeasurementResultResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01DEE822253B5AC00983B1C /* MeasurementResultResponse.swift */; };
+		E029274722D630D3001FCAEC /* NetworkInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029274622D630D3001FCAEC /* NetworkInfo.swift */; };
 		E044DE0722D4896B00BB70CE /* CpuUsageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0622D4896B00BB70CE /* CpuUsageInfo.swift */; };
 		E044DE0922D489D700BB70CE /* MemoryUsageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0822D489D700BB70CE /* MemoryUsageInfo.swift */; };
 		E044DE0B22D48BB400BB70CE /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0A22D48BB400BB70CE /* LocationTracker.swift */; };
+		E044DE1222D4FC7600BB70CE /* IPConnectivityInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE1122D4FC7600BB70CE /* IPConnectivityInfo.swift */; };
+		E044DE1422D5067D00BB70CE /* InterfaceTrafficInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE1322D5067D00BB70CE /* InterfaceTrafficInfo.swift */; };
 		E0B9A3B6224D3EAB002AB640 /* MeasurementAgentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0B9A3AC224D3EAB002AB640 /* MeasurementAgentKit.framework */; };
 		E0B9A3BB224D3EAB002AB640 /* MeasurementAgentKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3BA224D3EAB002AB640 /* MeasurementAgentKitTests.swift */; };
 		E0B9A3BD224D3EAB002AB640 /* MeasurementAgentKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E0B9A3AF224D3EAB002AB640 /* MeasurementAgentKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -132,9 +135,12 @@
 		E00F4AFC2266218400EAD0C0 /* AnyProgram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyProgram.swift; sourceTree = "<group>"; };
 		E00F4B0422676BCF00EAD0C0 /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
 		E01DEE822253B5AC00983B1C /* MeasurementResultResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasurementResultResponse.swift; sourceTree = "<group>"; };
+		E029274622D630D3001FCAEC /* NetworkInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfo.swift; sourceTree = "<group>"; };
 		E044DE0622D4896B00BB70CE /* CpuUsageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CpuUsageInfo.swift; sourceTree = "<group>"; };
 		E044DE0822D489D700BB70CE /* MemoryUsageInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryUsageInfo.swift; sourceTree = "<group>"; };
 		E044DE0A22D48BB400BB70CE /* LocationTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTracker.swift; sourceTree = "<group>"; };
+		E044DE1122D4FC7600BB70CE /* IPConnectivityInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPConnectivityInfo.swift; sourceTree = "<group>"; };
+		E044DE1322D5067D00BB70CE /* InterfaceTrafficInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceTrafficInfo.swift; sourceTree = "<group>"; };
 		E0692792225CA1F600E028CA /* MeasurementAgentKit.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeasurementAgentKit.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		E0B9A3AC224D3EAB002AB640 /* MeasurementAgentKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MeasurementAgentKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0B9A3AF224D3EAB002AB640 /* MeasurementAgentKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeasurementAgentKit.h; sourceTree = "<group>"; };
@@ -280,6 +286,9 @@
 				E044DE0622D4896B00BB70CE /* CpuUsageInfo.swift */,
 				E044DE0822D489D700BB70CE /* MemoryUsageInfo.swift */,
 				E044DE0A22D48BB400BB70CE /* LocationTracker.swift */,
+				E044DE1122D4FC7600BB70CE /* IPConnectivityInfo.swift */,
+				E044DE1322D5067D00BB70CE /* InterfaceTrafficInfo.swift */,
+				E029274622D630D3001FCAEC /* NetworkInfo.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -694,6 +703,7 @@
 				E0B9A3DC224D4CF8002AB640 /* CellLocationDto.swift in Sources */,
 				B180E1202284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift in Sources */,
 				B141591B22B2C46E00DD5C96 /* MemoryUsageInformationCollector.swift in Sources */,
+				E044DE1422D5067D00BB70CE /* InterfaceTrafficInfo.swift in Sources */,
 				E0B9A3F9224D5F5C002AB640 /* LmapStopDto.swift in Sources */,
 				E0B9A41C224E6860002AB640 /* ApiResponse.swift in Sources */,
 				E00F48CC225F72B300EAD0C0 /* ProgramProtocol.swift in Sources */,
@@ -738,6 +748,7 @@
 				E0B9A410224E645B002AB640 /* RestApiService.swift in Sources */,
 				E0EA84E222807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift in Sources */,
 				E00F48C9225F3BDF00EAD0C0 /* MeasurementTypeDto.swift in Sources */,
+				E029274722D630D3001FCAEC /* NetworkInfo.swift in Sources */,
 				E0B9A40E224E638B002AB640 /* ResultService.swift in Sources */,
 				E0B9A3D0224D428D002AB640 /* LmapReportDto.swift in Sources */,
 				E0B9A405224D648D002AB640 /* LmapEventDto.swift in Sources */,
@@ -753,6 +764,7 @@
 				E0B9A40A224E634D002AB640 /* ControlService.swift in Sources */,
 				E00F48C7225F340000EAD0C0 /* RegistrationRequest.swift in Sources */,
 				B1C64966228C1834007506A6 /* IasMeasurementResult.swift in Sources */,
+				E044DE1222D4FC7600BB70CE /* IPConnectivityInfo.swift in Sources */,
 				E0B9A3D4224D4661002AB640 /* MeasurementAgentTypeDto.swift in Sources */,
 				E0B9A3D2224D4426002AB640 /* ApiRequestInfo.swift in Sources */,
 			);

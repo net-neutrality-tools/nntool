@@ -45,6 +45,7 @@
 		E026A58E2241271900BACDB5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E026A58C2241271900BACDB5 /* LaunchScreen.storyboard */; };
 		E026A5992241271A00BACDB5 /* iosAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E026A5982241271A00BACDB5 /* iosAppTests.swift */; };
 		E026A5A42241271A00BACDB5 /* iosAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E026A5A32241271A00BACDB5 /* iosAppUITests.swift */; };
+		E029274522D60B01001FCAEC /* AttributedStringHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029274422D60B01001FCAEC /* AttributedStringHelper.swift */; };
 		E044DE0222D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */; };
 		E044DE0E22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */; };
 		E044DE1022D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */; };
@@ -195,6 +196,8 @@
 		E026A59F2241271A00BACDB5 /* ios-appUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ios-appUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E026A5A32241271A00BACDB5 /* iosAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosAppUITests.swift; sourceTree = "<group>"; };
 		E026A5A52241271A00BACDB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E029274422D60B01001FCAEC /* AttributedStringHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedStringHelper.swift; sourceTree = "<group>"; };
+		E029274822D63CAB001FCAEC /* ios-app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ios-app.entitlements"; sourceTree = "<group>"; };
 		E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementPeerSelectionTableViewController.swift; sourceTree = "<group>"; };
 		E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeScreenDeviceInfoView.xib; sourceTree = "<group>"; };
 		E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Format.swift"; sourceTree = "<group>"; };
@@ -402,6 +405,7 @@
 		E026A5802241271700BACDB5 /* ios-app */ = {
 			isa = PBXGroup;
 			children = (
+				E029274822D63CAB001FCAEC /* ios-app.entitlements */,
 				E0B9A369224AD6E8002AB640 /* Configuration */,
 				E026A5B32241338800BACDB5 /* Sources */,
 				E026A5B42241339900BACDB5 /* Resources */,
@@ -583,6 +587,7 @@
 				E00F4B02226719DE00EAD0C0 /* UIAlertController+ProgressIndicator.swift */,
 				E0EA84E62282C1B000EB73BF /* SpeedHelper.swift */,
 				E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */,
+				E029274422D60B01001FCAEC /* AttributedStringHelper.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -750,6 +755,11 @@
 					E026A57D2241271700BACDB5 = {
 						CreatedOnToolsVersion = 10.1;
 						LastSwiftMigration = 1020;
+						SystemCapabilities = {
+							com.apple.AccessWiFi = {
+								enabled = 1;
+							};
+						};
 					};
 					E026A5932241271A00BACDB5 = {
 						CreatedOnToolsVersion = 10.1;
@@ -1060,6 +1070,7 @@
 				E0B9A33E224A5C24002AB640 /* ProgressInfoBar.swift in Sources */,
 				E044DE1022D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift in Sources */,
 				E0AF3DF122413BF200FDBFD1 /* SettingsTableViewController.swift in Sources */,
+				E029274522D60B01001FCAEC /* AttributedStringHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1430,6 +1441,8 @@
 			baseConfigurationReference = 9A7B01F143D9A74599DAC596 /* Pods-All-ios-app.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "ios-app/ios-app.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "ios-app/Configuration/Info.plist";
@@ -1450,6 +1463,8 @@
 			baseConfigurationReference = D329819C8E115D34CA521957 /* Pods-All-ios-app.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "ios-app/ios-app.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "ios-app/Configuration/Info.plist";

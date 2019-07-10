@@ -25,9 +25,9 @@ public class MemoryUsageInfo {
     // TODO: we could also report actual value instead of just percent
 
     public init() {
-        
+
     }
-    
+
     public func getCurrentMemoryUsagePercent() -> Double? {
         var hostSize = mach_msg_type_number_t(MemoryLayout<vm_statistics_data_t>.stride / MemoryLayout<integer_t>.stride)
 

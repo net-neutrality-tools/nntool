@@ -25,7 +25,7 @@ public class LocationTracker: NSObject {
 
     private var locationManager: CLLocationManager?
     private var updateLocationCallback: UpdateLocationCallback?
-    
+
     public func start(updateLocationCallback: UpdateLocationCallback? = nil, desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest, distanceFilter: CLLocationDistance = 3.0) {
         guard locationManager == nil else {
             return // already started

@@ -27,7 +27,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o4f-PN-NxT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1036" y="743"/>
+            <point key="canvasLocation" x="-2954" y="746"/>
         </scene>
         <!--Measurement Peer-->
         <scene sceneID="93y-5l-Lc1">
@@ -67,7 +67,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vQ0-SI-SSw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1753" y="1599"/>
+            <point key="canvasLocation" x="-1209" y="1918"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="3qz-GC-gxZ">
@@ -84,24 +84,24 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ofG-ku-i5b" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2513" y="1599"/>
+            <point key="canvasLocation" x="-1210" y="1310"/>
         </scene>
         <!--Table View Controller-->
         <scene sceneID="gdK-p9-SqE">
             <objects>
                 <tableViewController id="LLJ-6e-oAa" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="static" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="IEx-ER-CTj">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="32"/>
+                        <rect key="frame" x="0.0" y="0.0" width="337.5" height="32"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <sections>
                             <tableViewSection id="1xg-41-eqd">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" rowHeight="32" id="J2Q-MO-TgD" customClass="MeasurementPeerSelectionTableViewCell" customModule="ios_app" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="32"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="337.5" height="32"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="J2Q-MO-TgD" id="cGp-qM-eJb" customClass="HomeScreenMeasurementPeerSelectionView" customModule="ios_app" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="341" height="32"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="303.5" height="32"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo Measurement Peer, AT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ECq-wm-Uqc">
@@ -134,7 +134,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bhD-QP-MyE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2513" y="1270"/>
+            <point key="canvasLocation" x="-2122" y="1310"/>
         </scene>
         <!--Home View Controller-->
         <scene sceneID="hNz-n2-bh7">
@@ -158,14 +158,14 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2cB-jw-3yG" userLabel="Separator View">
-                                <rect key="frame" x="9.5" y="453" width="356" height="1"/>
+                                <rect key="frame" x="19" y="453" width="337.5" height="1"/>
                                 <color key="backgroundColor" red="0.81568627449999997" green="0.81568627449999997" blue="0.81568627449999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="MsS-Bb-dts"/>
                                 </constraints>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bwt-GG-jdr">
-                                <rect key="frame" x="0.0" y="454" width="375" height="32"/>
+                                <rect key="frame" x="19" y="454" width="337.5" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="32" id="ysg-Yh-MRs"/>
                                 </constraints>
@@ -174,7 +174,7 @@
                                 </connections>
                             </containerView>
                             <view contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0jR-8t-xIG" customClass="HomeScreenDeviceInfoView" customModule="ios_app" customModuleProvider="target">
-                                <rect key="frame" x="9.5" y="486" width="356" height="127"/>
+                                <rect key="frame" x="19" y="486" width="337.5" height="127"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
@@ -182,15 +182,15 @@
                         <constraints>
                             <constraint firstItem="sus-O4-eXm" firstAttribute="top" secondItem="PQr-Ze-W5v" secondAttribute="top" constant="10" id="2gN-xJ-fEO"/>
                             <constraint firstItem="X48-qC-w0f" firstAttribute="bottom" secondItem="2cB-jw-3yG" secondAttribute="bottom" id="8MB-7D-aaG"/>
-                            <constraint firstItem="2cB-jw-3yG" firstAttribute="width" secondItem="PQr-Ze-W5v" secondAttribute="width" multiplier="0.95" id="A3s-8R-D6C"/>
+                            <constraint firstItem="2cB-jw-3yG" firstAttribute="width" secondItem="PQr-Ze-W5v" secondAttribute="width" multiplier="0.9" id="A3s-8R-D6C"/>
                             <constraint firstItem="bwt-GG-jdr" firstAttribute="top" secondItem="X48-qC-w0f" secondAttribute="bottom" id="B2P-hY-i7w"/>
                             <constraint firstItem="0jR-8t-xIG" firstAttribute="top" secondItem="bwt-GG-jdr" secondAttribute="bottom" id="C06-2h-MkV"/>
                             <constraint firstItem="sus-O4-eXm" firstAttribute="width" secondItem="PQr-Ze-W5v" secondAttribute="width" multiplier="0.9" id="D6h-y9-VGR"/>
                             <constraint firstItem="X48-qC-w0f" firstAttribute="top" secondItem="sus-O4-eXm" secondAttribute="bottom" constant="-30" id="GJv-eE-jWE"/>
                             <constraint firstItem="bwt-GG-jdr" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="GVA-lL-jQH"/>
-                            <constraint firstItem="0jR-8t-xIG" firstAttribute="width" secondItem="PQr-Ze-W5v" secondAttribute="width" multiplier="0.95" id="SBZ-0T-jYy"/>
+                            <constraint firstItem="0jR-8t-xIG" firstAttribute="width" secondItem="PQr-Ze-W5v" secondAttribute="width" multiplier="0.9" id="SBZ-0T-jYy"/>
                             <constraint firstItem="PQr-Ze-W5v" firstAttribute="bottom" secondItem="0jR-8t-xIG" secondAttribute="bottom" constant="5" id="Trk-rK-CfA"/>
-                            <constraint firstItem="bwt-GG-jdr" firstAttribute="width" secondItem="PQr-Ze-W5v" secondAttribute="width" id="aGs-rt-PHx"/>
+                            <constraint firstItem="bwt-GG-jdr" firstAttribute="width" secondItem="PQr-Ze-W5v" secondAttribute="width" multiplier="0.9" id="aGs-rt-PHx"/>
                             <constraint firstItem="sus-O4-eXm" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="cJB-Pc-6YG"/>
                             <constraint firstItem="2cB-jw-3yG" firstAttribute="centerX" secondItem="PQr-Ze-W5v" secondAttribute="centerX" id="cTd-jl-wFU"/>
                             <constraint firstItem="0jR-8t-xIG" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="mFi-1Z-BAZ"/>
@@ -215,7 +215,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1036" y="1487"/>
+            <point key="canvasLocation" x="-2953" y="1523"/>
         </scene>
         <!--History View Controller-->
         <scene sceneID="kb8-YU-fAr">
@@ -267,7 +267,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Eis-9o-h85" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1610" y="2257"/>
+            <point key="canvasLocation" x="-2954" y="2434"/>
         </scene>
         <!--BEREC nntool-->
         <scene sceneID="n1C-tX-reP">
@@ -360,7 +360,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-815" y="2258"/>
+            <point key="canvasLocation" x="-2122" y="2435"/>
         </scene>
         <!--QoS Measurement View Controller-->
         <scene sceneID="5C5-WY-GtL">
@@ -418,7 +418,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OK7-0g-dgs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-22" y="2256"/>
+            <point key="canvasLocation" x="-1178" y="2434"/>
         </scene>
         <!--Terms and Conditions-->
         <scene sceneID="BUS-zU-5p3">
@@ -495,7 +495,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qFD-57-kB5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1610" y="2982"/>
+            <point key="canvasLocation" x="-2954" y="3206"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="Dbk-Pb-bU6">
@@ -933,19 +933,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wsv-Rx-lmD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1817" y="744"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="bFT-bb-CJE">
-            <objects>
-                <viewController id="oTD-R3-sfL" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="tGX-eI-Xas">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="YqC-Rk-mYq" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
         </scene>
     </scenes>
     <resources>

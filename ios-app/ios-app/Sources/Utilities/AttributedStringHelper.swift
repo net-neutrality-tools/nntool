@@ -1,4 +1,4 @@
-// ios-app: HomeScreenDeviceInfoView.swift, created on 26.03.19
+// ios-app: AttributedStringHelper.swift, created on 10.07.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -18,32 +18,22 @@
 import Foundation
 import UIKit
 
-///
-@IBDesignable class HomeScreenDeviceInfoView: NibView {
+class AttributedStringHelper {
 
-    @IBOutlet var cpuValueLabel: UILabel?
-    @IBOutlet var memValueLabel: UILabel?
+    public class func repeatedColoredIconString(_ icon: IconFont, count: Int, activeCount: Int, ltr: Bool, activeColor: UIColor = BEREC_RED, inactiveColor: UIColor = BEREC_LIGHT_GRAY) -> NSAttributedString {
 
-    @IBOutlet var ipv4ValueLabel: UILabel?
-    @IBOutlet var ipv6ValueLabel: UILabel?
+        let str = NSMutableAttributedString(string: icon.repeating(count))
+        str.addAttribute(.foregroundColor, value: inactiveColor, range: NSRange(location: 0, length: count))
 
-    @IBOutlet var trafficInValueLabel: UILabel?
-    @IBOutlet var trafficOutValueLabel: UILabel?
+        var location = 0
+        var length = activeCount
 
-    @IBOutlet var locationLabel: UILabel?
-    @IBOutlet var locationInfoLabel: UILabel?
+        if !ltr {
+            location = count - activeCount
+        }
 
-    func reset() {
-        cpuValueLabel?.text = ""
-        memValueLabel?.text = ""
+        str.addAttribute(.foregroundColor, value: activeColor, range: NSRange(location: location, length: length))
 
-        //ipv4ValueLabel?.icon = .cross
-        //ipv6ValueLabel?.icon = .cross
-
-        //trafficInValueLabel?.text = ""
-        //trafficOutValueLabel?.text = ""
-
-        locationLabel?.text = ""
-        locationInfoLabel?.text = ""
+        return str
     }
 }
