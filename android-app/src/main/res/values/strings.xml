@@ -87,7 +87,6 @@
     <string name="history_no_results_found">No results found.</string>
     <string name="history_disassociate_measurement">Disassociate this measurement</string>
 
-    <string name="result_share_text">I am sharing this result</string>
     <string name="result_share_subject">Nettest result</string>
     <string name="result_share_intent_title">Share result</string>
 

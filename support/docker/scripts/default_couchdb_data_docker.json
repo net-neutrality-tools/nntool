@@ -245,19 +245,25 @@
                             "key": "speed.rttInfo.averageNs",
                             "format": "DIV_1E6",
                             "unit": "ms",
-                            "translation_key": "translate_ping"
+                            "translation_key": "translate_ping",
+                            "share_text": "share_ping {}",
+                            "share_priority": 3
                         },
                         {
                             "key": "speed.throughputAvgDownloadBps",
                             "unit": "Mbps",
                             "format": "DIV_1E6",
-                            "translation_key": "translate_down"
+                            "translation_key": "translate_down",
+                            "share_text": "share_download {}",
+                            "share_priority": 1
                         },
                         {
                             "key": "speed.throughputAvgUploadBps",
                             "unit": "Mbps",
                             "format": "DIV_1E6",
-                            "translation_key": "translate_up"
+                            "translation_key": "translate_up",
+                            "share_text": "share_upload {}",
+                            "share_priority": 2
                         },
                         {
                             "key": "openDataUuid",
@@ -297,7 +303,8 @@
                     "values": [
                         {
                             "key": "speed.connectionInfo.address",
-                            "translation_key": "address"
+                            "translation_key": "address",
+                            "share_text": "share_address {}"
                         },
                         {
                             "key": "speed.connectionInfo.port",

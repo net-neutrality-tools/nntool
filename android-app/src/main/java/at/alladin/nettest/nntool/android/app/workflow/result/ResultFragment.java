@@ -136,10 +136,9 @@ public class ResultFragment extends Fragment {
         }
         Log.d(TAG, "Sharing measurement result");
         try {
-            final String result = ObjectMapperUtil.createBasicObjectMapper().writeValueAsString(measurementResponse);
             final Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_TEXT, R.string.result_share_text + "\n" + result);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, measurementResponse.getShareMeasurementText());
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, R.string.result_share_subject);
             shareIntent.setType("text/plain");
             getActivity().startActivity(Intent.createChooser(shareIntent, getString(R.string.result_share_intent_title)));
