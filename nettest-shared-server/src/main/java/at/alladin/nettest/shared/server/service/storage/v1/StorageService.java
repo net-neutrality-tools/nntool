@@ -8,6 +8,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
@@ -35,7 +36,7 @@ public interface StorageService {
 	
 	SettingsResponse getSettings(String settingsUuid) throws StorageServiceException; // TODO: custom exception
 	
-	LmapTaskDto getTaskDto(MeasurementTypeDto type, String settingsUuid) throws StorageServiceException; // TODO: add client info to fetch personalized settings 
+	LmapTaskDto getTaskDto(MeasurementTypeDto type, LmapCapabilityTaskDto capability, String settingsUuid) throws StorageServiceException; // TODO: add client info to fetch personalized settings 
 
 	FullMeasurementResponse getFullMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid, String measurementUuid) throws StorageServiceException;
 	

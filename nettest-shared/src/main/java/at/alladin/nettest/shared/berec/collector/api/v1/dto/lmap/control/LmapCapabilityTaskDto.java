@@ -66,6 +66,16 @@ public class LmapCapabilityTaskDto {
 	@JsonProperty(required = false, value = "version")
 	private String version;
 
+	/**
+	 * The measurement peer identifier the agent wishes to measure against for this task.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = false, value = "The measurement peer identifier the agent wishes to measure against for this task.")
+	@JsonPropertyDescription("The measurement peer identifier the agent wishes to measure against for this task.")
+	@Expose
+	@SerializedName("selected_measurement_peer_identifier")
+	@JsonProperty(required = true, value = "selected_measurement_peer_identifier")
+	private String selectedMeasurementPeerIdentifier;
+
 	public String getTaskName() {
 		return taskName;
 	}
@@ -96,5 +106,13 @@ public class LmapCapabilityTaskDto {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public String getSelectedMeasurementPeerIdentifier() {
+		return selectedMeasurementPeerIdentifier;
+	}
+
+	public void setSelectedMeasurementPeerIdentifier(String selectedMeasurementPeerIdentifier) {
+		this.selectedMeasurementPeerIdentifier = selectedMeasurementPeerIdentifier;
 	}
 }
