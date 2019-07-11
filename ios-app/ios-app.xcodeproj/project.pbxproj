@@ -198,6 +198,7 @@
 		E026A5A52241271A00BACDB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E029274422D60B01001FCAEC /* AttributedStringHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedStringHelper.swift; sourceTree = "<group>"; };
 		E029274822D63CAB001FCAEC /* ios-app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ios-app.entitlements"; sourceTree = "<group>"; };
+		E029274E22D790EA001FCAEC /* add_build_infos.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = add_build_infos.sh; sourceTree = "<group>"; };
 		E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementPeerSelectionTableViewController.swift; sourceTree = "<group>"; };
 		E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeScreenDeviceInfoView.xib; sourceTree = "<group>"; };
 		E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Format.swift"; sourceTree = "<group>"; };
@@ -405,7 +406,7 @@
 		E026A5802241271700BACDB5 /* ios-app */ = {
 			isa = PBXGroup;
 			children = (
-				E029274822D63CAB001FCAEC /* ios-app.entitlements */,
+				E029274D22D790C3001FCAEC /* Scripts */,
 				E0B9A369224AD6E8002AB640 /* Configuration */,
 				E026A5B32241338800BACDB5 /* Sources */,
 				E026A5B42241339900BACDB5 /* Resources */,
@@ -484,6 +485,14 @@
 				E0AF3DFB224151EE00FDBFD1 /* TermsAndConditions */,
 			);
 			path = Home;
+			sourceTree = "<group>";
+		};
+		E029274D22D790C3001FCAEC /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				E029274E22D790EA001FCAEC /* add_build_infos.sh */,
+			);
+			path = Scripts;
 			sourceTree = "<group>";
 		};
 		E044DE0022D485F600BB70CE /* MeasurementPeerSelection */ = {
@@ -596,6 +605,7 @@
 			isa = PBXGroup;
 			children = (
 				E026A58F2241271900BACDB5 /* Info.plist */,
+				E029274822D63CAB001FCAEC /* ios-app.entitlements */,
 			);
 			path = Configuration;
 			sourceTree = "<group>";
@@ -685,6 +695,7 @@
 				E026A57B2241271700BACDB5 /* Frameworks */,
 				E026A57C2241271700BACDB5 /* Resources */,
 				E0B9A33222495BBB002AB640 /* Run swiftlint */,
+				E029274F22D79156001FCAEC /* Add Build Info */,
 				4FCF19EEF58E6B3991550D89 /* [CP] Embed Pods Frameworks */,
 				E00F48E5225F7D2600EAD0C0 /* Embed Frameworks */,
 				E00F4AEB225F80B300EAD0C0 /* TNS Copy app */,
@@ -959,6 +970,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"/${SRCROOT}/../ias-mobile/copy_app_ios.sh\"\n";
+		};
+		E029274F22D79156001FCAEC /* Add Build Info */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Add Build Info";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/ios-app/Scripts/add_build_infos.sh\"\n";
 		};
 		E0B9A33222495BBB002AB640 /* Run swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;

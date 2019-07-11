@@ -16,6 +16,7 @@
  ******************************************************************************/
 
 import UIKit
+import MeasurementAgentKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -57,6 +58,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     ///
     func afterStart(isNewlyLaunched: Bool) {
+        if isNewlyLaunched {
+            logger.debug(BundleHelper.getAppVersionInfo())
+            logger.debug(BundleHelper.getBundleGitInfoString())
+        }
 
         // Refresh MeasurementAgent settings after App launch
         if MEASUREMENT_AGENT.isRegistered() {

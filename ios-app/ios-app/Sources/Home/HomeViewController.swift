@@ -79,51 +79,51 @@ class HomeViewController: CustomNavigationBarViewController {
         reachability = try? Reachability()
         reachability?.whenReachable = { r in
             self.updateIpInfo()
-            
+
             var networkTypeString: String?
             var networkDetailString: String?
-            
+
             switch r.connection {
             case .wifi:
                 let (ssid, _) = NetworkInfo.getWifiInfo()
-                
+
                 #if targetEnvironment(simulator)
                 networkTypeString = "Simulator Network"
                 #else
                 networkTypeString = ssid ?? "Unknown"
                 #endif
-                
+
                 networkDetailString = "WiFi"
             case .cellular:
                 let telephonyNetworkInfo = CTTelephonyNetworkInfo()
                 let carrier = telephonyNetworkInfo.subscriberCellularProvider
-                
+
                 networkTypeString = carrier?.carrierName
 
                 if  let mcc = carrier?.mobileCountryCode,
                     let mnc = carrier?.mobileNetworkCode,
                     let currentRadioAccessTechnology = telephonyNetworkInfo.currentRadioAccessTechnology,
                     let cellularNetworkDisplayName = NetworkInfo.getCellularNetworkTypeDisplayName(currentRadioAccessTechnology) {
-                    
+
                     networkDetailString = "\(cellularNetworkDisplayName), \(mcc)-\(mnc)"
                 }
             default:
                 break
             }
-            
+
             DispatchQueue.main.async {
                 self.speedMeasurementGaugeView?.isStartButtonEnabled = true
-                
+
                 self.speedMeasurementGaugeView?.networkTypeLabel?.text = networkTypeString
                 self.speedMeasurementGaugeView?.networkDetailLabel?.text = networkDetailString
             }
         }
         reachability?.whenUnreachable = { r in
             self.updateIpInfo()
-            
+
             DispatchQueue.main.async {
                 self.speedMeasurementGaugeView?.isStartButtonEnabled = false
-                
+
                 self.speedMeasurementGaugeView?.networkTypeLabel?.text = "Unknown"
                 self.speedMeasurementGaugeView?.networkDetailLabel?.text = "No connection"
             }

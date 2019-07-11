@@ -37,6 +37,8 @@
 		E00F4B0522676BD100EAD0C0 /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4B0422676BCF00EAD0C0 /* Program.swift */; };
 		E01DEE832253B5AC00983B1C /* MeasurementResultResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01DEE822253B5AC00983B1C /* MeasurementResultResponse.swift */; };
 		E029274722D630D3001FCAEC /* NetworkInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029274622D630D3001FCAEC /* NetworkInfo.swift */; };
+		E029274A22D78CE2001FCAEC /* ApiRequestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029274922D78CE2001FCAEC /* ApiRequestHelper.swift */; };
+		E029274C22D78EAD001FCAEC /* BundleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029274B22D78EAD001FCAEC /* BundleHelper.swift */; };
 		E044DE0722D4896B00BB70CE /* CpuUsageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0622D4896B00BB70CE /* CpuUsageInfo.swift */; };
 		E044DE0922D489D700BB70CE /* MemoryUsageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0822D489D700BB70CE /* MemoryUsageInfo.swift */; };
 		E044DE0B22D48BB400BB70CE /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0A22D48BB400BB70CE /* LocationTracker.swift */; };
@@ -136,6 +138,8 @@
 		E00F4B0422676BCF00EAD0C0 /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
 		E01DEE822253B5AC00983B1C /* MeasurementResultResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasurementResultResponse.swift; sourceTree = "<group>"; };
 		E029274622D630D3001FCAEC /* NetworkInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfo.swift; sourceTree = "<group>"; };
+		E029274922D78CE2001FCAEC /* ApiRequestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequestHelper.swift; sourceTree = "<group>"; };
+		E029274B22D78EAD001FCAEC /* BundleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleHelper.swift; sourceTree = "<group>"; };
 		E044DE0622D4896B00BB70CE /* CpuUsageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CpuUsageInfo.swift; sourceTree = "<group>"; };
 		E044DE0822D489D700BB70CE /* MemoryUsageInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryUsageInfo.swift; sourceTree = "<group>"; };
 		E044DE0A22D48BB400BB70CE /* LocationTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTracker.swift; sourceTree = "<group>"; };
@@ -347,6 +351,8 @@
 				E00F4AF02264B51300EAD0C0 /* MeasurementRunnerDelegate.swift */,
 				E0B9A408224E6321002AB640 /* Servers */,
 				E0B9A3E9224D574A002AB640 /* DTO */,
+				E029274922D78CE2001FCAEC /* ApiRequestHelper.swift */,
+				E029274B22D78EAD001FCAEC /* BundleHelper.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -698,6 +704,7 @@
 				E0B9A41E224E6910002AB640 /* VersionResponse.swift in Sources */,
 				B1C6496C228C3941007506A6 /* ConnectionInfoDto.swift in Sources */,
 				E0B9A3DE224D4E79002AB640 /* MeasurementResultNetworkPointInTimeDto.swift in Sources */,
+				E029274A22D78CE2001FCAEC /* ApiRequestHelper.swift in Sources */,
 				E00F4AEF2264B41C00EAD0C0 /* MeasurementAgentConfiguration.swift in Sources */,
 				E00F4AFB22660B2B00EAD0C0 /* MeasurementRunner.swift in Sources */,
 				E0B9A3DC224D4CF8002AB640 /* CellLocationDto.swift in Sources */,
@@ -747,6 +754,7 @@
 				E0B9A401224D6313002AB640 /* LmapSuppressionDto.swift in Sources */,
 				E0B9A410224E645B002AB640 /* RestApiService.swift in Sources */,
 				E0EA84E222807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift in Sources */,
+				E029274C22D78EAD001FCAEC /* BundleHelper.swift in Sources */,
 				E00F48C9225F3BDF00EAD0C0 /* MeasurementTypeDto.swift in Sources */,
 				E029274722D630D3001FCAEC /* NetworkInfo.swift in Sources */,
 				E0B9A40E224E638B002AB640 /* ResultService.swift in Sources */,

@@ -156,9 +156,9 @@ public class MeasurementRunner {
             do {
                 // TODO: how to cancel measurement?
                 let result = try programInstance.run()
-                logger.debug(":: program \(taskName) returned result:")
-                logger.debug(result)
-                logger.debug(":: -------")
+                //logger.debug(":: program \(taskName) returned result:")
+                //logger.debug(result)
+                //logger.debug(":: -------")
 
                 taskResultDict[taskType] = result
             } catch {
@@ -174,6 +174,10 @@ public class MeasurementRunner {
 
         logger.info("-- all finished")
 
+        submitMeasurementResult(tasks: tasks, taskResultDict: taskResultDict, startTime: startTime, startTimeNs: startTimeNs, timeBasedResult: informationCollector.getResult())
+    }
+
+    private func submitMeasurementResult(tasks: [LmapTaskDto], taskResultDict: [MeasurementTypeDto: SubMeasurementResult], startTime: Date, startTimeNs: UInt64, timeBasedResult: TimeBasedResultDto) {
         let endTime = Date()
         let endTimeNs = TimeHelper.currentTimeNs()
 
@@ -188,40 +192,16 @@ public class MeasurementRunner {
         //reportModel.measurementPoint = "" // TODO
         reportModel.date = Date()
 
-        let timeBasedResult = informationCollector.getResult()
-
         timeBasedResult.startTime = startTime
         timeBasedResult.endTime = endTime
         timeBasedResult.durationNs = endTimeNs - startTimeNs
 
         reportModel.timeBasedResult = timeBasedResult
 
-        let apiRequestInfo = ApiRequestInfo()
-
-        apiRequestInfo.agentId = agentUuid
-        apiRequestInfo.agentType = .mobile
-        //apiRequestInfo.apiLevel = "Swift 5" // TODO: read from bundle
-        //apiRequestInfo.appGitRevision = "" // TODO: read from bundle
-        //apiRequestInfo.appVersionCode = nil // TODO: read from bundle
-        //apiRequestInfo.appVersionName = "" // TODO: read from bundle
-        apiRequestInfo.codeName = UIDevice.current.model
-        //apiRequestInfo.geoLocation = timeBasedResult.geoLocations?.first // TODO
-        apiRequestInfo.language = {
-            let preferredLanguages = Locale.preferredLanguages
-
-            if preferredLanguages.count < 1 {
-                return "en" //"de"
-            }
-
-            let sep = preferredLanguages[0].components(separatedBy: "-")
-            return sep[0]
-        }()
-        apiRequestInfo.model = UIDevice.current.model
-        apiRequestInfo.osName = UIDevice.current.systemName
-        apiRequestInfo.osVersion = UIDevice.current.systemVersion
-        apiRequestInfo.timezone = TimeZone.current.identifier
-
-        reportModel.additionalRequestInfo = apiRequestInfo
+        reportModel.additionalRequestInfo = ApiRequestHelper.buildApiRequestInfo(
+            agentUuid: agentUuid,
+            geoLocation: timeBasedResult.geoLocations?.first
+        )
 
         ////
 
@@ -239,15 +219,11 @@ public class MeasurementRunner {
             taskResult.task = taskName
 
             if let r = taskResultDict[taskType] {
-                //logger.debug("!!!!---!!!")
-                //logger.debug((r as? QoSMeasurementResult)?.objectiveResults)
                 taskResult.results = [ r ]
             }
 
             reportModel.results?.append(taskResult)
         }
-
-        //logger.debug((reportModel.results?.first?.results?.first as? QoSMeasurementResult)?.objectiveResults)
 
         ////
 

@@ -20,7 +20,7 @@ import CoreTelephony
 import SystemConfiguration.CaptiveNetwork
 
 public class NetworkInfo {
-    
+
     private static let cellularNetworkIdDictionary = [
         CTRadioAccessTechnologyGPRS: 1,
         CTRadioAccessTechnologyEdge: 2,
@@ -34,22 +34,21 @@ public class NetworkInfo {
         CTRadioAccessTechnologyLTE: 13,
         CTRadioAccessTechnologyeHRPD: 14
     ]
-    
+
     private static let cellularNetworkNameDictionary = [
-        CTRadioAccessTechnologyGPRS:         "GPRS (2G)",
-        CTRadioAccessTechnologyEdge:         "EDGE (2G)",
-        CTRadioAccessTechnologyWCDMA:        "UMTS (3G)",
-        CTRadioAccessTechnologyCDMA1x:       "CDMA (2G)",
+        CTRadioAccessTechnologyGPRS: "GPRS (2G)",
+        CTRadioAccessTechnologyEdge: "EDGE (2G)",
+        CTRadioAccessTechnologyWCDMA: "UMTS (3G)",
+        CTRadioAccessTechnologyCDMA1x: "CDMA (2G)",
         CTRadioAccessTechnologyCDMAEVDORev0: "EVDO0 (2G)",
         CTRadioAccessTechnologyCDMAEVDORevA: "EVDOA (2G)",
-        CTRadioAccessTechnologyHSDPA:        "HSDPA (3G)",
-        CTRadioAccessTechnologyHSUPA:        "HSUPA (3G)",
+        CTRadioAccessTechnologyHSDPA: "HSDPA (3G)",
+        CTRadioAccessTechnologyHSUPA: "HSUPA (3G)",
         CTRadioAccessTechnologyCDMAEVDORevB: "EVDOB (2G)",
-        CTRadioAccessTechnologyLTE:          "LTE (4G)",
-        CTRadioAccessTechnologyeHRPD:        "HRPD (2G)"
+        CTRadioAccessTechnologyLTE: "LTE (4G)",
+        CTRadioAccessTechnologyeHRPD: "HRPD (2G)"
     ]
 
-    
     public class func getWifiInfo() -> (String?, String?) {
         #if targetEnvironment(simulator)
         logger.debug("running in simulator -> not possible to read wifi information")
@@ -58,29 +57,29 @@ public class NetworkInfo {
         guard let interfaceNames = CNCopySupportedInterfaces() as? [String] else {
             return (nil, nil)
         }
-        
+
         for name in interfaceNames {
             guard let interface = CNCopyCurrentNetworkInfo(name as CFString) as? [String: AnyObject] else {
                 continue
             }
-            
+
             guard let ssid = interface[kCNNetworkInfoKeySSID as String] as? String,
                 let bssid = interface[kCNNetworkInfoKeyBSSID as String] as? String else {
                     continue
             }
-            
+
             // TODO: support multiple ssid/bssid?
             return (ssid, bssid)
         }
-        
+
         return (nil, nil)
         #endif
     }
-    
+
     public class func getCellularNetworkType(_ str: String) -> Int? {
         return NetworkInfo.cellularNetworkIdDictionary[str]
     }
-    
+
     public class func getCellularNetworkTypeDisplayName(_ str: String) -> String? {
         return NetworkInfo.cellularNetworkNameDictionary[str]
     }
