@@ -20,6 +20,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.S
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.TrafficDto;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ConnectionInfo;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
@@ -37,8 +38,10 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Traffic;
 @Mapper(componentModel = "spring", imports = ChronoUnit.class)
 public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttInfoDtoMapper {
 	
-	public static final String QOS_TEST_UID_KEY = "qos_test_uid";
-	public static final String QOS_TEST_TYPE_KEY = "test_type";
+	double EARTH_MEAN_RADIUS = 6373000;
+
+	String QOS_TEST_UID_KEY = "qos_test_uid";
+	String QOS_TEST_TYPE_KEY = "test_type";
 
 	// Explicit map method not necessary if all fields have the same name
 //	@Mappings({
@@ -129,6 +132,7 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 				+ " null : ChronoUnit.NANOS.between(measurementTime.getStartTime(), measurementTime.getEndTime()))"),
 		
 		@Mapping(source = "timeBasedResult.geoLocations", target = "geoLocationInfo.geoLocations"),
+		@Mapping(expression="java(parseDistanceMoved(timeBasedResultDto.getGeoLocations()))", target="geoLocationInfo.distanceMovedMetres"),
 //		//@Mapping(source = "timeBasedResult.cpuUsage", target = "deviceInfo.osInfo.cpuUsage"),
 //		//@Mapping(source = "timeBasedResult.memUsage", target = "deviceInfo.osInfo.memUsage"),
 //		//@Mapping(source = "timeBasedResult.networkPointsInTime", target = "networkPointsInTime"),
@@ -155,7 +159,7 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 				+ "null : Math.log10(speedMeasurement.getThroughputAvgUploadBps()))", target="throughputAvgUploadLog"),
 	})
 	SpeedMeasurement map (SpeedMeasurementResult speedMeasurementResult, LocalDateTime startTimeNs);
-	
+
 	@Mappings ({
 		@Mapping(expression="java(mapSubMeasurementTime(qoSMeasurementResult, startTimeNs))", target="measurementTime"),
 		@Mapping(source="qoSMeasurementResult.status", target="statusInfo.status"),
@@ -175,9 +179,9 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 		@Mapping(source="actualNumStreamsUpload", target="numStreamsInfo.actualNumStreamsUpload"),
 	})
 	ConnectionInfo map (ConnectionInfoDto connectionInfoDto);
-	
+
 	Traffic map (TrafficDto trafficDto);
-	
+
 	@Mappings ({
 		@Mapping(source="subMeasurementResult.relativeStartTimeNs", target="relativeStartTimeNs"),
 		@Mapping(source="subMeasurementResult.relativeEndTimeNs", target="relativeEndTimeNs"),
@@ -216,12 +220,12 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 		for (LmapResultDto<? extends SubMeasurementResult> resList : lmapReportDto.getResults()) {
 			for (SubMeasurementResult res : resList.getResults()) {
 				if (res instanceof SpeedMeasurementResult) {
-					ret.put(MeasurementTypeDto.SPEED, this.map((SpeedMeasurementResult) res, 
+					ret.put(MeasurementTypeDto.SPEED, this.map((SpeedMeasurementResult) res,
 							lmapReportDto.getTimeBasedResult() == null ?
 							null : lmapReportDto.getTimeBasedResult().getStartTime() == null ?
 									null: lmapReportDto.getTimeBasedResult().getStartTime()));
 				} else if (res instanceof QoSMeasurementResult) {
-					ret.put(MeasurementTypeDto.QOS, this.map((QoSMeasurementResult) res, 
+					ret.put(MeasurementTypeDto.QOS, this.map((QoSMeasurementResult) res,
 							lmapReportDto.getTimeBasedResult() == null ?
 							null : lmapReportDto.getTimeBasedResult().getStartTime() == null ?
 									null: lmapReportDto.getTimeBasedResult().getStartTime()));
@@ -264,4 +268,40 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 		return ret;
 	}
 	
+	default Integer parseDistanceMoved(final List<GeoLocationDto> geoLocationList) {
+		if (geoLocationList == null || geoLocationList.size() == 0) {
+			return null;
+		}
+		GeoLocationDto previous = null;
+
+		Integer sum = null;
+
+		for(GeoLocationDto g : geoLocationList) {
+			if (previous == null) {
+				if (g.getLatitude() != null && g.getLongitude() != null) {
+					previous = g;
+				}
+				continue;
+			}
+			if (g.getLatitude() != null && g.getLongitude() != null) {
+				//used Haversine formula from: https://www.movable-type.co.uk/scripts/latlong.html
+				double lat = Math.toRadians(g.getLatitude() - previous.getLatitude()) / 2;
+				double lon = Math.toRadians(g.getLongitude() - previous.getLongitude()) / 2;
+				double cosLatOne = Math.cos(Math.toRadians(previous.getLatitude()));
+				double cosLatTwo = Math.cos(Math.toRadians(g.getLatitude()));
+
+				double a = Math.pow(Math.sin(lat), 2) + cosLatOne * cosLatTwo * Math.pow(Math.sin(lon), 2);
+				double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+				double distance = c * EARTH_MEAN_RADIUS;
+				if (sum == null) {
+					sum = 0;
+				}
+				sum += (int) distance;
+
+				previous = g;
+			}
+		}
+		return sum;
+	}
+
 }
