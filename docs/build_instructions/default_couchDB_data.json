@@ -269,6 +269,12 @@
                         {
                             "key": "openDataUuid",
                             "translation_key": "uuid"
+                        },
+                        {
+                            "key": "systemUuid",
+                            "translation_key": "measurement_system_uuid",
+                            "share_text": "share_system {}",
+                            "share_priority": 5
                         }
                     ]
                 },
@@ -295,6 +301,11 @@
                         {
                             "key": "agentInfo.timezone",
                             "translation_key": "translate_timezone"
+                        },
+                        {
+                            "key": "geoLocationInfo.distanceMovedMetres",
+                            "translation_key": "translate_distMetres",
+                            "unit": "m"
                         }
                     ]
                 },

@@ -222,13 +222,11 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 				if (res instanceof SpeedMeasurementResult) {
 					ret.put(MeasurementTypeDto.SPEED, this.map((SpeedMeasurementResult) res,
 							lmapReportDto.getTimeBasedResult() == null ?
-							null : lmapReportDto.getTimeBasedResult().getStartTime() == null ?
-									null: lmapReportDto.getTimeBasedResult().getStartTime()));
+							null : lmapReportDto.getTimeBasedResult().getStartTime()));
 				} else if (res instanceof QoSMeasurementResult) {
 					ret.put(MeasurementTypeDto.QOS, this.map((QoSMeasurementResult) res,
 							lmapReportDto.getTimeBasedResult() == null ?
-							null : lmapReportDto.getTimeBasedResult().getStartTime() == null ?
-									null: lmapReportDto.getTimeBasedResult().getStartTime()));
+							null : lmapReportDto.getTimeBasedResult().getStartTime()));
 				}
 			}
 		}
@@ -258,7 +256,7 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 				try {
 					res.setObjectiveId(Long.parseLong(val.toString()));
 				} catch (IllegalArgumentException ex) {
-					
+					ex.printStackTrace();
 				}
 			}
 			res.setResults(map);
