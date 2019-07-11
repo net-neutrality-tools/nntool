@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
+import at.alladin.nettest.nntool.android.app.async.RequestAgentIpTask;
 import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
 import at.alladin.nettest.nntool.android.app.async.RequestSpeedMeasurementPeersTask;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
@@ -28,6 +29,7 @@ import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.system.SystemInfoGatherer;
 import at.alladin.nettest.nntool.android.app.view.CpuAndRamView;
 import at.alladin.nettest.nntool.android.app.view.GeoLocationView;
+import at.alladin.nettest.nntool.android.app.view.Ipv4v6View;
 import at.alladin.nettest.nntool.android.app.view.MeasurementServerSelectionView;
 import at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView;
 import at.alladin.nettest.nntool.android.app.view.InterfaceTrafficView;
@@ -48,6 +50,8 @@ public class TitleFragment extends Fragment {
     private InterfaceTrafficView interfaceTrafficView;
 
     private CpuAndRamView cpuAndRamView;
+
+    private Ipv4v6View ipv4v6View;
 
     private InformationProvider informationProvider;
 
@@ -78,6 +82,8 @@ public class TitleFragment extends Fragment {
 
         cpuAndRamView = v.findViewById(R.id.view_cpu_ram);
 
+        ipv4v6View = v.findViewById(R.id.view_ipv4v6_status);
+
         measurementServerSelectionView = v.findViewById(R.id.view_measurement_server_selection);
 
         final RequestSpeedMeasurementPeersTask measurementPeersTask = new RequestSpeedMeasurementPeersTask(getContext(), response -> {
@@ -90,6 +96,12 @@ public class TitleFragment extends Fragment {
         });
 
         measurementPeersTask.execute();
+
+        final RequestAgentIpTask requestAgentIpTask = new RequestAgentIpTask(getContext(), response -> {
+            ipv4v6View.updateIpStatus(response);
+        });
+
+        requestAgentIpTask.execute();
 
         //Log.i(TAG, "onCreateView");
         return v;
