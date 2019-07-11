@@ -88,7 +88,7 @@ class TcpPortTask: QoSBidirectionalIpTask {
             port: 0, // gets set in switch/case
             outgoing: true,
             timeoutNs: timeoutNs,
-            payload: TcpPortTaskExecutor.PAYLOAD
+            payload: TcpPortTask.PAYLOAD
         )
 
         switch direction {

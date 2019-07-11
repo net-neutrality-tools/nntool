@@ -17,29 +17,11 @@
 import Foundation
 
 ///
-public class TcpPortTaskResult: AbstractBidirectionalIpTaskResult {
-
-    var resultOut: Status?
-    var resultIn: Status?
-
-    var resultOutResponse: String?
-    var resultInResponse: String?
-
-    var resultErrorDetails: String?
+enum TaskError: Error {
 
     ///
-    enum CodingKeys: String, CodingKey {
-        case objectiveTimeoutNs = "tcp_objective_timeout" // TODO: use generic "objective_timeout"...
+    case unknownError
 
-        case objectivePortOut   = "tcp_objective_out_port"
-        case objectivePortIn    = "tcp_objective_in_port"
-
-        case resultOut          = "tcp_result_out"
-        case resultIn           = "tcp_result_in"
-
-        case resultOutResponse  = "tcp_result_out_response"
-        case resultInResponse   = "tcp_result_in_response"
-
-        case resultErrorDetails = "tcp_result_error_details"
-    }
+    ///
+    case controlConnectionError
 }

@@ -48,7 +48,7 @@ class UdpStreamUtil: NSObject {
     ///
     private let config: UdpStreamUtilConfiguration
 
-    private var status: AbstractTaskResult.Status = .unknown
+    private var status: QoSTaskStatus = .unknown
 
     private var stopReceivingSemaphore: DispatchSemaphore?
     private var delayElapsedSemaphore: DispatchSemaphore?
@@ -66,7 +66,7 @@ class UdpStreamUtil: NSObject {
     }
 
     ///
-    public func runStream() -> (AbstractTaskResult.Status, UdpStreamUtilResult?) {
+    public func runStream() -> (QoSTaskStatus, UdpStreamUtilResult?) {
         let delegateQueue = DispatchQueue(label: "at.alladin.nettest.qos.udpstream.delegate")
         let socket = GCDAsyncUdpSocket(delegate: self, delegateQueue: delegateQueue)
 
@@ -95,7 +95,7 @@ class UdpStreamUtil: NSObject {
             return (.error, nil)
         }
 
-        var status: AbstractTaskResult.Status = .unknown
+        var status: QoSTaskStatus = .unknown
 
         // send packets if outgoing
         if config.outgoing {
