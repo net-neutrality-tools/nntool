@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import at.alladin.nettest.service.collector.config.CollectorServiceProperties;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
@@ -33,6 +34,9 @@ public class MeasurementResultResource {
 	
 	@Autowired
 	private StorageService storageService;
+
+	@Autowired
+	private CollectorServiceProperties collectorServiceProperties;
 	
 	/**
 	 * Store measurement result.
@@ -50,7 +54,7 @@ public class MeasurementResultResource {
     public ResponseEntity<ApiResponse<MeasurementResultResponse>> postMeasurement(@ApiParam("Measurement result") @RequestBody LmapReportDto lmapReportDto) {
 		final MeasurementResultResponse resultResponse;
 		try {
-			resultResponse = storageService.save(lmapReportDto);
+			resultResponse = storageService.save(lmapReportDto, collectorServiceProperties.getSystemUuid());
 		} catch (Exception ex) {
 			throw new StorageServiceException(ex);
 		}

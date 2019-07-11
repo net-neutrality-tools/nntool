@@ -11,6 +11,7 @@ import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.dialog.BlockingProgressDialog;
 import at.alladin.nettest.nntool.android.app.util.ConnectionUtil;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
+import at.alladin.nettest.nntool.android.app.util.ObjectMapperUtil;
 import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.util.connection.ControllerConnection;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
@@ -28,9 +29,16 @@ public class RequestMeasurementTask extends AsyncTask<Void, Void, LmapControlDto
 
     private BlockingProgressDialog progressDialog;
 
-    public RequestMeasurementTask (final Context context, final OnTaskFinishedCallback<LmapUtil.LmapTaskWrapper> callback) {
+    private String selectedMeasurementPeerIdentifier;
+
+    public RequestMeasurementTask (final String selectedMeasurementPeerIdentifier, final Context context, final OnTaskFinishedCallback<LmapUtil.LmapTaskWrapper> callback) {
         this.context = context;
         this.callback = callback;
+        this.selectedMeasurementPeerIdentifier = selectedMeasurementPeerIdentifier;
+    }
+
+    public RequestMeasurementTask (final Context context, final OnTaskFinishedCallback<LmapUtil.LmapTaskWrapper> callback) {
+        this(null, context, callback);
     }
 
     @Override
@@ -46,14 +54,14 @@ public class RequestMeasurementTask extends AsyncTask<Void, Void, LmapControlDto
     protected LmapControlDto doInBackground(Void... voids) {
         final ControllerConnection controllerConnection = ConnectionUtil.createControllerConnection(context);
         return controllerConnection.requestMeasurement(
-                RequestUtil.prepareMeasurementInitiationRequest(context));
+                RequestUtil.prepareMeasurementInitiationRequest(selectedMeasurementPeerIdentifier, context));
     }
 
     @Override
     protected void onPostExecute(LmapControlDto result) {
         final LmapUtil.LmapTaskWrapper taskWrapper = LmapUtil.extractQosTaskDescList(result);
         try {
-            Log.d(TAG, new ObjectMapper().writeValueAsString(taskWrapper));
+            Log.d(TAG, ObjectMapperUtil.createBasicObjectMapper().writeValueAsString(taskWrapper));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

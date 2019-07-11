@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string translatable="false" name="default_agent_group_name">default-agent-group-name</string>
-    <string translatable="false" name="default_controller_host">10.9.8.39</string>
+    <string translatable="false" name="default_controller_host">127.0.0.1</string>
+    <string translatable="false" name="default_controller_host_ipv6">::1</string>
     <string translatable="false" name="default_controller_path_prefix">/</string>
     <integer translatable="false" name="default_controller_port">8080</integer>
     <bool translatable="false" name="default_controller_connection_is_encrypted">false</bool>

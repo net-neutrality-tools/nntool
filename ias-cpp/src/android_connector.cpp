@@ -481,6 +481,11 @@ void AndroidConnector::startMeasurement() {
         ::DOWNLOAD 			= performDownload;
         ::UPLOAD 			= performUpload;
 
+        ::PERFORMED_RTT = false;
+        ::PERFORMED_DOWNLOAD = false;
+        ::PERFORMED_UPLOAD = false;
+        ::hasError = false;
+
         json11::Json::object jRttParameters;
         json11::Json::object jDownloadParameters;
         json11::Json::object jUploadParameters;

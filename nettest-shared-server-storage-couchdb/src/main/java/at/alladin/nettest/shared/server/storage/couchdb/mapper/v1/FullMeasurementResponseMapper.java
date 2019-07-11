@@ -18,7 +18,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasur
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
 
 @Mapper(componentModel = "spring")
-public interface FullMeasurementResponseMapper extends DateTimeMapper {
+public interface FullMeasurementResponseMapper extends DateTimeMapper, ConnectionInfoMapper {
 
 	@Mappings({
 		@Mapping(source="measurementTime.startTime", target="startTime"),
@@ -32,6 +32,9 @@ public interface FullMeasurementResponseMapper extends DateTimeMapper {
 	@Mappings({
 		@Mapping(source="measurementTime.relativeStartTimeNs", target="relativeStartTimeNs"),
 		@Mapping(source="measurementTime.relativeEndTimeNs", target="relativeEndTimeNs"),
+		@Mapping(source="measurementTime.durationNs", target="durationNs"),
+		@Mapping(source="measurementTime.startTime", target="startTime"),
+		@Mapping(source="measurementTime.endTime", target="endTime"),
 		@Mapping(source="statusInfo.status", target="status"),
 		@Mapping(source="statusInfo.reason", target="reason"),
 	})
@@ -40,10 +43,14 @@ public interface FullMeasurementResponseMapper extends DateTimeMapper {
 	@Mappings({
 		@Mapping(source="measurementTime.relativeStartTimeNs", target="relativeStartTimeNs"),
 		@Mapping(source="measurementTime.relativeEndTimeNs", target="relativeEndTimeNs"),
+		@Mapping(source="measurementTime.durationNs", target="durationNs"),
+		@Mapping(source="measurementTime.startTime", target="startTime"),
+		@Mapping(source="measurementTime.endTime", target="endTime"),
 		@Mapping(source="statusInfo.status", target="status"),
 		@Mapping(source="statusInfo.reason", target="reason"),
 		@Mapping(source="speedRawData.download", target="downloadRawData"),
 		@Mapping(source="speedRawData.upload", target="uploadRawData"),
+		@Mapping(source="rttInfo.address", target="rttInfo.address"),
 	})
 	FullSpeedMeasurement map(SpeedMeasurement measurement);
 	

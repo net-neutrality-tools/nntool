@@ -239,21 +239,47 @@
             },
             "speedtest_detail_groups": [
                 {
-                    "key": "group1",
-                    "icon": "a",
+                    "key": "group_overview",
+                    "icon": "r",
                     "values": [
                         {
-                            "key": "openDataUuid",
-                            "translation_key": "translate_uuid"
+                            "key": "speed.rttInfo.averageNs",
+                            "format": "DIV_1E6",
+                            "unit": "ms",
+                            "translation_key": "translate_ping",
+                            "share_text": "share_ping {}",
+                            "share_priority": 3
                         },
                         {
-                            "key": "submitTime",
-                            "translation_key": "translate_time"
+                            "key": "speed.throughputAvgDownloadBps",
+                            "unit": "Mbps",
+                            "format": "DIV_1E6",
+                            "translation_key": "translate_down",
+                            "share_text": "share_download {}",
+                            "share_priority": 1
+                        },
+                        {
+                            "key": "speed.throughputAvgUploadBps",
+                            "unit": "Mbps",
+                            "format": "DIV_1E6",
+                            "translation_key": "translate_up",
+                            "share_text": "share_upload {}",
+                            "share_priority": 2
+                        },
+                        {
+                            "key": "openDataUuid",
+                            "translation_key": "uuid"
+                        },
+                        {
+                            "key": "systemUuid",
+                            "translation_key": "measurement_system_uuid",
+                            "share_text": "share_system {}",
+                            "share_priority": 5
                         }
                     ]
                 },
                 {
-                    "key": "group2",
+                    "key": "group_device",
                     "icon": "b",
                     "values": [
                         {
@@ -261,8 +287,44 @@
                             "translation_key": "translate_osName"
                         },
                         {
+                            "key": "deviceInfo.osInfo.version",
+                            "translation_key": "translate_version"
+                        },
+                        {
+                            "key": "deviceInfo.codeName",
+                            "translation_key": "translate_codename"
+                        },
+                        {
+                            "key": "deviceInfo.model",
+                            "translation_key": "translate_model"
+                        },
+                        {
                             "key": "agentInfo.timezone",
                             "translation_key": "translate_timezone"
+                        },
+                        {
+                            "key": "geoLocationInfo.distanceMovedMetres",
+                            "translation_key": "translate_distMetres",
+                            "unit": "m"
+                        }
+                    ]
+                },
+                {
+                    "key": "group_speed_connectivity",
+                    "icon": "ú",
+                    "values": [
+                        {
+                            "key": "speed.connectionInfo.address",
+                            "translation_key": "address",
+                            "share_text": "share_address {}"
+                        },
+                        {
+                            "key": "speed.connectionInfo.port",
+                            "translation_key": "port"
+                        },
+                        {
+                            "key": "speed.connectionInfo.encrypted",
+                            "translation_key": "encryption"
                         }
                     ]
                 }

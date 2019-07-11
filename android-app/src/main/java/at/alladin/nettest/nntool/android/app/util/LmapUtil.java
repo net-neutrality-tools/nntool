@@ -1,7 +1,6 @@
 package at.alladin.nettest.nntool.android.app.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +94,7 @@ public class LmapUtil {
         SpeedTaskDesc speedTaskDesc = null;
 
         try {
-            System.out.println(new ObjectMapper().writeValueAsString(controlDto));
+            System.out.println(ObjectMapperUtil.createBasicObjectMapper().writeValueAsString(controlDto));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

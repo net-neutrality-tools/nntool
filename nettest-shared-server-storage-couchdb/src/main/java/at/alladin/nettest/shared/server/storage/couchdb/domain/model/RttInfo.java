@@ -19,6 +19,16 @@ import com.google.gson.annotations.SerializedName;
 public class RttInfo {
 
 	/**
+	 * The address of the measurement server.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "The address of the rtt server.")
+	@JsonPropertyDescription("The address of the rtt server.")
+	@Expose
+	@SerializedName("address")
+	@JsonProperty(required = true, value = "address")
+	private String address;
+	
+	/**
 	 * List of all measured RTTs.
 	 */
 	@JsonPropertyDescription("List of all measured RTTs.")
@@ -306,4 +316,13 @@ public class RttInfo {
 	public void setStandardDeviationNs(Long standardDeviationNs) {
 		this.standardDeviationNs = standardDeviationNs;
 	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
 }

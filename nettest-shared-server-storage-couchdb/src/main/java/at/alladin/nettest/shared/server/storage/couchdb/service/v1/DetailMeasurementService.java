@@ -6,8 +6,10 @@ import java.text.DecimalFormatSymbols;
 import java.text.Format;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.PriorityQueue;
 
 import org.json.JSONException;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,10 @@ public class DetailMeasurementService {
 	private static final String SPEED_PREFIX = "speed";
 	
 	private static final String QOS_PREFIX = "qos";
+	
+	private static final String SHARE_TEXT_PLACEHOLDER = "{}";
+	
+	private static final String SHARE_TEXT_INTRO_TRANSLATION_KEY = "share_text_intro";
 	
 	/**
 	 * Groups the results according to the groupStructure param
@@ -73,6 +79,10 @@ public class DetailMeasurementService {
     	
     	//Fill in the corresponding Response with translated and formatted values
 		final DetailMeasurementResponse ret = new DetailMeasurementResponse();
+		
+		final PriorityQueue<ShareText> shareTextQueue = new PriorityQueue<>((textOne, textTwo) -> {
+			return textOne.getPriority().compareTo(textTwo.getPriority());
+		});
 		
 		final List<DetailMeasurementGroup> responseGroupList = new ArrayList<>();
 		ret.setGroups(responseGroupList);
@@ -149,6 +159,20 @@ public class DetailMeasurementService {
 				if(item.getValue() == null){
 					item.setValue(val);
 				}
+				//provide the values for the share text
+				if (entry.getShareText() != null) {
+					final ShareText share = new ShareText();
+					////getLocalizedMessage(entry.getTranslationKey(), locale));
+					if (entry.getShareText().contains(SHARE_TEXT_PLACEHOLDER)) { 
+						share.setText(entry.getShareText().replace(SHARE_TEXT_PLACEHOLDER, item.getValue() + 
+							(item.getUnit() != null ? " " + item.getUnit() : "") + "\n"));
+					} else {
+						share.setText(entry.getShareText() + "\n");
+					}
+					share.setPriority(entry.getSharePriority() != null ? entry.getSharePriority() : Integer.MAX_VALUE);
+					shareTextQueue.add(share);
+				}
+				
 				//and add that item to the responseGroup
 				responseGroup.getItems().add(item);
 			}
@@ -173,7 +197,20 @@ public class DetailMeasurementService {
 			if (responseGroup.getItems().size() > 0) {
 				ret.getGroups().add(responseGroup);
 			}
-		} 
+		}
+		//assemble share text
+		if (!shareTextQueue.isEmpty()) {
+			final StringBuilder builder = new StringBuilder();
+			//getLocalizedMessage(entry.getTranslationKey(), locale));
+			builder.append(SHARE_TEXT_INTRO_TRANSLATION_KEY).append("\n");
+			
+			for (ShareText s : shareTextQueue) {
+				builder.append(s.getText());
+			}
+			
+			ret.setShareMeasurementText(builder.toString());
+		}
+		
 		return ret;
 	}
 	
@@ -277,5 +314,31 @@ public class DetailMeasurementService {
 		return value;
 	}
 
+	private class ShareText {
+		
+		private String text;
+		
+		private Integer priority;
+
+		public String getText() {
+			return text;
+		}
+		public void setText(String text) {
+			this.text = text;
+		}
+		public Integer getPriority() {
+			return priority;
+		}
+		public void setPriority(Integer priority) {
+			this.priority = priority;
+		}
+
+		@Override
+		public String toString() {
+			return "ShareText [text=" + text + ", priority=" + priority + "]";
+		}
+		
+		
+	}
 
 }

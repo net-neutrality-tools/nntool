@@ -5,7 +5,6 @@ import android.os.Build;
 import android.text.TextUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +32,9 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.Q
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.TimeBasedResultDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellLocationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
-import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
-import at.alladin.nntool.client.v2.task.result.QoSTestResult;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
@@ -86,7 +84,7 @@ public class RequestUtil {
         return apiRequest;
     }
 
-    public static LmapControlDto prepareMeasurementInitiationRequest (final Context context) {
+    public static LmapControlDto prepareMeasurementInitiationRequest (final String selectedMeasurementPeerIdentifier, final Context context) {
         final LmapControlDto request = new LmapControlDto();
         final LmapAgentDto agentDto = new LmapAgentDto();
         agentDto.setAgentId(PreferencesUtil.getAgentUuid(context));
@@ -101,6 +99,9 @@ public class RequestUtil {
         LmapCapabilityTaskDto capabilityTask = new LmapCapabilityTaskDto();
         capabilityTask.setVersion(context.getResources().getString(R.string.default_speed_configuration_version));
         capabilityTask.setTaskName(MeasurementTypeDto.SPEED.toString());
+        if (selectedMeasurementPeerIdentifier != null) {
+            capabilityTask.setSelectedMeasurementPeerIdentifier(selectedMeasurementPeerIdentifier);
+        }
         capabilityTaskDtoList.add(capabilityTask);
 
         capabilityTask = new LmapCapabilityTaskDto();
@@ -109,7 +110,7 @@ public class RequestUtil {
         capabilityTaskDtoList.add(capabilityTask);
 
         try {
-            System.out.println(new ObjectMapper().writeValueAsString(request));
+            System.out.println(ObjectMapperUtil.createBasicObjectMapper().writeValueAsString(request));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -161,6 +162,13 @@ public class RequestUtil {
         }
 
         return report;
+    }
+
+    public static ApiRequest<SpeedMeasurementPeerRequest> prepareApiSpeedMeasurementPeerRequest(final Context context) {
+        final ApiRequest<SpeedMeasurementPeerRequest> apiRequest = new ApiRequest<>();
+        apiRequest.setData(new SpeedMeasurementPeerRequest());
+        apiRequest.setRequestInfo(prepareApiRequestInfo(context));
+        return apiRequest;
     }
 
     private static CellLocationDto cellInfoWrapperToCellLocationDto (final CellInfoWrapper cellInfoWrapper) {

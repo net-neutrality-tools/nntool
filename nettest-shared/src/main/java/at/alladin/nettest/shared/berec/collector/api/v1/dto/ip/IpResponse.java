@@ -40,6 +40,8 @@ public class IpResponse {
 	@JsonProperty(required = true, value = "ip_version")
 	private IpVersion version; // TODO: rename ipVersion
 
+	public IpResponse() {}
+
 	/**
 	 * 
 	 * @param addr
@@ -65,6 +67,14 @@ public class IpResponse {
 
 	public void setVersion(IpVersion version) {
 		this.version = version;
+	}
+
+	@Override
+	public String toString() {
+		return "IpResponse{" +
+				"ipAddress='" + ipAddress + '\'' +
+				", version=" + version +
+				'}';
 	}
 
 	/**

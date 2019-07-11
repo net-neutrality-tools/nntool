@@ -24,7 +24,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".6"
-            android:text="@string/ifont_check" />
+            android:textColor="@color/ip_address_unavailable"
+            android:text="@string/ifont_close" />
     </LinearLayout>
 
     <LinearLayout
@@ -45,7 +46,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".6"
-
+            android:textColor="@color/ip_address_unavailable"
             android:text="@string/ifont_close" />
     </LinearLayout>
 </LinearLayout>

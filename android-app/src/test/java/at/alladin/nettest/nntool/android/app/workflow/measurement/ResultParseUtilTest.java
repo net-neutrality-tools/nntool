@@ -27,6 +27,8 @@ public class ResultParseUtilTest {
     private static final long lastDurationRttNs = 6691659000000L;
     private static final long lastDurationDownloadNs = 2500000000L;
     private static final long lastDurationUploadNs = 2000000000L;
+    private static final long durationUploadTotal = 5676805000L;
+    private static final long durationDownloadTotal = 6150238000L;
     private static final long rttUdpStart = 1561554378264499000L;
     private static final long uploadStart = 1561554404912793000L;
     private static final long downloadStart = 1561554390079342000L;
@@ -95,7 +97,7 @@ public class ResultParseUtilTest {
         down.setBytes(lastBytesDownload);
         down.setBytesIncludingSlowStart(lastBytesDownloadIncludingSlowStart);
         down.setDurationNs(lastDurationDownloadNs);
-        down.setDurationNsTotal(6150238000L);
+        down.setDurationNsTotal(durationDownloadTotal);
         down.setNumStreamsEnd(4);
         down.setNumStreamsStart(4);
         down.setProgress(1.0f);
@@ -143,7 +145,7 @@ public class ResultParseUtilTest {
         up.setBytes(lastBytesUpload);
         up.setBytesIncludingSlowStart(lastBytesUploadIncludingSlowStart);
         up.setDurationNs(lastDurationUploadNs);
-        up.setDurationNsTotal(5676805000L);
+        up.setDurationNsTotal(durationUploadTotal);
         up.setNumStreamsEnd(4);
         up.setNumStreamsStart(4);
         up.setProgress(1.0f);
@@ -283,8 +285,8 @@ public class ResultParseUtilTest {
         Assert.assertEquals("unexpected upload bytes", lastBytesUploadIncludingSlowStart, result.getBytesUploadIncludingSlowStart().longValue());
 
         Assert.assertEquals("unexpected duration", lastDurationRttNs, result.getDurationRttNs().longValue());
-        Assert.assertEquals("unexpected duration", lastDurationDownloadNs, result.getDurationDownloadNs().longValue());
-        Assert.assertEquals("unexpected duration", lastDurationUploadNs, result.getDurationUploadNs().longValue());
+        Assert.assertEquals("unexpected duration", durationDownloadTotal, result.getDurationDownloadNs().longValue());
+        Assert.assertEquals("unexpected duration", durationUploadTotal, result.getDurationUploadNs().longValue());
 
         Assert.assertEquals("unexpected relative start time", 0, result.getRelativeStartTimeRttNs().longValue());
         Assert.assertEquals("unexpected relative start time", downloadStart - rttUdpStart, result.getRelativeStartTimeDownloadNs().longValue());
@@ -319,7 +321,7 @@ public class ResultParseUtilTest {
 
         Assert.assertNull("unexpected duration", result.getDurationRttNs());
         Assert.assertNull("unexpected duration", result.getDurationDownloadNs());
-        Assert.assertEquals("unexpected duration", lastDurationUploadNs, result.getDurationUploadNs().longValue());
+        Assert.assertEquals("unexpected duration", durationUploadTotal, result.getDurationUploadNs().longValue());
 
         Assert.assertEquals("unexpected relative start time", 0, result.getRelativeStartTimeRttNs().longValue());
         Assert.assertNull("unexpected relative start time", result.getRelativeStartTimeDownloadNs());

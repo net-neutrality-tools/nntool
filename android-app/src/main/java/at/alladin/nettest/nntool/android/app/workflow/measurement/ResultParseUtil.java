@@ -55,7 +55,7 @@ public class ResultParseUtil {
             final JniSpeedMeasurementResult.BandwidthResult lastDownloadEntry = result.getDownloadInfoList().get(result.getDownloadInfoList().size() - 1);
             ret.setBytesDownload(lastDownloadEntry.getBytes());
             ret.setBytesDownloadIncludingSlowStart(lastDownloadEntry.getBytesIncludingSlowStart());
-            ret.setDurationDownloadNs(lastDownloadEntry.getDurationNs());
+            ret.setDurationDownloadNs(lastDownloadEntry.getDurationNsTotal());
             if (timeInfo != null && timeInfo.getDownloadStart() != null ) {
                 ret.setRelativeStartTimeDownloadNs(timeInfo.getRttUdpStart() != null ? timeInfo.getDownloadStart() - timeInfo.getRttUdpStart() : 0);
             }
@@ -74,7 +74,7 @@ public class ResultParseUtil {
             final JniSpeedMeasurementResult.BandwidthResult lastUploadEntry = result.getUploadInfoList().get(result.getUploadInfoList().size() - 1);
             ret.setBytesUpload(lastUploadEntry.getBytes());
             ret.setBytesUploadIncludingSlowStart(lastUploadEntry.getBytesIncludingSlowStart());
-            ret.setDurationUploadNs(lastUploadEntry.getDurationNs());
+            ret.setDurationUploadNs(lastUploadEntry.getDurationNsTotal());
             if (timeInfo != null && timeInfo.getUploadStart() != null ) {
                 ret.setRelativeStartTimeUploadNs(timeInfo.getRttUdpStart() != null ? timeInfo.getUploadStart() - timeInfo.getRttUdpStart() :
                         timeInfo.getDownloadStart() != null ? timeInfo.getUploadStart() - timeInfo.getDownloadStart() : 0);

@@ -96,36 +96,46 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private LmapTaskMapper lmapTaskMapper;
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see at.alladin.nettest.shared.server.service.storage.v1.StorageService#save(at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto)
+	 */
+	@Override
+	public MeasurementResultResponse save(LmapReportDto lmapReportDto, String systemUuid) throws StorageServiceException {
+		final String agentUuid = lmapReportDto.getAgentId();
+		if (agentUuid == null || !isValidMeasurementAgentUuid(agentUuid)) {
+			throw new StorageServiceException("Invalid user agent id");
+		}
+
+		final Measurement measurement = lmapReportModelMapper.map(lmapReportDto);
+
+		measurement.setSystemUuid(systemUuid);
+		measurement.setUuid(UUID.randomUUID().toString());
+		measurement.setOpenDataUuid(UUID.randomUUID().toString());
+		measurement.setSubmitTime(LocalDateTime.now(ZoneId.of("UTC")));
+
+		try {
+			measurementRepository.save(measurement);
+		} catch (Exception ex) {
+			throw new StorageServiceException(ex);
+		}
+
+		final MeasurementResultResponse resultResponse = new MeasurementResultResponse();
+
+		resultResponse.setUuid(measurement.getUuid());
+		resultResponse.setOpenDataUuid(measurement.getOpenDataUuid());
+
+		return resultResponse;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see at.alladin.nettest.shared.server.service.storage.v1.StorageService#save(at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto)
 	 */
 	@Override
 	public MeasurementResultResponse save(LmapReportDto lmapReportDto) throws StorageServiceException {
-		final String agentUuid = lmapReportDto.getAgentId();
-		if (agentUuid == null || !isValidMeasurementAgentUuid(agentUuid)) {
-			throw new StorageServiceException("Invalid user agent id");
-		}
-		
-		final Measurement measurement = lmapReportModelMapper.map(lmapReportDto);
-		
-		measurement.setUuid(UUID.randomUUID().toString());
-		measurement.setOpenDataUuid(UUID.randomUUID().toString());
-		measurement.setSubmitTime(LocalDateTime.now(ZoneId.of("UTC")));
-		
-		try {
-			measurementRepository.save(measurement);
-		} catch (Exception ex) {
-			throw new StorageServiceException(ex);
-		}
-		
-		final MeasurementResultResponse resultResponse = new MeasurementResultResponse();
-		
-		resultResponse.setUuid(measurement.getUuid());
-		resultResponse.setOpenDataUuid(measurement.getOpenDataUuid());
-		
-		return resultResponse;
+		return save(lmapReportDto, null);
 	}
 
 	/*
@@ -293,7 +303,7 @@ public class CouchDbStorageService implements StorageService {
 		if (!agentUuid.equals(measurement.getAgentInfo().getUuid())) {
 			throw new StorageServiceException("Invalid agent/measurement uuid pair");
 		}
-		anonymizeMeasurement(measurement);
+		disassociateMeasurement(measurement);
 		try {
 			measurementRepository.save(measurement);
 		} catch (Exception ex) {
@@ -306,7 +316,7 @@ public class CouchDbStorageService implements StorageService {
 	public DisassociateResponse disassociateAllMeasurements(final String agentUuid) throws StorageServiceException {
 		try {
 			final List<Measurement> measurementList = measurementRepository.findByAgentInfoUuid(agentUuid);
-			measurementList.forEach(m -> anonymizeMeasurement(m));
+			measurementList.forEach(m -> disassociateMeasurement(m));
 			measurementRepository.saveAll(measurementList);
 		} catch (Exception ex) {
 			throw new StorageServiceException(ex);
@@ -314,8 +324,7 @@ public class CouchDbStorageService implements StorageService {
 		return new DisassociateResponse();
 	}
 	
-	private void anonymizeMeasurement (final Measurement toAnonymize) {
-		//TODO: do we anonymize anything else?
+	private void disassociateMeasurement (final Measurement toAnonymize) {
 		if (toAnonymize.getAgentInfo() != null) {
 			toAnonymize.getAgentInfo().setUuid(null);
 		}
