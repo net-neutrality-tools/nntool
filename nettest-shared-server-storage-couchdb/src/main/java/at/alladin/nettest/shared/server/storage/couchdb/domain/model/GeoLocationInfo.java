@@ -25,6 +25,15 @@ public class GeoLocationInfo {
 	@SerializedName("geo_locations")
 	@JsonProperty("geo_locations")
 	private List<GeoLocation> geoLocations;
+
+	/**
+	 * The distance moved in metres, calculated from the geoLocations.
+	 */
+	@JsonPropertyDescription("The distance moved in metres, calculated from the geoLocations.")
+	@Expose
+	@SerializedName("distance_moved_metres")
+	@JsonProperty("distance_moved_metres")
+	private Integer distanceMovedMetres;
 	
 	public List<GeoLocation> getGeoLocations() {
 		return geoLocations;
@@ -32,5 +41,13 @@ public class GeoLocationInfo {
 	
 	public void setGeoLocations(List<GeoLocation> geoLocations) {
 		this.geoLocations = geoLocations;
+	}
+
+	public Integer getDistanceMovedMetres() {
+		return distanceMovedMetres;
+	}
+
+	public void setDistanceMovedMetres(Integer distanceMovedMetres) {
+		this.distanceMovedMetres = distanceMovedMetres;
 	}
 }

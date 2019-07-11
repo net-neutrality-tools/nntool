@@ -15,6 +15,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.Measurem
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.QoSMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
@@ -29,7 +30,9 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurem
  */
 @Mapper(componentModel = "spring")
 public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
-	
+
+	public static final double EARTH_MEAN_RADIUS = 6373000;
+
 	public static final String QOS_TEST_UID_KEY = "qos_test_uid";
 	public static final String QOS_TEST_TYPE_KEY = "test_type";
 
@@ -119,6 +122,7 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		@Mapping(source = "timeBasedResult.durationNs", target = "measurementTime.durationNs"),
 		
 		@Mapping(source = "timeBasedResult.geoLocations", target = "geoLocationInfo.geoLocations"),
+		@Mapping(expression="java(parseDistanceMoved(timeBasedResultDto.getGeoLocations()))", target="geoLocationInfo.distanceMovedMetres"),
 //		//@Mapping(source = "timeBasedResult.cpuUsage", target = "deviceInfo.osInfo.cpuUsage"),
 //		//@Mapping(source = "timeBasedResult.memUsage", target = "deviceInfo.osInfo.memUsage"),
 //		//@Mapping(source = "timeBasedResult.networkPointsInTime", target = "networkPointsInTime"),
@@ -213,4 +217,40 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		return ret;
 	}
 	
+	default Integer parseDistanceMoved(final List<GeoLocationDto> geoLocationList) {
+		if (geoLocationList == null || geoLocationList.size() == 0) {
+			return null;
+		}
+		GeoLocationDto previous = null;
+
+		Integer sum = null;
+
+		for(GeoLocationDto g : geoLocationList) {
+			if (previous == null) {
+				if (g.getLatitude() != null && g.getLongitude() != null) {
+					previous = g;
+				}
+				continue;
+			}
+			if (g.getLatitude() != null && g.getLongitude() != null) {
+				//used Haversine formula from: https://www.movable-type.co.uk/scripts/latlong.html
+				double lat = Math.toRadians(g.getLatitude() - previous.getLatitude()) / 2;
+				double lon = Math.toRadians(g.getLongitude() - previous.getLongitude()) / 2;
+				double cosLatOne = Math.cos(Math.toRadians(previous.getLatitude()));
+				double cosLatTwo = Math.cos(Math.toRadians(g.getLatitude()));
+
+				double a = Math.pow(Math.sin(lat), 2) + cosLatOne * cosLatTwo * Math.pow(Math.sin(lon), 2);
+				double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+				double distance = c * EARTH_MEAN_RADIUS;
+				if (sum == null) {
+					sum = 0;
+				}
+				sum += (int) distance;
+
+				previous = g;
+			}
+		}
+		return sum;
+	}
+
 }
