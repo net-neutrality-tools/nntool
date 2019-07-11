@@ -33,7 +33,7 @@ class TcpStreamUtil: NSObject {
     private let config: TcpStreamUtilConfiguration
 
     private var result: String?
-    private var status: AbstractTaskResult.Status = .unknown
+    private var status: QoSTaskStatus = .unknown
 
     var controlFunc: (() -> (Bool))?
 
@@ -42,7 +42,7 @@ class TcpStreamUtil: NSObject {
     }
 
     ///
-    public func runStream() -> (AbstractTaskResult.Status, String?) {
+    public func runStream() -> (QoSTaskStatus, String?) {
         let delegateQueue = DispatchQueue(label: "at.alladin.nettest.qos.tcpstream.delegate")
         let socket = GCDAsyncSocket(delegate: self, delegateQueue: delegateQueue)
 
@@ -82,7 +82,7 @@ class TcpStreamUtil: NSObject {
     ///
     private func evaluateControlFunc() throws {
         if let c = controlFunc, !c() {
-            throw TaskExecutorError.controlConnectionError
+            throw TaskError.controlConnectionError
         }
     }
 }

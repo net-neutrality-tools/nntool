@@ -16,6 +16,8 @@
  ******************************************************************************/
 
 import Foundation
+import CodableJSON
+import nntool_shared_swift
 
 ///
 public class MeasurementRunner {
@@ -25,7 +27,13 @@ public class MeasurementRunner {
     private let programs: [MeasurementTypeDto: ProgramConfiguration]
     private let programOrder: [MeasurementTypeDto]
 
+    private var currentProgram: ProgramProtocol?
+
+    private var isCanceled = false
+
     public var delegate: MeasurementRunnerDelegate?
+
+    ////
 
     init(controlService: ControlService, agentUuid: String, programOrder: [MeasurementTypeDto], programs: [MeasurementTypeDto: ProgramConfiguration]) {
         self.controlService = controlService
@@ -43,6 +51,34 @@ public class MeasurementRunner {
 
         ////
 
+        let capabilities = getCapabilities()
+
+        controlDto.capabilities = LmapCapabilityDto()
+        controlDto.capabilities?.tasks = capabilities
+
+        delegate?.measurementWillStartRequestingControlModel(self)
+        // TODO: delegate queue
+
+        controlService.initiateMeasurement(controlDto: controlDto, onSuccess: { responseControlDto in
+            self.delegate?.measurementDidReceiveControlModel(self)
+
+            DispatchQueue.global(qos: .unspecified).async {
+                self.runMeasurement(controlDto: responseControlDto)
+            }
+        }, onFailure: { err in
+            logger.error("err: \(err)")
+            self.delegate?.measurementDidFail(self)
+        })
+    }
+
+    public func stopMeasurement() {
+        isCanceled = true
+        currentProgram?.cancel()
+    }
+
+    ////
+
+    private func getCapabilities() -> [LmapCapabilityTaskDto] {
         let capabilities = programOrder.map { name -> LmapCapabilityTaskDto in
             let config = programs[name]
 
@@ -57,29 +93,8 @@ public class MeasurementRunner {
             return task
         }
 
-        controlDto.capabilities = LmapCapabilityDto()
-        controlDto.capabilities?.tasks = capabilities
-
-        delegate?.measurementWillStartRequestingControlModel(self)
-        // TODO: delegate queue
-
-        controlService.initiateMeasurement(controlDto: controlDto, onSuccess: { responseControlDto in
-            self.delegate?.measurementDidReceiveControlModel(self)
-
-            DispatchQueue.global(qos: .unspecified).async {
-                self.runMeasurement(controlDto: responseControlDto)
-            }
-        }) { err in
-            print("err: \(err)")
-            self.delegate?.measurementDidFail(self)
-        }
+        return capabilities
     }
-
-    public func stopMeasurement() {
-
-    }
-
-    ////
 
     private func runMeasurement(controlDto: LmapControlDto) {
         delegate?.measurementDidStart(self)
@@ -91,53 +106,147 @@ public class MeasurementRunner {
 
         // task order: schedule -> action
 
-        if let tasks = controlDto.tasks {
-            if tasks.count == 0 {
-                // TODO: fail measurement, no tasks provided
-                fail()
-                return
-            }
-
-            for task in tasks {
-                print("run task \(task.name), \(task.options)")
-
-                //task.name
-                //task.options
-
-                let taskType = MeasurementTypeDto(rawValue: task.name!)! // TODO: !, !
-
-                guard let programConfiguration = programs[taskType] else {
-                    // TODO: should we fail if we don't have the requested program?
-                    print("---- NO PROGRAM FOR TASK TYPE \(taskType) ----")
-                    return
-                }
-
-                guard let programInstance = try? programConfiguration.newInstance(task) else {
-                    return
-                }
-
-                delegate?.measurementRunner(self, willStartProgramWithName: task.name!, implementation: programInstance) // TODO: !
-
-                do {
-                    // TODO: how to cancel measurement?
-                    let result = try programInstance.run()
-                    print(":: program \(task.name!) returned result:")
-                    print(result)
-                    print(":: -------")
-                } catch {
-                    // TODO
-                }
-
-                delegate?.measurementRunner(self, didFinishProgramWithName: task.name!, implementation: programInstance) // !
-            }
-
-            print("-- all finished")
-
-            finish()
+        guard let tasks = controlDto.tasks, tasks.count > 0 else {
+            fail()
             return
         }
 
-        fail()
+        let startTime = Date()
+        let startTimeNs = TimeHelper.currentTimeNs()
+
+        let informationCollector = SystemInformationCollector.defaultCollector()
+        informationCollector.start(startNs: startTimeNs)
+
+        var taskResultDict = [MeasurementTypeDto: SubMeasurementResult]()
+
+        for task in tasks {
+            if isCanceled {
+                logger.info("Measurement runner is cancelled.")
+
+                informationCollector.stop()
+                finish() // TODO: stop? fail?
+                return
+            }
+
+            guard let taskName = task.name else {
+                logger.info("Skipping task because name is not set.")
+                continue
+            }
+
+            logger.info("Running task \(taskName) with options \(task.options).")
+
+            guard let taskType = MeasurementTypeDto(rawValue: taskName) else {
+                continue
+            }
+
+            guard let programConfiguration = programs[taskType] else {
+                // TODO: should we fail if we don't have the requested program?
+                logger.debug("---- NO PROGRAM FOR TASK TYPE \(taskType) ----")
+                continue
+            }
+
+            guard let programInstance = try? programConfiguration.newInstance(task) else {
+                continue
+            }
+
+            currentProgram = programInstance
+
+            delegate?.measurementRunner(self, willStartProgramWithName: taskName, implementation: programInstance)
+
+            do {
+                // TODO: how to cancel measurement?
+                let result = try programInstance.run()
+                //logger.debug(":: program \(taskName) returned result:")
+                //logger.debug(result)
+                //logger.debug(":: -------")
+
+                taskResultDict[taskType] = result
+            } catch {
+                // TODO: fail whole measurement or just submeasurement?
+            }
+
+            delegate?.measurementRunner(self, didFinishProgramWithName: taskName, implementation: programInstance)
+
+            currentProgram = nil
+        }
+
+        informationCollector.stop()
+
+        logger.info("-- all finished")
+
+        submitMeasurementResult(tasks: tasks, taskResultDict: taskResultDict, startTime: startTime, startTimeNs: startTimeNs, timeBasedResult: informationCollector.getResult())
+    }
+
+    private func submitMeasurementResult(tasks: [LmapTaskDto], taskResultDict: [MeasurementTypeDto: SubMeasurementResult], startTime: Date, startTimeNs: UInt64, timeBasedResult: TimeBasedResultDto) {
+        let endTime = Date()
+        let endTimeNs = TimeHelper.currentTimeNs()
+
+        // TODO: measurement finished vs results submitted -> add additional state
+
+        // send_results
+
+        let reportModel = LmapReportDto()
+
+        reportModel.agentId = agentUuid
+        //reportModel.groupId = "" // TODO
+        //reportModel.measurementPoint = "" // TODO
+        reportModel.date = Date()
+
+        timeBasedResult.startTime = startTime
+        timeBasedResult.endTime = endTime
+        timeBasedResult.durationNs = endTimeNs - startTimeNs
+
+        reportModel.timeBasedResult = timeBasedResult
+
+        reportModel.additionalRequestInfo = ApiRequestHelper.buildApiRequestInfo(
+            agentUuid: agentUuid,
+            geoLocation: timeBasedResult.geoLocations?.first
+        )
+
+        ////
+
+        logger.debug(taskResultDict)
+
+        reportModel.results = []
+
+        for task in tasks {
+            guard let taskName = task.name, let taskType = MeasurementTypeDto(rawValue: taskName) else {
+                continue
+            }
+
+            let taskResult = LmapResultDto()
+
+            taskResult.task = taskName
+
+            if let r = taskResultDict[taskType] {
+                taskResult.results = [ r ]
+            }
+
+            reportModel.results?.append(taskResult)
+        }
+
+        ////
+
+        guard let collectorUrl = extractFirstValidCollectorUrlFromTaskOptions(tasks) else {
+            logger.error("No collector URL provieded, aborting measurement.")
+            self.fail()
+            return
+        }
+
+        logger.info("Found collector URL: \(collectorUrl)")
+
+        DispatchQueue.main.sync {
+            let collectorService = CollectorService(baseURL: collectorUrl)
+
+            collectorService.storeMeasurement(reportDto: reportModel, onSuccess: { _ in
+                self.finish()
+            }, onFailure: { error in
+                print(error)
+                self.fail() // TODO: error
+            })
+        }
+
+        // /send_results
     }
 
     private func finish() {
@@ -152,5 +261,26 @@ public class MeasurementRunner {
 
     private func stop() {
         delegate?.measurementDidStop(self)
+    }
+}
+
+extension MeasurementRunner {
+
+    func extractFirstValidCollectorUrlFromTaskOptions(_ tasks: [LmapTaskDto]) -> String? {
+        for task in tasks {
+            guard let url = task.getOptionByName("result_collector_base_url") else {
+                continue
+            }
+
+            // check if url is valid
+            guard URL(string: url) != nil else {
+                continue
+            }
+
+            // return first valid url
+            return url
+        }
+
+        return nil
     }
 }

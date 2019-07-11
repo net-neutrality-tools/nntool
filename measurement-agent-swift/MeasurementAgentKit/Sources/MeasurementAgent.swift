@@ -114,6 +114,24 @@ public class MeasurementAgent {
         return MeasurementRunner(controlService: controlService, agentUuid: agentUuid, programOrder: programOrder, programs: programs)
     }
 
+    public func newIPConnectivityInfo() -> IPConnectivityInfo {
+        var controlServiceV4: ControlService?
+        var controlServiceV6: ControlService?
+
+        if Thread.isMainThread {
+            controlServiceV4 = ControlService(baseURL: "http://127.0.0.1:18080/api/v1")
+            controlServiceV6 = ControlService(baseURL: "http://[::1]:18080/api/v1")
+        } else {
+            DispatchQueue.main.sync {
+                controlServiceV4 = ControlService(baseURL: "http://127.0.0.1:18080/api/v1")
+                controlServiceV6 = ControlService(baseURL: "http://[::1]:18080/api/v1")
+            }
+        }
+
+        // TODO: from settings request
+        return IPConnectivityInfo(controlServiceV4: controlServiceV4!, controlServiceV6: controlServiceV6!)
+    }
+
     var settings = Settings()
 
     class Settings {

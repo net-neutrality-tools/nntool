@@ -22,10 +22,7 @@ import UIKit
 class CustomNavigationBarViewController: UIViewController {
 
     ///
-    private var savedLeftBarItem: UIBarButtonItem?
-
-    ///
-    private var savedRightBarItem: UIBarButtonItem?
+    private var savedRightBarButtonItems: [UIBarButtonItem]?
 
     /*var tabBarEnabled: Bool = true {
         didSet(enabled) {
@@ -37,6 +34,11 @@ class CustomNavigationBarViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // view controllers in tabBar should not be customizable
+        tabBarController?.customizableViewControllers = []
+
+        navigationItem.applyIconFontAttributes()
+
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
 
@@ -45,11 +47,9 @@ class CustomNavigationBarViewController: UIViewController {
 
     ///
     func hideNavigationItems() {
-        savedLeftBarItem = navigationItem.leftBarButtonItem
-        savedRightBarItem = navigationItem.rightBarButtonItem
+        savedRightBarButtonItems = navigationItem.rightBarButtonItems
 
-        navigationItem.setLeftBarButton(nil, animated: true)
-        navigationItem.setRightBarButton(nil, animated: true)
+        navigationItem.setRightBarButtonItems(nil, animated: true)
         navigationItem.setHidesBackButton(true, animated: false)
 
         tabBarController?.tabBar.isUserInteractionEnabled = false
@@ -58,8 +58,7 @@ class CustomNavigationBarViewController: UIViewController {
 
     ///
     func showNavigationItems() {
-        navigationItem.setLeftBarButton(savedLeftBarItem, animated: true)
-        navigationItem.setRightBarButton(savedRightBarItem, animated: true)
+        navigationItem.setRightBarButtonItems(savedRightBarButtonItems, animated: true)
         navigationItem.setHidesBackButton(false, animated: false)
 
         tabBarController?.tabBar.isUserInteractionEnabled = true

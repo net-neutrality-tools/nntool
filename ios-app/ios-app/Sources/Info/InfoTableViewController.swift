@@ -25,7 +25,6 @@ class InfoTableViewController: UITableViewController {
         super.viewDidLoad()
 
         navigationItem.applyIconFontAttributes()
-        //navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 
     ///

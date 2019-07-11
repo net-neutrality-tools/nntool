@@ -22,13 +22,8 @@
     "dependencies": {
         "Alamofire": ["~> 4.8.2"],
         "CocoaAsyncSocket": ["~> 7.6.3"],
-        "XCGLogger": ["~> 7.0.0"]
+        "nntool-shared-swift": ["~> 0.0.1"]
     },
-    "frameworks": [
-       "Foundation",
-       "CoreLocation",
-       "SystemConfiguration"
-    ],
     "libraries": [
         "resolv"
     ],

@@ -28,4 +28,9 @@ enum TaskType: String, Codable {
     ///
     case echoProtocol = "echo_protocol"
 
+    ///
+    case dns = "dns"
+
+    ///
+    case httpProxy = "http_proxy"
 }

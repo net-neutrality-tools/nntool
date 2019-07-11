@@ -1,4 +1,5 @@
 import Foundation
+import nntool_shared_swift
 
 class QoSBidirectionalIpTask: QoSControlConnectionTask {
 
@@ -32,11 +33,11 @@ class QoSBidirectionalIpTask: QoSControlConnectionTask {
     override init?(config: QoSTaskConfiguration) {
         logger.debug(config)
 
-        if let portOutString = config[CodingKeys3.portOut.rawValue] as? String, let portOut = UInt16(portOutString) {
+        if let portOut = config[CodingKeys3.portOut.rawValue]?.uint16Value {
             self.portOut = portOut
         }
 
-        if let portInString = config[CodingKeys3.portIn.rawValue] as? String, let portIn = UInt16(portInString) {
+        if let portIn = config[CodingKeys3.portIn.rawValue]?.uint16Value {
             self.portIn = portIn
         }
 
