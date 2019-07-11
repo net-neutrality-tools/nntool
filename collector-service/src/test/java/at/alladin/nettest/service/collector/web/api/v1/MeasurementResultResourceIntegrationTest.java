@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import at.alladin.nettest.service.collector.config.CollectorServiceProperties;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
@@ -47,10 +48,14 @@ public class MeasurementResultResourceIntegrationTest {
 	@MockBean
 	private StorageService storageService;
 	
+	@MockBean
+	private CollectorServiceProperties collectorServiceProperties;
+	
 	@Before
 	public void setup() {
 		final MeasurementResultResource controller = new MeasurementResultResource();
 		ReflectionTestUtils.setField(controller, "storageService", storageService);
+		ReflectionTestUtils.setField(controller, "collectorServiceProperties", collectorServiceProperties);
 		
 		this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 	}
@@ -61,7 +66,8 @@ public class MeasurementResultResourceIntegrationTest {
 		resultResponse.setUuid(UUID.randomUUID().toString());
 		resultResponse.setOpenDataUuid(UUID.randomUUID().toString());
 		
-		when(storageService.save(any(LmapReportDto.class))).thenReturn(resultResponse);
+		when(storageService.save(any(LmapReportDto.class), any(String.class))).thenReturn(resultResponse);
+		when(collectorServiceProperties.getSystemUuid()).thenReturn(UUID.randomUUID().toString());
 		
 		mockMvc
 			.perform(
@@ -74,7 +80,7 @@ public class MeasurementResultResourceIntegrationTest {
 			.andExpect(jsonPath("data.uuid", is(resultResponse.getUuid())))
 			.andExpect(jsonPath("data.open_data_uuid", is(resultResponse.getOpenDataUuid())));
 		
-		verify(storageService, times(1)).save(any(LmapReportDto.class));
+		verify(storageService, times(1)).save(any(LmapReportDto.class), any(String.class));
 	}
 	
 	// TODO: test if storageService throws exception

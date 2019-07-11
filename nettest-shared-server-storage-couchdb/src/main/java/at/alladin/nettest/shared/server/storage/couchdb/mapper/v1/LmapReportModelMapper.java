@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.temporal.ChronoUnit;
 
+import org.joda.time.LocalDateTime;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -15,6 +17,9 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.Measurem
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.QoSMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.TrafficDto;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ConnectionInfo;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
@@ -22,19 +27,21 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurem
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurementTime;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Traffic;
 
 /**
  * 
  * @author alladin-IT GmbH (bp@alladin.at)
  *
  */
-@Mapper(componentModel = "spring")
-public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
+@Mapper(componentModel = "spring", imports = ChronoUnit.class)
+public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttInfoDtoMapper {
+	
+	double EARTH_MEAN_RADIUS = 6373000;
 
-	public static final double EARTH_MEAN_RADIUS = 6373000;
-
-	public static final String QOS_TEST_UID_KEY = "qos_test_uid";
-	public static final String QOS_TEST_TYPE_KEY = "test_type";
+	String QOS_TEST_UID_KEY = "qos_test_uid";
+	String QOS_TEST_TYPE_KEY = "test_type";
 
 	// Explicit map method not necessary if all fields have the same name
 //	@Mappings({
@@ -119,7 +126,10 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		
 		@Mapping(source = "timeBasedResult.startTime", 	target = "measurementTime.startTime"),
 		@Mapping(source = "timeBasedResult.endTime", 	target = "measurementTime.endTime"),
-		@Mapping(source = "timeBasedResult.durationNs", target = "measurementTime.durationNs"),
+		@Mapping(target = "measurementTime.durationNs", expression="java(measurementTime == null ?"
+				+ " null : measurementTime.getStartTime() == null ?"
+				+ " null : measurementTime.getEndTime() == null ?"
+				+ " null : ChronoUnit.NANOS.between(measurementTime.getStartTime(), measurementTime.getEndTime()))"),
 		
 		@Mapping(source = "timeBasedResult.geoLocations", target = "geoLocationInfo.geoLocations"),
 		@Mapping(expression="java(parseDistanceMoved(timeBasedResultDto.getGeoLocations()))", target="geoLocationInfo.distanceMovedMetres"),
@@ -135,23 +145,58 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 	Measurement map(LmapReportDto lmapReportDto);
 	
 	@Mappings ({
-		@Mapping(source="relativeStartTimeNs", target="measurementTime.relativeStartTimeNs"),
-		@Mapping(source="relativeEndTimeNs", target="measurementTime.relativeEndTimeNs"),
-		@Mapping(source="downloadRawData", target="speedRawData.download"),
-		@Mapping(source="uploadRawData", target="speedRawData.upload"),
-		@Mapping(source="status", target="statusInfo"),
-		@Mapping(expression="java(parseAverageDownload(subMeasurementResult))", target="throughputAvgDownloadBps"),
-		@Mapping(expression="java(parseAverageUpload(subMeasurementResult))", target="throughputAvgUploadBps")
+		@Mapping(expression="java(mapSubMeasurementTime(speedMeasurementResult, startTimeNs))", target="measurementTime"),
+		@Mapping(source="speedMeasurementResult.downloadRawData", target="speedRawData.download"),
+		@Mapping(source="speedMeasurementResult.uploadRawData", target="speedRawData.upload"),
+		@Mapping(source="speedMeasurementResult.connectionInfo", target="connectionInfo"),
+		@Mapping(source="speedMeasurementResult.status", target="statusInfo.status"),
+		@Mapping(source="speedMeasurementResult.reason", target="statusInfo.reason"),
+		@Mapping(expression="java(parseAverageDownload(speedMeasurementResult))", target="throughputAvgDownloadBps"),
+		@Mapping(expression="java(parseAverageUpload(speedMeasurementResult))", target="throughputAvgUploadBps"),
+		@Mapping(expression="java(speedMeasurement.getThroughputAvgDownloadBps() == null ? "
+				+ "null : Math.log10(speedMeasurement.getThroughputAvgDownloadBps()))", target="throughputAvgDownloadLog"),
+		@Mapping(expression="java(speedMeasurement.getThroughputAvgUploadBps() == null ? "
+				+ "null : Math.log10(speedMeasurement.getThroughputAvgUploadBps()))", target="throughputAvgUploadLog"),
 	})
-	SpeedMeasurement map (SpeedMeasurementResult subMeasurementResult);
+	SpeedMeasurement map (SpeedMeasurementResult speedMeasurementResult, LocalDateTime startTimeNs);
+
+	@Mappings ({
+		@Mapping(expression="java(mapSubMeasurementTime(qoSMeasurementResult, startTimeNs))", target="measurementTime"),
+		@Mapping(source="qoSMeasurementResult.status", target="statusInfo.status"),
+		@Mapping(source="qoSMeasurementResult.reason", target="statusInfo.reason"),
+		@Mapping(source="qoSMeasurementResult.status", target="statusInfo"),
+		@Mapping(expression="java(parseQoSResult(qoSMeasurementResult))", target="results")
+	})
+	QoSMeasurement map (QoSMeasurementResult qoSMeasurementResult, LocalDateTime startTimeNs);
 	
 	@Mappings ({
-		@Mapping(source="relativeStartTimeNs", target="measurementTime.relativeStartTimeNs"),
-		@Mapping(source="relativeEndTimeNs", target="measurementTime.relativeEndTimeNs"),
-		@Mapping(source="status", target="statusInfo"),
-		@Mapping(expression="java(parseQoSResult(subMeasurementResult))", target="results")
+		@Mapping(source="agentInterfaceTotalTraffic", target="clientInterfaceTotalTraffic"),
+		@Mapping(source="agentInterfaceDownloadMeasurementTraffic", target="clientInterfaceDownloadMeasurementTraffic"),
+		@Mapping(source="agentInterfaceUploadMeasurementTraffic", target="clientInterfaceUploadMeasurementTraffic"),
+		@Mapping(source="requestedNumStreamsDownload", target="numStreamsInfo.requestedNumStreamsDownload"),
+		@Mapping(source="requestedNumStreamsUpload", target="numStreamsInfo.requestedNumStreamsUpload"),
+		@Mapping(source="actualNumStreamsDownload", target="numStreamsInfo.actualNumStreamsDownload"),
+		@Mapping(source="actualNumStreamsUpload", target="numStreamsInfo.actualNumStreamsUpload"),
 	})
-	QoSMeasurement map (QoSMeasurementResult subMeasurementResult);
+	ConnectionInfo map (ConnectionInfoDto connectionInfoDto);
+
+	Traffic map (TrafficDto trafficDto);
+
+	@Mappings ({
+		@Mapping(source="subMeasurementResult.relativeStartTimeNs", target="relativeStartTimeNs"),
+		@Mapping(source="subMeasurementResult.relativeEndTimeNs", target="relativeEndTimeNs"),
+		@Mapping(target = "durationNs", expression="java(subMeasurementResult == null ?"
+				+ " null : subMeasurementResult.getRelativeStartTimeNs() == null ?"
+				+ " null : subMeasurementResult.getRelativeEndTimeNs() == null ?"
+				+ " null : subMeasurementResult.getRelativeEndTimeNs() - subMeasurementResult.getRelativeStartTimeNs())"),
+		@Mapping(expression="java(startTimeNs == null || subMeasurementResult == null ? "
+				+ "null : subMeasurementResult.getRelativeStartTimeNs() == null ? "
+				+ "null : map(startTimeNs.plusMillis((int) (subMeasurementResult.getRelativeStartTimeNs() / 1e6))))", target="startTime"),
+		@Mapping(expression="java(startTimeNs == null || subMeasurementResult == null ? "
+				+ "null : subMeasurementResult.getRelativeEndTimeNs() == null ? "
+				+ "null : map(startTimeNs.plusMillis((int) (subMeasurementResult.getRelativeEndTimeNs() / 1e6))))", target="endTime")
+	})
+	SubMeasurementTime mapSubMeasurementTime(SubMeasurementResult subMeasurementResult, LocalDateTime startTimeNs);
 	
 	default Long parseAverageDownload (final SpeedMeasurementResult result) {
 		if (result.getBytesDownload() == null || result.getDurationDownloadNs() == null) {
@@ -175,9 +220,13 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 		for (LmapResultDto<? extends SubMeasurementResult> resList : lmapReportDto.getResults()) {
 			for (SubMeasurementResult res : resList.getResults()) {
 				if (res instanceof SpeedMeasurementResult) {
-					ret.put(MeasurementTypeDto.SPEED, this.map((SpeedMeasurementResult) res));
+					ret.put(MeasurementTypeDto.SPEED, this.map((SpeedMeasurementResult) res,
+							lmapReportDto.getTimeBasedResult() == null ?
+							null : lmapReportDto.getTimeBasedResult().getStartTime()));
 				} else if (res instanceof QoSMeasurementResult) {
-					ret.put(MeasurementTypeDto.QOS, this.map((QoSMeasurementResult) res));
+					ret.put(MeasurementTypeDto.QOS, this.map((QoSMeasurementResult) res,
+							lmapReportDto.getTimeBasedResult() == null ?
+							null : lmapReportDto.getTimeBasedResult().getStartTime()));
 				}
 			}
 		}
@@ -207,7 +256,7 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper {
 				try {
 					res.setObjectiveId(Long.parseLong(val.toString()));
 				} catch (IllegalArgumentException ex) {
-					
+					ex.printStackTrace();
 				}
 			}
 			res.setResults(map);

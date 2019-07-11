@@ -30,12 +30,30 @@ public class DetailMeasurementResponse extends BasicResponse {
 	@JsonProperty(required = true, value = "groups")
 	private List<DetailMeasurementGroup> groups;
 	
+	/**
+	 * The share text for this specific measurement.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "The share text for this specific measurement.")
+	@JsonPropertyDescription("The share text for this specific measurement.")
+	@Expose
+	@SerializedName("share_measurement_text")
+	@JsonProperty(required = true, value = "share_measurement_text")
+	private String shareMeasurementText;
+	
 	public List<DetailMeasurementGroup> getGroups() {
 		return groups;
 	}
 	
 	public void setGroups(List<DetailMeasurementGroup> groups) {
 		this.groups = groups;
+	}
+	
+	public String getShareMeasurementText() {
+		return shareMeasurementText;
+	}
+
+	public void setShareMeasurementText(String shareMeasurementText) {
+		this.shareMeasurementText = shareMeasurementText;
 	}
 
 	@Override

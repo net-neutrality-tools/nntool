@@ -143,7 +143,7 @@ int CTimer::run()
 			break;
 	}
 
-    if (::RUNNING) {
+    if (::RUNNING && !::hasError) {
 	    mCallback->callback("finish", "measurement completed", 0, "");
 	}
 	

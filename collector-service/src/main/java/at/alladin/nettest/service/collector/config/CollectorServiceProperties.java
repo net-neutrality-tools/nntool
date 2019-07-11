@@ -11,4 +11,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "collector", ignoreUnknownFields = true)
 public class CollectorServiceProperties {
 
+    private String systemUuid;
+
+    public String getSystemUuid() {
+        return systemUuid;
+    }
+
+    public void setSystemUuid(String systemUuid) {
+        this.systemUuid = systemUuid;
+    }
 }

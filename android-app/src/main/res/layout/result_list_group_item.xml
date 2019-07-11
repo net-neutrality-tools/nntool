@@ -1,0 +1,44 @@
+<RelativeLayout android:layout_height="wrap_content"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
+    android:layout_width="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:background="@drawable/border_bottom"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+        <TextView
+            android:layout_margin="1dp"
+            android:id="@+id/result_list_group_item_title"
+            style="@style/Nettest.Result.Item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="title"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/result_list_group_item_title"
+            android:gravity="end">
+            <TextView
+                android:layout_margin="1dp"
+                android:id="@+id/result_list_group_item_value"
+                style="@style/Nettest.Result.Item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="8e475631-d334-4115-8414-b3286e417e2a"/>
+
+            <TextView
+                android:layout_margin="1dp"
+                android:id="@+id/result_list_group_item_unit"
+                style="@style/Nettest.Result.Item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text=""/>
+        </LinearLayout>
+
+</RelativeLayout>

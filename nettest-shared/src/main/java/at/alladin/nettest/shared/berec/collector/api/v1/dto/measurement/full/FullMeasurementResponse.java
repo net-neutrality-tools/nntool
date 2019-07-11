@@ -47,16 +47,15 @@ public class FullMeasurementResponse extends BasicResponse {
 	@SerializedName("open_data_uuid")
 	@JsonProperty(required = true, value = "open_data_uuid")
 	private String openDataUuid;
-	
+
 	/**
-	 * Measurement source. Can be either own system or imported from open-data.
+	 * Measurement system uuid. Can be either own system or imported from open-data.
 	 */
-	@io.swagger.annotations.ApiModelProperty("Measurement source. Can be either own system or imported from open-data.")
-	@JsonPropertyDescription("Measurement source. Can be either own system or imported from open-data.")
+	@JsonPropertyDescription("Measurement system uuid. Can be either own system or imported from open-data.")
 	@Expose
-	@SerializedName("source")
-	@JsonProperty("source")
-	private String source;
+	@SerializedName("system_uuid")
+	@JsonProperty("system_uuid")
+	private String systemUuid;
 	
 	/**
 	 * Contains the result of a Speed and/or QoS measurement.
@@ -164,12 +163,12 @@ public class FullMeasurementResponse extends BasicResponse {
 		this.openDataUuid = openDataUuid;
 	}
 
-	public String getSource() {
-		return source;
+	public String getSystemUuid() {
+		return systemUuid;
 	}
 
-	public void setSource(String source) {
-		this.source = source;
+	public void setSystemUuid(String systemUuid) {
+		this.systemUuid = systemUuid;
 	}
 
 	public Map<MeasurementTypeDto, FullSubMeasurement> getMeasurements() {

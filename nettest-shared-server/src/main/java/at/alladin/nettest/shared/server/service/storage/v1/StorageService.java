@@ -28,6 +28,8 @@ import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServ
  */
 public interface StorageService {
 
+	MeasurementResultResponse save(LmapReportDto lmapReportDto, String systemUuid) throws StorageServiceException;
+
 	MeasurementResultResponse save(LmapReportDto lmapReportDto) throws StorageServiceException; // TODO: custom exception
 	
 	RegistrationResponse registerMeasurementAgent(ApiRequest<RegistrationRequest> registrationRequest) throws StorageServiceException; // TODO: custom exception

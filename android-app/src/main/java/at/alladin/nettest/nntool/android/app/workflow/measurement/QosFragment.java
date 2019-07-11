@@ -73,6 +73,9 @@ public class QosFragment extends Fragment implements ServiceConnection {
         final View view = inflater.inflate(R.layout.fragment_qos, container, false);
         qosProgressView = view.findViewById(R.id.qos_progress_view);
         topProgressBarView = view.findViewById(R.id.top_progress_bar_view);
+        if (topProgressBarView != null) {
+            topProgressBarView.setLeftText((int)(0.8 * 100) + "%");
+        }
         return view;
     }
 
