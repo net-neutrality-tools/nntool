@@ -127,11 +127,11 @@ public class RequestUtil {
         if (subMeasurementResultList != null && subMeasurementResultList.size() > 0) {
             for (SubMeasurementResult subMeasurementResult : subMeasurementResultList) {
                 if (subMeasurementResult != null) {
-                    LmapResultDto<?> lmapResult = null;
+                    LmapResultDto lmapResult = null;
                     if (subMeasurementResult instanceof SpeedMeasurementResult) {
-                        lmapResult = new LmapResultDto<SpeedMeasurementResult>();
+                        lmapResult = new LmapResultDto();
                     } else if (subMeasurementResult instanceof QoSMeasurementResult) {
-                        lmapResult = new LmapResultDto<QoSMeasurementResult>();
+                        lmapResult = new LmapResultDto();
                     }
 
                     if (lmapResult != null) {
