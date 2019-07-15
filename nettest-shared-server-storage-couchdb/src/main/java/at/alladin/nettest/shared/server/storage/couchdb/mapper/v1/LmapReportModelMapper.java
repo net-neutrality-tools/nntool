@@ -217,7 +217,7 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 	default Map<MeasurementTypeDto, SubMeasurement> parseMeasurements (LmapReportDto lmapReportDto) {
 		Map<MeasurementTypeDto, SubMeasurement> ret = new HashMap<>();
 		
-		for (LmapResultDto<? extends SubMeasurementResult> resList : lmapReportDto.getResults()) {
+		for (LmapResultDto resList : lmapReportDto.getResults()) {
 			for (SubMeasurementResult res : resList.getResults()) {
 				if (res instanceof SpeedMeasurementResult) {
 					ret.put(MeasurementTypeDto.SPEED, this.map((SpeedMeasurementResult) res,

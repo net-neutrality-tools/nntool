@@ -25,7 +25,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.S
 @io.swagger.annotations.ApiModel(description = "This module defines a data model for a single reporting result, which is a part of a Large-Scale Measurement Platform (LMAP).")
 @JsonClassDescription("This module defines a data model for a single reporting result, which is a part of a Large-Scale Measurement Platform (LMAP).")
 @JsonInclude(Include.NON_EMPTY)
-public class LmapResultDto<T extends SubMeasurementResult> {
+public class LmapResultDto {
 	
 	/**
 	 * The name of the Schedule that produced the result.
