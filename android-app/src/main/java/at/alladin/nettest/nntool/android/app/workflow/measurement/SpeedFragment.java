@@ -32,6 +32,7 @@ import at.alladin.nettest.nntool.android.app.view.AlladinTextView;
 import at.alladin.nettest.nntool.android.app.view.BottomMeasurementResultSummaryView;
 import at.alladin.nettest.nntool.android.app.view.CanvasArcDoubleGaugeWithLabels;
 import at.alladin.nettest.nntool.android.app.view.TopProgressBarView;
+import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
@@ -39,7 +40,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.M
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
  */
-public class SpeedFragment  extends Fragment implements ServiceConnection {
+public class SpeedFragment extends ActionBarFragment implements ServiceConnection {
 
     private final static String TAG = "SPEED_FRAGMENT";
 
@@ -226,4 +227,13 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
         }
     };
 
+    @Override
+    public Integer getTitleStringId() {
+        return R.string.app_name;
+    }
+
+    @Override
+    public boolean showHelpButton() {
+        return false;
+    }
 }

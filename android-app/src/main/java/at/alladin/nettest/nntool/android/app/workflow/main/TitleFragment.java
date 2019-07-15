@@ -33,13 +33,14 @@ import at.alladin.nettest.nntool.android.app.view.Ipv4v6View;
 import at.alladin.nettest.nntool.android.app.view.MeasurementServerSelectionView;
 import at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView;
 import at.alladin.nettest.nntool.android.app.view.InterfaceTrafficView;
+import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
  */
-public class TitleFragment extends Fragment {
+public class TitleFragment extends ActionBarFragment {
 
     private final static String TAG = TitleFragment.class.getSimpleName();
 
@@ -142,15 +143,10 @@ public class TitleFragment extends Fragment {
     public void onResume() {
         super.onResume();
         startInformationProvider();
-        //Log.i(TAG, "onResume");
-        //final Intent serviceIntent = new Intent(getContext(), InformationService.class);
-        //getContext().bindService(serviceIntent, this, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     public void onPause() {
-        //Log.i(TAG, "onPause");
-        //getContext().unbindService(this);
         stopInformationProvider();
         super.onPause();
     }
@@ -242,5 +238,15 @@ public class TitleFragment extends Fragment {
                 }
             }
         };
+    }
+
+    @Override
+    public Integer getTitleStringId() {
+        return R.string.app_name;
+    }
+
+    @Override
+    public Integer getHelpSectionStringId() {
+        return null;
     }
 }
