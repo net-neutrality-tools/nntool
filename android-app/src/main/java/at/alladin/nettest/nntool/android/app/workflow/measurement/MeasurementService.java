@@ -111,7 +111,7 @@ public class MeasurementService extends Service implements ServiceConnection {
         Log.d(TAG, "onCreate");
         final Intent serviceIntent = new Intent(this, InformationService.class);
         bindService(serviceIntent, this, Context.BIND_AUTO_CREATE);
-        informationCollector = new InformationCollector(new InformationProvider(getApplicationContext()));
+        informationCollector = new InformationCollector(InformationProvider.createMeasurementDefault(getApplicationContext()));
     }
 
     @Override

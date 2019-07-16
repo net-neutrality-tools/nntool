@@ -81,9 +81,9 @@ public class NetworkGatherer
         IntentFilter intentFilter;
         intentFilter = new IntentFilter();
         intentFilter.addAction(WifiManager.RSSI_CHANGED_ACTION);
-        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        intentFilter.addAction(WifiManager.NETWORK_IDS_CHANGED_ACTION);
-        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        //intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        //intentFilter.addAction(WifiManager.NETWORK_IDS_CHANGED_ACTION);
+        //intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         getInformationProvider().getContext().registerReceiver(networkStateBroadcastReceiver, intentFilter);
 
         int events = PhoneStateListener.LISTEN_SIGNAL_STRENGTHS;
@@ -258,6 +258,7 @@ public class NetworkGatherer
     private class NetworkStateBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(final Context context, final Intent intent) {
+            Log.d(TAG, "NetworkStateBroadcastReceiver onReceive");
             getNetwork();
         }
     }
@@ -265,6 +266,7 @@ public class NetworkGatherer
     public class TelephonyStateListener extends PhoneStateListener {
         @Override
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+            Log.d(TAG, "TelephonyStateListener onSignalStrengthsChanged");
             getNetwork();
         }
     }
@@ -272,6 +274,8 @@ public class NetworkGatherer
     @Override
     public void onSignalStrengthChange(SignalStrengthChangeEvent event) {
         Log.d(TAG, event != null ? event.toString() : "SignalStrengthChangeEvent == null");
-        getNetwork();
+        if (event != null && event.getCurrentSignalStrength() != null) {
+            getNetwork();
+        }
     }
 }
