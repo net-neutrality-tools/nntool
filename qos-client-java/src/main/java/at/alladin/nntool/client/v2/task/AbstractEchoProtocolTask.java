@@ -26,13 +26,13 @@ public abstract class AbstractEchoProtocolTask extends AbstractQoSTask {
 
     protected final static String RESULT_RTT_NS = "echo_protocol_result_rtt_ns";
 
-    protected final static String PARAM_TIMEOUT = "timeout";
+    public final static String PARAM_TIMEOUT = "timeout";
 
     //the port to test against
-    protected final static String PARAM_SERVER_PORT = "echo_protocol_objective_server_port";
+    public final static String PARAM_SERVER_PORT = "echo_protocol_objective_server_port";
 
     //the server to test against
-    protected final static String PARAM_SERVER_ADDRESS = "echo_protocol_objective_server_addr";
+    public final static String PARAM_SERVER_ADDRESS = "echo_protocol_objective_server_addr";
 
     protected final static long DEFAULT_TIMEOUT = 3000000000L;
 

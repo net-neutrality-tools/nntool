@@ -134,6 +134,7 @@ public class QualityOfServiceTestTest {
             httpProxyTask.getTestType();
             result = QoSTestResultEnum.HTTP_PROXY;
             httpProxyTask.getTestServerAddr();
+            minTimes = 0;
             result = "test_server_address";
             httpProxyTask.getTaskDesc();
             result = httpProxyTaskDesc;
@@ -141,6 +142,7 @@ public class QualityOfServiceTestTest {
             nonTransparentProxyTask.getTestType();
             result = QoSTestResultEnum.NON_TRANSPARENT_PROXY;
             nonTransparentProxyTask.getTestServerAddr();
+            minTimes = 0;
             result = "other_test_server_address";
             nonTransparentProxyTask.getTaskDesc();
             result = nonTransparentProxyTaskDesc;
@@ -152,6 +154,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = dnsTaskDesc;
             dnsTask.getTestServerAddr();
+            minTimes = 0;
             result = "test_server_address";
 
 
@@ -161,6 +164,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = tcpTaskDesc;
             tcpTask.getTestServerAddr();
+            minTimes = 0;
             result = "third_test_server_address";
 
             udpTask.getTestType();
@@ -169,6 +173,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = udpTaskDesc;
             udpTask.getTestServerAddr();
+            minTimes = 0;
             result = "test_server_address";
 
             voipTask.getTestType();
@@ -177,6 +182,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = voipTaskDesc;
             voipTask.getTestServerAddr();
+            minTimes = 0;
             result = "test_server_address";
 
             tracerouteTask.getTestType();
@@ -185,6 +191,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = tracerouteTaskDesc;
             tracerouteTask.getTestServerAddr();
+            minTimes = 0;
             result = "other_test_server_address";
 
             websiteTask.getTestType();
@@ -193,6 +200,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = websiteTaskDesc;
             websiteTask.getTestServerAddr();
+            minTimes = 0;
             result = "test_server_address";
 
             echoProtocolTcpTask.getTestType();
@@ -201,6 +209,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = echoTcpTaskDesc;
             echoProtocolTcpTask.getTestServerAddr();
+            minTimes = 0;
             result = "test_server_address";
 
             echoProtocolUdpTask.getTestType();
@@ -209,6 +218,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = echoUdpTaskDesc;
             echoProtocolUdpTask.getTestServerAddr();
+            minTimes = 0;
             result = "test_server_address";
 
             httpProxyTask.getTestType();
@@ -217,6 +227,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = httpProxyTaskDesc;
             httpProxyTask.getTestServerAddr();
+            minTimes = 0;
             result = "third_test_server_address";
 
             nonTransparentProxyTask.getTestType();
@@ -225,6 +236,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = nonTransparentProxyTaskDesc;
             nonTransparentProxyTask.getTestServerAddr();
+            minTimes = 0;
             result = "test_server_address";
         }};
 
@@ -246,7 +258,6 @@ public class QualityOfServiceTestTest {
         assertEquals("Unexpected qosTestMap size", 9, qosTest.getTestMap().size());
         assertEquals("The two Http proxy tests have not been registered correctly", 2, qosTest.getTestMap().get(QoSTestResultEnum.HTTP_PROXY).size());
         assertEquals("The two echo protocol tests have not been registered correctly", 2, qosTest.getTestMap().get(QoSTestResultEnum.ECHO_PROTOCOL).size());
-        assertEquals("Unexpected number of qos control connections opened for tests", 3, qosTest.controlConnectionMap.size());
     }
 
     @Test
@@ -256,8 +267,10 @@ public class QualityOfServiceTestTest {
             httpProxyTask.getTestType();
             result = QoSTestResultEnum.HTTP_PROXY;
             httpProxyTask.getTestServerAddr();
+            minTimes = 0;
             result = "test_server_address";
             httpProxyTask.getTaskDesc();
+            minTimes = 0;
             result = httpProxyTaskDesc;
 
         }};
@@ -272,7 +285,6 @@ public class QualityOfServiceTestTest {
 
         assertEquals("Unexpected qosTestMap size", 1, qosTest.getTestMap().size());
         assertEquals("The two Http proxy tests have not been registered correctly", 1, qosTest.getTestMap().get(QoSTestResultEnum.HTTP_PROXY).size());
-        assertEquals("Unexpected number of qos control connections opened for tests", 1, qosTest.controlConnectionMap.size());
     }
 
     @Test
@@ -283,7 +295,6 @@ public class QualityOfServiceTestTest {
         qosTest = new QualityOfServiceTest(clientHolder, testSettings);
 
         assertEquals("Unexpected qosTestMap size", 0, qosTest.getTestMap().size());
-        assertEquals("Unexpected number of qos control connections opened for tests", 0, qosTest.controlConnectionMap.size());
     }
 
     @Test
@@ -294,7 +305,6 @@ public class QualityOfServiceTestTest {
         qosTest = new QualityOfServiceTest(clientHolder, testSettings);
 
         assertEquals("Unexpected qosTestMap size", 0, qosTest.getTestMap().size());
-        assertEquals("Unexpected number of qos control connections opened for tests", 0, qosTest.controlConnectionMap.size());
     }
 
     @Test
@@ -304,7 +314,6 @@ public class QualityOfServiceTestTest {
         qosTest = new QualityOfServiceTest(clientHolder, testSettings);
 
         assertEquals("Unexpected qosTestMap size", 0, qosTest.getTestMap().size());
-        assertEquals("Unexpected number of qos control connections opened for tests", 0, qosTest.controlConnectionMap.size());
     }
 
     @Test
@@ -314,7 +323,6 @@ public class QualityOfServiceTestTest {
         qosTest = new QualityOfServiceTest(clientHolder, testSettings);
 
         assertEquals("Unexpected qosTestMap size", 0, qosTest.getTestMap().size());
-        assertEquals("Unexpected number of qos control connections opened for tests", 0, qosTest.controlConnectionMap.size());
     }
 
     @Test
@@ -329,6 +337,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = dnsTaskDesc;
             dnsTask.getTestServerAddr();
+            minTimes = 0;
             result = "test_server_address";
 
             tcpTask.getTestType();
@@ -337,6 +346,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = tcpTaskDesc;
             tcpTask.getTestServerAddr();
+            minTimes = 0;
             result = "other_test_server_address";
 
             trafficService.start();
@@ -426,7 +436,6 @@ public class QualityOfServiceTestTest {
 
         assertEquals("Unexpected qosTestMap size", 2, qosTest.getTestMap().size());
         assertEquals("The two Http proxy tests have not been registered correctly", 2, qosTest.getTestMap().get(QoSTestResultEnum.TCP).size());
-        assertEquals("Unexpected number of qos control connections opened for tests", 2, qosTest.controlConnectionMap.size());
 
         qosTest.removeQoSProgressListener(removedListener);
         final QoSResultCollector res = qosTest.call();
@@ -446,6 +455,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = dnsTaskDesc;
             dnsTask.getTestServerAddr();
+            minTimes = 0;
             result = "test_server_address";
 
             tcpTask.getTestType();
@@ -454,6 +464,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = tcpTaskDesc;
             tcpTask.getTestServerAddr();
+            minTimes = 0;
             result = "other_test_server_address";
             tcpTask.hasConnectionError();
             returns(
@@ -484,7 +495,6 @@ public class QualityOfServiceTestTest {
 
         assertEquals("Unexpected qosTestMap size", 2, qosTest.getTestMap().size());
         assertEquals("The two Http proxy tests have not been registered correctly", 2, qosTest.getTestMap().get(QoSTestResultEnum.TCP).size());
-        assertEquals("Unexpected number of qos control connections opened for tests", 2, qosTest.controlConnectionMap.size());
 
         final QoSResultCollector res = qosTest.call();
 
@@ -507,6 +517,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = dnsTaskDesc;
             dnsTask.getTestServerAddr();
+            minTimes = 0;
             result = "test_server_address";
 
             tcpTask.getTestType();
@@ -515,6 +526,7 @@ public class QualityOfServiceTestTest {
             minTimes = 0;
             result = tcpTaskDesc;
             tcpTask.getTestServerAddr();
+            minTimes = 0;
             result = "other_test_server_address";
             tcpTask.hasConnectionError();
             returns(
@@ -548,7 +560,6 @@ public class QualityOfServiceTestTest {
 
         assertEquals("Unexpected qosTestMap size", 2, qosTest.getTestMap().size());
         assertEquals("The two Http proxy tests have not been registered correctly", 2, qosTest.getTestMap().get(QoSTestResultEnum.TCP).size());
-        assertEquals("Unexpected number of qos control connections opened for tests", 2, qosTest.controlConnectionMap.size());
 
         qosTest.call();
         assertEquals("Unexpected qosTest status", QoSTestEnum.ERROR, qosTest.getStatus());
