@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -11,11 +11,17 @@
 
     <style name="Nettest.ActionBar" parent="Base.Widget.AppCompat.ActionBar">
         <item name="background">@color/theme_action_bar_bg</item>
+        <item name="actionButtonStyle">@style/Nettest.ActionBar.Button</item>
         <item name="titleTextStyle">@style/Nettest.ActionBar.Title</item>
+        <item name="android:actionMenuTextColor">@color/theme_text_color</item>
     </style>
 
-    <style name="Nettest.ActionBar.Title" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/black</item>
+    <style name="Nettest.ActionBar.Title" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+    </style>
+
+    <style name="Nettest.ActionBar.Button" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">

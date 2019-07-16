@@ -8,6 +8,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_single_result">Measurement Report</string>
+    <string name="title_help">Help</string>
 
     <string name="not_available_short">n/a</string>
 
@@ -89,5 +90,12 @@
 
     <string name="result_share_subject">Nettest result</string>
     <string name="result_share_intent_title">Share result</string>
+
+    <!-- Help specific string -->
+    <string name="help_link_history_section">history</string>
+    <string name="help_link_result_section">result</string>
+    <string name="help_link_statistics_section">statistics</string>
+    <string name="help_link_map_section">map</string>
+    <string name="help_link_settings_section">settings</string>
 
 </resources>
