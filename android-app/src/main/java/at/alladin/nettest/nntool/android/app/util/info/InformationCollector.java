@@ -1,5 +1,7 @@
 package at.alladin.nettest.nntool.android.app.util.info;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -22,6 +24,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDt
 public class InformationCollector
         implements SignalStrengthChangeListener, NetworkChangeListener, GeoLocationChangeListener {
 
+    private final static String TAG = InformationCollector.class.getSimpleName();
+
     private final InformationProvider informationProvider;
 
     private final AtomicBoolean isCollecting = new AtomicBoolean(false);
@@ -40,24 +44,32 @@ public class InformationCollector
 
     public void start() {
         if (!this.isCollecting.getAndSet(true)) {
+            Log.d(TAG, "Starting InformationCollector...");
             final SignalGatherer signalGatherer = this.informationProvider.getGatherer(SignalGatherer.class);
             final GeoLocationGatherer geoLocationGatherer = this.informationProvider.getGatherer(GeoLocationGatherer.class);
             final NetworkGatherer networkGatherer = this.informationProvider.getGatherer(NetworkGatherer.class);
 
             if (signalGatherer != null) {
+                Log.d(TAG, "Found SignalGatherer. Registering listener.");
                 signalGatherer.addListener(this);
             }
             if (geoLocationGatherer != null) {
+                Log.d(TAG, "Found GeoLocationGatherer. Registering listener.");
                 geoLocationGatherer.addListener(this);
             }
             if (networkGatherer != null) {
+                Log.d(TAG, "Found NetworkGatherer. Registering listener.");
                 networkGatherer.addListener(this);
             }
+
+            this.informationProvider.start();
         }
     }
 
     public void stop() {
+        Log.d(TAG, "Stopping InformationCollector...");
         this.isCollecting.set(false);
+        this.informationProvider.stop();
 
         final SignalGatherer signalGatherer = this.informationProvider.getGatherer(SignalGatherer.class);
         final GeoLocationGatherer geoLocationGatherer = this.informationProvider.getGatherer(GeoLocationGatherer.class);
@@ -72,6 +84,9 @@ public class InformationCollector
         if (networkGatherer != null) {
             networkGatherer.removeListener(this);
         }
+
+        Log.d(TAG, "CellInfoList: " + cellInfoList);
+        Log.d(TAG, "GeoLocationList: " + geoLocationList);
     }
 
     public List<CellInfoWrapper> getCellInfoList() {
