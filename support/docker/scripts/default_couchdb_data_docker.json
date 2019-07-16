@@ -108,8 +108,8 @@
             "parameters": {
                 "echo_protocol_objective_protocol": "udp",
                 "echo_protocol_objective_payload": "UPD payload",
-                "server_addr": "127.0.0.1",
-                "server_port": "20007"
+                "echo_protocol_objective_server_addr": "127.0.0.1",
+                "echo_protocol_objective_server_port": "7"
             },
             "evaluations": [
                 {
@@ -134,8 +134,8 @@
             "parameters": {
                 "echo_protocol_objective_protocol": "tcp",
                 "echo_protocol_objective_payload": "TCP payload",
-                "server_addr": "127.0.0.1",
-                "server_port": "20007"
+                "echo_protocol_objective_server_addr": "127.0.0.1",
+                "echo_protocol_objective_server_port": "7"
             },
             "evaluations": [
                 {
