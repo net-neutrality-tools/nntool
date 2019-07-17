@@ -15,7 +15,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.Q
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.TimeBasedResultDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellLocationDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.PointInTimeValueDto;
@@ -117,7 +117,7 @@ public class DocumentationResource extends AbstractDocumentationResource {
 			SpeedMeasurementResult.class,
 			SubMeasurementResult.class,
 			
-			CellLocationDto.class,
+			CellInfoDto.class,
 			MeasurementAgentTypeDto.class,
 			GeoLocationDto.class,
 			PointInTimeValueDto.class,
