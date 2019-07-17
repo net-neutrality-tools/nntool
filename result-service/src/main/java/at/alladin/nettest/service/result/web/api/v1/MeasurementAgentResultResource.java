@@ -1,6 +1,7 @@
 package at.alladin.nettest.service.result.web.api.v1;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -115,7 +116,8 @@ public class MeasurementAgentResultResource {
 	public ResponseEntity<ApiResponse<FullMeasurementResponse>> getMeasurement(
 		@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid,
 		@ApiParam(value = "The measurement UUID", required = true) @PathVariable String uuid,
-		@ApiParam(value = "Set of included measurement types (e.g. SPEED, TCP_PORT, VOIP, ...). If nothing is provided all measurement types are returned") @RequestParam(required = false, name = "include") Set<GeneralMeasurementTypeDto> includedMeasurementTypes) {
+		@ApiParam(value = "Set of included measurement types (e.g. SPEED, TCP_PORT, VOIP, ...). If nothing is provided all measurement types are returned") @RequestParam(required = false, name = "include") Set<GeneralMeasurementTypeDto> includedMeasurementTypes,
+		Locale locale) {
 
 		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
 			return ResponseEntity.badRequest().build();
@@ -123,7 +125,7 @@ public class MeasurementAgentResultResource {
 		
 		logger.debug("{}", includedMeasurementTypes);
 		
-		return ResponseHelper.ok(storageService.getFullMeasurementByAgentAndMeasurementUuid(agentUuid, uuid));
+		return ResponseHelper.ok(storageService.getFullMeasurementByAgentAndMeasurementUuid(agentUuid, uuid, locale));
 	}
 
 	/**
@@ -143,13 +145,14 @@ public class MeasurementAgentResultResource {
 	public ResponseEntity<ApiResponse<DetailMeasurementResponse>> getMeasurementDetails(
 		@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid,
 		@ApiParam(value = "The measurement UUID", required = true) @PathVariable String uuid,
-		@ApiParam(value = "Flag that indicates if the details should be grouped") @RequestParam(value = "grouped", defaultValue = "false") boolean grouped) {
+		@ApiParam(value = "Flag that indicates if the details should be grouped") @RequestParam(value = "grouped", defaultValue = "false") boolean grouped,
+		Locale locale) {
 
 		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
 			throw new StorageServiceException("Invalid agent uuid");
 		}
 		
-		return ResponseHelper.ok(storageService.getDetailMeasurementByAgentAndMeasurementUuid(agentUuid, uuid, properties.getSettingsUuid()));
+		return ResponseHelper.ok(storageService.getDetailMeasurementByAgentAndMeasurementUuid(agentUuid, uuid, properties.getSettingsUuid(), locale));
 	}
 
 	/**

@@ -39,4 +39,7 @@
 
     <color name="interface_traffic_arrow_inactive">@color/theme_border_color</color>
     <color name="interface_traffic_arrow_active">@color/theme_primary_color</color>
+
+    <color name="result_group_icon">@color/theme_primary_color</color>
+    <color name="result_qos_icon">@color/theme_primary_color</color>
 </resources>

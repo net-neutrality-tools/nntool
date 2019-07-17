@@ -2,33 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp">
+    >
 
-    <Button
-        android:id="@+id/result_to_qos_button"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/result_show_qos"/>
-
-    <ExpandableListView
-        android:id="@+id/result_list_view"
+    <GridView
+        android:id="@+id/qos_result_grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:childIndicator="@null"
-        android:layout_above="@id/result_to_qos_button"
+        android:numColumns="2"
+        android:horizontalSpacing="20dp"
+        android:verticalSpacing="20dp"
+        android:padding="20dp"
+        android:gravity="center"
+        android:stretchMode="columnWidth"
         android:background="@color/theme_tertiary_color"
         />
 
     <ProgressBar
-        android:id="@+id/result_loading_progress_bar"
+        android:id="@+id/qos_result_loading_progress_bar"
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/result_loading_error_text"
+        android:id="@+id/qos_result_loading_error_text"
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

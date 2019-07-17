@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,6 +37,8 @@ public class ResultFragment extends ActionBarFragment {
     private TextView errorText;
 
     private ExpandableListView resultListView;
+
+    private Button toQoSButton;
 
     private DetailMeasurementResponse measurementResponse;
 
@@ -78,6 +81,16 @@ public class ResultFragment extends ActionBarFragment {
         loadingProgressBar = v.findViewById(R.id.result_loading_progress_bar);
         errorText = v.findViewById(R.id.result_loading_error_text);
         resultListView = v.findViewById(R.id.result_list_view);
+        toQoSButton = v.findViewById(R.id.result_to_qos_button);
+
+        toQoSButton.setOnClickListener( view -> {
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_fragment_layout, ResultQoSFragment.newInstance(workflowResultParameter))
+                    .addToBackStack(null)
+                    .commit();
+
+        });
 
         final DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
