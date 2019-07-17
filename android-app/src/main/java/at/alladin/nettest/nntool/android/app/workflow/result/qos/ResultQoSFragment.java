@@ -1,4 +1,4 @@
-package at.alladin.nettest.nntool.android.app.workflow.result;
+package at.alladin.nettest.nntool.android.app.workflow.result.qos;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +20,7 @@ import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.RequestFulllMeasurementTask;
 import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
+import at.alladin.nettest.nntool.android.app.workflow.result.WorkflowResultParameter;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.EvaluatedQoSResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
@@ -88,10 +88,15 @@ public class ResultQoSFragment extends ActionBarFragment {
                 if (context != null) {
                     final FullQoSMeasurement qoSMeasurement = (FullQoSMeasurement) measurementResponse.getMeasurements().get(MeasurementTypeDto.QOS);
                     qosResultGridView.setAdapter(new ResultQoSAdapter(context, new ArrayList<>(parseIntoBoxResults(qoSMeasurement)), qoSMeasurement));
-                    qosResultGridView.getViewTreeObserver().addOnPreDrawListener(() -> {
-                        qosResultGridView.getAdapter().getCount();
-                        return true;
+                    qosResultGridView.setOnItemClickListener((parent, view, position, id) -> {
+                        final QoSBoxResult item = (QoSBoxResult) qosResultGridView.getItemAtPosition(position);
+                        getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.main_fragment_layout, ResultQoSTypeDetailFragment.newInstance(qoSMeasurement, item))
+                                .addToBackStack(null)
+                                .commit();
                     });
+
                 }
             }
 
@@ -101,12 +106,12 @@ public class ResultQoSFragment extends ActionBarFragment {
         return v;
     }
 
-    private List<ResultQoSAdapter.QoSBoxResult> parseIntoBoxResults (final FullQoSMeasurement qoSMeasurement) {
-        final Map<QoSMeasurementTypeDto, ResultQoSAdapter.QoSBoxResult> typeToBoxResult = new LinkedHashMap<>();
+    private List<QoSBoxResult> parseIntoBoxResults (final FullQoSMeasurement qoSMeasurement) {
+        final Map<QoSMeasurementTypeDto, QoSBoxResult> typeToBoxResult = new LinkedHashMap<>();
         for (EvaluatedQoSResult r : qoSMeasurement.getResults()) {
-            ResultQoSAdapter.QoSBoxResult boxResult = typeToBoxResult.get(r.getType());
+            QoSBoxResult boxResult = typeToBoxResult.get(r.getType());
             if (boxResult == null) {
-                boxResult = new ResultQoSAdapter.QoSBoxResult();
+                boxResult = new QoSBoxResult();
                 boxResult.setType(r.getType());
                 final QoSTypeDescription typeDescription = qoSMeasurement.getQosTypeToDescriptionMap().get(r.getType());
                 if (typeDescription != null) {

@@ -95,6 +95,9 @@
     <string name="result_share_intent_title">Share result</string>
     <string name="result_show_qos">Quality of Service results</string>
 
+    <string name="result_qos_test_list_header">Tests</string>
+    <string name="result_qos_test_list_item_header">Test #%1$d</string>
+
     <!-- Help specific string -->
     <string name="help_link_history_section">history</string>
     <string name="help_link_result_section">result</string>

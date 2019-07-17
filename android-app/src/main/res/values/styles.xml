@@ -215,6 +215,34 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <!-- QoS Result Details Fragment -->
+
+    <style name="Nettest.Result.QoS.Details.Section" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:padding">20dp</item>
+        <item name="android:background">@color/theme_tertiary_color</item>
+    </style>
+
+    <style name="Nettest.Result.QoS.Details.Description" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">20dp</item>
+    </style>
+
+    <style name="Nettest.Result.QoS.Details.List.Header" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Nettest.Result.QoS.Details.List.Description" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+
+
 
     <!-- History Fragment -->
     <style name="Nettest.History.Error.Text" parent="TextAppearance.AppCompat.Medium">

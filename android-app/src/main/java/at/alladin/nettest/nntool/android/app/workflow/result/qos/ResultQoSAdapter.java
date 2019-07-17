@@ -15,6 +15,7 @@ import java.util.List;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.view.AlladinTextView;
 import at.alladin.nettest.nntool.android.app.workflow.history.HistoryListAdapter;
+import at.alladin.nettest.nntool.android.app.workflow.result.qos.QoSBoxResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefSpeedMeasurement;
@@ -24,7 +25,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasuremen
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
  */
-public class ResultQoSAdapter extends ArrayAdapter<ResultQoSAdapter.QoSBoxResult> {
+public class ResultQoSAdapter extends ArrayAdapter<QoSBoxResult> {
 
     private final FullQoSMeasurement fullQoSMeasurement;
 
@@ -74,56 +75,5 @@ public class ResultQoSAdapter extends ArrayAdapter<ResultQoSAdapter.QoSBoxResult
         return convertView;
     }
 
-    public static class QoSBoxResult {
-        private QoSMeasurementTypeDto type;
-
-        private String name;
-
-        private String icon;
-
-        private Integer successCount;
-
-        private Integer evaluationCount;
-
-        public QoSMeasurementTypeDto getType() {
-            return type;
-        }
-
-        public void setType(QoSMeasurementTypeDto type) {
-            this.type = type;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getIcon() {
-            return icon;
-        }
-
-        public void setIcon(String icon) {
-            this.icon = icon;
-        }
-
-        public Integer getSuccessCount() {
-            return successCount;
-        }
-
-        public void setSuccessCount(Integer successCount) {
-            this.successCount = successCount;
-        }
-
-        public Integer getEvaluationCount() {
-            return evaluationCount;
-        }
-
-        public void setEvaluationCount(Integer evaluationCount) {
-            this.evaluationCount = evaluationCount;
-        }
-    }
 
 }
