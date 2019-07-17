@@ -1,7 +1,5 @@
 package at.alladin.nettest.shared.berec.collector.api.v1.dto.shared;
 
-import org.joda.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -9,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import org.joda.time.LocalDateTime;
 
 /**
  * Contains signal information from a point in time on the measurement agent.
@@ -20,6 +20,16 @@ import com.google.gson.annotations.SerializedName;
 @JsonClassDescription("Contains signal information from a point in time on the measurement agent.")
 @JsonInclude(Include.NON_EMPTY)
 public class SignalDto {
+
+	/**
+	 * Cell location information from a point in time on the measurement agent.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "Cell identity information from a point in time on the measurement agent.")
+	@JsonPropertyDescription("Cell identity information from a point in time on the measurement agent.")
+	@Expose
+	@SerializedName("cell_info")
+	@JsonProperty(required = true, value = "cell_info")
+	private CellInfoDto cellInfo;
 
 	/**
 	 * Network type id as it gets returned by the Android API.
@@ -150,6 +160,14 @@ public class SignalDto {
     @SerializedName("wifi_bssid")
 	@JsonProperty("wifi_bssid")
     private String wifiBssid;
+
+	public CellInfoDto getCellInfo() {
+		return cellInfo;
+	}
+
+	public void setCellInfo(CellInfoDto cellInfo) {
+		this.cellInfo = cellInfo;
+	}
 
 	public Integer getNetworkTypeId() {
 		return networkTypeId;

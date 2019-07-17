@@ -138,7 +138,6 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 //		//@Mapping(source = "timeBasedResult.networkPointsInTime", target = "networkPointsInTime"),
 		@Mapping(target = "networkInfo.networkPointsInTime", ignore = true), // TODO
 		
-		@Mapping(source = "timeBasedResult.cellLocations", target = "networkInfo.cellLocationInfo.cellLocations"),
 		@Mapping(source = "timeBasedResult.signals", target = "networkInfo.signalInfo.signals"),
 		@Mapping(expression = "java(parseMeasurements(lmapReportDto))", target = "measurements")
 	})

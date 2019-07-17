@@ -29,18 +29,6 @@ public class NetworkInfoDto {
 	@JsonProperty(required = true, value = "network_point_in_time_info")
 	List<NetworkPointInTimeInfoDto> networkPointInTimeInfo;
 	
-// _ CellLocationInfo
-
-	/**
-	 * List of captured cell information.
-	 */
-	@io.swagger.annotations.ApiModelProperty("List of captured cell information.")
-	@JsonPropertyDescription("List of captured cell information.")
-	@Expose
-	@SerializedName("cell_locations")
-	@JsonProperty("cell_locations")
-	private List<CellLocationDto> cellLocations;
-	
 // _ SignalInfo
 
 	/**
@@ -59,14 +47,6 @@ public class NetworkInfoDto {
 
 	public void setNetworkPointInTimeInfo(List<NetworkPointInTimeInfoDto> networkPointInTimeInfo) {
 		this.networkPointInTimeInfo = networkPointInTimeInfo;
-	}
-
-	public List<CellLocationDto> getCellLocations() {
-		return cellLocations;
-	}
-
-	public void setCellLocations(List<CellLocationDto> cellLocations) {
-		this.cellLocations = cellLocations;
 	}
 
 	public List<SignalDto> getSignals() {
