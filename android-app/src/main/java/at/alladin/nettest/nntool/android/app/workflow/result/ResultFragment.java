@@ -39,7 +39,7 @@ public class ResultFragment extends ActionBarFragment {
 
     private ExpandableListView resultListView;
 
-    private Button toQoSButton;
+    private View toQoSButton;
 
     private DetailMeasurementResponse measurementResponse;
 

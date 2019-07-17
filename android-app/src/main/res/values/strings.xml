@@ -98,6 +98,10 @@
     <string name="result_qos_test_list_header">Tests</string>
     <string name="result_qos_test_list_item_header">Test #%1$d</string>
 
+    <string name="result_qos_single_description">Description</string>
+    <string name="result_qos_single_result">Result</string>
+    <string name="result_qos_single_details">Details</string>
+
     <!-- Help specific string -->
     <string name="help_link_history_section">history</string>
     <string name="help_link_result_section">result</string>

@@ -72,6 +72,14 @@ public class ResultQoSTypeDetailFragment extends ActionBarFragment {
         }
 
         qosResultDetailsView.setAdapter(new ResultQoSTypeDetailAdapter(getContext(), evaluatedResultsOfType));
+        qosResultDetailsView.setOnItemClickListener((parent, view, position, id) -> {
+            final EvaluatedQoSResult item = (EvaluatedQoSResult) qosResultDetailsView.getItemAtPosition(position);
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_fragment_layout, ResultQoSSingleResultFragment.newInstance(item, qoSMeasurement.getKeyToTranslationMap(), position + 1))
+                    .addToBackStack(null)
+                    .commit();
+        });
 
         return v;
     }
