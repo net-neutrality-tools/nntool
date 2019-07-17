@@ -33,8 +33,9 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.S
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.TimeBasedResultDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerRequest;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellLocationDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.SignalDto;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
@@ -150,10 +151,17 @@ public class RequestUtil {
             final TimeBasedResultDto timeBasedResultDto = new TimeBasedResultDto();
             timeBasedResultDto.setGeoLocations(informationCollector.getGeoLocationList());
 
+            final List<CellInfoWrapper> cellList = informationCollector.getCellInfoList();
+            if (cellList != null) {
+                for (final CellInfoWrapper cell : cellList) {
+                    final SignalDto signalDto = new SignalDto();
+                }
+            }
+
             if (informationCollector.getCellInfoList() != null && informationCollector.getCellInfoList().size() > 0) {
-                final List<CellLocationDto> cellLocationDtoList = new ArrayList<>();
+                final List<CellInfoDto> cellLocationDtoList = new ArrayList<>();
                 for (CellInfoWrapper ciWrap : informationCollector.getCellInfoList()) {
-                    final CellLocationDto locationDto = cellInfoWrapperToCellLocationDto(ciWrap);
+                    final CellInfoDto locationDto = cellInfoWrapperToCellLocationDto(ciWrap);
                     if (locationDto != null) {
                         cellLocationDtoList.add(locationDto);
                     }
@@ -171,17 +179,17 @@ public class RequestUtil {
         return apiRequest;
     }
 
-    private static CellLocationDto cellInfoWrapperToCellLocationDto (final CellInfoWrapper cellInfoWrapper) {
+    private static CellInfoDto cellInfoWrapperToCellLocationDto (final CellInfoWrapper cellInfoWrapper) {
         if (cellInfoWrapper == null) {
             return null;
         }
-        final CellLocationDto ret = new CellLocationDto();
+        final CellInfoDto ret = new CellInfoDto();
         if (cellInfoWrapper.getCellIdentityWrapper() != null) {
             final CellIdentityWrapper iWrap = cellInfoWrapper.getCellIdentityWrapper();
             ret.setAreaCode(iWrap.getAreaCode());
             ret.setCellId(iWrap.getCellId());
             ret.setPrimaryScramblingCode(iWrap.getScramblingCode());
-            ret.setArfcn(iWrap.getFrequency());
+            ret.setFrequency(iWrap.getFrequency());
         }
         if (cellInfoWrapper.getCellSignalStrengthWrapper() != null) {
             final CellSignalStrengthWrapper cWrap = cellInfoWrapper.getCellSignalStrengthWrapper();
@@ -190,7 +198,7 @@ public class RequestUtil {
         /*
         ret.setLongitude();
         ret.setLatitude();
-        ret.setArfcn();
+        ret.setFrequency();
         ret.setTime();
         ret.setRelativeTimeNs();
         */
