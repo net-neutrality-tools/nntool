@@ -26,6 +26,8 @@ public class CellIdentityWrapper {
 	private Integer mcc;
 	private Integer mnc;
 	private Integer frequency;
+	private String wifiBssid;
+	private String wifiSsid;
 	private boolean isRegistered = false;
 
 	private CellIdentityWrapper(final CellInfo cellInfo) {
@@ -119,6 +121,8 @@ public class CellIdentityWrapper {
 		wrapper.setRegistered(true);
 		wrapper.setCellInfoType(CellType.WLAN);
 		wrapper.setFrequency(CellInfoWrapper.maxIntegerToNull(wifiInfo.getFrequency()));
+		wrapper.setWifiBssid(wifiInfo.getBSSID());
+		wrapper.setWifiSsid(wifiInfo.getSSID());
 		return wrapper;
 	}
 
@@ -211,6 +215,22 @@ public class CellIdentityWrapper {
 		isRegistered = registered;
 	}
 
+	public String getWifiBssid() {
+		return wifiBssid;
+	}
+
+	public void setWifiBssid(String wifiBssid) {
+		this.wifiBssid = wifiBssid;
+	}
+
+	public String getWifiSsid() {
+		return wifiSsid;
+	}
+
+	public void setWifiSsid(String wifiSsid) {
+		this.wifiSsid = wifiSsid;
+	}
+
 	@Override
 	public String toString() {
 		return "CellIdentityWrapper{" +
@@ -222,6 +242,8 @@ public class CellIdentityWrapper {
 				", mcc=" + mcc +
 				", mnc=" + mnc +
 				", frequency=" + frequency +
+				", wifiBssid='" + wifiBssid + '\'' +
+				", wifiSsid='" + wifiSsid + '\'' +
 				", isRegistered=" + isRegistered +
 				'}';
 	}
