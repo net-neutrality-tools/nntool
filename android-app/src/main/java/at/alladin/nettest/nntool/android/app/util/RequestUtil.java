@@ -149,23 +149,20 @@ public class RequestUtil {
 
         if (informationCollector != null) {
             final TimeBasedResultDto timeBasedResultDto = new TimeBasedResultDto();
+            report.setTimeBasedResult(timeBasedResultDto);
+
             timeBasedResultDto.setGeoLocations(informationCollector.getGeoLocationList());
 
-            final List<CellInfoWrapper> cellList = informationCollector.getCellInfoList();
-            if (cellList != null) {
-                for (final CellInfoWrapper cell : cellList) {
-                    final SignalDto signalDto = new SignalDto();
-                }
-            }
-
             if (informationCollector.getCellInfoList() != null && informationCollector.getCellInfoList().size() > 0) {
-                final List<CellInfoDto> cellLocationDtoList = new ArrayList<>();
+                final List<SignalDto> signalDtoList = new ArrayList<>();
                 for (CellInfoWrapper ciWrap : informationCollector.getCellInfoList()) {
-                    final CellInfoDto locationDto = cellInfoWrapperToCellLocationDto(ciWrap);
-                    if (locationDto != null) {
-                        cellLocationDtoList.add(locationDto);
+                    final SignalDto signalDto = cellInfoWrapperToSignalDto(ciWrap);
+                    if (signalDto != null) {
+                        signalDtoList.add(signalDto);
                     }
                 }
+
+                timeBasedResultDto.setSignals(signalDtoList);
             }
         }
 
@@ -179,30 +176,36 @@ public class RequestUtil {
         return apiRequest;
     }
 
-    private static CellInfoDto cellInfoWrapperToCellLocationDto (final CellInfoWrapper cellInfoWrapper) {
-        if (cellInfoWrapper == null) {
+    private static SignalDto cellInfoWrapperToSignalDto(final CellInfoWrapper cellInfoWrapper) {
+        if (cellInfoWrapper == null || cellInfoWrapper.getCellSignalStrengthWrapper() == null) {
             return null;
         }
-        final CellInfoDto ret = new CellInfoDto();
+
+        final SignalDto signalDto = new SignalDto();
+        final CellSignalStrengthWrapper sigWrap = cellInfoWrapper.getCellSignalStrengthWrapper();
+        signalDto.setLteCqi(sigWrap.getLteCqi());
+        signalDto.setLteRsrpDbm(sigWrap.getLteRsrp());
+        signalDto.setLteRsrqDb(sigWrap.getLteRsrq());
+        signalDto.setLteRssnrDb(sigWrap.getLteRssnr());
+        signalDto.setNetworkTypeId(sigWrap.getNetworkId());
+        signalDto.setSignalStrength2g3gDbm(sigWrap.getSignalStrength());
+        signalDto.setWifiLinkSpeedBps(sigWrap.getWifiLinkSpeed());
+        signalDto.setWifiRssiDbm(sigWrap.getWifiRssi());
+
         if (cellInfoWrapper.getCellIdentityWrapper() != null) {
             final CellIdentityWrapper iWrap = cellInfoWrapper.getCellIdentityWrapper();
-            ret.setAreaCode(iWrap.getAreaCode());
-            ret.setCellId(iWrap.getCellId());
-            ret.setPrimaryScramblingCode(iWrap.getScramblingCode());
-            ret.setFrequency(iWrap.getFrequency());
-        }
-        if (cellInfoWrapper.getCellSignalStrengthWrapper() != null) {
-            final CellSignalStrengthWrapper cWrap = cellInfoWrapper.getCellSignalStrengthWrapper();
-        }
-        //TODO: parse the other information into the
-        /*
-        ret.setLongitude();
-        ret.setLatitude();
-        ret.setFrequency();
-        ret.setTime();
-        ret.setRelativeTimeNs();
-        */
+            signalDto.setWifiBssid(iWrap.getWifiBssid());
+            signalDto.setWifiSsid(iWrap.getWifiSsid());
 
-        return ret;
+            final CellInfoDto cellInfoDto = new CellInfoDto();
+            signalDto.setCellInfo(cellInfoDto);
+
+            cellInfoDto.setAreaCode(iWrap.getAreaCode());
+            cellInfoDto.setCellId(iWrap.getCellId());
+            cellInfoDto.setPrimaryScramblingCode(iWrap.getScramblingCode());
+            cellInfoDto.setFrequency(iWrap.getFrequency());
+        }
+
+        return signalDto;
     }
 }

@@ -77,8 +77,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.TrafficDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.WebSocketInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.version.VersionResponse;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.CellLocation;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.CellLocationInfo;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.CellInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ConnectionInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Device;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.DeviceInfo;
@@ -249,8 +248,7 @@ public class DocumentationResource extends AbstractDocumentationResource {
 	@Override
 	public List<Class<?>> getModelClasses() {
 		return Arrays.asList(
-			CellLocation.class,
-			CellLocationInfo.class,
+			CellInfo.class,
 			MeasurementAgent.class,
 			MeasurementAgentInfo.class,
 			MeasurementAgentType.class,

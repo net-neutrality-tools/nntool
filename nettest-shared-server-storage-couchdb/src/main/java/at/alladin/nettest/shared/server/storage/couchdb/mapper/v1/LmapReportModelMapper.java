@@ -17,6 +17,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.Measurem
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.QoSMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.TrafficDto;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ConnectionInfo;
@@ -199,7 +200,7 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 	
 	default Long parseAverageDownload (final SpeedMeasurementResult result) {
 		if (result.getBytesDownload() == null || result.getDurationDownloadNs() == null) {
-			return 0L;
+			return null; //was: 0L
 		}
 		
 		return (long) (result.getBytesDownload() * 8 / (result.getDurationDownloadNs() / 1e9));
@@ -207,7 +208,7 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 	
 	default Long parseAverageUpload (final SpeedMeasurementResult result) {
 		if (result.getBytesUpload() == null || result.getDurationUploadNs() == null) {
-			return 0L;
+			return null; //was: 0L
 		}
 		
 		return (long) (result.getBytesUpload() * 8 / (result.getDurationUploadNs() / 1e9));

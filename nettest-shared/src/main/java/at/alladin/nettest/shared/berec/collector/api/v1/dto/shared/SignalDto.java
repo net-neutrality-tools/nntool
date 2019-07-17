@@ -40,7 +40,7 @@ public class SignalDto {
 	@SerializedName("network_type_id")
 	@JsonProperty(required = true, value = "network_type_id")
 	private Integer networkTypeId;
-	
+
 	/**
 	 * Time and date the signal information was captured (UTC).
 	 */
@@ -117,8 +117,8 @@ public class SignalDto {
 	@io.swagger.annotations.ApiModelProperty("The LTE reference signal received quality, in dB (If available).")
 	@JsonPropertyDescription("The LTE reference signal received quality, in dB (If available).")
     @Expose
-    @SerializedName("lte_rsrp_db")
-    @JsonProperty("lte_rsrp_db")
+    @SerializedName("lte_rsrq_db")
+    @JsonProperty("lte_rsrq_db")
     private Integer lteRsrqDb;
     
     /**
