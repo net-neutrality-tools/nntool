@@ -1,9 +1,8 @@
-package at.alladin.nettest.nntool.android.app.workflow.result;
+package at.alladin.nettest.nntool.android.app.workflow.result.qos;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +13,7 @@ import java.util.List;
 
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.view.AlladinTextView;
-import at.alladin.nettest.nntool.android.app.workflow.history.HistoryListAdapter;
-import at.alladin.nettest.nntool.android.app.workflow.result.qos.QoSBoxResult;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefSpeedMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)

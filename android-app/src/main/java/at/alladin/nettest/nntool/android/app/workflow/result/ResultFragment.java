@@ -21,6 +21,7 @@ import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.RequestGroupedDetailMeasurementTask;
 import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
+import at.alladin.nettest.nntool.android.app.workflow.result.qos.ResultQoSFragment;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
 
 /**
