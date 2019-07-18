@@ -25,16 +25,7 @@ public class NetworkInfo {
 	@SerializedName("network_points_in_time")
 	@JsonProperty("network_points_in_time")
 	List<NetworkPointInTime> networkPointsInTime;
-	
-	/**
-	 * @see CellLocationInfo
-	 */
-	@JsonPropertyDescription("Contains cell location information captured during the test.")
-	@Expose
-	@SerializedName("cell_location_info")
-	@JsonProperty("cell_location_info")
-	private CellLocationInfo cellLocationInfo;
-	
+
 	/**
 	 * @see SignalInfo
 	 */
@@ -50,14 +41,6 @@ public class NetworkInfo {
 
 	public void setNetworkPointsInTime(List<NetworkPointInTime> networkPointsInTime) {
 		this.networkPointsInTime = networkPointsInTime;
-	}
-
-	public CellLocationInfo getCellLocationInfo() {
-		return cellLocationInfo;
-	}
-
-	public void setCellLocationInfo(CellLocationInfo cellLocationInfo) {
-		this.cellLocationInfo = cellLocationInfo;
 	}
 
 	public SignalInfo getSignalInfo() {

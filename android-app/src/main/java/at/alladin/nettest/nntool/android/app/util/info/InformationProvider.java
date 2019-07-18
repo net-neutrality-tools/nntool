@@ -223,12 +223,17 @@ public class InformationProvider {
     }
 
     public static InformationProvider createDefault(final Context context) {
+        final InformationProvider informationProvider = createMeasurementDefault(context);
+        informationProvider.registerRunnableGatherer(TrafficGatherer.class);
+        informationProvider.registerRunnableGatherer(SystemInfoGatherer.class);
+        return informationProvider;
+    }
+
+    public static InformationProvider createMeasurementDefault(final Context context) {
         final InformationProvider informationProvider = new InformationProvider(context);
         informationProvider.registerGatherer(SignalGatherer.class);
         informationProvider.registerGatherer(NetworkGatherer.class);
         informationProvider.registerGatherer(GeoLocationGatherer.class);
-        informationProvider.registerRunnableGatherer(TrafficGatherer.class);
-        informationProvider.registerRunnableGatherer(SystemInfoGatherer.class);
         return informationProvider;
     }
 }

@@ -37,8 +37,9 @@ public class SendReportTask extends AsyncTask<Void, Void, MeasurementResultRespo
         this.collectorUrl = collectorUrl;
         this.reportDto = reportDto;
         try {
-            Log.d(TAG, ObjectMapperUtil.createBasicObjectMapper()
-                    .writeValueAsString(reportDto));
+            final String json = ObjectMapperUtil.createBasicObjectMapper()
+                    .writeValueAsString(reportDto);
+            Log.d(TAG, json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

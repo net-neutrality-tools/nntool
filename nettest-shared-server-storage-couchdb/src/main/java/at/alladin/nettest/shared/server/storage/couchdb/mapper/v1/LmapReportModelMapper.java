@@ -1,10 +1,10 @@
 package at.alladin.nettest.shared.server.storage.couchdb.mapper.v1;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.time.temporal.ChronoUnit;
 
 import org.joda.time.LocalDateTime;
 import org.mapstruct.Mapper;
@@ -18,9 +18,9 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.Q
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.TrafficDto;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ConnectionInfo;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
@@ -36,7 +36,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Traffic;
  *
  */
 @Mapper(componentModel = "spring", imports = ChronoUnit.class)
-public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttInfoDtoMapper {
+public interface LmapReportModelMapper extends UuidMapper, RttInfoDtoMapper, MeasurementResultNetworkPointInTimeDtoMapper {
 	
 	double EARTH_MEAN_RADIUS = 6373000;
 
@@ -136,9 +136,8 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 //		//@Mapping(source = "timeBasedResult.cpuUsage", target = "deviceInfo.osInfo.cpuUsage"),
 //		//@Mapping(source = "timeBasedResult.memUsage", target = "deviceInfo.osInfo.memUsage"),
 //		//@Mapping(source = "timeBasedResult.networkPointsInTime", target = "networkPointsInTime"),
-		@Mapping(target = "networkInfo.networkPointsInTime", ignore = true), // TODO
+		@Mapping(source = "timeBasedResult.networkPointsInTime", target = "networkInfo.networkPointsInTime"),
 		
-		@Mapping(source = "timeBasedResult.cellLocations", target = "networkInfo.cellLocationInfo.cellLocations"),
 		@Mapping(source = "timeBasedResult.signals", target = "networkInfo.signalInfo.signals"),
 		@Mapping(expression = "java(parseMeasurements(lmapReportDto))", target = "measurements")
 	})
@@ -153,9 +152,9 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 		@Mapping(source="speedMeasurementResult.reason", target="statusInfo.reason"),
 		@Mapping(expression="java(parseAverageDownload(speedMeasurementResult))", target="throughputAvgDownloadBps"),
 		@Mapping(expression="java(parseAverageUpload(speedMeasurementResult))", target="throughputAvgUploadBps"),
-		@Mapping(expression="java(speedMeasurement.getThroughputAvgDownloadBps() == null ? "
+		@Mapping(expression="java(speedMeasurement.getThroughputAvgDownloadBps() == null || speedMeasurement.getThroughputAvgDownloadBps() == 0 ? "
 				+ "null : Math.log10(speedMeasurement.getThroughputAvgDownloadBps()))", target="throughputAvgDownloadLog"),
-		@Mapping(expression="java(speedMeasurement.getThroughputAvgUploadBps() == null ? "
+		@Mapping(expression="java(speedMeasurement.getThroughputAvgUploadBps() == null || speedMeasurement.getThroughputAvgUploadBps() == 0 ? "
 				+ "null : Math.log10(speedMeasurement.getThroughputAvgUploadBps()))", target="throughputAvgUploadLog"),
 	})
 	SpeedMeasurement map (SpeedMeasurementResult speedMeasurementResult, LocalDateTime startTimeNs);
@@ -200,7 +199,7 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 	
 	default Long parseAverageDownload (final SpeedMeasurementResult result) {
 		if (result.getBytesDownload() == null || result.getDurationDownloadNs() == null) {
-			return 0L;
+			return null; //was: 0L
 		}
 		
 		return (long) (result.getBytesDownload() * 8 / (result.getDurationDownloadNs() / 1e9));
@@ -208,7 +207,7 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 	
 	default Long parseAverageUpload (final SpeedMeasurementResult result) {
 		if (result.getBytesUpload() == null || result.getDurationUploadNs() == null) {
-			return 0L;
+			return null; //was: 0L
 		}
 		
 		return (long) (result.getBytesUpload() * 8 / (result.getDurationUploadNs() / 1e9));

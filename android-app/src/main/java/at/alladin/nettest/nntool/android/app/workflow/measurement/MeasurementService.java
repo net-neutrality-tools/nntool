@@ -26,7 +26,6 @@ import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.SendReportTask;
-import at.alladin.nettest.nntool.android.app.support.telephony.CellInfoWrapper;
 import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
 import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationCollector;
@@ -43,7 +42,6 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.M
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.TimeBasedResultDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.TaskDesc;
@@ -73,9 +71,9 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     final AtomicBoolean isBound = new AtomicBoolean(false);
 
-    private Long overallStartTime;
+    private Long overallStartTimeNs;
 
-    private Long startTime;
+    private Long subMeasurementStartTimeNs;
 
     private LocalDateTime startDateTime;
 
@@ -111,7 +109,6 @@ public class MeasurementService extends Service implements ServiceConnection {
         Log.d(TAG, "onCreate");
         final Intent serviceIntent = new Intent(this, InformationService.class);
         bindService(serviceIntent, this, Context.BIND_AUTO_CREATE);
-        informationCollector = new InformationCollector(new InformationProvider(getApplicationContext()));
     }
 
     @Override
@@ -153,8 +150,7 @@ public class MeasurementService extends Service implements ServiceConnection {
     public void startMeasurement(final Bundle options) {
         this.bundle = options;
         followUpActions = (ArrayList<MeasurementType>) options.getSerializable(EXTRAS_KEY_FOLLOW_UP_ACTIONS);
-        overallStartTime = System.nanoTime();
-        startTime = overallStartTime;
+        subMeasurementStartTimeNs = System.nanoTime();
         startDateTime = LocalDateTime.now(DateTimeZone.UTC);
 
         final String speedTaskCollectorUrl = options.getString(EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL);
@@ -166,7 +162,7 @@ public class MeasurementService extends Service implements ServiceConnection {
             @Override
             public void onMeasurementFinished(JniSpeedMeasurementResult result, SpeedTaskDesc taskDesc) {
                 final SpeedMeasurementResult speedMeasurementResult = ResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
-                speedMeasurementResult.setRelativeStartTimeNs(overallStartTime);
+                speedMeasurementResult.setRelativeStartTimeNs(overallStartTimeNs);
                 speedMeasurementResult.setStatus(StatusDto.FINISHED);
                 Log.d(TAG, speedMeasurementResult.toString());
                 addSubMeasurementResult(speedMeasurementResult);
@@ -198,7 +194,7 @@ public class MeasurementService extends Service implements ServiceConnection {
                 */
         this.bundle = options;
         followUpActions = (ArrayList<MeasurementType>) options.getSerializable(EXTRAS_KEY_FOLLOW_UP_ACTIONS);
-        startTime = System.nanoTime();
+        subMeasurementStartTimeNs = System.nanoTime();
 
         final List<TaskDesc> taskDescList = (List<TaskDesc>) options.getSerializable(EXTRAS_KEY_QOS_TASK_DESC_LIST);
         final String collectorUrl = options.getString(EXTRAS_KEY_QOS_TASK_COLLECTOR_URL);
@@ -229,6 +225,12 @@ public class MeasurementService extends Service implements ServiceConnection {
         if (intent != null) {
             //if this is the first action of the current total measurement start the listeners
             if (!isFollowUpAction.getAndSet(true)) {
+                overallStartTimeNs = System.nanoTime();
+                if (informationCollector != null) {
+                    informationCollector.stop();
+                }
+                informationCollector = new InformationCollector(InformationProvider.createMeasurementDefault(getApplicationContext()));
+                informationCollector.setStartTimeNs(overallStartTimeNs);
                 informationCollector.start();
             }
             Log.d(TAG, "Got intent with action: '" + intent.getAction() + "'");
@@ -263,9 +265,9 @@ public class MeasurementService extends Service implements ServiceConnection {
     public boolean sendResults(final MainActivity mainActivity, final AtomicBoolean sendingResults) {
         if (!sendingResults.getAndSet(true)) {
             endDateTime = LocalDateTime.now(DateTimeZone.UTC);
-            isFollowUpAction.set(false);
-            //stop collecting information and allow new measurements to start as not followupaction
+            //stop collecting information and allow new measurements to start as non-followupaction
             informationCollector.stop();
+            isFollowUpAction.set(false);
             final LmapReportDto reportDto = RequestUtil.prepareLmapReportForMeasurement(subMeasurementResultList, informationCollector, mainActivity);
             if (reportDto.getTimeBasedResult() == null) {
                 reportDto.setTimeBasedResult(new TimeBasedResultDto());
@@ -325,8 +327,8 @@ public class MeasurementService extends Service implements ServiceConnection {
      * @param result
      */
     public void addSubMeasurementResult(final SubMeasurementResult result) {
-        result.setRelativeStartTimeNs(startTime - overallStartTime);
-        result.setRelativeEndTimeNs(System.nanoTime() - overallStartTime);
+        result.setRelativeStartTimeNs(subMeasurementStartTimeNs - overallStartTimeNs);
+        result.setRelativeEndTimeNs(System.nanoTime() - overallStartTimeNs);
         subMeasurementResultList.add(result);
     }
 
