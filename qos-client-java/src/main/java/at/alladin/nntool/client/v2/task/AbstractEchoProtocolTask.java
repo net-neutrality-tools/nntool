@@ -26,7 +26,13 @@ public abstract class AbstractEchoProtocolTask extends AbstractQoSTask {
 
     protected final static String RESULT_RTT_NS = "echo_protocol_result_rtt_ns";
 
-    protected final static String PARAM_TIMEOUT = "timeout";
+    public final static String PARAM_TIMEOUT = "timeout";
+
+    //the port to test against
+    public final static String PARAM_SERVER_PORT = "echo_protocol_objective_server_port";
+
+    //the server to test against
+    public final static String PARAM_SERVER_ADDRESS = "echo_protocol_objective_server_addr";
 
     protected final static long DEFAULT_TIMEOUT = 3000000000L;
 
@@ -40,6 +46,17 @@ public abstract class AbstractEchoProtocolTask extends AbstractQoSTask {
 
     public AbstractEchoProtocolTask (final QualityOfServiceTest nnTest, final TaskDesc taskDesc, final int threadId, final int id) {
         super(nnTest, taskDesc, threadId, id);
+
+        String value = (String) taskDesc.getParams().get(PARAM_SERVER_PORT);
+        this.testPort = value != null ? Integer.valueOf(value) : null;
+
+        value = (String) taskDesc.getParams().get(PARAM_TIMEOUT);
+        this.timeout = value != null ? Long.valueOf(value) : DEFAULT_TIMEOUT;
+
+        value = (String) taskDesc.getParams().get(PARAM_PAYLOAD);
+        this.payload = value != null ? value : "default_payload";
+
+        this.testHost = (String) taskDesc.getParams().get(PARAM_SERVER_ADDRESS);
     }
 
     /*

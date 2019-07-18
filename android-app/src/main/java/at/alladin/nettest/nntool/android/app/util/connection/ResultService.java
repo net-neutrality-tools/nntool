@@ -6,6 +6,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapRepo
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.disassociate.DisassociateResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -25,6 +26,9 @@ public interface ResultService {
 
     @GET("/api/v1/measurement-agents/{agentUuid}/measurements/{measurementUuid}/details")
     Call<ApiResponse<DetailMeasurementResponse>> getGroupedDetailMeasurementRequest(@Path("agentUuid") String agentUuid, @Path("measurementUuid") String measurementUuid);
+
+    @GET("/api/v1/measurement-agents/{agentUuid}/measurements/{measurementUuid}")
+    Call<ApiResponse<FullMeasurementResponse>> getFullMeasurementRequest(@Path("agentUuid") String agentUuid, @Path("measurementUuid") String measurementUuid);
 
     @DELETE("/api/v1/measurement-agents/{agentUuid}/measurements/{measurementUuid}")
     Call<ApiResponse<DisassociateResponse>> deleteSingleMeasurement(@Path("agentUuid") String agentUuid, @Path("measurementUuid") String measurementUuid);

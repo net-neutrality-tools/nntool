@@ -5,29 +5,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.RequestGroupedDetailMeasurementTask;
-import at.alladin.nettest.nntool.android.app.util.ObjectMapperUtil;
-import at.alladin.nettest.nntool.android.app.view.AlladinTextView;
+import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
+import at.alladin.nettest.nntool.android.app.workflow.result.qos.ResultQoSFragment;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  */
-public class ResultFragment extends Fragment {
+public class ResultFragment extends ActionBarFragment {
 
     private final static String TAG = ResultFragment.class.getSimpleName();
 
@@ -38,6 +38,8 @@ public class ResultFragment extends Fragment {
     private TextView errorText;
 
     private ExpandableListView resultListView;
+
+    private View toQoSButton;
 
     private DetailMeasurementResponse measurementResponse;
 
@@ -54,6 +56,24 @@ public class ResultFragment extends Fragment {
         return fragment;
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        final MenuItem menuItem = menu.findItem(R.id.action_bar_share_results_action);
+        menuItem.setVisible(true);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_bar_share_results_action:
+                shareResult();
+                return true;
+        }
+        //the help option is handled by the superclass
+        return super.onOptionsItemSelected(item);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,14 +82,15 @@ public class ResultFragment extends Fragment {
         loadingProgressBar = v.findViewById(R.id.result_loading_progress_bar);
         errorText = v.findViewById(R.id.result_loading_error_text);
         resultListView = v.findViewById(R.id.result_list_view);
+        toQoSButton = v.findViewById(R.id.result_to_qos_button);
 
-        final ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
-        actionBar.setDisplayShowCustomEnabled(true);
-        ((TextView) actionBar.getCustomView().findViewById(R.id.action_bar_header)).setText(R.string.title_single_result);
-        final AlladinTextView shareIcon = actionBar.getCustomView().findViewById(R.id.action_bar_share_results);
-        shareIcon.setVisibility(View.VISIBLE);
-        shareIcon.setOnClickListener(view -> {
-            shareResult();
+        toQoSButton.setOnClickListener( view -> {
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_fragment_layout, ResultQoSFragment.newInstance(workflowResultParameter))
+                    .addToBackStack(null)
+                    .commit();
+
         });
 
         final DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -111,10 +132,17 @@ public class ResultFragment extends Fragment {
     }
 
     @Override
+    public Integer getTitleStringId() {
+        return R.string.title_single_result;
+    }
+
+    @Override
+    public Integer getHelpSectionStringId() {
+        return R.string.help_link_result_section;
+    }
+
+    @Override
     public void onDestroyView() {
-        final ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
-        actionBar.setDisplayShowCustomEnabled(false);
-        actionBar.getCustomView().findViewById(R.id.action_bar_share_results).setVisibility(View.GONE);
         super.onDestroyView();
     }
 

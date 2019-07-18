@@ -8,6 +8,8 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_single_result">Measurement Report</string>
+    <string name="title_qos_result">Quality of Service</string>
+    <string name="title_help">Help</string>
 
     <string name="not_available_short">n/a</string>
 
@@ -87,7 +89,25 @@
     <string name="history_no_results_found">No results found.</string>
     <string name="history_disassociate_measurement">Disassociate this measurement</string>
 
+    <!-- Result specific strings -->
+
     <string name="result_share_subject">Nettest result</string>
     <string name="result_share_intent_title">Share result</string>
+    <string name="result_show_qos">Quality of Service results</string>
+
+    <string name="result_qos_test_list_header">Tests</string>
+    <string name="result_qos_test_list_item_header">Test #%1$d</string>
+
+    <string name="result_qos_single_description">Description</string>
+    <string name="result_qos_single_result">Result</string>
+    <string name="result_qos_single_details">Details</string>
+
+    <!-- Help specific string -->
+    <string name="help_link_history_section">history</string>
+    <string name="help_link_result_section">result</string>
+    <string name="help_link_qos_result_section">qos</string>
+    <string name="help_link_statistics_section">statistics</string>
+    <string name="help_link_map_section">map</string>
+    <string name="help_link_settings_section">settings</string>
 
 </resources>

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -21,6 +20,7 @@ import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.DisassociateMeasurementTask;
 import at.alladin.nettest.nntool.android.app.async.RequestHistoryTask;
 import at.alladin.nettest.nntool.android.app.util.ObjectMapperUtil;
+import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
 import at.alladin.nettest.nntool.android.app.workflow.result.ResultFragment;
 import at.alladin.nettest.nntool.android.app.workflow.result.WorkflowResultParameter;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
@@ -28,7 +28,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.Br
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
  */
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends ActionBarFragment {
 
     private final static String TAG = HistoryFragment.class.getSimpleName();
 
@@ -41,6 +41,16 @@ public class HistoryFragment extends Fragment {
     public static HistoryFragment newInstance() {
         final HistoryFragment fragment = new HistoryFragment();
         return fragment;
+    }
+
+    @Override
+    public Integer getHelpSectionStringId() {
+        return R.string.help_link_history_section;
+    }
+
+    @Override
+    public Integer getTitleStringId() {
+        return R.string.title_history;
     }
 
     @Nullable

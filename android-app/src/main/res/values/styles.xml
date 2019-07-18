@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -11,11 +11,17 @@
 
     <style name="Nettest.ActionBar" parent="Base.Widget.AppCompat.ActionBar">
         <item name="background">@color/theme_action_bar_bg</item>
+        <item name="actionButtonStyle">@style/Nettest.ActionBar.Button</item>
         <item name="titleTextStyle">@style/Nettest.ActionBar.Title</item>
+        <item name="android:actionMenuTextColor">@color/theme_text_color</item>
     </style>
 
-    <style name="Nettest.ActionBar.Title" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/black</item>
+    <style name="Nettest.ActionBar.Title" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+    </style>
+
+    <style name="Nettest.ActionBar.Button" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -171,8 +177,8 @@
 
     <!-- Result Fragment -->
     <style name="Nettest.Result.Group.Icon" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textColor">@color/theme_text_color</item>
-        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@color/result_group_icon</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="Nettest.Result.Group.Header" parent="TextAppearance.AppCompat.Medium">
@@ -188,8 +194,55 @@
 
     <style name="Nettest.Result.Item" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/theme_text_color</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
+
+    <!-- QoS Result Fragment -->
+
+    <style name="Nettest.Result.QoS.Icon" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_primary_color</item>
+        <item name="android:textSize">35sp</item>
+    </style>
+
+    <style name="Nettest.Result.QoS.Name" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Nettest.Result.QoS.Success.Count" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- QoS Result Details Fragment -->
+
+    <style name="Nettest.Result.QoS.Details.Section" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:padding">20dp</item>
+        <item name="android:background">@color/theme_tertiary_color</item>
+    </style>
+
+    <style name="Nettest.Result.QoS.Details.Description" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">20dp</item>
+    </style>
+
+    <style name="Nettest.Result.QoS.Details.List.Header" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Nettest.Result.QoS.Details.List.Description" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+
+
 
     <!-- History Fragment -->
     <style name="Nettest.History.Error.Text" parent="TextAppearance.AppCompat.Medium">

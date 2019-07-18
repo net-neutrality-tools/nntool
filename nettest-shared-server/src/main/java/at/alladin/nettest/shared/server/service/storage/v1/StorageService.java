@@ -1,6 +1,7 @@
 package at.alladin.nettest.shared.server.service.storage.v1;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.data.domain.Pageable;
 
@@ -40,9 +41,9 @@ public interface StorageService {
 	
 	LmapTaskDto getTaskDto(MeasurementTypeDto type, LmapCapabilityTaskDto capability, String settingsUuid) throws StorageServiceException; // TODO: add client info to fetch personalized settings 
 
-	FullMeasurementResponse getFullMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid, String measurementUuid) throws StorageServiceException;
+	FullMeasurementResponse getFullMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid, String measurementUuid, Locale locale) throws StorageServiceException;
 	
-	DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid, String measurementUuid, String settingsUuid) throws StorageServiceException;
+	DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid, String measurementUuid, String settingsUuid, Locale locale) throws StorageServiceException;
 	
 	List<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid(String measurementAgentUuid, 
 			Pageable pageable) throws StorageServiceException;

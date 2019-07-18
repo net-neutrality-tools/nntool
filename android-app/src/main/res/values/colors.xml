@@ -8,13 +8,17 @@
     <color name="theme_action_bar_bg">@color/theme_app_bg</color>
     <color name="theme_text_color">@color/black</color>
 
+    <color name="green_light">#08c675</color>
+    <color name="yellow_light">#fbc423</color>
+    <color name="red_light">#de3c41</color>
+
     <color name="colorPrimary">@color/theme_primary_color</color>
     <color name="colorPrimaryDark">@color/black</color>
     <color name="colorAccent">@color/theme_primary_color</color>
 
-    <color name="ip_address_behind_nat">#ffc200</color>
-    <color name="ip_address_correct">#104f00</color>
-    <color name="ip_address_unavailable">#cf0000</color>
+    <color name="ip_address_behind_nat">@color/yellow_light</color>
+    <color name="ip_address_correct">@color/green_light</color>
+    <color name="ip_address_unavailable">@color/red_light</color>
 
     <color name="black">#111111</color>
 
@@ -39,4 +43,10 @@
 
     <color name="interface_traffic_arrow_inactive">@color/theme_border_color</color>
     <color name="interface_traffic_arrow_active">@color/theme_primary_color</color>
+
+    <color name="result_group_icon">@color/theme_primary_color</color>
+    <color name="result_qos_icon">@color/theme_primary_color</color>
+
+    <color name="result_qos_checkmark_good">@color/green_light</color>
+    <color name="result_qos_checkmark_bad">@color/red_light</color>
 </resources>

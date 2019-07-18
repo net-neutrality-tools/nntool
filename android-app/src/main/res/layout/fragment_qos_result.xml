@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <GridView
+        android:id="@+id/qos_result_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="2"
+        android:horizontalSpacing="20dp"
+        android:verticalSpacing="20dp"
+        android:padding="20dp"
+        android:gravity="center"
+        android:stretchMode="columnWidth"
+        android:background="@color/theme_tertiary_color"
+        />
+
+    <ProgressBar
+        android:id="@+id/qos_result_loading_progress_bar"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/qos_result_loading_error_text"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        style="@style/Nettest.History.Error.Text"
+        android:text="@string/history_no_results_found"/>
+</RelativeLayout>

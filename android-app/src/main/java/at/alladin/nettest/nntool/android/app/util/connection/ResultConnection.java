@@ -6,6 +6,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapRepo
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.disassociate.DisassociateResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import retrofit2.Response;
 
@@ -46,6 +47,15 @@ public class ResultConnection extends AbstractConnection<ResultService> {
     public ApiResponse<DisassociateResponse> disassociateMeasurement (final String agentUuid, final String measurementUuid) {
         try {
             return getControllerService().deleteSingleMeasurement(agentUuid, measurementUuid).execute().body();
+        } catch (final Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public ApiResponse<FullMeasurementResponse> requestFullMeasurement (final String agentUuid, final String measurementUuid) {
+        try {
+            return getControllerService().getFullMeasurementRequest(agentUuid, measurementUuid).execute().body();
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
