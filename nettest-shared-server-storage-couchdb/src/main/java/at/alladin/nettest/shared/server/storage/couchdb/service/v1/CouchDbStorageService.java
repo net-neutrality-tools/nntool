@@ -264,7 +264,7 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Override
 	public FullMeasurementResponse getFullMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid,
-			String measurementUuid) throws StorageServiceException {
+			String measurementUuid, Locale locale) throws StorageServiceException {
 		final Measurement measurement = obtainMeasurement(measurementAgentUuid, measurementUuid);
 		
 		final FullMeasurementResponse ret = fullMeasurementResponseMapper.map(measurement);
@@ -272,8 +272,7 @@ public class CouchDbStorageService implements StorageService {
 		//evaluate the qos stuff 
 		final QoSMeasurement qosMeasurement = (QoSMeasurement) measurement.getMeasurements().get(MeasurementTypeDto.QOS);
 		if (qosMeasurement != null) {
-			//TODO: forward qosMeasurement to mapper
-			final FullQoSMeasurement fullQosMeasurement = qosEvaluationService.evaluateQoSMeasurement(qosMeasurement);
+			final FullQoSMeasurement fullQosMeasurement = qosEvaluationService.evaluateQoSMeasurement(qosMeasurement, locale);
 			ret.getMeasurements().put(MeasurementTypeDto.QOS, fullQosMeasurement);
 		}
 		
@@ -281,7 +280,7 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	@Override
-	public DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid (String measurementAgentUuid, String measurementUuid, final String settingsUuid) throws StorageServiceException {
+	public DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid (String measurementAgentUuid, String measurementUuid, final String settingsUuid, final Locale locale) throws StorageServiceException {
 		final Measurement measurement = obtainMeasurement(measurementAgentUuid, measurementUuid);
 		//TODO: default settings?
 		final Settings settings = settingsRepository.findByUuid(settingsUuid);

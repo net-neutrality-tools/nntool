@@ -108,14 +108,14 @@
             "parameters": {
                 "echo_protocol_objective_protocol": "udp",
                 "echo_protocol_objective_payload": "UPD payload",
-                "server_addr": "127.0.0.1",
-                "server_port": "7"
+                "echo_protocol_objective_server_addr": "127.0.0.1",
+                "echo_protocol_objective_server_port": "7"
             },
             "evaluations": [
                 {
                     "operator": "eq",
                     "on_failure": "echo_protocol.failure",
-                    "echo_protocl_result": "OK",
+                    "echo_protocol_status": "OK",
                     "on_success": "echo_protocol.success"
                 }
             ]
@@ -134,14 +134,14 @@
             "parameters": {
                 "echo_protocol_objective_protocol": "tcp",
                 "echo_protocol_objective_payload": "TCP payload",
-                "server_addr": "127.0.0.1",
-                "server_port": "7"
+                "echo_protocol_objective_server_addr": "127.0.0.1",
+                "echo_protocol_objective_server_port": "7"
             },
             "evaluations": [
                 {
                     "operator": "eq",
                     "on_failure": "echo_protocol.failure",
-                    "echo_protocl_result": "OK",
+                    "echo_protocol_status": "OK",
                     "on_success": "echo_protocol.success"
                 }
             ]

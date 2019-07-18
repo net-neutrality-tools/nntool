@@ -102,6 +102,22 @@ public class EvaluatedQoSResult {
 	@JsonProperty("evaluation_keys")
 	private Map<String, String> evaluationKeyMap;
 
+	/**
+	 * Contains all to be displayed result keys mapped to the corresponding QoSResultOutcome.
+	 */
+	@io.swagger.annotations.ApiModelProperty("Contains all to be displayed result keys mapped to the corresponding QoSResultOutcome.")
+	@JsonPropertyDescription("Contains all to be displayed result keys mapped to the corresponding QoSResultOutcome.")
+	@Expose
+	@SerializedName("result_keys")
+	@JsonProperty("result_keys")
+	private Map<String, QoSResultOutcome> resultKeyMap;
+
+	public enum QoSResultOutcome {
+		OK,
+		INFO,
+		FAIL
+	}
+
 	public QoSMeasurementTypeDto getType() {
 		return type;
 	}
@@ -164,6 +180,14 @@ public class EvaluatedQoSResult {
 
 	public void setEvaluationKeyMap(Map<String, String> evaluationKeyMap) {
 		this.evaluationKeyMap = evaluationKeyMap;
+	}
+
+	public Map<String, QoSResultOutcome> getResultKeyMap() {
+		return resultKeyMap;
+	}
+
+	public void setResultKeyMap(Map<String, QoSResultOutcome> resultKeyMap) {
+		this.resultKeyMap = resultKeyMap;
 	}
 
 	@Override

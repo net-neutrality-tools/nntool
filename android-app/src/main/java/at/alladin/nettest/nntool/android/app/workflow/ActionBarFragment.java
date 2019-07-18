@@ -24,12 +24,20 @@ public abstract class ActionBarFragment extends Fragment {
      */
     public abstract Integer getTitleStringId();
 
+    public Object[] getTitleArgs() {
+        return null;
+    }
+
     /**
      * The help section string id to be appended to the help link (e.g. R.string.help_link_history_section)
      * If null, no section will be appended
      * @return
      */
     public Integer getHelpSectionStringId() {
+        return null;
+    }
+
+    public Object[] getHelpSectionArgs() {
         return null;
     }
 
@@ -43,10 +51,12 @@ public abstract class ActionBarFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         final Integer helpSectionStringId = getHelpSectionStringId();
+        final Object[] helpArgs = getHelpSectionArgs();
         if (R.id.action_bar_show_help_action == item.getItemId()) {
             getActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.main_fragment_layout, HelpFragment.newInstance(helpSectionStringId != null ? getString(helpSectionStringId) : null))
+                    .replace(R.id.main_fragment_layout, HelpFragment.newInstance(helpSectionStringId == null ?
+                            null : helpArgs == null ? getString(helpSectionStringId) : getString(helpSectionStringId, helpArgs)))
                     .addToBackStack(null)
                     .commit();
             return true;
@@ -55,16 +65,20 @@ public abstract class ActionBarFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onResume() {
         final Integer titleStringId = getTitleStringId();
         if (titleStringId != null) {
-            ((MainActivity) getActivity()).setActionBarTitle(getString(titleStringId));
+            final Object[] titleArgs = getTitleArgs();
+            if (titleArgs != null) {
+                ((MainActivity) getActivity()).setActionBarTitle(getString(titleStringId, titleArgs));
+            } else {
+                ((MainActivity) getActivity()).setActionBarTitle(getString(titleStringId));
+            }
         } else {
             ((MainActivity) getActivity()).setActionBarTitle(new String());
         }
         setHasOptionsMenu(true);
-
-        super.onAttach(context);
+        super.onResume();
     }
 
     @Override

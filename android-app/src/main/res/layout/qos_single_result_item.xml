@@ -1,0 +1,23 @@
+<LinearLayout android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:descendantFocusability="blocksDescendants"
+    android:layout_marginRight="5dp"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <ImageView
+        android:id="@+id/qos_result_single_results_color"
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/rectangle_success"
+        />
+
+    <TextView
+        android:id="@+id/qos_result_single_results"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Nettest.Result.QoS.Details.Description"
+        android:text="Measurement successful"
+        />
+
+</LinearLayout>
