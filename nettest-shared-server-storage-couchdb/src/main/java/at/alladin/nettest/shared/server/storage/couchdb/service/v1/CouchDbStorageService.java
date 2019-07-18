@@ -258,7 +258,7 @@ public class CouchDbStorageService implements StorageService {
 	@Override
 	public List<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid (final String measurementAgentUuid, 
 			final Pageable pageable) {
-		final List<Measurement> measurementList = measurementRepository.findByAgentInfoUuid(measurementAgentUuid, pageable);
+		final List<Measurement> measurementList = measurementRepository.findByAgentInfoUuidOrderByMeasurementTimeStartTimeDesc(measurementAgentUuid, pageable);
 		return briefMeasurementResponseMapper.map(measurementList);
 	}
 	
