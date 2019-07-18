@@ -81,9 +81,9 @@ public class NetworkGatherer
         IntentFilter intentFilter;
         intentFilter = new IntentFilter();
         intentFilter.addAction(WifiManager.RSSI_CHANGED_ACTION);
-        //intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        //intentFilter.addAction(WifiManager.NETWORK_IDS_CHANGED_ACTION);
-        //intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.NETWORK_IDS_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         getInformationProvider().getContext().registerReceiver(networkStateBroadcastReceiver, intentFilter);
 
         int events = PhoneStateListener.LISTEN_SIGNAL_STRENGTHS;

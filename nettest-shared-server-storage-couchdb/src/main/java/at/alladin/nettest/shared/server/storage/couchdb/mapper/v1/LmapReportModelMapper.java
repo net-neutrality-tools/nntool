@@ -1,10 +1,10 @@
 package at.alladin.nettest.shared.server.storage.couchdb.mapper.v1;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.time.temporal.ChronoUnit;
 
 import org.joda.time.LocalDateTime;
 import org.mapstruct.Mapper;
@@ -17,11 +17,10 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.Measurem
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.QoSMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.TrafficDto;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ConnectionInfo;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
@@ -37,7 +36,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Traffic;
  *
  */
 @Mapper(componentModel = "spring", imports = ChronoUnit.class)
-public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttInfoDtoMapper {
+public interface LmapReportModelMapper extends UuidMapper, RttInfoDtoMapper, MeasurementResultNetworkPointInTimeDtoMapper {
 	
 	double EARTH_MEAN_RADIUS = 6373000;
 
@@ -137,7 +136,7 @@ public interface LmapReportModelMapper extends DateTimeMapper, UuidMapper, RttIn
 //		//@Mapping(source = "timeBasedResult.cpuUsage", target = "deviceInfo.osInfo.cpuUsage"),
 //		//@Mapping(source = "timeBasedResult.memUsage", target = "deviceInfo.osInfo.memUsage"),
 //		//@Mapping(source = "timeBasedResult.networkPointsInTime", target = "networkPointsInTime"),
-		@Mapping(target = "networkInfo.networkPointsInTime", ignore = true), // TODO
+		@Mapping(source = "timeBasedResult.networkPointsInTime", target = "networkInfo.networkPointsInTime"),
 		
 		@Mapping(source = "timeBasedResult.signals", target = "networkInfo.signalInfo.signals"),
 		@Mapping(expression = "java(parseMeasurements(lmapReportDto))", target = "measurements")

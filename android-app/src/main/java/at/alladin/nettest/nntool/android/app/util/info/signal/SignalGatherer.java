@@ -48,9 +48,9 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
         IntentFilter intentFilter;
         intentFilter = new IntentFilter();
         intentFilter.addAction(WifiManager.RSSI_CHANGED_ACTION);
-        //intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        //intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-        //intentFilter.addAction(WifiManager.NETWORK_IDS_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.NETWORK_IDS_CHANGED_ACTION);
         getInformationProvider().getContext().registerReceiver(networkStateBroadcastReceiver, intentFilter);
 
         int events = PhoneStateListener.LISTEN_SIGNAL_STRENGTHS;
@@ -125,7 +125,9 @@ public class SignalGatherer extends ListenableGatherer<SignalStrengthChangeEvent
                 final CellType newCellType = CellType.fromTelephonyNetworkTypeId(event.getNetworkType());
                 final CellType oldCellType = lastSignal != null ? CellType.fromTelephonyNetworkTypeId(lastSignal.getNetworkId()) : CellType.UNKNOWN;
                 Log.d(TAG, "comparing: (new) " + newCellType + " [network: " + event.getNetworkType() + "] <-> (old) " + oldCellType);
-                resetSignal = !newCellType.getTechnologyType().equals(oldCellType.getTechnologyType());
+                if (oldCellType != null) {
+                    resetSignal = newCellType == null || !newCellType.getTechnologyType().equals(oldCellType.getTechnologyType());
+                }
             }
             else if (event.getNetworkType() == null) {
                 resetSignal = true;
