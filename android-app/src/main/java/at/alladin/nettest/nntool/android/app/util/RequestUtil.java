@@ -197,7 +197,7 @@ public class RequestUtil {
                 }
 
                 networkInfoDto.setTime(operatorInfo.getTime());
-                networkInfoDto.setRelativeTimeNs(informationCollector.getStartTimeNs() - operatorInfo.getTimestampNs());
+                networkInfoDto.setRelativeTimeNs(operatorInfo.getTimestampNs() - informationCollector.getStartTimeNs());
                 networkInfoDto.setNetworkTypeId(operatorInfo.getNetworkId());
 
             }

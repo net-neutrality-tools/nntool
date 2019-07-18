@@ -151,7 +151,6 @@ public class MeasurementService extends Service implements ServiceConnection {
         this.bundle = options;
         followUpActions = (ArrayList<MeasurementType>) options.getSerializable(EXTRAS_KEY_FOLLOW_UP_ACTIONS);
         subMeasurementStartTimeNs = System.nanoTime();
-        startDateTime = LocalDateTime.now(DateTimeZone.UTC);
 
         final String speedTaskCollectorUrl = options.getString(EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL);
         final SpeedTaskDesc speedTaskDesc = (SpeedTaskDesc) options.getSerializable(EXTRAS_KEY_SPEED_TASK_DESC);
@@ -225,11 +224,12 @@ public class MeasurementService extends Service implements ServiceConnection {
         if (intent != null) {
             //if this is the first action of the current total measurement start the listeners
             if (!isFollowUpAction.getAndSet(true)) {
-                overallStartTimeNs = System.nanoTime();
                 if (informationCollector != null) {
                     informationCollector.stop();
                 }
                 informationCollector = new InformationCollector(InformationProvider.createMeasurementDefault(getApplicationContext()));
+                startDateTime = LocalDateTime.now(DateTimeZone.UTC);
+                overallStartTimeNs = System.nanoTime();
                 informationCollector.setStartTimeNs(overallStartTimeNs);
                 informationCollector.start();
             }
