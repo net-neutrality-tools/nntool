@@ -7,6 +7,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -148,7 +149,7 @@ public class GeoLocationGatherer extends ListenableGatherer<GeoLocationChangeEve
         dto.setLongitude(location.getLongitude());
         dto.setProvider(location.getProvider());
         dto.setSpeed((double) location.getSpeed());
-        dto.setTime(new LocalDateTime(location.getTime()));
+        dto.setTime(new LocalDateTime(location.getTime(), DateTimeZone.UTC));
         return dto;
     }
 

@@ -1,5 +1,6 @@
 package at.alladin.nettest.nntool.android.app.util.info.network;
 
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
 /**
@@ -34,7 +35,7 @@ public final class NetworkChangeEvent implements OperatorInfo {
     public NetworkChangeEvent(final Integer networkType, NetworkChangeEventType type) {
         this.networkType = networkType;
         this.timestampNs = System.nanoTime();
-        this.time = LocalDateTime.now();
+        this.time = LocalDateTime.now(DateTimeZone.UTC);
         this.eventType = type;
     }
 
