@@ -1,5 +1,7 @@
 package at.alladin.nettest.nntool.android.app.util.info.network;
 
+import org.joda.time.LocalDateTime;
+
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  */
@@ -19,6 +21,8 @@ public final class NetworkChangeEvent implements OperatorInfo {
 
     private final long timestampNs;
 
+    private final LocalDateTime time;
+
     private final Integer networkType;
 
     private NetworkChangeEventType eventType;
@@ -30,7 +34,12 @@ public final class NetworkChangeEvent implements OperatorInfo {
     public NetworkChangeEvent(final Integer networkType, NetworkChangeEventType type) {
         this.networkType = networkType;
         this.timestampNs = System.nanoTime();
+        this.time = LocalDateTime.now();
         this.eventType = type;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
     }
 
     public WifiOperator getWifiOperator() {

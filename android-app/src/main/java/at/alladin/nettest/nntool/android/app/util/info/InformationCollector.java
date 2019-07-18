@@ -10,9 +10,11 @@ import org.joda.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import at.alladin.nettest.nntool.android.app.support.telephony.CellInfoWrapper;
+import at.alladin.nettest.nntool.android.app.support.telephony.CellSignalStrengthWrapper;
 import at.alladin.nettest.nntool.android.app.support.telephony.CellType;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeEvent;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeListener;
@@ -48,6 +50,9 @@ public class InformationCollector
     private final AtomicReference<OperatorInfoHolder> operatorInfo = new AtomicReference<>(null);
 
     private final AtomicBoolean illegalNetworkStateDetected = new AtomicBoolean(false);
+
+    //timestamp in ns used for all relative time values
+    private final AtomicLong timestampNs = new AtomicLong(System.nanoTime());
 
     public InformationCollector(final InformationProvider informationProvider) {
         this.informationProvider = informationProvider;
@@ -118,7 +123,10 @@ public class InformationCollector
                 && geoLocationChangeEvent != null
                 && geoLocationChangeEvent.getGeoLocationDto() != null) {
             if (GeoLocationChangeEvent.GeoLocationChangeEventType.LOCATION_UPDATE.equals(geoLocationChangeEvent.getEventType())) {
-                geoLocationList.add(geoLocationChangeEvent.getGeoLocationDto());
+                final GeoLocationDto locationDto = geoLocationChangeEvent.getGeoLocationDto();
+                locationDto.setRelativeTimeNs(System.nanoTime() - timestampNs.get());
+                geoLocationList.add(locationDto);
+
             }
         }
     }
@@ -169,7 +177,8 @@ public class InformationCollector
                     final OperatorInfoHolder operatorInfoHolder = new OperatorInfoHolder();
                     operatorInfoHolder.setCellType(cellType);
                     operatorInfoHolder.setOperatorInfo(operator);
-                    operatorInfoHolder.setTimestamp(LocalDateTime.now());
+                    operatorInfoHolder.setTime(event.getTime());
+                    operatorInfoHolder.setTimestampNs(event.getTimestampNs());
                     operatorInfoHolder.setNetworkId(event.getNetworkType());
                     operatorInfo.set(operatorInfoHolder);
                 }
@@ -201,11 +210,20 @@ public class InformationCollector
         return illegalNetworkStateDetected.get();
     }
 
+    public void setStartTimeNs(final long startTimeNs) {
+        timestampNs.set(startTimeNs);
+    }
+
+    public long getStartTimeNs() {
+        return timestampNs.get();
+    }
+
     public static class OperatorInfoHolder {
         OperatorInfo operatorInfo;
         CellType cellType;
         Integer networkId;
-        LocalDateTime timestamp;
+        LocalDateTime time;
+        Long timestampNs;
 
         public OperatorInfo getOperatorInfo() {
             return operatorInfo;
@@ -231,12 +249,20 @@ public class InformationCollector
             this.networkId = networkId;
         }
 
-        public LocalDateTime getTimestamp() {
-            return timestamp;
+        public Long getTimestampNs() {
+            return timestampNs;
         }
 
-        public void setTimestamp(LocalDateTime timestamp) {
-            this.timestamp = timestamp;
+        public void setTimestampNs(Long timestampNs) {
+            this.timestampNs = timestampNs;
+        }
+
+        public LocalDateTime getTime() {
+            return time;
+        }
+
+        public void setTime(LocalDateTime time) {
+            this.time = time;
         }
     }
 }

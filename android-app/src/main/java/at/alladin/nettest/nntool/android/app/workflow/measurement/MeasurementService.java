@@ -71,13 +71,9 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     final AtomicBoolean isBound = new AtomicBoolean(false);
 
-    /**
-     * As of now this timestamp is taken immediately before the start of the speed measurement.
-     * This should be changed if the workflow should allow different sub measurement execution orders.
-     */
-    private Long overallStartTime;
+    private Long overallStartTimeNs;
 
-    private Long subMeasurementStartTime;
+    private Long subMeasurementStartTimeNs;
 
     private LocalDateTime startDateTime;
 
@@ -154,8 +150,7 @@ public class MeasurementService extends Service implements ServiceConnection {
     public void startMeasurement(final Bundle options) {
         this.bundle = options;
         followUpActions = (ArrayList<MeasurementType>) options.getSerializable(EXTRAS_KEY_FOLLOW_UP_ACTIONS);
-        overallStartTime = System.nanoTime();
-        subMeasurementStartTime = overallStartTime;
+        subMeasurementStartTimeNs = System.nanoTime();
         startDateTime = LocalDateTime.now(DateTimeZone.UTC);
 
         final String speedTaskCollectorUrl = options.getString(EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL);
@@ -167,7 +162,7 @@ public class MeasurementService extends Service implements ServiceConnection {
             @Override
             public void onMeasurementFinished(JniSpeedMeasurementResult result, SpeedTaskDesc taskDesc) {
                 final SpeedMeasurementResult speedMeasurementResult = ResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
-                speedMeasurementResult.setRelativeStartTimeNs(overallStartTime);
+                speedMeasurementResult.setRelativeStartTimeNs(overallStartTimeNs);
                 speedMeasurementResult.setStatus(StatusDto.FINISHED);
                 Log.d(TAG, speedMeasurementResult.toString());
                 addSubMeasurementResult(speedMeasurementResult);
@@ -199,7 +194,7 @@ public class MeasurementService extends Service implements ServiceConnection {
                 */
         this.bundle = options;
         followUpActions = (ArrayList<MeasurementType>) options.getSerializable(EXTRAS_KEY_FOLLOW_UP_ACTIONS);
-        subMeasurementStartTime = System.nanoTime();
+        subMeasurementStartTimeNs = System.nanoTime();
 
         final List<TaskDesc> taskDescList = (List<TaskDesc>) options.getSerializable(EXTRAS_KEY_QOS_TASK_DESC_LIST);
         final String collectorUrl = options.getString(EXTRAS_KEY_QOS_TASK_COLLECTOR_URL);
@@ -230,10 +225,12 @@ public class MeasurementService extends Service implements ServiceConnection {
         if (intent != null) {
             //if this is the first action of the current total measurement start the listeners
             if (!isFollowUpAction.getAndSet(true)) {
+                overallStartTimeNs = System.nanoTime();
                 if (informationCollector != null) {
                     informationCollector.stop();
                 }
                 informationCollector = new InformationCollector(InformationProvider.createMeasurementDefault(getApplicationContext()));
+                informationCollector.setStartTimeNs(overallStartTimeNs);
                 informationCollector.start();
             }
             Log.d(TAG, "Got intent with action: '" + intent.getAction() + "'");
@@ -330,8 +327,8 @@ public class MeasurementService extends Service implements ServiceConnection {
      * @param result
      */
     public void addSubMeasurementResult(final SubMeasurementResult result) {
-        result.setRelativeStartTimeNs(subMeasurementStartTime - overallStartTime);
-        result.setRelativeEndTimeNs(System.nanoTime() - overallStartTime);
+        result.setRelativeStartTimeNs(subMeasurementStartTimeNs - overallStartTimeNs);
+        result.setRelativeEndTimeNs(System.nanoTime() - overallStartTimeNs);
         subMeasurementResultList.add(result);
     }
 

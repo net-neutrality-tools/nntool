@@ -152,9 +152,9 @@ public interface LmapReportModelMapper extends UuidMapper, RttInfoDtoMapper, Mea
 		@Mapping(source="speedMeasurementResult.reason", target="statusInfo.reason"),
 		@Mapping(expression="java(parseAverageDownload(speedMeasurementResult))", target="throughputAvgDownloadBps"),
 		@Mapping(expression="java(parseAverageUpload(speedMeasurementResult))", target="throughputAvgUploadBps"),
-		@Mapping(expression="java(speedMeasurement.getThroughputAvgDownloadBps() == null ? "
+		@Mapping(expression="java(speedMeasurement.getThroughputAvgDownloadBps() == null || speedMeasurement.getThroughputAvgDownloadBps() == 0 ? "
 				+ "null : Math.log10(speedMeasurement.getThroughputAvgDownloadBps()))", target="throughputAvgDownloadLog"),
-		@Mapping(expression="java(speedMeasurement.getThroughputAvgUploadBps() == null ? "
+		@Mapping(expression="java(speedMeasurement.getThroughputAvgUploadBps() == null || speedMeasurement.getThroughputAvgUploadBps() == 0 ? "
 				+ "null : Math.log10(speedMeasurement.getThroughputAvgUploadBps()))", target="throughputAvgUploadLog"),
 	})
 	SpeedMeasurement map (SpeedMeasurementResult speedMeasurementResult, LocalDateTime startTimeNs);

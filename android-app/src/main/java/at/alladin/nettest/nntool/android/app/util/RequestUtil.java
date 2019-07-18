@@ -165,7 +165,7 @@ public class RequestUtil {
             if (informationCollector.getCellInfoList() != null && informationCollector.getCellInfoList().size() > 0) {
                 final List<SignalDto> signalDtoList = new ArrayList<>();
                 for (CellInfoWrapper ciWrap : informationCollector.getCellInfoList()) {
-                    final SignalDto signalDto = cellInfoWrapperToSignalDto(ciWrap);
+                    final SignalDto signalDto = cellInfoWrapperToSignalDto(ciWrap, informationCollector);
                     if (signalDto != null) {
                         signalDtoList.add(signalDto);
                     }
@@ -196,8 +196,10 @@ public class RequestUtil {
                     networkInfoDto.setSimCountry(operator.getSimCountryCode());
                 }
 
-                networkInfoDto.setTime(operatorInfo.getTimestamp());
+                networkInfoDto.setTime(operatorInfo.getTime());
+                networkInfoDto.setRelativeTimeNs(informationCollector.getStartTimeNs() - operatorInfo.getTimestampNs());
                 networkInfoDto.setNetworkTypeId(operatorInfo.getNetworkId());
+
             }
 
         }
@@ -212,7 +214,7 @@ public class RequestUtil {
         return apiRequest;
     }
 
-    private static SignalDto cellInfoWrapperToSignalDto(final CellInfoWrapper cellInfoWrapper) {
+    private static SignalDto cellInfoWrapperToSignalDto(final CellInfoWrapper cellInfoWrapper, final InformationCollector informationCollector) {
         if (cellInfoWrapper == null || cellInfoWrapper.getCellSignalStrengthWrapper() == null) {
             return null;
         }
@@ -227,6 +229,7 @@ public class RequestUtil {
         signalDto.setSignalStrength2g3gDbm(sigWrap.getSignalStrength());
         signalDto.setWifiLinkSpeedBps(sigWrap.getWifiLinkSpeed());
         signalDto.setWifiRssiDbm(sigWrap.getWifiRssi());
+        signalDto.setRelativeTimeNs(sigWrap.getTimeStampNano() - informationCollector.getStartTimeNs());
 
         if (cellInfoWrapper.getCellIdentityWrapper() != null) {
             final CellIdentityWrapper iWrap = cellInfoWrapper.getCellIdentityWrapper();
