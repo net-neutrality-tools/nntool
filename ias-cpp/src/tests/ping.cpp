@@ -231,6 +231,7 @@ int Ping::run()
 					{
 						TRC_ERR("Ping payload mismatch");
 						mTimeDiff = 0;
+						::hasError = true;
 						break;
 					}
 				}

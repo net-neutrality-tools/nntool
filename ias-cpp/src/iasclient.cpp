@@ -37,7 +37,7 @@ bool RTT;
 bool DOWNLOAD;
 bool UPLOAD;
 
-bool hasError = false;
+std::atomic_bool hasError;
 std::exception recentException;
 
 bool TIMER_ACTIVE;

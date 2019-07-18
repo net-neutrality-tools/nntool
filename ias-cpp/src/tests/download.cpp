@@ -223,19 +223,10 @@ int Download::run()
 			syncing_threads[pid] = 1;
 
 			//Got an error
-			if(mResponse == -1)
+			if(mResponse == -1 || mResponse == 0)
 			{
-				TRC_ERR("Received an Error: Download RECV == -1");
-
-				//break to the end of the loop
-				break;
-			}
-
-			//Got an error
-			if(mResponse == 0)
-			{
-				TRC_ERR("Received an Error: Download RECV == 0");
-
+				TRC_ERR("Received an Error: Download RECV == " + std::to_string(mResponse));
+                ::hasError = true;
 				//break to the end of the loop
 				break;
 			}
@@ -247,7 +238,7 @@ int Download::run()
 			mDownload.datasize_total += mResponse;
 
 			//Timer is running
-			if( TIMER_RUNNING )
+			if( TIMER_RUNNING && !hasError)
 			{
 				if(mDownload.results.find(TIMER_INDEX) == mDownload.results.end())
 					mDownload.results[TIMER_INDEX] = mResponse;

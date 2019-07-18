@@ -6,6 +6,7 @@
 #include <map>
 #include <jni.h>
 #include <iostream>
+#include <atomic>
 #include "../../ias-libnntool/json11.hpp"
 #include "type.h"
 
@@ -35,7 +36,7 @@ extern bool TIMER_ACTIVE;
 extern bool TIMER_RUNNING;
 extern bool TIMER_STOPPED;
 
-extern bool hasError;
+extern std::atomic_bool hasError;
 
 extern int TIMER_INDEX;
 extern int TIMER_DURATION;

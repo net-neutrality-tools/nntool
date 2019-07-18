@@ -226,23 +226,14 @@ int Upload::run()
 			syncing_threads[pid] = 1;
 			
 			//Got an error
-			if(mResponse == -1)
+			if(mResponse == -1 || mResponse == 0)
 			{
-				TRC_ERR("Received an Error: Upload RECV == -1");
-				
+				TRC_ERR("Received an Error: Upload RECV == " + std::to_string(mResponse));
+				::hasError = true;
 				//break to the end of the loop
 				break;
 			}
-			
-			//Got an error
-			if(mResponse == 0)
-			{
-				TRC_ERR("Received an Error: Upload RECV == 0");
-				
-				//break to the end of the loop
-				break;
-			}
-				
+
 			//Cut String out of Response from Server
 			string sResponse(rbuffer,find( rbuffer, rbuffer + mResponse,  ';'));
 
@@ -261,7 +252,7 @@ int Upload::run()
 	        }
 
 			//Timer is running
-			if( TIMER_RUNNING )
+			if( TIMER_RUNNING && !::hasError)
 			{
 				#ifdef NNTOOL
 					index = nTimeRecvExa;

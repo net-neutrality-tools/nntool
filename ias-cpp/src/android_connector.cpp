@@ -522,6 +522,7 @@ void AndroidConnector::startMeasurement() {
         json11::Json jMeasurementParametersJson = jMeasurementParameters;
         measurementStart(jMeasurementParametersJson.dump());
     } catch (std::exception & ex) {
+        shutdown();
         JNIEnv* env = getJniEnv();
         if (env == nullptr) {
             return;
