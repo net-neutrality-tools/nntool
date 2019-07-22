@@ -34,6 +34,7 @@ using namespace std;
 */
 class CCallback
 {
+    friend void startTestCase(int nTestCase);
 	private:
 		void callbackToPlatform(string cmd, string msg, int error_code, string error_description);
 		void rttUdpCallback(string cmd);

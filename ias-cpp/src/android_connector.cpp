@@ -239,7 +239,9 @@ void AndroidConnector::callback(json11::Json::object& message) const {
         } else {
             env->SetFloatField(baseMeasurementState, fieldProgress, 0.0f);
         }
-    }    
+    }
+
+    env->CallVoidMethod(jniCaller, callbackID, env->NewStringUTF(""));
 
 }
 

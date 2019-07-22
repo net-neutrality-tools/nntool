@@ -359,6 +359,10 @@ void startTestCase(int nTestCase)
 {
 	syncing_threads.clear();
 	pCallback->mTestCase = nTestCase;
+	#ifdef __ANDROID__
+	    //set off measurement start callback
+	    pCallback->callbackToPlatform("started", "", 0, "");
+	#endif
 	std::unique_ptr<CMeasurement> pMeasurement = std::make_unique<CMeasurement>( pConfig.get(), pXml.get(), pService.get(), conf.sProvider, nTestCase, pCallback.get());
 	pMeasurement->startMeasurement();
 }
