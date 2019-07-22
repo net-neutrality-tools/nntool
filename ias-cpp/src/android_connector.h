@@ -122,6 +122,22 @@ class AndroidConnector {
             jmethodID staticFloatValueOf;
         };
 
+        //the settings from the SpeedTaskDesc
+        struct SpeedTaskDesc {
+            std::string measurementServerUrlV4;
+            std::string measurementServerUrlV6;
+            int rttCount;
+            int downloadStreams;
+            int uploadStreams;
+            int speedServerPort;
+            bool performDownload;
+            bool performUpload;
+            bool performRtt;
+            bool isEncrypted;
+            bool useIpv6;
+            std::string clientIp;
+        } speedTaskDesc;
+
         JavaVM *javaVM;
         jclass jniHelperClass;
         jobject jniCaller;
@@ -149,23 +165,13 @@ class AndroidConnector {
         //pingMeasurementFields
         jfieldID fieldAverageMs;
 
-        //the settings from the SpeedTaskDesc
-        std::string measurementServerUrlV4;
-        std::string measurementServerUrlV6;
-        int rttCount;
-        int downloadStreams;
-        int uploadStreams;
-        int speedServerPort;
-        bool performDownload;
-        bool performUpload;
-        bool performRtt;
-        bool isEncrypted;
-
         //the classes for the final result
         jclass speedMeasurementResultClazz;
         jclass resultUdpClazz;
         jclass resultBandwidthClazz;
         jclass timeClazz;
+
+        std::string measurementServerIp;
 
         std::vector<std::string> pendingErrorMessages;
 

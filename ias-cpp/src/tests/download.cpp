@@ -38,7 +38,11 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 {
 	mServerName = pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
 	mServer 	= pXml->readString(sProvider,"IP","1.1.1.1");
-	mClient 	= "0.0.0.0";
+	#ifdef __ANDROID__
+	    mClient = pXml->readString(sProvider, "CLIENT_IP", "0.0.0.0");
+	#else
+	    mClient = "0.0.0.0";
+	#endif
 	mPort   	= pXml->readLong(sProvider,"DL_PORT",80);
 	mTls		= pXml->readLong(sProvider,"TLS",0);
 
@@ -81,10 +85,12 @@ int Download::run()
 		TRC_DEBUG( ("Resolving Hostname for Measurement: "+mServerName).c_str() );
 
 		#if defined(NNTOOL) && defined(__ANDROID__)
-		if( CTool::validateIp(mClient) == 6)
+
+		if( CTool::validateIp(mClient) == 6) {
 			mServer = CTool::getIpFromHostname( mServerName, 6 );
-		else
+		} else {
 			mServer = CTool::getIpFromHostname( mServerName, 4 );
+        }
 		#endif
 
 		#if defined(NNTOOL) && !defined(__ANDROID__)

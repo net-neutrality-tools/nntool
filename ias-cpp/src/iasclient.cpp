@@ -61,12 +61,11 @@ pthread_mutex_t mutex1;
 
 map<int,int> syncing_threads;
 
-CConfigManager* pConfig;
-CConfigManager* pXml;
-CConfigManager* pService;
+std::unique_ptr<CConfigManager> pConfig;
+std::unique_ptr<CConfigManager> pXml;
+std::unique_ptr<CConfigManager> pService;
 
-CCallback *pCallback;
-CMeasurement* pMeasurement;
+std::unique_ptr<CCallback> pCallback;
 
 MeasurementPhase currentTestPhase = MeasurementPhase::INIT;
 
@@ -238,9 +237,9 @@ void measurementStart(string measurementParameters)
 	TRC_INFO("Status: ias-client started");
 
 	//map measurement parameters to internal variables
-	pConfig = new CConfigManager();
-	pXml 	= new CConfigManager();
-	pService = new CConfigManager();
+	pConfig = std::make_unique<CConfigManager>();
+	pXml 	= std::make_unique<CConfigManager>();
+	pService = std::make_unique<CConfigManager>();
 
 	Json::array jTargets = jMeasurementParameters["wsTargets"].array_items();
 	string wsTLD = jMeasurementParameters["wsTLD"].string_value();
@@ -263,6 +262,9 @@ void measurementStart(string measurementParameters)
 	pXml->writeString(conf.sProvider,"UL_PORT",jMeasurementParameters["wsTargetPort"].string_value());
 
 	pXml->writeString(conf.sProvider,"TLS",jMeasurementParameters["wsWss"].string_value());
+	#ifdef __ANDROID__
+	    pXml->writeString(conf.sProvider, "CLIENT_IP", jMeasurementParameters["clientIp"].string_value());
+	#endif
 
 	pConfig->writeString("security","authToken",jMeasurementParameters["wsAuthToken"].string_value());
 	pConfig->writeString("security","authTimestamp",jMeasurementParameters["wsAuthTimestamp"].string_value());
@@ -285,7 +287,7 @@ void measurementStart(string measurementParameters)
 	#endif
 
 
-	pCallback = new CCallback();
+	pCallback = std::make_unique<CCallback>();
 
     if (!::RTT && !::DOWNLOAD && !::UPLOAD)
     {
@@ -357,9 +359,8 @@ void startTestCase(int nTestCase)
 {
 	syncing_threads.clear();
 	pCallback->mTestCase = nTestCase;
-	pMeasurement = new CMeasurement( pConfig, pXml, pService, conf.sProvider, nTestCase, pCallback);
+	std::unique_ptr<CMeasurement> pMeasurement = std::make_unique<CMeasurement>( pConfig.get(), pXml.get(), pService.get(), conf.sProvider, nTestCase, pCallback.get());
 	pMeasurement->startMeasurement();
-	delete(pMeasurement);
 }
 
 void shutdown()
@@ -367,12 +368,6 @@ void shutdown()
 	usleep(1000000);
 
 	::RUNNING = false;
-
-	delete(pService);
-	delete(pXml);
-	delete(pConfig);
-
-	delete(pCallback);
 
 	TRC_INFO("Status: ias-client stopped");
 

@@ -2,6 +2,7 @@ package at.alladin.nettest.nntool.android.app.workflow.measurement;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -94,7 +95,15 @@ public class SpeedFragment extends ActionBarFragment implements ServiceConnectio
         getView().requestFocus();
         getView().setOnKeyListener((v, keyCode, event) -> {
 
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                AlertDialogUtil.showCancelDialog(getContext(), R.string.alert_cancel_measurement_title, R.string.alert_cancel_measurement_content,
+                        (dialog, which) -> {
+                            measurementService.stopSpeedMeasurement();
+                            ((MainActivity) getActivity()).navigateTo(WorkflowTarget.TITLE);
+                            dialog.cancel();
+                        },
+                            (dialog, which) -> dialog.cancel()
+                        );
                 return true;
             }
 

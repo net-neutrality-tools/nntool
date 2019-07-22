@@ -101,39 +101,49 @@ void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
     jstring serverUrl = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
     if (serverUrl != nullptr) {
         const char * url = env->GetStringUTFChars(serverUrl, NULL);
-        measurementServerUrlV4 = std::string(url);
+        this->speedTaskDesc.measurementServerUrlV4 = std::string(url);
     }
 
     toParseId = env->GetFieldID(clazz, "speedServerAddrV6", "Ljava/lang/String;");
     serverUrl = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
     if (serverUrl != nullptr) {
         const char * urlv6 = env->GetStringUTFChars(serverUrl, NULL);
-        measurementServerUrlV6 = std::string(urlv6);
+        this->speedTaskDesc.measurementServerUrlV6 = std::string(urlv6);
     }
 
     toParseId = env->GetFieldID(clazz, "rttCount", "I");
-    rttCount = (int) env->GetIntField(speedTaskDesc, toParseId);
+    this->speedTaskDesc.rttCount = (int) env->GetIntField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "downloadStreams", "I");
-    downloadStreams = (int) env->GetIntField(speedTaskDesc, toParseId);
+    this->speedTaskDesc.downloadStreams = (int) env->GetIntField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "uploadStreams", "I");
-    uploadStreams = (int) env->GetIntField(speedTaskDesc, toParseId);
+    this->speedTaskDesc.uploadStreams = (int) env->GetIntField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "speedServerPort", "I");
-    speedServerPort = (int) env->GetIntField(speedTaskDesc, toParseId);
+    this->speedTaskDesc.speedServerPort = (int) env->GetIntField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "performDownload", "Z");
-    performDownload = env->GetBooleanField(speedTaskDesc, toParseId);
+    this->speedTaskDesc.performDownload = env->GetBooleanField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "performUpload", "Z");
-    performUpload = env->GetBooleanField(speedTaskDesc, toParseId);
+    this->speedTaskDesc.performUpload = env->GetBooleanField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "performRtt", "Z");
-    performRtt = env->GetBooleanField(speedTaskDesc, toParseId);
+    this->speedTaskDesc.performRtt = env->GetBooleanField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "useEncryption", "Z");
-    isEncrypted = env->GetBooleanField(speedTaskDesc, toParseId);
+    this->speedTaskDesc.isEncrypted = env->GetBooleanField(speedTaskDesc, toParseId);
+
+    toParseId = env->GetFieldID(clazz, "useIpV6", "Z");
+    this->speedTaskDesc.useIpv6 = env->GetBooleanField(speedTaskDesc, toParseId);
+
+    toParseId = env->GetFieldID(clazz, "clientIp", "Ljava/lang/String;");
+    serverUrl = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
+    if (serverUrl != nullptr) {
+        const char * clientIp = env->GetStringUTFChars(serverUrl, NULL);
+        this->speedTaskDesc.clientIp = std::string(clientIp);
+    }
 
 }
 
@@ -369,6 +379,9 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
         env->CallVoidMethod(speedMeasurementResult, addMethod, timeObj);
     }
 
+    jmethodID setId = env->GetMethodID(speedMeasurementResultClazz, "setMeasurementServerIp", "(Ljava/lang/String;)V");
+    env->CallVoidMethod(speedMeasurementResult, setId, env->NewStringUTF(this->measurementServerIp.c_str()));
+
     const jstring javaMsg = env->NewStringUTF(json11::Json(message).dump().c_str());
     env->CallVoidMethod(jniCaller, cppCallbackFinishedID, javaMsg, speedMeasurementResult);
 
@@ -464,22 +477,14 @@ void AndroidConnector::startMeasurement() {
         CTrace::setLogFunction(std::bind(&AndroidConnector::printLog, this, std::placeholders::_1));
 //        signalFunction = std::function<void(int)>(std::bind(&AndroidConnector::callbackError, this, std::placeholders::_1));
 
-    /*
-            JNIEnv* env = getJniEnv();
-            if (env == nullptr) {
-                return;
-            }
-            env->ThrowNew(jniExceptionClass, "Cpp error with signal code");
-    */
-
         //init from ias-client
 
         ::DEBUG 			= false;
         ::RUNNING 			= true;
 
-        ::RTT				= performRtt;
-        ::DOWNLOAD 			= performDownload;
-        ::UPLOAD 			= performUpload;
+        ::RTT				= speedTaskDesc.performRtt;
+        ::DOWNLOAD 			= speedTaskDesc.performDownload;
+        ::UPLOAD 			= speedTaskDesc.performUpload;
 
         ::PERFORMED_RTT = false;
         ::PERFORMED_DOWNLOAD = false;
@@ -498,9 +503,9 @@ void AndroidConnector::startMeasurement() {
         jUploadParameters["performMeasurement"] = ::UPLOAD;
 
         //set default measurement parameters
-        jDownloadParameters["streams"] = std::to_string(downloadStreams);
-        jUploadParameters["streams"] = std::to_string(uploadStreams);
-        jRttParameters["ping_query"] = std::to_string(rttCount);
+        jDownloadParameters["streams"] = std::to_string(speedTaskDesc.downloadStreams);
+        jUploadParameters["streams"] = std::to_string(speedTaskDesc.uploadStreams);
+        jRttParameters["ping_query"] = std::to_string(speedTaskDesc.rttCount);
         jMeasurementParameters["rtt"] = json11::Json(jRttParameters);
         jMeasurementParameters["download"] = json11::Json(jDownloadParameters);
         jMeasurementParameters["upload"] = json11::Json(jUploadParameters);
@@ -508,18 +513,26 @@ void AndroidConnector::startMeasurement() {
         jMeasurementParameters["platform"] = "mobile";
         jMeasurementParameters["clientos"] = "android";
         jMeasurementParameters["wsTLD"] = "net-neutrality.tools";
-        jMeasurementParameters["wsTargetPort"] = std::to_string(speedServerPort);
-        jMeasurementParameters["wsWss"] = isEncrypted ? "1" : "0";
+        jMeasurementParameters["wsTargetPort"] = std::to_string(speedTaskDesc.speedServerPort);
+        jMeasurementParameters["wsWss"] = speedTaskDesc.isEncrypted ? "1" : "0";
         jMeasurementParameters["wsAuthToken"] = "placeholderToken";
         jMeasurementParameters["wsAuthTimestamp"] = "placeholderTimestamp";
 
+        jMeasurementParameters["clientIp"] = this->speedTaskDesc.clientIp;
+
         json11::Json::array jTargets;
-        jTargets.push_back(measurementServerUrlV4);
-        jTargets.push_back(measurementServerUrlV6);
+        if (speedTaskDesc.useIpv6) {
+            jTargets.push_back(speedTaskDesc.measurementServerUrlV6);
+            measurementServerIp = CTool::getIpFromHostname( speedTaskDesc.measurementServerUrlV6, 6 );
+        } else {
+            jTargets.push_back(speedTaskDesc.measurementServerUrlV4);
+            measurementServerIp = CTool::getIpFromHostname( speedTaskDesc.measurementServerUrlV4, 4 );
+        }
         jMeasurementParameters["wsTargets"] = json11::Json(jTargets);
         jMeasurementParameters["wsTargetsRtt"] = json11::Json(jTargets);
 
         json11::Json jMeasurementParametersJson = jMeasurementParameters;
+
         measurementStart(jMeasurementParametersJson.dump());
     } catch (std::exception & ex) {
         shutdown();

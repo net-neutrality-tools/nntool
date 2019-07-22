@@ -19,6 +19,10 @@ public class JniSpeedMeasurementResult {
 
     private TimeInfo timeInfo;
 
+    private String measurementServerIp;
+
+    private String clientIp;
+
     public List<BandwidthResult> getDownloadInfoList() {
         return downloadInfoList;
     }
@@ -65,6 +69,24 @@ public class JniSpeedMeasurementResult {
     @Keep
     public void setTimeInfo(TimeInfo timeInfo) {
         this.timeInfo = timeInfo;
+    }
+
+    public String getMeasurementServerIp() {
+        return measurementServerIp;
+    }
+
+    @Keep
+    public void setMeasurementServerIp(String measurementServerIp) {
+        this.measurementServerIp = measurementServerIp;
+    }
+
+    public String getClientIp() {
+        return clientIp;
+    }
+
+    @Keep
+    public void setClientIp(String clientIp) {
+        this.clientIp = clientIp;
     }
 
     @Override

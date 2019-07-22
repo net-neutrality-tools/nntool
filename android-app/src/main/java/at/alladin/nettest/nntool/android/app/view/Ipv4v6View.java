@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.async.RequestAgentIpTask;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ip.IpResponse;
 
 /**
@@ -41,8 +42,7 @@ public class Ipv4v6View extends RelativeLayout {
         init();
     }
 
-    public void updateIpStatus(final Map<IpResponse.IpVersion, IpResponse> ipVersionToResponseMap) {
-        final Map<IpResponse.IpVersion, String> localAddresses = getLocalIpAddresses();
+    public void updateIpStatus(final Map<IpResponse.IpVersion, RequestAgentIpTask.IpResponseWrapper> ipVersionToResponseMap) {
         for (IpResponse.IpVersion ip : IpResponse.IpVersion.values()) {
             TextView toSet = null;
             switch (ip) {
@@ -57,14 +57,19 @@ public class Ipv4v6View extends RelativeLayout {
                 continue;
             }
             if (ipVersionToResponseMap != null && ipVersionToResponseMap.containsKey(ip)) {
-                if (localAddresses.containsKey(ip) && localAddresses.get(ip).equals(ipVersionToResponseMap.get(ip).getIpAddress())) {
-                    toSet.setText(R.string.ifont_check);
-                    toSet.setTextColor(getResources().getColor(R.color.ip_address_correct));
+                final RequestAgentIpTask.IpResponseWrapper response = ipVersionToResponseMap.get(ip);
+                if (response.getIpResponse() != null && response.getLocalAddress() != null) {
+                    if (response.getIpResponse().getIpAddress().equals(response.getLocalAddress().getHostAddress())) {
+                        toSet.setText(R.string.ifont_check);
+                        toSet.setTextColor(getResources().getColor(R.color.ip_address_correct));
+                    } else {
+                        toSet.setText(R.string.ifont_check);
+                        toSet.setTextColor(getResources().getColor(R.color.ip_address_behind_nat));
+                    }
                 } else {
-                    toSet.setText(R.string.ifont_check);
-                    toSet.setTextColor(getResources().getColor(R.color.ip_address_behind_nat));
+                    toSet.setText(R.string.ifont_close);
+                    toSet.setTextColor(getResources().getColor(R.color.ip_address_unavailable));
                 }
-
             } else {
                 toSet.setText(R.string.ifont_close);
                 toSet.setTextColor(getResources().getColor(R.color.ip_address_unavailable));
@@ -78,37 +83,4 @@ public class Ipv4v6View extends RelativeLayout {
         ipv6Text = findViewById(R.id.ipv6_status_text);
     }
 
-    //Basic implementation idea from https://stackoverflow.com/questions/40770555/getting-ipv4-and-ipv6-programatically-of-android-device-with-non-deprecated-meth#answer-47009976
-    private Map<IpResponse.IpVersion, String> getLocalIpAddresses() {
-        final Map<IpResponse.IpVersion, String> ipVersionToAddressMap = new HashMap<>(IpResponse.IpVersion.values().length);
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
-                final NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf
-                        .getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-
-                    if (!inetAddress.isLoopbackAddress()) {
-                        if (!ipVersionToAddressMap.containsKey(IpResponse.IpVersion.IPv4) && inetAddress instanceof Inet4Address) {
-                            ipVersionToAddressMap.put(IpResponse.IpVersion.IPv4, inetAddress.getHostAddress());
-                        } else if (!ipVersionToAddressMap.containsKey(IpResponse.IpVersion.IPv6) && inetAddress instanceof Inet6Address) {
-                            String ipaddress = inetAddress.getHostAddress();
-                            final int index = ipaddress.indexOf('%');
-                            if (index != -1 ) {
-                                ipVersionToAddressMap.put(IpResponse.IpVersion.IPv6, ipaddress.substring(0, index));
-                            } else {
-                                ipVersionToAddressMap.put(IpResponse.IpVersion.IPv6, ipaddress);
-                            }
-                        }
-                        if (ipVersionToAddressMap.size() == IpResponse.IpVersion.values().length) {
-                            return ipVersionToAddressMap;
-                        }
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return ipVersionToAddressMap;
-    }
 }
