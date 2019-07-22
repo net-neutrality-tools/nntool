@@ -386,7 +386,10 @@ function WSControl()
         {
             if (wsTargetsRtt.length > 0)
             {
-                wsTargetRtt = wsTargetsRtt[Math.floor(Math.random() * wsTargetsRtt.length)] + '.' + wsTLD;
+                wsTargetRtt = wsTargetsRtt[Math.floor(Math.random() * wsTargetsRtt.length)];
+                if (wsTLD) {
+                    wsTargetRtt += '.' + wsTLD;
+                }
             }
             console.log('target:            ' + wsWssString + wsTargetRtt + ':' + wsTargetPort);
             console.log('protocol:          ' + rttProtocol);
@@ -400,7 +403,10 @@ function WSControl()
         {
             if (wsTargets.length > 0)
             {
-                wsTarget = wsTargets[Math.floor(Math.random() * wsTargets.length)] + '.' + wsTLD;
+                wsTarget = wsTargets[Math.floor(Math.random() * wsTargets.length)];
+                if (wsTLD) {
+                    wsTarget += '.' + wsTLD;
+                }
             }
             console.log('target:            ' + wsWssString + wsTarget + ':' + wsTargetPort);
             console.log('protocol:          ' + wsProtocol);
@@ -1204,7 +1210,10 @@ function WSControl()
 
         if (typeof wsRttValues.server !== 'undefined')
         {
-            report.peer                 = wsRttValues.server + '.' + wsTLD;
+            report.peer                 = wsRttValues.server;
+            if (wsTLD) {
+                report.peer += '.' + wsTLD;
+            }
         }
 
         return report;

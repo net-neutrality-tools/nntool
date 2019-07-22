@@ -52,10 +52,12 @@ class IASProgram: NSObject, ProgramProtocol {
         speed.platform = "mobile"
 
         if let addr = serverAddress, let port = serverPort {
+            speed.targetsTld = ""
             speed.targets = [addr]
             speed.targetsRtt = [addr]
             speed.targetsPort = port
         } else {
+            speed.targetsTld = "net-neutrality.tools"
             speed.targets = ["peer-ias-de-01-ipv4"]
             speed.targetsRtt = ["peer-ias-de-01-ipv4"]
             speed.targetsPort = "80"
