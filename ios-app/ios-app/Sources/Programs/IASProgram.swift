@@ -33,6 +33,9 @@ class IASProgram: NSObject, ProgramProtocol {
 
     var config: IasMeasurementConfiguration?
 
+    var serverAddress: String?
+    var serverPort: String?
+
     private var currentPhase = SpeedMeasurementPhase.initialize
 
     var result: [AnyHashable: Any]?
@@ -48,9 +51,15 @@ class IASProgram: NSObject, ProgramProtocol {
 
         speed.platform = "mobile"
 
-        speed.targets = ["peer-ias-de-01-ipv4"]
-        speed.targetsRtt = ["peer-ias-de-01-ipv4"]
-        speed.targetsPort = "80"
+        if let addr = serverAddress, let port = serverPort {
+            speed.targets = [addr]
+            speed.targetsRtt = [addr]
+            speed.targetsPort = port
+        } else {
+            speed.targets = ["peer-ias-de-01-ipv4"]
+            speed.targetsRtt = ["peer-ias-de-01-ipv4"]
+            speed.targetsPort = "80"
+        }
 
         speed.performRttMeasurement      = true
         speed.performDownloadMeasurement = true
