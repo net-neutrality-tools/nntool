@@ -42,7 +42,6 @@ class CCallback
 		void uploadCallback(string cmd);
 		Json::object getMeasurementResults(struct measurement tempMeasurement, struct measurement_data data, string cmd);
 
-		Json::object jMeasurementResults;
 		Json::object jMeasurementResultsTime;
 		Json::array jMeasurementResultsRttUdp;
 		Json::array jMeasurementResultsDownload;

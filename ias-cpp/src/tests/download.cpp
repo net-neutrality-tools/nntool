@@ -59,9 +59,6 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 	else
 		mLimit = 1000000;
 
-	//Create Socket Object
-	mConnection = std::make_unique<CConnection>();
-
 	mConfig = pConfig;
 
 	mDownloadString = "GET";
@@ -75,6 +72,9 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 //! \return 0
 int Download::run()
 {
+    //Create Socket Object
+    std::unique_ptr<CConnection> mConnection = std::make_unique<CConnection>();
+
     try {
 		bool ipv6validated = false;
 
@@ -152,6 +152,8 @@ int Download::run()
 			if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 ) ipv6validated = true;
 		#endif
 
+        int ipversion;
+
 		if (ipv6validated)
 		{
 			//Create a TCP socket
@@ -212,7 +214,7 @@ int Download::run()
 		#endif
 
 		nHttpResponseDuration = pHttp->getHttpResponseDuration();
-		mServerHostname = pHttp->getHttpServerHostname();
+		std::string mServerHostname = pHttp->getHttpServerHostname();
 
 		#ifndef NNTOOL
 			//MYSQL_LOG("Measurement-DL-Connection",mServerHostname);

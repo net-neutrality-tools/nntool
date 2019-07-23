@@ -30,11 +30,7 @@ class CUploadSender : public CBasisThread
 {	
 	private:
 		CConnection *mConnection;
-		int mResponse;
-		
-		unsigned long long nPointer;
-		vector<char> payload;
-		
+
 	public:
 		//! Standard Constructor
 		CUploadSender();

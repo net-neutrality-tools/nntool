@@ -29,26 +29,10 @@
 class Ping : public CBasisThread
 {
 	private:
-		int mSock;
-		
 		int mPingPort;
-		
 		int mPingQuery;
-		int mResponse;
-				
-		struct sockaddr_in6 mServerDatav6;
-		struct sockaddr_in mServerDatav4;
-		struct sockaddr_in6 mClientDatav6;
-		struct sockaddr_in mClientDatav4;
-		socklen_t mClientDataSizev6;
-		socklen_t mClientDataSizev4;
-		
-		std::unique_ptr<CConnection> mSocket;
-		
-		unsigned long long time1;
-		unsigned long long time2;
 		unsigned long long mTimeDiff;
-		
+
 	public:
 		struct measurement_data mPingResult;
 

@@ -59,10 +59,7 @@ Upload::Upload( CConfigManager *pConfig, CConfigManager *pXml, CConfigManager *p
 		mLimit = 5000000;
 	else
 		mLimit = 1000000;
-	
-	//Create Socket Object
-	mConnection = std::make_unique<CConnection>();
-		
+
 	mConfig = pConfig;
 	
 	mUploadString = "POST";
@@ -75,7 +72,8 @@ Upload::Upload( CConfigManager *pConfig, CConfigManager *pXml, CConfigManager *p
 //! \param &syncing_thread
 //! \return 0
 int Upload::run()
-{	
+{
+    std::unique_ptr<CConnection> mConnection = std::make_unique<CConnection>();
     try {
 		bool ipv6validated = false;
 
@@ -151,6 +149,8 @@ int Upload::run()
 			if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 ) ipv6validated = true;
 		#endif
 
+		int ipversion;
+
 		if (ipv6validated)
 		{
 			//Create a TCP socket
@@ -196,7 +196,7 @@ int Upload::run()
 		}
 		
 		nHttpResponseDuration = pHttp->getHttpResponseDuration();
-		mServerHostname = pHttp->getHttpServerHostname();
+		std::string mServerHostname = pHttp->getHttpServerHostname();
 
 		//Start Upload Receiver Thread
 		std::unique_ptr<CUploadSender>  pUploadSender = std::make_unique<CUploadSender>(mConnection.get());

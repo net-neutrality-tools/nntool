@@ -36,8 +36,6 @@ CUploadSender::~CUploadSender()
 CUploadSender::CUploadSender( CConnection *nConnection )
 {
 	mConnection = nConnection;
-	
-	nPointer = 0;
 }
 
 //! \brief
@@ -50,7 +48,8 @@ int CUploadSender::run()
 
     const char *firstChar = randomDataValues.data();
 
-    nPointer = 1;
+    unsigned long long nPointer = 1;
+    int mResponse;
 	//++++++MAIN++++++
 	//Measurement Loop
 	while( RUNNING && !::hasError)
