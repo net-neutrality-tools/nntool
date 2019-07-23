@@ -100,10 +100,10 @@ public class MeasurementAgent {
 
         controlService.getSettings(agentUuid: agentUuid, onSuccess: { _ in
             success?()
-        }) { _ in
+        }, onFailure: { _ in
             // TODO
             failure?()
-        }
+        })
     }
 
     public func newMeasurementRunner() -> MeasurementRunner? {
@@ -111,7 +111,7 @@ public class MeasurementAgent {
             return nil
         }
 
-        return MeasurementRunner(controlService: controlService, agentUuid: agentUuid, programOrder: programOrder, programs: programs)
+        return MeasurementRunner(agent: self, controlService: controlService, agentUuid: agentUuid, programOrder: programOrder, programs: programs)
     }
 
     public func getSpeedMeasurementPeers(onSuccess: @escaping ([SpeedMeasurementPeerResponse.SpeedMeasurementPeer]) -> Void, onFailure: @escaping (Error) -> Void) {
@@ -121,9 +121,9 @@ public class MeasurementAgent {
             } else {
                 onSuccess(response.speedMeasurementPeers)
             }
-        }) { error in
+        }, onFailure: { error in
             onFailure(error)
-        }
+        })
     }
 
     public func newIPConnectivityInfo() -> IPConnectivityInfo {

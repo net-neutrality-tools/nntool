@@ -21,39 +21,85 @@ import CoreTelephony
 
 class NetworkInformationCollector: BaseInformationCollector {
 
+    private let connectivityService: IPConnectivityInfo?
+
     private var reachability: Reachability?
 
-    override func start(_ timeBasedResult: TimeBasedResultDto, startNs: UInt64) {
-        timeBasedResult.networkPointsInTime = [MeasurementResultNetworkPointInTimeDto]()
+    private var lastReportedNetworkInfo: MeasurementResultNetworkPointInTimeDto?
 
-        reachability = try? Reachability()
-        //try? reachability?.startNotifier()
+    init(connectivityService: IPConnectivityInfo?) {
+        self.connectivityService = connectivityService
+
+        super.init()
     }
 
-    override func collect(into timeBasedResult: TimeBasedResultDto) {
-        guard let r = reachability else {
-            return
+    /// network info collector should only collect if there's an update and not be triggered by 1 second interval!
+    override func start(_ timeBasedResult: TimeBasedResultDto, startNs: UInt64) {
+        super.start(timeBasedResult, startNs: startNs)
+
+        reachability = try? Reachability()
+
+        reachability?.whenReachable = { r in
+            let networkPointInTime = MeasurementResultNetworkPointInTimeDto()
+
+            switch r.connection {
+            case .wifi:
+                self.fillWifiInformation(dto: networkPointInTime)
+            case .cellular:
+                self.fillCellularInformation(dto: networkPointInTime)
+            default:
+                // no connection?
+                logger.debug("NO CONN!!! \(r.connection)")
+                break
+            }
+
+            networkPointInTime.time = Date()
+            networkPointInTime.relativeTimeNs = self.currentRelativeTimeNs()
+
+            if let conn = self.connectivityService {
+                // TODO: send both ipv4 and ipv6 ip addresses or request only information for current active family?
+
+                // Delay IP address request a few seconds to not interfere with the NativeScript intialization phase.
+                // If we don't wait some seconds the IP request would time out (main thread + Siesta).
+                // It may work if we start the request on a background thread, but then we would have to get rid of Siesta.
+                DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + .seconds(5)) {
+                    let ipv4Connectivity = conn.checkIPv4Connectivity()
+
+                    if ipv4Connectivity?.hasInternetConnection ?? false {
+                        networkPointInTime.agentPublicIp = ipv4Connectivity?.publicAddress
+                        networkPointInTime.agentPrivateIp = ipv4Connectivity?.localAddress
+                    } else {
+                        let ipv6Connectivity = conn.checkIPv6Connectivity()
+
+                        if ipv6Connectivity?.hasInternetConnection ?? false {
+                            networkPointInTime.agentPublicIp = ipv6Connectivity?.publicAddress
+                            networkPointInTime.agentPrivateIp = ipv6Connectivity?.localAddress
+                        }
+                    }
+                }
+            }
+
+            logger.debug("NETWORK: \(networkPointInTime.debugDescription)")
+
+            timeBasedResult.networkPointsInTime?.append(networkPointInTime)
+        }
+        reachability?.whenUnreachable = { r in
+            let networkPointInTime = MeasurementResultNetworkPointInTimeDto()
+
+            // TODO
+            //networkPointInTime.networkTypeId = -1
+
+            timeBasedResult.networkPointsInTime?.append(networkPointInTime)
         }
 
-        let networkPointInTime = MeasurementResultNetworkPointInTimeDto()
+        try? reachability?.startNotifier()
+    }
 
-        switch r.connection {
-        case .wifi:
-            fillWifiInformation(dto: networkPointInTime)
-        case .cellular:
-            fillCellularInformation(dto: networkPointInTime)
-        default:
-            // no connection?
-            logger.debug("NO CONN!!! \(r.connection)")
-            break
-        }
+    override func stop() {
+        super.stop()
 
-        networkPointInTime.time = Date()
-        networkPointInTime.relativeTimeNs = currentRelativeTimeNs()
-
-        logger.debug("NETWORK: \(networkPointInTime.debugDescription)")
-
-        timeBasedResult.networkPointsInTime?.append(networkPointInTime)
+        reachability?.stopNotifier()
+        reachability = nil
     }
 
     private func fillWifiInformation(dto: MeasurementResultNetworkPointInTimeDto) {
@@ -87,9 +133,5 @@ class NetworkInformationCollector: BaseInformationCollector {
         }
 
         // TODO: multi-sim support?
-    }
-
-    deinit {
-
     }
 }

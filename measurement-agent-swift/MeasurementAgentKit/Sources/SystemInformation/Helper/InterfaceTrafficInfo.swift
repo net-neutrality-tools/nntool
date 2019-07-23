@@ -112,6 +112,8 @@ public class InterfaceTrafficInfo {
             trafficDict[name] = InterfaceTraffic(tx: data.pointee.ifi_obytes, rx: data.pointee.ifi_ibytes)
         }
 
+        freeifaddrs(addrs)
+
         return trafficDict
     }
 

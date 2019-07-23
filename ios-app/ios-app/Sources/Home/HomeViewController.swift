@@ -273,6 +273,8 @@ class HomeViewController: CustomNavigationBarViewController {
     }
 
     private func updateIpStatus(_ status: IPStatus?, label: UILabel?) {
+        logger.debug("updating ip status: \(String(describing: status))")
+
         var icon: IconFont = .cross
         var color = BEREC_DARK_GRAY
 

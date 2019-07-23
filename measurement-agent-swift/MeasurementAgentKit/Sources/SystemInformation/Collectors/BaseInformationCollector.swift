@@ -24,6 +24,10 @@ class BaseInformationCollector: InformationCollector {
 
     private var startNs: UInt64?
 
+    deinit {
+        stop()
+    }
+
     func start(_ timeBasedResult: TimeBasedResultDto, startNs: UInt64) {
         self.timeBasedResult = timeBasedResult
         self.startNs = startNs

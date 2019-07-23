@@ -22,6 +22,8 @@ import nntool_shared_swift
 ///
 public class MeasurementRunner {
 
+    private let agent: MeasurementAgent
+
     private let controlService: ControlService
     private let agentUuid: String
     private let programs: [MeasurementTypeDto: ProgramConfiguration]
@@ -35,7 +37,8 @@ public class MeasurementRunner {
 
     ////
 
-    init(controlService: ControlService, agentUuid: String, programOrder: [MeasurementTypeDto], programs: [MeasurementTypeDto: ProgramConfiguration]) {
+    init(agent: MeasurementAgent, controlService: ControlService, agentUuid: String, programOrder: [MeasurementTypeDto], programs: [MeasurementTypeDto: ProgramConfiguration]) {
+        self.agent = agent
         self.controlService = controlService
         self.agentUuid = agentUuid
         self.programs = programs
@@ -121,7 +124,7 @@ public class MeasurementRunner {
         let startTime = Date()
         let startTimeNs = TimeHelper.currentTimeNs()
 
-        let informationCollector = SystemInformationCollector.defaultCollector()
+        let informationCollector = SystemInformationCollector.defaultCollector(connectivityService: agent.newIPConnectivityInfo())
         informationCollector.start(startNs: startTimeNs)
 
         var taskResultDict = [MeasurementTypeDto: SubMeasurementResult]()
