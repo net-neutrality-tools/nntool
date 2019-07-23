@@ -30,17 +30,21 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasuremen
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse.SpeedMeasurementPeer;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MccMnc;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgent;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementServer;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NetworkMobileInfo;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NetworkPointInTime;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.RoamingType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.BriefMeasurementResponseMapper;
@@ -114,6 +118,9 @@ public class CouchDbStorageService implements StorageService {
 		measurement.setUuid(UUID.randomUUID().toString());
 		measurement.setOpenDataUuid(UUID.randomUUID().toString());
 		measurement.setSubmitTime(LocalDateTime.now(ZoneId.of("UTC")));
+		if (measurement.getNetworkInfo() != null) {
+			measurement.getNetworkInfo().setComputedMobileInfo(computeMobileInfoAndProcessMccMnc(measurement));
+		}
 
 		try {
 			measurementRepository.save(measurement);
@@ -365,5 +372,42 @@ public class CouchDbStorageService implements StorageService {
 		);
 		
 		return response;
+	}
+	
+	private NetworkMobileInfo computeMobileInfoAndProcessMccMnc(final Measurement measurement) {
+		NetworkMobileInfo computedNmi = null;
+		
+		if (measurement.getNetworkInfo() != null 
+				&& measurement.getNetworkInfo().getNetworkPointsInTime() != null) {
+			for (final NetworkPointInTime pit : measurement.getNetworkInfo().getNetworkPointsInTime()) {
+				if (pit.getNetworkMobileInfo() != null) {
+					final NetworkMobileInfo nmi = pit.getNetworkMobileInfo();
+					if (computedNmi == null) {
+						computedNmi = nmi;
+					}
+
+					final MccMnc networkMccMnc = pit.getNetworkMobileInfo().getNetworkOperatorMccMnc();
+					final MccMnc simMccMnc = pit.getNetworkMobileInfo().getSimOperatorMccMnc();
+					if (networkMccMnc == null || simMccMnc == null 
+							|| nmi.getNetworkCountry() == null || nmi.getSimCountry() == null) {
+						nmi.setRoaming(false);
+						nmi.setRoamingType(RoamingType.NOT_AVAILABLE);
+					}
+					else {
+						nmi.setRoaming(!networkMccMnc.equals(simMccMnc));
+						if (nmi.getRoaming()) {
+							nmi.setRoamingType(
+									nmi.getNetworkCountry().equals(nmi.getSimCountry()) ? 
+											RoamingType.NATIONAL : RoamingType.INTERNATIONAL);
+						}
+						else {
+							nmi.setRoamingType(RoamingType.NO_ROAMING);
+						}
+					}
+				}
+			}
+		}
+		
+		return computedNmi;
 	}
 }
