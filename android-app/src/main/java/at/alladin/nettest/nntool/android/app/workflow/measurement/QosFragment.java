@@ -16,19 +16,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
-import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
-import at.alladin.nettest.nntool.android.app.async.SendReportTask;
-import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
-import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.view.TopProgressBarView;
-import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
@@ -154,7 +147,7 @@ public class QosFragment extends Fragment implements ServiceConnection {
         @Override
         public void run() {
             final QoSResultCollector qoSResultCollector = measurementService.getQosMeasurementClient().getQosResult();
-            final SubMeasurementResult subMeasurementResult = ResultParseUtil.parseIntoQosMeasurementResult(qoSResultCollector);
+            final SubMeasurementResult subMeasurementResult = SubMeasurementResultParseUtil.parseIntoQosMeasurementResult(qoSResultCollector);
             subMeasurementResult.setStatus(StatusDto.FINISHED);
             measurementService.addSubMeasurementResult(subMeasurementResult);
             final MainActivity activity = (MainActivity) getActivity();

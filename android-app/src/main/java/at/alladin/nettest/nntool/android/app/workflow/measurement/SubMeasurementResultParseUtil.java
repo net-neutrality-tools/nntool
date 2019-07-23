@@ -17,7 +17,7 @@ import at.alladin.nntool.client.v2.task.result.QoSTestResult;
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
  */
-public class ResultParseUtil {
+public class SubMeasurementResultParseUtil {
 
     public static QoSMeasurementResult parseIntoQosMeasurementResult(final QoSResultCollector qoSResultCollector) {
         final QoSMeasurementResult ret = new QoSMeasurementResult();

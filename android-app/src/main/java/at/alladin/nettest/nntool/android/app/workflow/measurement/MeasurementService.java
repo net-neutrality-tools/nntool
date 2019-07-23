@@ -178,7 +178,7 @@ public class MeasurementService extends Service implements ServiceConnection {
         jniSpeedMeasurementClient.addMeasurementFinishedListener(new JniSpeedMeasurementClient.MeasurementFinishedListener() {
             @Override
             public void onMeasurementFinished(JniSpeedMeasurementResult result, SpeedTaskDesc taskDesc) {
-                final SpeedMeasurementResult speedMeasurementResult = ResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
+                final SpeedMeasurementResult speedMeasurementResult = SubMeasurementResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
                 speedMeasurementResult.setRelativeStartTimeNs(overallStartTimeNs);
                 speedMeasurementResult.setStatus(StatusDto.FINISHED);
                 Log.d(TAG, speedMeasurementResult.toString());
@@ -284,6 +284,13 @@ public class MeasurementService extends Service implements ServiceConnection {
             //stop collecting information and allow new measurements to start as non-followupaction
             informationCollector.stop();
             isFollowUpAction.set(false);
+            if (bundle.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC) != null) {
+                informationCollector.setClientIpPublic(bundle.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC));
+                informationCollector.setClientIpPrivate(bundle.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE));
+            } else {
+                informationCollector.setClientIpPublic(bundle.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PUBLIC));
+                informationCollector.setClientIpPrivate(bundle.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE));
+            }
             final LmapReportDto reportDto = RequestUtil.prepareLmapReportForMeasurement(subMeasurementResultList, informationCollector, mainActivity);
             if (reportDto.getTimeBasedResult() == null) {
                 reportDto.setTimeBasedResult(new TimeBasedResultDto());
