@@ -320,7 +320,7 @@ int CConnection::tcpSocketServer( int &nPort )
 		return -1;
 	}
 	
-	listen(mSocket, 1);
+	listen(mSocket, -1);
 	
 	return mSocket;
 }
@@ -446,7 +446,7 @@ int CConnection::tcp6SocketServer( int &nPort )
 		return -1;
 	}
 	
-	listen(mSocket, 1);
+	listen(mSocket, -1);
 	
 	return mSocket;
 }
