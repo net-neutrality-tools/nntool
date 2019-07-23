@@ -17,20 +17,46 @@
 
 import Foundation
 import UIKit
+import MeasurementAgentKit
 
 ///
 class MeasurementPeerSelectionTableViewController: UITableViewController {
 
-    @IBAction func done() {
-        // TODO: save
-        dismiss()
-    }
+    var measurementPeers: [SpeedMeasurementPeerResponse.SpeedMeasurementPeer]?
+
+    var selectedMeasurementPeer: SpeedMeasurementPeerResponse.SpeedMeasurementPeer?
 
     @IBAction func cancel() {
-        dismiss()
+        dismiss(animated: true, completion: nil)
     }
 
-    private func dismiss() {
-        dismiss(animated: true, completion: nil)
+    // MARK: - TableView
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return measurementPeers?.count ?? 0
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.measurement_peer_cell.identifier, for: indexPath)
+
+        if let peer = measurementPeers?[indexPath.row] {
+            cell.textLabel?.text = peer.name
+            cell.detailTextLabel?.text = peer.description
+
+            if peer.identifier == selectedMeasurementPeer?.identifier {
+                cell.accessoryType = .checkmark
+            } else {
+                cell.accessoryType = .none
+            }
+        }
+
+        return cell
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedMeasurementPeer = measurementPeers?[indexPath.row]
+
+        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.reloadData()
     }
 }

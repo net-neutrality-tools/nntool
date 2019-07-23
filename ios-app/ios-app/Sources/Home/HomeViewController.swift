@@ -28,6 +28,12 @@ class HomeViewController: CustomNavigationBarViewController {
     @IBOutlet private var speedMeasurementGaugeView: SpeedMeasurementGaugeView?
     @IBOutlet private var deviceInfoView: HomeScreenDeviceInfoView?
 
+    @IBOutlet private var selectSpeedMeasurementPeerLabel: UILabel?
+    @IBOutlet private var selectSpeedMeasurementPeerSeparatorView: UIView?
+    @IBOutlet private var selectSpeedMeasurementPeerContainerView: UIView?
+
+    private var currentMeasurementPeerTableViewController: CurrentMeasurementPeerTableViewController?
+
     private let cpuUsageInfo = CpuUsageInfo()
     private let memoryUsageInfo = MemoryUsageInfo()
     private let locationTracker = LocationTracker()
@@ -55,13 +61,30 @@ class HomeViewController: CustomNavigationBarViewController {
         }
     }
 
-    ///
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
 
-        guard MEASUREMENT_AGENT.isRegistered() else {
-            performSegue(withIdentifier: R.segue.homeViewController.present_modally_terms_and_conditions, sender: self)
-            return
+        // load measurement peer list
+        if currentMeasurementPeerTableViewController?.measurementPeers == nil {
+            MEASUREMENT_AGENT.getSpeedMeasurementPeers(onSuccess: { peers in
+                logger.debug(peers)
+
+                DispatchQueue.main.async {
+                    self.currentMeasurementPeerTableViewController?.measurementPeers = peers
+
+                    self.selectSpeedMeasurementPeerLabel?.isHidden = false
+                    self.selectSpeedMeasurementPeerSeparatorView?.isHidden = false
+                    self.selectSpeedMeasurementPeerContainerView?.isHidden = false
+                }
+            }) { error in
+                logger.debug(error)
+
+                DispatchQueue.main.async {
+                    self.selectSpeedMeasurementPeerLabel?.isHidden = true
+                    self.selectSpeedMeasurementPeerSeparatorView?.isHidden = true
+                    self.selectSpeedMeasurementPeerContainerView?.isHidden = true
+                }
+            }
         }
 
         // TODO: display error message if location permission is not granted
@@ -142,6 +165,16 @@ class HomeViewController: CustomNavigationBarViewController {
         }
     }
 
+    ///
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        guard MEASUREMENT_AGENT.isRegistered() else {
+            performSegue(withIdentifier: R.segue.homeViewController.present_modally_terms_and_conditions, sender: self)
+            return
+        }
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
@@ -157,6 +190,22 @@ class HomeViewController: CustomNavigationBarViewController {
         ipTimer = nil
 
         ipInfo = nil
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else {
+            return
+        }
+
+        switch identifier {
+        case R.segue.homeViewController.embed_current_measurement_peer.identifier:
+            currentMeasurementPeerTableViewController = segue.destination as? CurrentMeasurementPeerTableViewController
+        case R.segue.homeViewController.show_speed_measurement_view_controller.identifier:
+            if let measurementViewController = segue.destination as? MeasurementViewController {
+                measurementViewController.preferredSpeedMeasurementPeer = currentMeasurementPeerTableViewController?.selectedMeasurementPeer
+            }
+        default: break
+        }
     }
 
     func displayPreMeasurementWarningAlert() {

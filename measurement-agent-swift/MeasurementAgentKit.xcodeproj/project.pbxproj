@@ -44,6 +44,7 @@
 		E044DE0B22D48BB400BB70CE /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0A22D48BB400BB70CE /* LocationTracker.swift */; };
 		E044DE1222D4FC7600BB70CE /* IPConnectivityInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE1122D4FC7600BB70CE /* IPConnectivityInfo.swift */; };
 		E044DE1422D5067D00BB70CE /* InterfaceTrafficInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE1322D5067D00BB70CE /* InterfaceTrafficInfo.swift */; };
+		E08D4BBB22E702BF00FA3E3C /* SpeedMeasurementPeerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08D4BBA22E702BF00FA3E3C /* SpeedMeasurementPeerResponse.swift */; };
 		E0B9A3B6224D3EAB002AB640 /* MeasurementAgentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0B9A3AC224D3EAB002AB640 /* MeasurementAgentKit.framework */; };
 		E0B9A3BB224D3EAB002AB640 /* MeasurementAgentKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3BA224D3EAB002AB640 /* MeasurementAgentKitTests.swift */; };
 		E0B9A3BD224D3EAB002AB640 /* MeasurementAgentKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E0B9A3AF224D3EAB002AB640 /* MeasurementAgentKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -146,6 +147,7 @@
 		E044DE1122D4FC7600BB70CE /* IPConnectivityInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPConnectivityInfo.swift; sourceTree = "<group>"; };
 		E044DE1322D5067D00BB70CE /* InterfaceTrafficInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceTrafficInfo.swift; sourceTree = "<group>"; };
 		E0692792225CA1F600E028CA /* MeasurementAgentKit.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeasurementAgentKit.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		E08D4BBA22E702BF00FA3E3C /* SpeedMeasurementPeerResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeedMeasurementPeerResponse.swift; sourceTree = "<group>"; };
 		E0B9A3AC224D3EAB002AB640 /* MeasurementAgentKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MeasurementAgentKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0B9A3AF224D3EAB002AB640 /* MeasurementAgentKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeasurementAgentKit.h; sourceTree = "<group>"; };
 		E0B9A3B0224D3EAB002AB640 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -453,6 +455,7 @@
 			isa = PBXGroup;
 			children = (
 				E0B9A412224E65BF002AB640 /* IpResponse.swift */,
+				E08D4BBA22E702BF00FA3E3C /* SpeedMeasurementPeerResponse.swift */,
 				E0B9A417224E66FB002AB640 /* SettingsResponse.swift */,
 				E0B9A415224E66B7002AB640 /* RegistrationResponse.swift */,
 				E00F48C6225F340000EAD0C0 /* RegistrationRequest.swift */,
@@ -771,6 +774,7 @@
 				E0B9A418224E66FB002AB640 /* SettingsResponse.swift in Sources */,
 				E0B9A40A224E634D002AB640 /* ControlService.swift in Sources */,
 				E00F48C7225F340000EAD0C0 /* RegistrationRequest.swift in Sources */,
+				E08D4BBB22E702BF00FA3E3C /* SpeedMeasurementPeerResponse.swift in Sources */,
 				B1C64966228C1834007506A6 /* IasMeasurementResult.swift in Sources */,
 				E044DE1222D4FC7600BB70CE /* IPConnectivityInfo.swift in Sources */,
 				E0B9A3D4224D4661002AB640 /* MeasurementAgentTypeDto.swift in Sources */,

@@ -43,7 +43,7 @@ public class MeasurementRunner {
     }
 
     ///
-    public func startMeasurement() {
+    public func startMeasurement(preferredSpeedMeasurementPeer: SpeedMeasurementPeerResponse.SpeedMeasurementPeer? = nil) {
         let controlDto = LmapControlDto()
 
         controlDto.agent = LmapAgentDto()
@@ -51,7 +51,12 @@ public class MeasurementRunner {
 
         ////
 
-        let capabilities = getCapabilities()
+        var preferredPeers = [MeasurementTypeDto: String]()
+        if let psmp = preferredSpeedMeasurementPeer {
+            preferredPeers[.speed] = psmp.identifier
+        }
+
+        let capabilities = getCapabilities(preferredPeers: preferredPeers)
 
         controlDto.capabilities = LmapCapabilityDto()
         controlDto.capabilities?.tasks = capabilities
@@ -78,7 +83,7 @@ public class MeasurementRunner {
 
     ////
 
-    private func getCapabilities() -> [LmapCapabilityTaskDto] {
+    private func getCapabilities(preferredPeers: [MeasurementTypeDto: String]) -> [LmapCapabilityTaskDto] {
         let capabilities = programOrder.map { name -> LmapCapabilityTaskDto in
             let config = programs[name]
 
@@ -89,6 +94,8 @@ public class MeasurementRunner {
             task.taskName = name.rawValue
             task.version = config?.version
             //task.program = name.rawValue
+
+            task.preferredMeasurementPeerIdentifier = preferredPeers[name]
 
             return task
         }

@@ -114,6 +114,18 @@ public class MeasurementAgent {
         return MeasurementRunner(controlService: controlService, agentUuid: agentUuid, programOrder: programOrder, programs: programs)
     }
 
+    public func getSpeedMeasurementPeers(onSuccess: @escaping ([SpeedMeasurementPeerResponse.SpeedMeasurementPeer]) -> Void, onFailure: @escaping (Error) -> Void) {
+        controlService.getSpeedMeasuremnetPeers(onSuccess: { response in
+            if response.speedMeasurementPeers.isEmpty {
+                onFailure(NSError(domain: "todo", code: -1234, userInfo: nil)) // TODO: improve error
+            } else {
+                onSuccess(response.speedMeasurementPeers)
+            }
+        }) { error in
+            onFailure(error)
+        }
+    }
+
     public func newIPConnectivityInfo() -> IPConnectivityInfo {
         var controlServiceV4: ControlService?
         var controlServiceV6: ControlService?

@@ -46,6 +46,8 @@ class MeasurementViewController: CustomNavigationBarViewController {
 
     private var isRunning = false
 
+    var preferredSpeedMeasurementPeer: SpeedMeasurementPeerResponse.SpeedMeasurementPeer?
+
     // MARK: - UI Code
 
     ///
@@ -140,7 +142,7 @@ class MeasurementViewController: CustomNavigationBarViewController {
         iasPhaseProgress?[.upload] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
 
         measurementRunner?.delegate = self
-        measurementRunner?.startMeasurement()
+        measurementRunner?.startMeasurement(preferredSpeedMeasurementPeer: preferredSpeedMeasurementPeer)
     }
 
     private func stopMeasurement() {

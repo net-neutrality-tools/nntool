@@ -49,6 +49,7 @@
 		E044DE0222D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */; };
 		E044DE0E22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */; };
 		E044DE1022D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */; };
+		E08D4BBD22E706F300FA3E3C /* CurrentMeasurementPeerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08D4BBC22E706F300FA3E3C /* CurrentMeasurementPeerTableViewController.swift */; };
 		E0AF3DE922413B7C00FDBFD1 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DE822413B7C00FDBFD1 /* MapViewController.swift */; };
 		E0AF3DEB22413B9800FDBFD1 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DEA22413B9800FDBFD1 /* HomeViewController.swift */; };
 		E0AF3DF122413BF200FDBFD1 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF022413BF200FDBFD1 /* SettingsTableViewController.swift */; };
@@ -202,6 +203,7 @@
 		E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementPeerSelectionTableViewController.swift; sourceTree = "<group>"; };
 		E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeScreenDeviceInfoView.xib; sourceTree = "<group>"; };
 		E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Format.swift"; sourceTree = "<group>"; };
+		E08D4BBC22E706F300FA3E3C /* CurrentMeasurementPeerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentMeasurementPeerTableViewController.swift; sourceTree = "<group>"; };
 		E0AF3DE822413B7C00FDBFD1 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		E0AF3DEA22413B9800FDBFD1 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		E0AF3DF022413BF200FDBFD1 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -498,6 +500,7 @@
 		E044DE0022D485F600BB70CE /* MeasurementPeerSelection */ = {
 			isa = PBXGroup;
 			children = (
+				E08D4BBC22E706F300FA3E3C /* CurrentMeasurementPeerTableViewController.swift */,
 				E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */,
 			);
 			path = MeasurementPeerSelection;
@@ -1071,6 +1074,7 @@
 				E0B9A371224B9A66002AB640 /* QoSMeasurementViewController.swift in Sources */,
 				E0AF3DFA22413C9500FDBFD1 /* HistoryTableViewController.swift in Sources */,
 				E0C4526C22CB867600FA4B44 /* LogConfig.swift in Sources */,
+				E08D4BBD22E706F300FA3E3C /* CurrentMeasurementPeerTableViewController.swift in Sources */,
 				E00F4B03226719DE00EAD0C0 /* UIAlertController+ProgressIndicator.swift in Sources */,
 				E0B9A35B224AB2FE002AB640 /* MeasurementPeerSelectionView.swift in Sources */,
 				E0B9A34A224A81CE002AB640 /* UIColor+RGB.swift in Sources */,

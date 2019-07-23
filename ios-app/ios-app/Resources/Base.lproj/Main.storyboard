@@ -38,12 +38,28 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="s3N-on-Cfy">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="measurement_peer_cell" textLabel="o6b-47-Oif" detailTextLabel="OdK-tM-ly3" style="IBUITableViewCellStyleSubtitle" id="s3N-on-Cfy">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="s3N-on-Cfy" id="CQB-Gm-wKB">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="o6b-47-Oif">
+                                            <rect key="frame" x="16" y="5" width="33.5" height="20.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OdK-tM-ly3">
+                                            <rect key="frame" x="16" y="25.5" width="44" height="14.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
@@ -58,14 +74,15 @@
                                 <action selector="cancel" destination="PxG-10-4qD" id="cZ7-FJ-8bO"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Done" id="vGh-of-JFy">
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="vGh-of-JFy">
                             <connections>
-                                <action selector="done" destination="PxG-10-4qD" id="6Lv-tq-TRY"/>
+                                <segue destination="x9d-cA-TAu" kind="unwind" unwindAction="unwindSave:" id="llW-oV-Y9S"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vQ0-SI-SSw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="x9d-cA-TAu" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-1209" y="1918"/>
         </scene>
@@ -86,10 +103,10 @@
             </objects>
             <point key="canvasLocation" x="-1210" y="1310"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Current Measurement Peer Table View Controller-->
         <scene sceneID="gdK-p9-SqE">
             <objects>
-                <tableViewController id="LLJ-6e-oAa" sceneMemberID="viewController">
+                <tableViewController id="LLJ-6e-oAa" customClass="CurrentMeasurementPeerTableViewController" customModule="ios_app" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="static" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="IEx-ER-CTj">
                         <rect key="frame" x="0.0" y="0.0" width="337.5" height="32"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -105,7 +122,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo Measurement Peer, AT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ECq-wm-Uqc">
-                                                    <rect key="frame" x="59" y="5.5" width="223" height="21"/>
+                                                    <rect key="frame" x="40.5" y="5.5" width="223" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.30196078430000001" green="0.31764705879999999" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -118,7 +135,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outletCollection property="centerContraintsToOffset" destination="bBy-md-AzZ" collectionClass="NSMutableArray" id="BGE-N7-Fos"/>
-                                            <segue destination="E0C-Av-QOd" kind="popoverPresentation" popoverAnchorView="J2Q-MO-TgD" id="KO7-FT-opV">
+                                            <segue destination="E0C-Av-QOd" kind="popoverPresentation" identifier="present_measurement_peer_selection" popoverAnchorView="J2Q-MO-TgD" id="KO7-FT-opV">
                                                 <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                                             </segue>
                                         </connections>
@@ -131,6 +148,9 @@
                             <outlet property="delegate" destination="LLJ-6e-oAa" id="9hb-fm-W8g"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="measurementPeerLabel" destination="ECq-wm-Uqc" id="QOl-oZ-tWH"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bhD-QP-MyE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -170,7 +190,7 @@
                                     <constraint firstAttribute="height" constant="32" id="ysg-Yh-MRs"/>
                                 </constraints>
                                 <connections>
-                                    <segue destination="LLJ-6e-oAa" kind="embed" id="ZQQ-QS-91v"/>
+                                    <segue destination="LLJ-6e-oAa" kind="embed" identifier="embed_current_measurement_peer" id="ZQQ-QS-91v"/>
                                 </connections>
                             </containerView>
                             <view contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0jR-8t-xIG" customClass="HomeScreenDeviceInfoView" customModule="ios_app" customModuleProvider="target">
@@ -208,6 +228,9 @@
                     </navigationItem>
                     <connections>
                         <outlet property="deviceInfoView" destination="0jR-8t-xIG" id="vCl-5W-wXf"/>
+                        <outlet property="selectSpeedMeasurementPeerContainerView" destination="bwt-GG-jdr" id="gKJ-dr-bzl"/>
+                        <outlet property="selectSpeedMeasurementPeerLabel" destination="X48-qC-w0f" id="YD6-hF-Nsm"/>
+                        <outlet property="selectSpeedMeasurementPeerSeparatorView" destination="2cB-jw-3yG" id="uf6-iS-ovZ"/>
                         <outlet property="speedMeasurementGaugeView" destination="sus-O4-eXm" id="diK-TR-UWX"/>
                         <segue destination="t4f-Xg-rdd" kind="presentation" identifier="present_modally_terms_and_conditions" id="tY1-um-iz5"/>
                         <segue destination="l2h-VI-UHi" kind="show" identifier="show_speed_measurement_view_controller" animates="NO" id="LFm-Ye-88T"/>
