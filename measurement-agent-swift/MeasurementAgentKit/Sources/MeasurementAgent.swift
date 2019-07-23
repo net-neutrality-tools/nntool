@@ -25,7 +25,7 @@ public class MeasurementAgent {
     let uuidKey: String
     let tcKey = "tc_accepted_version"
 
-    let controlService: ControlService
+    var controlService: ControlService! // !
 
     var uuid: String? {
         get {
@@ -51,7 +51,7 @@ public class MeasurementAgent {
     public init(configuration: MeasurementAgentConfiguration) {
         uuidKey = URL(string: configuration.controlServiceBaseUrl)?.host ?? "default_uuid_key" // TODO: based on controller url or system uuid
 
-        controlService = ControlService(baseURL: configuration.controlServiceBaseUrl)
+        controlService = ControlService(baseURL: configuration.controlServiceBaseUrl, agent: self)
 
         // TODO: check if registered -> get settings
     }
@@ -131,12 +131,12 @@ public class MeasurementAgent {
         var controlServiceV6: ControlService?
 
         if Thread.isMainThread {
-            controlServiceV4 = ControlService(baseURL: "http://127.0.0.1:18080/api/v1")
-            controlServiceV6 = ControlService(baseURL: "http://[::1]:18080/api/v1")
+            controlServiceV4 = ControlService(baseURL: "http://127.0.0.1:18080/api/v1", agent: self)
+            controlServiceV6 = ControlService(baseURL: "http://[::1]:18080/api/v1", agent: self)
         } else {
             DispatchQueue.main.sync {
-                controlServiceV4 = ControlService(baseURL: "http://127.0.0.1:18080/api/v1")
-                controlServiceV6 = ControlService(baseURL: "http://[::1]:18080/api/v1")
+                controlServiceV4 = ControlService(baseURL: "http://127.0.0.1:18080/api/v1", agent: self)
+                controlServiceV6 = ControlService(baseURL: "http://[::1]:18080/api/v1", agent: self)
             }
         }
 

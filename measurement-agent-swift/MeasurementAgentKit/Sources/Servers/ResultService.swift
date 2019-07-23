@@ -21,8 +21,8 @@ import Siesta
 ///
 class ResultService: RestApiService {
 
-    init(baseURL: URLConvertible = "http://localhost:8082/api/v1") {
-        super.init(baseURL: baseURL)
+    init(baseURL: URLConvertible = "http://localhost:8082/api/v1", agent: MeasurementAgent) {
+        super.init(baseURL: baseURL, agent: agent)
 
         configureTransformer("/measurements", forType: ApiResponse<MeasurementResultResponse>.self)
     }

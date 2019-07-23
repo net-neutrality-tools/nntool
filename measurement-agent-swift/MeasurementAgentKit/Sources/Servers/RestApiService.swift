@@ -89,11 +89,14 @@ class RestApiService {
 
     let service: Service
 
+    let agent: MeasurementAgent
+
     let jsonDecoder = JsonHelper.getPreconfiguredJSONDecoder()
     let jsonEncoder = JsonHelper.getPreconfiguredJSONEncoder()
 
-    init(baseURL: URLConvertible?) {
+    init(baseURL: URLConvertible?, agent: MeasurementAgent) {
         service = Service(baseURL: baseURL, standardTransformers: [])
+        self.agent = agent
 
         configureTransformer("/versions", forType: ApiResponse<VersionResponse>.self)
 
@@ -132,7 +135,11 @@ class RestApiService {
             if wrapInApiRequest {
                 let apiRequest = ApiRequest<T>()
                 apiRequest.data = requestEntity
-                //apiRequest.requestInfo = ApiRequestInfo() // TODO: fill ApiRequestInfo
+
+                apiRequest.requestInfo = ApiRequestHelper.buildApiRequestInfo(
+                    agentUuid: agent.uuid,
+                    geoLocation: nil // TODO
+                )
 
                 requestData = try jsonEncoder.encode(apiRequest)
             } else {

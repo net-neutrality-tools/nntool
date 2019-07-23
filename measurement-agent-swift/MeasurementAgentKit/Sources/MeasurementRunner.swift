@@ -246,7 +246,7 @@ public class MeasurementRunner {
         logger.info("Found collector URL: \(collectorUrl)")
 
         DispatchQueue.main.sync {
-            let collectorService = CollectorService(baseURL: collectorUrl)
+            let collectorService = CollectorService(baseURL: collectorUrl, agent: agent)
 
             collectorService.storeMeasurement(reportDto: reportModel, onSuccess: { _ in
                 self.finish()
