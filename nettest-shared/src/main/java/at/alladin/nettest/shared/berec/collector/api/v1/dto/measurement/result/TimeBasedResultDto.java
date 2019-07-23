@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellLocationDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.PointInTimeValueDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.SignalDto;
@@ -103,7 +103,7 @@ public class TimeBasedResultDto {
 
 	/**
 	 * Contains all relevant network information of a single point in time.
-	 * @see NetworkPointInTime
+	 * @see at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.NetworkPointInTimeInfoDto
 	 */
 	@io.swagger.annotations.ApiModelProperty(required = true, value = "Contains all relevant network information of a single point in time.")
 	@JsonPropertyDescription("Contains all relevant network information of a single point in time.")
@@ -111,19 +111,7 @@ public class TimeBasedResultDto {
 	@SerializedName("network_points_in_time")
 	@JsonProperty(required = true, value = "network_points_in_time")
 	private List<MeasurementResultNetworkPointInTimeDto> networkPointsInTime;
-	
-// _ CellLocationInfo
-	
-	/**
-	 * List of captured cell information.
-	 */
-	@io.swagger.annotations.ApiModelProperty("List of captured cell information.")
-	@JsonPropertyDescription("List of captured cell information.")
-	@Expose
-	@SerializedName("cell_locations")
-	@JsonProperty("cell_locations")
-	private List<CellLocationDto> cellLocations;
-	
+
 // _ SignalInfo
 
 	/**
@@ -190,14 +178,6 @@ public class TimeBasedResultDto {
 
 	public void setNetworkPointsInTime(List<MeasurementResultNetworkPointInTimeDto> networkPointsInTime) {
 		this.networkPointsInTime = networkPointsInTime;
-	}
-
-	public List<CellLocationDto> getCellLocations() {
-		return cellLocations;
-	}
-
-	public void setCellLocations(List<CellLocationDto> cellLocations) {
-		this.cellLocations = cellLocations;
 	}
 
 	public List<SignalDto> getSignals() {

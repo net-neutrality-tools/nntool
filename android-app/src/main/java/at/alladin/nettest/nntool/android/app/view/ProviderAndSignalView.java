@@ -73,12 +73,17 @@ public class ProviderAndSignalView extends RelativeLayout implements NetworkChan
                 signalText.setText("-");
             }
             else {
-                final CellInfoWrapper wrapper = event.getCurrentSignalStrength().getCellInfoWrapper();
-                final String signalInfo = getResources().getString(R.string.signal_info,
-                        getTechnologyString(event.getCurrentSignalStrength()),
-                        event.getCurrentSignalStrength().getSignalDbm());
+                if (event.getCurrentSignalStrength() != null) {
+                    final CellInfoWrapper wrapper = event.getCurrentSignalStrength().getCellInfoWrapper();
+                    final String signalInfo = getResources().getString(R.string.signal_info,
+                            getTechnologyString(event.getCurrentSignalStrength()),
+                            event.getCurrentSignalStrength().getSignalDbm());
 
-                signalText.setText(signalInfo);
+                    signalText.setText(signalInfo);
+                }
+                else {
+                    signalText.setText("-");
+                }
             }
         }
     }

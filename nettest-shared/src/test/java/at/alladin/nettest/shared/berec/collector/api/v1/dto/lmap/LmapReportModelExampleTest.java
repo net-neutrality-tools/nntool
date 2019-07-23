@@ -378,7 +378,7 @@ public class LmapReportModelExampleTest extends AbstractLmapExampleTest {
 		
 		//
 		
-		//timeBasedResultDto.setCellLocations(List<CellLocationDto> cellLocations);
+		//timeBasedResultDto.setCellLocations(List<CellInfoDto> cellLocations);
 		
 		//
 		

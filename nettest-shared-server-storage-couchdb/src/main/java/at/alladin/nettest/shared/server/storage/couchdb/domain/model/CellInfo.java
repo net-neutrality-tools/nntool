@@ -14,8 +14,8 @@ import com.google.gson.annotations.SerializedName;
  * @author alladin-IT GmbH (lb@alladin.at)
  *
  */
-@JsonClassDescription("Cell location information from a point in time.")
-public class CellLocation {
+@JsonClassDescription("Cell identity information from a point in time.")
+public class CellInfo {
 
 	/**
 	 * Contains the cell-ID, if available.
@@ -71,7 +71,17 @@ public class CellLocation {
 	@JsonProperty("relative_time_ns")
 	private Long relativeTimeNs;
 
-    /**
+	/**
+	 * Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN), if available.
+	 */
+	@io.swagger.annotations.ApiModelProperty("Contains the frequency (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN), if available.")
+	@JsonPropertyDescription("Contains the frequency (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN), if available.")
+	@Expose
+	@SerializedName("frequency")
+	@JsonProperty("frequency")
+	private Integer frequency;
+
+	/**
      * Geographic location latitude of this cell.
      */
 	@JsonPropertyDescription("Geographic location latitude of this cell.")
@@ -151,5 +161,13 @@ public class CellLocation {
 
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
+	}
+
+	public Integer getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(Integer frequency) {
+		this.frequency = frequency;
 	}
 }

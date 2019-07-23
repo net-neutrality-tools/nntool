@@ -15,9 +15,9 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.Q
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.TimeBasedResultDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellLocationDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.PointInTimeValueDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ReasonDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.RttDto;
@@ -27,8 +27,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.SpeedMeasurem
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.TrafficDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.WebSocketInfoDto;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.CellLocation;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.CellLocationInfo;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.CellInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ConnectionInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Device;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.DeviceInfo;
@@ -117,7 +116,7 @@ public class DocumentationResource extends AbstractDocumentationResource {
 			SpeedMeasurementResult.class,
 			SubMeasurementResult.class,
 			
-			CellLocationDto.class,
+			CellInfoDto.class,
 			MeasurementAgentTypeDto.class,
 			GeoLocationDto.class,
 			PointInTimeValueDto.class,
@@ -140,8 +139,7 @@ public class DocumentationResource extends AbstractDocumentationResource {
 	@Override
 	public List<Class<?>> getModelClasses() {
 		return Arrays.asList(
-			CellLocation.class,
-			CellLocationInfo.class,
+			CellInfo.class,
 			MeasurementAgent.class,
 			MeasurementAgentInfo.class,
 			MeasurementAgentType.class,
