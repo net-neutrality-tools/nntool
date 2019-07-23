@@ -35,6 +35,7 @@ using namespace std;
 class CCallback
 {
     friend void startTestCase(int nTestCase);
+    friend void measurementStart(std::string measurementParameters);
 	private:
 		void callbackToPlatform(string cmd, string msg, int error_code, string error_description);
 		void rttUdpCallback(string cmd);
