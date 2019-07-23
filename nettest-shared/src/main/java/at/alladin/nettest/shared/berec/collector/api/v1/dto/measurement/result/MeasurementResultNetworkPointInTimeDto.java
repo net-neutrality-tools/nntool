@@ -137,6 +137,24 @@ public class MeasurementResultNetworkPointInTimeDto {
     @JsonProperty("sim_operator_name")
     private String simOperatorName;
 
+	/**
+	 * Public IP address of the client.
+	 */
+	@JsonPropertyDescription("Public IP address of the client.")
+	@Expose
+	@SerializedName("client_public_ip")
+	@JsonProperty("client_public_ip")
+	private String clientPublicIp;
+
+	/**
+	 * Private IP address of the client.
+	 */
+	@JsonPropertyDescription("Private IP address of the client.")
+	@Expose
+	@SerializedName("client_private_ip")
+	@JsonProperty("client_private_ip")
+	private String clientPrivateIp;
+
 	public LocalDateTime getTime() {
 		return time;
 	}
@@ -223,5 +241,21 @@ public class MeasurementResultNetworkPointInTimeDto {
 
 	public void setSimOperatorName(String simOperatorName) {
 		this.simOperatorName = simOperatorName;
+	}
+
+	public String getClientPublicIp() {
+		return clientPublicIp;
+	}
+
+	public void setClientPublicIp(String clientPublicIp) {
+		this.clientPublicIp = clientPublicIp;
+	}
+
+	public String getClientPrivateIp() {
+		return clientPrivateIp;
+	}
+
+	public void setClientPrivateIp(String clientPrivateIp) {
+		this.clientPrivateIp = clientPrivateIp;
 	}
 }

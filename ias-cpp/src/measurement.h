@@ -47,8 +47,6 @@ class CMeasurement
 		CCallback *mCallback;
 		std::unique_ptr<CTimer> mTimer;
 		
-		int nResponse;
-	
 	public:
 		CMeasurement();
 		

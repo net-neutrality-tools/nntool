@@ -38,7 +38,11 @@ Ping::Ping( CConfigManager *pXml, CConfigManager *pService, string sProvider )
 {		
 	mServerName	= pXml->readString(sProvider,"DNS_HOSTNAME_RTT","default.com");
 	mServer 	= pXml->readString(sProvider,"PING_DESTINATION","1.1.1.1");	
-	mClient 	= "0.0.0.0";
+	#ifdef __ANDROID__
+        mClient = pXml->readString(sProvider, "CLIENT_IP", "0.0.0.0");
+    #else
+        mClient = "0.0.0.0";
+    #endif
 	mPingQuery 	= pXml->readLong(sProvider,"PING_QUERY",30);
 	mPingQuery++;
 	nPingTarget	= mPingQuery -1;
@@ -49,9 +53,6 @@ Ping::Ping( CConfigManager *pXml, CConfigManager *pService, string sProvider )
 		CTool::logging( ( "Ping: "+mServer+" from: "+mClient+" Query: "+CTool::toString(nPingTarget)+" Port: "+CTool::toString(mPingPort)).c_str() );
 	#endif
 
-	//Create Socket Object
-	mSocket = std::make_unique<CConnection>();
-	
 	mTimeDiff = 1;
 }
 
@@ -60,10 +61,15 @@ Ping::Ping( CConfigManager *pXml, CConfigManager *pService, string sProvider )
 //! \param &ping
 //! \return 0
 int Ping::run()
-{	
+{
+    int mSock;
+
     try {
 		//Syslog Message
 		TRC_INFO( ("Starting Ping Thread with PID: " + CTool::toString(syscall(SYS_gettid))).c_str() );
+
+		//Create Socket Object
+        std::unique_ptr<CConnection> mSocket = std::make_unique<CConnection>();
 
 		measurementTimeStart 	= 0;
 		measurementTimeEnd 		= 0;
@@ -129,7 +135,7 @@ int Ping::run()
 			if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 ) ipv6validated = true;
 		#endif
 
-		if (ipv6validated)	
+		if (ipv6validated)
 		{
 			//Create a datagram/UDP socket
 			if( ( mSock = mSocket->udp6Socket(mClient) ) < 0 )
@@ -168,6 +174,10 @@ int Ping::run()
 		setsockopt(mSock, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval));
 		setsockopt(mSock, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval));
 
+		int mResponse;
+		unsigned long long time1;
+        unsigned long long time2;
+
 		while( RUNNING && i <= mPingQuery )
 		{
 			#ifdef NNTOOL
@@ -183,6 +193,11 @@ int Ping::run()
 			
 			//Set Timestamp T1
 			time1 = CTool::get_timestamp();
+
+			struct sockaddr_in6 mClientDatav6;
+            struct sockaddr_in mClientDatav4;
+            socklen_t mClientDataSizev6;
+            socklen_t mClientDataSizev4;
 
 			if(ipv4)
 			{
@@ -231,6 +246,7 @@ int Ping::run()
 					{
 						TRC_ERR("Ping payload mismatch");
 						mTimeDiff = 0;
+						::hasError = true;
 						break;
 					}
 				}

@@ -48,7 +48,6 @@ class CHttp
 		string mHttpServerHostname;
 
 		CConfigManager *mConfig;
-		sockaddr_in6 *mClient;
 
 	public:
 		CHttp();

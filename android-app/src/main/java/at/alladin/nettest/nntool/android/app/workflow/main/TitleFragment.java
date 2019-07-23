@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,8 @@ import android.view.ViewGroup;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
@@ -36,6 +37,7 @@ import at.alladin.nettest.nntool.android.app.view.InterfaceTrafficView;
 import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.ip.IpResponse;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -115,6 +117,18 @@ public class TitleFragment extends ActionBarFragment {
                     public void onTaskFinished(LmapUtil.LmapTaskWrapper result) {
                         if (result != null &&
                                 (result.getSpeedTaskDesc() != null || (result.getTaskDescList() != null && result.getTaskDescList().size() > 0))){
+
+                            //fetch private ip, check if ipv6 measurement is desired
+                            Map<IpResponse.IpVersion, RequestAgentIpTask.IpResponseWrapper> ipResponse = null;
+                            try {
+                                final RequestAgentIpTask requestAgentIpTask = new RequestAgentIpTask(getContext(), null);
+                                requestAgentIpTask.execute();
+                                ipResponse = requestAgentIpTask.get(5, TimeUnit.SECONDS);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                                Log.e(TAG, "Failed to obtain client ip addresses, proceeding w/ipv4");
+                            }
+
                             final Bundle bundle = new Bundle();
                             bundle.putSerializable(MeasurementService.EXTRAS_KEY_QOS_TASK_DESC_LIST,
                                     (Serializable) result.getTaskDescList());
@@ -124,6 +138,21 @@ public class TitleFragment extends ActionBarFragment {
                                     result.getSpeedCollectorUrl());
                             bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_DESC,
                                     result.getSpeedTaskDesc());
+
+                            if (ipResponse != null) {
+                                for (Map.Entry<IpResponse.IpVersion, RequestAgentIpTask.IpResponseWrapper> e : ipResponse.entrySet()) {
+                                    switch (e.getKey()) {
+                                        case IPv4:
+                                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE, e.getValue().getLocalAddress().getHostAddress());
+                                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PUBLIC, e.getValue().getIpResponse().getIpAddress());
+                                            break;
+                                        case IPv6:
+                                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE, e.getValue().getLocalAddress().getHostAddress());
+                                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC, e.getValue().getIpResponse().getIpAddress());
+                                            break;
+                                    }
+                                }
+                            }
 
                             if (PreferencesUtil.isQoSEnabled(getContext())) {
                                 final ArrayList<MeasurementType> followUpActions = new ArrayList<>();

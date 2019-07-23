@@ -25,7 +25,16 @@ public class ConnectionInfoDto {
 	@SerializedName("address")
 	@JsonProperty(required = true, value = "address")
 	private String address;
-	
+
+	/**
+	 * The ip address of the measurement server (can be either v4 or v6).
+	 */
+	@JsonPropertyDescription("The ip address of the measurement server (can be either v4 or v6).")
+	@Expose
+	@SerializedName("ip_address")
+   	@JsonProperty("ip_address")
+   	private String ipAddress;
+
 	/**
 	 * Port used for the communication.
 	 */
@@ -324,5 +333,13 @@ public class ConnectionInfoDto {
 
 	public void setWebSocketInfoUpload(WebSocketInfoDto webSocketInfoUpload) {
 		this.webSocketInfoUpload = webSocketInfoUpload;
+	}
+
+	public String getIpAddress() {
+		return ipAddress;
+	}
+
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
 	}
 }

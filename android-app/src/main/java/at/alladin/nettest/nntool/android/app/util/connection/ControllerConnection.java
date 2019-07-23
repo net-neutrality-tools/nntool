@@ -13,9 +13,18 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasuremen
  */
 public class ControllerConnection extends AbstractConnection<ControllerService> {
 
+    private final String hostname;
+
+    private final String hostname6;
+
+    private final int port;
+
     public ControllerConnection(final boolean isEncrypted, final String hostname,
                                 final String hostname6, final int port, final String pathPrefix) {
         super(isEncrypted, hostname, hostname6, port, pathPrefix, ControllerService.class);
+        this.hostname = hostname;
+        this.hostname6 = hostname6;
+        this.port = port;
     }
 
     public RegistrationResponse registerMeasurementAgent(final ApiRequest<RegistrationRequest> request) {
@@ -61,4 +70,15 @@ public class ControllerConnection extends AbstractConnection<ControllerService> 
         return null;
     }
 
+    public String getHostname() {
+        return hostname;
+    }
+
+    public String getHostname6() {
+        return hostname6;
+    }
+
+    public int getPort() {
+        return port;
+    }
 }

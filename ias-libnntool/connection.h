@@ -41,14 +41,10 @@ class CConnection
 		\brief Struct of Socket-Address
 		- Initialisation of the struct named sockaddr
 		*/
-		struct sockaddr_ll sockinfo_ll;
 		struct sockaddr_in sockinfo_in;
 		struct sockaddr_in6 sockinfo_in6;
 
-	  	SSL_CTX* 			ctx;
 		SSL*     			ssl;
-		X509*    			server_cert;
-		const SSL_METHOD	*method;
 
 		int connectTLS();
 

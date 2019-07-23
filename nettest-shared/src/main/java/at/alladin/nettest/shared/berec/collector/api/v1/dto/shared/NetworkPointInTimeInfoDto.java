@@ -49,6 +49,15 @@ public class NetworkPointInTimeInfoDto {
 	private String agentPublicIp;
 
 	/**
+	 * Private IP address of the client.
+	 */
+	@JsonPropertyDescription("Private IP address of the client.")
+	@Expose
+	@SerializedName("agent_private_ip")
+	@JsonProperty("agent_private_ip")
+	private String agentPrivateIp;
+
+	/**
 	 * Country of the measurement agent which is gathered by Geo-IP lookup.
 	 */
 	@io.swagger.annotations.ApiModelProperty("Country of the measurement agent which is gathered by Geo-IP lookup.")
@@ -420,5 +429,13 @@ public class NetworkPointInTimeInfoDto {
 
 	public void setSimOperatorName(String simOperatorName) {
 		this.simOperatorName = simOperatorName;
+	}
+
+	public String getAgentPrivateIp() {
+		return agentPrivateIp;
+	}
+
+	public void setAgentPrivateIp(String agentPrivateIp) {
+		this.agentPrivateIp = agentPrivateIp;
 	}
 }
