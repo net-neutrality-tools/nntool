@@ -18,6 +18,10 @@
 
 #include "timer.h"
 
+#ifdef __ANDROID__
+    #include "android_connector.h"
+#endif
+
 //! \brief
 //!	Standard Destructor
 CTimer::CTimer()
@@ -148,6 +152,10 @@ int CTimer::run()
 	}
 	
 	TIMER_ACTIVE = false;
+
+	#ifdef __ANDROID__
+	    AndroidConnector::detachCurrentThreadFromJavaVM();
+	#endif
 	
 	//++++++END+++++++
 

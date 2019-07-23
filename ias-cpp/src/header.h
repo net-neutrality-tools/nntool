@@ -62,6 +62,7 @@
 #include <iostream>
 #include <algorithm>
 #include <exception>
+#include <atomic>
 
 
 #include <pthread.h>
@@ -115,7 +116,7 @@ extern bool TIMER_ACTIVE;
 extern bool TIMER_RUNNING;
 extern bool TIMER_STOPPED;
 
-extern bool hasError;
+extern std::atomic_bool hasError;
 extern std::exception recentException;
 
 extern int TIMER_INDEX;

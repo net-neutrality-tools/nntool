@@ -65,6 +65,14 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     public static String EXTRAS_KEY_SPEED_TASK_DESC = "speed_task_desc";
 
+    public static String EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE = "speed_task_client_ipv4_private";
+
+    public static String EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE = "speed_task_client_ipv6_private";
+
+    public static String EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PUBLIC = "speed_task_client_ipv4_public";
+
+    public static String EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC = "speed_task_client_ipv6_public";
+
     public static String EXTRAS_KEY_FOLLOW_UP_ACTIONS = "measurement_follow_up_actions";
 
     final MeasurementServiceBinder binder = new MeasurementServiceBinder();
@@ -154,13 +162,23 @@ public class MeasurementService extends Service implements ServiceConnection {
 
         final String speedTaskCollectorUrl = options.getString(EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL);
         final SpeedTaskDesc speedTaskDesc = (SpeedTaskDesc) options.getSerializable(EXTRAS_KEY_SPEED_TASK_DESC);
+        final String clientIpv4 = options.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE);
+        final String clientIpv6 = options.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE);
+
+        //if ipV6 is available, use it
+        if (clientIpv6 != null) {
+            speedTaskDesc.setUseIpV6(true);
+            speedTaskDesc.setClientIp(clientIpv6);
+        } else {
+            speedTaskDesc.setClientIp(clientIpv4);
+        }
 
         jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskDesc);
         jniSpeedMeasurementClient.setCollectorUrl(speedTaskCollectorUrl);
         jniSpeedMeasurementClient.addMeasurementFinishedListener(new JniSpeedMeasurementClient.MeasurementFinishedListener() {
             @Override
             public void onMeasurementFinished(JniSpeedMeasurementResult result, SpeedTaskDesc taskDesc) {
-                final SpeedMeasurementResult speedMeasurementResult = ResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
+                final SpeedMeasurementResult speedMeasurementResult = SubMeasurementResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
                 speedMeasurementResult.setRelativeStartTimeNs(overallStartTimeNs);
                 speedMeasurementResult.setStatus(StatusDto.FINISHED);
                 Log.d(TAG, speedMeasurementResult.toString());
@@ -180,17 +198,16 @@ public class MeasurementService extends Service implements ServiceConnection {
         });
     }
 
+    public void stopSpeedMeasurement () {
+        try {
+            jniSpeedMeasurementClient.stopMeasurement();
+        } catch (final Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void startQosMeasurement(final Bundle options) {
         //TODO: remove & replace
-        /*
-        ClientHolder client = ClientHolder.getInstance(getResources().getString(R.string.default_qos_control_host),
-                Integer.toString(getResources().getInteger(R.integer.default_qos_control_port)),
-                getResources().getIntArray(R.array.qos_tcp_test_port_list),
-                getResources().getIntArray(R.array.qos_udp_test_port_list),
-                getResources().getString(R.string.qos_echo_service_host),
-                getResources().getIntArray(R.array.qos_echo_service_tcp_ports),
-                getResources().getIntArray(R.array.qos_echo_service_udp_ports));
-                */
         this.bundle = options;
         followUpActions = (ArrayList<MeasurementType>) options.getSerializable(EXTRAS_KEY_FOLLOW_UP_ACTIONS);
         subMeasurementStartTimeNs = System.nanoTime();
@@ -208,7 +225,6 @@ public class MeasurementService extends Service implements ServiceConnection {
         final Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                //startMeasurement();
                 qosMeasurementClient.run();
             }
         });
@@ -268,6 +284,13 @@ public class MeasurementService extends Service implements ServiceConnection {
             //stop collecting information and allow new measurements to start as non-followupaction
             informationCollector.stop();
             isFollowUpAction.set(false);
+            if (bundle.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC) != null) {
+                informationCollector.setClientIpPublic(bundle.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC));
+                informationCollector.setClientIpPrivate(bundle.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE));
+            } else {
+                informationCollector.setClientIpPublic(bundle.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PUBLIC));
+                informationCollector.setClientIpPrivate(bundle.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE));
+            }
             final LmapReportDto reportDto = RequestUtil.prepareLmapReportForMeasurement(subMeasurementResultList, informationCollector, mainActivity);
             if (reportDto.getTimeBasedResult() == null) {
                 reportDto.setTimeBasedResult(new TimeBasedResultDto());

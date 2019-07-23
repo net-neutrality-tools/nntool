@@ -17,7 +17,7 @@ import at.alladin.nntool.client.v2.task.result.QoSTestResult;
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
  */
-public class ResultParseUtil {
+public class SubMeasurementResultParseUtil {
 
     public static QoSMeasurementResult parseIntoQosMeasurementResult(final QoSResultCollector qoSResultCollector) {
         final QoSMeasurementResult ret = new QoSMeasurementResult();
@@ -48,7 +48,6 @@ public class ResultParseUtil {
             connectionInfoDto.setRequestedNumStreamsUpload(speedTaskDesc.getUploadStreams());
 
             rttInfoDto.setRequestedNumPackets(speedTaskDesc.getRttCount());
-
         }
 
         if (result.getDownloadInfoList() != null && result.getDownloadInfoList().size() > 0) {
@@ -112,6 +111,10 @@ public class ResultParseUtil {
 
         if (timeInfo != null) {
             ret.setRelativeStartTimeRttNs(0L);
+        }
+
+        if (result.getMeasurementServerIp() != null) {
+            connectionInfoDto.setIpAddress(result.getMeasurementServerIp());
         }
 
         return ret;

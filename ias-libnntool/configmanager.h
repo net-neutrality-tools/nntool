@@ -32,15 +32,6 @@ using namespace std;
 class CConfigManager
 {
 	private:
-		bool mFlag;
-		bool mFileIsOpen;
-		bool mAbort;
-		
-		char mSeparator;
-		
-		string mIniFile;
-		string mXmlString;
-		
 		map<string, map<string, string> > mSections;
 
 	public:

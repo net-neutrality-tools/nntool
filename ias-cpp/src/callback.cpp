@@ -90,7 +90,7 @@ void CCallback::callback(string cmd, string msg, int error_code, string error_de
 void CCallback::callbackToPlatform(string cmd, string msg, int error_code, string error_description)
 {
     //construct JSON callback
-    jMeasurementResults = Json::object{};
+    Json::object jMeasurementResults = Json::object{};
     jMeasurementResults["cmd"] = cmd;
     jMeasurementResults["msg"] = msg;
     jMeasurementResults["test_case"] = conf.sTestName;

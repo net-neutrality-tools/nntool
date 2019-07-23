@@ -14,7 +14,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.S
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
  */
-public class ResultParseUtilTest {
+public class SubMeasurementResultParseUtilTest {
 
     private JniSpeedMeasurementResult jniSpeedResult;
 
@@ -267,7 +267,7 @@ public class ResultParseUtilTest {
 
     @Test
     public void parseBasicCompleteResult () {
-        final SpeedMeasurementResult result = ResultParseUtil.parseIntoSpeedMeasurementResult(jniSpeedResult, taskDesc);
+        final SpeedMeasurementResult result = SubMeasurementResultParseUtil.parseIntoSpeedMeasurementResult(jniSpeedResult, taskDesc);
 
         Assert.assertEquals("unexpected task description", "peer-ias-de-01.net-neutrality.tools", result.getConnectionInfo().getAddress());
         Assert.assertEquals("unexpected task description", 80, result.getConnectionInfo().getPort().intValue());
@@ -302,7 +302,7 @@ public class ResultParseUtilTest {
     public void parsePartialResultContainingAvailableResults () {
         jniSpeedResult.setDownloadInfoList(null);
         jniSpeedResult.setRttUdpResultList(null);
-        SpeedMeasurementResult result = ResultParseUtil.parseIntoSpeedMeasurementResult(jniSpeedResult, taskDesc);
+        SpeedMeasurementResult result = SubMeasurementResultParseUtil.parseIntoSpeedMeasurementResult(jniSpeedResult, taskDesc);
 
         Assert.assertEquals("unexpected task description", "peer-ias-de-01.net-neutrality.tools", result.getConnectionInfo().getAddress());
         Assert.assertEquals("unexpected task description", 80, result.getConnectionInfo().getPort().intValue());

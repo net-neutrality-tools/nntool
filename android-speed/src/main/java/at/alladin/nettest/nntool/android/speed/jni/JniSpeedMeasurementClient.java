@@ -32,6 +32,10 @@ public class JniSpeedMeasurementClient {
 
     private List<MeasurementFinishedListener> finishedListeners = new ArrayList<>();
 
+    private List<MeasurementPhaseListener> measurementPhaseListeners = new ArrayList<>();
+
+    private SpeedMeasurementState.MeasurementPhase previousMeasurementPhase = SpeedMeasurementState.MeasurementPhase.INIT;
+
     public JniSpeedMeasurementClient(final SpeedTaskDesc speedTaskDesc) {
         this.speedTaskDesc = speedTaskDesc;
         speedMeasurementState = new SpeedMeasurementState();
@@ -40,6 +44,14 @@ public class JniSpeedMeasurementClient {
 
     @Keep
     public void cppCallback(final String message) {
+        if (previousMeasurementPhase != speedMeasurementState.getMeasurementPhase()) {
+            Log.d(TAG, "Previous state: " + previousMeasurementPhase.toString() + " current state: " + speedMeasurementState.getMeasurementPhase().toString());
+            for(MeasurementPhaseListener l : measurementPhaseListeners) {
+                l.onMeasurementPhaseFinished(previousMeasurementPhase);
+                l.onMeasurementPhaseStarted(speedMeasurementState.getMeasurementPhase());
+            }
+            previousMeasurementPhase = speedMeasurementState.getMeasurementPhase();
+        }
         Log.d(TAG, message);
     }
 
@@ -86,6 +98,14 @@ public class JniSpeedMeasurementClient {
         finishedListeners.remove(listener);
     }
 
+    public void addMeasurementPhaseListener (final MeasurementPhaseListener listener) {
+        measurementPhaseListeners.add(listener);
+    }
+
+    public void removeMeasurementPhaseListener (final MeasurementPhaseListener listener) {
+        measurementPhaseListeners.remove(listener);
+    }
+
     public String getCollectorUrl() {
         return collectorUrl;
     }
@@ -103,5 +123,11 @@ public class JniSpeedMeasurementClient {
     public interface MeasurementFinishedListener {
 
         void onMeasurementFinished (final JniSpeedMeasurementResult result, final SpeedTaskDesc taskDesc);
+    }
+
+    public interface MeasurementPhaseListener {
+        void onMeasurementPhaseStarted (final SpeedMeasurementState.MeasurementPhase startedPhase);
+
+        void onMeasurementPhaseFinished (final SpeedMeasurementState.MeasurementPhase finishedPhase);
     }
 }

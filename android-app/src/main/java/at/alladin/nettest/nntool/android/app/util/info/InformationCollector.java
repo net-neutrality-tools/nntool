@@ -54,6 +54,10 @@ public class InformationCollector
     //timestamp in ns used for all relative time values
     private final AtomicLong timestampNs = new AtomicLong(System.nanoTime());
 
+    private String clientIpPublic;
+
+    private String clientIpPrivate;
+
     public InformationCollector(final InformationProvider informationProvider) {
         this.informationProvider = informationProvider;
     }
@@ -264,5 +268,21 @@ public class InformationCollector
         public void setTime(LocalDateTime time) {
             this.time = time;
         }
+    }
+
+    public String getClientIpPublic() {
+        return clientIpPublic;
+    }
+
+    public void setClientIpPublic(String clientIpPublic) {
+        this.clientIpPublic = clientIpPublic;
+    }
+
+    public String getClientIpPrivate() {
+        return clientIpPrivate;
+    }
+
+    public void setClientIpPrivate(String clientIpPrivate) {
+        this.clientIpPrivate = clientIpPrivate;
     }
 }

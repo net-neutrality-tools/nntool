@@ -37,13 +37,8 @@ class Upload : public CBasisThread
 		
 		string mServer;
 		string mServerName;
-		string mServerHostname;
 		string mClient;
-		
-		int ipversion;
-				
-		std::unique_ptr<CConnection> mConnection;
-		
+
 		CConfigManager *mConfig;
 		
 	public:
