@@ -48,8 +48,21 @@ public struct InterfaceTraffic {
     }
 
     public func differenceTo(_ previous: InterfaceTraffic) -> InterfaceTraffic {
-        // TODO: check overflow!
-        return InterfaceTraffic(tx: tx - previous.tx, rx: rx - previous.rx)
+        var txDiff: UInt32 = 0
+        if tx < previous.tx {
+            txDiff += UInt32.max - previous.tx + tx
+        } else {
+            txDiff = tx - previous.tx
+        }
+
+        var rxDiff: UInt32 = 0
+        if rx < previous.rx {
+            rxDiff += UInt32.max - previous.rx + rx
+        } else {
+            rxDiff = rx - previous.rx
+        }
+
+        return InterfaceTraffic(tx: txDiff, rx: rxDiff)
     }
 
     public func classify() -> (InterfaceTrafficClassification, InterfaceTrafficClassification) {
