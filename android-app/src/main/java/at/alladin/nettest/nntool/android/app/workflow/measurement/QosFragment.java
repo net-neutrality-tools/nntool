@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.view.TopProgressBarView;
+import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
@@ -32,7 +33,7 @@ import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  */
-public class QosFragment extends Fragment implements ServiceConnection {
+public class QosFragment extends ActionBarFragment implements ServiceConnection {
     private final static String TAG = "QOS_FRAGMENT";
 
     private MeasurementService measurementService;
@@ -170,5 +171,15 @@ public class QosFragment extends Fragment implements ServiceConnection {
     public void onServiceDisconnected(ComponentName name) {
         Log.d(TAG, "ON SERVICE DISCONNECTED");
         measurementService = null;
+    }
+
+    @Override
+    public Integer getTitleStringId() {
+        return R.string.app_name;
+    }
+
+    @Override
+    public boolean showHelpButton() {
+        return false;
     }
 }

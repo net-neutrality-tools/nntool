@@ -75,6 +75,13 @@ class AndroidConnector {
 
         static const char* TAG;
 
+        /**
+        *   Convenience method to detach threads from the jvm
+        */
+        static void detachCurrentThreadFromJavaVM() {
+            getInstance().detachCurrentThreadFromJvm();
+        }
+
         void registerSharedObject(JNIEnv* env, jobject caller, jobject baseMeasurementState, jobject pingMeasurementState, jobject downloadMeasurementState, jobject uploadMeasurementState);
 
         void setSpeedSettings(JNIEnv* env, jobject speedTaskDesc);

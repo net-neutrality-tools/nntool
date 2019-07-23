@@ -276,43 +276,69 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
             jobject singleResult = env->NewObject(resultUdpClazz, initId);
 
             jmethodID setId = env->GetMethodID(resultUdpClazz, "setAverageNs", "(Ljava/lang/Long;)V");
-            env->CallVoidMethod(singleResult, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["average_ns"].string_value())));
+            jobject obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["average_ns"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
 
             setId = env->GetMethodID(resultUdpClazz, "setDurationNs", "(Ljava/lang/Long;)V");
-            env->CallVoidMethod(singleResult, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["duration_ns"].string_value())));
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["duration_ns"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
 
             setId = env->GetMethodID(resultUdpClazz, "setMaxNs", "(Ljava/lang/Long;)V");
-            env->CallVoidMethod(singleResult, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["max_ns"].string_value())));
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["max_ns"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
 
             setId = env->GetMethodID(resultUdpClazz, "setMedianNs", "(Ljava/lang/Long;)V");
-            env->CallVoidMethod(singleResult, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["median_ns"].string_value())));
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["median_ns"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
 
             setId = env->GetMethodID(resultUdpClazz, "setMinNs", "(Ljava/lang/Long;)V");
-            env->CallVoidMethod(singleResult, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["min_ns"].string_value())));
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["min_ns"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
 
             setId = env->GetMethodID(resultUdpClazz, "setNumError", "(Ljava/lang/Integer;)V");
-            env->CallVoidMethod(singleResult, setId, env->CallStaticObjectMethod(parse.intClass, parse.staticIntValueOf, std::stol(rttEntry["num_error"].string_value())));
+            obj = env->CallStaticObjectMethod(parse.intClass, parse.staticIntValueOf, std::stol(rttEntry["num_error"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
 
             setId = env->GetMethodID(resultUdpClazz, "setNumMissing", "(Ljava/lang/Integer;)V");
-            env->CallVoidMethod(singleResult, setId, env->CallStaticObjectMethod(parse.intClass, parse.staticIntValueOf, std::stol(rttEntry["num_missing"].string_value())));
+            obj = env->CallStaticObjectMethod(parse.intClass, parse.staticIntValueOf, std::stol(rttEntry["num_missing"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
 
             setId = env->GetMethodID(resultUdpClazz, "setNumReceived", "(Ljava/lang/Integer;)V");
-            env->CallVoidMethod(singleResult, setId, env->CallStaticObjectMethod(parse.intClass, parse.staticIntValueOf, std::stol(rttEntry["num_received"].string_value())));
+            obj = env->CallStaticObjectMethod(parse.intClass, parse.staticIntValueOf, std::stol(rttEntry["num_received"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
 
             setId = env->GetMethodID(resultUdpClazz, "setNumSent", "(Ljava/lang/Integer;)V");
-            env->CallVoidMethod(singleResult, setId, env->CallStaticObjectMethod(parse.intClass, parse.staticIntValueOf, std::stol(rttEntry["num_sent"].string_value())));
+            obj = env->CallStaticObjectMethod(parse.intClass, parse.staticIntValueOf, std::stol(rttEntry["num_sent"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
 
             setId = env->GetMethodID(resultUdpClazz, "setPacketSize", "(Ljava/lang/Integer;)V");
-            env->CallVoidMethod(singleResult, setId, env->CallStaticObjectMethod(parse.intClass, parse.staticIntValueOf, std::stol(rttEntry["packet_size"].string_value())));
+            obj = env->CallStaticObjectMethod(parse.intClass, parse.staticIntValueOf, std::stol(rttEntry["packet_size"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
 
             setId = env->GetMethodID(resultUdpClazz, "setPeer", "(Ljava/lang/String;)V");
-            env->CallVoidMethod(singleResult, setId, env->NewStringUTF(rttEntry["peer"].string_value().c_str()));
+            obj = env->NewStringUTF(rttEntry["peer"].string_value().c_str());
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
 
             setId = env->GetMethodID(resultUdpClazz, "setProgress", "(Ljava/lang/Float;)V");
-            env->CallVoidMethod(singleResult, setId, env->CallStaticObjectMethod(parse.floatClass, parse.staticFloatValueOf, rttEntry["progress"].number_value()));
+            obj = env->CallStaticObjectMethod(parse.floatClass, parse.staticFloatValueOf, rttEntry["progress"].number_value());
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
 
             setId = env->GetMethodID(resultUdpClazz, "setStandardDeviationNs", "(Ljava/lang/Long;)V");
-            env->CallVoidMethod(singleResult, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["standard_deviation_ns"].string_value())));
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["standard_deviation_ns"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
 
             env->CallVoidMethod(speedMeasurementResult, addMethod, singleResult);
         }
@@ -348,41 +374,57 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
         jobject timeObj = env->NewObject(timeClazz, initId);
         jmethodID setId;
 
+        jobject obj;
+
         if (timeEntry["download_start"].is_string()) {
             setId = env->GetMethodID(timeClazz, "setDownloadStart", "(Ljava/lang/Long;)V");
-            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["download_start"].string_value())));
+            jobject obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["download_start"].string_value()));
+            env->CallVoidMethod(timeObj, setId, obj);
+            env->DeleteLocalRef(obj);
         }
 
         if (timeEntry["download_end"].is_string()) {
             setId = env->GetMethodID(timeClazz, "setDownloadEnd", "(Ljava/lang/Long;)V");
-            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["download_end"].string_value())));
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["download_end"].string_value()));
+            env->CallVoidMethod(timeObj, setId, obj);
+            env->DeleteLocalRef(obj);
         }
 
         if (timeEntry["rtt_udp_start"].is_string()) {
             setId = env->GetMethodID(timeClazz, "setRttUdpStart", "(Ljava/lang/Long;)V");
-            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["rtt_udp_start"].string_value())));
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["rtt_udp_start"].string_value()));
+            env->CallVoidMethod(timeObj, setId, obj);
+            env->DeleteLocalRef(obj);
         }
 
         if (timeEntry["rtt_udp_end"].is_string()) {
             setId = env->GetMethodID(timeClazz, "setRttUdpEnd", "(Ljava/lang/Long;)V");
-            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["rtt_udp_end"].string_value())));
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["rtt_udp_end"].string_value()));
+            env->CallVoidMethod(timeObj, setId, obj);
+            env->DeleteLocalRef(obj);
         }
 
         if (timeEntry["upload_start"].is_string()) {
             setId = env->GetMethodID(timeClazz, "setUploadStart", "(Ljava/lang/Long;)V");
-            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["upload_start"].string_value())));
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["upload_start"].string_value()));
+            env->CallVoidMethod(timeObj, setId, obj);
+            env->DeleteLocalRef(obj);
         }
 
         if (timeEntry["upload_end"].is_string()) {
             setId = env->GetMethodID(timeClazz, "setUploadEnd", "(Ljava/lang/Long;)V");
-            env->CallVoidMethod(timeObj, setId, env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["upload_end"].string_value())));
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["upload_end"].string_value()));
+            env->CallVoidMethod(timeObj, setId, obj);
+            env->DeleteLocalRef(obj);
         }
 
         env->CallVoidMethod(speedMeasurementResult, addMethod, timeObj);
     }
 
     jmethodID setId = env->GetMethodID(speedMeasurementResultClazz, "setMeasurementServerIp", "(Ljava/lang/String;)V");
-    env->CallVoidMethod(speedMeasurementResult, setId, env->NewStringUTF(this->measurementServerIp.c_str()));
+    jstring str = env->NewStringUTF(this->measurementServerIp.c_str());
+    env->CallVoidMethod(speedMeasurementResult, setId, str);
+    env->DeleteLocalRef(str);
 
     const jstring javaMsg = env->NewStringUTF(json11::Json(message).dump().c_str());
     env->CallVoidMethod(jniCaller, cppCallbackFinishedID, javaMsg, speedMeasurementResult);
@@ -444,28 +486,44 @@ void AndroidConnector::passJniSpeedState (JNIEnv* env, const MeasurementPhase& s
 
 void AndroidConnector::setBandwidthResult (JNIEnv * env, json11::Json const & jsonItems, jobject & result, JavaParseInformation & parseInfo) {
     jmethodID setId = env->GetMethodID(resultBandwidthClazz, "setBytes", "(Ljava/lang/Long;)V");
-    env->CallVoidMethod(result, setId, env->CallStaticObjectMethod(parseInfo.longClass, parseInfo.staticLongValueOf, std::stoll(jsonItems["bytes"].string_value())));
+    jobject obj = env->CallStaticObjectMethod(parseInfo.longClass, parseInfo.staticLongValueOf, std::stoll(jsonItems["bytes"].string_value()));
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
 
     setId = env->GetMethodID(resultBandwidthClazz, "setBytesIncludingSlowStart", "(Ljava/lang/Long;)V");
-    env->CallVoidMethod(result, setId, env->CallStaticObjectMethod(parseInfo.longClass, parseInfo.staticLongValueOf, std::stoll(jsonItems["bytes_including_slow_start"].string_value())));
+    obj = env->CallStaticObjectMethod(parseInfo.longClass, parseInfo.staticLongValueOf, std::stoll(jsonItems["bytes_including_slow_start"].string_value()));
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
 
     setId = env->GetMethodID(resultBandwidthClazz, "setDurationNs", "(Ljava/lang/Long;)V");
-    env->CallVoidMethod(result, setId, env->CallStaticObjectMethod(parseInfo.longClass, parseInfo.staticLongValueOf, std::stoll(jsonItems["duration_ns"].string_value())));
+    obj = env->CallStaticObjectMethod(parseInfo.longClass, parseInfo.staticLongValueOf, std::stoll(jsonItems["duration_ns"].string_value()));
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
 
     setId = env->GetMethodID(resultBandwidthClazz, "setDurationNsTotal", "(Ljava/lang/Long;)V");
-    env->CallVoidMethod(result, setId, env->CallStaticObjectMethod(parseInfo.longClass, parseInfo.staticLongValueOf, std::stoll(jsonItems["duration_ns_total"].string_value())));
+    obj = env->CallStaticObjectMethod(parseInfo.longClass, parseInfo.staticLongValueOf, std::stoll(jsonItems["duration_ns_total"].string_value()));
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
 
     setId = env->GetMethodID(resultBandwidthClazz, "setThroughputAvgBps", "(Ljava/lang/Long;)V");
-    env->CallVoidMethod(result, setId, env->CallStaticObjectMethod(parseInfo.longClass, parseInfo.staticLongValueOf, std::stoll(jsonItems["throughput_avg_bps"].string_value())));
+    obj = env->CallStaticObjectMethod(parseInfo.longClass, parseInfo.staticLongValueOf, std::stoll(jsonItems["throughput_avg_bps"].string_value()));
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
 
     setId = env->GetMethodID(resultBandwidthClazz, "setNumStreamsEnd", "(Ljava/lang/Integer;)V");
-    env->CallVoidMethod(result, setId, env->CallStaticObjectMethod(parseInfo.intClass, parseInfo.staticIntValueOf, std::stol(jsonItems["num_streams_end"].string_value())));
+    obj = env->CallStaticObjectMethod(parseInfo.intClass, parseInfo.staticIntValueOf, std::stol(jsonItems["num_streams_end"].string_value()));
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
 
     setId = env->GetMethodID(resultBandwidthClazz, "setNumStreamsStart", "(Ljava/lang/Integer;)V");
-    env->CallVoidMethod(result, setId, env->CallStaticObjectMethod(parseInfo.intClass, parseInfo.staticIntValueOf, std::stol(jsonItems["num_streams_start"].string_value())));
+    obj = env->CallStaticObjectMethod(parseInfo.intClass, parseInfo.staticIntValueOf, std::stol(jsonItems["num_streams_start"].string_value()));
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
 
     setId = env->GetMethodID(resultBandwidthClazz, "setProgress", "(Ljava/lang/Float;)V");
-    env->CallVoidMethod(result, setId, env->CallStaticObjectMethod(parseInfo.floatClass, parseInfo.staticFloatValueOf, jsonItems["progress"].number_value()));
+    obj = env->CallStaticObjectMethod(parseInfo.floatClass, parseInfo.staticFloatValueOf, jsonItems["progress"].number_value());
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
 
 }
 
