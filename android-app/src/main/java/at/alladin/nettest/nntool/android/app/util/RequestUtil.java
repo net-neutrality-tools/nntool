@@ -181,6 +181,9 @@ public class RequestUtil {
                 final MeasurementResultNetworkPointInTimeDto networkInfoDto = new MeasurementResultNetworkPointInTimeDto();
                 timeBasedResultDto.getNetworkPointsInTime().add(networkInfoDto);
 
+                networkInfoDto.setClientPrivateIp(informationCollector.getClientIpPrivate());
+                networkInfoDto.setClientPublicIp(informationCollector.getClientIpPublic());
+
                 if (operatorInfo.getOperatorInfo() instanceof WifiOperator) {
                     final WifiOperator operator = (WifiOperator) operatorInfo.getOperatorInfo();
                     networkInfoDto.setBssid(operator.getBssid());

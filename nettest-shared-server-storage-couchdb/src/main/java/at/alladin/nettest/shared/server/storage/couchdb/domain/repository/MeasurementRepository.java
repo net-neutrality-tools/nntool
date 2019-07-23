@@ -25,6 +25,8 @@ public interface MeasurementRepository extends CouchDbRepository<Measurement> {
 	
 	List<Measurement> findByAgentInfoUuid/*OrderByStarttimeDesc*/(String uuid, Pageable pageable);
 	
+	List<Measurement> findByAgentInfoUuidOrderByMeasurementTimeStartTimeDesc(String uuid, Pageable pageable);
+	
 	List<Measurement> findByAgentInfoUuid(String uuid);
 	
 	////

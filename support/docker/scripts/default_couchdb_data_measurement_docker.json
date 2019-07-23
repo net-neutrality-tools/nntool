@@ -1,0 +1,11 @@
+{
+    "index": {
+        "fields": [
+            {
+                "time.start_time": "desc"
+            }
+        ]
+    },
+    "type": "json",
+    "name": "measurement-by-start-time-desc-index"
+}

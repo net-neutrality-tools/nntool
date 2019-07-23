@@ -21,6 +21,7 @@ public class PartTreeMangoBasedCouchDbQuery extends AbstractCouchDbRepositoryQue
 
 	private final PartTree partTree;
 	
+	
 	public PartTreeMangoBasedCouchDbQuery(CouchDbQueryMethod method, CouchDbOperations operations) {
 		super(method, operations);
 		
@@ -30,11 +31,12 @@ public class PartTreeMangoBasedCouchDbQuery extends AbstractCouchDbRepositoryQue
 	@Override
 	public Object execute(Object[] parameters) {
 		final ParametersParameterAccessor paramAccessor = new ParametersParameterAccessor(method.getParameters(), parameters);
-		
+
 		final MangoQueryCreator creator = new MangoQueryCreator(
 			partTree, 
 			paramAccessor, 
-			method.getDocType()
+			method.getDocType(),
+			method.getResultProcessor().getReturnedType().getDomainType()
 		);
 		
 		final String query = creator.createQuery();

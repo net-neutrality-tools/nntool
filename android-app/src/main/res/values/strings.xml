@@ -27,6 +27,8 @@
 
     <string name="alert_send_measurement_result_title">Sending results</string>
     <string name="alert_send_measurement_results_error">An error occurred while sending measurement results.</string>
+    <string name="alert_cancel_measurement_title">Abort measurement</string>
+    <string name="alert_cancel_measurement_content">Abort current measurement?</string>
 
     <string name="measurement_data_consumption_warning">I am a data consumption warning!</string>
 

@@ -39,7 +39,11 @@ Upload::Upload( CConfigManager *pConfig, CConfigManager *pXml, CConfigManager *p
 {	
 	mServerName = pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
 	mServer 	= pXml->readString(sProvider,"IP","1.1.1.1");
-	mClient 	= "0.0.0.0";
+	#ifdef __ANDROID__
+        mClient = pXml->readString(sProvider, "CLIENT_IP", "0.0.0.0");
+    #else
+        mClient = "0.0.0.0";
+    #endif
 	mPort   	= pXml->readLong(sProvider,"DL_PORT",80);
 	mTls		= pXml->readLong(sProvider,"TLS",0);
 
@@ -55,10 +59,7 @@ Upload::Upload( CConfigManager *pConfig, CConfigManager *pXml, CConfigManager *p
 		mLimit = 5000000;
 	else
 		mLimit = 1000000;
-	
-	//Create Socket Object
-	mConnection = std::make_unique<CConnection>();
-		
+
 	mConfig = pConfig;
 	
 	mUploadString = "POST";
@@ -71,7 +72,8 @@ Upload::Upload( CConfigManager *pConfig, CConfigManager *pXml, CConfigManager *p
 //! \param &syncing_thread
 //! \return 0
 int Upload::run()
-{	
+{
+    std::unique_ptr<CConnection> mConnection = std::make_unique<CConnection>();
     try {
 		bool ipv6validated = false;
 
@@ -147,6 +149,8 @@ int Upload::run()
 			if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 ) ipv6validated = true;
 		#endif
 
+		int ipversion;
+
 		if (ipv6validated)
 		{
 			//Create a TCP socket
@@ -192,7 +196,7 @@ int Upload::run()
 		}
 		
 		nHttpResponseDuration = pHttp->getHttpResponseDuration();
-		mServerHostname = pHttp->getHttpServerHostname();
+		std::string mServerHostname = pHttp->getHttpServerHostname();
 
 		//Start Upload Receiver Thread
 		std::unique_ptr<CUploadSender>  pUploadSender = std::make_unique<CUploadSender>(mConnection.get());
@@ -226,23 +230,14 @@ int Upload::run()
 			syncing_threads[pid] = 1;
 			
 			//Got an error
-			if(mResponse == -1)
+			if(mResponse == -1 || mResponse == 0)
 			{
-				TRC_ERR("Received an Error: Upload RECV == -1");
-				
+				TRC_ERR("Received an Error: Upload RECV == " + std::to_string(mResponse));
+				::hasError = true;
 				//break to the end of the loop
 				break;
 			}
-			
-			//Got an error
-			if(mResponse == 0)
-			{
-				TRC_ERR("Received an Error: Upload RECV == 0");
-				
-				//break to the end of the loop
-				break;
-			}
-				
+
 			//Cut String out of Response from Server
 			string sResponse(rbuffer,find( rbuffer, rbuffer + mResponse,  ';'));
 
@@ -261,7 +256,7 @@ int Upload::run()
 	        }
 
 			//Timer is running
-			if( TIMER_RUNNING )
+			if( TIMER_RUNNING && !::hasError)
 			{
 				#ifdef NNTOOL
 					index = nTimeRecvExa;

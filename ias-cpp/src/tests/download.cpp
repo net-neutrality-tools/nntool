@@ -38,7 +38,11 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 {
 	mServerName = pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
 	mServer 	= pXml->readString(sProvider,"IP","1.1.1.1");
-	mClient 	= "0.0.0.0";
+	#ifdef __ANDROID__
+	    mClient = pXml->readString(sProvider, "CLIENT_IP", "0.0.0.0");
+	#else
+	    mClient = "0.0.0.0";
+	#endif
 	mPort   	= pXml->readLong(sProvider,"DL_PORT",80);
 	mTls		= pXml->readLong(sProvider,"TLS",0);
 
@@ -55,9 +59,6 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 	else
 		mLimit = 1000000;
 
-	//Create Socket Object
-	mConnection = std::make_unique<CConnection>();
-
 	mConfig = pConfig;
 
 	mDownloadString = "GET";
@@ -71,6 +72,9 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 //! \return 0
 int Download::run()
 {
+    //Create Socket Object
+    std::unique_ptr<CConnection> mConnection = std::make_unique<CConnection>();
+
     try {
 		bool ipv6validated = false;
 
@@ -81,10 +85,12 @@ int Download::run()
 		TRC_DEBUG( ("Resolving Hostname for Measurement: "+mServerName).c_str() );
 
 		#if defined(NNTOOL) && defined(__ANDROID__)
-		if( CTool::validateIp(mClient) == 6)
+
+		if( CTool::validateIp(mClient) == 6) {
 			mServer = CTool::getIpFromHostname( mServerName, 6 );
-		else
+		} else {
 			mServer = CTool::getIpFromHostname( mServerName, 4 );
+        }
 		#endif
 
 		#if defined(NNTOOL) && !defined(__ANDROID__)
@@ -146,6 +152,8 @@ int Download::run()
 			if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 ) ipv6validated = true;
 		#endif
 
+        int ipversion;
+
 		if (ipv6validated)
 		{
 			//Create a TCP socket
@@ -206,7 +214,7 @@ int Download::run()
 		#endif
 
 		nHttpResponseDuration = pHttp->getHttpResponseDuration();
-		mServerHostname = pHttp->getHttpServerHostname();
+		std::string mServerHostname = pHttp->getHttpServerHostname();
 
 		#ifndef NNTOOL
 			//MYSQL_LOG("Measurement-DL-Connection",mServerHostname);
@@ -223,19 +231,10 @@ int Download::run()
 			syncing_threads[pid] = 1;
 
 			//Got an error
-			if(mResponse == -1)
+			if(mResponse == -1 || mResponse == 0)
 			{
-				TRC_ERR("Received an Error: Download RECV == -1");
-
-				//break to the end of the loop
-				break;
-			}
-
-			//Got an error
-			if(mResponse == 0)
-			{
-				TRC_ERR("Received an Error: Download RECV == 0");
-
+				TRC_ERR("Received an Error: Download RECV == " + std::to_string(mResponse));
+                ::hasError = true;
 				//break to the end of the loop
 				break;
 			}
@@ -247,7 +246,7 @@ int Download::run()
 			mDownload.datasize_total += mResponse;
 
 			//Timer is running
-			if( TIMER_RUNNING )
+			if( TIMER_RUNNING && !hasError)
 			{
 				if(mDownload.results.find(TIMER_INDEX) == mDownload.results.end())
 					mDownload.results[TIMER_INDEX] = mResponse;

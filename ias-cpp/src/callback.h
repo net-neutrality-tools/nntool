@@ -34,6 +34,7 @@ using namespace std;
 */
 class CCallback
 {
+    friend void startTestCase(int nTestCase);
 	private:
 		void callbackToPlatform(string cmd, string msg, int error_code, string error_description);
 		void rttUdpCallback(string cmd);
@@ -41,7 +42,6 @@ class CCallback
 		void uploadCallback(string cmd);
 		Json::object getMeasurementResults(struct measurement tempMeasurement, struct measurement_data data, string cmd);
 
-		Json::object jMeasurementResults;
 		Json::object jMeasurementResultsTime;
 		Json::array jMeasurementResultsRttUdp;
 		Json::array jMeasurementResultsDownload;

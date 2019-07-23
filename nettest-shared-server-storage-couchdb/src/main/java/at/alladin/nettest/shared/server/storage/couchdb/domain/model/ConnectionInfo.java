@@ -25,6 +25,15 @@ public class ConnectionInfo {
 	private String address;
 
 	/**
+	 * The ip address of the measurement server (can be either v4 or v6).
+	 */
+	@JsonPropertyDescription("The ip address of the measurement server (can be either v4 or v6).")
+	@Expose
+	@SerializedName("ip_address")
+	@JsonProperty("ip_address")
+	private String ipAddress;
+
+	/**
 	 * Port used for the communication.
 	 */
 	@JsonPropertyDescription("Port used for the communication.")
@@ -255,5 +264,13 @@ public class ConnectionInfo {
 
 	public void setWebSocketInfoUpload(WebSocketInfo webSocketInfoUpload) {
 		this.webSocketInfoUpload = webSocketInfoUpload;
+	}
+
+	public String getIpAddress() {
+		return ipAddress;
+	}
+
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
 	}
 }

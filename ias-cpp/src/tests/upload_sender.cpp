@@ -36,8 +36,6 @@ CUploadSender::~CUploadSender()
 CUploadSender::CUploadSender( CConnection *nConnection )
 {
 	mConnection = nConnection;
-	
-	nPointer = 0;
 }
 
 //! \brief
@@ -50,10 +48,11 @@ int CUploadSender::run()
 
     const char *firstChar = randomDataValues.data();
 
-    nPointer = 1;
+    unsigned long long nPointer = 1;
+    int mResponse;
 	//++++++MAIN++++++
 	//Measurement Loop
-	while( RUNNING )
+	while( RUNNING && !::hasError)
 	{
 
 		if (nPointer + MAX_PACKET_SIZE > randomDataValues.size()) {
@@ -66,22 +65,14 @@ int CUploadSender::run()
         nPointer += MAX_PACKET_SIZE;
 
 		//Got an error
-		if(mResponse == -1)
+		if(mResponse == -1 || mResponse == 0)
 		{
-			TRC_ERR("Received an Error: Upload SEND == -1");
-			
+			TRC_ERR("Received an Error: Upload SEND == " + std::to_string(mResponse));
+			::hasError = true;
 			//break to the end of the loop
 			break;
 		}
-		//Got an error
-		if(mResponse == 0)
-		{
-			TRC_ERR("Received an Error: Upload SEND == 0");
-			
-			//break to the end of the loop
-			break;
-		}
-		
+
 		//If Thread should stop
 		if( m_fStop )
 			break;

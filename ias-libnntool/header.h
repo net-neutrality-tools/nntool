@@ -20,9 +20,9 @@
 #define HEADER_H_
 
 #ifdef NNTOOL_SERVER
-//log4cpp
-#include <log4cpp/Category.hh>
-#include <log4cpp/PropertyConfigurator.hh>
+    //log4cpp
+    #include <log4cpp/Category.hh>
+    #include <log4cpp/PropertyConfigurator.hh>
 #endif
 
 #include <sys/socket.h>
@@ -55,7 +55,6 @@
 #include <netdb.h>
 #include <resolv.h>
 #include <ifaddrs.h>
-
 
 #include <cmath>
 #include <cstdlib>
