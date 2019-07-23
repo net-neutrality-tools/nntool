@@ -19,6 +19,7 @@ import Foundation
 import MeasurementAgentKit
 import QoSKit
 import CodableJSON
+import nntool_shared_swift
 
 ///
 class QoSProgram: ProgramProtocol {
@@ -38,7 +39,7 @@ class QoSProgram: ProgramProtocol {
 
     var qosTaskExecutor: QoSTaskExecutor?
 
-    func run() throws -> SubMeasurementResult {
+    func run(relativeStartTimeNs: UInt64) throws -> SubMeasurementResult {
         let res = QoSMeasurementResult()
 
         guard let objtvs = objectives else {
@@ -55,12 +56,17 @@ class QoSProgram: ProgramProtocol {
 
         semaphore.wait()
 
+        let relativeEndTimeNs = TimeHelper.currentTimeNs() - relativeStartTimeNs
+
         logger.debug("after wait")
 
         guard let r = result else {
             res.status = .failed
             return res // or throw?
         }
+
+        res.relativeStartTimeNs = relativeStartTimeNs
+        res.relativeEndTimeNs = relativeEndTimeNs
 
         res.status = .finished
 

@@ -40,13 +40,15 @@ class IASProgram: NSObject, ProgramProtocol {
 
     var result: [AnyHashable: Any]?
 
-    private var startTimeNs: UInt64?
+    private var relativeStartTimeNs: UInt64?
 
     private var interfaceTrafficDownloadStart: InterfaceTraffic?
     private var interfaceTrafficUploadStart: InterfaceTraffic?
     private var interfaceTrafficUploadEnd: InterfaceTraffic?
 
-    func run() throws -> SubMeasurementResult {
+    func run(relativeStartTimeNs: UInt64) throws -> SubMeasurementResult {
+        self.relativeStartTimeNs = relativeStartTimeNs
+
         speed.speedDelegate = self
 
         speed.measurementLoad()
@@ -102,7 +104,7 @@ class IASProgram: NSObject, ProgramProtocol {
             // TODO: mark measurement as timed out
         }
 
-        let endTimeNs = TimeHelper.currentTimeNs()
+        let relativeEndTimeNs = TimeHelper.currentTimeNs() - relativeStartTimeNs
 
         let res = IasMeasurementResult()
 
@@ -113,6 +115,13 @@ class IASProgram: NSObject, ProgramProtocol {
             res.status = .failed // or .aborted
             return res
         }
+
+        res.relativeStartTimeNs = relativeStartTimeNs
+        res.relativeEndTimeNs = relativeEndTimeNs
+
+        // TODO
+
+        res.status = .finished
 
         if let rttInfo = r["rtt_info"] as? [AnyHashable: Any] {
             res.durationRttNs = rttInfo["duration_ns"] as? UInt64
@@ -166,9 +175,17 @@ class IASProgram: NSObject, ProgramProtocol {
         }
 
         if let timeInfo = r["time_info"] as? [AnyHashable: UInt64] {
-            res.relativeStartTimeRttNs = timeInfo["rtt_start"]
-            res.relativeStartTimeDownloadNs = timeInfo["download_start"]
-            res.relativeStartTimeUploadNs = timeInfo["upload_start"]
+            if let rttStart = timeInfo["rtt_start"] {
+                res.relativeStartTimeRttNs = rttStart - relativeStartTimeNs
+            }
+
+            if let dlStart = timeInfo["download_start"] {
+                res.relativeStartTimeDownloadNs = dlStart - relativeStartTimeNs
+            }
+
+            if let ulStart = timeInfo["upload_start"] {
+                res.relativeStartTimeUploadNs = ulStart - relativeStartTimeNs
+            }
         }
 
         res.connectionInfo?.address = serverAddress
@@ -195,13 +212,6 @@ class IASProgram: NSObject, ProgramProtocol {
         if let dlStartTraffic = interfaceTrafficDownloadStart, let ulEndTraffic = interfaceTrafficUploadEnd {
             res.connectionInfo?.agentInterfaceTotalTraffic = TrafficDto.fromInterfaceTraffic(ulEndTraffic.differenceTo(dlStartTraffic))
         }
-
-        res.relativeStartTimeNs = startTimeNs // TODO: relative to measurement start
-        res.relativeEndTimeNs = endTimeNs // TODO: relative to measurement start
-
-        // TODO
-
-        res.status = .finished
 
         return res
     }
@@ -319,8 +329,6 @@ extension IASProgram: SpeedDelegate {
         //logger.debug(error)
 
         logger.debug("measurementDidLoad")
-
-        startTimeNs = TimeHelper.currentTimeNs()
 
         speed.measurementStart()
         delegate?.iasMeasurement(self, didStartPhase: .initialize)
