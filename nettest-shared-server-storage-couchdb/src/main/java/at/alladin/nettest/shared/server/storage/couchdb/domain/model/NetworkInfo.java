@@ -27,6 +27,15 @@ public class NetworkInfo {
 	List<NetworkPointInTime> networkPointsInTime;
 
 	/**
+	 * @see NetworkMobileInfo
+	 */
+	@JsonPropertyDescription("Computed mobile network info.")
+	@Expose
+	@SerializedName("computed_mobile_info")
+	@JsonProperty("computed_mobile_info")
+	NetworkMobileInfo computedMobileInfo;
+	
+	/**
 	 * @see SignalInfo
 	 */
 	@JsonPropertyDescription("Contains signal information captured during the test.")
@@ -34,6 +43,15 @@ public class NetworkInfo {
 	@SerializedName("signal_info")
 	@JsonProperty("signal_info")
 	private SignalInfo signalInfo;
+
+	
+	public NetworkMobileInfo getComputedMobileInfo() {
+		return computedMobileInfo;
+	}
+
+	public void setComputedMobileInfo(NetworkMobileInfo computedMobileInfo) {
+		this.computedMobileInfo = computedMobileInfo;
+	}
 
 	public List<NetworkPointInTime> getNetworkPointsInTime() {
 		return networkPointsInTime;
