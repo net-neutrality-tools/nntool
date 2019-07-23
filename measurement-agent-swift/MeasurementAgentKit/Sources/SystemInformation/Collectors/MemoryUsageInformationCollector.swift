@@ -27,7 +27,7 @@ class MemoryUsageInformationCollector: BaseInformationCollector {
         result.value = memoryUsageInfo.getCurrentMemoryUsagePercent()
         result.relativeTimeNs = currentRelativeTimeNs()
 
-        logger.debug("MEM: \(result.value)")
+        logger.debug("MEM: \(String(describing: result.value))")
 
         timeBasedResult.memUsage?.append(result)
     }

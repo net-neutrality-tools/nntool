@@ -76,7 +76,7 @@ class HomeViewController: CustomNavigationBarViewController {
                     self.selectSpeedMeasurementPeerSeparatorView?.isHidden = false
                     self.selectSpeedMeasurementPeerContainerView?.isHidden = false
                 }
-            }) { error in
+            }, onFailure: { error in
                 logger.debug(error)
 
                 DispatchQueue.main.async {
@@ -84,7 +84,7 @@ class HomeViewController: CustomNavigationBarViewController {
                     self.selectSpeedMeasurementPeerSeparatorView?.isHidden = true
                     self.selectSpeedMeasurementPeerContainerView?.isHidden = true
                 }
-            }
+            })
         }
 
         // TODO: display error message if location permission is not granted

@@ -63,7 +63,6 @@ class RestApiService {
                     if let apiResponse = try? decoder.decode(ApiResponse<AnyCodable>.self, from: errorData) {
                         let firstError = apiResponse.errors?.first
 
-                        // debug print (TODO)
                         logger.debugExec {
                             logger.debug("--- REST API error ---")
                             logger.debug(String(describing: firstError?.path))
@@ -73,14 +72,6 @@ class RestApiService {
                             logger.debug(String(describing: firstError?.trace))
                             logger.debug("--- / REST API error ---")
                         }
-
-                        /*print("--- REST API error ---")
-                        print(String(describing: firstError?.path))
-                        print(String(describing: firstError?.error))
-                        print(String(describing: firstError?.message))
-                        print(String(describing: firstError?.exception))
-                        print(String(describing: firstError?.trace))
-                        print("--- / REST API error ---")*/
 
                         if let firstMessage = firstError?.message {
                             error.userMessage = firstMessage

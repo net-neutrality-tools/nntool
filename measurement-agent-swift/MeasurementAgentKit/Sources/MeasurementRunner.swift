@@ -92,7 +92,7 @@ public class MeasurementRunner {
 
             let task = LmapCapabilityTaskDto()
 
-            //print("add task \(name.rawValue) to capabilities")
+            //logger.debug("add task \(name.rawValue) to capabilities")
 
             task.taskName = name.rawValue
             task.version = config?.version
@@ -143,7 +143,7 @@ public class MeasurementRunner {
                 continue
             }
 
-            logger.info("Running task \(taskName) with options \(task.options).")
+            logger.info("Running task \(taskName) with options \(String(describing: task.options)).")
 
             guard let taskType = MeasurementTypeDto(rawValue: taskName) else {
                 continue
@@ -251,7 +251,7 @@ public class MeasurementRunner {
             collectorService.storeMeasurement(reportDto: reportModel, onSuccess: { _ in
                 self.finish()
             }, onFailure: { error in
-                print(error)
+                logger.debug(error)
                 self.fail() // TODO: error
             })
         }

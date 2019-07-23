@@ -98,7 +98,7 @@ class IASProgram: NSObject, ProgramProtocol {
             }
         }
 
-        let semaphoreResult = measurementFinishedSemaphore.wait(timeout: DispatchTime.distantFuture) // TODO: timeout
+        let semaphoreResult = measurementFinishedSemaphore.wait(timeout: DispatchTime.distantFuture)
         if semaphoreResult == .timedOut {
             cancel()
             // TODO: mark measurement as timed out
@@ -226,7 +226,7 @@ extension IASProgram: SpeedDelegate {
     func showKpisFromResponse(response: [AnyHashable: Any]!) {
         //logger.debug(response.description)
 
-        logger.debug("showKpisFromResponse (delegate: \(delegate))")
+        logger.debug("showKpisFromResponse (delegate: \(String(describing: delegate)))")
 
         logger.debug(response["cmd"])
         logger.debug(response["test_case"])
@@ -289,7 +289,7 @@ extension IASProgram: SpeedDelegate {
                  let medianNs = rttInfo["median_ns"] as? Double*/ {
 
                     // TODO: single rtt values
-                    logger.debug("--!!-- RTT: \(rttInfo["min_ns"]), \(rttInfo["max_ns"]), \(rttInfo["median_ns"]), \(numReceived)")
+                    logger.debug("--!!-- RTT: \(String(describing: rttInfo["min_ns"])), \(String(describing: rttInfo["max_ns"])), \(String(describing: rttInfo["median_ns"])), \(numReceived)")
 
                     phaseProgress = Double(numReceived + numMissing + numError) / 10.0 // TODO: rtt config packet count?
             }
@@ -310,7 +310,7 @@ extension IASProgram: SpeedDelegate {
         }
 
         if let pp = phaseProgress {
-            logger.debug("PHASE_PROGRESS: \(phaseProgress)")
+            logger.debug("PHASE_PROGRESS: \(String(describing: phaseProgress))")
             delegate?.iasMeasurement(self, didUpdateProgress: pp, inPhase: currentPhase)
         }
     }

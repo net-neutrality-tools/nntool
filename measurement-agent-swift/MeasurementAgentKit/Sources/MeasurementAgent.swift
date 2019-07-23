@@ -85,10 +85,10 @@ public class MeasurementAgent {
             //response.settings
 
             success()
-        }) { _ in
+        }, onFailure: { _ in
             // TODO
             failure()
-        }
+        })
     }
 
     public func updateSettings(success: (() -> Void)? = nil, failure: (() -> Void)? = nil) {

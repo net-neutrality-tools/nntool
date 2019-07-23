@@ -90,7 +90,7 @@ extension QoSProgram: QoSTaskExecutorDelegate {
     }
 
     func taskExecutorDidFail(_ taskExecutor: QoSTaskExecutor, withError error: Error?) {
-        logger.debug("QOS -- ERROR: \(error)")
+        logger.debug("QOS -- ERROR: \(String(describing: error))")
 
         forwardDelegate?.taskExecutorDidFail(taskExecutor, withError: error)
 

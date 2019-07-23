@@ -26,13 +26,12 @@ class AttributedStringHelper {
         str.addAttribute(.foregroundColor, value: inactiveColor, range: NSRange(location: 0, length: count))
 
         var location = 0
-        var length = activeCount
 
         if !ltr {
             location = count - activeCount
         }
 
-        str.addAttribute(.foregroundColor, value: activeColor, range: NSRange(location: location, length: length))
+        str.addAttribute(.foregroundColor, value: activeColor, range: NSRange(location: location, length: activeCount))
 
         return str
     }

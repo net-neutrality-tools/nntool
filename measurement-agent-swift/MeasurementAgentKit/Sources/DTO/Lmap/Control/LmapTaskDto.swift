@@ -58,6 +58,6 @@ public extension LmapTaskDto {
     }
 
     func getMeasurementParametersByName(_ name: String) -> MeasurementTypeParametersWrapperDto? {
-        return options?.filter({ $0.name == name && $0.measurementParameters != nil }).first?.measurementParameters as? MeasurementTypeParametersWrapperDto
+        return options?.filter({ $0.name == name && $0.measurementParameters != nil }).first?.measurementParameters
     }
 }

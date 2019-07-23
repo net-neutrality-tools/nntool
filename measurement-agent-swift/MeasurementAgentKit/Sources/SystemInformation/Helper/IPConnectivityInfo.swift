@@ -31,7 +31,7 @@ public struct IPStatus {
 extension IPStatus: CustomDebugStringConvertible {
 
     public var debugDescription: String {
-        return "[local: \(localAddress), public: \(publicAddress), conn: \(hasInternetConnection), nat: \(isNat)]"
+        return "[local: \(String(describing: localAddress)), public: \(String(describing: publicAddress)), conn: \(hasInternetConnection), nat: \(isNat)]"
     }
 }
 

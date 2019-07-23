@@ -68,11 +68,11 @@ class MeasurementAgentKitTests: XCTestCase {
             print(response.openDataUuid)
 
             expectation.fulfill()
-        }) { err in
+        }, onFailure: { err in
             print(err)
 
             expectation.fulfill()
-        }
+        })
 
         wait(for: [expectation], timeout: 10.0)
     }
@@ -113,11 +113,11 @@ class MeasurementAgentKitTests: XCTestCase {
             print(r.settings)
 
             expectation.fulfill()
-        }) { err in
+        }, onFailure: { err in
             print(err)
 
             expectation.fulfill()
-        }
+        })
 
         /*let controlDto = LmapControlDto()
         controlDto.agent = LmapAgentDto()

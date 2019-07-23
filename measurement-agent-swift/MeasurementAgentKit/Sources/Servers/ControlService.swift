@@ -33,7 +33,10 @@ class ControlService: RestApiService {
 
     ///
     func registerAgent(registrationRequest: RegistrationRequest, onSuccess: SuccessCallback<RegistrationResponse>?, onFailure: FailureCallback?) {
-        request("/measurement-agents", method: .post, requestEntity: registrationRequest, wrapInApiRequest: true, responseEntityType: RegistrationResponse.self, onSuccess: onSuccess, onFailure: onFailure)
+        request(
+            "/measurement-agents", method: .post, requestEntity: registrationRequest, wrapInApiRequest: true,
+            responseEntityType: RegistrationResponse.self, onSuccess: onSuccess, onFailure: onFailure
+        )
     }
 
     ///

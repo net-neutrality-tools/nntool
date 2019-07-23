@@ -50,7 +50,6 @@ class NetworkInformationCollector: BaseInformationCollector {
             default:
                 // no connection?
                 logger.debug("NO CONN!!! \(r.connection)")
-                break
             }
 
             networkPointInTime.time = Date()
