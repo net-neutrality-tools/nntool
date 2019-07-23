@@ -28,8 +28,7 @@ public interface MeasurementResultNetworkPointInTimeDtoMapper extends DateTimeMa
 		@Mapping(source="simCountry", target="networkMobileInfo.simCountry"),
 		@Mapping(expression="java(toMccMnc(measurementResultNetworkPointInTimeDto.getSimOperatorMccMnc()))",
 		target="networkMobileInfo.simOperatorMccMnc"),
-		@Mapping(source="simOperatorName", target="networkMobileInfo.simOperatorName"),
-
+		@Mapping(source="simOperatorName", target="networkMobileInfo.simOperatorName")
 	})
 	NetworkPointInTime map(MeasurementResultNetworkPointInTimeDto arg0);
 
