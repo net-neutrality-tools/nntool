@@ -30,6 +30,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasuremen
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse.SpeedMeasurementPeer;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ConnectionInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MccMnc;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgent;
@@ -42,6 +43,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.RoamingType
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
@@ -118,9 +120,12 @@ public class CouchDbStorageService implements StorageService {
 		measurement.setUuid(UUID.randomUUID().toString());
 		measurement.setOpenDataUuid(UUID.randomUUID().toString());
 		measurement.setSubmitTime(LocalDateTime.now(ZoneId.of("UTC")));
+			
 		if (measurement.getNetworkInfo() != null) {
 			measurement.getNetworkInfo().setComputedMobileInfo(computeMobileInfoAndProcessMccMnc(measurement));
 		}
+		
+		calculateTotalMeasurementPayload(measurement);
 
 		try {
 			measurementRepository.save(measurement);
@@ -409,5 +414,21 @@ public class CouchDbStorageService implements StorageService {
 		}
 		
 		return computedNmi;
+	}
+	
+	private void calculateTotalMeasurementPayload(final Measurement measurement) {
+		if (measurement != null && measurement.getMeasurements() != null) {
+			final SpeedMeasurement speedMeasurement = (SpeedMeasurement) measurement.getMeasurements().get(MeasurementTypeDto.SPEED);
+			if (speedMeasurement != null) {
+				final Long bytesDl = speedMeasurement.getBytesDownloadIncludingSlowStart();
+				final Long bytesUl = speedMeasurement.getBytesUploadIncludingSlowStart();
+				if (bytesDl != null && bytesUl != null) {
+					final ConnectionInfo ci = speedMeasurement.getConnectionInfo();
+					if (ci != null) {
+						ci.setTcpPayloadTotalBytes(bytesUl + bytesDl); 
+					}
+				}
+			}
+		}
 	}
 }
