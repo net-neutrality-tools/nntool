@@ -33,6 +33,7 @@ public class TrafficGatherer
         Log.d(TAG, "Stop TrafficGatherer");
         if (trafficService != null) {
             trafficService.stop();
+            calculateIntermediateValueAndEmitEvent();
         }
     }
 
@@ -45,13 +46,17 @@ public class TrafficGatherer
     public void run() {
         if (trafficService != null) {
             trafficService.stop();
-            final CurrentInterfaceTraffic currentInterfaceTraffic =
-                    new CurrentInterfaceTraffic(trafficService.getRxBytes(),
-                            trafficService.getTxBytes(), trafficService.getDurationNs());
-            setCurrentValue(currentInterfaceTraffic);
-            emitUpdateEvent(currentInterfaceTraffic);
+            calculateIntermediateValueAndEmitEvent();
             trafficService.start();
         }
+    }
+
+    private void calculateIntermediateValueAndEmitEvent() {
+        final CurrentInterfaceTraffic currentInterfaceTraffic =
+                new CurrentInterfaceTraffic(trafficService.getRxBytes(),
+                        trafficService.getTxBytes(), trafficService.getDurationNs());
+        setCurrentValue(currentInterfaceTraffic);
+        emitUpdateEvent(currentInterfaceTraffic);
     }
 
     protected void emitUpdateEvent(final CurrentInterfaceTraffic currentInterfaceTraffic) {
