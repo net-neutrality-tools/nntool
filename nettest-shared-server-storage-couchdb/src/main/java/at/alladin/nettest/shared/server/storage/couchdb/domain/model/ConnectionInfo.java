@@ -91,6 +91,16 @@ public class ConnectionInfo {
 	private Traffic clientInterfaceUploadMeasurementTraffic;
 
 	/**
+	 * Contains information about bytes transferred and received by the speed measurement.
+	 * 
+	 */
+	@JsonPropertyDescription("Contains information about traffic volume of the speed measurement based on TCP payload.")
+	@Expose
+	@SerializedName("tcp_payload_total_bytes")
+	@JsonProperty("tcp_payload_total_bytes")
+	private Long tcpPayloadTotalBytes;
+
+	/**
 	 * @see NumStreamsInfo
 	 */
 	@JsonPropertyDescription("Contains information about requested number of streams and the actual number of streams used during the speed measurement.")
@@ -273,4 +283,12 @@ public class ConnectionInfo {
 	public void setIpAddress(String ipAddress) {
 		this.ipAddress = ipAddress;
 	}
+
+	public Long getTcpPayloadTotalBytes() {
+		return tcpPayloadTotalBytes;
+	}
+
+	public void setTcpPayloadTotalBytes(Long tcpPayloadTotalBytes) {
+		this.tcpPayloadTotalBytes = tcpPayloadTotalBytes;
+	}	
 }

@@ -17,6 +17,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.Br
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefSubMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.DeviceInfo;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.EmbeddedNetworkType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.GeoLocation;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
@@ -96,7 +97,10 @@ public interface BriefMeasurementResponseMapper extends DateTimeMapper {
 	
 	public default String parseNetworkName(Measurement measurement) {
 		if (measurement.getNetworkInfo() != null && measurement.getNetworkInfo().getNetworkPointsInTime() != null && measurement.getNetworkInfo().getNetworkPointsInTime().size() > 0) {
-			return measurement.getNetworkInfo().getNetworkPointsInTime().get(0).getNetworkType().getGroupName();
+			final EmbeddedNetworkType networkType = measurement.getNetworkInfo().getNetworkPointsInTime().get(0).getNetworkType();
+			if (networkType != null) {
+				return networkType.getGroupName();
+			}
 		}
 		return null;
 	}

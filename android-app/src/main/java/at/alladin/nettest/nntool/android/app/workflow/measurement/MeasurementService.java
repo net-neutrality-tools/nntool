@@ -20,6 +20,7 @@ import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
@@ -31,8 +32,10 @@ import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationCollector;
 import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
+import at.alladin.nettest.nntool.android.app.util.info.interfaces.CurrentInterfaceTraffic;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
+import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
 import at.alladin.nettest.nntool.android.speed.jni.JniSpeedMeasurementClient;
 import at.alladin.nettest.qos.QoSMeasurementClientControlAdapter;
@@ -42,7 +45,9 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.M
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.TimeBasedResultDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.TrafficDto;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.TaskDesc;
 
@@ -74,6 +79,12 @@ public class MeasurementService extends Service implements ServiceConnection {
     public static String EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC = "speed_task_client_ipv6_public";
 
     public static String EXTRAS_KEY_FOLLOW_UP_ACTIONS = "measurement_follow_up_actions";
+
+    public final static String IF_TRAFFIC_LIST_UPLOAD_TAG = "UPLOAD";
+
+    public final static String IF_TRAFFIC_LIST_DOWNLOAD_TAG = "DOWNLOAD";
+
+    public final static String IF_TRAFFIC_LIST_PING_TAG = "PING";
 
     final MeasurementServiceBinder binder = new MeasurementServiceBinder();
 
@@ -175,16 +186,72 @@ public class MeasurementService extends Service implements ServiceConnection {
 
         jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskDesc);
         jniSpeedMeasurementClient.setCollectorUrl(speedTaskCollectorUrl);
+
         jniSpeedMeasurementClient.addMeasurementFinishedListener(new JniSpeedMeasurementClient.MeasurementFinishedListener() {
             @Override
             public void onMeasurementFinished(JniSpeedMeasurementResult result, SpeedTaskDesc taskDesc) {
                 final SpeedMeasurementResult speedMeasurementResult = SubMeasurementResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
                 speedMeasurementResult.setRelativeStartTimeNs(overallStartTimeNs);
                 speedMeasurementResult.setStatus(StatusDto.FINISHED);
+
+                final Map<String, CurrentInterfaceTraffic> ifMap = informationCollector.getInterfaceTrafficMap();
+                if (ifMap != null && ifMap.size() > 0) {
+                    if (speedMeasurementResult.getConnectionInfo() == null) {
+                        speedMeasurementResult.setConnectionInfo(new ConnectionInfoDto());
+                    }
+
+                    final CurrentInterfaceTraffic ifUp = ifMap.get(MeasurementService.IF_TRAFFIC_LIST_UPLOAD_TAG);
+                    if (ifUp != null) {
+                        final TrafficDto trafficDto = new TrafficDto();
+                        trafficDto.setBytesRx(ifUp.getRxBytes());
+                        trafficDto.setBytesTx(ifUp.getTxBytes());
+                        speedMeasurementResult.getConnectionInfo().setAgentInterfaceUploadMeasurementTraffic(trafficDto);
+                    }
+
+                    final CurrentInterfaceTraffic ifDown = ifMap.get(MeasurementService.IF_TRAFFIC_LIST_DOWNLOAD_TAG);
+                    if (ifDown != null) {
+                        final TrafficDto trafficDto = new TrafficDto();
+                        trafficDto.setBytesRx(ifDown.getRxBytes());
+                        trafficDto.setBytesTx(ifDown.getTxBytes());
+                        speedMeasurementResult.getConnectionInfo().setAgentInterfaceDownloadMeasurementTraffic(trafficDto);
+                    }
+
+                    final CurrentInterfaceTraffic ifTotal = informationCollector.getAggregatedIfValues();
+                    if (ifTotal != null) {
+                        final TrafficDto trafficDto = new TrafficDto();
+                        trafficDto.setBytesRx(ifTotal.getRxBytes());
+                        trafficDto.setBytesTx(ifTotal.getTxBytes());
+                        speedMeasurementResult.getConnectionInfo().setAgentInterfaceTotalTraffic(trafficDto);
+                    }
+                }
+
                 Log.d(TAG, speedMeasurementResult.toString());
                 addSubMeasurementResult(speedMeasurementResult);
             }
         });
+
+        jniSpeedMeasurementClient.addMeasurementPhaseListener(new JniSpeedMeasurementClient.MeasurementPhaseListener() {
+            @Override
+            public void onMeasurementPhaseStarted(SpeedMeasurementState.MeasurementPhase startedPhase) {
+
+            }
+
+            @Override
+            public void onMeasurementPhaseFinished(SpeedMeasurementState.MeasurementPhase finishedPhase) {
+                switch (finishedPhase) {
+                    case PING:
+                        informationCollector.takeTrafficSnapshot(IF_TRAFFIC_LIST_PING_TAG);
+                        break;
+                    case UPLOAD:
+                        informationCollector.takeTrafficSnapshot(IF_TRAFFIC_LIST_UPLOAD_TAG);
+                        break;
+                    case DOWNLOAD:
+                        informationCollector.takeTrafficSnapshot(IF_TRAFFIC_LIST_DOWNLOAD_TAG);
+                        break;
+                }
+            }
+        });
+
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
