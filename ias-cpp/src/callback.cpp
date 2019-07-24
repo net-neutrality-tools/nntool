@@ -79,11 +79,12 @@ void CCallback::callback(string cmd, string msg, int error_code, string error_de
         }
     }
 
-    callbackToPlatform(cmd, msg, error_code, error_description);
-
     if (cmd.compare("finish") == 0 && ::RTT == PERFORMED_RTT && ::DOWNLOAD == PERFORMED_DOWNLOAD && ::UPLOAD == PERFORMED_UPLOAD)
     {
+        ::currentTestPhase = MeasurementPhase::END;
         callbackToPlatform("completed", msg, error_code, error_description);
+    } else {
+        callbackToPlatform(cmd, msg, error_code, error_description);
     }
 }
 
@@ -138,6 +139,7 @@ void CCallback::callbackToPlatform(string cmd, string msg, int error_code, strin
     #ifdef __ANDROID__
 	    if (cmd == "completed") 
 	    {
+	        connector.callback(jMeasurementResults);
 	        connector.callbackFinished(jMeasurementResults);
 	        connector.detachCurrentThreadFromJvm();
 	    } 

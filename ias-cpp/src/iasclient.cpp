@@ -339,11 +339,6 @@ void measurementStart(string measurementParameters)
 
 	currentTestPhase = MeasurementPhase::END;
 
-	#ifdef __ANDROID__
-        //set off measurement callback to signal start of the end phase
-        pCallback->callbackToPlatform("started", "", 0, "");
-    #endif
-
 	shutdown();
 }
 
