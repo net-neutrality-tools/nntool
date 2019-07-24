@@ -20,8 +20,10 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.S
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.TrafficDto;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ComputedNetworkPointInTime;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ConnectionInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NetworkPointInTime;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
@@ -180,6 +182,8 @@ public interface LmapReportModelMapper extends UuidMapper, RttInfoDtoMapper, Mea
 	ConnectionInfo map (ConnectionInfoDto connectionInfoDto);
 
 	Traffic map (TrafficDto trafficDto);
+	
+	ComputedNetworkPointInTime map (NetworkPointInTime networkPointInTime);
 
 	@Mappings ({
 		@Mapping(source="subMeasurementResult.relativeStartTimeNs", target="relativeStartTimeNs"),
