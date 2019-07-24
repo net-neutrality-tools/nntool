@@ -22,6 +22,8 @@
     #include "android_connector.h"
 #endif
 
+extern MeasurementPhase currentTestPhase;
+
 //! \brief
 //!	Standard Destructor
 CCallback::CCallback()
@@ -81,7 +83,7 @@ void CCallback::callback(string cmd, string msg, int error_code, string error_de
 
     if (cmd.compare("finish") == 0 && ::RTT == PERFORMED_RTT && ::DOWNLOAD == PERFORMED_DOWNLOAD && ::UPLOAD == PERFORMED_UPLOAD)
     {
-        ::currentTestPhase = MeasurementPhase::END;
+        currentTestPhase = MeasurementPhase::END;
         callbackToPlatform("completed", msg, error_code, error_description);
     } else {
         callbackToPlatform(cmd, msg, error_code, error_description);
