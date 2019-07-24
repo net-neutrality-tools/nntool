@@ -57,9 +57,12 @@ public class HistoryListAdapter extends ArrayAdapter<BriefMeasurementResponse> {
 
         if (item.isSpeedMeasurementAvailable()) {
             final BriefSpeedMeasurement m = (BriefSpeedMeasurement) item.getMeasurements().get(MeasurementTypeDto.SPEED);
-            viewHolder.ping.setText(pingFormat.format(m.getRttAverageNs() / 1e6));
-            viewHolder.down.setText(speedFormat.format(m.getThroughputAvgDownloadBps() / 1e6));
-            viewHolder.up.setText(speedFormat.format(m.getThroughputAvgUploadBps() / 1e6));
+            viewHolder.ping.setText(m.getRttAverageNs() != null ?
+                    pingFormat.format(m.getRttAverageNs() / 1e6) : getContext().getString(R.string.not_available_short));
+            viewHolder.down.setText(m.getThroughputAvgDownloadBps() != null ?
+                    speedFormat.format(m.getThroughputAvgDownloadBps() / 1e6) : getContext().getString(R.string.not_available_short));
+            viewHolder.up.setText(m.getThroughputAvgUploadBps() != null ?
+                    speedFormat.format(m.getThroughputAvgUploadBps() / 1e6) : getContext().getString(R.string.not_available_short));
         }
 
         if (item.getStartTime() != null) {
