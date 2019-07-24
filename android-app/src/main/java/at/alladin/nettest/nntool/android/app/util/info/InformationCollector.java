@@ -2,23 +2,23 @@ package at.alladin.nettest.nntool.android.app.util.info;
 
 import android.util.Log;
 
-import com.google.common.collect.Table;
-
-import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import at.alladin.nettest.nntool.android.app.support.telephony.CellInfoWrapper;
-import at.alladin.nettest.nntool.android.app.support.telephony.CellSignalStrengthWrapper;
 import at.alladin.nettest.nntool.android.app.support.telephony.CellType;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeEvent;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationChangeListener;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.interfaces.CurrentInterfaceTraffic;
+import at.alladin.nettest.nntool.android.app.util.info.interfaces.TrafficGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.MobileOperator;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkChangeEvent;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkChangeListener;
@@ -37,6 +37,10 @@ public class InformationCollector
 
     private final static String TAG = InformationCollector.class.getSimpleName();
 
+    public final static String IF_TRAFFIC_LIST_END_TAG = "_END";
+
+    public final static String IF_TRAFFIC_LIST_TOTAL_TAG = "_TOTAL";
+
     private final InformationProvider informationProvider;
 
     private final AtomicBoolean isCollecting = new AtomicBoolean(false);
@@ -50,6 +54,8 @@ public class InformationCollector
     private final AtomicReference<OperatorInfoHolder> operatorInfo = new AtomicReference<>(null);
 
     private final AtomicBoolean illegalNetworkStateDetected = new AtomicBoolean(false);
+
+    private final Map<String, CurrentInterfaceTraffic> interfaceTrafficMap = new HashMap<>();
 
     //timestamp in ns used for all relative time values
     private final AtomicLong timestampNs = new AtomicLong(System.nanoTime());
@@ -72,6 +78,7 @@ public class InformationCollector
             final SignalGatherer signalGatherer = this.informationProvider.getGatherer(SignalGatherer.class);
             final GeoLocationGatherer geoLocationGatherer = this.informationProvider.getGatherer(GeoLocationGatherer.class);
             final NetworkGatherer networkGatherer = this.informationProvider.getGatherer(NetworkGatherer.class);
+            final TrafficGatherer trafficGatherer = this.informationProvider.getGatherer(TrafficGatherer.class);
 
             if (signalGatherer != null) {
                 Log.d(TAG, "Found SignalGatherer. Registering listener.");
@@ -84,6 +91,9 @@ public class InformationCollector
             if (networkGatherer != null) {
                 Log.d(TAG, "Found NetworkGatherer. Registering listener.");
                 networkGatherer.addListener(this);
+            }
+            if (trafficGatherer != null) {
+                Log.d(TAG, "Found TrafficGatherer. Starting.");
             }
 
             this.informationProvider.start();
@@ -98,6 +108,7 @@ public class InformationCollector
         final SignalGatherer signalGatherer = this.informationProvider.getGatherer(SignalGatherer.class);
         final GeoLocationGatherer geoLocationGatherer = this.informationProvider.getGatherer(GeoLocationGatherer.class);
         final NetworkGatherer networkGatherer = this.informationProvider.getGatherer(NetworkGatherer.class);
+        final TrafficGatherer trafficGatherer = this.informationProvider.getGatherer(TrafficGatherer.class);
 
         if (signalGatherer != null) {
             signalGatherer.removeListener(this);
@@ -109,8 +120,36 @@ public class InformationCollector
             networkGatherer.removeListener(this);
         }
 
+        interfaceTrafficMap.put(IF_TRAFFIC_LIST_END_TAG, trafficGatherer.getCurrentValue());
+
+        long rxTotal = 0;
+        long txTotal = 0;
+        long durationTotal = 0;
+        for (final CurrentInterfaceTraffic ift : interfaceTrafficMap.values()) {
+            rxTotal += ift.getRxBytes();
+            txTotal += ift.getTxBytes();
+            durationTotal += ift.getDurationNs();
+        }
+
+        interfaceTrafficMap.put(IF_TRAFFIC_LIST_TOTAL_TAG, new CurrentInterfaceTraffic(rxTotal, txTotal, durationTotal));
+
+        interfaceTrafficMap.put(IF_TRAFFIC_LIST_END_TAG, getAggregatedIfValues());
+
         Log.d(TAG, "CellInfoList: " + cellInfoList);
         Log.d(TAG, "GeoLocationList: " + geoLocationList);
+        Log.d(TAG, "InterfaceTrafficMap: " + interfaceTrafficMap);
+    }
+
+    public void takeTrafficSnapshot(final String tag) {
+        final TrafficGatherer trafficGatherer = this.informationProvider.getGatherer(TrafficGatherer.class);
+        if (trafficGatherer != null) {
+            trafficGatherer.run();
+            interfaceTrafficMap.put(tag, trafficGatherer.getCurrentValue());
+        }
+    }
+
+    public Map<String, CurrentInterfaceTraffic> getInterfaceTrafficMap() {
+        return interfaceTrafficMap;
     }
 
     public List<CellInfoWrapper> getCellInfoList() {
@@ -284,5 +323,18 @@ public class InformationCollector
 
     public void setClientIpPrivate(String clientIpPrivate) {
         this.clientIpPrivate = clientIpPrivate;
+    }
+
+    public CurrentInterfaceTraffic getAggregatedIfValues() {
+        long rxTotal = 0;
+        long txTotal = 0;
+        long durationTotal = 0;
+        for (final CurrentInterfaceTraffic ift : interfaceTrafficMap.values()) {
+            rxTotal += ift.getRxBytes();
+            txTotal += ift.getTxBytes();
+            durationTotal += ift.getDurationNs();
+        }
+
+        return new CurrentInterfaceTraffic(rxTotal, txTotal, durationTotal);
     }
 }
