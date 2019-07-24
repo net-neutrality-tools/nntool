@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-03
+ *      \date Last update: 2019-07-24
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -671,7 +671,8 @@ function WSControlSingleThread()
                         wsStartupStartTime = performance.now()+500;
                         wsStartupTimeout = setTimeout(measurementStart, wsStartupTime+500);
                     }
-                    else
+
+                    if (wsTestCase === 'upload')
                     {
                         wsStartupStartTime = performance.now();
                         wsStartupTimeout = setTimeout(measurementStart, wsStartupTime);
