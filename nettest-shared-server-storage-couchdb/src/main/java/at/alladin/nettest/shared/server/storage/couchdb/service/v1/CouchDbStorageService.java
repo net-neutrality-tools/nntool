@@ -32,6 +32,7 @@ import at.alladin.nettest.shared.nntool.Helperfunctions;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ComputedNetworkPointInTime;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ConnectionInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MccMnc;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgent;
@@ -46,6 +47,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.RoamingType
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
@@ -122,13 +124,15 @@ public class CouchDbStorageService implements StorageService {
 		measurement.setUuid(UUID.randomUUID().toString());
 		measurement.setOpenDataUuid(UUID.randomUUID().toString());
 		measurement.setSubmitTime(LocalDateTime.now(ZoneId.of("UTC")));
-		
+
 		if (measurement.getNetworkInfo() != null) {
 			final ComputedNetworkPointInTime cpit = computeNetworkInfo(measurement);
 			cpit.setNetworkMobileInfo(computeMobileInfoAndProcessMccMnc(measurement));
 			cpit.setNatTypeInfo(computeNatType(measurement, cpit));
 			measurement.getNetworkInfo().setComputedNetworkInfo(cpit);
 		}
+
+		calculateTotalMeasurementPayload(measurement);
 
 		try {
 			measurementRepository.save(measurement);
@@ -418,20 +422,36 @@ public class CouchDbStorageService implements StorageService {
 		
 		return computedNmi;
 	}
-	
+
+	private void calculateTotalMeasurementPayload(final Measurement measurement) {
+		if (measurement != null && measurement.getMeasurements() != null) {
+			final SpeedMeasurement speedMeasurement = (SpeedMeasurement) measurement.getMeasurements().get(MeasurementTypeDto.SPEED);
+			if (speedMeasurement != null) {
+				final Long bytesDl = speedMeasurement.getBytesDownloadIncludingSlowStart();
+				final Long bytesUl = speedMeasurement.getBytesUploadIncludingSlowStart();
+				if (bytesDl != null && bytesUl != null) {
+					final ConnectionInfo ci = speedMeasurement.getConnectionInfo();
+					if (ci != null) {
+						ci.setTcpPayloadTotalBytes(bytesUl + bytesDl);
+					}
+				}
+			}
+		}
+	}
+
 	private NatTypeInfo computeNatType(final Measurement measurement, final ComputedNetworkPointInTime cpit) {
-		final NatType natType = cpit != null ? 
+		final NatType natType = cpit != null ?
 				NatType.getNatType(cpit.getClientPrivateIp(), cpit.getClientPublicIp()) : NatType.NOT_AVAILABLE;
-				
+
 		final NatTypeInfo nat = new NatTypeInfo();
 		nat.setIpVersion(Helperfunctions.getIpVersion(cpit.getClientPrivateIp()));
 		nat.setNatType(natType);
-		nat.setIsBehindNat(natType != null 
+		nat.setIsBehindNat(natType != null
 				&& !natType.equals(NatType.NOT_AVAILABLE)
 				&& !natType.equals(NatType.NO_NAT));
 		return nat;
 	}
-	
+
 	private ComputedNetworkPointInTime computeNetworkInfo(final Measurement measurement) {
 		ComputedNetworkPointInTime cpit = null;
 		if (measurement.getNetworkInfo() != null) {
@@ -441,13 +461,13 @@ public class CouchDbStorageService implements StorageService {
 				if (npit != null && npit.getClientPrivateIp() != null && npit.getClientPublicIp() != null) {
 					cpit = lmapReportModelMapper.map(npit);
 				}
-			}			
+			}
 		}
-		
+
 		if (measurement.getNetworkInfo().getComputedNetworkInfo() == null) {
 			measurement.getNetworkInfo().setComputedNetworkInfo(new ComputedNetworkPointInTime());
 		}
-		
+
 		return cpit;
 	}
 }
