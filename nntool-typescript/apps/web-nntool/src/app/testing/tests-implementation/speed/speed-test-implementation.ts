@@ -199,6 +199,8 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
                             state.progress = (currentUpload.duration_ns / (1000 * 1000)) / config.wsMeasureTime;
                         }
                         if (currentState.cmd === 'completed') {
+                            //only store the full result on completion
+                            state.completeTestResult = currentState;
                             state.speedTestState = SpeedTestStateEnum.UP_OK;
                             currentUpload = currentState.upload_info[currentState.upload_info.length - 1];
                             state.upMBit = currentUpload.throughput_avg_bps / (1000 * 1000);

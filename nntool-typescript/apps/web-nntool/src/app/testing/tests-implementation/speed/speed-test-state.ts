@@ -21,6 +21,8 @@ export class SpeedTestState extends TestState {
     device: string;
     technology: string;
 
+    completeTestResult: any;
+
     apply = (other: SpeedTestState) => {
         this.speedTestState         = other.speedTestState;
         this.uuid                   = other.uuid;
@@ -42,5 +44,6 @@ export class SpeedTestState extends TestState {
         }
         this.device                 = other.device;
         this.technology             = other.technology;
+        this.completeTestResult = other.completeTestResult;
     }
 }

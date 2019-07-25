@@ -23,6 +23,7 @@ import {LocationService} from '../services/location.service';
 import {TimeBasedResultAPI} from './models/measurements/time-based-result.api';
 import {LmapResult} from '../lmap/models/lmap-report/lmap-result.model';
 import {DeviceDetectorService} from 'ngx-device-detector';
+import { MeasurementResultNetworkPointInTimeAPI } from './models/measurements/measurement-result-network-point-in-time.api';
 
 
 
@@ -34,6 +35,7 @@ export {TestGuard} from './test.guard';
 })
 export class NetTestComponent extends BaseNetTestComponent implements OnInit {
 
+    private readonly webNetworkType: number = 98;
     protected measurementControl: LmapControl = undefined;
     private speedControl: LmapTask = undefined;
     public speedConfig: MeasurementTypeParameters = undefined; // TODO: change to measurement configuration
@@ -139,6 +141,10 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
         });
 
         lmapReport.time_based_result = new TimeBasedResultAPI();
+        let networkPointIntTime: MeasurementResultNetworkPointInTimeAPI = new MeasurementResultNetworkPointInTimeAPI();
+        networkPointIntTime.network_type_id = this.webNetworkType;
+        networkPointIntTime.time = endTimeStamp;
+        lmapReport.time_based_result.network_points_in_time.push();
 
         this.locationService.stopTracking();
         lmapReport.time_based_result.geo_locations = this.locationService.getLocations();
@@ -163,9 +169,22 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
         speedMeasurementResult.status = null;
         speedMeasurementResult.bytes_download = speedTestResult.downBit / 8;
         speedMeasurementResult.bytes_upload = speedTestResult.upBit / 8;
-        speedMeasurementResult.duration_rtt_ns = 1000 * 1000 * 1000;
-        speedMeasurementResult.duration_download_ns = 1000 * 1000 * 1000;
-        speedMeasurementResult.duration_upload_ns = 1000 * 1000 * 1000;
+        if (typeof speedTestResult.completeTestResult !== 'undefined') {
+            const completeResult = speedTestResult.completeTestResult;
+            if (completeResult.download_info !== undefined && completeResult.download_info.length > 0) {
+                const currentDownload = completeResult.download_info[completeResult.download_info.length - 1];
+                speedMeasurementResult.duration_download_ns = currentDownload.duration_ns_total;
+            }
+            if (completeResult.rtt_info !== undefined) {
+                speedMeasurementResult.duration_rtt_ns = completeResult.rtt_info.duration_ns;
+
+            }
+            if (completeResult.upload_info !== undefined && completeResult.upload_info.length > 0) {
+                const currentUpload = completeResult.upload_info[completeResult.upload_info.length - 1];
+                speedMeasurementResult.duration_upload_ns = currentUpload.duration_ns_total;
+
+            }
+        }
         speedMeasurementResult.rtt_info = new RttInfo();
         speedMeasurementResult.rtt_info.rtts = [
             {

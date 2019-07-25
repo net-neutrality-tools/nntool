@@ -24,7 +24,9 @@
               "testing/tsconfig.libs.json",
               "testing/tsconfig.libs.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -50,7 +52,9 @@
               "testing/tsconfig.xplat.json",
               "testing/tsconfig.xplat.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -72,7 +76,9 @@
           "options": {
             "customWebpackConfig": {
               "path": "apps/web-nntool/extra-webpack.config.js",
-              "mergeStrategies": { "externals": "replace" }
+              "mergeStrategies": {
+                "externals": "replace"
+              }
             },
             "outputPath": "dist/apps/web-nntool",
             "index": "apps/web-nntool/src/index.html",
@@ -88,9 +94,18 @@
               "apps/web-nntool/src/less/client.less"
             ],
             "scripts": [
-              { "input": "../ias/build/uglified/web/ias.web.js", "bundleName": "ias.web" },
-              { "input": "../ias/build/uglified/web/Worker.js", "bundleName": "Worker" },
-              { "input": "../ias/build/uglified/web/Tool.js", "bundleName": "Tool" }
+              {
+                "input": "../ias/build/uglified/web/ias.web.js",
+                "bundleName": "ias.web"
+              },
+              {
+                "input": "../ias/build/uglified/web/Worker.js",
+                "bundleName": "Worker"
+              },
+              {
+                "input": "../ias/build/uglified/web/Tool.js",
+                "bundleName": "Tool"
+              }
             ]
           },
           "configurations": {
@@ -134,7 +149,9 @@
           "options": {
             "customWebpackConfig": {
               "path": "apps/web-nntool/extra-webpack.config.js",
-              "mergeStrategies": { "externals": "replace" }
+              "mergeStrategies": {
+                "externals": "replace"
+              }
             },
             "browserTarget": "web-nntool:build:serve"
           },
@@ -157,7 +174,9 @@
               "apps/web-nntool/tsconfig.app.json",
               "apps/web-nntool/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -176,10 +195,19 @@
               "apps/web-nntool/src/less/client.less"
             ],
             "scripts": [
-              { "input": "../ias/build/uglified/web/ias.web.js", "bundleName": "ias.web" },
-              { "input": "../ias/build/uglified/web/Worker.js", "bundleName": "Worker" },
-              { "input": "../ias/build/uglified/web/Tool.js", "bundleName": "Tool" }
-            ] 
+              {
+                "input": "../ias/build/uglified/web/ias.web.js",
+                "bundleName": "ias.web"
+              },
+              {
+                "input": "../ias/build/uglified/web/Worker.js",
+                "bundleName": "Worker"
+              },
+              {
+                "input": "../ias/build/uglified/web/Tool.js",
+                "bundleName": "Tool"
+              }
+            ]
           }
         }
       }
@@ -207,7 +235,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/web-nntool-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -300,7 +330,9 @@
               "apps/web-portal/tsconfig.app.json",
               "apps/web-portal/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -340,7 +372,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/web-portal-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -362,7 +396,9 @@
           "options": {
             "customWebpackConfig": {
               "path": "apps/web-nntool/extra-webpack.config.js",
-              "mergeStrategies": { "externals": "replace" }
+              "mergeStrategies": {
+                "externals": "replace"
+              }
             },
             "outputPath": "dist/apps/electron-nntool",
             "index": "apps/web-nntool/src/index.html",
@@ -375,7 +411,9 @@
               {
                 "glob": "**/*",
                 "input": "apps/electron-nntool/src/",
-                "ignore": ["**/*.ts"],
+                "ignore": [
+                  "**/*.ts"
+                ],
                 "output": ""
               }
             ],
@@ -384,9 +422,18 @@
               "apps/web-nntool/src/less/client.less"
             ],
             "scripts": [
-              { "input": "../ias/build/uglified/desktop/ias.desktop.js", "bundleName": "ias.web" },
-              { "input": "../ias/build/uglified/desktop/Worker.js", "bundleName": "Worker" },
-              { "input": "../ias/build/uglified/desktop/JSTool.js", "bundleName": "Tool" }
+              {
+                "input": "../ias/build/uglified/desktop/ias.desktop.js",
+                "bundleName": "ias.web"
+              },
+              {
+                "input": "../ias/build/uglified/desktop/Worker.js",
+                "bundleName": "Worker"
+              },
+              {
+                "input": "../ias/build/uglified/desktop/JSTool.js",
+                "bundleName": "Tool"
+              }
             ]
           },
           "configurations": {
@@ -430,7 +477,9 @@
           "options": {
             "customWebpackConfig": {
               "path": "apps/web-nntool/extra-webpack.config.js",
-              "mergeStrategies": { "externals": "replace" }
+              "mergeStrategies": {
+                "externals": "replace"
+              }
             },
             "browserTarget": "electron-nntool:build:serve"
           },
