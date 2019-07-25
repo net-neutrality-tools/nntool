@@ -141,10 +141,11 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
         });
 
         lmapReport.time_based_result = new TimeBasedResultAPI();
-        let networkPointIntTime: MeasurementResultNetworkPointInTimeAPI = new MeasurementResultNetworkPointInTimeAPI();
-        networkPointIntTime.network_type_id = this.webNetworkType;
-        networkPointIntTime.time = endTimeStamp;
-        lmapReport.time_based_result.network_points_in_time.push();
+        let networkPointInTime: MeasurementResultNetworkPointInTimeAPI = new MeasurementResultNetworkPointInTimeAPI();
+        networkPointInTime.network_type_id = this.webNetworkType;
+        networkPointInTime.time = endTimeStamp;
+        lmapReport.time_based_result.network_points_in_time = [];
+        lmapReport.time_based_result.network_points_in_time.push(networkPointInTime);
 
         this.locationService.stopTracking();
         lmapReport.time_based_result.geo_locations = this.locationService.getLocations();
