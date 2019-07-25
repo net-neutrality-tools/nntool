@@ -1,5 +1,7 @@
 package at.alladin.nettest.service.controller.web.api.v1;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import at.alladin.nettest.service.controller.exception.GeneralBadRequestException;
 import at.alladin.nettest.service.controller.service.MeasurementConfigurationService;
+import at.alladin.nettest.service.controller.service.MeasurementDeviceInformationService;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapAgentDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityDto;
@@ -35,6 +38,9 @@ public class MeasurementInitiationResource {
 	
 	@Autowired
 	private MeasurementConfigurationService measurementConfigurationService;
+
+	@Autowired
+	private MeasurementDeviceInformationService measurementDeviceInformationService;
 	
 	/**
 	 * Request a new measurement.
@@ -51,7 +57,8 @@ public class MeasurementInitiationResource {
 	})
 	@PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> requestMeasurement(@ApiParam("Initiation request") @RequestBody LmapControlDto measurementInitiationRequest) {
+	public ResponseEntity<?> requestMeasurement(@ApiParam("Initiation request") @RequestBody LmapControlDto measurementInitiationRequest,
+			HttpServletRequest request) {
 		
 		final LmapAgentDto agentDto = measurementInitiationRequest.getAgent();
 		
@@ -72,6 +79,8 @@ public class MeasurementInitiationResource {
 		if (capabilityDto == null || capabilityDto.getTasks() == null || capabilityDto.getTasks().size() == 0) {
 			throw new GeneralBadRequestException("No capabilities provided");
 		}
+		
+		measurementDeviceInformationService.fillDeviceInformation(measurementInitiationRequest.getAdditionalRequestInfo(), request);
 		
 		// TODO: load balancing
 		final LmapControlDto lmapControlDto = measurementConfigurationService.getLmapControlDtoForCapabilities(capabilityDto);
