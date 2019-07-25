@@ -7,6 +7,7 @@ import {BasicTestState} from '../../enums/basic-test-state.enum';
 import {SpeedTestStateEnum} from './enums/speed-test-state.enum';
 import {SpeedTestConfig} from './speed-test-config';
 import {TestSchedulerService} from '../../test-scheduler.service';
+import { MeasurementSettings } from '../../../test/models/measurement-settings';
 
 declare var Ias: any;
 
@@ -79,7 +80,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
         return state;
     }
 
-    public start = (config: SpeedTestConfig, $state: Subject<SpeedTestState>): void => {
+    public start = (config: MeasurementSettings, $state: Subject<SpeedTestState>): void => {
         if (this.ias !== undefined) {
             return;
         }
@@ -91,14 +92,16 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
         const rttRequestWait = 500;
         const rttDuration = (rttRequests * (rttRequestTimeout + rttRequestWait)) * 1.1;
         const downloadUploadDuration = 10000;
+        
+        const firstDotIndex = config.serverAddress.indexOf('.');
 
         const extendedConfig = {
             cmd: 'start',
             platform: 'web',
-            wsTargets: ['peer-ias-de-01'],
-            wsTargetsRtt: ['peer-ias-de-01'],
-            wsTLD: 'net-neutrality.tools',
-            wsTargetPort: '80',
+            wsTargets: [config.serverAddress.substr(0, firstDotIndex)],
+            wsTargetsRtt: [config.serverAddress.substr(0, firstDotIndex)],
+            wsTLD: config.serverAddress.substr(firstDotIndex + 1),
+            wsTargetPort: config.serverPort,
             wsWss: 0,
             wsAuthToken: 'placeholderToken',
             wsAuthTimestamp: 'placeholderTimestamp',
@@ -111,14 +114,14 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
                 performMeasurement: true
             },
             download: {
-                performMeasurement: config.download !== undefined && config.download !== null,
-                classes: config.download,
+                performMeasurement: config.speedConfig.download !== undefined && config.speedConfig.download !== null,
+                classes: config.speedConfig.download,
                 /*"streams": 4,
                 "frameSize": 32768*/
             },
             upload: {
-                performMeasurement: config.upload !== undefined && config.upload !== null,
-                classes: config.upload,
+                performMeasurement: config.speedConfig.upload !== undefined && config.speedConfig.upload !== null,
+                classes: config.speedConfig.upload,
                 /*"streams": 4,
                 "frameSize": 65535,
                 "framesPerCall": 1*/

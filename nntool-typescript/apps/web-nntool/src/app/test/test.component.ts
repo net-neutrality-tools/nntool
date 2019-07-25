@@ -24,6 +24,7 @@ import {TimeBasedResultAPI} from './models/measurements/time-based-result.api';
 import {LmapResult} from '../lmap/models/lmap-report/lmap-result.model';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import { MeasurementResultNetworkPointInTimeAPI } from './models/measurements/measurement-result-network-point-in-time.api';
+import { MeasurementSettings } from './models/measurement-settings';
 
 
 
@@ -36,9 +37,14 @@ export {TestGuard} from './test.guard';
 export class NetTestComponent extends BaseNetTestComponent implements OnInit {
 
     private readonly webNetworkType: number = 98;
+    private readonly paramSpeed: string = 'parameters_speed';
+    private readonly paramServerPort: string = 'server_port';
+    private readonly paramServerAddress: string = 'server_addr';
+    private readonly paramCollector: string = 'result_collector_base_url';
+    
     protected measurementControl: LmapControl = undefined;
     private speedControl: LmapTask = undefined;
-    public speedConfig: MeasurementTypeParameters = undefined; // TODO: change to measurement configuration
+    public speedConfig: MeasurementSettings = undefined; // TODO: change to measurement configuration
     private qosControl: LmapTask = undefined;
     public qosConfig: MeasurementTypeParameters = undefined; // TODO: change to measurement configuration
     private testResults: (SpeedMeasurementResult | QoSMeasurementResult)[] = [];
@@ -91,14 +97,22 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
             measurementControl.tasks.forEach((task: LmapTask) => {
                 switch (task.name) {
                     case 'SPEED':
-                        this.speedConfig = task.option.reduce(
-                            (config: any, option: LmapOption) => {
+                        this.speedConfig = new MeasurementSettings();
+                        for (let i in task.option) {
+                                const option: LmapOption = task.option[i];
                                 /* tslint:disable:no-string-literal */
-                                return option.name === 'parameters_speed' ?
-                                    option['measurement-parameters']['measurement_configuration']
-                                    : config;
+                                if (option.name === this.paramCollector) {
+                                    this.speedConfig.collectorAddress = option.value;
+                                } else if (option.name === this.paramServerAddress) {
+                                    this.speedConfig.serverAddress = option.value;
+                                } else if (option.name === this.paramServerPort) {
+                                    this.speedConfig.serverPort = option.value;
+                                } else if (option.name === this.paramSpeed) {
+                                    let v = option['measurement-parameters'];
+                                    this.speedConfig.speedConfig = option['measurement-parameters'].measurement_configuration;
+                                }
                                 /* tslint:enable:no-string-literal */
-                            }, {});
+                        }
                         this.speedControl = task;
                         break;
                     case 'QOS':
