@@ -21,6 +21,8 @@ import CodableJSON
 /// This DTO contains the QoS measurement results from the measurement agent.
 public class QoSMeasurementResult: SubMeasurementResult {
 
+    let deserializeType = "qos_result"
+
     /// QoS measurement results
     public var objectiveResults: [[String: JSON]]?
 
@@ -38,10 +40,14 @@ public class QoSMeasurementResult: SubMeasurementResult {
         var container = encoder.container(keyedBy: CodingKeys2.self)
 
         try container.encode(objectiveResults, forKey: .objectiveResults)
+
+        try container.encode(deserializeType, forKey: .deserializeType)
     }
 
     ///
     enum CodingKeys2: String, CodingKey {
         case objectiveResults = "results"
+
+        case deserializeType = "deserialize_type"
     }
 }

@@ -20,6 +20,8 @@ import Foundation
 /// This DTO contains the speed measurement results from the measurement agent.
 public class IasMeasurementResult: SubMeasurementResult {
 
+    let deserializeType = "speed_result"
+
     /// Bytes received during the speed measurement (Download).
     public var bytesDownload: UInt64?
 
@@ -89,6 +91,8 @@ public class IasMeasurementResult: SubMeasurementResult {
         //try container.encode(downloadRawData, forKey: .downloadRawData)
         //try container.encode(uploadRawData, forKey: .uploadRawData)
         try container.encode(connectionInfo, forKey: .connectionInfo)
+
+        try container.encode(deserializeType, forKey: .deserializeType)
     }
 
     ///
@@ -107,5 +111,7 @@ public class IasMeasurementResult: SubMeasurementResult {
         //case downloadRawData = "download_raw_data"
         //case uploadRawData = "upload_raw_data"
         case connectionInfo = "connection_info"
+
+        case deserializeType = "deserialize_type"
     }
 }
