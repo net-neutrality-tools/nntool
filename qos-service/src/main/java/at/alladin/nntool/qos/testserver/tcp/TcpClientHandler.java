@@ -21,11 +21,12 @@ import java.io.FilterOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicReference;
 
-import at.alladin.nntool.qos.testserver.ClientHandler;
 import at.alladin.nntool.qos.testserver.ServerPreferences.TestServerServiceEnum;
 import at.alladin.nntool.qos.testserver.TestServer;
+import at.alladin.nntool.qos.testserver.tcp.competences.Competence;
 import at.alladin.nntool.qos.testserver.util.TestServerConsole;
 
 /**
@@ -100,8 +101,17 @@ public class TcpClientHandler implements Runnable {
 				TestServerConsole.log("TCP/NTP Server (" + tcpServer.get().getServerSocket() + ") (:" + tcpServer.get().getPort() + "), connection from: " + clientSocket.getInetAddress().toString() + ", request: " + clientRequest, 
 						TcpMultiClientServer.VERBOSE_LEVEL_REQUEST_RESPONSE, TestServerServiceEnum.TCP_SERVICE);
 	
-				//send echo
-				byte[] response = ClientHandler.getBytesWithNewline(clientRequest);
+				//check competences and send echo or other response
+				byte[] response = null;
+				final Iterator<Competence> compIt = tcpServer.get().getCompetences().iterator(); 
+				while (compIt.hasNext()) {
+					final Competence competence = compIt.next();
+					if (competence.appliesTo(clientRequest)) {
+						response = competence.processRequest(clientRequest, br);
+						break;
+					}
+				}
+				//byte[] response = ClientHandler.getBytesWithNewline(clientRequest);
 				
 				TestServerConsole.log("TCP/NTP Server (" + tcpServer.get().getServerSocket() + ") (:" + tcpServer.get().getPort() + "), response: " + new String(response) + " to: " + clientSocket.getInetAddress().toString(), 
 						TcpMultiClientServer.VERBOSE_LEVEL_REQUEST_RESPONSE, TestServerServiceEnum.TCP_SERVICE);

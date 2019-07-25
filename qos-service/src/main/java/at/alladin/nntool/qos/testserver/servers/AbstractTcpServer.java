@@ -19,11 +19,15 @@ package at.alladin.nntool.qos.testserver.servers;
 
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.concurrent.atomic.AtomicLong;
 
 import at.alladin.nntool.qos.testserver.ServerPreferences.TestServerServiceEnum;
 import at.alladin.nntool.qos.testserver.entity.Observable;
 import at.alladin.nntool.qos.testserver.entity.TestCandidate;
+import at.alladin.nntool.qos.testserver.tcp.competences.BasicCompetence;
+import at.alladin.nntool.qos.testserver.tcp.competences.Competence;
 
 public abstract class AbstractTcpServer extends AbstractServer<ServerSocket, TestCandidate> implements Observable {
 
@@ -33,7 +37,21 @@ public abstract class AbstractTcpServer extends AbstractServer<ServerSocket, Tes
 	 */
 	protected final AtomicLong currentConnections = new AtomicLong(0); 
 	
+	/**
+	 * the competences this server holds
+	 */
+	private final Deque<Competence> competences = new ArrayDeque<>();
+	
 	public AbstractTcpServer(InetAddress addr, int port) {
 		super(ServerSocket.class, TestCandidate.class, addr, port, "TcpServer", TestServerServiceEnum.TCP_SERVICE);
+		registerCompetence(new BasicCompetence());
+	}
+	
+	public void registerCompetence(final Competence competence) {
+		this.competences.addFirst(competence);
+	}
+
+	public Deque<Competence> getCompetences() {
+		return competences;
 	}
 }
