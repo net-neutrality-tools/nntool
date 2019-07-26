@@ -18,6 +18,15 @@ TEST_CASE("CConnection") {
             int cSocket = cCon->udpSocket( lIP);
             CHECK(cSocket != -1);
 
+            // set the receive timeout to 1 seconds
+            timeval tv;
+		    tv.tv_sec = 1;
+		    tv.tv_usec = 0;
+		    setsockopt(cSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval));
+		    setsockopt(cSocket, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval));
+            setsockopt(sSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval));
+		    setsockopt(sSocket, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval));
+
             // Addr 
             struct sockaddr_in server;
             server.sin_family       = AF_INET;
@@ -30,6 +39,9 @@ TEST_CASE("CConnection") {
             //Send message to loopback socket
             int response = sendto(cSocket, cbuf, 8, 0, (struct sockaddr *) &server, sizeof(server));
             CHECK(response != -1);
+
+            
+
 
             //Check receiving the message
             response = recvfrom(sSocket, sbuf, 8, 0, NULL, NULL);
@@ -56,6 +68,16 @@ TEST_CASE("CConnection") {
             int cSocket = cCon->udp6Socket( lIP);
             CHECK(cSocket != -1);
 
+            // set the receive timeout to 1 seconds
+            timeval tv;
+		    tv.tv_sec = 1;
+		    tv.tv_usec = 0;
+		    setsockopt(cSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval));
+		    setsockopt(cSocket, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval));
+            setsockopt(sSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval));
+		    setsockopt(sSocket, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval));
+
+
             // Addr 
             struct sockaddr_in6 server;
             server.sin6_family       = AF_INET6;
@@ -71,6 +93,8 @@ TEST_CASE("CConnection") {
             response = recvfrom(sSocket, sbuf, 8, 0, NULL, NULL);
             CHECK(response != -1);
             CHECK(strcmp(cbuf, sbuf)==0);
+
+
 
         };
     };
@@ -90,6 +114,15 @@ TEST_CASE("CConnection") {
             auto cCon = std::make_unique<CConnection>();
             int cSock = cCon->tcpSocket(sIP,sIP, port);
             CHECK(cSock != -1);
+
+            // set the receive timeout to 1 seconds
+            timeval tv;
+		    tv.tv_sec = 1;
+		    tv.tv_usec = 0;
+		    setsockopt(sSock, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval));
+		    setsockopt(sSock, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval));
+            setsockopt(cSock, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval));
+		    setsockopt(cSock, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval));
 
             char cBuf[8]="NNT";
             char sBuf[8];
@@ -122,6 +155,15 @@ TEST_CASE("CConnection") {
             auto cCon = std::make_unique<CConnection>();
             int cSock = cCon->tcp6Socket(ip,ip, port);
             CHECK(cSock != -1);
+
+            // set the receive timeout to 1 seconds
+            timeval tv;
+		    tv.tv_sec = 1;
+		    tv.tv_usec = 0;
+		    setsockopt(sSock, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval));
+		    setsockopt(sSock, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval));
+            setsockopt(cSock, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval));
+		    setsockopt(cSock, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval));
 
             char cBuf[8]="NNT";
             char sBuf[8];
