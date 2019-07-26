@@ -92,6 +92,8 @@ IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
             tool_test.cpp
             connection_test.cpp
             configmanager_test.cpp
+            json11_test.cpp
+            sha1_test.cpp
         )
 
         target_link_libraries(
