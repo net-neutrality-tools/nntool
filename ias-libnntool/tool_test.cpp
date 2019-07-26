@@ -93,17 +93,44 @@ TEST_CASE("CTool")
         {
             string ip = CTool::getIpFromHostname("localhost");
             CHECK(ip == "::1");
+
             ip = CTool::getIpFromHostname("localhost", 4);
             CHECK(ip == "127.0.0.1");
+
             ip = CTool::getIpFromHostname("localhost", 6);
             CHECK(ip == "::1");
         }
         SECTION("get IPs from hostname"){
             addrinfo *addr_inf;
+            struct sockaddr_in *in_addr;
+            struct sockaddr_in6 * in6_addr;
+            bool ip4Found=false;
+            bool ip6Found=false;
+            char buf[sizeof(struct in6_addr)];
+            char aIP6[INET6_ADDRSTRLEN];
+
             addr_inf=CTool::getIpsFromHostname("localhost", false);
-            struct sockaddr_in *in_addr = (struct sockaddr_in*)(addr_inf->ai_addr);
-            string ip = inet_ntoa(in_addr->sin_addr);
-            CHECK(ip=="127.0.0.1");
+
+            for(;addr_inf != NULL; addr_inf = addr_inf->ai_next){
+                if(addr_inf->ai_family == AF_INET){
+                    in_addr = (struct sockaddr_in*)(addr_inf->ai_addr);
+                    if(strcmp(inet_ntoa(in_addr->sin_addr),"127.0.0.1")){
+                        ip4Found = true;
+                        break;
+                    }
+                }
+
+                else if (addr_inf->ai_family == AF_INET6){
+                    in6_addr = (struct sockaddr_in6*)(addr_inf->ai_addr);
+                    inet_ntop(AF_INET6,buf, aIP6, INET6_ADDRSTRLEN);
+                    if(strcmp(aIP6 ,"::1")){
+                        ip6Found = true;
+                        break;;
+                    }
+                }
+            }
+           
+            CHECK((ip4Found || ip6Found));
         }
     }
     SECTION("system meta informations")

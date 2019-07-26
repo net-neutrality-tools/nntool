@@ -132,7 +132,7 @@ int CConfigManager::writeLong( string sSection, string sKey, int nValue )
 
 	map<string, map<string, string> >::iterator itSection;
 		
-	mSections[sSection][sKey] = nValue;
+	mSections[sSection][sKey] = CTool::toString(nValue);
 	
 	return 0;
 }

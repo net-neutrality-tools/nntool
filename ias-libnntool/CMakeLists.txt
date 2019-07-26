@@ -90,6 +90,8 @@ IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
             libnntool_test.cpp
             http_test.cpp
             tool_test.cpp
+            connection_test.cpp
+            configmanager_test.cpp
         )
 
         target_link_libraries(
