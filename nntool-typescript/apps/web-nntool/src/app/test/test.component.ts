@@ -108,7 +108,6 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
                                 } else if (option.name === this.paramServerPort) {
                                     this.speedConfig.serverPort = option.value;
                                 } else if (option.name === this.paramSpeed) {
-                                    let v = option['measurement-parameters'];
                                     this.speedConfig.speedConfig = option['measurement-parameters'].measurement_configuration;
                                 }
                                 /* tslint:enable:no-string-literal */

@@ -1,5 +1,8 @@
-export abstract class MeasurementTypeParameters {
+export class MeasurementTypeParameters {
+    measurement_configuration?: any;
 
+    download: any;
+    upload: any;
 }
 
 export class LmapOption {
