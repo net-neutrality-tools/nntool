@@ -1,8 +1,9 @@
-package at.alladin.nntool.qos.testserver.tcp.competences;
+package at.alladin.nntool.qos.testserver.tcp.competences.sip;
 
 import java.io.BufferedReader;
 
 import at.alladin.nntool.qos.testserver.ClientHandler;
+import at.alladin.nntool.qos.testserver.tcp.competences.Competence;
 
 /**
  * 
@@ -19,5 +20,5 @@ public class SipCompetence implements Competence {
 	@Override
 	public byte[] processRequest(String firstLine, BufferedReader br) {
 		return ClientHandler.getBytesWithNewline(firstLine);
-	}
+	}	
 }

@@ -30,7 +30,7 @@ import at.alladin.nntool.qos.testserver.mock.SocketWithCountDownLatchMockup;
 import at.alladin.nntool.qos.testserver.mock.util.SocketCommunicationExpectationsUtil;
 import at.alladin.nntool.qos.testserver.tcp.competences.BasicCompetence;
 import at.alladin.nntool.qos.testserver.tcp.competences.Competence;
-import at.alladin.nntool.qos.testserver.tcp.competences.SipCompetence;
+import at.alladin.nntool.qos.testserver.tcp.competences.sip.SipCompetence;
 import at.alladin.nntool.qos.testserver.util.TestServerConsole;
 import mockit.Delegate;
 import mockit.Expectations;
