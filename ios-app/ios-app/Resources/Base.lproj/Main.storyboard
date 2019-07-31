@@ -156,7 +156,11 @@
                                     <action selector="presentHelp" destination="ChL-OL-d1x" id="T10-Sf-NwI"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="s" id="Yfz-Iw-Ury"/>
+                            <barButtonItem title="s" id="Yfz-Iw-Ury">
+                                <connections>
+                                    <action selector="shareMeasurementResult" destination="ChL-OL-d1x" id="Tjz-rg-Fil"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                 </tableViewController>

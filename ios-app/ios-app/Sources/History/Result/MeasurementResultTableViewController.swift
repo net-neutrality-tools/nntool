@@ -61,6 +61,17 @@ class MeasurementResultTableViewController: UITableViewController {
 
         return title.count > SUBTITLE_CELL_TEXT_COUNT_THRESHOLD || value.count > SUBTITLE_CELL_TEXT_COUNT_THRESHOLD
     }
+
+    @IBAction func shareMeasurementResult() {
+        guard let textToShare = data?.shareMeasurementText else {
+            return
+        }
+
+        let activityViewController = UIActivityViewController(activityItems: [textToShare], applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+
+        present(activityViewController, animated: true, completion: nil)
+    }
 }
 
 extension MeasurementResultTableViewController {
