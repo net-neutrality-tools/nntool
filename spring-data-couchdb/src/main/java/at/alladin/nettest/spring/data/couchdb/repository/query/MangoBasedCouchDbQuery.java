@@ -38,6 +38,12 @@ public class MangoBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 		
 		// TODO: improve this method, add error handling/validation etc.
 		
+		// Mango queries don't support aggregate functions (see https://github.com/apache/couchdb/issues/1254) so it's not 
+		// possible to execute pagination queries.
+		if (method.isPageQuery()) {
+			throw new IllegalArgumentException("Pageination queries are currently not possible with Mango queries.");
+		}
+		
 		if (StringUtils.isEmpty(query)) { // TODO: this should be validated
 			return null;
 		}
@@ -65,12 +71,14 @@ public class MangoBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 		
 		if (method.isCollectionQuery()) {
 			return docs;
-		}
-		
-		if (method.isStreamQuery()) {
+		} else if (method.isStreamQuery()) {
 			return docs.stream();
+		}/* else if (method.isPageQuery()) {
+			return new PageImpl<>(docs, accessor.getPageable(), ...);
+		}*/ else if (docs.size() > 0) {
+			return docs.get(0);
 		}
 		
-		return docs.get(0); // TODO: check if there's at least one element
+		return null;
 	}
 }

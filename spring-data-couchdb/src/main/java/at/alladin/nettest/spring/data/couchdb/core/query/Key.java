@@ -16,4 +16,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Key {
 
+	String value() default "";
+	
+	boolean highSentinel() default false;
+	
+	boolean nullValue() default false;
 }
