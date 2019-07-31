@@ -1,4 +1,4 @@
-// MeasurementAgentKit: MeasurementAgentTypeDto.swift, created on 28.03.19
+// ios-app: GroupSectionHeaderView.swift, created on 23.07.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,16 +16,16 @@
  ******************************************************************************/
 
 import Foundation
+import UIKit
 
-/// The type of measurement agent.
-public enum MeasurementAgentTypeDto: String, Codable {
-
-    ///
-    case mobile = "MOBILE"
+class GroupSectionHeaderView: UITableViewHeaderFooterView {
 
     ///
-    case browser = "BROWSER"
+    @IBOutlet var titleLabel: UILabel?
 
     ///
-    case desktop = "DESKTOP"
+    @IBOutlet var descriptionLabel: UILabel?
+
+    ///
+    @IBOutlet var iconLabel: UILabel?
 }

@@ -1,4 +1,4 @@
-// MeasurementAgentKit: MeasurementAgentTypeDto.swift, created on 28.03.19
+// MeasurementAgentKit: BriefSubMeasurement.swift, created on 24.07.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -17,15 +17,18 @@
 
 import Foundation
 
-/// The type of measurement agent.
-public enum MeasurementAgentTypeDto: String, Codable {
+/// Brief/short information of a sub measurement.
+public class BriefSubMeasurement: Codable {
+
+    /// Start time of this sub measurement in UTC.
+    public var startTime: Date?
+
+    /// Duration of this sub measurement.
+    public var durationNs: UInt64?
 
     ///
-    case mobile = "MOBILE"
-
-    ///
-    case browser = "BROWSER"
-
-    ///
-    case desktop = "DESKTOP"
+    enum CodingKeys: String, CodingKey {
+        case startTime  = "start_time"
+        case durationNs = "duration_ns"
+    }
 }

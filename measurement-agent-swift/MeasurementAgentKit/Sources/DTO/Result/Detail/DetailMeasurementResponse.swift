@@ -1,4 +1,4 @@
-// MeasurementAgentKit: MeasurementAgentTypeDto.swift, created on 28.03.19
+// MeasurementAgentKit: DetailMeasurementResponse.swift, created on 24.07.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -17,15 +17,18 @@
 
 import Foundation
 
-/// The type of measurement agent.
-public enum MeasurementAgentTypeDto: String, Codable {
+/// This DTO contains a list of detail groups.
+public class DetailMeasurementResponse: Codable {
+
+    /// A list of detail groups.
+    public var groups: [DetailMeasurementGroup]?
+
+    /// The share text for this specific measurement.
+    public var shareMeasurementText: String?
 
     ///
-    case mobile = "MOBILE"
-
-    ///
-    case browser = "BROWSER"
-
-    ///
-    case desktop = "DESKTOP"
+    enum CodingKeys: String, CodingKey {
+        case groups
+        case shareMeasurementText = "share_measurement_text"
+    }
 }

@@ -1,4 +1,4 @@
-// MeasurementAgentKit: MeasurementAgentTypeDto.swift, created on 28.03.19
+// MeasurementAgentKit: ApiPagination.swift, created on 24.07.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -17,15 +17,30 @@
 
 import Foundation
 
-/// The type of measurement agent.
-public enum MeasurementAgentTypeDto: String, Codable {
+/// Wrapper for paginated responses (e.g. list of measurements).
+public class ApiPagination<T: Codable>: Codable {
 
-    ///
-    case mobile = "MOBILE"
+    /// Paginated list of objects.
+    public var content: [T]?
 
-    ///
-    case browser = "BROWSER"
+    /// Current page number (>= 0).
+    public var pageNumber: Int
 
-    ///
-    case desktop = "DESKTOP"
+    /// Current page size (> 0).
+    public var pageSize: Int
+
+    /// Total amount of pages (>= 0).
+    public var totalPages: Int
+
+    /// Total amount of objects (>= 0).
+    public var totalElements: Int
+
+    //
+    enum CodingKeys: String, CodingKey {
+        case content
+        case pageNumber    = "page_number"
+        case pageSize      = "page_size"
+        case totalPages    = "total_pages"
+        case totalElements = "total_elements"
+    }
 }

@@ -1,4 +1,4 @@
-// MeasurementAgentKit: MeasurementAgentTypeDto.swift, created on 28.03.19
+// ios-app: HistoryItemCell.swift, created on 24.07.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,16 +16,18 @@
  ******************************************************************************/
 
 import Foundation
+import UIKit
 
-/// The type of measurement agent.
-public enum MeasurementAgentTypeDto: String, Codable {
+class HistoryItemCell: UITableViewCell {
 
-    ///
-    case mobile = "MOBILE"
+    @IBOutlet var technologyLabel: UILabel?
 
-    ///
-    case browser = "BROWSER"
+    @IBOutlet var dateLabel: UILabel?
 
-    ///
-    case desktop = "DESKTOP"
+    @IBOutlet var rttLabel: UILabel?
+
+    @IBOutlet var downloadLabel: UILabel?
+
+    @IBOutlet var uploadLabel: UILabel?
+
 }

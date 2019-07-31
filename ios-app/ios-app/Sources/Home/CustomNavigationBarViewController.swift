@@ -39,8 +39,8 @@ class CustomNavigationBarViewController: UIViewController {
 
         navigationItem.applyIconFontAttributes()
 
+        // hide navigationBar shadow image
         navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
 
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }

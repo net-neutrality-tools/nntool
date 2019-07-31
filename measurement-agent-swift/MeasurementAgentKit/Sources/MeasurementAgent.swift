@@ -26,8 +26,9 @@ public class MeasurementAgent {
     let tcKey = "tc_accepted_version"
 
     var controlService: ControlService! // !
+    public private(set) var resultService: ResultService? // !
 
-    var uuid: String? {
+    public private(set) var uuid: String? {
         get {
             return standardUserDefaults.string(forKey: uuidKey)
         }
@@ -52,6 +53,8 @@ public class MeasurementAgent {
         uuidKey = URL(string: configuration.controlServiceBaseUrl)?.host ?? "default_uuid_key" // TODO: based on controller url or system uuid
 
         controlService = ControlService(baseURL: configuration.controlServiceBaseUrl, agent: self)
+
+        resultService = ResultService(baseURL: "http://localhost:8082/api/v1", agent: self) // TODO: use baseUrl from settings request
 
         // TODO: check if registered -> get settings
     }

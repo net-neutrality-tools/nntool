@@ -21,10 +21,10 @@ import XCGLogger
 import nntool_shared_swift
 
 ///
-class RestApiService {
+public class RestApiService {
 
-    typealias SuccessCallback<R> = (_ entity: R) -> Void
-    typealias FailureCallback = (_ error: RequestError) -> Void
+    public typealias SuccessCallback<R> = (_ entity: R) -> Void
+    public typealias FailureCallback = (_ error: RequestError) -> Void
 
     enum ApiError: Error {
         case emptyData
@@ -114,19 +114,22 @@ class RestApiService {
 
     ////
 
-    func request<R: Decodable, W: ApiResponse<R>>(_ path: String, method: RequestMethod, responseEntityType: R.Type, onSuccess: SuccessCallback<R>?, onFailure: FailureCallback?) {
+    func request<R: Decodable, W: ApiResponse<R>>(_ path: String, method: RequestMethod, responseEntityType: R.Type, params: [String: String]? = nil, onSuccess: SuccessCallback<R>?, onFailure: FailureCallback?) {
+
+        logger.debug("REQUESTING \(path)")
 
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
 
-        let request = service
-            .resource(path)
-            //.addObserver(ResourceObserver, owner: AnyObject)
-            .request(method)
+        let request =
+            buildResource(path: path, params: params)
+                .request(method)
 
-            handleRequest(request: request, responseEntityType: responseEntityType, onSuccess: onSuccess, onFailure: onFailure)
+        handleRequest(request: request, responseEntityType: responseEntityType, onSuccess: onSuccess, onFailure: onFailure)
     }
 
-    func request<T: Codable, R: Decodable, W: ApiResponse<R>>(_ path: String, method: RequestMethod, requestEntity: T, wrapInApiRequest: Bool = true, responseEntityType: R.Type, onSuccess: SuccessCallback<R>?, onFailure: FailureCallback?) {
+    func request<T: Codable, R: Decodable, W: ApiResponse<R>>(_ path: String, method: RequestMethod, requestEntity: T, wrapInApiRequest: Bool = true, responseEntityType: R.Type, params: [String: String]? = nil, onSuccess: SuccessCallback<R>?, onFailure: FailureCallback?) {
+
+        logger.debug("REQUESTING \(path)")
 
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
 
@@ -154,10 +157,9 @@ class RestApiService {
         logger.debug(String(data: requestData, encoding: .utf8)!) // debug print
         logger.debug("--- /REQUEST BODY ---")
 
-        let request = service
-            .resource(path)
-            //.addObserver(ResourceObserver, owner: AnyObject)
-            .request(method, data: requestData, contentType: "application/json")
+        let request =
+            buildResource(path: path, params: params)
+                .request(method, data: requestData, contentType: "application/json")
 
         handleRequest(request: request, responseEntityType: responseEntityType, onSuccess: onSuccess, onFailure: onFailure)
     }
@@ -176,6 +178,7 @@ class RestApiService {
                 return
             }
 
+            // TODO: or request entity has wrong type!
             onFailure?(RequestError(userMessage: "no data from server (TODO: better description)", cause: ApiError.emptyData))
         }).onFailure { requestError in
             onFailure?(requestError)
@@ -184,9 +187,23 @@ class RestApiService {
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
 
+    private func buildResource(path: String, params: [String: String]?) -> Resource {
+        var resource = service.resource(path)
+
+        params?.forEach({ param in
+            let (key, value) = param
+
+            logger.debug("ADDING PARAM \(key) -> \(value)")
+
+            resource = resource.withParam(key, value)
+        })
+
+        return resource
+    }
+
     ////
 
-    func getVersion(onSuccess: @escaping SuccessCallback<VersionResponse>, onFailure: @escaping FailureCallback) {
+    public func getVersion(onSuccess: @escaping SuccessCallback<VersionResponse>, onFailure: @escaping FailureCallback) {
         request("/versions", method: .get, responseEntityType: VersionResponse.self, onSuccess: onSuccess, onFailure: onFailure)
     }
 }

@@ -48,6 +48,9 @@ class MeasurementViewController: CustomNavigationBarViewController {
 
     var preferredSpeedMeasurementPeer: SpeedMeasurementPeerResponse.SpeedMeasurementPeer?
 
+    private var measurementUuid: String?
+    private var openDataUuid: String?
+
     // MARK: - UI Code
 
     ///
@@ -83,8 +86,7 @@ class MeasurementViewController: CustomNavigationBarViewController {
     }
 
     @IBAction func viewMeasurementResultButtonTapped() {
-        //performSegue(withIdentifier: "TODO_measurement_result_view", sender: nil) // TODO
-        logger.debug("--> viewMeasurementResultButtonTapped")
+        performSegue(withIdentifier: R.segue.measurementViewController.show_measurement_result, sender: nil)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -96,7 +98,11 @@ class MeasurementViewController: CustomNavigationBarViewController {
         case R.segue.measurementViewController.embed_qos_measurement_view_controller.identifier:
             qosMeasurementViewController = segue.destination as? QoSMeasurementViewController
 
-            // TODO: populate measurement result view controller
+        case R.segue.measurementViewController.show_measurement_result.identifier:
+            if let measurementResultViewController = segue.destination as? MeasurementResultTableViewController {
+                measurementResultViewController.measurementUuid = measurementUuid
+                measurementResultViewController.openDataUuid = openDataUuid
+            }
 
         default: break
         }
@@ -106,6 +112,9 @@ class MeasurementViewController: CustomNavigationBarViewController {
 
     ///
     private func startMeasurement() {
+        measurementUuid = nil
+        openDataUuid = nil
+
         hideNavigationItems()
 
         speedMeasurementGaugeView?.isStartButtonEnabled = false
@@ -226,7 +235,10 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
         }
     }
 
-    func measurementDidFinish(_ runner: MeasurementRunner) {
+    func measurementDidFinish(_ runner: MeasurementRunner, measurementUuid: String?, openDataUuid: String?) {
+        self.measurementUuid = measurementUuid
+        self.openDataUuid = openDataUuid
+
         logger.debug("!^! did finish")
 
         isRunning = false

@@ -45,6 +45,8 @@ public struct InterfaceTraffic {
 
         tx += other.tx
         rx += other.rx
+
+        // TODO: overflow of UInt32 could happen (use UInt64 internally)
     }
 
     public func differenceTo(_ previous: InterfaceTraffic) -> InterfaceTraffic {

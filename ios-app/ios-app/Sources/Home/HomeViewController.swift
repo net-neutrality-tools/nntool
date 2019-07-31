@@ -64,6 +64,18 @@ class HomeViewController: CustomNavigationBarViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        deviceInfoView?.reset()
+    }
+
+    ///
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        guard MEASUREMENT_AGENT.isRegistered() else {
+            performSegue(withIdentifier: R.segue.homeViewController.present_modally_terms_and_conditions, sender: self)
+            return
+        }
+
         // load measurement peer list
         if currentMeasurementPeerTableViewController?.measurementPeers == nil {
             MEASUREMENT_AGENT.getSpeedMeasurementPeers(onSuccess: { peers in
@@ -162,16 +174,6 @@ class HomeViewController: CustomNavigationBarViewController {
 
         timer = Repeater.every(.seconds(1)) { _ in
             self.updateDeviceInfo()
-        }
-    }
-
-    ///
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        guard MEASUREMENT_AGENT.isRegistered() else {
-            performSegue(withIdentifier: R.segue.homeViewController.present_modally_terms_and_conditions, sender: self)
-            return
         }
     }
 

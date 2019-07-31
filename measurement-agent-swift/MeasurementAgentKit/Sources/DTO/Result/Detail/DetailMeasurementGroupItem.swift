@@ -1,4 +1,4 @@
-// MeasurementAgentKit: MeasurementAgentTypeDto.swift, created on 28.03.19
+// MeasurementAgentKit: DetailMeasurementGroupItem.swift, created on 24.07.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -17,15 +17,26 @@
 
 import Foundation
 
-/// The type of measurement agent.
-public enum MeasurementAgentTypeDto: String, Codable {
+/// This class specifies a single detail item with key, translated title, value and the unit of the value.
+public class DetailMeasurementGroupItem: Codable {
+
+    /// The key is the path to the chosen field inside the data model, e.g. "device_info.model".
+    public var key: String?
+
+    /// The translated title of this item.
+    public var title: String?
+
+    /// The actual value of this item in the given unit.
+    public var value: String?
+
+    /// The unit of the value.
+    public var unit: String?
 
     ///
-    case mobile = "MOBILE"
-
-    ///
-    case browser = "BROWSER"
-
-    ///
-    case desktop = "DESKTOP"
+    enum CodingKeys: String, CodingKey {
+        case key
+        case title
+        case value
+        case unit
+    }
 }

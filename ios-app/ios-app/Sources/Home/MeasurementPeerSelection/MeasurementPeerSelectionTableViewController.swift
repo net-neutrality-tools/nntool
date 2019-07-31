@@ -29,8 +29,11 @@ class MeasurementPeerSelectionTableViewController: UITableViewController {
     @IBAction func cancel() {
         dismiss(animated: true, completion: nil)
     }
+}
 
-    // MARK: - TableView
+// MARK: - TableView
+
+extension MeasurementPeerSelectionTableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return measurementPeers?.count ?? 0

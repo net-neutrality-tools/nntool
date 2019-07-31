@@ -134,7 +134,7 @@ public class MeasurementRunner {
                 logger.info("Measurement runner is cancelled.")
 
                 informationCollector.stop()
-                finish() // TODO: stop? fail?
+                fail() // TODO: fail reason user aborted?
                 return
             }
 
@@ -248,8 +248,8 @@ public class MeasurementRunner {
         DispatchQueue.main.sync {
             let collectorService = CollectorService(baseURL: collectorUrl, agent: agent)
 
-            collectorService.storeMeasurement(reportDto: reportModel, onSuccess: { _ in
-                self.finish()
+            collectorService.storeMeasurement(reportDto: reportModel, onSuccess: { response in
+                self.finish(response.uuid, response.openDataUuid)
             }, onFailure: { error in
                 logger.debug(error)
                 self.fail() // TODO: error
@@ -259,8 +259,8 @@ public class MeasurementRunner {
         // /send_results
     }
 
-    private func finish() {
-        delegate?.measurementDidFinish(self)
+    private func finish(_ uuid: String?, _ openDataUuid: String?) {
+        delegate?.measurementDidFinish(self, measurementUuid: uuid, openDataUuid: openDataUuid)
         stop()
     }
 
