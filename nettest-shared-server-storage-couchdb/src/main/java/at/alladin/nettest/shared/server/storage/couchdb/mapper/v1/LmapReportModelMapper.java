@@ -37,8 +37,14 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Traffic;
  * @author alladin-IT GmbH (bp@alladin.at)
  *
  */
-@Mapper(componentModel = "spring", imports = ChronoUnit.class)
-public interface LmapReportModelMapper extends UuidMapper, RttInfoDtoMapper, MeasurementResultNetworkPointInTimeDtoMapper {
+@Mapper(
+	componentModel = "spring", 
+	imports = ChronoUnit.class, 
+	uses = {
+		DateTimeMapper.class, UuidMapper.class, RttInfoDtoMapper.class, MeasurementResultNetworkPointInTimeDtoMapper.class
+	}
+)
+public interface LmapReportModelMapper {
 	
 	double EARTH_MEAN_RADIUS = 6373000;
 
