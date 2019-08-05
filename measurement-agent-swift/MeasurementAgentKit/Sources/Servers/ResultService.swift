@@ -26,6 +26,7 @@ public class ResultService: RestApiService {
 
         configureTransformer("/measurement-agents/**/measurements", forType: ApiResponse<ApiPagination<BriefMeasurementResponse>>.self)
         configureTransformer("/measurement-agents/**/measurements/**/details", forType: ApiResponse<DetailMeasurementResponse>.self)
+        configureTransformer("/measurement-agents/**/measurements/**", requestMethods: [.delete], forType: ApiResponse<DisassociateResponse>.self)
     }
 
     public func getMeasurements(page: Int = 0, pageSize: Int = 20, onSuccess: SuccessCallback<ApiPagination<BriefMeasurementResponse>>?, onFailure: FailureCallback?) {
@@ -33,8 +34,6 @@ public class ResultService: RestApiService {
             onFailure?(RequestError(userMessage: "TODO", cause: NSError(domain: "todo", code: -1234, userInfo: nil)))
             return
         }
-
-        // TODO: get parameters for pageable
 
         request("/measurement-agents/\(uuid)/measurements", method: .get, responseEntityType: ApiPagination<BriefMeasurementResponse>.self, params: ["page": "\(page)", "size": "\(pageSize)"], onSuccess: onSuccess, onFailure: onFailure)
     }
@@ -47,5 +46,15 @@ public class ResultService: RestApiService {
         }
 
         request("/measurement-agents/\(uuid)/measurements/\(measurementUuid)/details", method: .get, responseEntityType: DetailMeasurementResponse.self, onSuccess: onSuccess, onFailure: onFailure)
+    }
+
+    ///
+    public func disassociateMeasurement(measurementUuid: String, onSuccess: SuccessCallback<DisassociateResponse>?, onFailure: FailureCallback?) {
+        guard let uuid = agent.uuid else {
+            onFailure?(RequestError(userMessage: "TODO", cause: NSError(domain: "todo", code: -1234, userInfo: nil)))
+            return
+        }
+
+        request("/measurement-agents/\(uuid)/measurements/\(measurementUuid)", method: .delete, responseEntityType: DisassociateResponse.self, onSuccess: onSuccess, onFailure: onFailure)
     }
 }

@@ -106,8 +106,8 @@ public class RestApiService {
         }
     }
 
-    func configureTransformer<T: Decodable>(_ pattern: ConfigurationPatternConvertible, forType type: T.Type) {
-        service.configureTransformer(pattern) {
+    func configureTransformer<T: Decodable>(_ pattern: ConfigurationPatternConvertible, requestMethods: [RequestMethod]? = nil, forType type: T.Type) {
+        service.configureTransformer(pattern, requestMethods: requestMethods) {
             try self.jsonDecoder.decode(type, from: $0.content)
         }
     }

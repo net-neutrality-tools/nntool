@@ -96,6 +96,7 @@
 		E0CC26A122E8D4EA005DEED0 /* BriefMeasurementResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC26A022E8D4EA005DEED0 /* BriefMeasurementResponse.swift */; };
 		E0CE899A2253D57F009C1E25 /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CE89992253D57F009C1E25 /* ApiError.swift */; };
 		E0CE89A22253FC31009C1E25 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CE89A12253FC31009C1E25 /* ApiRequest.swift */; };
+		E0DA6EE222F229B90060F421 /* DisassociateResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0DA6EE122F229B90060F421 /* DisassociateResponse.swift */; };
 		E0EA84E022806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84DF22806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift */; };
 		E0EA84E222807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84E122807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift */; };
 		E0F3773E22E9A73100550948 /* BriefSubMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F3773D22E9A73100550948 /* BriefSubMeasurement.swift */; };
@@ -212,6 +213,7 @@
 		E0CC26A022E8D4EA005DEED0 /* BriefMeasurementResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BriefMeasurementResponse.swift; sourceTree = "<group>"; };
 		E0CE89992253D57F009C1E25 /* ApiError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
 		E0CE89A12253FC31009C1E25 /* ApiRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
+		E0DA6EE122F229B90060F421 /* DisassociateResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisassociateResponse.swift; sourceTree = "<group>"; };
 		E0EA84DF22806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSMeasurementTypeParametersDto.swift; sourceTree = "<group>"; };
 		E0EA84E122807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementTypeParametersWrapperDto.swift; sourceTree = "<group>"; };
 		E0F3773D22E9A73100550948 /* BriefSubMeasurement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BriefSubMeasurement.swift; sourceTree = "<group>"; };
@@ -510,6 +512,7 @@
 			children = (
 				E0F3774422E9AA3700550948 /* Detail */,
 				E0F3774322E9AA2B00550948 /* Brief */,
+				E0DA6EE122F229B90060F421 /* DisassociateResponse.swift */,
 			);
 			path = Result;
 			sourceTree = "<group>";
@@ -788,6 +791,7 @@
 				E0CE899A2253D57F009C1E25 /* ApiError.swift in Sources */,
 				B1C649602285FD40007506A6 /* MeasurementAgentLog.swift in Sources */,
 				E0B9A3EF224D59A3002AB640 /* LmapCapabilityTaskDto.swift in Sources */,
+				E0DA6EE222F229B90060F421 /* DisassociateResponse.swift in Sources */,
 				E0B9A3EB224D5780002AB640 /* LmapControlDto.swift in Sources */,
 				E0B9A3CB224D4113002AB640 /* MeasurementAgent.swift in Sources */,
 				E01DEE832253B5AC00983B1C /* MeasurementResultResponse.swift in Sources */,

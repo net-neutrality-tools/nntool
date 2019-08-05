@@ -18,7 +18,6 @@
 import Foundation
 import UIKit
 import MeasurementAgentKit
-import PaginatedTableView
 
 ///
 class HistoryTableViewController: UIViewController {
@@ -186,5 +185,25 @@ extension HistoryTableViewController: PaginatedTableViewDelegate {
         }
 
         performSegue(withIdentifier: R.segue.historyTableViewController.show_measurement_result_from_history.identifier, sender: item)
+    }
+
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        guard let uuid = self.data?[indexPath.row].uuid else {
+            return nil
+        }
+
+        let disassociateAction = UITableViewRowAction(style: .destructive, title: "Delete") { (_, _) in // TODO: translate
+            MEASUREMENT_AGENT.resultService?.disassociateMeasurement(measurementUuid: uuid, onSuccess: { _ in
+                DispatchQueue.main.async {
+                    self.data?.remove(at: indexPath.row)
+                    self.tableView?.deleteRows(at: [indexPath], with: .automatic)
+                }
+            }, onFailure: { error in
+                logger.debug(error)
+                // TODO: handle error
+            })
+        }
+
+        return [disassociateAction]
     }
 }

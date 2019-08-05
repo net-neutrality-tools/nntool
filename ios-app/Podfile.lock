@@ -21,7 +21,6 @@ PODS:
   - ObjcExceptionBridging (1.0.1):
     - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
   - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
-  - PaginatedTableView (0.1.0)
   - PocketSocket (1.0.1):
     - PocketSocket/Client (= 1.0.1)
     - PocketSocket/Core (= 1.0.1)
@@ -57,7 +56,6 @@ DEPENDENCIES:
   - FMDB (>= 2.7.2)
   - MeasurementAgentKit (from `../measurement-agent-swift`)
   - nntool-shared-swift (from `../nntool-shared-swift`)
-  - PaginatedTableView (~> 0.1.0)
   - PocketSocket (from `../PocketSocket`)
   - QoSKit (from `../qos-client-swift`)
   - R.swift (~> 5.0.3)
@@ -73,7 +71,6 @@ SPEC REPOS:
     - CodableJSON
     - FMDB
     - ObjcExceptionBridging
-    - PaginatedTableView
     - R.swift
     - R.swift.Library
     - ReachabilitySwift
@@ -104,7 +101,6 @@ SPEC CHECKSUMS:
   MeasurementAgentKit: ee7929596184ed2f8e1f1c00882ead4298f965d7
   nntool-shared-swift: 7955a6c51917bcf2f42316eb259da095c80a7398
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
-  PaginatedTableView: 14025b52a9f88bb1e9a87f31765eae7986ffb192
   PocketSocket: 9c6867d66fb4f962af96b9b07f4b45bb561b2c2a
   QoSKit: d85bee1116e983af2b481d9cb3458ed71244ba41
   R.swift: f5a87643b91ea569d23d6afb3eee9c743edde239
@@ -117,6 +113,6 @@ SPEC CHECKSUMS:
   WebBrowser: 0248873c77f54e2ac504ece7c2bc8eeb710b5a4f
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: d70ad42e0785c7948d053d136833af2319439737
+PODFILE CHECKSUM: 9feb7bdaac3976ea02549601b79f5ff10c77141c
 
 COCOAPODS: 1.7.1

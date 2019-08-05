@@ -21,7 +21,6 @@ abstract_target 'All' do
     pod 'R.swift', '~> 5.0.3'
     
     pod 'WebBrowser', '~> 0.1.5'
-    pod 'PaginatedTableView', '~> 0.1.0'
   end
   
   target 'Common' do
