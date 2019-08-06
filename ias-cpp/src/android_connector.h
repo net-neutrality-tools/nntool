@@ -6,6 +6,7 @@
 #include <map>
 #include <jni.h>
 #include <iostream>
+#include <atomic>
 #include "../../ias-libnntool/json11.hpp"
 #include "type.h"
 
@@ -35,7 +36,7 @@ extern bool TIMER_ACTIVE;
 extern bool TIMER_RUNNING;
 extern bool TIMER_STOPPED;
 
-extern bool hasError;
+extern std::atomic_bool hasError;
 
 extern int TIMER_INDEX;
 extern int TIMER_DURATION;
@@ -52,8 +53,6 @@ extern std::vector<char> randomDataValues;
 extern pthread_mutex_t mutex1;
 
 extern std::map<int,int> syncing_threads;
-
-extern class CTrace* pTrace;
 
 extern class CConfigManager* pConfig;
 extern class CConfigManager* pXml;
@@ -76,11 +75,19 @@ class AndroidConnector {
 
         static const char* TAG;
 
+        /**
+        *   Convenience method to detach threads from the jvm
+        */
+        static void detachCurrentThreadFromJavaVM() {
+            getInstance().detachCurrentThreadFromJvm();
+        }
+
         void registerSharedObject(JNIEnv* env, jobject caller, jobject baseMeasurementState, jobject pingMeasurementState, jobject downloadMeasurementState, jobject uploadMeasurementState);
 
         void setSpeedSettings(JNIEnv* env, jobject speedTaskDesc);
         /**
         *   resets state and releases global java references made during setup
+        *   this function is automatically called from the jni.onUnload event
         */
         void unregisterSharedObject();
 
@@ -122,6 +129,22 @@ class AndroidConnector {
             jmethodID staticFloatValueOf;
         };
 
+        //the settings from the SpeedTaskDesc
+        struct SpeedTaskDesc {
+            std::string measurementServerUrlV4;
+            std::string measurementServerUrlV6;
+            int rttCount;
+            int downloadStreams;
+            int uploadStreams;
+            int speedServerPort;
+            bool performDownload;
+            bool performUpload;
+            bool performRtt;
+            bool isEncrypted;
+            bool useIpv6;
+            std::string clientIp;
+        } speedTaskDesc;
+
         JavaVM *javaVM;
         jclass jniHelperClass;
         jobject jniCaller;
@@ -145,23 +168,9 @@ class AndroidConnector {
         
         //speedMeasurementFields
         jfieldID fieldAvgThroughput;
-        jfieldID fieldDurationMsTotal;
-        jfieldID fieldDurationMs;
 
         //pingMeasurementFields
         jfieldID fieldAverageMs;
-
-        //the settings from the SpeedTaskDesc
-        std::string measurementServerUrlV4;
-        std::string measurementServerUrlV6;
-        int rttCount;
-        int downloadStreams;
-        int uploadStreams;
-        int speedServerPort;
-        bool performDownload;
-        bool performUpload;
-        bool performRtt;
-        bool isEncrypted;
 
         //the classes for the final result
         jclass speedMeasurementResultClazz;
@@ -169,8 +178,9 @@ class AndroidConnector {
         jclass resultBandwidthClazz;
         jclass timeClazz;
 
-        std::vector<std::string> pendingErrorMessages;
+        std::string measurementServerIp;
 
+        std::vector<std::string> pendingErrorMessages;
 
         AndroidConnector() {};
 

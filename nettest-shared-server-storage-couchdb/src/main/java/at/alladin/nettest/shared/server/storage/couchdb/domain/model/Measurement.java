@@ -104,13 +104,13 @@ public class Measurement {
 	private /*Enum*/Map<MeasurementTypeDto, SubMeasurement> measurements;
 
 	/**
-	 * Measurement source. Can be either own system or imported from open-data.
+	 * Measurement system uuid. Can be either own system or imported from open-data.
 	 */
-	@JsonPropertyDescription("Measurement source. Can be either own system or imported from open-data.")
+	@JsonPropertyDescription("Measurement system uuid. Can be either own system or imported from open-data.")
 	@Expose
-	@SerializedName("source")
-	@JsonProperty("source")
-	private String source;
+	@SerializedName("system_uuid")
+	@JsonProperty("system_uuid")
+	private String systemUuid;
 
 	/**
 	 * Start Date and time (in UTC) when this measurement result was submitted to the collector.
@@ -198,12 +198,12 @@ public class Measurement {
 		this.measurements = measurements;
 	}
 
-	public String getSource() {
-		return source;
+	public String getSystemUuid() {
+		return systemUuid;
 	}
 
-	public void setSource(String source) {
-		this.source = source;
+	public void setSystemUuid(String systemUuid) {
+		this.systemUuid = systemUuid;
 	}
 
 	public LocalDateTime getSubmitTime() {
@@ -257,7 +257,7 @@ public class Measurement {
 	@Override
 	public String toString() {
 		return "Measurement [rev=" + rev + ", docType=" + docType + ", uuid=" + uuid + ", openDataUuid=" + openDataUuid
-				+ ", tag=" + tag + ", measurements=" + measurements + ", source=" + source + ", submitTime="
+				+ ", tag=" + tag + ", measurements=" + measurements + ", systemUuid=" + systemUuid + ", submitTime="
 				+ submitTime + ", measurementTime=" + measurementTime + ", geoLocationInfo=" + geoLocationInfo
 				+ ", agentInfo=" + agentInfo + ", deviceInfo=" + deviceInfo + ", networkInfo=" + networkInfo + "]";
 	}

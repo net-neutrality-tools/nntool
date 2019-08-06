@@ -23,5 +23,10 @@ public enum RoamingType {
 	/**
 	 * International roaming.
 	 */
-	INTERNATIONAL
+	INTERNATIONAL,
+
+	/**
+	 * Roaming type is not available (cannot be determined)
+	 */
+	NOT_AVAILABLE
 }

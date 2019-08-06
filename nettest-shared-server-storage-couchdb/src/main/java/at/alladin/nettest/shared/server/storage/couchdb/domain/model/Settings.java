@@ -190,6 +190,17 @@ public class Settings {
 		private String collectorService;
 
 		/**
+		 * Base URL of the result service of the form "[protocol]://[domain]:[port]/[path]".
+		 * This domain name should have A and AAAA records.
+		 */
+		@io.swagger.annotations.ApiModelProperty("Base URL of the result service of the form \"[protocol]://[domain]:[port]/[path]\". This domain name should have A and AAAA records.")
+		@JsonPropertyDescription("Base URL of the result service of the form \"[protocol]://[domain]:[port]/[path]\". This domain name should have A and AAAA records.")
+		@Expose
+		@SerializedName("result_service")
+		@JsonProperty("result_service")
+		private String resultService;
+
+		/**
 		 * Base URL of the map service of the form "[protocol]://[domain]:[port]/[path]".
 		 */
 		@JsonPropertyDescription("Base URL of the map service of the form \"[protocol]://[domain]:[port]/[path]\".")
@@ -246,6 +257,14 @@ public class Settings {
 
 		public void setCollectorService(String collectorService) {
 			this.collectorService = collectorService;
+		}
+
+		public String getResultService() {
+			return resultService;
+		}
+
+		public void setResultService(String resultService) {
+			this.resultService = resultService;
 		}
 
 		public String getMapService() {

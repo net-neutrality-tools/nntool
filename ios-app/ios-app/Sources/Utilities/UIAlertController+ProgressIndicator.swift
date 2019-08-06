@@ -20,29 +20,33 @@ import UIKit
 
 extension UIAlertController {
 
-    class func createLoadingAlert(title: String/*, message: String*/) -> UIAlertController {
-        let alert = UIAlertController(title: title, message: ""/*message*/, preferredStyle: .alert)
+    class func createLoadingAlert(title: String, message: String = "") -> UIAlertController {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addActivityIndicator()
 
         return alert
     }
 
     func addActivityIndicator() {
+        guard let v = view else {
+            return
+        }
+
         let activityIndicator = UIActivityIndicatorView(style: .gray)
 
         activityIndicator.hidesWhenStopped = true
         activityIndicator.isUserInteractionEnabled = false
 
-        view.addSubview(activityIndicator)
+        v.addSubview(activityIndicator)
 
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        let xConstraint = NSLayoutConstraint(item: activityIndicator, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1, constant: 0)
-        let yConstraint = NSLayoutConstraint(item: activityIndicator, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.4, constant: 0)
+        let xConstraint = NSLayoutConstraint(item: activityIndicator, attribute: .centerX, relatedBy: .equal, toItem: v, attribute: .centerX, multiplier: 1, constant: 0)
+        let yConstraint = NSLayoutConstraint(item: activityIndicator, attribute: .centerY, relatedBy: .equal, toItem: v, attribute: .centerY, multiplier: 1.4, constant: 0)
 
         NSLayoutConstraint.activate([xConstraint, yConstraint])
 
-        let height = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 80)
-        view.addConstraint(height)
+        let height = NSLayoutConstraint(item: v, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 80)
+        v.addConstraint(height)
 
         activityIndicator.startAnimating()
     }

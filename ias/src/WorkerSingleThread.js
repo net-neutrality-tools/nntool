@@ -12,8 +12,8 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-29
- *      \note Copyright (c) 2018 -2019 zafaco GmbH. All rights reserved.
+ *      \date Last update: 2019-07-03
+ *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
 /* global logDebug, wsControl, global */
@@ -111,6 +111,27 @@ function WSWorkerSingleThread()
                 wsAuthTimestamp       = data.wsAuthTimestamp;  
 
                 connectSM();
+                break;
+            }
+
+            case 'fetchCounter':
+            {
+                if (wsTestCase === 'upload')
+                {
+                    for (var key in ulReportDict)
+                    {
+                        wsData      += ulReportDict[key].bRcv;
+                        wsFrames    += ulReportDict[key].hRcv;
+                    }
+                }
+                reportToControlSM('info', 'counter');
+
+                if (wsTestCase === 'upload')
+                {
+                    wsData          = 0;
+                    wsFrames        = 0;
+                }
+                
                 break;
             }
 
@@ -230,66 +251,66 @@ function WSWorkerSingleThread()
 
         webSocket.onmessage = function (event)
         {  
-if (wsTestCase === 'download')
-        {
-            wsData      += event.data.size;
-            wsFrames++;
-        }
-        else
-        {
-            //console.log('Server: response text received: ' + event.data);
-            //reportToControl('info', 'Server: response text received: ' + event.data);
-
-            if (wsTestCase === 'upload')
+            if (wsTestCase === 'download')
             {
-                var length = 0;
-                for (var key in ulReportDict)
-                {
-                    length++;
-                }
+                wsData      += event.data.size;
+                wsFrames++;
+            }
+            else
+            {
+                //console.log('Server: response text received: ' + event.data);
+                //reportToControl('info', 'Server: response text received: ' + event.data);
 
-                var data = event.data.split(';')[0].split(',');
-                if (data.length > 4)
+                if (wsTestCase === 'upload')
                 {
-                    ulReportDict[length]        = {};
-                    ulReportDict[length].bRcv   = Number(data[0]);
-                    ulReportDict[length].time   = Number(data[3]);
-                    ulReportDict[length].hRcv   = Number(data[4]);
+                    var length = 0;
+                    for (var key in ulReportDict)
+                    {
+                        length++;
+                    }
+
+                    var data = event.data.split(';')[0].split(',');
+                    if (data.length > 4)
+                    {
+                        ulReportDict[length]        = {};
+                        ulReportDict[length].bRcv   = Number(data[0]);
+                        ulReportDict[length].time   = Number(data[3]);
+                        ulReportDict[length].hRcv   = Number(data[4]);
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
-                else
+                else if (wsTestCase === 'rtt')
                 {
-                    return;
+                    try 
+                    {
+                        var data = JSON.parse(event.data);
+                    }
+                    catch (error)
+                    {
+                        //console.log('webSocket on Message: json parse error');
+                        //reportToControl('info', 'webSocket on Message: json parse error');
+                        return;
+                    }
+
+                    if (data.cmd === 'rttReport')
+                    {
+                        wsRttValues.avg         = Number(data.avg) * 1000 * 1000;
+                        wsRttValues.med         = Number(data.med) * 1000 * 1000;
+                        wsRttValues.min         = Number(data.min) * 1000 * 1000;
+                        wsRttValues.max         = Number(data.max) * 1000 * 1000;
+                        wsRttValues.requests    = Number(data.req);
+                        wsRttValues.replies     = Number(data.rep);
+                        wsRttValues.errors      = Number(data.err);
+                        wsRttValues.missing     = Number(data.mis);
+                        wsRttValues.packetsize  = Number(data.pSz);
+                        wsRttValues.stDevPop    = Number(data.std_dev_pop) * 1000 * 1000;
+                        wsRttValues.server      = String(data.srv);
+                    }
                 }
             }
-            else if (wsTestCase === 'rtt')
-            {
-                try 
-                {
-                    var data = JSON.parse(event.data);
-                }
-                catch (error)
-                {
-                    //console.log('webSocket on Message: json parse error');
-                    //reportToControl('info', 'webSocket on Message: json parse error');
-                    return;
-                }
-
-                if (data.cmd === 'rttReport')
-                {
-                    wsRttValues.avg         = Number(data.avg) * 1000 * 1000;
-                    wsRttValues.med         = Number(data.med) * 1000 * 1000;
-                    wsRttValues.min         = Number(data.min) * 1000 * 1000;
-                    wsRttValues.max         = Number(data.max) * 1000 * 1000;
-                    wsRttValues.requests    = Number(data.req);
-                    wsRttValues.replies     = Number(data.rep);
-                    wsRttValues.errors      = Number(data.err);
-                    wsRttValues.missing     = Number(data.mis);
-                    wsRttValues.packetsize  = Number(data.pSz);
-                    wsRttValues.stDevPop    = Number(data.std_dev_pop) * 1000 * 1000;
-                    wsRttValues.server      = String(data.srv);
-                }
-            }
-        }
         };
 
         webSocket.onclose = function (event)
@@ -321,11 +342,6 @@ if (wsTestCase === 'download')
             wsCompleted = false;
             reportToControlSM('info', 'start upload'); 
             ulStarted = true;
-        }
-        
-        if (typeof require !== 'undefined')
-        {
-            ulIntervalTiming = 1;
         }
 
         ulInterval = setInterval(function ()

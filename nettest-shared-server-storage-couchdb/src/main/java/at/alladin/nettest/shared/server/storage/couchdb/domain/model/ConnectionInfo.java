@@ -25,6 +25,15 @@ public class ConnectionInfo {
 	private String address;
 
 	/**
+	 * The ip address of the measurement server (can be either v4 or v6).
+	 */
+	@JsonPropertyDescription("The ip address of the measurement server (can be either v4 or v6).")
+	@Expose
+	@SerializedName("ip_address")
+	@JsonProperty("ip_address")
+	private String ipAddress;
+
+	/**
 	 * Port used for the communication.
 	 */
 	@JsonPropertyDescription("Port used for the communication.")
@@ -80,6 +89,16 @@ public class ConnectionInfo {
 	@SerializedName("client_interface_upload_measurement_traffic")
 	@JsonProperty("client_interface_upload_measurement_traffic")
 	private Traffic clientInterfaceUploadMeasurementTraffic;
+
+	/**
+	 * Contains information about bytes transferred and received by the speed measurement.
+	 * 
+	 */
+	@JsonPropertyDescription("Contains information about traffic volume of the speed measurement based on TCP payload.")
+	@Expose
+	@SerializedName("tcp_payload_total_bytes")
+	@JsonProperty("tcp_payload_total_bytes")
+	private Long tcpPayloadTotalBytes;
 
 	/**
 	 * @see NumStreamsInfo
@@ -256,4 +275,20 @@ public class ConnectionInfo {
 	public void setWebSocketInfoUpload(WebSocketInfo webSocketInfoUpload) {
 		this.webSocketInfoUpload = webSocketInfoUpload;
 	}
+
+	public String getIpAddress() {
+		return ipAddress;
+	}
+
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
+	}
+
+	public Long getTcpPayloadTotalBytes() {
+		return tcpPayloadTotalBytes;
+	}
+
+	public void setTcpPayloadTotalBytes(Long tcpPayloadTotalBytes) {
+		this.tcpPayloadTotalBytes = tcpPayloadTotalBytes;
+	}	
 }

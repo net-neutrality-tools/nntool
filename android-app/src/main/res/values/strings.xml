@@ -7,6 +7,9 @@
     <string name="title_settings">Settings</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_single_result">Measurement Report</string>
+    <string name="title_qos_result">Quality of Service</string>
+    <string name="title_help">Help</string>
 
     <string name="not_available_short">n/a</string>
 
@@ -14,6 +17,7 @@
     <string name="measurement_server_selection_default_server">Default</string>
     <string name="measurement_server_selection_title">Select a Measurement Server</string>
     <string name="measurement_server_selection_default_server_selected">Default server selected.</string>
+    <string name="measurement_recent_result_title">View Your Measurement Report</string>
 
     <string name="geo_location_accuracy">Location ± {}</string>
 
@@ -23,6 +27,8 @@
 
     <string name="alert_send_measurement_result_title">Sending results</string>
     <string name="alert_send_measurement_results_error">An error occurred while sending measurement results.</string>
+    <string name="alert_cancel_measurement_title">Abort measurement</string>
+    <string name="alert_cancel_measurement_content">Abort current measurement?</string>
 
     <string name="measurement_data_consumption_warning">I am a data consumption warning!</string>
 
@@ -58,8 +64,11 @@
     <string name="top_progress_bar_view_ping_unit">ms</string>
 
     <string name="bottom_measurement_result_summary_view_download_unit">Download (Mbps)</string>
+    <string name="bottom_measurement_result_summary_view_download_not_available">-</string>
     <string name="bottom_measurement_result_summary_view_upload_unit">Upload (Mbps)</string>
+    <string name="bottom_measurement_result_summary_view_upload_not_available">-</string>
     <string name="bottom_measurement_result_summary_view_ping_unit">Ping (ms)</string>
+    <string name="bottom_measurement_result_summary_view_ping_not_available">-</string>
 
     <string name="measurement_gauge_label_init">init</string>
     <string name="measurement_gauge_label_ping">ping</string>
@@ -71,5 +80,36 @@
     <string name="measurement_gauge_speed_two">10Mb</string>
     <string name="measurement_gauge_speed_three">100Mb</string>
     <string name="measurement_gauge_speed_four">1Gb</string>
+
+    <!-- History specific strings -->
+    <string name="history_header_unit_ms">(ms)</string>
+    <string name="history_header_unit_mbps">(Mbps)</string>
+    <string name="history_header_date">Date</string>
+    <string name="history_header_ping">Ping</string>
+    <string name="history_header_down">Down</string>
+    <string name="history_header_up">Up</string>
+    <string name="history_no_results_found">No results found.</string>
+    <string name="history_disassociate_measurement">Disassociate this measurement</string>
+
+    <!-- Result specific strings -->
+
+    <string name="result_share_subject">Nettest result</string>
+    <string name="result_share_intent_title">Share result</string>
+    <string name="result_show_qos">Quality of Service results</string>
+
+    <string name="result_qos_test_list_header">Tests</string>
+    <string name="result_qos_test_list_item_header">Test #%1$d</string>
+
+    <string name="result_qos_single_description">Description</string>
+    <string name="result_qos_single_result">Result</string>
+    <string name="result_qos_single_details">Details</string>
+
+    <!-- Help specific string -->
+    <string name="help_link_history_section">history</string>
+    <string name="help_link_result_section">result</string>
+    <string name="help_link_qos_result_section">qos</string>
+    <string name="help_link_statistics_section">statistics</string>
+    <string name="help_link_map_section">map</string>
+    <string name="help_link_settings_section">settings</string>
 
 </resources>

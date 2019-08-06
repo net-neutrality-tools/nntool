@@ -46,3 +46,10 @@ public class LmapTaskDto: Codable {
         case tags      = "tag"
     }
 }
+
+public extension LmapTaskDto {
+
+    func getOptionByName(_ name: String) -> String? {
+        return options?.filter({ $0.name == name }).first?.value
+    }
+}

@@ -3,6 +3,7 @@ package at.alladin.nettest.shared.berec.collector.api.v1.dto;
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -24,6 +25,7 @@ public abstract class ApiBase<T> {
 	@Expose
 	@SerializedName("data")
 	@JsonProperty(required = true, value = "data")
+	@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="deserialize_type")
 	private T data;
 	
 	/**

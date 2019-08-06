@@ -29,4 +29,5 @@
     <string name="ifont_traffic_in" translatable="false">I</string>
     <string name="ifont_traffic_out" translatable="false">J</string>
     <string name="ifont_hourglass" translatable="false">O</string>
+    <string name="ifont_down_arrow" translatable="false">V</string>
 </resources>

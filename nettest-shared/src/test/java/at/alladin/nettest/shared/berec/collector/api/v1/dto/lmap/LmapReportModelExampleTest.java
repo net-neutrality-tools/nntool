@@ -57,10 +57,9 @@ public class LmapReportModelExampleTest extends AbstractLmapExampleTest {
 		
 		///
 		
-		final List<LmapResultDto<?>> results = new ArrayList<>();
+		final List<LmapResultDto> results = new ArrayList<>();
 		
-		final LmapResultDto<SpeedMeasurementResult> speedResultDto = new LmapResultDto<>();
-		
+		final LmapResultDto speedResultDto = new LmapResultDto();
 		speedResultDto.setSchedule("immediate_speed_qos_measurement_schedule");
 		speedResultDto.setAction("speed_measurement_action");
 		speedResultDto.setTask(MeasurementTypeDto.SPEED.name());
@@ -222,7 +221,7 @@ public class LmapReportModelExampleTest extends AbstractLmapExampleTest {
 		results.add(speedResultDto);
 		
 		//
-		final LmapResultDto<QoSMeasurementResult> qosResultDto = new LmapResultDto<>();
+		final LmapResultDto qosResultDto = new LmapResultDto();
 		
 		qosResultDto.setSchedule("immediate_speed_qos_measurement_schedule");
 		qosResultDto.setAction("qos_measurement_action");
@@ -379,7 +378,7 @@ public class LmapReportModelExampleTest extends AbstractLmapExampleTest {
 		
 		//
 		
-		//timeBasedResultDto.setCellLocations(List<CellLocationDto> cellLocations);
+		//timeBasedResultDto.setCellLocations(List<CellInfoDto> cellLocations);
 		
 		//
 		

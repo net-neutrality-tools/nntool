@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-14
+ *      \date Last update: 2019-07-01
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -62,6 +62,7 @@
 #include <iostream>
 #include <algorithm>
 #include <exception>
+#include <atomic>
 
 
 #include <pthread.h>
@@ -93,23 +94,12 @@
 //project
 #include "type.h"
 
-
 using namespace std;
 using namespace json11;
 
-
-#define MAX_PACKET_SIZE 1500
-#define MAXBUFFER 1580
 #define MAX_NUM_THREADS 256
 #define ECHO 64
-
-
-#define TRC_DEBUG(s)  CTrace::getInstance()->logDebug(s)
-#define TRC_INFO(s)   CTrace::getInstance()->logInfo(s)
-#define TRC_WARN(s)   CTrace::getInstance()->logWarn(s)
-#define TRC_ERR(s)    CTrace::getInstance()->logErr(s)
-#define TRC_CRIT(s)   CTrace::getInstance()->logCritical(s)
-
+#define UPLOAD_ADDITIONAL_MEASUREMENT_DURATION 2
 
 extern bool DEBUG;
 extern bool RUNNING;
@@ -126,12 +116,16 @@ extern bool TIMER_ACTIVE;
 extern bool TIMER_RUNNING;
 extern bool TIMER_STOPPED;
 
-extern bool hasError;
+extern std::atomic_bool hasError;
 extern std::exception recentException;
 
 extern int TIMER_INDEX;
 extern int TIMER_DURATION;
 extern unsigned long long MEASUREMENT_DURATION;
+
+extern bool PERFORMED_RTT;
+extern bool PERFORMED_DOWNLOAD;
+extern bool PERFORMED_UPLOAD;
 
 extern int INSTANCE;
 

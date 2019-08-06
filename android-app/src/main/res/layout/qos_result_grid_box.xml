@@ -1,0 +1,43 @@
+<RelativeLayout android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:descendantFocusability="blocksDescendants"
+    android:background="@color/theme_app_bg"
+    android:minHeight="120dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <at.alladin.nettest.nntool.android.app.view.AlladinTextView
+        android:id="@+id/result_qos_group_icon"
+        style="@style/Nettest.Result.QoS.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ifont_non_transparent"
+        android:textColor="@color/result_qos_icon"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="5dp"
+        />
+
+    <TextView
+        android:id="@+id/result_qos_group_name"
+        style="@style/Nettest.Result.QoS.Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/result_qos_group_icon"
+        android:paddingTop="5dp"
+        android:text="Network"/>
+
+    <TextView
+        android:id="@+id/result_qos_success_count"
+        style="@style/Nettest.Result.QoS.Success.Count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="10dp"
+        android:text="1/1"/>
+
+</RelativeLayout>

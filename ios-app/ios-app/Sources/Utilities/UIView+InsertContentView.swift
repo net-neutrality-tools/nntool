@@ -29,10 +29,10 @@ extension UIView {
         addSubview(content)
 
         NSLayoutConstraint.activate([
-            content.topAnchor.constraint(equalTo: self.topAnchor),
-            content.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            content.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            content.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+            content.topAnchor.constraint(equalTo: topAnchor),
+            content.bottomAnchor.constraint(equalTo: bottomAnchor),
+            content.leadingAnchor.constraint(equalTo: leadingAnchor),
+            content.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
 }

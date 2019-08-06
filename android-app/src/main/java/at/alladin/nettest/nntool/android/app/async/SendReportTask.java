@@ -6,10 +6,13 @@ import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.dialog.BlockingProgressDialog;
 import at.alladin.nettest.nntool.android.app.util.ConnectionUtil;
+import at.alladin.nettest.nntool.android.app.util.ObjectMapperUtil;
 import at.alladin.nettest.nntool.android.app.util.connection.CollectorConnection;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
@@ -34,7 +37,9 @@ public class SendReportTask extends AsyncTask<Void, Void, MeasurementResultRespo
         this.collectorUrl = collectorUrl;
         this.reportDto = reportDto;
         try {
-            Log.d(TAG, new ObjectMapper().writeValueAsString(reportDto));
+            final String json = ObjectMapperUtil.createBasicObjectMapper()
+                    .writeValueAsString(reportDto);
+            Log.d(TAG, json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

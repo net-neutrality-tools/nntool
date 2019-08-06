@@ -107,7 +107,7 @@
 
         /*!
          *      \author zafaco GmbH <info@zafaco.de>
-         *      \date Last update: 2019-04-08
+         *      \date Last update: 2019-07-03
          *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
          */
 
@@ -176,8 +176,6 @@
             iasParameters.wsAuthTimestamp               = 'placeholderTimestamp';
 
             iasParameters.wsWorkerPath                  = 'Worker.js';
-            iasParameters.performRouteToClientLookup    = true;
-            iasParameters.routeToClientTargetPort       = 8080;
 
             iasParameters.download  = {};
             iasParameters.upload    = {};
@@ -221,7 +219,7 @@
                 downloadClassLow.streams            = 4;
                 downloadClassLow.frameSize          = 2048;
                 downloadClassLow.bounds             = {};
-                downloadClassLow.bounds.lower       = 0.01;
+                downloadClassLow.bounds.lower       = 0.00;
                 downloadClassLow.bounds.upper       = 1.05;
 
                 var downloadClassDefault            = {};
@@ -248,6 +246,25 @@
                 downloadClassVeryHigh.bounds.lower  = 950;
                 downloadClassVeryHigh.bounds.upper  = 9000;
 
+                var jsTool = new JSTool();
+                var browserReport = jsTool.getBrowserReport();
+                if (browserReport.browser.name.search('Chrome') !== -1)
+                {
+                    downloadClassDefault.default        = true;
+                    downloadClassDefault.streams        = 4;
+                    downloadClassDefault.frameSize      = 32768;
+                    downloadClassDefault.bounds         = {};
+                    downloadClassDefault.bounds.lower   = 0.95;
+                    downloadClassDefault.bounds.upper   = 340;
+
+                    downloadClassHigh.default           = false;
+                    downloadClassHigh.streams           = 4;
+                    downloadClassHigh.frameSize         = 524288;
+                    downloadClassHigh.bounds            = {};
+                    downloadClassHigh.bounds.lower      = 310;
+                    downloadClassHigh.bounds.upper      = 1050;
+                }
+
                 iasParameters.download.classes.push(downloadClassLow);
                 iasParameters.download.classes.push(downloadClassDefault);
                 iasParameters.download.classes.push(downloadClassHigh);
@@ -258,7 +275,7 @@
                 uploadClassLow.streams              = 4;
                 uploadClassLow.frameSize            = 2048;
                 uploadClassLow.bounds               = {};
-                uploadClassLow.bounds.lower         = 0.01;
+                uploadClassLow.bounds.lower         = 0.00;
                 uploadClassLow.bounds.upper         = 1.05;
                 uploadClassLow.framesPerCall        = 1;
 
@@ -269,7 +286,7 @@
                 uploadClassDefault.bounds           = {};
                 uploadClassDefault.bounds.lower     = 0.95;
                 uploadClassDefault.bounds.upper     = 525;
-                uploadClassDefault.framesPerCall    = 1;
+                uploadClassDefault.framesPerCall    = 2;
 
                 var uploadClassHigh                 = {};
                 uploadClassHigh.default             = false;
@@ -288,6 +305,25 @@
                 uploadClassVeryHigh.bounds.lower    = 950;
                 uploadClassVeryHigh.bounds.upper    = 9000;
                 uploadClassVeryHigh.framesPerCall   = 20;
+
+                if (browserReport.browser.name.search('Chrome') !== -1)
+                {
+                    uploadClassDefault.default          = true;
+                    uploadClassDefault.streams          = 4;
+                    uploadClassDefault.frameSize        = 65535;
+                    uploadClassDefault.bounds           = {};
+                    uploadClassDefault.bounds.lower     = 0.95;
+                    uploadClassDefault.bounds.upper     = 210;
+                    uploadClassDefault.framesPerCall    = 2;
+
+                    uploadClassHigh.default             = false;
+                    uploadClassHigh.streams             = 4;
+                    uploadClassHigh.frameSize           = 65535;
+                    uploadClassHigh.bounds              = {};
+                    uploadClassHigh.bounds.lower        = 190;
+                    uploadClassHigh.bounds.upper        = 1050;
+                    uploadClassHigh.framesPerCall       = 4;
+                }
 
                 iasParameters.upload.classes.push(uploadClassLow);
                 iasParameters.upload.classes.push(uploadClassDefault);

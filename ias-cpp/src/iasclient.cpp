@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-14
+ *      \date Last update: 2019-07-01
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -37,7 +37,7 @@ bool RTT;
 bool DOWNLOAD;
 bool UPLOAD;
 
-bool hasError = false;
+std::atomic_bool hasError;
 std::exception recentException;
 
 bool TIMER_ACTIVE;
@@ -48,6 +48,9 @@ int TIMER_INDEX;
 int TIMER_DURATION;
 unsigned long long MEASUREMENT_DURATION;
 
+bool PERFORMED_RTT;
+bool PERFORMED_DOWNLOAD;
+bool PERFORMED_UPLOAD;
 
 struct conf_data conf;
 struct measurement measurements;
@@ -58,14 +61,11 @@ pthread_mutex_t mutex1;
 
 map<int,int> syncing_threads;
 
-CTrace* pTrace;
+std::unique_ptr<CConfigManager> pConfig;
+std::unique_ptr<CConfigManager> pXml;
+std::unique_ptr<CConfigManager> pService;
 
-CConfigManager* pConfig;
-CConfigManager* pXml;
-CConfigManager* pService;
-
-CCallback *pCallback;
-CMeasurement* pMeasurement;
+std::unique_ptr<CCallback> pCallback;
 
 MeasurementPhase currentTestPhase = MeasurementPhase::INIT;
 
@@ -234,14 +234,12 @@ void measurementStart(string measurementParameters)
     ::PLATFORM = jMeasurementParameters["platform"].string_value().c_str();
     ::CLIENT_OS = jMeasurementParameters["clientos"].string_value().c_str();
 
-	pTrace = CTrace::getInstance(); 
-	
 	TRC_INFO("Status: ias-client started");
 
 	//map measurement parameters to internal variables
-	pConfig = new CConfigManager();
-	pXml 	= new CConfigManager();
-	pService = new CConfigManager();
+	pConfig = std::make_unique<CConfigManager>();
+	pXml 	= std::make_unique<CConfigManager>();
+	pService = std::make_unique<CConfigManager>();
 
 	Json::array jTargets = jMeasurementParameters["wsTargets"].array_items();
 	string wsTLD = jMeasurementParameters["wsTLD"].string_value();
@@ -264,6 +262,9 @@ void measurementStart(string measurementParameters)
 	pXml->writeString(conf.sProvider,"UL_PORT",jMeasurementParameters["wsTargetPort"].string_value());
 
 	pXml->writeString(conf.sProvider,"TLS",jMeasurementParameters["wsWss"].string_value());
+	#ifdef __ANDROID__
+	    pXml->writeString(conf.sProvider, "CLIENT_IP", jMeasurementParameters["clientIp"].string_value());
+	#endif
 
 	pConfig->writeString("security","authToken",jMeasurementParameters["wsAuthToken"].string_value());
 	pConfig->writeString("security","authTimestamp",jMeasurementParameters["wsAuthTimestamp"].string_value());
@@ -279,10 +280,14 @@ void measurementStart(string measurementParameters)
 	::UPLOAD = jUpload["performMeasurement"].bool_value();
 	pXml->writeString(conf.sProvider,"UL_STREAMS", jUpload["streams"].string_value());
 
-	pXml->writeString(conf.sProvider,"PING_QUERY","10");
+    #ifdef __ANDROID__
+        pXml->writeString(conf.sProvider,"PING_QUERY",jRtt["ping_query"].string_value());
+    #else
+	    pXml->writeString(conf.sProvider,"PING_QUERY","10");
+	#endif
 
 
-	pCallback = new CCallback();
+	pCallback = std::make_unique<CCallback>();
 
     if (!::RTT && !::DOWNLOAD && !::UPLOAD)
     {
@@ -354,9 +359,12 @@ void startTestCase(int nTestCase)
 {
 	syncing_threads.clear();
 	pCallback->mTestCase = nTestCase;
-	pMeasurement = new CMeasurement( pConfig, pXml, pService, conf.sProvider, nTestCase, pCallback);
+	#ifdef __ANDROID__
+	    //set off measurement start callback
+	    pCallback->callbackToPlatform("started", "", 0, "");
+	#endif
+	std::unique_ptr<CMeasurement> pMeasurement = std::make_unique<CMeasurement>( pConfig.get(), pXml.get(), pService.get(), conf.sProvider, nTestCase, pCallback.get());
 	pMeasurement->startMeasurement();
-	delete(pMeasurement);
 }
 
 void shutdown()
@@ -365,15 +373,7 @@ void shutdown()
 
 	::RUNNING = false;
 
-	delete(pService);
-	delete(pXml);
-	delete(pConfig);
-
-	delete(pCallback);
-
 	TRC_INFO("Status: ias-client stopped");
-
-	delete(pTrace);
 
     #ifndef __ANDROID__
         exit(EXIT_SUCCESS);

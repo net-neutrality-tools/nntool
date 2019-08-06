@@ -27,7 +27,114 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o4f-PN-NxT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1036" y="743"/>
+            <point key="canvasLocation" x="-2954" y="746"/>
+        </scene>
+        <!--Measurement Peer-->
+        <scene sceneID="93y-5l-Lc1">
+            <objects>
+                <tableViewController id="PxG-10-4qD" customClass="MeasurementPeerSelectionTableViewController" customModule="ios_app" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="kTz-vH-RHh">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="500"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="s3N-on-Cfy">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="s3N-on-Cfy" id="CQB-Gm-wKB">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="PxG-10-4qD" id="iqw-RL-AHJ"/>
+                            <outlet property="delegate" destination="PxG-10-4qD" id="G4h-QT-kXD"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Measurement Peer" id="KbN-6Z-1ap">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="RXe-eQ-KTe">
+                            <connections>
+                                <action selector="cancel" destination="PxG-10-4qD" id="cZ7-FJ-8bO"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Done" id="vGh-of-JFy">
+                            <connections>
+                                <action selector="done" destination="PxG-10-4qD" id="6Lv-tq-TRY"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vQ0-SI-SSw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1209" y="1918"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="3qz-GC-gxZ">
+            <objects>
+                <navigationController id="E0C-Av-QOd" sceneMemberID="viewController">
+                    <size key="freeformSize" width="375" height="500"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="cH8-rs-yJA">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="PxG-10-4qD" kind="relationship" relationship="rootViewController" id="bSl-11-Jo5"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ofG-ku-i5b" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1210" y="1310"/>
+        </scene>
+        <!--Table View Controller-->
+        <scene sceneID="gdK-p9-SqE">
+            <objects>
+                <tableViewController id="LLJ-6e-oAa" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="static" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="IEx-ER-CTj">
+                        <rect key="frame" x="0.0" y="0.0" width="337.5" height="32"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <sections>
+                            <tableViewSection id="1xg-41-eqd">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" rowHeight="32" id="J2Q-MO-TgD" customClass="MeasurementPeerSelectionTableViewCell" customModule="ios_app" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="337.5" height="32"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="J2Q-MO-TgD" id="cGp-qM-eJb" customClass="HomeScreenMeasurementPeerSelectionView" customModule="ios_app" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="303.5" height="32"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo Measurement Peer, AT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ECq-wm-Uqc">
+                                                    <rect key="frame" x="59" y="5.5" width="223" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.30196078430000001" green="0.31764705879999999" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="ECq-wm-Uqc" firstAttribute="centerY" secondItem="cGp-qM-eJb" secondAttribute="centerY" id="7QK-8J-FUq"/>
+                                                <constraint firstItem="ECq-wm-Uqc" firstAttribute="centerX" secondItem="cGp-qM-eJb" secondAttribute="centerX" id="bBy-md-AzZ"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outletCollection property="centerContraintsToOffset" destination="bBy-md-AzZ" collectionClass="NSMutableArray" id="BGE-N7-Fos"/>
+                                            <segue destination="E0C-Av-QOd" kind="popoverPresentation" popoverAnchorView="J2Q-MO-TgD" id="KO7-FT-opV">
+                                                <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                            </segue>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="LLJ-6e-oAa" id="vUM-Ta-v9F"/>
+                            <outlet property="delegate" destination="LLJ-6e-oAa" id="9hb-fm-W8g"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bhD-QP-MyE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2122" y="1310"/>
         </scene>
         <!--Home View Controller-->
         <scene sceneID="hNz-n2-bh7">
@@ -41,29 +148,54 @@
                                 <rect key="frame" x="19" y="74" width="337.5" height="388"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dKk-oK-Tjx" customClass="HomeScreenMeasurementPeerSelectionView" customModule="ios_app" customModuleProvider="target">
-                                <rect key="frame" x="19" y="452" width="337.5" height="55"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Select a Measurement Peer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X48-qC-w0f">
+                                <rect key="frame" x="78" y="432" width="219" height="22"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="22" id="dRE-g1-Km4"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                <color key="textColor" red="0.30196078431372547" green="0.31764705882352939" blue="0.36470588235294116" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2cB-jw-3yG" userLabel="Separator View">
+                                <rect key="frame" x="19" y="453" width="337.5" height="1"/>
+                                <color key="backgroundColor" red="0.81568627449999997" green="0.81568627449999997" blue="0.81568627449999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="MsS-Bb-dts"/>
+                                </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vOs-FH-Uz6" customClass="HomeScreenDeviceInformationView" customModule="ios_app" customModuleProvider="target">
-                                <rect key="frame" x="19" y="507" width="337.5" height="111"/>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bwt-GG-jdr">
+                                <rect key="frame" x="19" y="454" width="337.5" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" id="ysg-Yh-MRs"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="LLJ-6e-oAa" kind="embed" id="ZQQ-QS-91v"/>
+                                </connections>
+                            </containerView>
+                            <view contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0jR-8t-xIG" customClass="HomeScreenDeviceInfoView" customModule="ios_app" customModuleProvider="target">
+                                <rect key="frame" x="19" y="486" width="337.5" height="127"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="dKk-oK-Tjx" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="0qw-w0-QvS"/>
-                            <constraint firstItem="vOs-FH-Uz6" firstAttribute="top" secondItem="dKk-oK-Tjx" secondAttribute="bottom" id="2ZA-d1-7Hz"/>
                             <constraint firstItem="sus-O4-eXm" firstAttribute="top" secondItem="PQr-Ze-W5v" secondAttribute="top" constant="10" id="2gN-xJ-fEO"/>
+                            <constraint firstItem="X48-qC-w0f" firstAttribute="bottom" secondItem="2cB-jw-3yG" secondAttribute="bottom" id="8MB-7D-aaG"/>
+                            <constraint firstItem="2cB-jw-3yG" firstAttribute="width" secondItem="PQr-Ze-W5v" secondAttribute="width" multiplier="0.9" id="A3s-8R-D6C"/>
+                            <constraint firstItem="bwt-GG-jdr" firstAttribute="top" secondItem="X48-qC-w0f" secondAttribute="bottom" id="B2P-hY-i7w"/>
+                            <constraint firstItem="0jR-8t-xIG" firstAttribute="top" secondItem="bwt-GG-jdr" secondAttribute="bottom" id="C06-2h-MkV"/>
                             <constraint firstItem="sus-O4-eXm" firstAttribute="width" secondItem="PQr-Ze-W5v" secondAttribute="width" multiplier="0.9" id="D6h-y9-VGR"/>
-                            <constraint firstItem="dKk-oK-Tjx" firstAttribute="width" secondItem="PQr-Ze-W5v" secondAttribute="width" multiplier="0.9" id="EoY-fC-sO1"/>
-                            <constraint firstItem="vOs-FH-Uz6" firstAttribute="height" secondItem="PQr-Ze-W5v" secondAttribute="height" multiplier="0.2" id="KmL-et-NlD"/>
-                            <constraint firstItem="vOs-FH-Uz6" firstAttribute="width" secondItem="PQr-Ze-W5v" secondAttribute="width" multiplier="0.9" id="Qm4-0M-Wua"/>
-                            <constraint firstItem="vOs-FH-Uz6" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="TnQ-d9-kMd"/>
+                            <constraint firstItem="X48-qC-w0f" firstAttribute="top" secondItem="sus-O4-eXm" secondAttribute="bottom" constant="-30" id="GJv-eE-jWE"/>
+                            <constraint firstItem="bwt-GG-jdr" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="GVA-lL-jQH"/>
+                            <constraint firstItem="0jR-8t-xIG" firstAttribute="width" secondItem="PQr-Ze-W5v" secondAttribute="width" multiplier="0.9" id="SBZ-0T-jYy"/>
+                            <constraint firstItem="PQr-Ze-W5v" firstAttribute="bottom" secondItem="0jR-8t-xIG" secondAttribute="bottom" constant="5" id="Trk-rK-CfA"/>
+                            <constraint firstItem="bwt-GG-jdr" firstAttribute="width" secondItem="PQr-Ze-W5v" secondAttribute="width" multiplier="0.9" id="aGs-rt-PHx"/>
                             <constraint firstItem="sus-O4-eXm" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="cJB-Pc-6YG"/>
-                            <constraint firstItem="dKk-oK-Tjx" firstAttribute="height" secondItem="PQr-Ze-W5v" secondAttribute="height" multiplier="0.1" id="dxj-vc-rfQ"/>
-                            <constraint firstItem="PQr-Ze-W5v" firstAttribute="bottom" secondItem="vOs-FH-Uz6" secondAttribute="bottom" id="eCT-0b-ILG"/>
+                            <constraint firstItem="2cB-jw-3yG" firstAttribute="centerX" secondItem="PQr-Ze-W5v" secondAttribute="centerX" id="cTd-jl-wFU"/>
+                            <constraint firstItem="0jR-8t-xIG" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="mFi-1Z-BAZ"/>
                             <constraint firstItem="sus-O4-eXm" firstAttribute="height" secondItem="PQr-Ze-W5v" secondAttribute="height" multiplier="0.7" id="tIb-XO-R7X"/>
+                            <constraint firstItem="X48-qC-w0f" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="w7L-4m-fAR"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="PQr-Ze-W5v"/>
                     </view>
@@ -75,6 +207,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="deviceInfoView" destination="0jR-8t-xIG" id="vCl-5W-wXf"/>
                         <outlet property="speedMeasurementGaugeView" destination="sus-O4-eXm" id="diK-TR-UWX"/>
                         <segue destination="t4f-Xg-rdd" kind="presentation" identifier="present_modally_terms_and_conditions" id="tY1-um-iz5"/>
                         <segue destination="l2h-VI-UHi" kind="show" identifier="show_speed_measurement_view_controller" animates="NO" id="LFm-Ye-88T"/>
@@ -82,7 +215,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1036" y="1487"/>
+            <point key="canvasLocation" x="-2953" y="1523"/>
         </scene>
         <!--History View Controller-->
         <scene sceneID="kb8-YU-fAr">
@@ -134,7 +267,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Eis-9o-h85" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1610" y="2257"/>
+            <point key="canvasLocation" x="-2954" y="2434"/>
         </scene>
         <!--BEREC nntool-->
         <scene sceneID="n1C-tX-reP">
@@ -206,7 +339,7 @@
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" title="BEREC nntool" id="hp5-mn-BBe">
-                        <barButtonItem key="rightBarButtonItem" title="m" id="QGO-Yk-GtN">
+                        <barButtonItem key="rightBarButtonItem" title="_" id="QGO-Yk-GtN">
                             <connections>
                                 <action selector="presentHelp" destination="l2h-VI-UHi" id="IxH-jb-LRh"/>
                             </connections>
@@ -227,7 +360,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-815" y="2258"/>
+            <point key="canvasLocation" x="-2122" y="2435"/>
         </scene>
         <!--QoS Measurement View Controller-->
         <scene sceneID="5C5-WY-GtL">
@@ -285,7 +418,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OK7-0g-dgs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-22" y="2256"/>
+            <point key="canvasLocation" x="-1178" y="2434"/>
         </scene>
         <!--Terms and Conditions-->
         <scene sceneID="BUS-zU-5p3">
@@ -362,7 +495,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qFD-57-kB5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1610" y="2982"/>
+            <point key="canvasLocation" x="-2954" y="3206"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="Dbk-Pb-bU6">
@@ -650,10 +783,10 @@
             </objects>
             <point key="canvasLocation" x="1817" y="1487"/>
         </scene>
-        <!--View Controller-->
+        <!--Terms And Conditions Info View Controller-->
         <scene sceneID="7TL-gU-7XM">
             <objects>
-                <viewController id="aZD-Ce-Rn0" sceneMemberID="viewController">
+                <viewController id="aZD-Ce-Rn0" customClass="TermsAndConditionsInfoViewController" customModule="ios_app" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="UD6-Qq-LQD" customClass="TermsAndConditionsView" customModule="ios_app" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

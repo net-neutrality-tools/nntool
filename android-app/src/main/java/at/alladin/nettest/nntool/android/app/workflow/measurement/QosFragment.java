@@ -10,7 +10,6 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -22,13 +21,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
-import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
-import at.alladin.nettest.nntool.android.app.async.SendReportTask;
-import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
-import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.view.TopProgressBarView;
-import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
+import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.QoSTestEnum;
@@ -37,7 +33,7 @@ import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 /**
  * @author Lukasz Budryk (lb@alladin.at)
  */
-public class QosFragment extends Fragment implements ServiceConnection {
+public class QosFragment extends ActionBarFragment implements ServiceConnection {
     private final static String TAG = "QOS_FRAGMENT";
 
     private MeasurementService measurementService;
@@ -71,6 +67,9 @@ public class QosFragment extends Fragment implements ServiceConnection {
         final View view = inflater.inflate(R.layout.fragment_qos, container, false);
         qosProgressView = view.findViewById(R.id.qos_progress_view);
         topProgressBarView = view.findViewById(R.id.top_progress_bar_view);
+        if (topProgressBarView != null) {
+            topProgressBarView.setLeftText((int)(0.8 * 100) + "%");
+        }
         return view;
     }
 
@@ -120,7 +119,8 @@ public class QosFragment extends Fragment implements ServiceConnection {
                             if (progress >= 1f) {
                                 qosProgressView.finishQosType(e.getKey());
                             }
-                            topProgressBarView.setLeftText((int)(qosTest.getTotalProgress() * 100) + "%");
+                            //the total progress (if QoS is enabled) is only from 0.8 to 1.0
+                            topProgressBarView.setLeftText((int)((qosTest.getTotalProgress() * 0.2 + 0.8) * 100) + "%");
                             topProgressBarView.setRightText((int)(qosTest.getTotalProgress() * 100) + "%");
                         }
                         else if (QoSTestEnum.QOS_FINISHED.equals(qosTest.getStatus()) ||
@@ -131,11 +131,6 @@ public class QosFragment extends Fragment implements ServiceConnection {
                             topProgressBarView.setRightText("100%");
                         }
                     }
-                }
-                else if (qosTest == null) {
-                    topProgressBarView.setLeftText("100%");
-                    topProgressBarView.setRightText("100%");
-                    postResultRunnable = true;
                 }
 
             }
@@ -153,24 +148,14 @@ public class QosFragment extends Fragment implements ServiceConnection {
         @Override
         public void run() {
             final QoSResultCollector qoSResultCollector = measurementService.getQosMeasurementClient().getQosResult();
-            final String collectorUrl = measurementService.getQosMeasurementClient().getCollectorUrl();
+            final SubMeasurementResult subMeasurementResult = SubMeasurementResultParseUtil.parseIntoQosMeasurementResult(qoSResultCollector);
+            subMeasurementResult.setStatus(StatusDto.FINISHED);
+            measurementService.addSubMeasurementResult(subMeasurementResult);
             final MainActivity activity = (MainActivity) getActivity();
-            final SendReportTask task = new SendReportTask(getContext(),
-                    RequestUtil.prepareLmapReportForQosMeasurement(qoSResultCollector, getContext()),
-                    collectorUrl, new OnTaskFinishedCallback<MeasurementResultResponse>() {
-                        @Override
-                        public void onTaskFinished(MeasurementResultResponse result) {
-                            if (result == null) {
-                                AlertDialogUtil.showAlertDialog(activity,
-                                        R.string.alert_send_measurement_result_title,
-                                        R.string.alert_send_measurement_results_error);
-                            }
-                            activity.navigateTo(WorkflowTarget.TITLE);
-                        }
-                    });
-
-            if (!sendingResults.getAndSet(true)) {
-                task.execute();
+            if (measurementService.hasFollowUpAction()) {
+                measurementService.executeFollowUpAction(activity);
+            } else {
+                measurementService.sendResults(activity, sendingResults);
             }
         }
     };
@@ -186,5 +171,15 @@ public class QosFragment extends Fragment implements ServiceConnection {
     public void onServiceDisconnected(ComponentName name) {
         Log.d(TAG, "ON SERVICE DISCONNECTED");
         measurementService = null;
+    }
+
+    @Override
+    public Integer getTitleStringId() {
+        return R.string.app_name;
+    }
+
+    @Override
+    public boolean showHelpButton() {
+        return false;
     }
 }

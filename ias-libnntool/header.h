@@ -20,9 +20,9 @@
 #define HEADER_H_
 
 #ifdef NNTOOL_SERVER
-//log4cpp
-#include <log4cpp/Category.hh>
-#include <log4cpp/PropertyConfigurator.hh>
+    //log4cpp
+    #include <log4cpp/Category.hh>
+    #include <log4cpp/PropertyConfigurator.hh>
 #endif
 
 #include <sys/socket.h>
@@ -55,7 +55,6 @@
 #include <netdb.h>
 #include <resolv.h>
 #include <ifaddrs.h>
-
 
 #include <cmath>
 #include <cstdlib>
@@ -95,12 +94,11 @@
 #define MAX_PACKET_SIZE 1500
 #define MAXBUFFER 1580
 
-
-#define TRC_DEBUG(s)  CTrace::getInstance()->logDebug(s)
-#define TRC_INFO(s)   CTrace::getInstance()->logInfo(s)
-#define TRC_WARN(s)   CTrace::getInstance()->logWarn(s)
-#define TRC_ERR(s)    CTrace::getInstance()->logErr(s)
-#define TRC_CRIT(s)   CTrace::getInstance()->logCritical(s)
+#define TRC_DEBUG(s)  CTrace::getInstance().logDebug(s)
+#define TRC_INFO(s)   CTrace::getInstance().logInfo(s)
+#define TRC_WARN(s)   CTrace::getInstance().logWarn(s)
+#define TRC_ERR(s)    CTrace::getInstance().logErr(s)
+#define TRC_CRIT(s)   CTrace::getInstance().logCritical(s)
 
 
 extern bool DEBUG;

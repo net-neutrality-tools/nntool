@@ -18,6 +18,10 @@
 
 #include "timer.h"
 
+#ifdef __ANDROID__
+    #include "android_connector.h"
+#endif
+
 //! \brief
 //!	Standard Destructor
 CTimer::CTimer()
@@ -143,11 +147,15 @@ int CTimer::run()
 			break;
 	}
 
-    if (::RUNNING) {
+    if (::RUNNING && !::hasError) {
 	    mCallback->callback("finish", "measurement completed", 0, "");
 	}
 	
 	TIMER_ACTIVE = false;
+
+	#ifdef __ANDROID__
+	    AndroidConnector::detachCurrentThreadFromJavaVM();
+	#endif
 	
 	//++++++END+++++++
 

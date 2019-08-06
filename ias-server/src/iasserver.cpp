@@ -114,8 +114,8 @@ int main(int argc, char** argv)
 
     write_pidfile("/var/run/ias-server.pid");
 
-    CTrace *pTrace = CTrace::getInstance(); 
-    pTrace->init("/etc/ias-server/trace.ini","ias-server");
+    CTrace& pTrace = CTrace::getInstance();
+    pTrace.init("/etc/ias-server/trace.ini","ias-server");
 
     TRC_INFO("Status: ias-server started");
 
@@ -232,8 +232,6 @@ int main(int argc, char** argv)
     delete(pUdpListenerIPv4);
     
     TRC_INFO("Status: ias-server stopped");
-    
-    delete(pTrace);
 
     return EXIT_SUCCESS;
 }

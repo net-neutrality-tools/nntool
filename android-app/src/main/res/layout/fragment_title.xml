@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -12,41 +12,48 @@
         android:id="@+id/top_progress_bar_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true"
         android:visibility="invisible" />
 
     <RelativeLayout
+        android:id="@+id/start_test_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/top_progress_bar_view"
+        >
         <include layout="@layout/start_test_view" />
     </RelativeLayout>
 
     <at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="-120dp"
         android:id="@+id/view_provider_signal"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <at.alladin.nettest.nntool.android.app.view.BottomMeasurementResultSummaryView
-        android:layout_marginTop="3dp"
-        android:id="@+id/bottom_measurement_result_summary_view"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:layout_below="@id/start_test_layout"/>
 
     <at.alladin.nettest.nntool.android.app.view.MeasurementServerSelectionView
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="3dp"
         android:id="@+id/view_measurement_server_selection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:layout_below="@id/view_provider_signal"
+        />
 
     <LinearLayout
+        android:id="@+id/cpu_ram_ip_container"
         android:layout_marginTop="3dp"
         android:weightSum="2"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view_measurement_server_selection"
+        >
 
         <at.alladin.nettest.nntool.android.app.view.CpuAndRamView
             android:id="@+id/view_cpu_ram"
@@ -66,13 +73,17 @@
         android:background="@drawable/border_top"
         android:id="@+id/view_interface_traffic"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cpu_ram_ip_container"
+        />
 
     <at.alladin.nettest.nntool.android.app.view.GeoLocationView
         android:layout_marginTop="3dp"
         android:background="@drawable/border_top"
         android:id="@+id/view_geo_location"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view_interface_traffic"
+        />
 
-</LinearLayout>
+</RelativeLayout>

@@ -75,7 +75,7 @@ public class LmapReportDto {
 	@Expose
 	@SerializedName("result")
 	@JsonProperty(required = true, value = "result")
-	private List<LmapResultDto<?>> results = new ArrayList<>();
+	private List<LmapResultDto> results = new ArrayList<>();
 	
 	/**
 	 * Additional information that is sent by agent alongside the request.
@@ -129,11 +129,11 @@ public class LmapReportDto {
 		this.measurementPoint = measurementPoint;
 	}
 
-	public List<LmapResultDto<?>> getResults() {
+	public List<LmapResultDto> getResults() {
 		return results;
 	}
 
-	public void setResults(List<LmapResultDto<?>> results) {
+	public void setResults(List<LmapResultDto> results) {
 		this.results = results;
 	}
 

@@ -11,7 +11,8 @@ public enum CellType {
     MOBILE_WCDMA(TechnologyType.TECH_3G), /* MOBILE 3G */
     MOBILE_LTE(TechnologyType.TECH_4G), /* MOBILE 4G */
     MOBILE_ANY(TechnologyType.TECH_MOBILE_ANY), /* unknown mobile */
-    WLAN(TechnologyType.TECH_WLAN); /* WLAN */
+    WLAN(TechnologyType.TECH_WLAN),  /* WLAN */
+    UNKNOWN(TechnologyType.UNKNOWN); /* UNKNOWN */
 
     private final TechnologyType technologyType;
 
@@ -22,7 +23,6 @@ public enum CellType {
     public TechnologyType getTechnologyType() {
         return technologyType;
     }
-
 
     public static CellType fromTelephonyNetworkTypeId(final int typeId) {
         final NetworkFamilyEnum networkFamily = NetworkFamilyEnum.getFamilyByNetworkId(typeId);
@@ -37,7 +37,7 @@ public enum CellType {
         LAN("LAN"),
         ETHERNET("ETHERNET"),
         BLUETOOTH("BLUETOOTH"),
-        WLAN("WLAN"),
+        WLAN("WLAN", "WLAN", CellType.WLAN),
         _1xRTT("1xRTT","2G"),
         _2G3G("2G/3G"),
         _3G4G("3G/4G"),

@@ -61,7 +61,7 @@ public class MeasurementConfigurationService {
 				logger.error(String.format("Unknown measurement type of name %s requested. Ignoring.", capability.getTaskName()));
 				continue;
 			}
-			LmapTaskDto task = getMeasurementTaskConfiguration(type, capability.getVersion());
+			LmapTaskDto task = getMeasurementTaskConfiguration(type, capability);
 			if (task != null) {
 				ret.add(task);
 			}
@@ -106,12 +106,12 @@ public class MeasurementConfigurationService {
 		return ret;
 	}
 	
-	private LmapTaskDto getMeasurementTaskConfiguration(final MeasurementTypeDto name, final String version) {
-		if (name == null || version == null) {
+	private LmapTaskDto getMeasurementTaskConfiguration(final MeasurementTypeDto name, final LmapCapabilityTaskDto capability) {
+		if (name == null || capability == null) {
 			return null;
 		}
 
-		final LmapTaskDto ret = storageService.getTaskDto(name, controllerServiceProperties.getSettingsUuid());
+		final LmapTaskDto ret = storageService.getTaskDto(name, capability, controllerServiceProperties.getSettingsUuid());
 		final List<String> tagList = new ArrayList<String>();
 		//tagList.add(version);
 		
