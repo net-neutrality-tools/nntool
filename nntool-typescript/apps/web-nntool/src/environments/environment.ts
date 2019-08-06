@@ -60,6 +60,10 @@ export const environment = {
             rmbt: true
         }
     },
+    deserializeTypes: {
+        registrationRequestDeserializeType: 'at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest',
+        settingsRequestDeserializeType: 'at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsRequest'
+    },
     map: {
         showLegend: true,
         view: {

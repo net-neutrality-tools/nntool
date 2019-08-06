@@ -20,6 +20,7 @@ import {LmapControl} from '../../lmap/models/lmap-control.model';
 import {LmapReport} from '../../lmap/models/lmap-report.model';
 import {LocationService} from '../location.service';
 import {DeviceDetectorService, DeviceInfo} from 'ngx-device-detector';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable()
@@ -48,6 +49,7 @@ export class TestService {
 
             registrationRequest = {
                 data: {
+                    deserialize_type: environment.deserializeTypes.registrationRequestDeserializeType,
                     group_name: undefined,
                     terms_and_conditions_accepted: true,
                     terms_and_conditions_accepted_version: 12
@@ -81,6 +83,7 @@ export class TestService {
             const { agentSettings, testSettings } = this.testSettingsService;
             settingsRequest = {
                 data: {
+                    deserialize_type: environment.deserializeTypes.settingsRequestDeserializeType
                 },
                 request_info: {
                     agent_type: MeasurementAgentType.MOBILE,
