@@ -37,7 +37,10 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.OperatingSy
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
-	LmapReportModelMapperImpl.class
+	LmapReportModelMapperImpl.class,
+	DateTimeMapperImpl.class,
+	RttInfoDtoMapperImpl.class,
+	MeasurementResultNetworkPointInTimeDtoMapperImpl.class
 })
 @AutoConfigureJsonTesters
 public class LmapReportModelMapperTest {
