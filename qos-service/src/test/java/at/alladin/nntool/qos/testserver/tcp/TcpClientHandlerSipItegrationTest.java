@@ -64,7 +64,7 @@ public class TcpClientHandlerSipItegrationTest {
 	}
 
 	@Test
-	public void testClientHandlerWithSimpleSipWorkflowIncludingInviteAndTrying(@Mocked FilterOutputStream fos) throws Exception {
+	public void testClientHandlerWithSimpleSipWorkflowAndMockedCompetencesIncludingInviteAndTrying(@Mocked FilterOutputStream fos) throws Exception {
 		TestServer.getInstance().serverPreferences = new ServerPreferences();
 		final AtomicReference<String[]> results = new AtomicReference<>(new String[2]);
 		SocketCommunicationExpectationsUtil.createExpectationWithMultipleResultStrings(socket, fos, results,
@@ -109,6 +109,52 @@ public class TcpClientHandlerSipItegrationTest {
 		assertEquals("FROM != Bob <sip:bob@home>", "Bob <sip:bob@home>", resRinging.getFrom());
 		assertEquals("TO != Alice <sip:alice@home>", "Alice <sip:alice@home>", resRinging.getTo());
 		assertEquals("VIA != SIP/2.0/TCP localhost:5060", "SIP/2.0/TCP localhost:5060", resRinging.getVia());
+	}
+	
+	@Test
+	public void testClientHandlerWithSimpleSipWorkflowAndMockedCompetencesIncludingInviteAndTryingAndCheckDelayBetweenPackets(@Mocked FilterOutputStream fos) throws Exception {
+		TestServer.getInstance().serverPreferences = new ServerPreferences();
+		final AtomicReference<String[]> results = new AtomicReference<>(new String[2]);
+		SocketCommunicationExpectationsUtil.createExpectationWithMultipleResultStrings(socket, fos, results,
+						"INVITE sip:bob@home SIP/2.0\n" + 
+						"Via: SIP/2.0/TCP localhost:5060\n" + 
+						"Max-Forwards: 70\n" + 
+						"From: Alice <sip:alice@home>\n" + 
+						"To: Bob <sip:bob@home>\n\n");
+		
+		TcpClientHandler tch = new TcpClientHandler(socket, tcpServer);
+
+		new Expectations() {
+			{
+				tcpServer.getCompetences();
+				result = new Delegate<Deque<Competence>>() {
+					public Deque<Competence> delegate() {
+						final Deque<Competence> r = new ArrayDeque<>();
+						r.addFirst(new BasicCompetence());
+						r.addFirst(new SipCompetence());
+						return r;
+					}
+				};
+			}
+		};
+		
+		tch.run();
+		
+		final boolean reachedZeroCountdown = latch.await(10L, TimeUnit.SECONDS);
+				
+		assertTrue("CountDownLatch hasn't reached 0 and ran into a timeout", reachedZeroCountdown);
+
+		final List<ConsoleLog> lc = tscm.getLogList();
+		assertNotNull("Log is null", lc);
+		assertTrue("Log size < 2", lc.size() >= 2);
+		
+		final ConsoleLog tryingLog = lc.get(lc.size()-2);
+		final ConsoleLog ringingLog = lc.get(lc.size()-1);
+		assertNotNull("tryingLog is null", tryingLog);
+		assertNotNull("ringingLog is null", ringingLog);
+		
+		assertTrue("tryingLog not after ringingLog", ringingLog.getTimeMs() > tryingLog.getTimeMs());
+		assertTrue("tryingLog and ringingLog time diff < 100", (ringingLog.getTimeMs() - tryingLog.getTimeMs()) >= 100);
 	}
 	
 	@Test

@@ -23,11 +23,15 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.atomic.AtomicLong;
 
+import at.alladin.nntool.qos.testserver.ServerPreferences;
+import at.alladin.nntool.qos.testserver.ServerPreferences.TcpCompetence;
 import at.alladin.nntool.qos.testserver.ServerPreferences.TestServerServiceEnum;
+import at.alladin.nntool.qos.testserver.TestServer;
 import at.alladin.nntool.qos.testserver.entity.Observable;
 import at.alladin.nntool.qos.testserver.entity.TestCandidate;
 import at.alladin.nntool.qos.testserver.tcp.competences.BasicCompetence;
 import at.alladin.nntool.qos.testserver.tcp.competences.Competence;
+import at.alladin.nntool.qos.testserver.tcp.competences.sip.SipCompetence;
 
 public abstract class AbstractTcpServer extends AbstractServer<ServerSocket, TestCandidate> implements Observable {
 
@@ -45,6 +49,16 @@ public abstract class AbstractTcpServer extends AbstractServer<ServerSocket, Tes
 	public AbstractTcpServer(InetAddress addr, int port) {
 		super(ServerSocket.class, TestCandidate.class, addr, port, "TcpServer", TestServerServiceEnum.TCP_SERVICE);
 		registerCompetence(new BasicCompetence());
+		
+		final ServerPreferences sp = TestServer.getInstance().serverPreferences;
+		if (sp != null && sp.getTcpCompetenceMap() != null) {
+			final TcpCompetence tcpCompetence = sp.getTcpCompetenceMap().get(port);
+			if (tcpCompetence != null) {
+				if (tcpCompetence.hasSipCompetence()) {
+					registerCompetence(new SipCompetence());
+				}
+			}
+		}
 	}
 	
 	public void registerCompetence(final Competence competence) {
