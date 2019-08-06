@@ -94,7 +94,6 @@ public class SipUtil {
 		return msg;
 	}
 	
-	
 	/**
 	 * 
 	 * @param data

@@ -22,11 +22,14 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import at.alladin.nntool.qos.testserver.ServerPreferences.TestServerServiceEnum;
 import at.alladin.nntool.qos.testserver.TestServer;
+import at.alladin.nntool.qos.testserver.tcp.competences.Action;
 import at.alladin.nntool.qos.testserver.tcp.competences.Competence;
+import at.alladin.nntool.qos.testserver.tcp.competences.ResponseAction;
 import at.alladin.nntool.qos.testserver.util.TestServerConsole;
 
 /**
@@ -102,7 +105,7 @@ public class TcpClientHandler implements Runnable {
 						TcpMultiClientServer.VERBOSE_LEVEL_REQUEST_RESPONSE, TestServerServiceEnum.TCP_SERVICE);
 	
 				//check competences and send echo or other response
-				byte[] response = null;
+				List<Action> response = null;
 				final Iterator<Competence> compIt = tcpServer.get().getCompetences().iterator(); 
 				while (compIt.hasNext()) {
 					final Competence competence = compIt.next();
@@ -112,11 +115,18 @@ public class TcpClientHandler implements Runnable {
 					}
 				}
 				//byte[] response = ClientHandler.getBytesWithNewline(clientRequest);
-				
-				TestServerConsole.log("TCP/NTP Server (" + tcpServer.get().getServerSocket() + ") (:" + tcpServer.get().getPort() + "), response: " + new String(response) + " to: " + clientSocket.getInetAddress().toString(), 
-						TcpMultiClientServer.VERBOSE_LEVEL_REQUEST_RESPONSE, TestServerServiceEnum.TCP_SERVICE);
-	
-				fos.write(response);				
+					
+				if (response != null) {
+					for (final Action a : response) {
+						if (a instanceof ResponseAction) {
+							TestServerConsole.log("TCP/NTP Server (" + tcpServer.get().getServerSocket() 
+									+ ") (:" + tcpServer.get().getPort() + "), response: " 
+									+ new String(((ResponseAction) a).getData()) + " to: " + clientSocket.getInetAddress().toString(), 
+									TcpMultiClientServer.VERBOSE_LEVEL_REQUEST_RESPONSE, TestServerServiceEnum.TCP_SERVICE);
+						}
+						a.execute(fos);
+					}
+				}
 			}
 		}
 		catch (SocketTimeoutException e) {

@@ -19,6 +19,13 @@ public class SipRequestMessage extends SipMessage {
 		this.type = type;
 	}
 	
+	public SipRequestMessage(final SipRequestType type, final SipResponseMessage response) {
+		this.type = type;
+		this.setTo(response.getFrom());
+		this.setFrom(response.getTo());
+		this.setVia(response.getVia());
+	}
+	
 	public SipRequestType getType() {
 		return type;
 	}

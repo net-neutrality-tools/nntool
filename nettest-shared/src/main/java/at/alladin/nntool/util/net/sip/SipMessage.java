@@ -71,15 +71,15 @@ public abstract class SipMessage {
 		sb.append(getFirstLine()).append("\n");
 
 		for (final Entry<String, String> header : headerMap.entrySet()) {
-			sb.append(header.getKey()).append(":").append(header.getValue()).append("\n");
+			sb.append(header.getKey()).append(": ").append(header.getValue()).append("\n");
 		}
 		
 		if (body != null) {
-			sb.append("Content-Length:").append(body.length).append("\n\n");
+			sb.append("Content-Length: ").append(body.length).append("\n\n");
 			sb.append(body);
 		}
 		else {
-			sb.append("Content-Length:0").append("\n");
+			sb.append("Content-Length: 0").append("\n");
 			sb.append("\n");
 		}
 		

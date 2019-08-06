@@ -28,8 +28,10 @@ import at.alladin.nntool.qos.testserver.TestServer;
 import at.alladin.nntool.qos.testserver.entity.TestCandidate;
 import at.alladin.nntool.qos.testserver.mock.SocketWithCountDownLatchMockup;
 import at.alladin.nntool.qos.testserver.mock.util.SocketCommunicationExpectationsUtil;
+import at.alladin.nntool.qos.testserver.tcp.competences.Action;
 import at.alladin.nntool.qos.testserver.tcp.competences.BasicCompetence;
 import at.alladin.nntool.qos.testserver.tcp.competences.Competence;
+import at.alladin.nntool.qos.testserver.tcp.competences.ResponseAction;
 import at.alladin.nntool.qos.testserver.tcp.competences.sip.SipCompetence;
 import at.alladin.nntool.qos.testserver.util.TestServerConsole;
 import mockit.Delegate;
@@ -82,7 +84,7 @@ public class TcpClientHandlerIntegrationTest {
 						return r;
 					}
 				};
-			}
+			};
 		};
 		
 		tch.run();
@@ -137,8 +139,10 @@ public class TcpClientHandlerIntegrationTest {
 						r.addFirst(new Competence() {
 							
 							@Override
-							public byte[] processRequest(String firstLine, BufferedReader br) {
-								return (firstLine + firstLine + "\n").getBytes();
+							public List<Action> processRequest(String firstLine, BufferedReader br) {
+								final List<Action> result = new ArrayList<>();
+								result.add(new ResponseAction((firstLine + firstLine + "\n").getBytes()));
+								return result;
 							}
 							
 							@Override
@@ -176,8 +180,10 @@ public class TcpClientHandlerIntegrationTest {
 						r.addFirst(new Competence() {
 							
 							@Override
-							public byte[] processRequest(String firstLine, BufferedReader br) {
-								return (firstLine + firstLine + "\n").getBytes();
+							public List<Action> processRequest(String firstLine, BufferedReader br) {
+								final List<Action> result = new ArrayList<>();
+								result.add(new ResponseAction((firstLine + firstLine + "\n").getBytes()));
+								return result;
 							}
 							
 							@Override
@@ -225,7 +231,7 @@ public class TcpClientHandlerIntegrationTest {
 				};
 			}
 		};
-		
+				
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();		
 		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MESSAGE");		
 		TcpClientHandler tch = new TcpClientHandler(socket, tcpServer);

@@ -1,6 +1,7 @@
 package at.alladin.nntool.qos.testserver.tcp.competences;
 
 import java.io.BufferedReader;
+import java.util.List;
 
 /**
  * 
@@ -17,9 +18,9 @@ public interface Competence {
 	boolean appliesTo(final String firstLine);
 	
 	/**
-	 * Process request and return response.
+	 * Process request and return action(s).
 	 * @param tcpClientHandler
 	 * @return
 	 */
-	byte[] processRequest(final String firstLine, final BufferedReader br);
+	List<Action> processRequest(final String firstLine, final BufferedReader br);
 }

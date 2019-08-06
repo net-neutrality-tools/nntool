@@ -18,18 +18,22 @@ public class SipUtilTest {
 	
 	@Test
 	public void testSipRequestParsing() {
-		final SipRequestMessage msg = SipUtil.parseRequestData("INVITE sip:bob@home SIP/2.0\n" + 
+		SipRequestMessage msg = SipUtil.parseRequestData("INVITE sip:bob@home SIP/2.0\n" + 
 				"Via: SIP/2.0/TCP localhost:5060\n" + 
 				"Max-Forwards: 70\n" + 
 				"From: Alice <sip:alice@home>\n" + 
 				"To: Bob <sip:bob@home>\n" + 
 				"Call-ID: 1234@home\n" + 
-				"Contact: <sip:alice@home>");
+				"Contact: <sip:alice@home>\n\n");
 		
 		assertNotNull("msg != null", msg);
 		assertEquals("TO != Bob <sip:bob@home>", "Bob <sip:bob@home>", msg.getTo());
 		assertEquals("FROM != Alice <sip:alice@home>", "Alice <sip:alice@home>", msg.getFrom());
 		assertEquals("VIA != SIP/2.0/TCP localhost:5060", "SIP/2.0/TCP localhost:5060", msg.getVia());
+		assertEquals("SIP Action != INVITE", SipRequestType.INVITE, msg.getType());
+
+		msg = SipUtil.parseRequestData("INVITE sip:bob@home SIP/2.0\n");
+		assertNotNull("msg != null", msg);
 		assertEquals("SIP Action != INVITE", SipRequestType.INVITE, msg.getType());
 	}
 
@@ -41,18 +45,23 @@ public class SipUtilTest {
 
 	@Test
 	public void testSipResponseParsing() {
-		final SipResponseMessage msg = SipUtil.parseResponseData("SIP/2.0 180 Ringing\n" + 
+		SipResponseMessage msg = SipUtil.parseResponseData("SIP/2.0 180 Ringing\n" + 
 				"Via: SIP/2.0/TCP localhost:5060\n" + 
 				"Max-Forwards: 70\n" + 
 				"From: Alice <sip:alice@home>\n" + 
 				"To: Bob <sip:bob@home>\n" + 
 				"Call-ID: 1234@home\n" + 
-				"Contact: <sip:alice@home>");
+				"Contact: <sip:alice@home>\n\n");
 		
 		assertNotNull("msg != null", msg);
 		assertEquals("TO != Bob <sip:bob@home>", "Bob <sip:bob@home>", msg.getTo());
 		assertEquals("FROM != Alice <sip:alice@home>", "Alice <sip:alice@home>", msg.getFrom());
 		assertEquals("VIA != SIP/2.0/TCP localhost:5060", "SIP/2.0/TCP localhost:5060", msg.getVia());
+		assertEquals("SIP Response != Ringing", SipResponseType.RINGING, msg.getType());		
+		assertEquals("SIP Response Code != 180", SipResponseType.RINGING.getCode(), msg.getType().getCode());
+		
+		msg = SipUtil.parseResponseData("SIP/2.0 180 Ringing\n");
+		assertNotNull("msg != null", msg);
 		assertEquals("SIP Response != Ringing", SipResponseType.RINGING, msg.getType());		
 		assertEquals("SIP Response Code != 180", SipResponseType.RINGING.getCode(), msg.getType().getCode());
 	}
