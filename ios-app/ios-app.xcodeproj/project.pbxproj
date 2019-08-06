@@ -50,7 +50,13 @@
 		E044DE0E22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */; };
 		E044DE1022D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */; };
 		E069C28F22F8143600344A67 /* PaginatedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C28E22F8143600344A67 /* PaginatedTableView.swift */; };
+		E069C29422F84A2900344A67 /* QoSMeasurementResultGroupTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C29322F84A2900344A67 /* QoSMeasurementResultGroupTableViewController.swift */; };
+		E069C29622F84B2200344A67 /* QoSMeasurementResultDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C29522F84B2200344A67 /* QoSMeasurementResultDetailTableViewController.swift */; };
+		E069C29822F84C5200344A67 /* QoSGroupOverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C29722F84C5200344A67 /* QoSGroupOverviewCell.swift */; };
+		E069C29A22F852F900344A67 /* QoSGroupCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E069C29922F852F900344A67 /* QoSGroupCollectionViewCell.xib */; };
+		E069C29C22F8554B00344A67 /* QoSGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C29B22F8554B00344A67 /* QoSGroupCollectionViewCell.swift */; };
 		E08D4BBD22E706F300FA3E3C /* CurrentMeasurementPeerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08D4BBC22E706F300FA3E3C /* CurrentMeasurementPeerTableViewController.swift */; };
+		E0AA400422F96EED0039DC2B /* CollectionViewFlowLayoutConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AA400322F96EEC0039DC2B /* CollectionViewFlowLayoutConfig.swift */; };
 		E0AF3DE922413B7C00FDBFD1 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DE822413B7C00FDBFD1 /* MapViewController.swift */; };
 		E0AF3DEB22413B9800FDBFD1 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DEA22413B9800FDBFD1 /* HomeViewController.swift */; };
 		E0AF3DF122413BF200FDBFD1 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AF3DF022413BF200FDBFD1 /* SettingsTableViewController.swift */; };
@@ -210,7 +216,13 @@
 		E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeScreenDeviceInfoView.xib; sourceTree = "<group>"; };
 		E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Format.swift"; sourceTree = "<group>"; };
 		E069C28E22F8143600344A67 /* PaginatedTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginatedTableView.swift; sourceTree = "<group>"; };
+		E069C29322F84A2900344A67 /* QoSMeasurementResultGroupTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSMeasurementResultGroupTableViewController.swift; sourceTree = "<group>"; };
+		E069C29522F84B2200344A67 /* QoSMeasurementResultDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSMeasurementResultDetailTableViewController.swift; sourceTree = "<group>"; };
+		E069C29722F84C5200344A67 /* QoSGroupOverviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSGroupOverviewCell.swift; sourceTree = "<group>"; };
+		E069C29922F852F900344A67 /* QoSGroupCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QoSGroupCollectionViewCell.xib; sourceTree = "<group>"; };
+		E069C29B22F8554B00344A67 /* QoSGroupCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSGroupCollectionViewCell.swift; sourceTree = "<group>"; };
 		E08D4BBC22E706F300FA3E3C /* CurrentMeasurementPeerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentMeasurementPeerTableViewController.swift; sourceTree = "<group>"; };
+		E0AA400322F96EEC0039DC2B /* CollectionViewFlowLayoutConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewFlowLayoutConfig.swift; sourceTree = "<group>"; };
 		E0AF3DE822413B7C00FDBFD1 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		E0AF3DEA22413B9800FDBFD1 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		E0AF3DF022413BF200FDBFD1 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -485,6 +497,7 @@
 				E0B9A35E224AB835002AB640 /* SpeedMeasurementBasicResultView.xib */,
 				E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */,
 				E0CC269622E8AAB0005DEED0 /* GroupSectionHeaderView.xib */,
+				E069C29922F852F900344A67 /* QoSGroupCollectionViewCell.xib */,
 				E0CC269922E8C4E1005DEED0 /* HistoryListHeaderView.xib */,
 			);
 			path = Resources;
@@ -518,6 +531,15 @@
 				E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */,
 			);
 			path = MeasurementPeerSelection;
+			sourceTree = "<group>";
+		};
+		E069C29022F849A100344A67 /* QoS */ = {
+			isa = PBXGroup;
+			children = (
+				E069C29322F84A2900344A67 /* QoSMeasurementResultGroupTableViewController.swift */,
+				E069C29522F84B2200344A67 /* QoSMeasurementResultDetailTableViewController.swift */,
+			);
+			path = QoS;
 			sourceTree = "<group>";
 		};
 		E0AF3DEC22413BB900FDBFD1 /* History */ = {
@@ -616,6 +638,7 @@
 				E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */,
 				E029274422D60B01001FCAEC /* AttributedStringHelper.swift */,
 				E069C28E22F8143600344A67 /* PaginatedTableView.swift */,
+				E0AA400322F96EEC0039DC2B /* CollectionViewFlowLayoutConfig.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -640,6 +663,7 @@
 		E0CC268522E772D9005DEED0 /* Result */ = {
 			isa = PBXGroup;
 			children = (
+				E069C29022F849A100344A67 /* QoS */,
 				E0CC268822E77425005DEED0 /* Views */,
 				E0CC268622E772EE005DEED0 /* MeasurementResultTableViewController.swift */,
 			);
@@ -651,6 +675,8 @@
 			children = (
 				E0CC268922E7743A005DEED0 /* GroupSectionHeaderView.swift */,
 				E0CC269C22E8CEE6005DEED0 /* HistoryItemCell.swift */,
+				E069C29722F84C5200344A67 /* QoSGroupOverviewCell.swift */,
+				E069C29B22F8554B00344A67 /* QoSGroupCollectionViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -864,6 +890,7 @@
 			files = (
 				E00F4918225F7DC900EAD0C0 /* ias.mobile.js in Resources */,
 				E044DE0E22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib in Resources */,
+				E069C29A22F852F900344A67 /* QoSGroupCollectionViewCell.xib in Resources */,
 				E026A58E2241271900BACDB5 /* LaunchScreen.storyboard in Resources */,
 				E0B9A33B224A5BCA002AB640 /* ProgressInfoBar.xib in Resources */,
 				E0B9A3392249826E002AB640 /* SpeedMeasurementGaugeView.xib in Resources */,
@@ -1111,9 +1138,11 @@
 				E0B9A36B224B812A002AB640 /* TermsAndConditionsInfoViewController.swift in Sources */,
 				E0B9A371224B9A66002AB640 /* QoSMeasurementViewController.swift in Sources */,
 				E0AF3DFA22413C9500FDBFD1 /* HistoryTableViewController.swift in Sources */,
+				E0AA400422F96EED0039DC2B /* CollectionViewFlowLayoutConfig.swift in Sources */,
 				E0C4526C22CB867600FA4B44 /* LogConfig.swift in Sources */,
 				E08D4BBD22E706F300FA3E3C /* CurrentMeasurementPeerTableViewController.swift in Sources */,
 				E00F4B03226719DE00EAD0C0 /* UIAlertController+ProgressIndicator.swift in Sources */,
+				E069C29622F84B2200344A67 /* QoSMeasurementResultDetailTableViewController.swift in Sources */,
 				E0B9A35B224AB2FE002AB640 /* MeasurementPeerSelectionView.swift in Sources */,
 				E069C28F22F8143600344A67 /* PaginatedTableView.swift in Sources */,
 				E0B9A34A224A81CE002AB640 /* UIColor+RGB.swift in Sources */,
@@ -1136,9 +1165,12 @@
 				E0AF3DE922413B7C00FDBFD1 /* MapViewController.swift in Sources */,
 				E0B9A347224A62A3002AB640 /* CoreGraphicsHelper.swift in Sources */,
 				E0B9A377224C06A9002AB640 /* IconFont.swift in Sources */,
+				E069C29822F84C5200344A67 /* QoSGroupOverviewCell.swift in Sources */,
+				E069C29C22F8554B00344A67 /* QoSGroupCollectionViewCell.swift in Sources */,
 				E0C4527622CDFAA700FA4B44 /* R.generated.swift in Sources */,
 				E0B9A355224AAC09002AB640 /* CustomNavigationBarViewController.swift in Sources */,
 				E00F4B012266235700EAD0C0 /* QoSProgramDelegate.swift in Sources */,
+				E069C29422F84A2900344A67 /* QoSMeasurementResultGroupTableViewController.swift in Sources */,
 				E0B9A33E224A5C24002AB640 /* ProgressInfoBar.swift in Sources */,
 				E044DE1022D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift in Sources */,
 				E0CC268A22E7743A005DEED0 /* GroupSectionHeaderView.swift in Sources */,

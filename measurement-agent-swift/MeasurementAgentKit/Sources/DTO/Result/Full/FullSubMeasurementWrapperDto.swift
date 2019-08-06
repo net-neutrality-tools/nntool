@@ -1,4 +1,4 @@
-// MeasurementAgentKit: DetailMeasurementGroup.swift, created on 24.07.19
+// MeasurementAgentKit: FullSubMeasurementWrapperDto.swift, created on 05.08.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -17,30 +17,29 @@
 
 import Foundation
 
-/// Measurement detail group object which contains a translated title, an optional description, and icon and the items.
-public class DetailMeasurementGroup: Codable {
+public class FullSubMeasurementWrapperDto: Codable {
 
-    /// The already translated title of the given group.
-    public var title: String?
+    var deserializeType: String?
 
-    /// The already translated (optional) description of the given group.
-    public var description: String?
+    public var content: FullSubMeasurement?
 
-    /// The icon to be used for the given group (as a single char in the corresponding icon font).
-    public var iconCharacter: String?
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
 
-    /// Contains all the entries of the given group.
-    public var items: [DetailMeasurementGroupItem]?
+        deserializeType = try container.decodeIfPresent(String.self, forKey: .deserializeType) ?? ""
 
-    public init() {
-
+        switch deserializeType {
+        case "full_qos_measurement":
+            content = try FullQoSMeasurement(from: decoder)
+        case "full_speed_measurement":
+            content = try FullIASMeasurement(from: decoder)
+        default:
+            break
+        }
     }
 
     ///
     enum CodingKeys: String, CodingKey {
-        case title
-        case description
-        case iconCharacter = "icon_character"
-        case items
+        case deserializeType = "deserialize_type"
     }
 }

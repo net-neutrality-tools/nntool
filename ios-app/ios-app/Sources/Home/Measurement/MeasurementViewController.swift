@@ -101,7 +101,6 @@ class MeasurementViewController: CustomNavigationBarViewController {
         case R.segue.measurementViewController.show_measurement_result.identifier:
             if let measurementResultViewController = segue.destination as? MeasurementResultTableViewController {
                 measurementResultViewController.measurementUuid = measurementUuid
-                measurementResultViewController.openDataUuid = openDataUuid
             }
 
         default: break

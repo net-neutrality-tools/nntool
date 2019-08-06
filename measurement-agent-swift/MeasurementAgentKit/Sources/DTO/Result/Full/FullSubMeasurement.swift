@@ -1,4 +1,4 @@
-// MeasurementAgentKit: DetailMeasurementGroup.swift, created on 24.07.19
+// MeasurementAgentKit: FullSubMeasurement.swift, created on 05.08.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -17,30 +17,22 @@
 
 import Foundation
 
-/// Measurement detail group object which contains a translated title, an optional description, and icon and the items.
-public class DetailMeasurementGroup: Codable {
+/// This DTO class is a base class for all specific full measurement classes.
+public class FullSubMeasurement: Codable {
 
-    /// The already translated title of the given group.
-    public var title: String?
+    /// Start Date and time for this (sub-) measurement. Date and time is always stored as UTC.
+    public var startTime: Date?
 
-    /// The already translated (optional) description of the given group.
-    public var description: String?
+    /// End Date and time for this (sub-) measurement. Date and time is always stored as UTC.
+    public var endTime: Date?
 
-    /// The icon to be used for the given group (as a single char in the corresponding icon font).
-    public var iconCharacter: String?
-
-    /// Contains all the entries of the given group.
-    public var items: [DetailMeasurementGroupItem]?
-
-    public init() {
-
-    }
+    /// Duration of a measurement.
+    public var durationNs: UInt64?
 
     ///
     enum CodingKeys: String, CodingKey {
-        case title
-        case description
-        case iconCharacter = "icon_character"
-        case items
+        case startTime  = "start_time"
+        case endTime    = "end_time"
+        case durationNs = "duration_ns"
     }
 }

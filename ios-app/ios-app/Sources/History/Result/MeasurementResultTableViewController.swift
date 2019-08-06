@@ -25,9 +25,15 @@ class MeasurementResultTableViewController: UITableViewController {
 
     var measurementUuid: String?
 
-    var openDataUuid: String?
+    private var data: DetailMeasurementResponse?
+    private var qosData: FullQoSMeasurement?
+    private var qosTypeBoxResult: [QoSMeasurementType: QoSTypeBoxResult]?
 
-    var data: DetailMeasurementResponse?
+    private let qosCollectionViewFlowLayoutConfig = CollectionViewFlowLayoutConfig(
+        sectionInsets: UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0),
+        itemsPerRow: 2,
+        heightFactor: 0.85
+    )
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,8 +47,50 @@ class MeasurementResultTableViewController: UITableViewController {
             MEASUREMENT_AGENT.resultService?.getDetailedMeasurementResult(measurementUuid: measurementUuid, onSuccess: { response in
                 self.data = response
 
-                //let qosGroup = DetailMeasurementGroup()
-                //self.data?.groups?.append()
+                // load qos
+                // TODO: gather QoS results
+                MEASUREMENT_AGENT.resultService?.getFullMeasurementResult(measurementUuid: measurementUuid, onSuccess: { fullMeasurementReponse in
+
+                    if let fullQoSMeasurement = fullMeasurementReponse.measurements?["QOS"]?.content as? FullQoSMeasurement {
+                        self.qosData = fullQoSMeasurement
+
+                        // TODO: parse into model (type -> desc, with calculated success/error rate)
+
+                        let qosGroup = DetailMeasurementGroup()
+                        qosGroup.title = "QoS"
+                        qosGroup.iconCharacter = IconFont.qos.rawValue
+
+                        self.data?.groups?.append(qosGroup)
+
+                        //
+
+                        self.qosTypeBoxResult = [:]
+
+                        self.qosData?.results?.forEach({ result in
+                            guard let type = result.type else {
+                                return
+                            }
+
+                            if self.qosTypeBoxResult?[type] == nil {
+                                if let typeDescription = self.qosData?.qosTypeToDescriptionMap?[type.rawValue] {
+                                    self.qosTypeBoxResult?[type] = QoSTypeBoxResult(
+                                        type: type.rawValue, name: typeDescription.name ?? type.rawValue, icon: typeDescription.icon, successCount: 0, evaluationCount: 0
+                                    )
+                                }
+                            }
+
+                            self.qosTypeBoxResult?[type]?.successCount += result.successCount ?? 0
+                            self.qosTypeBoxResult?[type]?.evaluationCount += result.evaluationCount ?? 0
+                        })
+
+                        DispatchQueue.main.async {
+                            self.tableView.reloadData()
+                        }
+                    }
+                }, onFailure: { error in
+                    // TODO: handle error
+                    logger.debug(error)
+                })
 
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
@@ -72,6 +120,23 @@ class MeasurementResultTableViewController: UITableViewController {
 
         present(activityViewController, animated: true, completion: nil)
     }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else {
+            return
+        }
+
+        switch identifier {
+        case R.segue.measurementResultTableViewController.show_qos_group.identifier:
+            if let qosGroupTableViewController = segue.destination as? QoSMeasurementResultGroupTableViewController {
+                // TODO
+                //logger.debug("tapped \((sender as? QoSGroupCollectionViewCell)?.groupNameLabel)")
+
+                //qosGroupTableViewController.abc = ...
+            }
+        default: break
+        }
+    }
 }
 
 extension MeasurementResultTableViewController {
@@ -82,11 +147,34 @@ extension MeasurementResultTableViewController {
 
     ///
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data?.groups?[section].items?.count ?? 0
+        guard let section = data?.groups?[section] else {
+            return 0
+        }
+
+        if section.title == "QoS" {
+            return 1
+        }
+
+        return section.items?.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let item = data?.groups?[indexPath.section].items?[indexPath.row] else {
+        guard let section = data?.groups?[indexPath.section] else {
+            return super.tableView(tableView, cellForRowAt: indexPath)
+        }
+
+        if section.title == "QoS" {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.qos_group_overview_cell.identifier, for: indexPath) as? QoSGroupOverviewCell else {
+                return super.tableView(tableView, cellForRowAt: indexPath)
+            }
+
+            cell.evaluatedQoSResults = [QoSTypeBoxResult](qosTypeBoxResult!.values)
+            cell.flowLayoutConfig = qosCollectionViewFlowLayoutConfig
+
+            return cell
+        }
+
+        guard let item = section.items?[indexPath.row] else {
             return super.tableView(tableView, cellForRowAt: indexPath)
         }
 
@@ -106,10 +194,22 @@ extension MeasurementResultTableViewController {
         return cell
     }
 
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        guard let section = data?.groups?[indexPath.section], section.title == "QoS" else {
+            return super.tableView(tableView, heightForRowAt: indexPath)
+        }
+
+        return qosCollectionViewFlowLayoutConfig.getCollectionViewDimensions(viewWidth: tableView.frame.width, count: self.qosTypeBoxResult?.count ?? 0).height
+    }
+
     //
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let group = data?.groups?[section] else {
+            return nil
+        }
+
+        guard let title = group.title else {
             return nil
         }
 
@@ -118,7 +218,7 @@ extension MeasurementResultTableViewController {
         }
 
         cell.iconLabel?.text = group.iconCharacter
-        cell.titleLabel?.text = group.title?.uppercased()
+        cell.titleLabel?.text = title.uppercased()
         cell.descriptionLabel?.text = group.description
 
         return cell
@@ -131,17 +231,5 @@ extension MeasurementResultTableViewController {
         }
 
         return 100
-    }
-
-    /*override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if let item = data?.groups?[indexPath.section].items?[indexPath.row] {
-            //return
-        }
-
-        return super.tableView(tableView, heightForRowAt: indexPath)
-    }*/
-
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

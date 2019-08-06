@@ -31,6 +31,9 @@ class HistoryTableViewController: UIViewController {
 
         navigationItem.applyIconFontAttributes()
 
+        let headerNib = UINib(nibName: "HistoryListHeaderView", bundle: Bundle.main)
+        tableView?.register(headerNib, forHeaderFooterViewReuseIdentifier: "history_list_header_view")
+
         tableView?.enablePullToRefresh = true
 
         tableView?.paginatedDelegate = self
@@ -50,9 +53,10 @@ class HistoryTableViewController: UIViewController {
 
         switch identifier {
         case R.segue.historyTableViewController.show_measurement_result_from_history.identifier:
-            if let measurementResultViewController = segue.destination as? MeasurementResultTableViewController {
-                measurementResultViewController.measurementUuid = (sender as? BriefMeasurementResponse)?.uuid
-                //measurementResultViewController.openDataUuid = (sender as? BriefMeasurementResponse)?.openDataUuid
+            if let measurementResultViewController = segue.destination as? MeasurementResultTableViewController,
+               let briefMeasurementResponse = sender as? BriefMeasurementResponse {
+
+                measurementResultViewController.measurementUuid = briefMeasurementResponse.uuid
             }
         default: break
         }
@@ -88,7 +92,7 @@ extension HistoryTableViewController: PaginatedTableViewDataSource {
 
         if let startTime = item.startTime {
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm" // :ss
             dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
 
             cell.dateLabel?.text = dateFormatter.string(from: startTime)
@@ -154,30 +158,13 @@ extension HistoryTableViewController: PaginatedTableViewDelegate {
         return 44
     }
 
-    /*override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-     guard let group = data?.groups?[section] else {
-     return nil
-     }
-     
-     guard let cell = tableView.dequeueReusableHeaderFooterView(withIdentifier: "group_section_header_view") as? GroupSectionHeaderView else {
-     return nil
-     }
-     
-     cell.iconLabel?.text = group.iconCharacter
-     cell.titleLabel?.text = group.title?.uppercased()
-     cell.descriptionLabel?.text = group.description
-     
-     return cell
-     }
-     
-     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-     // TODO: calculate height of description
-     if section == 0 {
-     return 120
-     }
-     
-     return 100
-     }*/
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 44
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return tableView.dequeueReusableHeaderFooterView(withIdentifier: "history_list_header_view")
+    }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let item = data?[indexPath.row] else {

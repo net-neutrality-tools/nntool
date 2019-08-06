@@ -25,7 +25,7 @@ class ControlService: RestApiService {
         super.init(baseURL: baseURL, agent: agent)
 
         configureTransformer("/measurement-agents", forType: ApiResponse<RegistrationResponse>.self)
-        configureTransformer("/measurement-agents/**/settings", forType: ApiResponse<SettingsResponse>.self)
+        configureTransformer("/measurement-agents/*/settings", forType: ApiResponse<SettingsResponse>.self)
         configureTransformer("/measurements", forType: LmapControlDto.self)
         configureTransformer("/speed-measurement-peers", forType: ApiResponse<SpeedMeasurementPeerResponse>.self)
         configureTransformer("/ip", forType: ApiResponse<IpResponse>.self)

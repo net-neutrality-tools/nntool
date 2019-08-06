@@ -54,7 +54,7 @@ public class MeasurementAgent {
 
         controlService = ControlService(baseURL: configuration.controlServiceBaseUrl, agent: self)
 
-        resultService = ResultService(baseURL: "http://localhost:8082/api/v1", agent: self) // TODO: use baseUrl from settings request
+        resultService = ResultService(baseURL: "http://localhost:18082/api/v1", agent: self) // TODO: use baseUrl from settings request
 
         // TODO: check if registered -> get settings
     }

@@ -1,4 +1,4 @@
-// MeasurementAgentKit: DetailMeasurementGroup.swift, created on 24.07.19
+// MeasurementAgentKit: QoSTypeDescription.swift, created on 05.08.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -17,30 +17,21 @@
 
 import Foundation
 
-/// Measurement detail group object which contains a translated title, an optional description, and icon and the items.
-public class DetailMeasurementGroup: Codable {
+/// This DTO class contains all QoS measurement information that is sent to the measurement agent.
+public class QoSTypeDescription: Codable {
 
-    /// The already translated title of the given group.
-    public var title: String?
+    /// The translated name of the QoS type.
+    public var name: String?
 
-    /// The already translated (optional) description of the given group.
+    /// The translated description of the QoS type.
     public var description: String?
 
-    /// The icon to be used for the given group (as a single char in the corresponding icon font).
-    public var iconCharacter: String?
+    /// The icon of the QoS type.
+    public var icon: String?
 
-    /// Contains all the entries of the given group.
-    public var items: [DetailMeasurementGroupItem]?
-
-    public init() {
-
-    }
-
-    ///
     enum CodingKeys: String, CodingKey {
-        case title
+        case name
         case description
-        case iconCharacter = "icon_character"
-        case items
+        case icon
     }
 }

@@ -241,6 +241,10 @@ extension PaginatedTableView: UITableViewDataSource, UITableViewDelegate {
     }
 
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == sections - 1 {
+            return nil
+        }
+
         return paginatedDelegate?.tableView?(tableView, viewForHeaderInSection: section)
     }
 
@@ -249,10 +253,18 @@ extension PaginatedTableView: UITableViewDataSource, UITableViewDelegate {
     }
 
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == sections - 1 {
+            return nil
+        }
+
         return titleForHeaderInSection
     }
 
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == sections - 1 {
+            return 0
+        }
+
         return paginatedDelegate?.tableView?(tableView, heightForHeaderInSection: section) ?? heightForHeaderInSection
     }
 

@@ -31,7 +31,7 @@ class MeasurementAgentKitTests: XCTestCase {
         }
     }
 
-    func testCollector() {
+    /*func testCollector() {
 
         let expectation = XCTestExpectation(description: "Test")
 
@@ -148,7 +148,7 @@ class MeasurementAgentKitTests: XCTestCase {
         }*/
 
         wait(for: [expectation], timeout: 10.0)
-    }
+     }*/
 
     func testX() {
 
