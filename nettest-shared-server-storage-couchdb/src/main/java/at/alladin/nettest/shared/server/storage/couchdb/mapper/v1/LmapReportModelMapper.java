@@ -200,10 +200,10 @@ public interface LmapReportModelMapper {
 				+ " null : subMeasurementResult.getRelativeEndTimeNs() - subMeasurementResult.getRelativeStartTimeNs())"),
 		@Mapping(expression="java(startTimeNs == null || subMeasurementResult == null ? "
 				+ "null : subMeasurementResult.getRelativeStartTimeNs() == null ? "
-				+ "null : map(startTimeNs.plusMillis((int) (subMeasurementResult.getRelativeStartTimeNs() / 1e6))))", target="startTime"),
+				+ "null : dateTimeMapper.map(startTimeNs.plusMillis((int) (subMeasurementResult.getRelativeStartTimeNs() / 1e6))))", target="startTime"),
 		@Mapping(expression="java(startTimeNs == null || subMeasurementResult == null ? "
 				+ "null : subMeasurementResult.getRelativeEndTimeNs() == null ? "
-				+ "null : map(startTimeNs.plusMillis((int) (subMeasurementResult.getRelativeEndTimeNs() / 1e6))))", target="endTime")
+				+ "null : dateTimeMapper.map(startTimeNs.plusMillis((int) (subMeasurementResult.getRelativeEndTimeNs() / 1e6))))", target="endTime")
 	})
 	SubMeasurementTime mapSubMeasurementTime(SubMeasurementResult subMeasurementResult, LocalDateTime startTimeNs);
 	
