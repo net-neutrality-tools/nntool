@@ -22,7 +22,7 @@ if (gradle.ext.includeJibGradlePlugin) {
   }
 
   jib {
-    to.image = "nntool.eu/${project.name}:${version}"
+    to.image = "${gradle.ext.dockerRegistryName}/${project.name}:${version}"
     to.tags = ['latest']
     container {
       ports = ['8080-8089']
