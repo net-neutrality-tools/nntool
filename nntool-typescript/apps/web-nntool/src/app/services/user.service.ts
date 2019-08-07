@@ -197,8 +197,9 @@ export class UserService {
         // const lang: string = this.translateService.currentLang;
         return new Observable((observer: any) => {
             this.requests.getJson<any>(
-                Location.joinWithSlash('http://localhost:8082/api/v1/measurement-agents', user.uuid + '/measurements'),
-                {}
+              // TODO: take result-service url from settings request
+              Location.joinWithSlash(this.config.servers.result, 'measurement-agents/' + user.uuid + '/measurements'),
+              {}
             ).subscribe(
                 (data: any) => {
                     this.logger.debug('User Mes', data);
