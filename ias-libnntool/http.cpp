@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-18
+ *      \date Last update: 2019-08-07
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -78,12 +78,6 @@ int CHttp::parseResponse()
 	char rbuffer[MAXBUFFER];
 	string buffer;
 
-	string get 			= "GET /data.img";
-	string post 		= "POST /data.img";
-	string ok 			= "HTTP/1.1 200 OK";
-	string cont			= "HTTP/1.1 100 Continue";
-	string forbidden	= "HTTP/1.1 403 Forbidden";
-	
 	//Zero buffer
 	bzero(rbuffer, MAXBUFFER);
 	
@@ -94,7 +88,7 @@ int CHttp::parseResponse()
 	
 	TRC_DEBUG("Received: (" + to_string(recv_len) + ") --------------------------------" + "\r\n" + buffer);
 	
-	if( buffer.find(ok) != string::npos )
+	if( buffer.find(HTTP_OK) != string::npos )
 	{
 		mHttpResponseTime = CTool::get_timestamp();
 		
@@ -102,21 +96,33 @@ int CHttp::parseResponse()
 		nValue = 0;
 	}
 	
-	if( buffer.find(cont) != string::npos )
+	if( buffer.find(HTTP_CONTINUE) != string::npos )
 	{
 		mHttpResponseTime = CTool::get_timestamp();
 		
 		//Return Flag 0 for invalid query (Query at wrong time)
 		nValue = 0;
 	}
-	
-	if( buffer.find(forbidden) != string::npos )
+
+	if( recv_len == 0 )
 	{
 		//Return Flag -1 and close everything
 		nValue = -1;
 	}
 	
-	if( firstRequest && buffer.find(get) != string::npos )
+	if( buffer.find(HTTP_FORBIDDEN) != string::npos )
+	{
+		//Return Flag -2 and close everything
+		nValue = -2;
+	}
+
+	if( buffer.find(HTTP_BANDWIDTH_LIMIT_EXCEEDED) != string::npos )
+	{
+		//Return Flag -3 and close everything
+		nValue = -3;
+	}
+	
+	if( firstRequest && buffer.find(HTTP_GET_DATA) != string::npos )
 	{	
 		//We need a identifier for our return code in the responseOk()
 		mType="GET";
@@ -124,7 +130,7 @@ int CHttp::parseResponse()
 		nValue = responseOk();
 	}
 	
-	if( firstRequest && buffer.find(post) != string::npos )
+	if( firstRequest && buffer.find(HTTP_POST_DATA) != string::npos )
 	{
 		//We need a identifier for our return code in the responseOk()
 		mType="POST";
@@ -132,9 +138,13 @@ int CHttp::parseResponse()
 		nValue = responseOk();
 	}
 	
-	if( nValue == -1 )
-		return responseNotFound();
-	
+	#ifndef NNTOOL_CLIENT
+		if( nValue == -1 )
+		{
+			return responseNotFound();
+		}
+	#endif
+
 	return nValue;
 }
 
@@ -173,33 +183,6 @@ int CHttp::getHttpResponseDuration()
 string CHttp::getHttpServerHostname()
 {
 	return mHttpServerHostname;
-}
-
-//! \brief
-//!	Init and Auth Server
-//! \return 0
-int CHttp::responseForbidden()
-{	
-	//Generate Reply 
-	string send_init = "";
-	string content = "";
-	
-	send_init += "HTTP/1.1 403 Forbidden\r\n";
-	send_init += "Server: "+mHostname+"\r\n";
-	send_init += "Date: "+CTool::get_timestamp_string()+"\r\n";
-	send_init += "Content-Length: "+CTool::toString( generateHTML(content, "403 Forbidden") )+"\r\n";
-	send_init += "Content-Language: en\r\n";
-	send_init += "Content-Type: text/html; charset=utf-8\r\n";
-	send_init += "Connection: close\r\n\r\n";
-	send_init += content;
-	//send_init +="\0";	
-				
-	//String to Server
-	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
-
-	TRC_DEBUG("SEND-Buffer: (" + to_string(send_len) + ") --------------------------------" + "\r\n" + send_init);
-		
-	return 403;
 }
 
 //! \brief
@@ -295,7 +278,7 @@ int CHttp::requestToReferenceServer()
 	string send_init = "";
 	send_init += "" + mType + " /data.img HTTP/1.1\r\n";
 	send_init += "Host: " + mHostname + "\r\n";
-	send_init += "Cookie: tk=" + mAuthenticationToken + "; ts=" + mAuthenticationTimestamp + "\r\n";
+	send_init += "Cookie: overload=true; tk=" + mAuthenticationToken + "; ts=" + mAuthenticationTimestamp + "\r\n";
 	send_init += "Connection: keep-alive\r\n\r\n";
 		
 	//String to Server
