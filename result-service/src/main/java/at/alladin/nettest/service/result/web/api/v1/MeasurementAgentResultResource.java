@@ -1,13 +1,12 @@
 package at.alladin.nettest.service.result.web.api.v1;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -70,32 +69,9 @@ public class MeasurementAgentResultResource {
 			return ResponseEntity.badRequest().build();
 		}
 		
-		final List<BriefMeasurementResponse> responseList = storageService.getPagedBriefMeasurementResponseByAgentUuid(agentUuid, pageable);
+		final Page<BriefMeasurementResponse> responsePage = storageService.getPagedBriefMeasurementResponseByAgentUuid(agentUuid, pageable);
 		
-		return ResponseHelper.ok(new PageImpl<>(responseList, pageable, 1));
-	}
-
-	/**
-	 * Disassociate all measurements of this measurement agent.
-	 * All measurements of this measurement agent will be disassociated, i.e. the connection between measurement and measurement agent will be removed.
-	 * The measurements will no longer appear in the user's history and the measurements will no longer carry the agentUuid.
-	 * This feature allows end user's with privacy concerns to use this measurement tool without fear.
-	 *
-	 * @param agentUuid
-	 * @return
-	 */
-	@io.swagger.annotations.ApiOperation(value = "Disassociate all measurements of this measurement agent.", notes = "All measurements of this measurement agent will be disassociated, i.e. the connection between measurement and measurement agent will be removed. The measurements will no longer appear in the user's history and the measurements will no longer carry the agentUuid. This feature allows end user's with privacy concerns to use this measurement tool without fear.")
-	@io.swagger.annotations.ApiResponses({
-		@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ApiResponse.class),
-		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
-	})
-	@DeleteMapping(value = "/{agentUuid}/measurements", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<ApiResponse<DisassociateResponse>> disassociateAllMeasurements(@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid) {
-		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
-			return ResponseEntity.badRequest().build();
-		}
-		
-		return ResponseHelper.ok(storageService.disassociateAllMeasurements(agentUuid));
+		return ResponseHelper.ok(responsePage);
 	}
 
 	/**
@@ -154,6 +130,29 @@ public class MeasurementAgentResultResource {
 		
 		return ResponseHelper.ok(storageService.getDetailMeasurementByAgentAndMeasurementUuid(agentUuid, uuid, properties.getSettingsUuid(), locale));
 	}
+	
+	/**
+	 * Disassociate all measurements of this measurement agent.
+	 * All measurements of this measurement agent will be disassociated, i.e. the connection between measurement and measurement agent will be removed.
+	 * The measurements will no longer appear in the user's history and the measurements will no longer carry the agentUuid.
+	 * This feature allows end user's with privacy concerns to use this measurement tool without fear.
+	 *
+	 * @param agentUuid
+	 * @return
+	 */
+	@io.swagger.annotations.ApiOperation(value = "Disassociate all measurements of this measurement agent.", notes = "All measurements of this measurement agent will be disassociated, i.e. the connection between measurement and measurement agent will be removed. The measurements will no longer appear in the user's history and the measurements will no longer carry the agentUuid. This feature allows end user's with privacy concerns to use this measurement tool without fear.")
+	@io.swagger.annotations.ApiResponses({
+		@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ApiResponse.class),
+		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
+	})
+	@DeleteMapping(value = "/{agentUuid}/measurements", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<ApiResponse<DisassociateResponse>> disassociateAllMeasurements(@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid) {
+		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
+			return ResponseEntity.badRequest().build();
+		}
+		
+		return ResponseHelper.ok(storageService.disassociateAllMeasurements(agentUuid));
+	}
 
 	/**
 	 * Disassociate a single measurement.
@@ -171,7 +170,7 @@ public class MeasurementAgentResultResource {
 		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
 	})
 	@DeleteMapping(value = "/{agentUuid}/measurements/{uuid}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<ApiResponse<DisassociateResponse>> deleteMeasurement(
+	public ResponseEntity<ApiResponse<DisassociateResponse>> disassociateMeasurement(
 		@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid,
 		@ApiParam(value = "The measurement UUID", required = true) @PathVariable String uuid) {
 

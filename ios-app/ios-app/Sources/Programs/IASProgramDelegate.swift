@@ -18,7 +18,7 @@
 import Foundation
 
 ///
-protocol IASProgramDelegate {
+protocol IASProgramDelegate: class {
 
     func iasMeasurement(_ ias: IASProgram, didStartPhase phase: SpeedMeasurementPhase)
 

@@ -25,9 +25,10 @@ public class MeasurementAgent {
     let uuidKey: String
     let tcKey = "tc_accepted_version"
 
-    let controlService: ControlService
+    var controlService: ControlService! // !
+    public private(set) var resultService: ResultService? // !
 
-    var uuid: String? {
+    public private(set) var uuid: String? {
         get {
             return standardUserDefaults.string(forKey: uuidKey)
         }
@@ -51,7 +52,9 @@ public class MeasurementAgent {
     public init(configuration: MeasurementAgentConfiguration) {
         uuidKey = URL(string: configuration.controlServiceBaseUrl)?.host ?? "default_uuid_key" // TODO: based on controller url or system uuid
 
-        controlService = ControlService(baseURL: configuration.controlServiceBaseUrl)
+        controlService = ControlService(baseURL: configuration.controlServiceBaseUrl, agent: self)
+
+        resultService = ResultService(baseURL: "http://localhost:18082/api/v1", agent: self) // TODO: use baseUrl from settings request
 
         // TODO: check if registered -> get settings
     }
@@ -85,10 +88,10 @@ public class MeasurementAgent {
             //response.settings
 
             success()
-        }) { _ in
+        }, onFailure: { _ in
             // TODO
             failure()
-        }
+        })
     }
 
     public func updateSettings(success: (() -> Void)? = nil, failure: (() -> Void)? = nil) {
@@ -100,10 +103,10 @@ public class MeasurementAgent {
 
         controlService.getSettings(agentUuid: agentUuid, onSuccess: { _ in
             success?()
-        }) { _ in
+        }, onFailure: { _ in
             // TODO
             failure?()
-        }
+        })
     }
 
     public func newMeasurementRunner() -> MeasurementRunner? {
@@ -111,7 +114,19 @@ public class MeasurementAgent {
             return nil
         }
 
-        return MeasurementRunner(controlService: controlService, agentUuid: agentUuid, programOrder: programOrder, programs: programs)
+        return MeasurementRunner(agent: self, controlService: controlService, agentUuid: agentUuid, programOrder: programOrder, programs: programs)
+    }
+
+    public func getSpeedMeasurementPeers(onSuccess: @escaping ([SpeedMeasurementPeerResponse.SpeedMeasurementPeer]) -> Void, onFailure: @escaping (Error) -> Void) {
+        controlService.getSpeedMeasuremnetPeers(onSuccess: { response in
+            if response.speedMeasurementPeers.isEmpty {
+                onFailure(NSError(domain: "todo", code: -1234, userInfo: nil)) // TODO: improve error
+            } else {
+                onSuccess(response.speedMeasurementPeers)
+            }
+        }, onFailure: { error in
+            onFailure(error)
+        })
     }
 
     public func newIPConnectivityInfo() -> IPConnectivityInfo {
@@ -119,12 +134,12 @@ public class MeasurementAgent {
         var controlServiceV6: ControlService?
 
         if Thread.isMainThread {
-            controlServiceV4 = ControlService(baseURL: "http://127.0.0.1:18080/api/v1")
-            controlServiceV6 = ControlService(baseURL: "http://[::1]:18080/api/v1")
+            controlServiceV4 = ControlService(baseURL: "http://127.0.0.1:18080/api/v1", agent: self)
+            controlServiceV6 = ControlService(baseURL: "http://[::1]:18080/api/v1", agent: self)
         } else {
             DispatchQueue.main.sync {
-                controlServiceV4 = ControlService(baseURL: "http://127.0.0.1:18080/api/v1")
-                controlServiceV6 = ControlService(baseURL: "http://[::1]:18080/api/v1")
+                controlServiceV4 = ControlService(baseURL: "http://127.0.0.1:18080/api/v1", agent: self)
+                controlServiceV6 = ControlService(baseURL: "http://[::1]:18080/api/v1", agent: self)
             }
         }
 

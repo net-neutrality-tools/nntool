@@ -33,13 +33,22 @@ class IASProgram: NSObject, ProgramProtocol {
 
     var config: IasMeasurementConfiguration?
 
+    var serverAddress: String?
+    var serverPort: String?
+
     private var currentPhase = SpeedMeasurementPhase.initialize
 
     var result: [AnyHashable: Any]?
 
-    private var startTimeNs: UInt64?
+    private var relativeStartTimeNs: UInt64?
 
-    func run() throws -> SubMeasurementResult {
+    private var interfaceTrafficDownloadStart: InterfaceTraffic?
+    private var interfaceTrafficUploadStart: InterfaceTraffic?
+    private var interfaceTrafficUploadEnd: InterfaceTraffic?
+
+    func run(relativeStartTimeNs: UInt64) throws -> SubMeasurementResult {
+        self.relativeStartTimeNs = relativeStartTimeNs
+
         speed.speedDelegate = self
 
         speed.measurementLoad()
@@ -48,9 +57,17 @@ class IASProgram: NSObject, ProgramProtocol {
 
         speed.platform = "mobile"
 
-        speed.targets = ["peer-ias-de-01-ipv4"]
-        speed.targetsRtt = ["peer-ias-de-01-ipv4"]
-        speed.targetsPort = "80"
+        if let addr = serverAddress, let port = serverPort {
+            speed.targetsTld = ""
+            speed.targets = [addr]
+            speed.targetsRtt = [addr]
+            speed.targetsPort = port
+        } else {
+            speed.targetsTld = "net-neutrality.tools"
+            speed.targets = ["peer-ias-de-01-ipv4"]
+            speed.targetsRtt = ["peer-ias-de-01-ipv4"]
+            speed.targetsPort = "80"
+        }
 
         speed.performRttMeasurement      = true
         speed.performDownloadMeasurement = true
@@ -81,13 +98,13 @@ class IASProgram: NSObject, ProgramProtocol {
             }
         }
 
-        let semaphoreResult = measurementFinishedSemaphore.wait(timeout: DispatchTime.distantFuture) // TODO: timeout
+        let semaphoreResult = measurementFinishedSemaphore.wait(timeout: DispatchTime.distantFuture)
         if semaphoreResult == .timedOut {
             cancel()
             // TODO: mark measurement as timed out
         }
 
-        let endTimeNs = TimeHelper.currentTimeNs()
+        let relativeEndTimeNs = TimeHelper.currentTimeNs() - relativeStartTimeNs
 
         let res = IasMeasurementResult()
 
@@ -98,6 +115,13 @@ class IASProgram: NSObject, ProgramProtocol {
             res.status = .failed // or .aborted
             return res
         }
+
+        res.relativeStartTimeNs = relativeStartTimeNs
+        res.relativeEndTimeNs = relativeEndTimeNs
+
+        // TODO
+
+        res.status = .finished
 
         if let rttInfo = r["rtt_info"] as? [AnyHashable: Any] {
             res.durationRttNs = rttInfo["duration_ns"] as? UInt64
@@ -121,9 +145,8 @@ class IASProgram: NSObject, ProgramProtocol {
             res.bytesDownloadIncludingSlowStart = lastDownloadInfo["bytes_including_slow_start"] as? UInt64
             res.durationDownloadNs = lastDownloadInfo["duration_ns_total"] as? UInt64
 
-            res.connectionInfo?.actualNumStreamsDownload = lastDownloadInfo["num_streams_end"] as? Int // TODO: this might not be correct
-            //res.connectionInfo?.agentInterfaceDownloadMeasurementTraffic // TODO
-            res.connectionInfo?.requestedNumStreamsDownload = lastDownloadInfo["num_streams_start"] as? Int // TODO: this might not be correct
+            res.connectionInfo?.actualNumStreamsDownload = lastDownloadInfo["num_streams_end"] as? Int
+            res.connectionInfo?.requestedNumStreamsDownload = lastDownloadInfo["num_streams_start"] as? Int
 
             res.connectionInfo?.webSocketInfoDownload = WebSocketInfoDto()
             res.connectionInfo?.webSocketInfoDownload?.frameCount = lastDownloadInfo["frame_count"] as? Int
@@ -139,9 +162,8 @@ class IASProgram: NSObject, ProgramProtocol {
             res.bytesUploadIncludingSlowStart = lastUploadInfo["bytes_including_slow_start"] as? UInt64
             res.durationUploadNs = lastUploadInfo["duration_ns_total"] as? UInt64
 
-            res.connectionInfo?.actualNumStreamsUpload = lastUploadInfo["num_streams_end"] as? Int // TODO: this might not be correct
-            //res.connectionInfo?.agentInterfaceUploadMeasurementTraffic // TODO
-            res.connectionInfo?.requestedNumStreamsUpload = lastUploadInfo["num_streams_start"] as? Int // TODO: this might not be correct
+            res.connectionInfo?.actualNumStreamsUpload = lastUploadInfo["num_streams_end"] as? Int
+            res.connectionInfo?.requestedNumStreamsUpload = lastUploadInfo["num_streams_start"] as? Int
 
             res.connectionInfo?.webSocketInfoUpload = WebSocketInfoDto()
             res.connectionInfo?.webSocketInfoUpload?.frameCount = lastUploadInfo["frame_count"] as? Int
@@ -153,27 +175,43 @@ class IASProgram: NSObject, ProgramProtocol {
         }
 
         if let timeInfo = r["time_info"] as? [AnyHashable: UInt64] {
-            res.relativeStartTimeRttNs = timeInfo["rtt_start"]
-            res.relativeStartTimeDownloadNs = timeInfo["download_start"]
-            res.relativeStartTimeUploadNs = timeInfo["upload_start"]
+            if let rttStart = timeInfo["rtt_start"] {
+                res.relativeStartTimeRttNs = rttStart - relativeStartTimeNs
+            }
+
+            if let dlStart = timeInfo["download_start"] {
+                res.relativeStartTimeDownloadNs = dlStart - relativeStartTimeNs
+            }
+
+            if let ulStart = timeInfo["upload_start"] {
+                res.relativeStartTimeUploadNs = ulStart - relativeStartTimeNs
+            }
         }
 
-        //res.connectionInfo?.address
+        res.connectionInfo?.address = serverAddress
         //res.connectionInfo?.encrypted
         //res.connectionInfo?.encryptionInfo
-        //res.connectionInfo?.port
+        if let serverPort = serverPort, let port = UInt16(serverPort) {
+            res.connectionInfo?.port = port
+        }
         //res.connectionInfo?.serverMss
         //res.connectionInfo?.serverMtu
         //res.connectionInfo?.tcpOptSackRequested
         //res.connectionInfo?.tcpOptWscaleRequested
-        //res.connectionInfo?.agentInterfaceTotalTraffic
 
-        res.relativeStartTimeNs = startTimeNs // TODO: relative to measurement start
-        res.relativeEndTimeNs = endTimeNs // TODO: relative to measurement start
+        if let dlStartTraffic = interfaceTrafficDownloadStart {
+            if let ulStartTraffic = interfaceTrafficUploadStart {
+                res.connectionInfo?.agentInterfaceDownloadMeasurementTraffic = TrafficDto.fromInterfaceTraffic(ulStartTraffic.differenceTo(dlStartTraffic))
+            }
+        }
 
-        // TODO
+        if let ulStartTraffic = interfaceTrafficUploadStart, let ulEndTraffic = interfaceTrafficUploadEnd {
+            res.connectionInfo?.agentInterfaceUploadMeasurementTraffic = TrafficDto.fromInterfaceTraffic(ulEndTraffic.differenceTo(ulStartTraffic))
+        }
 
-        res.status = .finished
+        if let dlStartTraffic = interfaceTrafficDownloadStart, let ulEndTraffic = interfaceTrafficUploadEnd {
+            res.connectionInfo?.agentInterfaceTotalTraffic = TrafficDto.fromInterfaceTraffic(ulEndTraffic.differenceTo(dlStartTraffic))
+        }
 
         return res
     }
@@ -188,7 +226,7 @@ extension IASProgram: SpeedDelegate {
     func showKpisFromResponse(response: [AnyHashable: Any]!) {
         //logger.debug(response.description)
 
-        logger.debug("showKpisFromResponse (delegate: \(delegate))")
+        logger.debug("showKpisFromResponse (delegate: \(String(describing: delegate)))")
 
         logger.debug(response["cmd"])
         logger.debug(response["test_case"])
@@ -199,71 +237,91 @@ extension IASProgram: SpeedDelegate {
 
         if let cmd = response["cmd"] as? String {
             switch cmd {
-            case "info":
-                let newPhase = SpeedMeasurementPhase(rawValue: response["test_case"] as? String ?? "init") ?? currentPhase
-                if newPhase != currentPhase {
-                    currentPhase = newPhase
-                    delegate?.iasMeasurement(self, didStartPhase: currentPhase)
-                }
-            case "report":
-                if let primaryValue: Double = {
-                    switch currentPhase {
-                    case .rtt: return (response["rtt_info"] as? [AnyHashable: Any])?[/*"min_ns"*/"average_ns"] as? Double
-                    case .download: return (response["download_info"] as? [[AnyHashable: Any]])?.last?["throughput_avg_bps"] as? Double
-                    case .upload: return (response["upload_info"] as? [[AnyHashable: Any]])?.last?["throughput_avg_bps"] as? Double
-                    default:
-                        return nil
-                    }
-                    }() {
-                    delegate?.iasMeasurement(self, didMeasurePrimaryValue: primaryValue, inPhase: currentPhase)
-                }
-
-                var phaseProgress: Double?
-
-                switch currentPhase {
-                case .initialize:
-                    break
-                case .rtt:
-                    if  let rttInfo = response["rtt_info"] as? [String: Any],
-                        let numReceived = rttInfo["num_received"] as? Int,
-                        let numMissing = rttInfo["num_missing"] as? Int,
-                        let numError = rttInfo["num_error"] as? Int//,
-
-                        /*let minNs = rttInfo["min_ns"] as? Double,
-                        let maxNs = rttInfo["max_ns"] as? Double,
-                        let medianNs = rttInfo["median_ns"] as? Double*/ {
-
-                        // TODO: single rtt values
-                        logger.debug("--!!-- RTT: \(rttInfo["min_ns"]), \(rttInfo["max_ns"]), \(rttInfo["median_ns"]), \(numReceived)")
-
-                        phaseProgress = Double(numReceived + numMissing + numError) / 10.0 // TODO: rtt config packet count?
-                    }
-                case .download:
-                    if  let downloadInfo = response["download_info"] as? [[String: Any]],
-                        let lastDownloadInfo = downloadInfo.last,
-                        let durationNs = lastDownloadInfo["duration_ns"] as? Double {
-
-                        phaseProgress = (durationNs/* / Double(NSEC_PER_MSEC)*/) / (10 * Double(NSEC_PER_SEC))/*self.speed.measureTime.doubleValue*/
-                    }
-                case .upload:
-                    if  let uploadInfo = response["upload_info"] as? [[String: Any]],
-                        let lastUploadInfo = uploadInfo.last,
-                        let durationNs = lastUploadInfo["duration_ns"] as? Double {
-
-                        phaseProgress = (durationNs/* / Double(NSEC_PER_MSEC)*/) / (10 * Double(NSEC_PER_SEC))/*self.speed.measureTime.doubleValue*/
-                    }
-                }
-
-                if let pp = phaseProgress {
-                    logger.debug("PHASE_PROGRESS: \(phaseProgress)")
-                    delegate?.iasMeasurement(self, didUpdateProgress: pp, inPhase: currentPhase)
-                }
-            case "finish":
-                delegate?.iasMeasurement(self, didFinishPhase: currentPhase)
-            default:
-                break
+            case "info": handleCmdInfo(response)
+            case "report": handleCmdReport(response)
+            case "finish": handleCmdFinish(response)
+            default: break
             }
         }
+    }
+
+    private func handleCmdInfo(_ response: [AnyHashable: Any]!) {
+        let newPhase = SpeedMeasurementPhase(rawValue: response["test_case"] as? String ?? "init") ?? currentPhase
+        if newPhase != currentPhase {
+            currentPhase = newPhase
+
+            switch newPhase {
+            case .download: interfaceTrafficDownloadStart = InterfaceTrafficInfo.getWwanAndWifiNetworkInterfaceTraffic()
+            case .upload: interfaceTrafficUploadStart = InterfaceTrafficInfo.getWwanAndWifiNetworkInterfaceTraffic()
+            default: break
+            }
+
+            delegate?.iasMeasurement(self, didStartPhase: currentPhase)
+        }
+    }
+
+    private func handleCmdReport(_ response: [AnyHashable: Any]!) {
+        if let primaryValue: Double = {
+            switch currentPhase {
+            case .rtt: return (response["rtt_info"] as? [AnyHashable: Any])?[/*"min_ns"*/"average_ns"] as? Double
+            case .download: return (response["download_info"] as? [[AnyHashable: Any]])?.last?["throughput_avg_bps"] as? Double
+            case .upload: return (response["upload_info"] as? [[AnyHashable: Any]])?.last?["throughput_avg_bps"] as? Double
+            default:
+                return nil
+            }
+            }() {
+            delegate?.iasMeasurement(self, didMeasurePrimaryValue: primaryValue, inPhase: currentPhase)
+        }
+
+        var phaseProgress: Double?
+
+        switch currentPhase {
+        case .initialize:
+            break
+        case .rtt:
+            if  let rttInfo = response["rtt_info"] as? [String: Any],
+                let numReceived = rttInfo["num_received"] as? Int,
+                let numMissing = rttInfo["num_missing"] as? Int,
+                let numError = rttInfo["num_error"] as? Int//,
+
+                /*let minNs = rttInfo["min_ns"] as? Double,
+                 let maxNs = rttInfo["max_ns"] as? Double,
+                 let medianNs = rttInfo["median_ns"] as? Double*/ {
+
+                    // TODO: single rtt values
+                    logger.debug("--!!-- RTT: \(String(describing: rttInfo["min_ns"])), \(String(describing: rttInfo["max_ns"])), \(String(describing: rttInfo["median_ns"])), \(numReceived)")
+
+                    phaseProgress = Double(numReceived + numMissing + numError) / 10.0 // TODO: rtt config packet count?
+            }
+        case .download:
+            if  let downloadInfo = response["download_info"] as? [[String: Any]],
+                let lastDownloadInfo = downloadInfo.last,
+                let durationNs = lastDownloadInfo["duration_ns"] as? Double {
+
+                phaseProgress = (durationNs/* / Double(NSEC_PER_MSEC)*/) / (10 * Double(NSEC_PER_SEC))/*self.speed.measureTime.doubleValue*/
+            }
+        case .upload:
+            if  let uploadInfo = response["upload_info"] as? [[String: Any]],
+                let lastUploadInfo = uploadInfo.last,
+                let durationNs = lastUploadInfo["duration_ns"] as? Double {
+
+                phaseProgress = (durationNs/* / Double(NSEC_PER_MSEC)*/) / (10 * Double(NSEC_PER_SEC))/*self.speed.measureTime.doubleValue*/
+            }
+        }
+
+        if let pp = phaseProgress {
+            logger.debug("PHASE_PROGRESS: \(String(describing: phaseProgress))")
+            delegate?.iasMeasurement(self, didUpdateProgress: pp, inPhase: currentPhase)
+        }
+    }
+
+    private func handleCmdFinish(_ response: [AnyHashable: Any]!) {
+        switch currentPhase {
+        case .upload: interfaceTrafficUploadEnd = InterfaceTrafficInfo.getWwanAndWifiNetworkInterfaceTraffic()
+        default: break
+        }
+
+        delegate?.iasMeasurement(self, didFinishPhase: currentPhase)
     }
 
     func measurementDidLoad(withResponse response: [AnyHashable: Any]!, withError error: Error!) {
@@ -271,8 +329,6 @@ extension IASProgram: SpeedDelegate {
         //logger.debug(error)
 
         logger.debug("measurementDidLoad")
-
-        startTimeNs = TimeHelper.currentTimeNs()
 
         speed.measurementStart()
         delegate?.iasMeasurement(self, didStartPhase: .initialize)

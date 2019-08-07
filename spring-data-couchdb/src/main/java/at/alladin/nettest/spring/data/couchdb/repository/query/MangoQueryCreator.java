@@ -49,7 +49,7 @@ public class MangoQueryCreator extends AbstractQueryCreator<String, Selector> {
 		return Expression.eq("docType", docType);
 	}
 	
-	private String toCustomDotPath (final PropertyPath propertyPath) {
+	private String toCustomDotPath(final PropertyPath propertyPath) {
 		String segment = propertyPath.getSegment();
 		try {
 			final Field field = propertyPath.getOwningType().getType().getDeclaredField(segment);
@@ -162,7 +162,7 @@ public class MangoQueryCreator extends AbstractQueryCreator<String, Selector> {
 		return queryBuilder.build();
 	}
 	
-	protected com.cloudant.client.api.query.Sort[] parseSortObject (final Sort sort) {
+	protected com.cloudant.client.api.query.Sort[] parseSortObject(final Sort sort) {
 		final List<com.cloudant.client.api.query.Sort> sortList = sort.get().map(o -> {
 			return o.getDirection() == Direction.DESC ? 
 					com.cloudant.client.api.query.Sort.desc(transformSortQuery(o.getProperty())) : com.cloudant.client.api.query.Sort.asc(transformSortQuery(o.getProperty()));
@@ -171,16 +171,18 @@ public class MangoQueryCreator extends AbstractQueryCreator<String, Selector> {
 		return sortList.toArray(new com.cloudant.client.api.query.Sort[] {});
 	}
 	
-	private String transformSortQuery (final String sortString) {
+	private String transformSortQuery(final String sortString) {
 		if (sortString == null) {
 			return null;
 		}
+		
 		try {
 			final PropertyPath sortPath = PropertyPath.from(sortString, resultClass);
 			return toCustomDotPath(sortPath);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		
 		return sortString;
 	}
 }

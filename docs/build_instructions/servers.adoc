@@ -31,15 +31,15 @@ curl -X POST \
   -d @default_couchDB_data.json
 ```
 
-Additional configuration regarding the measurement database is located in the `default_couchdb_data_measurement.json`.
-As this relates to a different database (the measurement database) another request needs to be made.
+Additional configuration regarding the measurement database is located in the `default_couchdb_design_doc_measurement.json`.
+As this relates to a different database (the measurement database) another request needs to be made:
 
 ```
 curl -X POST \
-  http://localhost:15984/measurement/_index \
+  http://localhost:15984/measurement/_design/Measurement \
   -H 'Content-Type: application/json' \
   -H 'cache-control: no-cache' \
-  -d @default_couchdb_data_measurement.json
+  -d @default_couchdb_design_doc_measurement.json
 ```
 
 

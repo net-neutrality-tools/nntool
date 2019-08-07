@@ -18,22 +18,22 @@
 import Foundation
 
 /// Class for all kind of versions that the server reveals.
-class VersionResponse: Codable {
+public class VersionResponse: Codable {
 
     /// Controller service version number.
-    var controllerServiceVersion: String?
+    public var controllerServiceVersion: String?
 
     /// Collector service version number.
-    var collectorServiceVersion: String?
+    public var collectorServiceVersion: String?
 
     /// Result service version number.
-    var resultServiceVersion: String?
+    public var resultServiceVersion: String?
 
     /// Map service version number.
-    var mapServiceVersion: String?
+    public var mapServiceVersion: String?
 
     /// Statistic service version number.
-    var statisticServiceVersion: String?
+    public var statisticServiceVersion: String?
 
     ///
     enum CodingKeys: String, CodingKey {

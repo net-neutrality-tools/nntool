@@ -37,13 +37,19 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.OperatingSy
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
-	LmapReportModelMapperImpl.class
+	LmapReportModelMapperImpl.class,
+	DateTimeMapperImpl.class,
+	RttInfoDtoMapperImpl.class,
+	MeasurementResultNetworkPointInTimeDtoMapperImpl.class
 })
 @AutoConfigureJsonTesters
 public class LmapReportModelMapperTest {
 
 	@Autowired
 	private LmapReportModelMapper lmapReportModelMapper;
+	
+	@Autowired
+	private DateTimeMapper dateTimeMapper;
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -69,7 +75,7 @@ public class LmapReportModelMapperTest {
 		assertNull(measurement.getUuid());
 		assertNull(measurement.getOpenDataUuid());
 		
-		assertEquals(lmapReportModelMapper.map(lmapReportDto.getDate()), measurement.getSubmitTime());
+		assertEquals(dateTimeMapper.map(lmapReportDto.getDate()), measurement.getSubmitTime());
 		assertEquals(lmapReportDto.getAgentId(), agentInfo.getUuid());
 		
 		assertEquals(addReqInfo.getLanguage(),  agentInfo.getLanguage());
@@ -88,8 +94,8 @@ public class LmapReportModelMapperTest {
 		assertEquals(addReqInfo.getAppVersionCode(), agentInfo.getAppVersionCode());
 		assertEquals(addReqInfo.getAppGitRevision(), agentInfo.getAppGitRevision());
 		
-		assertEquals(lmapReportModelMapper.map(timeBasedResultDto.getStartTime()), measurementTime.getStartTime());
-		assertEquals(lmapReportModelMapper.map(timeBasedResultDto.getEndTime()), measurementTime.getEndTime());
+		assertEquals(dateTimeMapper.map(timeBasedResultDto.getStartTime()), measurementTime.getStartTime());
+		assertEquals(dateTimeMapper.map(timeBasedResultDto.getEndTime()), measurementTime.getEndTime());
 		assertEquals(timeBasedResultDto.getDurationNs(), measurementTime.getDurationNs());
 		
 		// TODO: more

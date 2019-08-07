@@ -30,6 +30,11 @@ public class RttDto: Codable {
 
     }
 
+    public init(rttNs: UInt64?, relativeTimeNs: UInt64?) {
+        self.rttNs = rttNs
+        self.relativeTimeNs = relativeTimeNs
+    }
+
     ///
     enum CodingKeys: String, CodingKey {
         case rttNs = "rtt_ns"

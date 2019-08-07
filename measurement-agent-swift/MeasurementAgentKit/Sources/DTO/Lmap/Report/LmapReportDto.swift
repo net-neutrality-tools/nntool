@@ -48,7 +48,7 @@ class LmapReportDto: Codable {
         case agentId = "agent-id"
         case groupId = "group-id"
         case measurementPoint = "measurement-point"
-        case results
+        case results = "result"
         case additionalRequestInfo = "additional_request_info"
         case timeBasedResult = "time_based_result"
     }

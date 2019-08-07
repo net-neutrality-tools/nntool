@@ -20,6 +20,9 @@ import Foundation
 /// Registration request DTO. It contains the fields needed to register a new measurement agent.
 class RegistrationRequest: Codable {
 
+    // TODO: use identifiers instead of fully qualified class names...
+    let deserializeType = "at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest"
+
     /// Boolean whether the measurement agent has accepted the presented terms and conditions.
     var termsAndConditionsAccepted: Bool?
 
@@ -34,5 +37,6 @@ class RegistrationRequest: Codable {
         case termsAndConditionsAccepted = "terms_and_conditions_accepted"
         case termsAndConditionsAcceptedVersion = "terms_and_conditions_accepted_version"
         case groupName = "group_name"
+        case deserializeType = "deserialize_type"
     }
 }
