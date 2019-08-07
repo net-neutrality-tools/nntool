@@ -82,4 +82,67 @@ class VersionResponseTests: XCTestCase {
             XCTFail("decoding failed")
         }
     }
+
+    func testX() {
+        let jsonString = """
+        {
+            "deserialize_type" : "at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse",
+            "groups" : [ {
+            "title" : "key_group_overview",
+            "description" : "description_group_overview",
+            "icon_character" : "r",
+            "items" : [ {
+            "key" : null,
+            "title" : "uuid",
+            "value" : "4f78be1c-4621-4732-946f-f107bb6fee6c",
+            "unit" : null
+            }, {
+            "key" : null,
+            "title" : "measurement_system_uuid",
+            "value" : "f0b6d3f1-40c8-4835-82df-747b28caa326",
+            "unit" : null
+            } ]
+            }, {
+            "title" : "key_group_device",
+            "description" : "description_group_device",
+            "icon_character" : "b",
+            "items" : [ {
+            "key" : null,
+            "title" : "translate_osName",
+            "value" : "iOS",
+            "unit" : null
+            }, {
+            "key" : null,
+            "title" : "translate_version",
+            "value" : "12.2",
+            "unit" : null
+            }, {
+            "key" : null,
+            "title" : "translate_codename",
+            "value" : "iPhone",
+            "unit" : null
+            }, {
+            "key" : null,
+            "title" : "translate_model",
+            "value" : "iPhone",
+            "unit" : null
+            }, {
+            "key" : null,
+            "title" : "translate_timezone",
+            "value" : "Europe/Vienna",
+            "unit" : null
+            } ]
+            } ],
+            "share_measurement_text" : "share_text_intro\\nshare_system f0b6d3f1-40c8-4835-82df-747b28caa326"
+        }
+        """
+
+        // swiftlint:disable all
+        
+        let vr = try! JSONDecoder().decode(DetailMeasurementResponse.self, from: jsonString.data(using: .utf8)!)
+        
+        print(vr)
+        
+        // swiftlint:enable all
+    }
 }

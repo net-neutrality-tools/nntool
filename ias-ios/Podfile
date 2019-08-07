@@ -20,6 +20,8 @@ use_frameworks!
 pod 'FMDB', '>= 2.7.2'
 pod 'CocoaLumberjack', '>= 3.4.2'
 pod 'PocketSocket', :path => '../PocketSocket'
+
+pod 'nntool-shared-swift', :path => '../nntool-shared-swift'
 pod 'QoSKit', :path => '../qos-client-swift'
 
 target 'Speed'

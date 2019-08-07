@@ -107,7 +107,7 @@
 
         /*!
          *      \author zafaco GmbH <info@zafaco.de>
-         *      \date Last update: 2019-07-03
+         *      \date Last update: 2019-07-24
          *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
          */
 
@@ -522,15 +522,15 @@
                     outputToHtml('Measurement running', 'status');
                     var output = '';
 
-                    if (data.test_case === 'rtt' && data.rtt_info.average_ns !== 0)
+                    if (data.test_case === 'rtt' && typeof data.rtt_info !== 'undefined' && data.rtt_info.average_ns !== 0)
                     {
                         outputToHtml(data.rtt_info.average_ns, 'rtt');
                     }
-                    if (data.test_case === 'download' && data.download_info[data.download_info.length-1].throughput_avg_bps !== 0)
+                    if (data.test_case === 'download' && typeof data.download_info !== 'undefined' && data.download_info[data.download_info.length-1].throughput_avg_bps !== 0)
                     {
                         outputToHtml((data.download_info[data.download_info.length-1].throughput_avg_bps / 1000 / 1000).toFixed(2), 'download');
                     }
-                    if (data.test_case === 'upload' && data.upload_info[data.upload_info.length-1].throughput_avg_bps !== 0)
+                    if (data.test_case === 'upload' && typeof data.upload_info !== 'undefined' && data.upload_info[data.upload_info.length-1].throughput_avg_bps !== 0)
                     {
                         outputToHtml((data.upload_info[data.upload_info.length-1].throughput_avg_bps / 1000 / 1000).toFixed(2), 'upload');
                     }

@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import QoSKit
+import CodableJSON
 
 class QoSViewController: UIViewController {
 
@@ -15,8 +16,8 @@ class QoSViewController: UIViewController {
     
     @IBOutlet private var kpisTextView: UITextView?
 
-    private static let qosServiceAddress = "localhost"
-    private static let qosServicePort = "5233"
+    private static let qosServiceAddress = JSON("localhost")
+    private static let qosServicePort = JSON("5233")
     
     private static let objectives: QoSObjectives = [
         "TCP": [
@@ -198,6 +199,10 @@ class QoSViewController: UIViewController {
 }
 
 extension QoSViewController: QoSTaskExecutorDelegate {
+    
+    func taskExecutorDidStop(_ taskExecutor: QoSTaskExecutor) {
+        
+    }
     
     func taskExecutorDidStart(_ taskExecutor: QoSTaskExecutor, withTaskGroups groups: [QoSTaskGroup]) {
 

@@ -24,11 +24,9 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurem
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
 
-@Mapper(componentModel = "spring")
-public interface BriefMeasurementResponseMapper extends DateTimeMapper {
+@Mapper(componentModel = "spring", uses = { DateTimeMapper.class })
+public interface BriefMeasurementResponseMapper {
 	
-	List<BriefMeasurementResponse> map (List<Measurement> measurementList);
-
 	@Mappings({
 		@Mapping(target="firstAccurateGeoLocation", expression="java(parseFirstGeoLocation(measurement))"),
 		@Mapping(target="startTime", source="measurementTime.startTime"),
@@ -37,7 +35,7 @@ public interface BriefMeasurementResponseMapper extends DateTimeMapper {
 		@Mapping(target="measurements", expression="java(parseMeasurementMap(measurement))"),
 		@Mapping(target="networkTypeName", expression="java(parseNetworkName(measurement))")
 	})
-	BriefMeasurementResponse map (Measurement measurement);
+	BriefMeasurementResponse map(Measurement measurement);
 	
 	@Mappings({
 		@Mapping(target="averageCpuUsage", source="osInfo.cpuUsage.average"),
@@ -47,7 +45,7 @@ public interface BriefMeasurementResponseMapper extends DateTimeMapper {
 		@Mapping(target="osName", source="osInfo.name"),
 		@Mapping(target="osVersion", source="osInfo.version"),
 	})
-	BriefDeviceInfo map (DeviceInfo deviceInfo);
+	BriefDeviceInfo map(DeviceInfo deviceInfo);
 	
 	@Mappings({
 		@Mapping(target="objectiveCount", expression="java(qosMeasurement.getResults().size())"),

@@ -31,6 +31,15 @@ public class TrafficDto: Codable {
         case bytesRx = "bytes_rx"
         case bytesTx = "bytes_tx"
     }
+
+    public class func fromInterfaceTraffic(_ it: InterfaceTraffic) -> TrafficDto {
+        let t = TrafficDto()
+
+        t.bytesTx = UInt64(it.tx)
+        t.bytesRx = UInt64(it.rx)
+
+        return t
+    }
 }
 
 /// Contains information about the connection(s) used for the speed measurement.
@@ -40,7 +49,7 @@ public class ConnectionInfoDto: Codable {
     public var address: String?
 
     /// Port used for the communication.
-    public var port: Int?
+    public var port: UInt16?
 
     /// Indicates if the communication with the measurement server will be encrypted.
     public var encrypted: Bool?

@@ -39,7 +39,7 @@ class ApiRequestHelper {
             let preferredLanguages = Locale.preferredLanguages
 
             if preferredLanguages.count < 1 {
-                return "en" //"de"
+                return "en"
             }
 
             let sep = preferredLanguages[0].components(separatedBy: "-")

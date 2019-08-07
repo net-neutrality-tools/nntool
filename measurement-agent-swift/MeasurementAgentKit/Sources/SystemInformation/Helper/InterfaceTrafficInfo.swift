@@ -45,11 +45,26 @@ public struct InterfaceTraffic {
 
         tx += other.tx
         rx += other.rx
+
+        // TODO: overflow of UInt32 could happen (use UInt64 internally)
     }
 
     public func differenceTo(_ previous: InterfaceTraffic) -> InterfaceTraffic {
-        // TODO: check overflow!
-        return InterfaceTraffic(tx: tx - previous.tx, rx: rx - previous.rx)
+        var txDiff: UInt32 = 0
+        if tx < previous.tx {
+            txDiff += UInt32.max - previous.tx + tx
+        } else {
+            txDiff = tx - previous.tx
+        }
+
+        var rxDiff: UInt32 = 0
+        if rx < previous.rx {
+            rxDiff += UInt32.max - previous.rx + rx
+        } else {
+            rxDiff = rx - previous.rx
+        }
+
+        return InterfaceTraffic(tx: txDiff, rx: rxDiff)
     }
 
     public func classify() -> (InterfaceTrafficClassification, InterfaceTrafficClassification) {
@@ -98,6 +113,8 @@ public class InterfaceTrafficInfo {
 
             trafficDict[name] = InterfaceTraffic(tx: data.pointee.ifi_obytes, rx: data.pointee.ifi_ibytes)
         }
+
+        freeifaddrs(addrs)
 
         return trafficDict
     }

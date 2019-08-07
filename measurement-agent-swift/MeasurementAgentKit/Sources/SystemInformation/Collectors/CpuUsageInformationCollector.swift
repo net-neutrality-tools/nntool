@@ -30,7 +30,7 @@ class CpuUsageInformationCollector: BaseInformationCollector {
         result.value = cpuUsageInfo.getCurrentCpuUsagePercent()
         result.relativeTimeNs = currentRelativeTimeNs()
 
-        logger.debug("CPU: \(result.value)")
+        logger.debug("CPU: \(String(describing: result.value))")
 
         timeBasedResult.cpuUsage?.append(result)
     }

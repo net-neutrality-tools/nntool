@@ -20,7 +20,7 @@ import nntool_shared_swift
 
 extension GeoLocationDto: CustomDebugStringConvertible {
 
-    var debugDescription: String {
+    public var debugDescription: String {
         return JsonHelper.debugPrintObject(self)
     }
 }

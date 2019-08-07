@@ -8,6 +8,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -265,22 +266,19 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Override
 	public SettingsResponse getSettings(String settingsUuid) throws StorageServiceException {
-		final Settings settings;
 		try {
-			settings = settingsRepository.findByUuid(settingsUuid);
+			return settingsResponseMapper.map(settingsRepository.findByUuid(settingsUuid));
 		} catch (Exception ex) {
 			throw new StorageServiceException(ex);
 		}
-		
-		return settingsResponseMapper.map(settings);
-		
 	}
 	
 	@Override
-	public List<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid (final String measurementAgentUuid, 
+	public Page<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid(final String measurementAgentUuid, 
 			final Pageable pageable) {
-		final List<Measurement> measurementList = measurementRepository.findByAgentInfoUuidOrderByMeasurementTimeStartTimeDesc(measurementAgentUuid, pageable);
-		return briefMeasurementResponseMapper.map(measurementList);
+		return measurementRepository
+			.findByAgentInfoUuidOrderByMeasurementTimeStartTimeDesc(measurementAgentUuid, pageable)
+			.map(briefMeasurementResponseMapper::map);
 	}
 	
 	@Override
@@ -290,7 +288,7 @@ public class CouchDbStorageService implements StorageService {
 		
 		final FullMeasurementResponse ret = fullMeasurementResponseMapper.map(measurement);
 		
-		//evaluate the qos stuff 
+		//evaluate the QoS stuff 
 		final QoSMeasurement qosMeasurement = (QoSMeasurement) measurement.getMeasurements().get(MeasurementTypeDto.QOS);
 		if (qosMeasurement != null) {
 			final FullQoSMeasurement fullQosMeasurement = qosEvaluationService.evaluateQoSMeasurement(qosMeasurement, locale);
@@ -301,7 +299,7 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	@Override
-	public DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid (String measurementAgentUuid, String measurementUuid, final String settingsUuid, final Locale locale) throws StorageServiceException {
+	public DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid, String measurementUuid, final String settingsUuid, final Locale locale) throws StorageServiceException {
 		final Measurement measurement = obtainMeasurement(measurementAgentUuid, measurementUuid);
 		//TODO: default settings?
 		final Settings settings = settingsRepository.findByUuid(settingsUuid);

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="berec-icons.ttf">
+            <string>berec-icons</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HomeScreenDeviceInfoView" customModule="ios_app" customModuleProvider="target"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="QoSGroupCollectionViewCell" customModule="ios_app" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="282" height="121"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="à" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NSF-Bl-WtG" userLabel="Icon Label">
+                    <rect key="frame" x="121" y="5" width="40" height="40"/>
+                    <fontDescription key="fontDescription" name="berec-icons" family="berec-icons" pointSize="40"/>
+                    <color key="textColor" red="0.57254901960000004" green="0.1215686275" blue="0.33725490200000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ow2-Wh-dlU" userLabel="Title Label">
+                    <rect key="frame" x="14" y="50" width="254" height="20.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.2627450980392157" green="0.2627450980392157" blue="0.2627450980392157" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nXM-US-Ch2">
+                    <rect key="frame" x="118" y="91" width="46" height="20"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="v" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j8w-xA-VNJ">
+                            <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
+                            <fontDescription key="fontDescription" name="berec-icons" family="berec-icons" pointSize="20"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10/10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UX0-ai-gXl">
+                            <rect key="frame" x="20" y="0.0" width="26" height="20"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                            <color key="textColor" red="0.2627450980392157" green="0.2627450980392157" blue="0.2627450980392157" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="nXM-US-Ch2" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="4Ud-P4-Mzy"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="nXM-US-Ch2" secondAttribute="bottom" constant="10" id="8FB-3D-cg9"/>
+                <constraint firstItem="ow2-Wh-dlU" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="0.9" id="BK5-u7-Tt6"/>
+                <constraint firstItem="NSF-Bl-WtG" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="S3R-iz-A5a"/>
+                <constraint firstItem="ow2-Wh-dlU" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="cKf-vv-j4h"/>
+                <constraint firstItem="ow2-Wh-dlU" firstAttribute="top" secondItem="NSF-Bl-WtG" secondAttribute="bottom" constant="5" id="hVY-PP-5fA"/>
+                <constraint firstItem="NSF-Bl-WtG" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="5" id="pzi-hP-fNe"/>
+            </constraints>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="groupNameLabel" destination="ow2-Wh-dlU" id="csS-uV-Mu7"/>
+                <outlet property="iconLabel" destination="NSF-Bl-WtG" id="Myf-dK-KiH"/>
+                <outlet property="statusIconLabel" destination="j8w-xA-VNJ" id="0Cj-X3-u76"/>
+                <outlet property="statusLabel" destination="UX0-ai-gXl" id="24O-jV-LV6"/>
+            </connections>
+            <point key="canvasLocation" x="-62.399999999999999" y="131.78410794602701"/>
+        </view>
+    </objects>
+</document>

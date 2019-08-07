@@ -1,8 +1,8 @@
 package at.alladin.nettest.shared.server.service.storage.v1;
 
-import java.util.List;
 import java.util.Locale;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
@@ -45,7 +45,7 @@ public interface StorageService {
 	
 	DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid, String measurementUuid, String settingsUuid, Locale locale) throws StorageServiceException;
 	
-	List<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid(String measurementAgentUuid, 
+	Page<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid(String measurementAgentUuid, 
 			Pageable pageable) throws StorageServiceException;
 	
 	DisassociateResponse disassociateMeasurement(String agentUuid, String measurementUuid) throws StorageServiceException;

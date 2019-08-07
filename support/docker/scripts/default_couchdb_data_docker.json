@@ -153,7 +153,7 @@
                 "controller_service": "http://localhost:18080/api/v1",
                 "controller_service_ipv4": "ipv4",
                 "controller_service_ipv6": "ipv6",
-                "collector_service": "http://localhost:18081/api/v1"
+                "collector_service": "http://localhost:18081/api/v1/measurements"
             },
             "measurements": {
                 "SPEED": {

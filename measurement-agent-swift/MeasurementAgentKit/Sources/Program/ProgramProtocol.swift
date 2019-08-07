@@ -27,7 +27,7 @@ public protocol ProgramProtocol {
 
     //var result: [:]? { get }
 
-    func run() throws -> SubMeasurementResult
+    func run(relativeStartTimeNs: UInt64) throws -> SubMeasurementResult
 
     func cancel()
 }

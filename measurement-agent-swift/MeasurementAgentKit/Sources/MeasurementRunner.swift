@@ -22,6 +22,8 @@ import nntool_shared_swift
 ///
 public class MeasurementRunner {
 
+    private let agent: MeasurementAgent
+
     private let controlService: ControlService
     private let agentUuid: String
     private let programs: [MeasurementTypeDto: ProgramConfiguration]
@@ -35,7 +37,8 @@ public class MeasurementRunner {
 
     ////
 
-    init(controlService: ControlService, agentUuid: String, programOrder: [MeasurementTypeDto], programs: [MeasurementTypeDto: ProgramConfiguration]) {
+    init(agent: MeasurementAgent, controlService: ControlService, agentUuid: String, programOrder: [MeasurementTypeDto], programs: [MeasurementTypeDto: ProgramConfiguration]) {
+        self.agent = agent
         self.controlService = controlService
         self.agentUuid = agentUuid
         self.programs = programs
@@ -43,7 +46,7 @@ public class MeasurementRunner {
     }
 
     ///
-    public func startMeasurement() {
+    public func startMeasurement(preferredSpeedMeasurementPeer: SpeedMeasurementPeerResponse.SpeedMeasurementPeer? = nil) {
         let controlDto = LmapControlDto()
 
         controlDto.agent = LmapAgentDto()
@@ -51,7 +54,12 @@ public class MeasurementRunner {
 
         ////
 
-        let capabilities = getCapabilities()
+        var preferredPeers = [MeasurementTypeDto: String]()
+        if let psmp = preferredSpeedMeasurementPeer {
+            preferredPeers[.speed] = psmp.identifier
+        }
+
+        let capabilities = getCapabilities(preferredPeers: preferredPeers)
 
         controlDto.capabilities = LmapCapabilityDto()
         controlDto.capabilities?.tasks = capabilities
@@ -78,17 +86,19 @@ public class MeasurementRunner {
 
     ////
 
-    private func getCapabilities() -> [LmapCapabilityTaskDto] {
+    private func getCapabilities(preferredPeers: [MeasurementTypeDto: String]) -> [LmapCapabilityTaskDto] {
         let capabilities = programOrder.map { name -> LmapCapabilityTaskDto in
             let config = programs[name]
 
             let task = LmapCapabilityTaskDto()
 
-            //print("add task \(name.rawValue) to capabilities")
+            //logger.debug("add task \(name.rawValue) to capabilities")
 
             task.taskName = name.rawValue
             task.version = config?.version
             //task.program = name.rawValue
+
+            task.preferredMeasurementPeerIdentifier = preferredPeers[name]
 
             return task
         }
@@ -114,7 +124,7 @@ public class MeasurementRunner {
         let startTime = Date()
         let startTimeNs = TimeHelper.currentTimeNs()
 
-        let informationCollector = SystemInformationCollector.defaultCollector()
+        let informationCollector = SystemInformationCollector.defaultCollector(connectivityService: agent.newIPConnectivityInfo())
         informationCollector.start(startNs: startTimeNs)
 
         var taskResultDict = [MeasurementTypeDto: SubMeasurementResult]()
@@ -124,7 +134,7 @@ public class MeasurementRunner {
                 logger.info("Measurement runner is cancelled.")
 
                 informationCollector.stop()
-                finish() // TODO: stop? fail?
+                fail() // TODO: fail reason user aborted?
                 return
             }
 
@@ -133,7 +143,7 @@ public class MeasurementRunner {
                 continue
             }
 
-            logger.info("Running task \(taskName) with options \(task.options).")
+            logger.info("Running task \(taskName) with options \(String(describing: task.options)).")
 
             guard let taskType = MeasurementTypeDto(rawValue: taskName) else {
                 continue
@@ -155,7 +165,7 @@ public class MeasurementRunner {
 
             do {
                 // TODO: how to cancel measurement?
-                let result = try programInstance.run()
+                let result = try programInstance.run(relativeStartTimeNs: TimeHelper.currentTimeNs() - startTimeNs)
                 //logger.debug(":: program \(taskName) returned result:")
                 //logger.debug(result)
                 //logger.debug(":: -------")
@@ -236,12 +246,12 @@ public class MeasurementRunner {
         logger.info("Found collector URL: \(collectorUrl)")
 
         DispatchQueue.main.sync {
-            let collectorService = CollectorService(baseURL: collectorUrl)
+            let collectorService = CollectorService(baseURL: collectorUrl, agent: agent)
 
-            collectorService.storeMeasurement(reportDto: reportModel, onSuccess: { _ in
-                self.finish()
+            collectorService.storeMeasurement(reportDto: reportModel, onSuccess: { response in
+                self.finish(response.uuid, response.openDataUuid)
             }, onFailure: { error in
-                print(error)
+                logger.debug(error)
                 self.fail() // TODO: error
             })
         }
@@ -249,8 +259,8 @@ public class MeasurementRunner {
         // /send_results
     }
 
-    private func finish() {
-        delegate?.measurementDidFinish(self)
+    private func finish(_ uuid: String?, _ openDataUuid: String?) {
+        delegate?.measurementDidFinish(self, measurementUuid: uuid, openDataUuid: openDataUuid)
         stop()
     }
 

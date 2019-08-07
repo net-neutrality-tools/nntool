@@ -22,43 +22,26 @@ import CodableJSON
 let MEASUREMENT_AGENT =
     MeasurementAgentBuilder(controlServiceBaseUrl: "http://localhost:18080/api/v1")
         .program(task: .speed, config: ProgramConfiguration(name: "IAS", version: "1.0.0") { (taskDto: LmapTaskDto) in
-            let optionDict = taskDto.options?.reduce(into: [String: Any]()) { result, option in
-                guard let name = option.name else {
-                    return
-                }
+            let p = IASProgram()
 
-                if let mp = option.measurementParameters {
-                    result[name] = mp
-                } else {
-                    result[name] = option.value
-                }
+            if let measurementConfig = (taskDto.getMeasurementParametersByName("parameters_speed")?.content as? IasMeasurementTypeParametersDto)?.measurementConfiguration {
+
+                p.config = measurementConfig
             }
 
-            let measurementConfig = ((optionDict?["parameters_speed"] as? MeasurementTypeParametersWrapperDto)?.content as? IasMeasurementTypeParametersDto)?.measurementConfiguration
-
-            let p = IASProgram()
-            p.config = measurementConfig
+            if let serverAddr = taskDto.getOptionByName("server_addr"), let serverPort = taskDto.getOptionByName("server_port") {
+                p.serverAddress = serverAddr
+                p.serverPort = serverPort
+            }
 
             return p
         })
         .program(task: .qos, config: ProgramConfiguration(name: "QOS", version: "1.0.0") { (taskDto: LmapTaskDto) in
-            let optionDict = taskDto.options?.reduce(into: [String: Any]()) { result, option in
-                guard let name = option.name else {
-                    return
-                }
-
-                if let mp = option.measurementParameters {
-                    result[name] = mp
-                } else {
-                    result[name] = option.value
-                }
-            }
-
             let p = QoSProgram()
 
-            if var objectives: [String: [[String: JSON]]] = ((optionDict?["parameters_qos"] as? MeasurementTypeParametersWrapperDto)?.content as? QoSMeasurementTypeParametersDto)?.objectives {
+            if var objectives = (taskDto.getMeasurementParametersByName("parameters_qos")?.content as? QoSMeasurementTypeParametersDto)?.objectives {
 
-                if let serverAddr = optionDict?["server_addr"] as? String, let serverPort = optionDict?["server_port"] as? String {
+                if let serverAddr = taskDto.getOptionByName("server_addr"), let serverPort = taskDto.getOptionByName("server_port") {
 
                     for item in objectives {
                         let (k, v) = item

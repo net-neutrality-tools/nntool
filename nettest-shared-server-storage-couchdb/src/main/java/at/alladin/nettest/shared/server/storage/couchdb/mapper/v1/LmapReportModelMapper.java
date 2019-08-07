@@ -37,8 +37,14 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Traffic;
  * @author alladin-IT GmbH (bp@alladin.at)
  *
  */
-@Mapper(componentModel = "spring", imports = ChronoUnit.class)
-public interface LmapReportModelMapper extends UuidMapper, RttInfoDtoMapper, MeasurementResultNetworkPointInTimeDtoMapper {
+@Mapper(
+	componentModel = "spring", 
+	imports = ChronoUnit.class, 
+	uses = {
+		DateTimeMapper.class, UuidMapper.class, RttInfoDtoMapper.class, MeasurementResultNetworkPointInTimeDtoMapper.class
+	}
+)
+public interface LmapReportModelMapper {
 	
 	double EARTH_MEAN_RADIUS = 6373000;
 
@@ -194,10 +200,10 @@ public interface LmapReportModelMapper extends UuidMapper, RttInfoDtoMapper, Mea
 				+ " null : subMeasurementResult.getRelativeEndTimeNs() - subMeasurementResult.getRelativeStartTimeNs())"),
 		@Mapping(expression="java(startTimeNs == null || subMeasurementResult == null ? "
 				+ "null : subMeasurementResult.getRelativeStartTimeNs() == null ? "
-				+ "null : map(startTimeNs.plusMillis((int) (subMeasurementResult.getRelativeStartTimeNs() / 1e6))))", target="startTime"),
+				+ "null : dateTimeMapper.map(startTimeNs.plusMillis((int) (subMeasurementResult.getRelativeStartTimeNs() / 1e6))))", target="startTime"),
 		@Mapping(expression="java(startTimeNs == null || subMeasurementResult == null ? "
 				+ "null : subMeasurementResult.getRelativeEndTimeNs() == null ? "
-				+ "null : map(startTimeNs.plusMillis((int) (subMeasurementResult.getRelativeEndTimeNs() / 1e6))))", target="endTime")
+				+ "null : dateTimeMapper.map(startTimeNs.plusMillis((int) (subMeasurementResult.getRelativeEndTimeNs() / 1e6))))", target="endTime")
 	})
 	SubMeasurementTime mapSubMeasurementTime(SubMeasurementResult subMeasurementResult, LocalDateTime startTimeNs);
 	

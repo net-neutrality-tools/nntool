@@ -19,16 +19,53 @@ import Foundation
 import Siesta
 
 ///
-class ResultService: RestApiService {
+public class ResultService: RestApiService {
 
-    init(baseURL: URLConvertible = "http://localhost:8082/api/v1") {
-        super.init(baseURL: baseURL)
+    init(baseURL: URLConvertible = "http://localhost:18082/api/v1", agent: MeasurementAgent) {
+        super.init(baseURL: baseURL, agent: agent)
 
-        configureTransformer("/measurements", forType: ApiResponse<MeasurementResultResponse>.self)
+        configureTransformer("/measurement-agents/*/measurements", forType: ApiResponse<ApiPagination<BriefMeasurementResponse>>.self)
+        configureTransformer("/measurement-agents/*/measurements/*/details", forType: ApiResponse<DetailMeasurementResponse>.self)
+        configureTransformer("/measurement-agents/*/measurements/*", requestMethods: [.get], forType: ApiResponse<FullMeasurementResponse>.self)
+        configureTransformer("/measurement-agents/*/measurements/*", requestMethods: [.delete], forType: ApiResponse<DisassociateResponse>.self)
+    }
+
+    public func getMeasurements(page: Int = 0, pageSize: Int = 20, onSuccess: SuccessCallback<ApiPagination<BriefMeasurementResponse>>?, onFailure: FailureCallback?) {
+        guard let uuid = agent.uuid else {
+            onFailure?(RequestError(userMessage: "TODO", cause: NSError(domain: "todo", code: -1234, userInfo: nil)))
+            return
+        }
+
+        request("/measurement-agents/\(uuid)/measurements", method: .get, responseEntityType: ApiPagination<BriefMeasurementResponse>.self, params: ["page": "\(page)", "size": "\(pageSize)"], onSuccess: onSuccess, onFailure: onFailure)
     }
 
     ///
-    func storeMeasurement(reportDto: LmapReportDto, onSuccess: SuccessCallback<MeasurementResultResponse>?, onFailure: FailureCallback?) {
-        request("/measurements", method: .post, requestEntity: reportDto, wrapInApiRequest: false, responseEntityType: MeasurementResultResponse.self, onSuccess: onSuccess, onFailure: onFailure)
+    public func getFullMeasurementResult(measurementUuid: String, onSuccess: SuccessCallback<FullMeasurementResponse>?, onFailure: FailureCallback?) {
+        guard let uuid = agent.uuid else {
+            onFailure?(RequestError(userMessage: "TODO", cause: NSError(domain: "todo", code: -1234, userInfo: nil)))
+            return
+        }
+
+        request("/measurement-agents/\(uuid)/measurements/\(measurementUuid)", method: .get, responseEntityType: FullMeasurementResponse.self, onSuccess: onSuccess, onFailure: onFailure)
+    }
+
+    ///
+    public func getDetailedMeasurementResult(measurementUuid: String, onSuccess: SuccessCallback<DetailMeasurementResponse>?, onFailure: FailureCallback?) {
+        guard let uuid = agent.uuid else {
+            onFailure?(RequestError(userMessage: "TODO", cause: NSError(domain: "todo", code: -1234, userInfo: nil)))
+            return
+        }
+
+        request("/measurement-agents/\(uuid)/measurements/\(measurementUuid)/details", method: .get, responseEntityType: DetailMeasurementResponse.self, onSuccess: onSuccess, onFailure: onFailure)
+    }
+
+    ///
+    public func disassociateMeasurement(measurementUuid: String, onSuccess: SuccessCallback<DisassociateResponse>?, onFailure: FailureCallback?) {
+        guard let uuid = agent.uuid else {
+            onFailure?(RequestError(userMessage: "TODO", cause: NSError(domain: "todo", code: -1234, userInfo: nil)))
+            return
+        }
+
+        request("/measurement-agents/\(uuid)/measurements/\(measurementUuid)", method: .delete, responseEntityType: DisassociateResponse.self, onSuccess: onSuccess, onFailure: onFailure)
     }
 }

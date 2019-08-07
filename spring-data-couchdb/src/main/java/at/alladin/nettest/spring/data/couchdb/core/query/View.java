@@ -33,10 +33,9 @@ public @interface View {
 	
 	int skip() default 0;
 	
-	String[] keys() default {};
+	Key[] keys() default {};
 	
-	String startKey() default "";
+	Key[] startKey() default {};
 	
-	String endKey() default "";
-	
+	Key[] endKey() default {};
 }
