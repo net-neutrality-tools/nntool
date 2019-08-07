@@ -88,7 +88,7 @@ int CHttp::parseResponse()
 	
 	TRC_DEBUG("Received: (" + to_string(recv_len) + ") --------------------------------" + "\r\n" + buffer);
 	
-	if( buffer.find(HTTP_OK) != string::npos )
+	if( buffer.find("HTTP/1.1 200 OK") != string::npos )
 	{
 		mHttpResponseTime = CTool::get_timestamp();
 		
@@ -96,7 +96,7 @@ int CHttp::parseResponse()
 		nValue = 0;
 	}
 	
-	if( buffer.find(HTTP_CONTINUE) != string::npos )
+	if( buffer.find("HTTP/1.1 100 Continue") != string::npos )
 	{
 		mHttpResponseTime = CTool::get_timestamp();
 		
@@ -104,12 +104,6 @@ int CHttp::parseResponse()
 		nValue = 0;
 	}
 
-	if( recv_len == 0 )
-	{
-		//Return Flag -1 and close everything
-		nValue = -1;
-	}
-	
 	if( buffer.find(HTTP_FORBIDDEN) != string::npos )
 	{
 		//Return Flag -2 and close everything
