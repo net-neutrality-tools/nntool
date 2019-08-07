@@ -27,13 +27,15 @@ class MeasurementResultTableViewController: UITableViewController {
 
     private var data: DetailMeasurementResponse?
     private var qosData: FullQoSMeasurement?
-    private var qosTypeBoxResult: [QoSMeasurementType: QoSTypeBoxResult]?
+    private var qosResults: [QoSMeasurementType: QoSGroupResult]?
 
     private let qosCollectionViewFlowLayoutConfig = CollectionViewFlowLayoutConfig(
         sectionInsets: UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0),
         itemsPerRow: 2,
         heightFactor: 0.85
     )
+
+    // TODO: display loading indicator?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,15 +49,16 @@ class MeasurementResultTableViewController: UITableViewController {
             MEASUREMENT_AGENT.resultService?.getDetailedMeasurementResult(measurementUuid: measurementUuid, onSuccess: { response in
                 self.data = response
 
-                // load qos
-                // TODO: gather QoS results
+                // Load QoS results
                 MEASUREMENT_AGENT.resultService?.getFullMeasurementResult(measurementUuid: measurementUuid, onSuccess: { fullMeasurementReponse in
 
                     if let fullQoSMeasurement = fullMeasurementReponse.measurements?["QOS"]?.content as? FullQoSMeasurement {
+                        guard (fullQoSMeasurement.results?.count ?? 0) > 0 else {
+                            return
+                        }
+                        
                         self.qosData = fullQoSMeasurement
-
-                        // TODO: parse into model (type -> desc, with calculated success/error rate)
-
+                        
                         let qosGroup = DetailMeasurementGroup()
                         qosGroup.title = "QoS"
                         qosGroup.iconCharacter = IconFont.qos.rawValue
@@ -64,24 +67,7 @@ class MeasurementResultTableViewController: UITableViewController {
 
                         //
 
-                        self.qosTypeBoxResult = [:]
-
-                        self.qosData?.results?.forEach({ result in
-                            guard let type = result.type else {
-                                return
-                            }
-
-                            if self.qosTypeBoxResult?[type] == nil {
-                                if let typeDescription = self.qosData?.qosTypeToDescriptionMap?[type.rawValue] {
-                                    self.qosTypeBoxResult?[type] = QoSTypeBoxResult(
-                                        type: type.rawValue, name: typeDescription.name ?? type.rawValue, icon: typeDescription.icon, successCount: 0, evaluationCount: 0
-                                    )
-                                }
-                            }
-
-                            self.qosTypeBoxResult?[type]?.successCount += result.successCount ?? 0
-                            self.qosTypeBoxResult?[type]?.evaluationCount += result.evaluationCount ?? 0
-                        })
+                        self.parseQoSMeasurementResult()
 
                         DispatchQueue.main.async {
                             self.tableView.reloadData()
@@ -100,6 +86,44 @@ class MeasurementResultTableViewController: UITableViewController {
                 logger.debug(error)
             })
         }
+    }
+
+    private func parseQoSMeasurementResult() {
+        qosResults = [:]
+
+        qosData?.results?.forEach({ result in
+            guard let type = result.type else {
+                return
+            }
+
+            if qosResults?[type] == nil {
+                if let typeDescription = qosData?.qosTypeToDescriptionMap?[type.rawValue] {
+                    qosResults?[type] = QoSGroupResult(
+                        type: type,
+                        localizedName: typeDescription.name ?? type.rawValue,
+                        localizedDescription: typeDescription.description,
+                        icon: typeDescription.icon,
+                        successCount: 0, evaluationCount: 0, tasks: []
+                    )
+                }
+            }
+
+            qosResults?[type]?.successCount += result.successCount ?? 0
+            qosResults?[type]?.evaluationCount += result.evaluationCount ?? 0
+
+            let task = QoSTaskResultItem(
+                title: "Test #\((qosResults?[type]?.tasks.count ?? 0) + 1)", // TODO: translate
+                localizedDescription: result.description,
+                localizedSummary: result.summary,
+                successCount: result.successCount ?? 0,
+                evaluationCount: result.evaluationCount ?? 0,
+                evaluations: result.resultKeyMap?.map({ (key: String, value: QoSResultOutcome) in
+                    return QoSTaskResultItemEvaluation(text: qosData?.keyToTranslationMap?[key] ?? key, outcome: value)
+                })
+            )
+
+            qosResults?[type]?.tasks.append(task)
+        })
     }
 
     private func itemRequiresSubtitleCell(_ item: DetailMeasurementGroupItem) -> Bool {
@@ -129,10 +153,9 @@ class MeasurementResultTableViewController: UITableViewController {
         switch identifier {
         case R.segue.measurementResultTableViewController.show_qos_group.identifier:
             if let qosGroupTableViewController = segue.destination as? QoSMeasurementResultGroupTableViewController {
-                // TODO
-                //logger.debug("tapped \((sender as? QoSGroupCollectionViewCell)?.groupNameLabel)")
-
-                //qosGroupTableViewController.abc = ...
+                if let type = (sender as? QoSGroupCollectionViewCell)?.type {
+                    qosGroupTableViewController.qosType = qosResults?[type]
+                }
             }
         default: break
         }
@@ -168,7 +191,7 @@ extension MeasurementResultTableViewController {
                 return super.tableView(tableView, cellForRowAt: indexPath)
             }
 
-            cell.evaluatedQoSResults = [QoSTypeBoxResult](qosTypeBoxResult!.values)
+            cell.evaluatedQoSResults = [QoSGroupResult](qosResults!.values)
             cell.flowLayoutConfig = qosCollectionViewFlowLayoutConfig
 
             return cell
@@ -199,7 +222,7 @@ extension MeasurementResultTableViewController {
             return super.tableView(tableView, heightForRowAt: indexPath)
         }
 
-        return qosCollectionViewFlowLayoutConfig.getCollectionViewDimensions(viewWidth: tableView.frame.width, count: self.qosTypeBoxResult?.count ?? 0).height
+        return qosCollectionViewFlowLayoutConfig.getCollectionViewDimensions(viewWidth: tableView.frame.width, count: qosResults?.count ?? 0).height
     }
 
     //
@@ -232,4 +255,49 @@ extension MeasurementResultTableViewController {
 
         return 100
     }
+}
+
+//////////////////////////////
+
+struct QoSGroupResult {
+
+    /*enum Status {
+        case success
+        case inconclusive
+        case fail
+    }*/
+
+    var type: QoSMeasurementType
+
+    var localizedName: String?
+    var localizedDescription: String?
+
+    var icon: String?
+
+    var successCount = 0
+    var evaluationCount = 0
+
+    var tasks = [QoSTaskResultItem]()
+}
+
+struct QoSTaskResultItem {
+
+    var title: String?
+    var localizedDescription: String?
+    var localizedSummary: String?
+
+    var successCount = 0
+    var evaluationCount = 0
+
+    var evaluations: [QoSTaskResultItemEvaluation]?
+
+    func isSuccessful() -> Bool {
+        return successCount == evaluationCount
+    }
+}
+
+struct QoSTaskResultItemEvaluation {
+
+    var text: String?
+    var outcome: QoSResultOutcome?
 }

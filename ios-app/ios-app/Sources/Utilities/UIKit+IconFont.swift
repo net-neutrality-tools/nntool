@@ -33,6 +33,16 @@ extension UILabel {
             text = newValue?.rawValue
         }
     }
+
+    class func createIconLabel(icon: IconFont, frame: CGRect = CGRect(x: 0, y: 0, width: 26, height: 26), textColor: UIColor = UIColor.black, fontSize: CGFloat = 18) -> UILabel {
+        let iconLabel = UILabel(frame: frame)
+        iconLabel.font = R.font.berecIcons(size: fontSize)
+
+        iconLabel.textColor = textColor
+        iconLabel.icon = icon
+
+        return iconLabel
+    }
 }
 
 ///

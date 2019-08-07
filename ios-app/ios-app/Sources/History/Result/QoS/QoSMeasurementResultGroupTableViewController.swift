@@ -20,9 +20,31 @@ import UIKit
 
 class QoSMeasurementResultGroupTableViewController: UITableViewController {
 
+    var qosType: QoSGroupResult?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationItem.title = qosType?.localizedName
+
+        tableView.estimatedRowHeight = 80
+        tableView.rowHeight = UITableView.automaticDimension
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else {
+            return
+        }
+
+        switch identifier {
+        case R.segue.qoSMeasurementResultGroupTableViewController.show_qos_detail.identifier:
+            if let qosDetailTableViewController = segue.destination as? QoSMeasurementResultDetailTableViewController {
+                if let row = sender as? Int {
+                    qosDetailTableViewController.task = qosType?.tasks[row]
+                }
+            }
+        default: break
+        }
     }
 }
 
@@ -30,4 +52,53 @@ class QoSMeasurementResultGroupTableViewController: UITableViewController {
 
 extension QoSMeasurementResultGroupTableViewController {
 
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return 1
+        } else {
+            return qosType?.tasks.count ?? 0
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let identifier = indexPath.section == 0 ? R.reuseIdentifier.qos_type_desc_cell.identifier : R.reuseIdentifier.qos_task_cell.identifier
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
+
+        if indexPath.section == 0 {
+            cell.textLabel?.text = qosType?.localizedDescription
+        } else {
+            if let task = qosType?.tasks[indexPath.row] {
+                cell.textLabel?.text = task.title
+                cell.detailTextLabel?.text = task.localizedDescription
+
+                if task.isSuccessful() {
+                    cell.accessoryView = UILabel.createIconLabel(icon: .check, textColor: .green)
+                } else {
+                    cell.accessoryView = UILabel.createIconLabel(icon: .cross, textColor: .red)
+                }
+            }
+        }
+
+        return cell
+    }
+
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            return "Details" // TODO: translate
+        } else {
+            return "Tasks" // TODO: translate
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.section == 1 else {
+            return
+        }
+
+        performSegue(withIdentifier: R.segue.qoSMeasurementResultGroupTableViewController.show_qos_detail.identifier, sender: indexPath.row)
+    }
 }

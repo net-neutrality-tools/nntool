@@ -19,15 +19,6 @@ import Foundation
 import UIKit
 import MeasurementAgentKit
 
-struct QoSTypeBoxResult {
-    var type: String
-    var name: String
-    var icon: String?
-
-    var successCount = 0
-    var evaluationCount = 0
-}
-
 class QoSGroupOverviewCell: UITableViewCell {
 
     private static let reuseIdentifier = "qos_group_collectionview_cell"
@@ -36,7 +27,7 @@ class QoSGroupOverviewCell: UITableViewCell {
 
     var flowLayoutConfig: CollectionViewFlowLayoutConfig?
 
-    var evaluatedQoSResults: [QoSTypeBoxResult]?
+    var evaluatedQoSResults: [QoSGroupResult]?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -79,7 +70,7 @@ extension QoSGroupOverviewCell: UICollectionViewDataSource {
         cell.type = item.type
 
         cell.iconLabel?.text = item.icon
-        cell.groupNameLabel?.text = item.name
+        cell.groupNameLabel?.text = item.localizedName
 
         if item.successCount == item.evaluationCount {
             cell.statusIconLabel?.text = IconFont.check.rawValue

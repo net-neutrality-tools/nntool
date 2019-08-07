@@ -17,6 +17,7 @@
 
 import Foundation
 import UIKit
+import MeasurementAgentKit
 
 ///
 class QoSGroupCollectionViewCell: UICollectionViewCell {
@@ -34,5 +35,5 @@ class QoSGroupCollectionViewCell: UICollectionViewCell {
     @IBOutlet var statusLabel: UILabel?
 
     ///
-    var type: String?
+    var type: QoSMeasurementType?
 }
