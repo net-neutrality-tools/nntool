@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-03
+ *      \date Last update: 2019-08-07
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -20,19 +20,6 @@
 
 
 
-
-/*-------------------------class WSWorker------------------------*/
-
-/**
- * @class WSWorker
- * @description WebSocket Worker Class
- */
-var WSWorker = function ()
-{
-    this.wsControl      = 'undefined';
-
-    return(this);
-};
 
 var webSocket;
 
@@ -88,38 +75,16 @@ var ulInterval;
 var ulIntervalTiming        = 4;
 var ulReportDict            = {};
 
-var ulDataSize              = 2246915;
 var ulBufferSize            = 4096 * 1000;
 var ulStarted               = false;
 
 var uploadFramesPerCall     = 1;
 
-var singleThread            = false;
-
-var jsTool;
-
 var ndServerFamily;
 
-
-
-
-/*-------------------------WSWorker------------------------*/
-
 /**
  * @function onmessage
- * @description Function to Receive Commands from WSControl Single Thread 
- * @public
- * @param {string} data JSON coded measurement Parameters
- */
-WSWorker.prototype.onmessage = function(data)
-{
-    singleThread = true;
-    onmessage(data);
-};
-
-/**
- * @function onmessage
- * @description Function to Receive Commands from WSControl Multi Thread 
+ * @description Function to Receive Commands from WSControl
  * @public
  * @param {string} event JSON coded measurement Parameters
  */
@@ -129,7 +94,7 @@ onmessage = function (event)
 
     try 
     {
-        if (!singleThread) 
+        if (useWebWorkers) 
         {
             data = JSON.parse(event.data);
         }
@@ -232,6 +197,12 @@ onmessage = function (event)
             break;
         }
 
+        case 'uploadStart':
+        {
+            upload();
+            break;
+        }
+
         case 'close':
         {   
             reportToControl('report');
@@ -241,7 +212,7 @@ onmessage = function (event)
             if (webSocket.readyState === wsStateClosed)
             {
                 webSocket.close();
-                if (!singleThread) this.close();
+                if (useWebWorkers) this.close();
             }
             else
             {
@@ -249,12 +220,6 @@ onmessage = function (event)
                 websocketClose('close received');
                 reportToControl('info', 'websocket closing');   
             }
-            break;
-        }
-            
-        case 'uploadStart':
-        {
-            upload();
             break;
         }
 
@@ -275,9 +240,9 @@ function connect()
 {   
     resetValues();
 
-    if (!singleThread && typeof require === 'undefined') importScripts('Tool.js');
+    if (useWebWorkers && typeof require === 'undefined') importScripts('Tool.js');
     
-    if (typeof require === 'undefined')
+    if (!useWebWorkers || typeof require === 'undefined')
     {
         jsTool = new JSTool();
     }
@@ -292,13 +257,19 @@ function connect()
         target = wsWssString + wsTargetRtt + ':' + wsTargetPort;
     }
 
-    try 
+    try
     {
+        var wsProtocols = [wsProtocol, 'overload', wsAuthToken, wsAuthTimestamp];
+
         if (typeof require !== 'undefined' && typeof platformModule === 'undefined')
         {
             var logDebug = false;
             var WebSocketNode = require('ws');
-            var wsProtocols = [wsProtocol, wsAuthToken, wsAuthTimestamp, wsFrameSize];
+            
+            if (wsTestCase === 'download')
+            {
+                wsProtocols.push(wsFrameSize);
+            }
             webSocket = new WebSocketNode(target, wsProtocols,
             {
                 origin: 'http://' + wsTLD,
@@ -315,16 +286,11 @@ function connect()
         {
             if (wsTestCase === 'rtt'  || wsTestCase === 'download' || wsTestCase === 'upload')
             {
-                var wsProtocols = [wsProtocol, wsAuthToken, wsAuthTimestamp];
                 if (wsTestCase === 'download')
                 {
                     wsProtocols.push(wsFrameSize);
                 }
                 webSocket = new WebSocket(target, wsProtocols);
-            }
-            else
-            {
-                webSocket = new WebSocket(target, wsProtocol);
             }
         }
     }
@@ -338,6 +304,11 @@ function connect()
     {
         reportToControl('open', 'websocket open');
         wsConnected = true;
+
+        if (webSocket.protocol.indexOf('overload') !== -1)
+        {
+            reportToControl('error', 'overload'); 
+        }
 
         if (wsTestCase === 'rtt')
         {
@@ -358,14 +329,9 @@ function connect()
     {
         //console.log('webSocket error: onError: ' + event.type);
         if (logDebug) reportToControl('info', 'webSocket error: onError: ' + event.type);
-        if (!wsConnected && webSocket.readyState === wsStateClosed) 
+        if ((!useWebWorkers || !wsConnected) && webSocket.readyState === wsStateClosed) 
         {
             reportToControl('error', 'authorizationConnection'); 
-        }
-        else
-        if (singleThread && webSocket.readyState === wsStateClosed)
-        {
-            reportToControl('error', 'authorizationConnection');
         }
     };
 
@@ -565,11 +531,11 @@ function reportToControl(cmd, msg)
     data.wsID           = wsID;
     data.wsFrameSize    = wsFrameSize;
 
-    if (webSocket) data.wsState    = webSocket.readyState;
+    if (webSocket) data.wsState = webSocket.readyState;
 
     if (wsTestCase === 'rtt')
     {
-        data.wsRttValues            = wsRttValues;
+        data.wsRttValues = wsRttValues;
     }
 
     if (wsTestCase === 'upload')
@@ -589,7 +555,7 @@ function reportToControl(cmd, msg)
         data.wsTime = 0;
     }
 
-    if (!singleThread)
+    if (useWebWorkers)
     {
         self.postMessage(JSON.stringify(data));
     }
@@ -668,7 +634,7 @@ function websocketClose(reason)
 {
     webSocket.close();
     //console.log('close websocket: reason: ' + reason);
-    if (!singleThread) setTimeout(this.close, 200);
+    if (useWebWorkers) setTimeout(this.close, 200);
 };
 
 /**
