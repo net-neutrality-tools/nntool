@@ -54,7 +54,7 @@ public class MeasurementAgent {
 
         controlService = ControlService(baseURL: configuration.controlServiceBaseUrl, agent: self)
 
-        resultService = ResultService(baseURL: "http://localhost:18082/api/v1", agent: self) // TODO: use baseUrl from settings request
+        resultService = ResultService(baseURL: "https://result-de-01.net-neutrality.tools/api/v1", agent: self) // TODO: use baseUrl from settings request
 
         // TODO: check if registered -> get settings
     }
@@ -134,12 +134,12 @@ public class MeasurementAgent {
         var controlServiceV6: ControlService?
 
         if Thread.isMainThread {
-            controlServiceV4 = ControlService(baseURL: "http://127.0.0.1:18080/api/v1", agent: self)
-            controlServiceV6 = ControlService(baseURL: "http://[::1]:18080/api/v1", agent: self)
+            controlServiceV4 = ControlService(baseURL: "https://controller-de-01-ipv4.net-neutrality.tools/api/v1", agent: self)
+            controlServiceV6 = ControlService(baseURL: "https://controller-de-01-ipv6.net-neutrality.tools/api/v1", agent: self)
         } else {
             DispatchQueue.main.sync {
-                controlServiceV4 = ControlService(baseURL: "http://127.0.0.1:18080/api/v1", agent: self)
-                controlServiceV6 = ControlService(baseURL: "http://[::1]:18080/api/v1", agent: self)
+                controlServiceV4 = ControlService(baseURL: "https://controller-de-01-ipv4.net-neutrality.tools/api/v1", agent: self)
+                controlServiceV6 = ControlService(baseURL: "https://controller-de-01-ipv6.net-neutrality.tools/api/v1", agent: self)
             }
         }
 
