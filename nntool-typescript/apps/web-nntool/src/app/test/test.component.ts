@@ -41,7 +41,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
     private readonly paramServerPort: string = 'server_port';
     private readonly paramServerAddress: string = 'server_addr';
     private readonly paramCollector: string = 'result_collector_base_url';
-    
+
     protected measurementControl: LmapControl = undefined;
     private speedControl: LmapTask = undefined;
     public speedConfig: MeasurementSettings = undefined; // TODO: change to measurement configuration
@@ -98,19 +98,19 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
                 switch (task.name) {
                     case 'SPEED':
                         this.speedConfig = new MeasurementSettings();
-                        for (let i in task.option) {
-                                const option: LmapOption = task.option[i];
-                                /* tslint:disable:no-string-literal */
-                                if (option.name === this.paramCollector) {
-                                    this.speedConfig.collectorAddress = option.value;
-                                } else if (option.name === this.paramServerAddress) {
-                                    this.speedConfig.serverAddress = option.value;
-                                } else if (option.name === this.paramServerPort) {
-                                    this.speedConfig.serverPort = option.value;
-                                } else if (option.name === this.paramSpeed) {
-                                    this.speedConfig.speedConfig = option['measurement-parameters'].measurement_configuration;
-                                }
-                                /* tslint:enable:no-string-literal */
+                        for (const i in task.option) {
+                          const option: LmapOption = task.option[i];
+                          /* tslint:disable:no-string-literal */
+                          if (option.name === this.paramCollector) {
+                              this.speedConfig.collectorAddress = option.value;
+                          } else if (option.name === this.paramServerAddress) {
+                              this.speedConfig.serverAddress = option.value;
+                          } else if (option.name === this.paramServerPort) {
+                              this.speedConfig.serverPort = option.value;
+                          } else if (option.name === this.paramSpeed) {
+                              this.speedConfig.speedConfig = option['measurement-parameters'].measurement_configuration;
+                          }
+                          /* tslint:enable:no-string-literal */
                         }
                         this.speedControl = task;
                         break;
@@ -154,7 +154,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
         });
 
         lmapReport.time_based_result = new TimeBasedResultAPI();
-        let networkPointInTime: MeasurementResultNetworkPointInTimeAPI = new MeasurementResultNetworkPointInTimeAPI();
+        const networkPointInTime: MeasurementResultNetworkPointInTimeAPI = new MeasurementResultNetworkPointInTimeAPI();
         networkPointInTime.network_type_id = this.webNetworkType;
         networkPointInTime.time = endTimeStamp;
         lmapReport.time_based_result.network_points_in_time = [];
