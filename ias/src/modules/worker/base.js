@@ -305,7 +305,7 @@ function connect()
         reportToControl('open', 'websocket open');
         wsConnected = true;
 
-        if (webSocket.protocol.indexOf('overload') !== -1)
+        if (webSocket.protocol === 'overload')
         {
             reportToControl('error', 'overload'); 
         }
