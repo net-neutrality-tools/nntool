@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-03-20
+ *      \date Last update: 2019-07-25
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -41,14 +41,6 @@ global.console.log = function(message)
 
 global.messageToNative = function(channel, message)
 {
-    if (platformModule.isAndroid)
-    {
-        var broadcastManager = android.support.v4.content.LocalBroadcastManager.getInstance(utils.ad.getApplicationContext());
-        var intent = new android.content.Intent(channel);
-        intent.putExtra('message', message);
-        broadcastManager.sendBroadcast(intent);
-    }
-
     if (platformModule.isIOS)
     {
         var notificationCenter = utils.ios.getter(NSNotificationCenter, NSNotificationCenter.defaultCenter);
