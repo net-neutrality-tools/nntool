@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-04-29
+ *      \date Last update: 2019-08-07
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -34,6 +34,10 @@ class CTimer : public CBasisThread
 		int mInstances;
 
 		CCallback *mCallback;
+
+		bool unreachableSignaled;
+		bool forbiddenSignaled;
+		bool overloadSignaled;
 	
 	public:
 		CTimer();

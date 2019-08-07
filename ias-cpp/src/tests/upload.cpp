@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-01
+ *      \date Last update: 2019-08-07
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -186,11 +186,38 @@ int Upload::run()
 		
 		//Send Request and Authenticate Client
 		std::unique_ptr<CHttp> pHttp = std::make_unique<CHttp>( mConfig, mConnection.get(), mUploadString );
-		if( pHttp->requestToReferenceServer() < 0 )
+
+		int response = pHttp->requestToReferenceServer();
+		if (response < 0 )
 		{
-			TRC_INFO("No valid credentials for this server: " + mServer);
-			
+			if (response == -1)
+			{
+				::UNREACHABLE = true;
+				TRC_ERR("no connection to measurement peer: " + mServer);
+
+				#ifndef NNTOOL
+					//MYSQL_LOG("Measurement-DL-Auth","No valid credentials for this server: "+mServer);
+				#endif
+			}
+			if (response == -2)
+			{
+				::FORBIDDEN = true;
+				TRC_ERR("authorization unsuccessful on peer: " + mServer);
+
+				#ifndef NNTOOL
+					//MYSQL_LOG("Measurement-DL-Auth","No valid credentials for this server: "+mServer);
+				#endif
+			}
+			if (response == -3)
+			{
+				::OVERLOADED = true;
+				TRC_ERR("measurement peer overloaded: " + mServer);
+			}
+
 			mConnection->close();
+
+			//Syslog Message
+			TRC_DEBUG( ("Ending Download Thread with PID: " + CTool::toString(syscall(SYS_gettid))).c_str() );
 
 			return 0;
 		}
