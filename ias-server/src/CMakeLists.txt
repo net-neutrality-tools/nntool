@@ -12,7 +12,7 @@
 
 #/*!
 # *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2019-05-03
+# *      \date Last update: 2019-07-30
 # *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
 # */
 
@@ -40,6 +40,7 @@ add_executable(ias-server
     tcphandler.cpp
     tcptraceroutehandler.cpp
     udpserver.cpp
+    load_monitoring.cpp
 )
 
 TARGET_LINK_LIBRARIES(ias-server
