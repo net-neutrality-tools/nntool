@@ -38,7 +38,33 @@
     "HEADER_TEXT": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
     "DESCRIPTION_HEADER": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.",
     "DESCRIPTION": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
-    "DESCRIPTION_WEBSOCKET": "Test"
+    "DESCRIPTION_WEBSOCKET": "Test",
+    "TILES": {
+      "TEST": {
+        "HEADER": "Nettest",
+        "DESCRIPTION": "Measure your internet speed"
+      },
+      "HISTORY": {
+        "HEADER": "History",
+        "DESCRIPTION": "Your recent measurements"
+      },
+      "RESULT_LIST": {
+        "HEADER": "Recent Results",
+        "DESCRIPTION": "Recent results by all users"
+      },
+      "MAP": {
+        "HEADER": "Map",
+        "DESCRIPTION": "View measurement results on the interactive map"
+      },
+      "STATISTICS": {
+        "HEADER": "Statistics",
+        "DESCRIPTION": "Statistics about all performed measurements"
+      },
+      "HELP": {
+        "HEADER": "Help",
+        "DESCRIPTION": "Detailed assistance with all supported functionality"
+      }
+    }
   },
   "MAP": {
     "SEARCH": {

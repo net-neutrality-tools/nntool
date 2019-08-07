@@ -3,38 +3,64 @@
     <div class="wrapper">
         <header class="section-header">
             <h1 [innerHTML]="'HOME.HEADER' | translate"></h1>
-            <div class="icon icon-watch"></div>
         </header>
         <div class="section-content">
-            <h2 [innerHTML]="'HOME.HEADER_TEXT' | translate"></h2>
+            <p [innerHTML]="'HOME.DESCRIPTION' | translate"></p>
         </div>
     </div>
 </section>
 <!-- #section-intro end -->
 
-<!-- #section-features -->
-<section class="section" id="section-features">
+<!-- #section-technical -->
+<section class="section" id="section-technical">
     <div class="wrapper">
-        <header class="section-header">
-            <h1 [innerHTML]="'HOME.DESCRIPTION_HEADER' | translate"></h1>
-        </header>
-        <div class="section-content">
-            <h3 class="text-center" [innerHTML]="'HOME.DESCRIPTION' | translate"></h3>
-            <div class="section-interaction">
-                <a href="#" [routerLink]="['/nettest']" [queryParams]="{start: 'home'}" class="button inverse">{{ 'HOME.DESCRIPTION_WEBSOCKET' | translate }}</a>
+        <div class="flex--columns">
+            <div class="content--column home clickable" [routerLink]="['/nettest']" [queryParams]="{start: 'home'}">
+                <header class="column-header">
+                    <div class="icon icon-watch" aria-hidden="true"></div>
+                    
+                    <h3>{{ 'HOME.TILES.TEST.HEADER' | translate }}</h3>
+                </header>
+                <p [innerHTML]="'HOME.TILES.TEST.DESCRIPTION' | translate"></p>
             </div>
-            <div class="store-badges" [innerHTML]="'HOME.DESCRIPTION_BADGES' | translate">
-                <!-- German Badges -->
-                <a href="" class="app-store-badge de hide-text">Laden im App Store</a>
-                <a href="" class="google-play-badge de hide-text">Jetzt bei Google Play</a>
-                <!-- English Badges -->
-                <!--
-                <a href="" class="app-store-badge en hide-text">Download on the App Store</a>
-                <a href="" class="google-play-badge en hide-text">Get it on Google Play</a>
-                -->
+            <div class="content--column home clickable" [routerLink]="['/history']">
+                <header class="column-header">
+                    <div class="icon icon-history" aria-hidden="true"></div>
+                    
+                    <h3>{{ 'HOME.TILES.HISTORY.HEADER' | translate }}</h3>
+                </header>
+                <p [innerHTML]="'HOME.TILES.HISTORY.DESCRIPTION' | translate"></p>
+            </div>
+            <div class="content--column home clickable" [routerLink]="['/testresults']">
+                <header class="column-header">
+                    <div class="icon icon-search" aria-hidden="true"></div>
+                    
+                    <h3>{{ 'HOME.TILES.RESULT_LIST.HEADER' | translate }}</h3>
+                </header>
+                <p [innerHTML]="'HOME.TILES.RESULT_LIST.DESCRIPTION' | translate"></p>
+            </div>
+            <div class="content--column home clickable" [routerLink]="['/map']">
+                <header class="column-header">
+                    <div class="icon icon-map" aria-hidden="true"></div>
+                    <h3>{{ 'HOME.TILES.MAP.HEADER' | translate }}</h3>
+                </header>
+                <p [innerHTML]="'HOME.TILES.MAP.DESCRIPTION' | translate"></p>
+            </div>
+            <div class="content--column home clickable" [routerLink]="['/statistics']">
+                <header class="column-header">
+                    <div class="icon icon-statistics" aria-hidden="true"></div>
+                    <h3>{{ 'HOME.TILES.STATISTICS.HEADER' | translate }}</h3>
+                </header>
+                <p [innerHTML]="'HOME.TILES.STATISTICS.DESCRIPTION' | translate"></p>
+            </div>
+            <div class="content--column home clickable" [routerLink]="['/help']">
+                <header class="column-header">
+                    <div class="icon icon-help" aria-hidden="true"></div>
+                    <h3>{{ 'HOME.TILES.HELP.HEADER' | translate }}</h3>
+                </header>
+                <p [innerHTML]="'HOME.TILES.HELP.DESCRIPTION' | translate"></p>
             </div>
         </div>
     </div>
 </section>
-<!-- #section-features end -->
-
+<!-- #section-technical end -->

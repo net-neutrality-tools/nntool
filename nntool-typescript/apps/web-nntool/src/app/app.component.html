@@ -26,27 +26,6 @@
                 <span class="navbar-nav-item-text">{{ 'NAV.NETTEST' | translate }}</span>
             </a>
         </li>
-        <li class="menu-item" *ngIf="features.statistics">
-            <a class="navbar-nav-item icon-statistics"
-               [routerLink]="['/statistics']" [routerLinkActive]="['active']" (click)="menuClose()"
-            >
-                <span class="navbar-nav-item-text">{{ 'NAV.STATISTICS' | translate }}</span>
-            </a>
-        </li>
-        <li class="menu-item" *ngIf="features.opendata">
-            <a class="navbar-nav-item icon-opendata"
-               [routerLink]="['/opendata']" [routerLinkActive]="['active']" (click)="menuClose()"
-            >
-                <span class="navbar-nav-item-text">{{ 'NAV.OPENDATA' | translate }}</span>
-            </a>
-        </li>
-        <li class="menu-item" *ngIf="features.map">
-            <a class="navbar-nav-item icon-map"
-               [routerLink]="['/map']" [routerLinkActive]="['active']" (click)="menuClose()"
-            >
-                <span class="navbar-nav-item-text">{{ 'NAV.MAP' | translate }}</span>
-            </a>
-        </li>
         <li class="menu-item" *ngIf="features.history">
             <a class="navbar-nav-item icon-history"
                [routerLink]="['/history']" [routerLinkActive]="['active']" (click)="menuClose()"
@@ -59,6 +38,27 @@
                [routerLink]="['/testresults']" [routerLinkActive]="['active']" (click)="menuClose()"
             >
                 <span class="navbar-nav-item-text">{{ 'NAV.RESULT_LIST' | translate }}</span>
+            </a>
+        </li>
+        <li class="menu-item" *ngIf="features.map">
+            <a class="navbar-nav-item icon-map"
+               [routerLink]="['/map']" [routerLinkActive]="['active']" (click)="menuClose()"
+            >
+                <span class="navbar-nav-item-text">{{ 'NAV.MAP' | translate }}</span>
+            </a>
+        </li>
+        <li class="menu-item" *ngIf="features.statistics">
+            <a class="navbar-nav-item icon-statistics"
+               [routerLink]="['/statistics']" [routerLinkActive]="['active']" (click)="menuClose()"
+            >
+                <span class="navbar-nav-item-text">{{ 'NAV.STATISTICS' | translate }}</span>
+            </a>
+        </li>
+        <li class="menu-item" *ngIf="features.opendata">
+            <a class="navbar-nav-item icon-opendata"
+               [routerLink]="['/opendata']" [routerLinkActive]="['active']" (click)="menuClose()"
+            >
+                <span class="navbar-nav-item-text">{{ 'NAV.OPENDATA' | translate }}</span>
             </a>
         </li>
         <li class="menu-item" *ngIf="features.help">
