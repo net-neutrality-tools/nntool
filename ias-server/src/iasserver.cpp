@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-24
+ *      \date Last update: 2019-07-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -219,12 +219,24 @@ int main(int argc, char** argv)
         }
     }
 
+    CLoadMonitoring *pLoadMonitoring = new CLoadMonitoring();
+    if (::CONFIG["load"]["monitoring"]["enabled"].bool_value())
+    {
+        if(pLoadMonitoring->createThread() != 0 )
+        {
+            TRC_ERR("Error: Failure while creating Load Monitoring Thread");
+            return EXIT_FAILURE;
+        }
+    }       
+    
+    pLoadMonitoring->waitForEnd();
     tcpListener->waitForEnd();
     tcpTlsListener->waitForEnd();
     tcpTracerouteListener->waitForEnd();
     pUdpListenerGeneric->waitForEnd();
     pUdpListenerIPv4->waitForEnd();
     
+    delete(pLoadMonitoring);
     delete(tcpListener);
     delete(tcpTlsListener);
     delete(tcpTracerouteListener);
