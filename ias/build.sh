@@ -14,7 +14,7 @@
 
 #/*!
 # *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2019-04-08
+# *      \date Last update: 2019-08-07
 # *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
 # */
 
@@ -54,6 +54,17 @@ cp src/*.js build/plain/core/
 cp -R src/modules build/plain/core/
 find build/plain/core -type f -name "*.spec.js" -exec rm -f {} \;
 
+cat build/plain/core/modules/worker/WebWorker.header.js     >> build/plain/core/WebWorker.js;
+cat build/plain/core/modules/worker/base.js                 >> build/plain/core/WebWorker.js;
+
+cat build/plain/core/modules/worker/Worker.header.js        >> build/plain/core/Worker.js;
+cat build/plain/core/modules/worker/base.js                 >> build/plain/core/Worker.js;
+cat build/plain/core/modules/worker/Worker.footer.js        >> build/plain/core/Worker.js;
+
+rm -R build/plain/core/modules/worker/
+
+node replace.conf.js
+
 if [ -z $1 ]; then
     cd build/plain/core/
     for f in *.js; do short=${f%.js}; uglifyjs -c drop_console=true -m --comments /^!/ -- $f > ../../uglified/core/$short.js; done
@@ -61,6 +72,7 @@ if [ -z $1 ]; then
     for f in *.js; do short=${f%.js}; uglifyjs -c drop_console=true -m --comments /^!/ -- $f > ../../../uglified/core/modules/$short.js; done
     cd ../../../../
 fi
+
 
 #---------------------------------------------------------
 
@@ -76,21 +88,19 @@ cd build/
 cat plain/core/modules/browser.report.js    >> plain/web/ias.web.js
 cat plain/core/modules/Tool.js              >> plain/web/ias.web.js
 cat plain/core/Control.js                   >> plain/web/ias.web.js
-cat plain/core/ControlSingleThread.js       >> plain/web/ias.web.js
 cat plain/core/Ias.js                       >> plain/web/ias.web.js
 cat plain/core/Worker.js                    >> plain/web/ias.web.js
-cat plain/core/WorkerSingleThread.js        >> plain/web/ias.web.js
 cat plain/core/PortBlocking.js              >> plain/web/ias.web.js
 
 if [ -z $1 ]; then
     uglifyjs -c drop_console=true -m --comments /^!/ plain/web/ias.web.js > uglified/web/ias.web.js
 fi
 
-cp plain/core/Worker.js plain/web/
+cp plain/core/WebWorker.js plain/web/
 cp plain/core/modules/Tool.js plain/web/
 
 if [ -z $1 ]; then
-    cp uglified/core/Worker.js uglified/web/
+    cp uglified/core/WebWorker.js uglified/web/
     cp uglified/core/modules/Tool.js uglified/web/
 fi
 
@@ -112,10 +122,9 @@ fi
 
 cat plain/mobile/header.js              >> plain/mobile/ias.mobile.js
 cat plain/core/modules/Tool.js          >> plain/mobile/ias.mobile.js
-cat plain/core/ControlSingleThread.js   >> plain/mobile/ias.mobile.js
+cat plain/core/Control.js               >> plain/mobile/ias.mobile.js
 cat plain/core/Ias.js                   >> plain/mobile/ias.mobile.js
 cat plain/core/Worker.js                >> plain/mobile/ias.mobile.js
-cat plain/core/WorkerSingleThread.js    >> plain/mobile/ias.mobile.js
 cat plain/mobile/footer.js              >> plain/mobile/ias.mobile.js
 
 if [ -z $1 ]; then
@@ -148,17 +157,17 @@ cat plain/core/modules/browser.report.js    >> plain/desktop/ias.desktop.js
 cat plain/core/modules/Tool.js              >> plain/desktop/ias.desktop.js
 cat plain/core/Control.js                   >> plain/desktop/ias.desktop.js
 cat plain/core/Ias.js                       >> plain/desktop/ias.desktop.js
-cat plain/core/Worker.js                    >> plain/desktop/ias.desktop.js
+cat plain/core/WebWorker.js                 >> plain/desktop/ias.desktop.js
 
 if [ -z $1 ]; then
     uglifyjs -c drop_console=true -m --comments /^!/ plain/desktop/ias.desktop.js > uglified/desktop/ias.desktop.js
 fi
 
-cp plain/core/Worker.js plain/desktop/
+cp plain/core/WebWorker.js plain/desktop/
 cp plain/core/modules/Tool.js plain/desktop/JSTool.js
 
 if [ -z $1 ]; then
-    cp uglified/core/Worker.js uglified/desktop/
+    cp uglified/core/WebWorker.js uglified/desktop/
     cp uglified/core/modules/Tool.js uglified/desktop/JSTool.js
 fi
 
