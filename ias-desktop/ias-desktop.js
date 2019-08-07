@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-04-08
+ *      \date Last update: 2019-08-07
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -223,8 +223,15 @@ function iasCallback(data)
             tool.getRouteToTarget(measurementParameters.wsTargets[Math.floor(Math.random() * measurementParameters.wsTargets.length)] + '.' + measurementParameters.wsTLD, routeToTargetMaxHops, measurementParameters.ndServerFamily);
             
             routeToClientCalled = true;
-            jsTool.performRouteToClientLookup(measurementParameters.wsTargets[Math.floor(Math.random() * measurementParameters.wsTargets.length)] + '.' + measurementParameters.wsTLD, routeToClientTargetPort);
-            
+            if (typeof performRouteToClientLookup !== 'undefined' && performRouteToClientLookup)
+            {
+                jsTool.performRouteToClientLookup(measurementParameters.wsTargets[Math.floor(Math.random() * measurementParameters.wsTargets.length)] + '.' + measurementParameters.wsTLD, routeToClientTargetPort);
+            }
+            else
+            {
+                routeToClientCallbackCalled = true;
+            }
+
             if (typeof networkKPIs.dsk_interface_ipv4_gateway !== 'undefined' && networkKPIs.dsk_interface_ipv4_gateway !== '-')
             {
                 tool.getRttToTarget(networkKPIs.dsk_interface_ipv4_gateway, rttGatewayRequests);
