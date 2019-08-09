@@ -1,8 +1,8 @@
 ## Building ##
 
 ### Prerequisites ###
-Node.js >= 8
-npm >= 5
+Node.js >= 10
+npm >= 6
 uglify-es >= 3
 Linux or macOS (any Version, required for uglify)
 
