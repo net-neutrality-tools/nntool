@@ -122,7 +122,7 @@
     "clean": "rm -rf dist/",
     "clean:mac": "rm -rf dist/mac",
     "clean:linux": "rm -rf dist/linux-unpacked",
-    "dist:win": "npm run clean:node_modules:win && npm run copy:ias:win && npm run copy:node_modules:win && npm run build && npm run dist",
+    "dist:win": "npm run clean:node_modules:win && npm run copy:ias:win && npm run copy:node_modules:win && npm run dist",
     "dist:mac": "npm run clean:node_modules:unix && npm run copy:ias:unix && npm run copy:node_modules:unix  && npm run clean:mac && npm run build && npm run dist",
     "dist:linux": "npm run clean:node_modules:unix && npm run copy:ias:unix && npm run copy:node_modules:unix && npm run clean:linux && npm run build && npm run dist",
     "dist": "electron-builder",
