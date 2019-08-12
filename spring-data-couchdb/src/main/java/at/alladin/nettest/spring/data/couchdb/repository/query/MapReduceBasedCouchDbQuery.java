@@ -1,5 +1,6 @@
 package at.alladin.nettest.spring.data.couchdb.repository.query;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -72,8 +73,9 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 				
 				logger.debug("Count response: {}", total);
 			} catch (Exception e) {
-				e.printStackTrace();
-				return null; // TODO: throw exception
+				logger.error("Could not get total count, returning empty result"/*, e*/);
+				//e.printStackTrace();
+				return returnEmptyResult(accessor, total); // TODO: throw exception
 			}
 		}
 		
@@ -86,7 +88,7 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 			viewResponse = viewRequest.getResponse();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null; // TODO: throw exception
+			return returnEmptyResult(accessor, total); // TODO: throw exception
 		}
 		
 		// TODO: check viewResponse (entity count, null checks, etc.)
@@ -101,6 +103,20 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 			return new PageImpl<>(docs, accessor.getPageable(), total);
 		} else if (docs.size() > 0) {
 			return docs.get(0);
+		}
+	
+		return null;
+	}
+	
+	private Object returnEmptyResult(ParametersParameterAccessor accessor, long total) {
+		final List<?> emptyList = Collections.emptyList();
+		
+		if (method.isCollectionQuery()) {
+			return emptyList;
+		} else if (method.isStreamQuery()) {
+			return emptyList.stream();
+		} else if (method.isPageQuery()) {
+			return new PageImpl<>(emptyList, accessor.getPageable(), total);
 		}
 	
 		return null;
