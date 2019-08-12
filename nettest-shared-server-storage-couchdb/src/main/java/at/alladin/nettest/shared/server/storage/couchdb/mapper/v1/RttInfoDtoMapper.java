@@ -20,18 +20,23 @@ public interface RttInfoDtoMapper {
 		@Mapping(target="maxNs", source="maximumNs"),
 		@Mapping(target="minLog", expression="java(arg0 == null ? "
 				+ "null : arg0.getMinimumNs() == null ? "
+				+ "null : arg0.getMinimumNs() == 0 ? "
 				+ "null : Math.log10(arg0.getMinimumNs()))"),
 		@Mapping(target="maxLog", expression="java(arg0 == null ? "
 				+ "null : arg0.getMaximumNs() == null ? "
+				+ "null : arg0.getMaximumNs() == 0 ? "
 				+ "null : Math.log10(arg0.getMaximumNs()))"),
 		@Mapping(target="averageLog", expression="java(arg0 == null ? "
 				+ "null : arg0.getAverageNs() == null ? "
+				+ "null : arg0.getAverageNs() == 0 ? "
 				+ "null : Math.log10(arg0.getAverageNs()))"),
 		@Mapping(target="medianLog", expression="java(arg0 == null ? "
 				+ "null : arg0.getMedianNs() == null ? "
+				+ "null : arg0.getMedianNs() == 0 ? "
 				+ "null : Math.log10(arg0.getMedianNs()))"),
 		@Mapping(target="variance", expression="java(arg0 == null ? "
 				+ "null : arg0.getStandardDeviationNs() == null ? "
+				+ "null : arg0.getStandardDeviationNs() == 0 ? "
 				+ "null : arg0.getStandardDeviationNs() * arg0.getStandardDeviationNs())"),
 		@Mapping(target="address", source="address")
 	})

@@ -1,9 +1,5 @@
 package at.alladin.nettest.nntool.android.app.util.connection;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -42,10 +38,9 @@ public abstract class AbstractConnection<T> {
                 .protocols(protocols)
                 .build();
 
-
         try {
             Retrofit r = new Retrofit.Builder()
-                    .baseUrl(url)
+                    .baseUrl(appendTrailingSlashToUrl(url))
                     .addConverterFactory(JacksonConverterFactory.create(ObjectMapperUtil.createBasicObjectMapper()))
                     .client(httpClient)
                     .build();
@@ -60,7 +55,7 @@ public abstract class AbstractConnection<T> {
 
         try {
             Retrofit r6 = new Retrofit.Builder()
-                    .baseUrl(url6 == null ? url : url6)
+                    .baseUrl(appendTrailingSlashToUrl(url6 == null ? url : url6))
                     .addConverterFactory(JacksonConverterFactory.create(ObjectMapperUtil.createBasicObjectMapper()))
                     .client(httpClient)
                     .build();
@@ -79,5 +74,10 @@ public abstract class AbstractConnection<T> {
 
     public T getControllerService6() {
         return controllerService6;
+    }
+
+    private String appendTrailingSlashToUrl(final String url) {
+        return (url == null || url.length() == 0 || url.charAt(url.length() - 1) == '/') ?
+                url : url + "/";
     }
 }
