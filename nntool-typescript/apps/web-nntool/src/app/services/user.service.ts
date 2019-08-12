@@ -205,7 +205,7 @@ export class UserService {
                     this.logger.debug('User Mes', data);
                     user.measurementUUIDs = [];
 
-                    for (const mes of data) {
+                    for (const mes of data.data.content) {
                         user.measurementUUIDs.push(mes.test_uuid);
                     }
                     observer.next(data);
