@@ -42,7 +42,6 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
             wsWss: 0,
             wsAuthToken: 'placeholderToken',
             wsAuthTimestamp: 'placeholderTimestamp',
-            // "wsWorkerPath": "./lib/@zafaco/breitbandtest/Worker.js",
             wsWorkerPath: '/Worker.js',
             performRouteToClientLookup: false,
             performRttMeasurement: true,
@@ -92,7 +91,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
         const rttRequestWait = 500;
         const rttDuration = (rttRequests * (rttRequestTimeout + rttRequestWait)) * 1.1;
         const downloadUploadDuration = 10000;
-        
+
         const firstDotIndex = config.serverAddress.indexOf('.');
 
         const extendedConfig = {
@@ -105,7 +104,6 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
             wsWss: 0,
             wsAuthToken: 'placeholderToken',
             wsAuthTimestamp: 'placeholderTimestamp',
-            // "wsWorkerPath": "./lib/@zafaco/breitbandtest/Worker.js",
             wsWorkerPath: '/Worker.js',
             performRouteToClientLookup: true,
             routeToClientTargetPort: 8080,
@@ -133,6 +131,10 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
             wsMeasureTime: downloadUploadDuration,
         };
 
+        if (window.location.protocol == "https:") {
+          extendedConfig.wsTargetPort = "443";
+          extendedConfig.wsWss = 1;
+        }
 
         this.setupCallback(extendedConfig);
 
