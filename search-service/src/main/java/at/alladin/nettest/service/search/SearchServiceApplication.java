@@ -1,38 +1,39 @@
-package at.alladin.nettest.service.statistic;
+package at.alladin.nettest.service.search;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
-import at.alladin.nettest.service.statistic.config.DataExportConfiguration;
-import at.alladin.nettest.shared.server.helper.spring.DevelopmentWebCorsConfiguration;
+
+import at.alladin.nettest.service.search.config.SearchServiceProperties;
 import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
 
 /**
+ * The controller's main class which allows the controller to be started as stand-alone Java application or inside a servlet container.
  * 
  * @author alladin-IT GmbH (bp@alladin.at)
  *
  */
 @SpringBootApplication
-@EnableConfigurationProperties(DataExportConfiguration.class)
+@EnableConfigurationProperties({
+	SearchServiceProperties.class
+})
 @ComponentScan({
-	"at.alladin.nettest.service.statistic",
+	"at.alladin.nettest.service.search", 
 	"at.alladin.nettest.shared.server.web.api.v1"
 })
-@Import({ DevelopmentWebCorsConfiguration.class })
-public class StatisticServiceApplication extends SpringBootServletInitializer {
+public class SearchServiceApplication extends SpringBootServletInitializer {
 
 	/**
 	 * 
 	 */
-	private static final String CONFIGURATION_DIRECTORY_NAME = "statistic-service";
+	private static final String CONFIGURATION_DIRECTORY_NAME = "search-service";
 	
 	/**
 	 * 
 	 */
-	private static final Class<?> APPLICATION_CLASS = StatisticServiceApplication.class;
+	private static final Class<?> APPLICATION_CLASS = SearchServiceApplication.class;
 	
 	/*
 	 * (non-Javadoc)
