@@ -129,12 +129,11 @@ public class CouchDbStorageService implements StorageService {
 		if (measurement.getNetworkInfo() != null) {
 			final ComputedNetworkPointInTime cpit = computeNetworkInfo(measurement);
 			
-			if (cpit != null) {
+      if (cpit != null) {
 				cpit.setNetworkMobileInfo(computeMobileInfoAndProcessMccMnc(measurement));
 				cpit.setNatTypeInfo(computeNatType(measurement, cpit));
+				measurement.getNetworkInfo().setComputedNetworkInfo(cpit);
 			}
-			
-			measurement.getNetworkInfo().setComputedNetworkInfo(cpit);
 		}
 
 		calculateTotalMeasurementPayload(measurement);
