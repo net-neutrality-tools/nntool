@@ -1,8 +1,8 @@
-create schema public;
+-- create schema public;
 
-comment on schema public is 'standard public schema';
+-- comment on schema public is 'standard public schema';
 
-alter schema public owner to postgres;
+-- alter schema public owner to postgres;
 
 create table settings
 (

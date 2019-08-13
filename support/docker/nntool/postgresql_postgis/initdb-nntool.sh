@@ -15,7 +15,6 @@ EOSQL
 echo "Loading nntool related extensions into $DB"
 "${psql[@]}" --dbname="nntool" <<-'EOSQL'
   CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA public;
-  CREATE EXTENSION IF NOT EXISTS quantile WITH SCHEMA public;
 EOSQL
 
 cat /tmp/nntool-schema.sql | "${psql[@]}" --dbname="nntool"
