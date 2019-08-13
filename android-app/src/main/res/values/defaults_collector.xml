@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool translatable="false" name="default_collector_settings_override">false</bool>
-    <string translatable="false" name="default_collector_host">10.9.8.39</string>
+    <string translatable="false" name="default_collector_host">collector-de-01.net-neutrality.tools</string>
     <string translatable="false" name="default_collector_path_prefix">/</string>
     <integer translatable="false" name="default_collector_port">8081</integer>
-    <bool translatable="false" name="default_collector_connection_is_encrypted">false</bool>
+    <bool translatable="false" name="default_collector_connection_is_encrypted">true</bool>
 </resources>
