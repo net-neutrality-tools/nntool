@@ -1,9 +1,7 @@
 package at.alladin.nettest.nntool.android.app.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -92,10 +90,11 @@ public class LmapUtil {
         String speedServerAddrV4 = null;
         String speedServerAddrV6 = null;
         Integer speedServerPort = null;
+        Boolean speedEncryption = false;
         SpeedTaskDesc speedTaskDesc = null;
 
         try {
-            System.out.println(new ObjectMapper().writeValueAsString(controlDto));
+            System.out.println(ObjectMapperUtil.createBasicObjectMapper().writeValueAsString(controlDto));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -183,6 +182,9 @@ public class LmapUtil {
                                     case SERVER_ADDR_IPV6:
                                         speedServerAddrV6 = option.getValue();
                                         break;
+                                    case ENCRYPTION:
+                                        speedEncryption = Boolean.valueOf(option.getValue());
+                                        break;
                                     case SERVER_PORT:
                                         speedServerPort = Integer.valueOf(option.getValue());
                                         break;
@@ -206,6 +208,7 @@ public class LmapUtil {
             speedTaskDesc.setSpeedServerAddrV4(speedServerAddrV4);
             speedTaskDesc.setSpeedServerAddrV6(speedServerAddrV6);
             speedTaskDesc.setSpeedServerPort(speedServerPort);
+            speedTaskDesc.setUseEncryption(speedEncryption);
         }
         wrapper.setSpeedTaskDesc(speedTaskDesc);
 

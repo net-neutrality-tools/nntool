@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-29
+ *      \date Last update: 2019-07-01
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -31,8 +31,6 @@ CMeasurement::~CMeasurement()
 {
 	mTimer->stopThread();
 	mTimer->waitForEnd();
-	
-	delete( mTimer );
 }
 
 //! \brief
@@ -62,7 +60,7 @@ CMeasurement::CMeasurement( CConfigManager *pConfig, CConfigManager *pXml,  CCon
 			break;
 	}
 	
-	mTimer = new CTimer( conf.instances, mCallback );
+	mTimer = std::make_unique<CTimer>( conf.instances, mCallback );
 	
 	if( mTimer->createThread() != 0 )
 	{
@@ -80,10 +78,7 @@ int CMeasurement::startMeasurement()
 	
 	vector<string> vString;
 	vector<string>::iterator iString;
-	
-	vector<Download*> vDownloadThreads;
-	vector<Upload*> vUploadThreads;
-	
+
 	measurements.streams = 0;
 	
 	map<int, unsigned long long> mTmpMap;
@@ -92,19 +87,26 @@ int CMeasurement::startMeasurement()
 	{
 		// PING
 		case 2:
-			ping = new Ping( mXml, mService, mProvider );
+		{
+			std::unique_ptr<Ping> ping = std::make_unique<Ping>(mXml, mService, mProvider);
 			ping->createThread();
 
-			mCallback->pingThread = ping;
+			mCallback->pingThread = ping.get();
 			
 			ping->waitForEnd();
-			
-			delete( ping );
+			while (!::PERFORMED_RTT && !::hasError && ::RUNNING)
+			{
+				//Sleep 100ms
+                usleep(100000);
+			}
 
 			break;
+        }
 
 		// DOWNLOAD
-		case 3:		
+		case 3:
+		{
+		    std::vector<Download *> vDownloadThreads;
 			//Set Measurement Duration for Timer - Download
 			if( mXml->readString(mProvider,"testname","dummy") == "http_down_dataload" ) 
 				MEASUREMENT_DURATION = mXml->readLong(mProvider,"DL_DURATION_DL",10);
@@ -113,7 +115,7 @@ int CMeasurement::startMeasurement()
 				
 			for(int i = 0; i < conf.instances; i++)
 			{
-				download = new Download( mConfig, mXml, mService, mProvider );
+				Download * download = new Download( mConfig, mXml, mService, mProvider );
 				if( download->createThread() != 0 )
 				{
 					TRC_ERR( "Error: Failure while creating the Thread - DownloadThread!" );
@@ -128,24 +130,38 @@ int CMeasurement::startMeasurement()
 			for(vector<Download*>::iterator itThread = vDownloadThreads.begin(); itThread != vDownloadThreads.end(); ++itThread)
 			{
 				(*itThread)->waitForEnd();
-				delete( *itThread );
 			}
 
+			while (!::PERFORMED_DOWNLOAD && !::hasError && ::RUNNING)
+			{
+                //Sleep 100ms
+                usleep(100000);
+            }
+
+            for(vector<Download*>::iterator itThread = vDownloadThreads.begin(); itThread != vDownloadThreads.end(); ++itThread)
+            {
+                delete( *itThread );
+            }
+
 			break;
+		}
 		
 		// Upload
 		case 4:
-			//Set Measurement Duration for Timer - Upload
+		{
+		    std::vector<Upload *> vUploadThreads;
+			/*Set Measurement Duration for Timer - Upload. Add an additional UPLOAD_ADDITIONAL_MEASUREMENT_DURATION to 
+			allow the client to receive all responses which were sent by the server during TCP_STARTUP + UL_DURATION*/
 			if( mXml->readString(mProvider,"testname","dummy") == "http_up_dataload" ) 
-				MEASUREMENT_DURATION = mXml->readLong(mProvider,"UL_DURATION_DL",10)+2;
+				MEASUREMENT_DURATION = mXml->readLong(mProvider,"UL_DURATION_DL",10)+UPLOAD_ADDITIONAL_MEASUREMENT_DURATION;
 			else
-				MEASUREMENT_DURATION = mXml->readLong(mProvider,"UL_DURATION",10)+2;
+				MEASUREMENT_DURATION = mXml->readLong(mProvider,"UL_DURATION",10)+UPLOAD_ADDITIONAL_MEASUREMENT_DURATION;
 			
 			measurements.upload.datasize = 0;
 			
 			for(int i = 0; i < conf.instances; i++)
 			{
-				upload = new Upload( mConfig, mXml, mService, mProvider );
+				Upload * upload = new Upload( mConfig, mXml, mService, mProvider );
 				if( upload->createThread() != 0 )
 				{
 					TRC_ERR( "Error: Failure while creating the Thread - UploadThread!" );
@@ -160,10 +176,21 @@ int CMeasurement::startMeasurement()
 			for(vector<Upload*>::iterator itThread = vUploadThreads.begin(); itThread != vUploadThreads.end(); ++itThread)
 			{
 				(*itThread)->waitForEnd();
-				delete( *itThread );
 			}
 
+			while (!::PERFORMED_UPLOAD && !::hasError && ::RUNNING)
+			{
+				//Sleep 100ms
+                usleep(100000);
+            }
+
+			for(vector<Upload*>::iterator itThread = vUploadThreads.begin(); itThread != vUploadThreads.end(); ++itThread)
+            {
+                delete( *itThread );
+            }
+
 			break;
+		}
 	}
 	
 	return 0;

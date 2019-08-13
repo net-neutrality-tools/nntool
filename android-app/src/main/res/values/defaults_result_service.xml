@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool translatable="false" name="default_result_service_settings_override">false</bool>
+    <string translatable="false" name="default_result_service_host">result-de-01.net-neutrality.tools</string>
+    <string translatable="false" name="default_result_service_path_prefix">/</string>
+    <integer translatable="false" name="default_result_service_port">8082</integer>
+    <bool translatable="false" name="default_result_service_connection_is_encrypted">false</bool>
+</resources>

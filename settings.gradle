@@ -60,6 +60,12 @@ gradle.ext.includeJibGradlePlugin = skipAndroid
 if (skipAndroid) {
 	println '*) Skipping Android projects because: ' + skipMsg
 	println '*) Including jib-gradle-plugin'
+
+  if (System.getProperty('docker-registry') != null) {
+    gradle.ext.dockerRegistryName = System.getProperty('docker-registry')
+  } else {
+    gradle.ext.dockerRegistryName = 'nntool.eu'
+  }
 } else {
 	println '*) Including Android apps'
 

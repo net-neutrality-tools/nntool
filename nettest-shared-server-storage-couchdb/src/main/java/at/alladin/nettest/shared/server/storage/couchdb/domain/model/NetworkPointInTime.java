@@ -42,6 +42,15 @@ public class NetworkPointInTime {
 	@SerializedName("client_public_ip")
 	@JsonProperty("client_public_ip")
 	private String clientPublicIp;
+
+	/**
+	 * Private IP address of the client.
+	 */
+	@JsonPropertyDescription("Private IP address of the client.")
+	@Expose
+	@SerializedName("client_private_ip")
+	@JsonProperty("client_private_ip")
+	private String clientPrivateIp;
 	
 	/**
 	 * Country of the client which is gathered by Geo-IP lookup.
@@ -167,5 +176,29 @@ public class NetworkPointInTime {
 
 	public void setNetworkMobileInfo(NetworkMobileInfo networkMobileInfo) {
 		this.networkMobileInfo = networkMobileInfo;
+	}
+
+	public String getClientPrivateIp() {
+		return clientPrivateIp;
+	}
+
+	public void setClientPrivateIp(String clientPrivateIp) {
+		this.clientPrivateIp = clientPrivateIp;
+	}
+
+	@Override
+	public String toString() {
+		return "NetworkPointInTime{" +
+				"time=" + time +
+				", relativeTimeNs=" + relativeTimeNs +
+				", clientPublicIp='" + clientPublicIp + '\'' +
+				", clientPrivateIp='" + clientPrivateIp + '\'' +
+				", clientPublicIpCountryCode='" + clientPublicIpCountryCode + '\'' +
+				", publicIpRdns='" + publicIpRdns + '\'' +
+				", networkType=" + networkType +
+				", providerInfo=" + providerInfo +
+				", networkWifiInfo=" + networkWifiInfo +
+				", networkMobileInfo=" + networkMobileInfo +
+				'}';
 	}
 }

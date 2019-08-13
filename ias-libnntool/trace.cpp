@@ -12,14 +12,12 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-03
+ *      \date Last update: 2019-06-18
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
 #include "trace.h"
 
-CTrace* CTrace::global_pHandlerTrace = NULL;
-pthread_mutex_t CTrace::global_mutexCreateTrace = PTHREAD_MUTEX_INITIALIZER;
 std::function<void(std::string)> CTrace::logFunction = nullptr;
 
 //! \brief
@@ -28,25 +26,10 @@ CTrace::CTrace()
 {	
 }
 
-//! \brief
-//!	Standard Destructor
-CTrace::~CTrace()
+CTrace& CTrace::getInstance()
 {
-}
-
-CTrace* CTrace::getInstance()
-{
-	
-	pthread_mutex_lock(&global_mutexCreateTrace);
-	{
-		if ( global_pHandlerTrace == NULL)
-		{
-			global_pHandlerTrace = new CTrace();
-		}
-	}
-	pthread_mutex_unlock(&global_mutexCreateTrace);
-
-	return global_pHandlerTrace;
+    static CTrace instance;
+    return instance;
 }
 
 
@@ -124,10 +107,10 @@ void CTrace::logInfo(const string &sMessage)
 
 void CTrace::logDebug(const string &sMessage)
 {
-	#ifdef NNTOOL_CLIENT
-	//if (DEBUG)
+	#if defined(NNTOOL_CLIENT) && !defined(__ANDROID__)
+	if (::DEBUG)
 	{
-	//	logToPlatform("DEBUG", sMessage);
+		logToPlatform("DEBUG", sMessage);
 	}
 	#endif
 

@@ -33,6 +33,16 @@ extension UILabel {
             text = newValue?.rawValue
         }
     }
+
+    class func createIconLabel(icon: IconFont, frame: CGRect = CGRect(x: 0, y: 0, width: 26, height: 26), textColor: UIColor = UIColor.black, fontSize: CGFloat = 18) -> UILabel {
+        let iconLabel = UILabel(frame: frame)
+        iconLabel.font = R.font.berecIcons(size: fontSize)
+
+        iconLabel.textColor = textColor
+        iconLabel.icon = icon
+
+        return iconLabel
+    }
 }
 
 ///
@@ -48,7 +58,7 @@ extension UIButton {
 extension UIBarButtonItem {
 
     private static let iconFontAttributes: [NSAttributedString.Key: Any] = [
-        NSAttributedString.Key.font: UIFont(name: "berec-icons", size: 32)!,
+        NSAttributedString.Key.font: R.font.berecIcons(size: 32)!, // !
         NSAttributedString.Key.foregroundColor: UINavigationBar.appearance().tintColor ?? UIColor.black
     ]
 
@@ -70,16 +80,17 @@ extension UIBarButtonItem {
         setTitleTextAttributes(UIBarButtonItem.iconFontAttributes, for: .normal)
         setTitleTextAttributes(UIBarButtonItem.iconFontAttributes, for: .highlighted)
         setTitleTextAttributes(UIBarButtonItem.iconFontAttributes, for: .disabled)
+        setTitleTextAttributes(UIBarButtonItem.iconFontAttributes, for: .selected)
         setTitleTextAttributes(UIBarButtonItem.iconFontAttributes, for: .focused)
     }
 }
 
-extension UINavigationBar {
+/*extension UINavigationBar {
 
     func applyIconFontAttributes() {
         items?.forEach { $0.rightBarButtonItems?.forEach { $0.applyIconFontAttributes() } }
     }
-}
+}*/
 
 extension UINavigationItem {
 

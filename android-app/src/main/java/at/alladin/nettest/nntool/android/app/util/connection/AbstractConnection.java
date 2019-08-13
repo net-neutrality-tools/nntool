@@ -1,14 +1,10 @@
 package at.alladin.nettest.nntool.android.app.util.connection;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
+import at.alladin.nettest.nntool.android.app.util.ObjectMapperUtil;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import retrofit2.Retrofit;
@@ -42,11 +38,10 @@ public abstract class AbstractConnection<T> {
                 .protocols(protocols)
                 .build();
 
-
         try {
             Retrofit r = new Retrofit.Builder()
-                    .baseUrl(url)
-                    .addConverterFactory(JacksonConverterFactory.create())
+                    .baseUrl(appendTrailingSlashToUrl(url))
+                    .addConverterFactory(JacksonConverterFactory.create(ObjectMapperUtil.createBasicObjectMapper()))
                     .client(httpClient)
                     .build();
 
@@ -60,8 +55,8 @@ public abstract class AbstractConnection<T> {
 
         try {
             Retrofit r6 = new Retrofit.Builder()
-                    .baseUrl(url6 == null ? url : url6)
-                    .addConverterFactory(JacksonConverterFactory.create())
+                    .baseUrl(appendTrailingSlashToUrl(url6 == null ? url : url6))
+                    .addConverterFactory(JacksonConverterFactory.create(ObjectMapperUtil.createBasicObjectMapper()))
                     .client(httpClient)
                     .build();
 
@@ -79,5 +74,10 @@ public abstract class AbstractConnection<T> {
 
     public T getControllerService6() {
         return controllerService6;
+    }
+
+    private String appendTrailingSlashToUrl(final String url) {
+        return (url == null || url.length() == 0 || url.charAt(url.length() - 1) == '/') ?
+                url : url + "/";
     }
 }

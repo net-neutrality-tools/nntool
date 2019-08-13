@@ -1,4 +1,5 @@
 import Foundation
+import CodableJSON
 
 class EchoProtocolTask: QoSTask {
 
@@ -31,28 +32,28 @@ class EchoProtocolTask: QoSTask {
     override var result: QoSTaskResult {
         var r = super.result
 
-        r["echo_protocol_result"] = resultResponse
+        r["echo_protocol_result"] = JSON(resultResponse)
 
         return r
     }
 
     ///
     override init?(config: QoSTaskConfiguration) {
-        guard let host = config[CodingKeys4.host.rawValue] as? String else {
+        guard let host = config[CodingKeys4.host.rawValue]?.stringValue else {
             logger.debug("host nil")
             return nil
         }
 
-        guard let payload = config[CodingKeys4.payload.rawValue] as? String else {
+        guard let payload = config[CodingKeys4.payload.rawValue]?.stringValue else {
             logger.debug("payload nil")
             return nil
         }
 
-        if let portString = config[CodingKeys4.port.rawValue] as? String, let port = UInt16(portString) {
+        if let port = config[CodingKeys4.port.rawValue]?.uint16Value {
             self.port = port
         }
 
-        if let protocolTypeString = config[CodingKeys4.protocolType.rawValue] as? String, let protocolType = ProtocolType(rawValue: protocolTypeString) {
+        if let protocolTypeString = config[CodingKeys4.protocolType.rawValue]?.stringValue, let protocolType = ProtocolType(rawValue: protocolTypeString) {
             self.protocolType = protocolType
         }
 

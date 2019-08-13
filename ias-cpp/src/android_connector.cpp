@@ -7,9 +7,15 @@
 const char* AndroidConnector::TAG = "cpp";
 
 extern "C" JNIEXPORT
-jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
-
+jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
+    __android_log_write(ANDROID_LOG_DEBUG, AndroidConnector::TAG, "jni on load executed");
     return AndroidConnector::getInstance().jniLoad(vm);
+}
+
+extern "C" JNIEXPORT
+void JNICALL JNI_OnUnload(JavaVM* vm, void* reserved) {
+    __android_log_write(ANDROID_LOG_DEBUG, AndroidConnector::TAG, "jni on unload executed");
+    return AndroidConnector::getInstance().unregisterSharedObject();
 }
 
 extern "C" JNIEXPORT
@@ -35,6 +41,7 @@ void JNICALL Java_at_alladin_nettest_nntool_android_speed_jni_JniSpeedMeasuremen
     AndroidConnector::getInstance().unregisterSharedObject();
 }
 
+
 jint AndroidConnector::jniLoad(JavaVM* vm) {
     JNIEnv* env;
     if (vm->GetEnv((void**)&env, JNI_VERSION_1_6) != JNI_OK) {
@@ -44,13 +51,14 @@ jint AndroidConnector::jniLoad(JavaVM* vm) {
     jclass clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/jni/JniSpeedMeasurementClient");
     jniHelperClass = (jclass) env->NewGlobalRef(clazz);
     callbackID = env->GetMethodID(jniHelperClass, "cppCallback", "(Ljava/lang/String;)V");
-    cppCallbackFinishedID = env->GetMethodID(jniHelperClass, "cppCallbackFinished", "(Ljava/lang/String;)V");
+    cppCallbackFinishedID = env->GetMethodID(jniHelperClass, "cppCallbackFinished", "(Ljava/lang/String;Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult;)V");
+
+    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/jni/exception/AndroidJniCppException");
+    jniExceptionClass = (jclass) env->NewGlobalRef(clazz);
 
     //get the fields for the SpeedphaseState
     clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementState$SpeedPhaseState");
     fieldAvgThroughput = env->GetFieldID(clazz, "throughputAvgBps", "J");
-    fieldDurationMsTotal = env->GetFieldID(clazz, "durationMsTotal", "J");
-    fieldDurationMs = env->GetFieldID(clazz, "durationMs", "J");
 
     //get the fields for the PingPhaseState
     clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementState$PingPhaseState");
@@ -62,11 +70,17 @@ jint AndroidConnector::jniLoad(JavaVM* vm) {
 
     setMeasurementPhaseByStringValueID = env->GetMethodID(clazz, "setMeasurementPhaseByStringValue", "(Ljava/lang/String;)V");
 
+    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult");
+    speedMeasurementResultClazz = (jclass) env->NewGlobalRef(clazz);
+    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$RttUdpResult");
+    resultUdpClazz = (jclass) env->NewGlobalRef(clazz);
+    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$BandwidthResult");
+    resultBandwidthClazz = (jclass) env->NewGlobalRef(clazz);
+    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$TimeInfo");
+    timeClazz = (jclass) env->NewGlobalRef(clazz);
 
     //according to the google examples, we can keep the reference to the javaVM until android takes it away from us
     javaVM = vm;
-
-    __android_log_write(ANDROID_LOG_DEBUG, TAG, std::string("Jni on load called").c_str());
 
     return JNI_VERSION_1_6;
 }
@@ -87,53 +101,83 @@ void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
     jstring serverUrl = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
     if (serverUrl != nullptr) {
         const char * url = env->GetStringUTFChars(serverUrl, NULL);
-        measurementServerUrlV4 = std::string(url);
+        this->speedTaskDesc.measurementServerUrlV4 = std::string(url);
     }
 
     toParseId = env->GetFieldID(clazz, "speedServerAddrV6", "Ljava/lang/String;");
     serverUrl = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
     if (serverUrl != nullptr) {
         const char * urlv6 = env->GetStringUTFChars(serverUrl, NULL);
-        measurementServerUrlV6 = std::string(urlv6);
+        this->speedTaskDesc.measurementServerUrlV6 = std::string(urlv6);
     }
 
     toParseId = env->GetFieldID(clazz, "rttCount", "I");
-    rttCount = (int) env->GetIntField(speedTaskDesc, toParseId);
+    this->speedTaskDesc.rttCount = (int) env->GetIntField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "downloadStreams", "I");
-    downloadStreams = (int) env->GetIntField(speedTaskDesc, toParseId);
+    this->speedTaskDesc.downloadStreams = (int) env->GetIntField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "uploadStreams", "I");
-    uploadStreams = (int) env->GetIntField(speedTaskDesc, toParseId);
+    this->speedTaskDesc.uploadStreams = (int) env->GetIntField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "speedServerPort", "I");
-    speedServerPort = (int) env->GetIntField(speedTaskDesc, toParseId);
+    this->speedTaskDesc.speedServerPort = (int) env->GetIntField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "performDownload", "Z");
-    performDownload = (int) env->GetBooleanField(speedTaskDesc, toParseId);
+    this->speedTaskDesc.performDownload = env->GetBooleanField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "performUpload", "Z");
-    performUpload = (int) env->GetBooleanField(speedTaskDesc, toParseId);
+    this->speedTaskDesc.performUpload = env->GetBooleanField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "performRtt", "Z");
-    performRtt = (int) env->GetBooleanField(speedTaskDesc, toParseId);
+    this->speedTaskDesc.performRtt = env->GetBooleanField(speedTaskDesc, toParseId);
+
+    toParseId = env->GetFieldID(clazz, "useEncryption", "Z");
+    this->speedTaskDesc.isEncrypted = env->GetBooleanField(speedTaskDesc, toParseId);
+
+    toParseId = env->GetFieldID(clazz, "useIpV6", "Z");
+    this->speedTaskDesc.useIpv6 = env->GetBooleanField(speedTaskDesc, toParseId);
+
+    toParseId = env->GetFieldID(clazz, "clientIp", "Ljava/lang/String;");
+    serverUrl = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
+    if (serverUrl != nullptr) {
+        const char * clientIp = env->GetStringUTFChars(serverUrl, NULL);
+        this->speedTaskDesc.clientIp = std::string(clientIp);
+    }
 
 }
 
 void AndroidConnector::unregisterSharedObject() {
-    JNIEnv* env;
-    jint err = javaVM->GetEnv((void**)&env, JNI_VERSION_1_6);
-    if (err == JNI_EDETACHED) {
-        //std::cout << "GetEnv: not attached" << std::endl;
-        if (javaVM->AttachCurrentThread(&env, NULL) != 0) {
-            return;
-            //std::cout << "Failed to attach" << std::endl;
-        }
-    } else if (err != JNI_OK) {
+    JNIEnv* env = getJniEnv();
+    if (env == nullptr) {
         return;
     }
 
     //clean up the global jni references
+    if (jniExceptionClass != nullptr) {
+        env->DeleteGlobalRef(jniExceptionClass);
+        jniExceptionClass = nullptr;
+    }
+    if (jniHelperClass != nullptr) {
+        env->DeleteGlobalRef(jniHelperClass);
+        jniHelperClass = nullptr;
+    }
+    if (speedMeasurementResultClazz != nullptr) {
+        env->DeleteGlobalRef(speedMeasurementResultClazz);
+        speedMeasurementResultClazz = nullptr;
+    }
+    if (resultUdpClazz != nullptr) {
+        env->DeleteGlobalRef(resultUdpClazz);
+        resultUdpClazz = nullptr;
+    }
+    if (resultBandwidthClazz != nullptr) {
+        env->DeleteGlobalRef(resultBandwidthClazz);
+        resultBandwidthClazz = nullptr;
+    }
+    if (timeClazz != nullptr) {
+        env->DeleteGlobalRef(timeClazz);
+        timeClazz = nullptr;
+    }
     if (baseMeasurementState != nullptr) {
         env->DeleteGlobalRef(baseMeasurementState);
         baseMeasurementState = nullptr;
@@ -157,13 +201,8 @@ void AndroidConnector::unregisterSharedObject() {
 }
 
 void AndroidConnector::callback(json11::Json::object& message) const {
-    JNIEnv* env;
-    jint err = javaVM->GetEnv((void**)&env, JNI_VERSION_1_6);
-    if (err == JNI_EDETACHED) {
-        if (javaVM->AttachCurrentThread(&env, NULL) != 0) {
-            return;
-        }
-    } else if (err != JNI_OK) {
+    JNIEnv* env = getJniEnv();
+    if (env == nullptr) {
         return;
     }
 
@@ -171,8 +210,9 @@ void AndroidConnector::callback(json11::Json::object& message) const {
 
     //parse the json for now
     if (currentTestPhase == MeasurementPhase::PING) {
-        if (message["rtt_udp_info"].is_object()) {
-            const json11::Json recentResult = message["rtt_udp_info"];
+        if (message["rtt_udp_info"].is_array()) {
+            json11::Json::array const rttInfo = message["rtt_udp_info"].array_items();
+            json11::Json const recentResult = rttInfo.at(rttInfo.size() - 1);
             passJniSpeedState(env, MeasurementPhase::PING, recentResult);
         } else {
             env->SetFloatField(baseMeasurementState, fieldProgress, 0.0f);
@@ -199,38 +239,215 @@ void AndroidConnector::callback(json11::Json::object& message) const {
         } else {
             env->SetFloatField(baseMeasurementState, fieldProgress, 0.0f);
         }
-    }    
-    
-    //const jstring javaMsg = env->NewStringUTF("callback");//json11::Json(message).dump().c_str());
-    //env->CallVoidMethod(jniCaller, callbackID, javaMsg);
+    }
+
+    env->CallVoidMethod(jniCaller, callbackID, env->NewStringUTF(""));
 
 }
 
-void AndroidConnector::callbackFinished (const json11::Json::object& message) {
+void AndroidConnector::callbackFinished (json11::Json::object& message) {
 
-    JNIEnv* env;
-    jint err = javaVM->GetEnv((void**)&env, JNI_VERSION_1_6);
-    if (err == JNI_EDETACHED) {
-        if (javaVM->AttachCurrentThread(&env, NULL) != 0) {
-            return;
-        }
-    } else if (err != JNI_OK) {
+    JNIEnv* env = getJniEnv();
+    if (env == nullptr) {
         return;
     }
 
+    //parse result
+    jmethodID initId = env->GetMethodID(speedMeasurementResultClazz, "<init>", "()V");
+
+    jobject speedMeasurementResult = env->NewObject(speedMeasurementResultClazz, initId);
+
+    JavaParseInformation parse;
+
+    parse.longClass = env->FindClass("java/lang/Long");
+    parse.staticLongValueOf = env->GetStaticMethodID(parse.longClass, "valueOf", "(J)Ljava/lang/Long;");
+
+    parse.intClass = env->FindClass("java/lang/Integer");
+    parse.staticIntValueOf = env->GetStaticMethodID(parse.intClass, "valueOf", "(I)Ljava/lang/Integer;");
+
+    parse.floatClass = env->FindClass("java/lang/Float");
+    parse.staticFloatValueOf = env->GetStaticMethodID(parse.floatClass, "valueOf", "(F)Ljava/lang/Float;");
+
+    if (message["rtt_udp_info"].is_array()) {
+        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "addRttUdpResult", "(Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$RttUdpResult;)V");
+        initId = env->GetMethodID(resultUdpClazz, "<init>", "()V");
+
+        for (Json const & rttEntry : message["rtt_udp_info"].array_items()) {
+            jobject singleResult = env->NewObject(resultUdpClazz, initId);
+
+            jmethodID setId = env->GetMethodID(resultUdpClazz, "setAverageNs", "(Ljava/lang/Long;)V");
+            jobject obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["average_ns"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
+
+            setId = env->GetMethodID(resultUdpClazz, "setDurationNs", "(Ljava/lang/Long;)V");
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["duration_ns"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
+
+            setId = env->GetMethodID(resultUdpClazz, "setMaxNs", "(Ljava/lang/Long;)V");
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["max_ns"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
+
+            setId = env->GetMethodID(resultUdpClazz, "setMedianNs", "(Ljava/lang/Long;)V");
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["median_ns"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
+
+            setId = env->GetMethodID(resultUdpClazz, "setMinNs", "(Ljava/lang/Long;)V");
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["min_ns"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
+
+            setId = env->GetMethodID(resultUdpClazz, "setNumError", "(Ljava/lang/Integer;)V");
+            obj = env->CallStaticObjectMethod(parse.intClass, parse.staticIntValueOf, std::stol(rttEntry["num_error"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
+
+            setId = env->GetMethodID(resultUdpClazz, "setNumMissing", "(Ljava/lang/Integer;)V");
+            obj = env->CallStaticObjectMethod(parse.intClass, parse.staticIntValueOf, std::stol(rttEntry["num_missing"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
+
+            setId = env->GetMethodID(resultUdpClazz, "setNumReceived", "(Ljava/lang/Integer;)V");
+            obj = env->CallStaticObjectMethod(parse.intClass, parse.staticIntValueOf, std::stol(rttEntry["num_received"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
+
+            setId = env->GetMethodID(resultUdpClazz, "setNumSent", "(Ljava/lang/Integer;)V");
+            obj = env->CallStaticObjectMethod(parse.intClass, parse.staticIntValueOf, std::stol(rttEntry["num_sent"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
+
+            setId = env->GetMethodID(resultUdpClazz, "setPacketSize", "(Ljava/lang/Integer;)V");
+            obj = env->CallStaticObjectMethod(parse.intClass, parse.staticIntValueOf, std::stol(rttEntry["packet_size"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
+
+            setId = env->GetMethodID(resultUdpClazz, "setPeer", "(Ljava/lang/String;)V");
+            obj = env->NewStringUTF(rttEntry["peer"].string_value().c_str());
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
+
+            setId = env->GetMethodID(resultUdpClazz, "setProgress", "(Ljava/lang/Float;)V");
+            obj = env->CallStaticObjectMethod(parse.floatClass, parse.staticFloatValueOf, rttEntry["progress"].number_value());
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
+
+            setId = env->GetMethodID(resultUdpClazz, "setStandardDeviationNs", "(Ljava/lang/Long;)V");
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(rttEntry["standard_deviation_ns"].string_value()));
+            env->CallVoidMethod(singleResult, setId, obj);
+            env->DeleteLocalRef(obj);
+
+            env->CallVoidMethod(speedMeasurementResult, addMethod, singleResult);
+        }
+    }
+
+    if (message["download_info"].is_array()) {
+        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "addDownloadInfo", "(Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$BandwidthResult;)V");
+        initId = env->GetMethodID(resultBandwidthClazz, "<init>", "()V");
+
+        for (Json const & downloadEntry : message["download_info"].array_items()) {
+            jobject singleResult = env->NewObject(resultBandwidthClazz, initId);
+            setBandwidthResult(env, downloadEntry, singleResult, parse);
+            env->CallVoidMethod(speedMeasurementResult, addMethod, singleResult);
+        }
+    }
+
+    if (message["upload_info"].is_array()) {
+        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "addUploadInfo", "(Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$BandwidthResult;)V");
+        initId = env->GetMethodID(resultBandwidthClazz, "<init>", "()V");
+
+        for (Json const & downloadEntry : message["upload_info"].array_items()) {
+            jobject singleResult = env->NewObject(resultBandwidthClazz, initId);
+            setBandwidthResult(env, downloadEntry, singleResult, parse);
+            env->CallVoidMethod(speedMeasurementResult, addMethod, singleResult);
+        }
+    }
+
+    if (message["time_info"].is_object()) {
+        Json const & timeEntry = message["time_info"];
+        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "setTimeInfo", "(Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$TimeInfo;)V");
+
+        initId = env->GetMethodID(timeClazz, "<init>", "()V");
+        jobject timeObj = env->NewObject(timeClazz, initId);
+        jmethodID setId;
+
+        jobject obj;
+
+        if (timeEntry["download_start"].is_string()) {
+            setId = env->GetMethodID(timeClazz, "setDownloadStart", "(Ljava/lang/Long;)V");
+            jobject obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["download_start"].string_value()));
+            env->CallVoidMethod(timeObj, setId, obj);
+            env->DeleteLocalRef(obj);
+        }
+
+        if (timeEntry["download_end"].is_string()) {
+            setId = env->GetMethodID(timeClazz, "setDownloadEnd", "(Ljava/lang/Long;)V");
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["download_end"].string_value()));
+            env->CallVoidMethod(timeObj, setId, obj);
+            env->DeleteLocalRef(obj);
+        }
+
+        if (timeEntry["rtt_udp_start"].is_string()) {
+            setId = env->GetMethodID(timeClazz, "setRttUdpStart", "(Ljava/lang/Long;)V");
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["rtt_udp_start"].string_value()));
+            env->CallVoidMethod(timeObj, setId, obj);
+            env->DeleteLocalRef(obj);
+        }
+
+        if (timeEntry["rtt_udp_end"].is_string()) {
+            setId = env->GetMethodID(timeClazz, "setRttUdpEnd", "(Ljava/lang/Long;)V");
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["rtt_udp_end"].string_value()));
+            env->CallVoidMethod(timeObj, setId, obj);
+            env->DeleteLocalRef(obj);
+        }
+
+        if (timeEntry["upload_start"].is_string()) {
+            setId = env->GetMethodID(timeClazz, "setUploadStart", "(Ljava/lang/Long;)V");
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["upload_start"].string_value()));
+            env->CallVoidMethod(timeObj, setId, obj);
+            env->DeleteLocalRef(obj);
+        }
+
+        if (timeEntry["upload_end"].is_string()) {
+            setId = env->GetMethodID(timeClazz, "setUploadEnd", "(Ljava/lang/Long;)V");
+            obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, std::stoll(timeEntry["upload_end"].string_value()));
+            env->CallVoidMethod(timeObj, setId, obj);
+            env->DeleteLocalRef(obj);
+        }
+
+        env->CallVoidMethod(speedMeasurementResult, addMethod, timeObj);
+    }
+
+    jmethodID setId = env->GetMethodID(speedMeasurementResultClazz, "setMeasurementServerIp", "(Ljava/lang/String;)V");
+    jstring str = env->NewStringUTF(this->measurementServerIp.c_str());
+    env->CallVoidMethod(speedMeasurementResult, setId, str);
+    env->DeleteLocalRef(str);
+
     const jstring javaMsg = env->NewStringUTF(json11::Json(message).dump().c_str());
-    env->CallVoidMethod(jniCaller, cppCallbackFinishedID, javaMsg);
+    env->CallVoidMethod(jniCaller, cppCallbackFinishedID, javaMsg, speedMeasurementResult);
 
     if (baseMeasurementState != nullptr) {
         env->SetFloatField(baseMeasurementState, fieldProgress, 1);
         env->CallVoidMethod(baseMeasurementState, setMeasurementPhaseByStringValueID, env->NewStringUTF(getStringForMeasurementPhase(MeasurementPhase::END).c_str()));
     }
 
-    unregisterSharedObject();
 }
 
-void AndroidConnector::callbackError(const int errorCode, const std::string &errorMessage) const {
-    //TODO: error handling
+void AndroidConnector::callbackError(std::string message) {
+
+    JNIEnv* env = getJniEnv();
+    if (env == nullptr) {
+        return;
+    }
+    env->ExceptionClear();
+    if (env->ExceptionCheck()) {
+        pendingErrorMessages.push_back(message);
+    } else {
+        env->ThrowNew(jniExceptionClass, message.c_str());
+    }
 }
 
 void AndroidConnector::passJniSpeedState (JNIEnv* env, const MeasurementPhase& speedStateToSet, const json11::Json& json) const {
@@ -241,7 +458,6 @@ void AndroidConnector::passJniSpeedState (JNIEnv* env, const MeasurementPhase& s
     case MeasurementPhase::PING:
         toFill = pingMeasurementState;
         obj = json["average_ns"];
-        printLog(json.dump());
         if (obj.is_string()) {
             env->SetLongField(toFill, fieldAverageMs, std::stoll(obj.string_value()) / 1e6);
         }
@@ -255,7 +471,7 @@ void AndroidConnector::passJniSpeedState (JNIEnv* env, const MeasurementPhase& s
         //they're all strings
         obj = json["throughput_avg_bps"];
         if (obj.is_string()) {
-            env->SetLongField(toFill, fieldAvgThroughput, std::stoll(obj.string_value()) / 1e6);
+            env->SetLongField(toFill, fieldAvgThroughput, std::stoll(obj.string_value()));
         }
 
         break;
@@ -268,65 +484,128 @@ void AndroidConnector::passJniSpeedState (JNIEnv* env, const MeasurementPhase& s
 
 }
 
+void AndroidConnector::setBandwidthResult (JNIEnv * env, json11::Json const & jsonItems, jobject & result, JavaParseInformation & parseInfo) {
+    jmethodID setId = env->GetMethodID(resultBandwidthClazz, "setBytes", "(Ljava/lang/Long;)V");
+    jobject obj = env->CallStaticObjectMethod(parseInfo.longClass, parseInfo.staticLongValueOf, std::stoll(jsonItems["bytes"].string_value()));
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
+
+    setId = env->GetMethodID(resultBandwidthClazz, "setBytesIncludingSlowStart", "(Ljava/lang/Long;)V");
+    obj = env->CallStaticObjectMethod(parseInfo.longClass, parseInfo.staticLongValueOf, std::stoll(jsonItems["bytes_including_slow_start"].string_value()));
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
+
+    setId = env->GetMethodID(resultBandwidthClazz, "setDurationNs", "(Ljava/lang/Long;)V");
+    obj = env->CallStaticObjectMethod(parseInfo.longClass, parseInfo.staticLongValueOf, std::stoll(jsonItems["duration_ns"].string_value()));
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
+
+    setId = env->GetMethodID(resultBandwidthClazz, "setDurationNsTotal", "(Ljava/lang/Long;)V");
+    obj = env->CallStaticObjectMethod(parseInfo.longClass, parseInfo.staticLongValueOf, std::stoll(jsonItems["duration_ns_total"].string_value()));
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
+
+    setId = env->GetMethodID(resultBandwidthClazz, "setThroughputAvgBps", "(Ljava/lang/Long;)V");
+    obj = env->CallStaticObjectMethod(parseInfo.longClass, parseInfo.staticLongValueOf, std::stoll(jsonItems["throughput_avg_bps"].string_value()));
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
+
+    setId = env->GetMethodID(resultBandwidthClazz, "setNumStreamsEnd", "(Ljava/lang/Integer;)V");
+    obj = env->CallStaticObjectMethod(parseInfo.intClass, parseInfo.staticIntValueOf, std::stol(jsonItems["num_streams_end"].string_value()));
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
+
+    setId = env->GetMethodID(resultBandwidthClazz, "setNumStreamsStart", "(Ljava/lang/Integer;)V");
+    obj = env->CallStaticObjectMethod(parseInfo.intClass, parseInfo.staticIntValueOf, std::stol(jsonItems["num_streams_start"].string_value()));
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
+
+    setId = env->GetMethodID(resultBandwidthClazz, "setProgress", "(Ljava/lang/Float;)V");
+    obj = env->CallStaticObjectMethod(parseInfo.floatClass, parseInfo.staticFloatValueOf, jsonItems["progress"].number_value());
+    env->CallVoidMethod(result, setId, obj);
+    env->DeleteLocalRef(obj);
+
+}
+
 void AndroidConnector::printLog(const std::string& message) const {
     __android_log_write(ANDROID_LOG_DEBUG, TAG, message.c_str());
 }
 
 
 void AndroidConnector::startMeasurement() {
-    CTrace::setLogFunction(std::bind(&AndroidConnector::printLog, this, std::placeholders::_1));
+    try {
+        CTrace::setLogFunction(std::bind(&AndroidConnector::printLog, this, std::placeholders::_1));
+//        signalFunction = std::function<void(int)>(std::bind(&AndroidConnector::callbackError, this, std::placeholders::_1));
 
-    //init from ias-client
+        //init from ias-client
 
-    ::DEBUG 			= false;
-	::RUNNING 			= true;
+        ::DEBUG 			= false;
+        ::RUNNING 			= true;
 
-	::RTT				= performRtt;
-	::DOWNLOAD 			= performDownload;
-	::UPLOAD 			= performUpload;
+        ::RTT				= speedTaskDesc.performRtt;
+        ::DOWNLOAD 			= speedTaskDesc.performDownload;
+        ::UPLOAD 			= speedTaskDesc.performUpload;
 
-	json11::Json::object jRttParameters;
-	json11::Json::object jDownloadParameters;
-	json11::Json::object jUploadParameters;
+        ::PERFORMED_RTT = false;
+        ::PERFORMED_DOWNLOAD = false;
+        ::PERFORMED_UPLOAD = false;
+        ::hasError = false;
 
-	json11::Json::object jMeasurementParameters;
+        json11::Json::object jRttParameters;
+        json11::Json::object jDownloadParameters;
+        json11::Json::object jUploadParameters;
 
-	//set requested test cases
-	jRttParameters["performMeasurement"] = ::RTT;
-	jDownloadParameters["performMeasurement"] = ::DOWNLOAD;
-	jUploadParameters["performMeasurement"] = ::UPLOAD;
+        json11::Json::object jMeasurementParameters;
 
-	//set default measurement parameters
-	jDownloadParameters["streams"] = std::to_string(downloadStreams);
-	jUploadParameters["streams"] = std::to_string(uploadStreams);
-	jMeasurementParameters["rtt"] = json11::Json(jRttParameters);
-	jMeasurementParameters["download"] = json11::Json(jDownloadParameters);
-	jMeasurementParameters["upload"] = json11::Json(jUploadParameters);
+        //set requested test cases
+        jRttParameters["performMeasurement"] = ::RTT;
+        jDownloadParameters["performMeasurement"] = ::DOWNLOAD;
+        jUploadParameters["performMeasurement"] = ::UPLOAD;
 
-	jMeasurementParameters["platform"] = "desktop";
-	jMeasurementParameters["clientos"] = "linux";
-	jMeasurementParameters["wsTLD"] = "net-neutrality.tools";
-	jMeasurementParameters["wsTargetPort"] = std::to_string(speedServerPort);
-	jMeasurementParameters["wsWss"] = "0";
-	jMeasurementParameters["wsAuthToken"] = "placeholderToken";
-	jMeasurementParameters["wsAuthTimestamp"] = "placeholderTimestamp";
+        //set default measurement parameters
+        jDownloadParameters["streams"] = std::to_string(speedTaskDesc.downloadStreams);
+        jUploadParameters["streams"] = std::to_string(speedTaskDesc.uploadStreams);
+        jRttParameters["ping_query"] = std::to_string(speedTaskDesc.rttCount);
+        jMeasurementParameters["rtt"] = json11::Json(jRttParameters);
+        jMeasurementParameters["download"] = json11::Json(jDownloadParameters);
+        jMeasurementParameters["upload"] = json11::Json(jUploadParameters);
 
-	json11::Json::array jTargets;
-	jTargets.push_back(measurementServerUrlV4);
-	jTargets.push_back(measurementServerUrlV6);
-	jMeasurementParameters["wsTargets"] = json11::Json(jTargets);
-	jMeasurementParameters["wsTargetsRtt"] = json11::Json(jTargets);
+        jMeasurementParameters["platform"] = "mobile";
+        jMeasurementParameters["clientos"] = "android";
+        jMeasurementParameters["wsTLD"] = "net-neutrality.tools";
+        jMeasurementParameters["wsTargetPort"] = std::to_string(speedTaskDesc.speedServerPort);
+        jMeasurementParameters["wsWss"] = speedTaskDesc.isEncrypted ? "1" : "0";
+        jMeasurementParameters["wsAuthToken"] = "placeholderToken";
+        jMeasurementParameters["wsAuthTimestamp"] = "placeholderTimestamp";
 
-	json11::Json jMeasurementParametersJson = jMeasurementParameters;
+        jMeasurementParameters["clientIp"] = this->speedTaskDesc.clientIp;
 
-	measurementStart(jMeasurementParametersJson.dump());
+        json11::Json::array jTargets;
+        if (speedTaskDesc.useIpv6) {
+            jTargets.push_back(speedTaskDesc.measurementServerUrlV6);
+            measurementServerIp = CTool::getIpFromHostname( speedTaskDesc.measurementServerUrlV6, 6 );
+        } else {
+            jTargets.push_back(speedTaskDesc.measurementServerUrlV4);
+            measurementServerIp = CTool::getIpFromHostname( speedTaskDesc.measurementServerUrlV4, 4 );
+        }
+        jMeasurementParameters["wsTargets"] = json11::Json(jTargets);
+        jMeasurementParameters["wsTargetsRtt"] = json11::Json(jTargets);
 
-    //end init from ias-client
-    unregisterSharedObject();
+        json11::Json jMeasurementParametersJson = jMeasurementParameters;
+
+        measurementStart(jMeasurementParametersJson.dump());
+    } catch (std::exception & ex) {
+        shutdown();
+        JNIEnv* env = getJniEnv();
+        if (env == nullptr) {
+            return;
+        }
+        env->ThrowNew(jniExceptionClass, ex.what());
+    }
+
 }
 
 
 void AndroidConnector::stopMeasurement() {
-    unregisterSharedObject();
     measurementStop();
 }

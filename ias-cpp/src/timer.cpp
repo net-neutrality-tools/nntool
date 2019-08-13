@@ -18,6 +18,10 @@
 
 #include "timer.h"
 
+#ifdef __ANDROID__
+    #include "android_connector.h"
+#endif
+
 //! \brief
 //!	Standard Destructor
 CTimer::CTimer()
@@ -108,12 +112,12 @@ int CTimer::run()
 				//Get over all duration of measurement while synced
 				time_diff = time2 - time1;
 				TIMER_DURATION = time_diff;
-				
+
 				//if we reached the time, stop immediately
-				if( MEASUREMENT_DURATION == (unsigned long long)(time_diff/1000000) )
+				if( MEASUREMENT_DURATION <= (unsigned long long)(time_diff/1000000) )
 				{
 					//Stop timer
-					TIMER_STOPPED = true;	
+					TIMER_STOPPED = true;
 
 					#ifndef NNTOOL
 					MYSQL_LOG("LOG_TIMER_END", CTool::toString( CTool::get_timestamp() ) );
@@ -132,20 +136,26 @@ int CTimer::run()
 				//Sleep 10ms
 				usleep(10000);
 
-			}while( RUNNING && time_diff < (MEASUREMENT_DURATION * 1000000) && !m_fStop );
+			}while( RUNNING && !TIMER_STOPPED && !m_fStop );
 		}
 
 		//Sleep 10ms
 		usleep(1000);
-		
+
 		//Stop Timer if needed
 		if( m_fStop )
 			break;
 	}
 
-	mCallback->callback("finish", "measurement completed", 0, "");
+    if (::RUNNING && !::hasError) {
+	    mCallback->callback("finish", "measurement completed", 0, "");
+	}
 	
 	TIMER_ACTIVE = false;
+
+	#ifdef __ANDROID__
+	    AndroidConnector::detachCurrentThreadFromJavaVM();
+	#endif
 	
 	//++++++END+++++++
 

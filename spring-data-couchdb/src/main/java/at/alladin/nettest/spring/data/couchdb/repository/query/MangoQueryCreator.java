@@ -35,18 +35,21 @@ public class MangoQueryCreator extends AbstractQueryCreator<String, Selector> {
 	
 	private final ParameterAccessor parameters;
 	
-	public MangoQueryCreator(PartTree tree, ParameterAccessor parameters, String docType) {
+	private final Class<?> resultClass;
+	
+	public MangoQueryCreator(PartTree tree, ParameterAccessor parameters, String docType, final Class<?> resultClass) {
 		super(tree, parameters);
 		
 		this.parameters = parameters;
 		this.docType = docType;
+		this.resultClass = resultClass;
 	}
-
+	
 	private Selector createDocTypeSelector() {
 		return Expression.eq("docType", docType);
 	}
 	
-	private String toCustomDotPath (final PropertyPath propertyPath) {
+	private String toCustomDotPath(final PropertyPath propertyPath) {
 		String segment = propertyPath.getSegment();
 		try {
 			final Field field = propertyPath.getOwningType().getType().getDeclaredField(segment);
@@ -151,8 +154,7 @@ public class MangoQueryCreator extends AbstractQueryCreator<String, Selector> {
 					.skip(pageable.getOffset())
 					.limit(pageable.getPageSize());
 			}
-			//TODO: do we sort from pageable if it is not paged?
-			if (pageable.getSort() != null) {
+			if (sort == null && pageable.getSort() != null) {
 				queryBuilder.sort(parseSortObject(pageable.getSort()));
 			}
 		}
@@ -160,11 +162,27 @@ public class MangoQueryCreator extends AbstractQueryCreator<String, Selector> {
 		return queryBuilder.build();
 	}
 	
-	protected com.cloudant.client.api.query.Sort[] parseSortObject (final Sort sort) {
+	protected com.cloudant.client.api.query.Sort[] parseSortObject(final Sort sort) {
 		final List<com.cloudant.client.api.query.Sort> sortList = sort.get().map(o -> {
-			return o.getDirection() == Direction.DESC ? com.cloudant.client.api.query.Sort.desc(o.getProperty()) : com.cloudant.client.api.query.Sort.asc(o.getProperty());
+			return o.getDirection() == Direction.DESC ? 
+					com.cloudant.client.api.query.Sort.desc(transformSortQuery(o.getProperty())) : com.cloudant.client.api.query.Sort.asc(transformSortQuery(o.getProperty()));
 		}).collect(Collectors.toList());
 		
 		return sortList.toArray(new com.cloudant.client.api.query.Sort[] {});
+	}
+	
+	private String transformSortQuery(final String sortString) {
+		if (sortString == null) {
+			return null;
+		}
+		
+		try {
+			final PropertyPath sortPath = PropertyPath.from(sortString, resultClass);
+			return toCustomDotPath(sortPath);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return sortString;
 	}
 }

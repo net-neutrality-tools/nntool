@@ -18,7 +18,7 @@
 import Foundation
 
 ///
-class GeoLocationDto: Codable {
+public class GeoLocationDto: Codable {
 
     /// Time and date the geographic location information was captured (UTC).
     var time: Date?

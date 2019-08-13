@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-17
+ *      \date Last update: 2019-06-24
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -114,8 +114,8 @@ int main(int argc, char** argv)
 
     write_pidfile("/var/run/ias-server.pid");
 
-    CTrace *pTrace = CTrace::getInstance(); 
-    pTrace->init("/etc/ias-server/trace.ini","ias-server");
+    CTrace& pTrace = CTrace::getInstance();
+    pTrace.init("/etc/ias-server/trace.ini","ias-server");
 
     TRC_INFO("Status: ias-server started");
 
@@ -179,27 +179,59 @@ int main(int argc, char** argv)
         }
     }
 
-    CUdpListener *pUdpListener = new CUdpListener(mPortUdp); 
+    CUdpListener *pUdpListenerGeneric = new CUdpListener(mPortUdp, 0, "");
+    CUdpListener *pUdpListenerIPv4 = new CUdpListener(mPortUdp, 0, "");
     if (mPortUdp != 0) 
     { 
-        if (pUdpListener->createThread() != 0) 
-        { 
-            TRC_ERR("Error: Failure while creating UDP Listener Thread");
-            return EXIT_FAILURE;
+        //check for ip bindings
+        if (::CONFIG["ip_bindings"]["v4"].string_value().compare("") == 0 && ::CONFIG["ip_bindings"]["v6"].string_value().compare("") == 0)
+        {
+            //no bindings, use generic IP socket
+            if (pUdpListenerGeneric->createThread() != 0) 
+            { 
+                TRC_ERR("Error: Failure while creating generic IP UDP Listener Thread");
+                return EXIT_FAILURE;
+            }
+        } 
+        else
+        {
+            //IPv4 binding
+            if( ::CONFIG["ip_bindings"]["v4"].string_value().compare("") != 0 )
+            {
+                pUdpListenerIPv4 = new CUdpListener(mPortUdp, 4, ::CONFIG["ip_bindings"]["v4"].string_value()); 
+                if (pUdpListenerIPv4->createThread() != 0) 
+                { 
+                    TRC_ERR("Error: Failure while creating IPv4 UDP Listener Thread");
+                    return EXIT_FAILURE;
+                }
+            }
+
+            //IPv6 binding
+            if( ::CONFIG["ip_bindings"]["v6"].string_value().compare("") != 0 )
+            {
+                pUdpListenerGeneric = new CUdpListener(mPortUdp, 6, ::CONFIG["ip_bindings"]["v6"].string_value()); 
+                if (pUdpListenerGeneric->createThread() != 0) 
+                { 
+                    TRC_ERR("Error: Failure while creating IPv6 UDP Listener Thread");
+                    return EXIT_FAILURE;
+                }
+            }
         }
     }
-    
+
     tcpListener->waitForEnd();
     tcpTlsListener->waitForEnd();
     tcpTracerouteListener->waitForEnd();
+    pUdpListenerGeneric->waitForEnd();
+    pUdpListenerIPv4->waitForEnd();
     
     delete(tcpListener);
     delete(tcpTlsListener);
     delete(tcpTracerouteListener);
+    delete(pUdpListenerGeneric);
+    delete(pUdpListenerIPv4);
     
     TRC_INFO("Status: ias-server stopped");
-    
-    delete(pTrace);
 
     return EXIT_SUCCESS;
 }
@@ -271,6 +303,10 @@ int start_daemon(int nochdir, int noclose)
 
 static void signal_handler(int signal)
 {
+    TRC_ERR("Error signal received " + std::to_string(signal));
+
+    CTool::print_stacktrace();
+    
     ::RUNNING = false;
     sleep(1);
     exit(signal);

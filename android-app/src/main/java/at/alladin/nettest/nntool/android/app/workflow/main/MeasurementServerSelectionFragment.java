@@ -12,8 +12,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.dialog.AbstractFullScreenDialogFragment;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse;
 
 /**
  * @author Lukasz Budryk (lb@alladin.at)
@@ -24,12 +26,17 @@ public class MeasurementServerSelectionFragment extends AbstractFullScreenDialog
 
     private ListView serverListView;
 
+    private List<SpeedMeasurementPeerResponse.SpeedMeasurementPeer> measurementPeerList;
+
+    private ServerItem selectedServerItem;
+
     /**
      *
      * @return
      */
-    public static MeasurementServerSelectionFragment newInstance() {
+    public static MeasurementServerSelectionFragment newInstance(final List<SpeedMeasurementPeerResponse.SpeedMeasurementPeer> measurementPeerList) {
         final MeasurementServerSelectionFragment fragment = new MeasurementServerSelectionFragment();
+        fragment.setMeasurementPeerList(measurementPeerList);
         return fragment;
     }
 
@@ -50,28 +57,57 @@ public class MeasurementServerSelectionFragment extends AbstractFullScreenDialog
         serverListView = v.findViewById(R.id.listview_measurement_server_list);
         final List<ServerItem> serverItemList = new ArrayList<>();
 
-        //TODO: fill server list
-        serverItemList.add(new ServerItem(getString(R.string.measurement_server_selection_default_server), null));
+        Integer defaultIndex = null;
+        Integer selectedIndex = null;
+        final String selectedIdentifier = ((MainActivity) getContext()).getSelectedMeasurementPeerIdentifier();
+        for (int i = 0; i < measurementPeerList.size(); i++) {
+            SpeedMeasurementPeerResponse.SpeedMeasurementPeer p = measurementPeerList.get(i);
+            serverItemList.add(new ServerItem(p.getName(), p.getDescription(), p.getIdentifier()));
+            if (defaultIndex == null && p.isDefaultPeer()) {
+                defaultIndex = i;
+            }
+            if (p.getIdentifier() != null && p.getIdentifier().equals(selectedIdentifier)) {
+                selectedIndex = i;
+            }
+        }
+        if (defaultIndex == null) {
+            defaultIndex = 0;
+        }
 
         final ServerListAdapter adapter = new ServerListAdapter(getContext(), serverItemList);
-        //TODO: select current server
-        adapter.setSelectedIndex(0);
+        adapter.setSelectedIndex(selectedIndex != null ? selectedIndex : defaultIndex);
+        selectedServerItem = adapter.getItem(selectedIndex != null ? selectedIndex : defaultIndex);
 
         serverListView.setAdapter(adapter);
         serverListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         serverListView.setOnItemClickListener((parent, view, position, id) -> {
             adapter.setSelectedIndex(position);
+            selectedServerItem = adapter.getItem(position);
             adapter.notifyDataSetChanged();
         });
     }
 
+    public List<SpeedMeasurementPeerResponse.SpeedMeasurementPeer> getMeasurementPeerList() {
+        return measurementPeerList;
+    }
+
+    public void setMeasurementPeerList(List<SpeedMeasurementPeerResponse.SpeedMeasurementPeer> measurementPeerList) {
+        this.measurementPeerList = measurementPeerList;
+    }
+
+    public String getSelectedServerIdentifier() {
+        return selectedServerItem.identifier;
+    }
+
     private class ServerItem {
         String name;
-        String country;
+        String description;
+        String identifier;
 
-        public ServerItem(String name, String country) {
+        public ServerItem(String name, String description, String identifier) {
             this.name = name;
-            this.country = country;
+            this.description = description;
+            this.identifier = identifier;
         }
 
         public String getName() {
@@ -82,12 +118,20 @@ public class MeasurementServerSelectionFragment extends AbstractFullScreenDialog
             this.name = name;
         }
 
-        public String getCountry() {
-            return country;
+        public String getDescription() {
+            return description;
         }
 
-        public void setCountry(String country) {
-            this.country = country;
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getIdentifier() {
+            return identifier;
+        }
+
+        public void setIdentifier(String identifier) {
+            this.identifier = identifier;
         }
     }
 
@@ -98,7 +142,7 @@ public class MeasurementServerSelectionFragment extends AbstractFullScreenDialog
         private class ViewHolder {
             RadioButton radioButton;
             TextView name;
-            TextView country;
+            TextView description;
         }
 
         public ServerListAdapter(final Context context, final List<ServerItem> items) {
@@ -122,7 +166,7 @@ public class MeasurementServerSelectionFragment extends AbstractFullScreenDialog
                 v = LayoutInflater.from(getContext()).inflate(R.layout.measurement_server_selection_item, parent, false);
                 vh = new ViewHolder();
                 vh.name = v.findViewById(R.id.text_server_name);
-                vh.country = v.findViewById(R.id.text_server_country);
+                vh.description = v.findViewById(R.id.text_server_country);
                 vh.radioButton = v.findViewById(R.id.radio_server_selected);
                 v.setTag(vh);
             }
@@ -134,12 +178,12 @@ public class MeasurementServerSelectionFragment extends AbstractFullScreenDialog
 
             if (item != null) {
                 vh.name.setText(item.getName());
-                if (item.getCountry() != null) {
-                    vh.country.setVisibility(View.VISIBLE);
-                    vh.country.setText(item.getCountry());
+                if (item.getDescription() != null) {
+                    vh.description.setVisibility(View.VISIBLE);
+                    vh.description.setText(item.getDescription());
                 }
                 else {
-                    vh.country.setVisibility(View.GONE);
+                    vh.description.setVisibility(View.GONE);
                 }
                 vh.radioButton.setChecked(position == selectedIndex);
             }

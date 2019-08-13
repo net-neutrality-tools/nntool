@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-03-20
+ *      \date Last update: 2019-07-03
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -44,7 +44,7 @@ static NSInteger const defaultWss                           = 0;
 static const bool defaultPerformRttMeasurement              = true;
 static const bool defaultPerformDownloadMeasuement          = true;
 static const bool defaultPerformUploadMeasurement           = true;
-static const bool defaultPerformRouteToClientLookup         = true;
+static const bool defaultPerformRouteToClientLookup         = false;
 static const bool defaultPerformGeolocationLookup           = true;
 
 static const NSInteger defaultRouteToClientTargetPort       = 8080;

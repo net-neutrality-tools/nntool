@@ -18,7 +18,7 @@
 import Foundation
 
 ///
-protocol QoSProgramDelegate {
+protocol QoSProgramDelegate: class {
 
     func qosDidStart(_ qos: QoSProgram)
 

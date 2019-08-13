@@ -16,6 +16,7 @@
  ******************************************************************************/
 
 import UIKit
+import MeasurementAgentKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -52,15 +53,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applyAppearance() {
         UINavigationBar.appearance().tintColor = APP_TINT_COLOR
+        UINavigationBar.appearance().barTintColor = UIColor.white
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: APP_TINT_COLOR]
     }
 
     ///
     func afterStart(isNewlyLaunched: Bool) {
+        if isNewlyLaunched {
+            logger.debug(BundleHelper.getAppVersionInfo())
+            logger.debug(BundleHelper.getBundleGitInfoString())
+        }
 
         // Refresh MeasurementAgent settings after App launch
         if MEASUREMENT_AGENT.isRegistered() {
-            print("reloading settings (newlyLaunched: \(isNewlyLaunched))")
+            logger.debug("reloading settings (newlyLaunched: \(isNewlyLaunched))")
             MEASUREMENT_AGENT.updateSettings()
         }
     }

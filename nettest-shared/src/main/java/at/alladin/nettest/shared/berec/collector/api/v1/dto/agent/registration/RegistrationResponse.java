@@ -71,4 +71,9 @@ public class RegistrationResponse extends BasicResponse {
 	public void setSettings(SettingsResponse settings) {
 		this.settings = settings;
 	}
+
+	@Override
+	public String toString() {
+		return "RegistrationResponse [agentUuid=" + agentUuid + ", settings=" + settings + "]";
+	}
 }

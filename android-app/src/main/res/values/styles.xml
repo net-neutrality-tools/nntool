@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -11,11 +11,17 @@
 
     <style name="Nettest.ActionBar" parent="Base.Widget.AppCompat.ActionBar">
         <item name="background">@color/theme_action_bar_bg</item>
+        <item name="actionButtonStyle">@style/Nettest.ActionBar.Button</item>
         <item name="titleTextStyle">@style/Nettest.ActionBar.Title</item>
+        <item name="android:actionMenuTextColor">@color/theme_text_color</item>
     </style>
 
-    <style name="Nettest.ActionBar.Title" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/black</item>
+    <style name="Nettest.ActionBar.Title" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+    </style>
+
+    <style name="Nettest.ActionBar.Button" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -76,14 +82,30 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="Nettest.Title.CpuRam.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="Nettest.Title.GeoLocation.Text" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/theme_text_color</item>
-        <item name="android:textSize">19sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="Nettest.Title.GeoLocation.Accuracy.Text" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/theme_text_color</item>
         <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Nettest.Title.InterfaceTraffic.Arrow" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/interface_traffic_arrow_inactive</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="Nettest.Title.InterfaceTraffic.Label" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <!-- TOP PROGRESS BAR -->
@@ -144,6 +166,99 @@
     <style name="Nettest.Measurement.Speed.Result.Overview.Unit.Text" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/bottom_result_overview_text</item>
         <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- View your recent measurement button -->
+
+    <style name="Nettest.Measurement.Result.View.Recent.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/title_page_start_button_fg</item>
+    </style>
+
+    <!-- Result Fragment -->
+    <style name="Nettest.Result.Group.Icon" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/result_group_icon</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Nettest.Result.Group.Header" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="Nettest.Result.Group.Description" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Nettest.Result.Item" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- QoS Result Fragment -->
+
+    <style name="Nettest.Result.QoS.Icon" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_primary_color</item>
+        <item name="android:textSize">35sp</item>
+    </style>
+
+    <style name="Nettest.Result.QoS.Name" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Nettest.Result.QoS.Success.Count" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- QoS Result Details Fragment -->
+
+    <style name="Nettest.Result.QoS.Details.Section" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:padding">20dp</item>
+        <item name="android:background">@color/theme_tertiary_color</item>
+    </style>
+
+    <style name="Nettest.Result.QoS.Details.Description" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">20dp</item>
+    </style>
+
+    <style name="Nettest.Result.QoS.Details.List.Header" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Nettest.Result.QoS.Details.List.Description" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+
+
+
+    <!-- History Fragment -->
+    <style name="Nettest.History.Error.Text" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!-- Custom Action Bar -->
+    <style name="Nettest.Custom.Action.Bar.Title" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="Nettest.Custom.Action.Bar.Icon" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/theme_text_color</item>
+        <item name="android:textSize">35dp</item>
     </style>
 
 </resources>

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-29
+ *      \date Last update: 2019-06-24
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -29,25 +29,10 @@
 class Ping : public CBasisThread
 {
 	private:
-		int mSock;
-		
 		int mPingPort;
-		
-		int mResponse;
-				
-		struct sockaddr_in6 mServerDatav6;
-		struct sockaddr_in mServerDatav4;
-		struct sockaddr_in6 mClientDatav6;
-		struct sockaddr_in mClientDatav4;
-		socklen_t mClientDataSizev6;
-		socklen_t mClientDataSizev4;
-		
-		CConnection *mSocket;
-		
-		unsigned long long time1;
-		unsigned long long time2;
+		int mPingQuery;
 		unsigned long long mTimeDiff;
-		
+
 	public:
 		struct measurement_data mPingResult;
 
@@ -64,9 +49,8 @@ class Ping : public CBasisThread
 
 		int ipversion;
 
-		int mPingQuery;
+		int nPingTarget;
 
-		int nHops;
 		int nSize;
 		int nError;
 		

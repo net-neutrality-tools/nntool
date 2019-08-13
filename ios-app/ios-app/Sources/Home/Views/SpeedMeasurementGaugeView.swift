@@ -24,12 +24,12 @@ import UIKit
     @IBOutlet private var startButton: UIButton?
     @IBOutlet var speedMeasurementGauge: SpeedMeasurementGauge?
 
-    @IBOutlet private var networkTypeLabel: UILabel?
-    @IBOutlet private var networkDetailLabel: UILabel?
+    @IBOutlet var networkTypeLabel: UILabel?
+    @IBOutlet var networkDetailLabel: UILabel?
 
     var startButtonActionCallback: (() -> Void)?
 
-    private static let iconFont = UIFont(name: "berec-icons", size: 50)
+    private static let iconFont = R.font.berecIcons(size: 50)
 
     private var startButtonSystemFont: UIFont?
 

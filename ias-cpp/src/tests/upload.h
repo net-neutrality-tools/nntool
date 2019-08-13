@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-17
+ *      \date Last update: 2019-06-24
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -37,13 +37,8 @@ class Upload : public CBasisThread
 		
 		string mServer;
 		string mServerName;
-		string mServerHostname;
 		string mClient;
-		
-		int ipversion;
-				
-		CConnection *mConnection;
-		
+
 		CConfigManager *mConfig;
 		
 	public:

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-20
+ *      \date Last update: 2019-06-18
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -92,11 +92,7 @@ int CHttp::parseResponse()
 	
 	buffer = string(rbuffer);
 	
-	//if(DEBUG)
-	{
-		cout<<endl<<"Received ("<<recv_len<<")--------------------------------"<<endl;
-		cout<<buffer<<endl;
-	}
+	TRC_DEBUG("Received: (" + to_string(recv_len) + ") --------------------------------" + "\r\n" + buffer);
 	
 	if( buffer.find(ok) != string::npos )
 	{
@@ -201,12 +197,7 @@ int CHttp::responseForbidden()
 	//String to Server
 	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
 
-	
-	//if(DEBUG)
-	{
-		cout<<"SEND-Buffer ("<<send_len<<")----------------------"<<endl;
-		cout<<send_init<<endl;
-	}
+	TRC_DEBUG("SEND-Buffer: (" + to_string(send_len) + ") --------------------------------" + "\r\n" + send_init);
 		
 	return 403;
 }
@@ -233,11 +224,7 @@ int CHttp::responseNotFound()
 	//String to Server
 	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
 	
-	//if(DEBUG)
-	{
-		cout<<"SEND-Buffer ("<<send_len<<")----------------------"<<endl;
-		cout<<send_init<<endl;
-	}
+	TRC_DEBUG("SEND-Buffer: (" + to_string(send_len) + ") --------------------------------" + "\r\n" + send_init);
 		
 	return 404;
 }
@@ -295,11 +282,7 @@ int CHttp::responseOk()
 	//String to Server
 	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
 	
-	//if(DEBUG)
-	{
-		cout<<"SEND-Buffer ("<<send_len<<")----------------------"<<endl;
-		cout<<send_init<<endl;
-	}
+	TRC_DEBUG("SEND-Buffer: (" + to_string(send_len) + ") --------------------------------" + "\r\n" + send_init);
 		
 	return ret;
 }
@@ -318,11 +301,7 @@ int CHttp::requestToReferenceServer()
 	//String to Server
 	int send_len = mConnection->send(send_init.c_str(), send_init.size(), 0);
 	
-	//if(DEBUG)
-	{
-		cout<<"SEND-Buffer ("<<send_len<<")----------------------"<<endl;
-		cout<<send_init<<endl;
-	}
+	TRC_DEBUG("SEND-Buffer: (" + to_string(send_len) + ") --------------------------------" + "\r\n" + send_init);
 		
 	return parseResponse();
 }

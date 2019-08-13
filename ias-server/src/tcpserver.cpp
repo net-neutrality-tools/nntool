@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-10
+ *      \date Last update: 2019-06-18
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -33,7 +33,6 @@ CTcpServer::CTcpServer()
 //!	Virtual Destructor
 CTcpServer::~CTcpServer()
 {
-	delete(mSocket);
 }
 
 //! \brief
@@ -44,7 +43,7 @@ CTcpServer::CTcpServer(int nTargetPort, int nTargetPortTraceroute, bool nTlsSock
     mTargetPortTraceroute 	= nTargetPortTraceroute;
     mTlsSocket  			= nTlsSocket;
 	
-    mSocket    			 	= new CConnection();
+    mSocket                 = std::make_unique<CConnection>();
 }
 
 //! \brief

@@ -16,6 +16,7 @@
  ******************************************************************************/
 
 import Foundation
+import CodableJSON
 
 ///
 public protocol ProgramProtocol {
@@ -26,6 +27,7 @@ public protocol ProgramProtocol {
 
     //var result: [:]? { get }
 
-    func run() throws -> [AnyHashable: Any]
+    func run(relativeStartTimeNs: UInt64) throws -> SubMeasurementResult
 
+    func cancel()
 }

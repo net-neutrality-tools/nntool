@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-29
+ *      \date Last update: 2019-07-03
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -177,6 +177,27 @@ onmessage = function (event)
             wsAuthTimestamp       = data.wsAuthTimestamp;  
 
             connect();
+            break;
+        }
+
+        case 'fetchCounter':
+        {
+            if (wsTestCase === 'upload')
+            {
+                for (var key in ulReportDict)
+                {
+                    wsData      += ulReportDict[key].bRcv;
+                    wsFrames    += ulReportDict[key].hRcv;
+                }
+            }
+            reportToControl('info', 'counter');
+
+            if (wsTestCase === 'upload')
+            {
+                wsData          = 0;
+                wsFrames        = 0;
+            }
+            
             break;
         }
 

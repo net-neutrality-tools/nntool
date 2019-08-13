@@ -35,11 +35,15 @@ class LmapCapabilityTaskDto: Codable {
     /// This should include the version number of the Measurement Task software.
     var version: String?
 
+    /// The measurement peer identifier the agent wishes to measure against for this task.
+    var preferredMeasurementPeerIdentifier: String?
+
     ///
     enum CodingKeys: String, CodingKey {
         case taskName  = "name"
         case functions = "function"
         case program
         case version
+        case preferredMeasurementPeerIdentifier = "selected_measurement_peer_identifier"
     }
 }

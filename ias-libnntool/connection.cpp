@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-22
+ *      \date Last update: 2019-06-18
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -320,7 +320,7 @@ int CConnection::tcpSocketServer( int &nPort )
 		return -1;
 	}
 	
-	listen(mSocket, 1);
+	listen(mSocket, -1);
 	
 	return mSocket;
 }
@@ -446,7 +446,7 @@ int CConnection::tcp6SocketServer( int &nPort )
 		return -1;
 	}
 	
-	listen(mSocket, 1);
+	listen(mSocket, -1);
 	
 	return mSocket;
 }
@@ -514,9 +514,9 @@ int CConnection::connectTLS()
   	int ssl_error = 0;
 
 	OpenSSL_add_ssl_algorithms();
-	method = TLS_client_method();
+	const SSL_METHOD *method = TLS_client_method();
 	SSL_load_error_strings();
-	ctx = SSL_CTX_new (method);
+	SSL_CTX* ctx = SSL_CTX_new (method);
 
 	ssl = SSL_new (ctx);
 	SSL_set_fd(ssl, mSocket);
@@ -530,10 +530,9 @@ int CConnection::connectTLS()
 	}
 	else
 	{
-		server_cert = SSL_get_peer_certificate (ssl);
+		X509* server_cert = SSL_get_peer_certificate (ssl);
 
 		//check certificate
-	    int ret;
 	    X509_STORE *store;
 	    X509_STORE_CTX *store_ctx;
 

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -19,13 +20,17 @@ import com.google.gson.annotations.SerializedName;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.EvaluatedQoSResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.EvaluatedQoSResult.QoSResultOutcome;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.QoSTypeDescription;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
+import at.alladin.nettest.shared.model.qos.QosMeasurementDescription;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapper;
 import at.alladin.nntool.shared.db.QoSTestResult.TestType;
 import at.alladin.nntool.shared.qos.AbstractResult;
 import at.alladin.nntool.shared.qos.ResultComparer;
@@ -34,15 +39,24 @@ import at.alladin.nntool.shared.qos.ResultOptions;
 
 @Service
 public class QoSEvaluationService {
+
+	private final static String TRANSLATION_DESCRIPTION_SUFFIX = "_description";
+
+	private final static String TRANSLATION_NAME_SUFFIX = "_title";
 	
+	private final static String TRANSLATION_ICON_FONT_SUFFIX = "_icon";
+
 	@Autowired
 	public QoSMeasurementObjectiveRepository qosMeasurementObjectiveRepository;
 
 	@Autowired
+	private FullMeasurementResponseMapper fullMeasurementResponseMapper;
+
+	@Autowired
 	private GsonBuilder gsonBuilder;
-	
+
 	private Map<Long, QoSMeasurementObjective> objectiveIdToMeasurementObjectiveMap;
-	
+
 	private void initMeasurementObjectiveMap() {
 		//if this were a post-construct, all servers would need to request QoSMeasurementObjective in their application.yml (as they all know the storage service)
 		//initialize the qos objective map (recalculate it everytime, if no server restart on qos definition change is desired)
@@ -51,16 +65,18 @@ public class QoSEvaluationService {
 		objectiveList.forEach( (o) -> objectiveIdToMeasurementObjectiveMap.put(Long.parseLong(o.getObjectiveId()), o));
 	}
 	
-	public FullQoSMeasurement evaluateQoSMeasurement (final QoSMeasurement measurement) {
+	public FullQoSMeasurement evaluateQoSMeasurement (final QoSMeasurement measurement, final Locale locale) {
 		if (objectiveIdToMeasurementObjectiveMap == null) {
 			initMeasurementObjectiveMap();
 		}
 		
-		final FullQoSMeasurement ret = new FullQoSMeasurement();
+		final FullQoSMeasurement ret = fullMeasurementResponseMapper.map(measurement);
 		ret.setResults(new ArrayList<>());
 		
 		//start copying
 		final Map<QoSMeasurementType, TreeSet<ResultDesc>> resultKeys = new HashMap<>();
+		
+		final Set<String> resultTranslationKeys = new HashSet<>();
 		
 		for (QoSResult qosResult : measurement.getResults()) {
 			final QoSMeasurementObjective objective = objectiveIdToMeasurementObjectiveMap.get(qosResult.getObjectiveId());
@@ -68,10 +84,37 @@ public class QoSEvaluationService {
 				continue;
 			}
 			
-			ret.getResults().add(compareTestResults(qosResult, objective, resultKeys));
+			final EvaluatedQoSResult evaluatedQoSResult = compareTestResults(qosResult, objective, resultKeys);
+			evaluatedQoSResult.getResultKeyMap().forEach((key, outcome) -> resultTranslationKeys.add(key));
+			ret.getResults().add(evaluatedQoSResult);
 			
 		}
+
+		ret.setKeyToTranslationMap(getKeyToTranslationMapForKeys(resultTranslationKeys, locale));
+		ret.setQosTypeToDescriptionMap(getQosMeasurementDecriptionMap(locale));
 		
+		return ret;
+	}
+
+	private Map<String, String> getKeyToTranslationMapForKeys(final Set<String> resultTranslationKeys, final Locale locale) {
+		final Map<String, String> ret = new HashMap<>();
+		resultTranslationKeys.forEach( key -> {
+			ret.put(key, key); //TODO: ret.put(key, getLocalizedMessage(key, locale);
+		});
+		return ret;
+	}
+
+	private Map<QoSMeasurementTypeDto, QoSTypeDescription> getQosMeasurementDecriptionMap (final Locale locale) {
+		final Map<QoSMeasurementTypeDto, QoSTypeDescription> ret = new HashMap<>();
+
+		for (QoSMeasurementTypeDto type : QoSMeasurementTypeDto.values()) {
+			QoSTypeDescription description = new QoSTypeDescription();
+			description.setDescription(type.toString() + TRANSLATION_DESCRIPTION_SUFFIX); //TODO: localizedMessages.get()
+			description.setName(type.toString() + TRANSLATION_NAME_SUFFIX); //TODO: localizedMessages.get()
+			description.setIcon(type.toString() + TRANSLATION_ICON_FONT_SUFFIX); //TODO: localizedMessages.get() ?
+			ret.put(type, description);
+		}
+
 		return ret;
 	}
 	
@@ -92,7 +135,7 @@ public class QoSEvaluationService {
 		final Gson gson = gsonBuilder.create();
 		
 		//fix double gson call
-		final AbstractResult result = gson.fromJson(gson.toJson(qosResult.getResults()), resultClass);	// == testResult
+		final AbstractResult result = gson.fromJson(gson.toJsonTree(qosResult.getResults()), resultClass);	// == testResult
 		result.setResultMap(qosResult.getResults()); //and add the map (needed for evaluations (e.g. %EVAL xxxxx%))
 		
 		//create a parsed abstract result set sorted by priority
@@ -115,7 +158,9 @@ public class QoSEvaluationService {
 				expResultSet.add(res);
 			
 			}
-			
+
+			final Map<String, EvaluatedQoSResult.QoSResultOutcome> resultKeyMap = new HashMap<>();
+
 			for (AbstractResult objectiveResult : expResultSet) {
 				final ResultOptions resultOptions = new ResultOptions(Locale.getDefault());
 				final ResultDesc desc;
@@ -146,8 +191,8 @@ public class QoSEvaluationService {
 	    			}
 	
 					resultDescSet.add(desc);
-					
-					qosResult.getResults().put(desc.getKey(), resultHolder.resultKeyType);
+
+					resultKeyMap.put(desc.getKey(), resultHolder.resultKeyType);
 					
 	    			if (AbstractResult.BEHAVIOUR_ABORT.equals(resultHolder.event)) {
 	    				break;
@@ -163,6 +208,7 @@ public class QoSEvaluationService {
 			}
 			ret.setFailureCount(qosResult.getFailureCount());
 			ret.setSuccessCount(qosResult.getSuccessCount());
+			ret.setResultKeyMap(resultKeyMap);
 			ret.setEvaluationCount(ret.getFailureCount() + ret.getSuccessCount());
 			ret.setImplausible(qosResult.isImplausible());
 			ret.setDescription(objective.getTranslationKeys().getDescription());
@@ -226,7 +272,7 @@ public class QoSEvaluationService {
 	}
 	
 	private ResultHolder calculateResultCounter(final QoSResult qosResult, final AbstractResult expResult, final ResultDesc resultDesc) {
-		String resultKeyType = null;
+		QoSResultOutcome resultKeyType = null;
 		String event = AbstractResult.BEHAVIOUR_NOTHING;
 		
 		//increase the failure or success counter of this result object
@@ -234,10 +280,10 @@ public class QoSEvaluationService {
 			if (expResult.getOnSuccess() != null) {
 				qosResult.setSuccessCount(qosResult.getSuccessCount() + 1);
 				if (AbstractResult.RESULT_TYPE_DEFAULT.equals(expResult.getSuccessType())) {
-					resultKeyType = ResultDesc.STATUS_CODE_SUCCESS;
+					resultKeyType = QoSResultOutcome.OK;
 				}
 				else {
-					resultKeyType = ResultDesc.STATUS_CODE_INFO;
+					resultKeyType = QoSResultOutcome.INFO;
 				}
 				
 				event = expResult.getOnSuccessBehaivour();
@@ -247,10 +293,10 @@ public class QoSEvaluationService {
 			if (expResult.getOnFailure() != null) {
 				qosResult.setFailureCount(qosResult.getFailureCount()+1);
 				if (AbstractResult.RESULT_TYPE_DEFAULT.equals(expResult.getFailureType())) {
-					resultKeyType = ResultDesc.STATUS_CODE_FAILURE;
+					resultKeyType = QoSResultOutcome.FAIL;
 				}
 				else {
-					resultKeyType = ResultDesc.STATUS_CODE_INFO;
+					resultKeyType = QoSResultOutcome.INFO;
 				}
 				
 				event = expResult.getOnFailureBehaivour();
@@ -261,15 +307,15 @@ public class QoSEvaluationService {
 	}
 	
 	public static class ResultHolder {
-		final String resultKeyType;
+		final QoSResultOutcome resultKeyType;
 		final String event;
 		
-		public ResultHolder(final String resultKeyType, final String event) {
+		public ResultHolder(final QoSResultOutcome resultKeyType, final String event) {
 			this.resultKeyType = resultKeyType;
 			this.event = event;
 		}
 
-		public String getResultKeyType() {
+		public QoSResultOutcome getResultKeyType() {
 			return resultKeyType;
 		}
 

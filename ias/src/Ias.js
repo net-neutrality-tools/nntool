@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-03-20
+ *      \date Last update: 2019-07-03
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -54,6 +54,8 @@ function Ias()
     var classChangesLimit               = 2;
     var classIndexCurrent               = -1;
     var classIndexUsed                  = [];
+    var classIndexLowestBound           = -1;
+    var classIndexHighestBound          = -1;
     var classMatched                    = false;
     var classChangePerforming           = false;
 
@@ -78,6 +80,8 @@ function Ias()
 
     var waitTime                        = 3000;
     var waitTimeShort                   = 1000;
+    var waitTimeClassChangeDownload     = 8000;
+    var waitTimeClassChangeUpload       = 15000;
 
 
 
@@ -254,7 +258,7 @@ function Ias()
         if (classChangePerforming)
         {
             return;
-        }
+        }    
 
         data = JSON.parse(data);
 
@@ -264,10 +268,15 @@ function Ias()
         globalKPIs.error_code           = data.error_code;
         globalKPIs.error_description    = data.error_description;
 
-        if(data.test_case === 'routeToClient')
+        if (data.test_case === 'routeToClient')
         {
             routeKPIs.server_client       = data.server_client_route;
             routeKPIs.server_client_hops  = data.server_client_route_hops;
+        }
+
+        if (data.cmd === 'classCheck' && (typeof wsMeasurementParameters[data.test_case].classes === 'undefined' || wsMeasurementParameters[data.test_case].classes.length === 0))
+        {
+            return;
         }
 
         if ((data.test_case === 'download' || data.test_case === 'upload') && typeof data.throughput_avg_bps !== 'undefined' && classIndexCurrent !== -1)
@@ -292,29 +301,68 @@ function Ias()
             }
 
             classChangePerforming = false;
-            if (data.out_of_bounds  && !classMatched)
+            if (data.out_of_bounds  && !classMatched && data.cmd === 'classCheck')
             {
                 if (classIndexUsed.length <= classChangesLimit)
                 {
                     var newClassSelected = false;
-                    wsMeasurementParameters[data.test_case].classes.forEach(function(element, index)
+
+                    wsMeasurementParameters[data.test_case].classes.every(function(element, index)
                     {
-                        if (element.bounds.lower * 1000 * 1000 < data.throughput_avg_bps && element.bounds.upper * 1000 * 1000 > data.throughput_avg_bps)
+                        var i = index;
+                        //check for new class within bounds OR if lowest lower or highest upper bounds where exceeded
+                        if ((element.bounds.lower * 1000 * 1000 < data.throughput_avg_bps && element.bounds.upper * 1000 * 1000 > data.throughput_avg_bps)
+                            || wsMeasurementParameters[data.test_case].classes[classIndexLowestBound].bounds.lower * 1000 * 1000 > data.throughput_avg_bps
+                            || wsMeasurementParameters[data.test_case].classes[classIndexHighestBound].bounds.upper * 1000 * 1000 < data.throughput_avg_bps)
                         {
-                            if (index === classIndexCurrent || classIndexUsed.includes(index))
+                            if (wsMeasurementParameters[data.test_case].classes[classIndexLowestBound].bounds.lower * 1000 * 1000 > data.throughput_avg_bps
+                                || wsMeasurementParameters[data.test_case].classes[classIndexHighestBound].bounds.upper * 1000 * 1000 < data.throughput_avg_bps)
                             {
-                                console.log('Class #' + index + ' was already used');
+                                if (wsMeasurementParameters[data.test_case].classes[classIndexLowestBound].bounds.lower * 1000 * 1000 > data.throughput_avg_bps)
+                                {
+                                    i = classIndexLowestBound;
+                                    console.log("Lowest bound of configured classes was exceeded");
+                                }
+                                if (wsMeasurementParameters[data.test_case].classes[classIndexHighestBound].bounds.upper * 1000 * 1000 < data.throughput_avg_bps)
+                                {
+                                    i = classIndexHighestBound;
+                                    console.log("Highest bound of configured classes was exceeded");
+                                }
+
+                                if (i === classIndexCurrent || classIndexUsed.includes(i))
+                                {
+                                    console.log('Class #' + i + ' was already used');
+                                }
+                                else
+                                {
+                                    newClassSelected = true;
+                                }
                             }
                             else
                             {
-                                classIndexCurrent = index;
-                                classIndexUsed.push(classIndexCurrent);
-                                classChangePerforming = true;
-                                newClassSelected = true;
-                                return;
+                                if (index === classIndexCurrent || classIndexUsed.includes(index))
+                                {
+                                    console.log('Class #' + index + ' was already used');
+                                }
+                                else
+                                {
+                                    i = index;
+                                    newClassSelected = true;
+                                }
                             }
                         }
+
+                        if (newClassSelected)
+                        {
+                            classIndexCurrent = i;
+                            //classIndexUsed.push(classIndexCurrent);
+                            classChangePerforming = true;
+                            return false;
+                        }
+
+                        return true;
                     });
+
                     if (!newClassSelected)
                     {
                         console.log('Class can not be changed, resuming measurement');
@@ -328,7 +376,7 @@ function Ias()
                 }
             }
 
-            if (classChangePerforming)
+            if (classChangePerforming && data.cmd === 'classCheck')
             {
                 console.log('Changing Class');
                 wsControl.measurementStop(JSON.stringify(wsMeasurementParameters));
@@ -339,12 +387,12 @@ function Ias()
 
                 if (data.test_case === 'download')
                 {
-                    wsDownloadTimer = setTimeout(startDownload, waitTime);
+                    wsDownloadTimer = setTimeout(startDownload, waitTimeClassChangeDownload);
                 }
 
                 if (data.test_case === 'upload')
                 {
-                    wsDownloadTimer = setTimeout(startUpload, waitTime);
+                    wsDownloadTimer = setTimeout(startUpload, waitTimeClassChangeUpload);
                 }
                 
                 globalKPIs.cmd = 'report';
@@ -575,7 +623,18 @@ function Ias()
                         {
                             classIndexCurrent = index;
                             console.log("Default Class selected: " + JSON.stringify(element));
-                            return;
+                        }
+
+                        //get classes with highest upper and lowest lower bound
+                        if (element.bounds.lower < classIndexLowestBound || classIndexLowestBound === -1)
+                        {
+                            classIndexLowestBound = index;
+                            console.log("New lowest bound discovered on index #" + classIndexLowestBound + ": " + element.bounds.lower);
+                        }
+                        if (element.bounds.upper > classIndexHighestBound || classIndexHighestBound === -1)
+                        {
+                            classIndexHighestBound = index;
+                            console.log("New highest bound discovered on index #" + classIndexHighestBound + ": " + element.bounds.upper);
                         }
                     });
 
@@ -591,8 +650,9 @@ function Ias()
 
             classIndexUsed.push(classIndexCurrent);
 
-            wsMeasurementParameters[measurementType].streams    = wsMeasurementParameters[measurementType].classes[classIndexCurrent].streams;
-            wsMeasurementParameters[measurementType].frameSize  = wsMeasurementParameters[measurementType].classes[classIndexCurrent].frameSize;
+            wsMeasurementParameters[measurementType].streams          = wsMeasurementParameters[measurementType].classes[classIndexCurrent].streams;
+            wsMeasurementParameters[measurementType].frameSize        = wsMeasurementParameters[measurementType].classes[classIndexCurrent].frameSize;
+            wsMeasurementParameters[measurementType].framesPerCall    = wsMeasurementParameters[measurementType].classes[classIndexCurrent].framesPerCall;
         }
         else
         {

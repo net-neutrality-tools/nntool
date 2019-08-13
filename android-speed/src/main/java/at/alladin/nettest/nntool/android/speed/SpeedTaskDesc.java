@@ -13,7 +13,7 @@ public class SpeedTaskDesc implements Serializable {
 
     private int speedServerPort = 80;
 
-    private int rttCount;
+    private int rttCount = 10;
 
     private int downloadStreams;
 
@@ -24,6 +24,14 @@ public class SpeedTaskDesc implements Serializable {
     private boolean performUpload = true;
 
     private boolean performRtt = true;
+
+    private boolean useEncryption = false;
+
+    private boolean useIpV6 = false;
+
+    private String clientIp;
+
+    private String clientIpPublic;
 
     public int getRttCount() {
         return rttCount;
@@ -97,6 +105,38 @@ public class SpeedTaskDesc implements Serializable {
         this.performRtt = performRtt;
     }
 
+    public boolean isUseEncryption() {
+        return useEncryption;
+    }
+
+    public void setUseEncryption(boolean useEncryption) {
+        this.useEncryption = useEncryption;
+    }
+
+    public boolean isUseIpV6() {
+        return useIpV6;
+    }
+
+    public void setUseIpV6(boolean useIpV6) {
+        this.useIpV6 = useIpV6;
+    }
+
+    public String getClientIp() {
+        return clientIp;
+    }
+
+    public void setClientIp(String clientIp) {
+        this.clientIp = clientIp;
+    }
+
+    public String getClientIpPublic() {
+        return clientIpPublic;
+    }
+
+    public void setClientIpPublic(String clientIpPublic) {
+        this.clientIpPublic = clientIpPublic;
+    }
+
     @Override
     public String toString() {
         return "SpeedTaskDesc{" +
@@ -109,6 +149,10 @@ public class SpeedTaskDesc implements Serializable {
                 ", performDownload=" + performDownload +
                 ", performUpload=" + performUpload +
                 ", performRtt=" + performRtt +
+                ", useEncryption=" + useEncryption +
+                ", useIpV6=" + useIpV6 +
+                ", clientIp='" + clientIp + '\'' +
+                ", clientIpPublic='" + clientIpPublic + '\'' +
                 '}';
     }
 }

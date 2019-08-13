@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_bar_share_results_action"
+        android:title="@string/result_share_intent_title"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_action_map"
+        android:visible="false"
+        />
+
+    <item
+        android:id="@+id/action_bar_show_help_action"
+        android:title="@string/result_share_intent_title"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_action_about"
+        />
+
+</menu>

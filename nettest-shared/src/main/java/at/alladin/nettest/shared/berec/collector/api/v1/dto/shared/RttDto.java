@@ -51,4 +51,5 @@ public class RttDto {
 	public void setRelativeTimeNs(Long relativeTimeNs) {
 		this.relativeTimeNs = relativeTimeNs;
 	}
+
 }

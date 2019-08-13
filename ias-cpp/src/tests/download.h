@@ -36,14 +36,9 @@ class Download : public CBasisThread
 		
 		string mServer;
 		string mServerName;
-		string mServerHostname;
 		string mClient;
-		
-		int ipversion;
-		
-		CConnection *mConnection;
-		
-		CConfigManager *mConfig;	
+
+		CConfigManager *mConfig;
 	public:
 		int mResponse;
 

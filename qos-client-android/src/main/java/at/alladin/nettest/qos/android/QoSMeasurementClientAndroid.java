@@ -150,7 +150,9 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
             }
 
             //TODO: probably any other method is better than this:
-            qosTestSettings.setUseSsl(client.getTaskDescList().get(0).isEncryption());
+            if (client.getTaskDescList() != null && client.getTaskDescList().size() > 0) {
+                qosTestSettings.setUseSsl(client.getTaskDescList().get(0).isEncryption());
+            }
 
             qosTest = new QualityOfServiceTest(client, testSettings, progressListeners);
 

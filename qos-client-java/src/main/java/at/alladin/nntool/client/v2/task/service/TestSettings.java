@@ -84,6 +84,11 @@ public class TestSettings {
 		return startTimeNs;
 	}
 
+	/**
+	 * sets the absolute starting point of the qos test.<br>
+	 * is called during the qualityOfServiceTest.run() to store the actual start of the qos measurements
+	 * @param startTimeNs
+	 */
 	public void setStartTimeNs(long startTimeNs) {
 		this.startTimeNs = startTimeNs;
 	}

@@ -25,15 +25,15 @@ public class NetworkInfo {
 	@SerializedName("network_points_in_time")
 	@JsonProperty("network_points_in_time")
 	List<NetworkPointInTime> networkPointsInTime;
-	
+
 	/**
-	 * @see CellLocationInfo
+	 * @see ComputedNetworkPointInTime
 	 */
-	@JsonPropertyDescription("Contains cell location information captured during the test.")
+	@JsonPropertyDescription("Computed network information.")
 	@Expose
-	@SerializedName("cell_location_info")
-	@JsonProperty("cell_location_info")
-	private CellLocationInfo cellLocationInfo;
+	@SerializedName("computed_network_info")
+	@JsonProperty("computed_network_info")
+	ComputedNetworkPointInTime computedNetworkInfo;
 	
 	/**
 	 * @see SignalInfo
@@ -52,19 +52,19 @@ public class NetworkInfo {
 		this.networkPointsInTime = networkPointsInTime;
 	}
 
-	public CellLocationInfo getCellLocationInfo() {
-		return cellLocationInfo;
-	}
-
-	public void setCellLocationInfo(CellLocationInfo cellLocationInfo) {
-		this.cellLocationInfo = cellLocationInfo;
-	}
-
 	public SignalInfo getSignalInfo() {
 		return signalInfo;
 	}
 
 	public void setSignalInfo(SignalInfo signalInfo) {
 		this.signalInfo = signalInfo;
+	}
+
+	public ComputedNetworkPointInTime getComputedNetworkInfo() {
+		return computedNetworkInfo;
+	}
+
+	public void setComputedNetworkInfo(ComputedNetworkPointInTime computedNetworkInfo) {
+		this.computedNetworkInfo = computedNetworkInfo;
 	}
 }

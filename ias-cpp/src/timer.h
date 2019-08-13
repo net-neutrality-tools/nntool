@@ -31,8 +31,6 @@ using namespace std;
 class CTimer : public CBasisThread
 {
 	private:
-		string mHostname;
-		int mPort;
 		int mInstances;
 
 		CCallback *mCallback;

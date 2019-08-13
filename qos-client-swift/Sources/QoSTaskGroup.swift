@@ -21,30 +21,10 @@ public class QoSTaskGroup {
         case "udp": initializer = { UdpPortTask(config: $0) }
         case "tcp": initializer = { TcpPortTask(config: $0) }
         case "echo_protocol": initializer = { EchoProtocolTask(config: $0) }
-            /*case "http_proxy":
-             initializer = {
-             return QoSHttpProxyTest(params: $0)
-             }
-             case "traceroute":
-             initializer = {
-             return QoSTracerouteTest(params: $0)
-             }
-             case "website":
-             initializer = {
-             return QoSWebsiteRenderingTest(params: $0)
-             }
-             case "udp":
-             initializer = {
-             return QoSUdpTest(params: $0)
-             }
-             case "tcp":
-             initializer = {
-             return QoSTcpTest(params: $0)
-             }
-             case "non_transparent_proxy":
-             initializer = {
-             return QoSNonTransparentProxyTest(params: $0)
-             }*/
+        case "http_proxy": initializer = { HttpProxyTask(config: $0) }
+        //case "traceroute": initializer = { return TracerouteTask(config: $0) }
+        case "website": initializer = { WebsiteRenderingTask(config: $0) }
+        case "non_transparent_proxy": initializer = { NonTransparentProxyTask(config: $0) }
         default:
             return nil
         }

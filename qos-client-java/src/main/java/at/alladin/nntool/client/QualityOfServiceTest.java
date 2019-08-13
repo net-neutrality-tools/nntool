@@ -18,7 +18,6 @@ package at.alladin.nntool.client;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -235,19 +234,21 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 				if (tasks != null) {
 					tasks.add(test);
 				}
-				
-				if (!controlConnectionMap.containsKey(test.getTestServerAddr())) {
-					TestParameter params = new TestParameter(test.getTestServerAddr(), test.getTestServerPort(),
-									nnTestSettings.isUseSsl(), test.getTaskDesc().getToken(), 
-									test.getTaskDesc().getDuration(), test.getTaskDesc().getNumThreads(),
-									test.getTaskDesc().getNumPings(), test.getTaskDesc().getStartTime());
-					controlConnectionMap.put(test.getTestServerAddr(), new QoSControlConnection(getRMBTClient(), params));
-				}
-				
-				//check if qos test need test server
+
+				//check if qos test needs test server
 				if (test.needsQoSControlConnection()) {
+
+					if (!controlConnectionMap.containsKey(test.getTestServerAddr())) {
+						TestParameter params = new TestParameter(test.getTestServerAddr(), test.getTestServerPort(),
+								nnTestSettings.isUseSsl(), test.getTaskDesc().getToken(),
+								test.getTaskDesc().getDuration(), test.getTaskDesc().getNumThreads(),
+								test.getTaskDesc().getNumPings(), test.getTaskDesc().getStartTime());
+						controlConnectionMap.put(test.getTestServerAddr(), new QoSControlConnection(getRMBTClient(), params));
+					}
+
 					test.setControlConnection(controlConnectionMap.get(test.getTestServerAddr()));
 					controlConnectionMap.get(test.getTestServerAddr()).getConcurrencyGroupSet().add(test.getConcurrencyGroup());
+
 				}
 			}
 		}
@@ -261,6 +262,8 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
      * 
      */
 	public QoSResultCollector call() throws Exception {
+		//set the
+		qoSTestSettings.setStartTimeNs(System.nanoTime());
 		final int testSize = testCount.get();
 		for (QoSMeasurementClientProgressListener l : progressListeners) {
 			l.onQoSTestsDefined(testSize);
@@ -340,7 +343,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 							for (QoSMeasurementClientProgressListener l : progressListeners) {
 								l.onQoSTypeProgress(type, prog);
 							}
-							if (prog == 1) {
+							if (prog >= 1) {
 								for (QoSMeasurementClientProgressListener l : progressListeners) {
 									l.onQoSTypeFinished(type);
 								}

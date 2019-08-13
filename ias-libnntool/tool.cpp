@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-10
+ *      \date Last update: 2019-06-18
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -29,35 +29,6 @@ CTool::CTool()
 //!	Virtual Destructor
 CTool::~CTool()
 {
-}
-
-//! \brief
-//!	Syslog Function for generally logging
-//! \param message
-//! \return 0
-int CTool::logging( string sValue )
-{
-	//if(DEBUG)
-	{
-		cout<<sValue<<endl;
-	}
-	
-	return 0;
-}
-
-
-//! \brief
-//!	Syslog Function for generally logging
-//! \param message
-//! \return 0
-int CTool::logging( string sKey, string sValue )
-{
-	//if(DEBUG)
-	{
-		cout<<"DEBUG -> "<<sKey<<": "<<sValue<<endl;
-	}
-
-	return 0;
 }
 
 //! \brief
@@ -267,16 +238,16 @@ int CTool::calculateResults(struct measurement_data &sMeasurement, double increm
         
         if (samples%2 == 0)
         {
-            sMeasurement.median_ns  = ((medianVector[samples/2-1] + medianVector[samples/2])/2) * 1000 * 1000;
+            sMeasurement.median_ns  = ((medianVector[samples/2-1] + medianVector[samples/2])/2) * 1000;
         }
         else
         {
-            sMeasurement.median_ns  = medianVector[samples/2] * 1000 * 1000;
+            sMeasurement.median_ns  = medianVector[samples/2] * 1000;
         }
 
         //calculate population standard deviation
         double variancePopulation = (double)sumSq / (double)count - avgDouble * avgDouble;
-        sMeasurement.standard_deviation_ns = sqrt(variancePopulation) * 1000 * 1000;
+        sMeasurement.standard_deviation_ns = sqrt(variancePopulation) * 1000;
 		#endif
 	}
 	
@@ -314,101 +285,12 @@ string CTool::getSystemInfoOSVersion()
 //! \param sInterface Name of Device
 //! \param nType Switch between IPv4 and IPv6
 //! \return sIp IP Adress
-string CTool::getIP( string sInterface )
-{
-	return getIP(sInterface, 4);
-}
-
-//! \brief
-//!	Get active IP
-//! \param sInterface Name of Device
-//! \param nType Switch between IPv4 and IPv6
-//! \return sIp IP Adress
 int CTool::validateIp(const string &ipAddress)
 {
 	struct sockaddr_in sa4;
 	struct sockaddr_in6 sa6;
 	
 	return (inet_pton(AF_INET6, ipAddress.c_str(), &(sa6.sin6_addr)) != 0) ? 6 : (inet_pton(AF_INET, ipAddress.c_str(), &(sa4.sin_addr)) != 0) ? 4 : 0;
-}
-
-//! \brief
-//!	Get active IP
-//! \param sInterface Name of Device
-//! \param nType Switch between IPv4 and IPv6
-//! \return sIp IP Adress
-string CTool::getIP( string sInterface, int nType )
-{
-	string sIp = "0.0.0.0";
-	//if addrs needs a higher version of android than what was agreed upon
-//	struct ifaddrs *ifaddr, *ifa;
-//	int family, s;
-//	char host[NI_MAXHOST];
-//
-//	if (getifaddrs(&ifaddr) == -1)
-//	{
-//		TRC_ERR( "ERROR: Got an error while getting interfaces" );
-//		return sIp;
-//	}
-//
-//	/* Walk through linked list, maintaining head pointer so we can free list later */
-//
-//	for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next)
-//	{
-//		//On Error
-//		if (ifa->ifa_addr == NULL)
-//		{
-//			TRC_ERR( "ERROR: ifa_addr is NULL" );
-//			continue;
-//		}
-//
-//
-//		//Select interface we want
-//		if( ifa->ifa_name != sInterface)
-//		{
-//			continue;
-//		}
-//
-//
-//		//Get Type of intercace -> AF_INET or AF_INET6
-//		family = ifa->ifa_addr->sa_family;
-//
-//		if (family == AF_INET || family == AF_INET6)
-//		{
-//			s = getnameinfo(ifa->ifa_addr, (family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6), host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
-//
-//			if (s != 0)
-//			{
-//				TRC_ERR( "ERROR: Could not get IP address" );
-//				return sIp;
-//			}
-//
-//			//if we get IPv4 and want IPv4 then, at this point we have all informations
-//			if( family == AF_INET && nType == 4 )
-//				break;
-//
-//			//if we get IPv6 and want IPv6 then, at this point we have all informations
-//			if( family == AF_INET6 && nType == 6 )
-//			{
-//				//BUGFIX
-//				if( host[0] == 'f' && host[1] == 'd' )
-//					continue;
-//
-//				//BUGFIX
-//				if( host[0] == 'f' && host[1] == 'e' && host[2] == '8' && host[3] == '0' )
-//					continue;
-//
-//				break;
-//			}
-//		}
-//	}
-//
-//	if( validateIp(host) != 0 )
-//                sIp = host;
-//
-//	freeifaddrs(ifaddr);
- 
-	return sIp;
 }
 
 //! \brief
@@ -704,86 +586,89 @@ int CTool::randomData(vector<char> &vVector, int size)
 void CTool::print_stacktrace()
 {
     //backtrace under android doesn't work as is (no execinfo.h)
+    #ifndef __ANDROID__
 
-//	char 	chTrace[1024];
+	char 	chTrace[1024];
 	TRC_DEBUG( "stack trace:" );
 
 	// storage array for stack trace address data
-//	void* addrlist[64];
-//
-//	// retrieve current stack addresses
-//	int addrlen = backtrace(addrlist, sizeof(addrlist) / sizeof(void*));
-//
-//	if (addrlen == 0)
-//	{
-//		TRC_DEBUG( "  <empty, possibly corrupt>" );
-//		return;
-//	}
-//
-//	// resolve addresses into strings containing "filename(function+address)",
-//	// this array must be free()-ed
-//	char** symbollist = backtrace_symbols(addrlist, addrlen);
-//
-//	// allocate string which will be filled with the demangled function name
-//	size_t funcnamesize = 256;
-//	char* funcname = (char*)malloc(funcnamesize);
-//
-//	// iterate over the returned symbol lines. skip the first, it is the
-//	// address of this function.
-//	for (int i = 1; i < addrlen; i++)
-//	{
-//		char *begin_name = 0, *begin_offset = 0, *end_offset = 0;
-//
-//		// find parentheses and +address offset surrounding the mangled name:
-//		// ./module(function+0x15c) [0x8048a6d]
-//		for (char *p = symbollist[i]; *p; ++p)
-//		{
-//			if (*p == '(')
-//				begin_name = p;
-//			else if (*p == '+')
-//				begin_offset = p;
-//			else if (*p == ')' && begin_offset)
-//			{
-//				end_offset = p;
-//				break;
-//			}
-//		}
-//
-//		if (begin_name && begin_offset && end_offset
-//		&& begin_name < begin_offset)
-//		{
-//			*begin_name++ = '\0';
-//			*begin_offset++ = '\0';
-//			*end_offset = '\0';
-//
-//			// mangled name is now in [begin_name, begin_offset) and caller
-//			// offset in [begin_offset, end_offset). now apply
-//			// __cxa_demangle():
-//
-//			int status;
-//			char* ret = abi::__cxa_demangle(begin_name,funcname, &funcnamesize, &status);
-//			if (status == 0)
-//			{
-//				funcname = ret; // use possibly realloc()-ed string
-//				snprintf(chTrace, sizeof(chTrace), "  %s : %s+%s",symbollist[i], funcname, begin_offset);
-//				TRC_DEBUG(chTrace);
-//			}
-//			else
-//			{
-//				// demangling failed. Output function name as a C function with
-//				// no arguments.
-//				snprintf(chTrace, sizeof(chTrace), "  %s : %s()+%s",symbollist[i], begin_name, begin_offset);
-//				TRC_DEBUG(chTrace);
-//			}
-//		}
-//		else
-//		{
-//			// couldn't parse the line? print the whole line.
-//			snprintf(chTrace, sizeof(chTrace), "  %s", symbollist[i]);
-//			TRC_DEBUG(chTrace);
-//		}
-//	}
-//
-//	free(funcname);
-//	free(symbollist);
+	void* addrlist[64];
+
+	// retrieve current stack addresses
+	int addrlen = backtrace(addrlist, sizeof(addrlist) / sizeof(void*));
+
+	if (addrlen == 0)
+	{
+		TRC_DEBUG( "  <empty, possibly corrupt>" );
+		return;
+	}
+
+	// resolve addresses into strings containing "filename(function+address)",
+	// this array must be free()-ed
+	char** symbollist = backtrace_symbols(addrlist, addrlen);
+
+	// allocate string which will be filled with the demangled function name
+	size_t funcnamesize = 256;
+	char* funcname = (char*)malloc(funcnamesize);
+
+	// iterate over the returned symbol lines. skip the first, it is the
+	// address of this function.
+	for (int i = 1; i < addrlen; i++)
+	{
+		char *begin_name = 0, *begin_offset = 0, *end_offset = 0;
+
+		// find parentheses and +address offset surrounding the mangled name:
+		// ./module(function+0x15c) [0x8048a6d]
+		for (char *p = symbollist[i]; *p; ++p)
+		{
+			if (*p == '(')
+				begin_name = p;
+			else if (*p == '+')
+				begin_offset = p;
+			else if (*p == ')' && begin_offset)
+			{
+				end_offset = p;
+				break;
+			}
+		}
+
+		if (begin_name && begin_offset && end_offset
+		&& begin_name < begin_offset)
+		{
+			*begin_name++ = '\0';
+			*begin_offset++ = '\0';
+			*end_offset = '\0';
+
+			// mangled name is now in [begin_name, begin_offset) and caller
+			// offset in [begin_offset, end_offset). now apply
+			// __cxa_demangle():
+
+			int status;
+			char* ret = abi::__cxa_demangle(begin_name,funcname, &funcnamesize, &status);
+			if (status == 0)
+			{
+				funcname = ret; // use possibly realloc()-ed string
+				snprintf(chTrace, sizeof(chTrace), "  %s : %s+%s",symbollist[i], funcname, begin_offset);
+				TRC_DEBUG(chTrace);
+			}
+			else
+			{
+				// demangling failed. Output function name as a C function with
+				// no arguments.
+				snprintf(chTrace, sizeof(chTrace), "  %s : %s()+%s",symbollist[i], begin_name, begin_offset);
+				TRC_DEBUG(chTrace);
+			}
+		}
+		else
+		{
+			// couldn't parse the line? print the whole line.
+			snprintf(chTrace, sizeof(chTrace), "  %s", symbollist[i]);
+			TRC_DEBUG(chTrace);
+		}
+	}
+
+	free(funcname);
+	free(symbollist);
+
+	#endif
 }

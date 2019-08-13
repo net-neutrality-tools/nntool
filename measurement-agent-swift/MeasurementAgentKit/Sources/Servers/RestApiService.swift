@@ -18,12 +18,13 @@
 import Foundation
 import Siesta
 import XCGLogger
+import nntool_shared_swift
 
 ///
-class RestApiService {
+public class RestApiService {
 
-    typealias SuccessCallback<R> = (_ entity: R) -> Void
-    typealias FailureCallback = (_ error: RequestError) -> Void
+    public typealias SuccessCallback<R> = (_ entity: R) -> Void
+    public typealias FailureCallback = (_ error: RequestError) -> Void
 
     enum ApiError: Error {
         case emptyData
@@ -38,9 +39,9 @@ class RestApiService {
             switch response {
             case .success(let entity):
 
-                print("--- RESPONSE ---")
-                print(String(data: entity.content as? Data ?? Data(), encoding: .utf8)!)
-                print("--- /RESPONSE ---")
+                logger.debug("--- RESPONSE ---")
+                logger.debug(String(data: entity.content as? Data ?? Data(), encoding: .utf8)!)
+                logger.debug("--- /RESPONSE ---")
 
                 return response
             default:
@@ -62,24 +63,15 @@ class RestApiService {
                     if let apiResponse = try? decoder.decode(ApiResponse<AnyCodable>.self, from: errorData) {
                         let firstError = apiResponse.errors?.first
 
-                        // debug print (TODO)
-                        XCGLogger.default.debugExec {
-                            XCGLogger.default.debug("--- REST API error ---")
-                            XCGLogger.default.debug(String(describing: firstError?.path))
-                            XCGLogger.default.debug(String(describing: firstError?.error))
-                            XCGLogger.default.debug(String(describing: firstError?.message))
-                            XCGLogger.default.debug(String(describing: firstError?.exception))
-                            XCGLogger.default.debug(String(describing: firstError?.trace))
-                            XCGLogger.default.debug("--- / REST API error ---")
+                        logger.debugExec {
+                            logger.debug("--- REST API error ---")
+                            logger.debug(String(describing: firstError?.path))
+                            logger.debug(String(describing: firstError?.error))
+                            logger.debug(String(describing: firstError?.message))
+                            logger.debug(String(describing: firstError?.exception))
+                            logger.debug(String(describing: firstError?.trace))
+                            logger.debug("--- / REST API error ---")
                         }
-
-                        print("--- REST API error ---")
-                        print(String(describing: firstError?.path))
-                        print(String(describing: firstError?.error))
-                        print(String(describing: firstError?.message))
-                        print(String(describing: firstError?.exception))
-                        print(String(describing: firstError?.trace))
-                        print("--- / REST API error ---")
 
                         if let firstMessage = firstError?.message {
                             error.userMessage = firstMessage
@@ -97,11 +89,14 @@ class RestApiService {
 
     let service: Service
 
+    let agent: MeasurementAgent
+
     let jsonDecoder = JsonHelper.getPreconfiguredJSONDecoder()
     let jsonEncoder = JsonHelper.getPreconfiguredJSONEncoder()
 
-    init(baseURL: URLConvertible?) {
+    init(baseURL: URLConvertible?, agent: MeasurementAgent) {
         service = Service(baseURL: baseURL, standardTransformers: [])
+        self.agent = agent
 
         configureTransformer("/versions", forType: ApiResponse<VersionResponse>.self)
 
@@ -111,27 +106,30 @@ class RestApiService {
         }
     }
 
-    func configureTransformer<T: Decodable>(_ pattern: ConfigurationPatternConvertible, forType type: T.Type) {
-        service.configureTransformer(pattern) {
+    func configureTransformer<T: Decodable>(_ pattern: ConfigurationPatternConvertible, requestMethods: [RequestMethod]? = nil, forType type: T.Type) {
+        service.configureTransformer(pattern, requestMethods: requestMethods) {
             try self.jsonDecoder.decode(type, from: $0.content)
         }
     }
 
     ////
 
-    func request<R: Decodable, W: ApiResponse<R>>(_ path: String, method: RequestMethod, responseEntityType: R.Type, onSuccess: SuccessCallback<R>?, onFailure: FailureCallback?) {
+    func request<R: Decodable, W: ApiResponse<R>>(_ path: String, method: RequestMethod, responseEntityType: R.Type, params: [String: String]? = nil, onSuccess: SuccessCallback<R>?, onFailure: FailureCallback?) {
+
+        logger.debug("REQUESTING \(path)")
 
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
 
-        let request = service
-            .resource(path)
-            //.addObserver(ResourceObserver, owner: AnyObject)
-            .request(method)
+        let request =
+            buildResource(path: path, params: params)
+                .request(method)
 
-            handleRequest(request: request, responseEntityType: responseEntityType, onSuccess: onSuccess, onFailure: onFailure)
+        handleRequest(request: request, responseEntityType: responseEntityType, onSuccess: onSuccess, onFailure: onFailure)
     }
 
-    func request<T: Codable, R: Decodable, W: ApiResponse<R>>(_ path: String, method: RequestMethod, requestEntity: T, wrapInApiRequest: Bool = true, responseEntityType: R.Type, onSuccess: SuccessCallback<R>?, onFailure: FailureCallback?) {
+    func request<T: Codable, R: Decodable, W: ApiResponse<R>>(_ path: String, method: RequestMethod, requestEntity: T, wrapInApiRequest: Bool = true, responseEntityType: R.Type, params: [String: String]? = nil, onSuccess: SuccessCallback<R>?, onFailure: FailureCallback?) {
+
+        logger.debug("REQUESTING \(path)")
 
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
 
@@ -140,7 +138,11 @@ class RestApiService {
             if wrapInApiRequest {
                 let apiRequest = ApiRequest<T>()
                 apiRequest.data = requestEntity
-                //apiRequest.requestInfo = ApiRequestInfo() // TODO: fill ApiRequestInfo
+
+                apiRequest.requestInfo = ApiRequestHelper.buildApiRequestInfo(
+                    agentUuid: agent.uuid,
+                    geoLocation: nil // TODO
+                )
 
                 requestData = try jsonEncoder.encode(apiRequest)
             } else {
@@ -151,14 +153,13 @@ class RestApiService {
             return
         }
 
-        print("--- REQUEST BODY ---")
-        print(String(data: requestData, encoding: .utf8)!) // debug print
-        print("--- /REQUEST BODY ---")
+        logger.debug("--- REQUEST BODY ---")
+        logger.debug(String(data: requestData, encoding: .utf8)!) // debug print
+        logger.debug("--- /REQUEST BODY ---")
 
-        let request = service
-            .resource(path)
-            //.addObserver(ResourceObserver, owner: AnyObject)
-            .request(method, data: requestData, contentType: "application/json")
+        let request =
+            buildResource(path: path, params: params)
+                .request(method, data: requestData, contentType: "application/json")
 
         handleRequest(request: request, responseEntityType: responseEntityType, onSuccess: onSuccess, onFailure: onFailure)
     }
@@ -177,6 +178,7 @@ class RestApiService {
                 return
             }
 
+            // TODO: or request entity has wrong type!
             onFailure?(RequestError(userMessage: "no data from server (TODO: better description)", cause: ApiError.emptyData))
         }).onFailure { requestError in
             onFailure?(requestError)
@@ -185,9 +187,23 @@ class RestApiService {
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
 
+    private func buildResource(path: String, params: [String: String]?) -> Resource {
+        var resource = service.resource(path)
+
+        params?.forEach({ param in
+            let (key, value) = param
+
+            logger.debug("ADDING PARAM \(key) -> \(value)")
+
+            resource = resource.withParam(key, value)
+        })
+
+        return resource
+    }
+
     ////
 
-    func getVersion(onSuccess: @escaping SuccessCallback<VersionResponse>, onFailure: @escaping FailureCallback) {
+    public func getVersion(onSuccess: @escaping SuccessCallback<VersionResponse>, onFailure: @escaping FailureCallback) {
         request("/versions", method: .get, responseEntityType: VersionResponse.self, onSuccess: onSuccess, onFailure: onFailure)
     }
 }

@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -15,17 +18,22 @@ import at.alladin.nettest.nntool.android.app.async.RegisterMeasurementAgentTask;
 import at.alladin.nettest.nntool.android.app.util.PermissionUtil;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
+import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.app.workflow.history.HistoryFragment;
-import at.alladin.nettest.nntool.android.app.workflow.map.MapFragment;
-import at.alladin.nettest.nntool.android.app.workflow.measurement.SpeedFragment;
-import at.alladin.nettest.nntool.android.app.workflow.settings.SettingsFragment;
 import at.alladin.nettest.nntool.android.app.workflow.main.TitleFragment;
+import at.alladin.nettest.nntool.android.app.workflow.map.MapFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.QosFragment;
+import at.alladin.nettest.nntool.android.app.workflow.measurement.SpeedFragment;
+import at.alladin.nettest.nntool.android.app.workflow.measurement.TitleWithRecentResultFragment;
+import at.alladin.nettest.nntool.android.app.workflow.result.ResultFragment;
+import at.alladin.nettest.nntool.android.app.workflow.settings.SettingsFragment;
 import at.alladin.nettest.nntool.android.app.workflow.statistics.StatisticsFragment;
 import at.alladin.nettest.nntool.android.app.workflow.tc.TermsAndConditionsFragment;
+
+import static at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget.HISTORY;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -36,18 +44,24 @@ public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView navigation;
 
+    private String selectedMeasurementPeerIdentifier = null;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Log.d(TAG, "onNavigationItemSelected");
+            if (navigation.getSelectedItemId() == item.getItemId()) {
+                return true;
+            }
 
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     navigateTo(WorkflowTarget.TITLE);
                     return true;
                 case R.id.navigation_history:
-                    navigateTo(WorkflowTarget.HISTORY);
+                    navigateTo(HISTORY);
                     return true;
                 case R.id.navigation_map:
                     navigateTo(WorkflowTarget.MAP);
@@ -63,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void navigateTo(final WorkflowTarget target) {
+    public void navigateTo(final WorkflowTarget target, final WorkflowParameter workflowParameter) {
+        Log.d(TAG, "navigateToTarget");
         Fragment targetFragment = null;
         boolean isBottomNavigationVisible = true;
 
@@ -79,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
                 isBottomNavigationVisible = false;
                 targetFragment = QosFragment.newInstance();
                 break;
+            case MEASUREMENT_RECENT_RESULT:
+                targetFragment = TitleWithRecentResultFragment.newInstance();
+                break;
             case SETTINGS:
                 targetFragment = SettingsFragment.newInstance();
                 break;
@@ -87,20 +105,42 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case HISTORY:
                 targetFragment = HistoryFragment.newInstance();
+                navigation.getMenu().findItem(R.id.navigation_history).setChecked(true);
                 break;
             case STATISTICS:
                 targetFragment = StatisticsFragment.newInstance();
+                break;
+            case RESULT:
+                if (workflowParameter != null) {
+                    targetFragment = ResultFragment.newInstance(workflowParameter);
+                } else {
+                    //TODO: is fallback to history the right choice?
+                    targetFragment = HistoryFragment.newInstance();
+                }
+                navigation.getMenu().findItem(R.id.navigation_history).setChecked(true);
                 break;
         }
 
         setBottomNavigationVisible(isBottomNavigationVisible);
 
         if (targetFragment != null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.main_fragment_layout, targetFragment)
-                    .commit();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fragmentManager.beginTransaction()
+                .replace(R.id.main_fragment_layout, targetFragment)
+                .commit();
         }
+    }
+
+    public void setActionBarTitle (final String title) {
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null && title != null) {
+            actionBar.setTitle(title);
+        }
+    }
+
+    public void navigateTo(final WorkflowTarget target) {
+        navigateTo(target, null);
     }
 
     public void startMeasurement(final MeasurementType measurementType, final Bundle options) {
@@ -145,8 +185,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setSupportActionBar(findViewById(R.id.toolbar));
 
-        navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         navigateTo(WorkflowTarget.TITLE);
@@ -161,8 +202,12 @@ public class MainActivity extends AppCompatActivity {
             PermissionUtil.requestLocationPermission(this);
         }
 
-        getSupportActionBar().setElevation(0f);
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_bar, menu);
+        return true;
     }
 
     @Override
@@ -191,8 +236,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void registerMeasurementAgent() {
-        RegisterMeasurementAgentTask task = new RegisterMeasurementAgentTask(this, null);
+        RegisterMeasurementAgentTask task = new RegisterMeasurementAgentTask(this, r -> {
+            if (r == null && getResources().getBoolean(R.bool.debug_functionality_reset_uuid_if_not_in_database_and_retry)) {
+                Log.d(TAG, "Measurement agent registration request failed. Deleting agent uuid and retrying.");
+                PreferencesUtil.setAgentUuid(MainActivity.this, null);
+                final RegisterMeasurementAgentTask retryTask = new RegisterMeasurementAgentTask(MainActivity.this, null);
+                retryTask.execute();
+            }
+        });
         task.execute();
     }
 
+    public String getSelectedMeasurementPeerIdentifier() {
+        return selectedMeasurementPeerIdentifier;
+    }
+
+    public void setSelectedMeasurementPeerIdentifier(String selectedMeasurementPeerIdentifier) {
+        this.selectedMeasurementPeerIdentifier = selectedMeasurementPeerIdentifier;
+    }
 }

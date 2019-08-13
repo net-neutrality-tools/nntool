@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- if set to true reset client UUID and retry registration process -->
+    <bool name="debug_functionality_reset_uuid_if_not_in_database_and_retry">false</bool>
+
+    <!-- if enabled, the actual UUID will be overridden by the UUID below -->
+    <bool name="debug_functionality_override_agent_uuid">false</bool>
+    <!-- if set to a correct UUID and enabled it will override the actual agent uuid -->
+    <string name="debug_functionality_agent_uuid">1b400692-c5b2-481c-b7d1-8ed7acf41fa8</string>
+</resources>
