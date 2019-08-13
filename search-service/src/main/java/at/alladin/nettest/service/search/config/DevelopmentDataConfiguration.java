@@ -120,7 +120,7 @@ public class DevelopmentDataConfiguration {
 		fullMeasurementResponse.setStartTime(LocalDateTime.now().minusHours(1));
 		fullMeasurementResponse.setEndTime(LocalDateTime.now().minusHours(1).plusSeconds(30));
 		fullMeasurementResponse.setDurationNs(30 * 1000000000l);
-		fullMeasurementResponse.setSource("nntool_dev_source");
+		fullMeasurementResponse.setSystemUuid("46840690-63d1-41dc-b221-82161d917b60");
 		
 		//
 		

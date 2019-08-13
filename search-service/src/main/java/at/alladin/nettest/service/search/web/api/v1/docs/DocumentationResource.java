@@ -25,7 +25,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.Ful
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullSpeedMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullSubMeasurement;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellLocationDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
@@ -99,8 +99,8 @@ public class DocumentationResource extends AbstractDocumentationResource {
 			DetailMeasurementResponse.class,
 			
 			GeneralMeasurementTypeDto.class,
-			
-			CellLocationDto.class,
+
+			CellInfoDto.class,
 			MeasurementAgentInfoDto.class,
 			MeasurementAgentTypeDto.class,
 			ConnectionInfoDto.class,
