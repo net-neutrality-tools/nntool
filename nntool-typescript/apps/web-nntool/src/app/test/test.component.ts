@@ -183,6 +183,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
         speedMeasurementResult.status = null;
         speedMeasurementResult.bytes_download = speedTestResult.downBit / 8;
         speedMeasurementResult.bytes_upload = speedTestResult.upBit / 8;
+        speedMeasurementResult.rtt_info = new RttInfo();
         if (typeof speedTestResult.completeTestResult !== 'undefined') {
             const completeResult = speedTestResult.completeTestResult;
             if (completeResult.download_info !== undefined && completeResult.download_info.length > 0) {
@@ -190,22 +191,42 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
                 speedMeasurementResult.duration_download_ns = currentDownload.duration_ns_total;
             }
             if (completeResult.rtt_info !== undefined) {
-                speedMeasurementResult.duration_rtt_ns = completeResult.rtt_info.duration_ns;
-
+                const currentRtt = completeResult.rtt_info;
+                speedMeasurementResult.duration_rtt_ns = currentRtt.duration_ns;
+                speedMeasurementResult.rtt_info = {
+                    rtts: [
+                        {
+                            rtt_ns: speedTestResult.ping * 1000 * 1000,
+                            relative_time_ns: undefined
+                        }    
+                    ],
+                    requested_num_packets: 10, //TODO: fill w/server setting
+                    num_sent: currentRtt.num_sent,
+                    num_received: currentRtt.num_received,
+                    num_error: currentRtt.num_error,
+                    num_missing: currentRtt.num_missing,
+                    packet_size: currentRtt.packet_size,
+                    average_ns: currentRtt.average_ns,
+                    maximum_ns: currentRtt.max_ns,
+                    median_ns: currentRtt.median_ms,
+                    minimum_ns: currentRtt.min_ns,
+                    standard_deviation_ns: currentRtt.standard_deviation_ns
+                }
             }
             if (completeResult.upload_info !== undefined && completeResult.upload_info.length > 0) {
                 const currentUpload = completeResult.upload_info[completeResult.upload_info.length - 1];
                 speedMeasurementResult.duration_upload_ns = currentUpload.duration_ns_total;
 
             }
+
+        } else {
+            speedMeasurementResult.rtt_info.rtts = [
+                {
+                    rtt_ns: speedTestResult.ping * 1000 * 1000,
+                    relative_time_ns: undefined
+                }
+            ];
         }
-        speedMeasurementResult.rtt_info = new RttInfo();
-        speedMeasurementResult.rtt_info.rtts = [
-            {
-                rtt_ns: speedTestResult.ping * 1000 * 1000,
-                relative_time_ns: undefined
-            }
-        ];
 
         this.testResults.push(speedMeasurementResult);
     }
