@@ -3,7 +3,8 @@ import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 
-import {NvD3Component} from 'ng2-nvd3';
+//import {NvD3Component} from 'ng2-nvd3';
+import {NvD3Module} from 'ng2-nvd3';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 
@@ -75,7 +76,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 
 const MAIN_DECLARATIONS = [
     AppComponent,
-    NvD3Component,
+    //NvD3Component,
     MapComponent,
     StatisticsComponent,
     ResultListComponent,
@@ -125,7 +126,8 @@ const MAIN_DECLARATIONS = [
                 deps: [HttpClient]
             }
         }),
-        CoreModule, SharedModule
+        CoreModule, SharedModule,
+        NvD3Module
     ],
     declarations: [
         ...MAIN_DECLARATIONS,

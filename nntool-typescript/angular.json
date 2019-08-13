@@ -100,11 +100,13 @@
               },
               {
                 "input": "../ias/build/uglified/web/Worker.js",
-                "bundleName": "Worker"
+                "bundleName": "Worker",
+                "lazy": true
               },
               {
                 "input": "../ias/build/uglified/web/Tool.js",
-                "bundleName": "Tool"
+                "bundleName": "Tool",
+                "lazy": true
               }
             ]
           },
@@ -121,10 +123,10 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
+              "aot": false,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true,
+              "buildOptimizer": false,
               "budgets": [
                 {
                   "type": "initial",
@@ -201,11 +203,13 @@
               },
               {
                 "input": "../ias/build/uglified/web/Worker.js",
-                "bundleName": "Worker"
+                "bundleName": "Worker",
+                "lazy": true
               },
               {
                 "input": "../ias/build/uglified/web/Tool.js",
-                "bundleName": "Tool"
+                "bundleName": "Tool",
+                "lazy": true
               }
             ]
           }
@@ -404,7 +408,7 @@
             "index": "apps/web-nntool/src/index.html",
             "main": "apps/web-nntool/src/main.electron.ts",
             "polyfills": "apps/web-nntool/src/polyfills.ts",
-            "tsConfig": "apps/web-nntool/tsconfig.app.json",
+            "tsConfig": "apps/web-nntool/tsconfig.electron.json",
             "assets": [
               "apps/web-nntool/src/favicon.ico",
               "apps/web-nntool/src/assets",
@@ -445,14 +449,14 @@
                 }
               ],
               "optimization": true,
-              "outputHashing": "all",
+              "outputHashing": "none",
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
+              "aot": false,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true,
+              "buildOptimizer": false,
               "budgets": [
                 {
                   "type": "initial",
@@ -497,7 +501,7 @@
       "typescriptMismatch": false,
       "versionMismatch": false
     },
-    "defaultCollection": "@nstudio/schematics"
+    "defaultCollection": "@nstudio/xplat"
   },
   "schematics": {
     "@nrwl/angular:application": {
