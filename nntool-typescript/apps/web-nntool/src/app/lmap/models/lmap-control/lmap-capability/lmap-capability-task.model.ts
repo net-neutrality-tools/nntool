@@ -24,5 +24,10 @@ export class LmapCapabilityTask {
      * This should include the version number of the Measurement Task software.
      */
     version?: string;
+
+    /**
+	 * The measurement peer identifier the agent wishes to measure against for this task.
+	 */
+    selected_measurement_peer_identifier?: string;
 }
 

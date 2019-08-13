@@ -67,6 +67,7 @@ import {DeviceDetectorModule} from 'ngx-device-detector';
 // app
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './features/shared/shared.module';
+import { RequestInfoService } from './services/request-info.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -137,6 +138,7 @@ const MAIN_DECLARATIONS = [
     providers: [
         ConfigService,
         RequestsService,
+        RequestInfoService,
         Guard,
         ADocService,
         ColorService,

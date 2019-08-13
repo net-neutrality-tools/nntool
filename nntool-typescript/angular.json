@@ -497,7 +497,7 @@
       "typescriptMismatch": false,
       "versionMismatch": false
     },
-    "defaultCollection": "@nstudio/schematics"
+    "defaultCollection": "@nstudio/xplat"
   },
   "schematics": {
     "@nrwl/angular:application": {

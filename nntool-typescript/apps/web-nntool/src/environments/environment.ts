@@ -64,7 +64,8 @@ export const environment = {
     },
     deserializeTypes: {
         registrationRequestDeserializeType: 'at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest',
-        settingsRequestDeserializeType: 'at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsRequest'
+        settingsRequestDeserializeType: 'at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsRequest',
+        speedMeasurementPeerRequestDeserializeType: 'at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerRequest'
     },
     map: {
         showLegend: true,

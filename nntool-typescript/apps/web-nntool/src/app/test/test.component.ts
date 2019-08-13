@@ -1,4 +1,4 @@
-import {Component, ElementRef, NgZone, OnInit} from '@angular/core';
+import {Component, ElementRef, NgZone, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 import {TranslateService} from '@ngx-translate/core';
@@ -25,11 +25,9 @@ import {LmapResult} from '../lmap/models/lmap-report/lmap-result.model';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import { MeasurementResultNetworkPointInTimeAPI } from './models/measurements/measurement-result-network-point-in-time.api';
 import { MeasurementSettings } from './models/measurement-settings';
-
-
+import { ServerSelectionComponent } from './test.server_selection';
 
 export {TestGuard} from './test.guard';
-
 
 @Component({
     templateUrl: './test.component.html'
@@ -41,6 +39,8 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
     private readonly paramServerPort: string = 'server_port';
     private readonly paramServerAddress: string = 'server_addr';
     private readonly paramCollector: string = 'result_collector_base_url';
+
+    @ViewChild(ServerSelectionComponent, {static: false}) serverSelectionComponent: ServerSelectionComponent;
 
     protected measurementControl: LmapControl = undefined;
     private speedControl: LmapTask = undefined;
@@ -84,7 +84,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
     }
 
     private requestMeasurement(): void {
-        this.testService.newMeasurement().subscribe(response => {
+        this.testService.newMeasurement(undefined, this.serverSelectionComponent.getCurrentSpeedServer()).subscribe(response => {
             this.processTestControl(response);
             this.measurementControl = response;
             this.locationService.startTracking();

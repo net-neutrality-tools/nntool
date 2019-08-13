@@ -21,6 +21,9 @@ import {LmapReport} from '../../lmap/models/lmap-report.model';
 import {LocationService} from '../location.service';
 import {DeviceDetectorService, DeviceInfo} from 'ngx-device-detector';
 import { environment } from '../../../environments/environment';
+import {RequestInfoService} from '../request-info.service';
+import { request } from 'http';
+import { SpeedMeasurementPeer } from '../../test/models/server-selection/speed-measurement-peer';
 
 
 @Injectable()
@@ -32,7 +35,8 @@ export class TestService {
         private testSettingsService: TestSettingsService,
         private configService: ConfigService,
         private locationService: LocationService,
-        private deviceService: DeviceDetectorService
+        private deviceService: DeviceDetectorService,
+        private requestInfoService: RequestInfoService
     ) { }
 
     private static logger: Logger = LoggerService.getLogger('TestService');
@@ -54,20 +58,7 @@ export class TestService {
                     terms_and_conditions_accepted: true,
                     terms_and_conditions_accepted_version: 12
                 },
-                request_info: {
-                    agent_type: testSettings.agent_type,
-                    api_level: undefined,
-                    app_git_revision: testSettings.app_revision,
-                    app_version_code: testSettings.app_version_code,
-                    app_version_name: testSettings.app_version_name,
-                    code_name: undefined,
-                    geo_location: this.getFirstLocation(),
-                    language: agentSettings.language,
-                    model: agentSettings.model,
-                    os_name: undefined,
-                    os_version: agentSettings.os_version,
-                    timezone: agentSettings.timezone
-                }
+                request_info: this.requestInfoService.getRequestInfo()
             };
         }
 
@@ -81,26 +72,14 @@ export class TestService {
         if (!settingsRequest) {
 
             const { agentSettings, testSettings } = this.testSettingsService;
+
             settingsRequest = {
                 data: {
                     deserialize_type: environment.deserializeTypes.settingsRequestDeserializeType
                 },
-                request_info: {
-                    agent_type: MeasurementAgentType.MOBILE,
-                    agent_id: this.userService.user.uuid, // TODO: check which uuid is which
-                    api_level: undefined,
-                    app_git_revision: testSettings.app_revision,
-                    app_version_code: testSettings.app_version_code,
-                    app_version_name: testSettings.app_version_name,
-                    code_name: undefined,
-                    geo_location: this.getFirstLocation(),
-                    language: agentSettings.language,
-                    model: agentSettings.model,
-                    os_name: undefined,
-                    os_version: agentSettings.os_version,
-                    timezone: agentSettings.timezone
-                }
+                request_info: this.requestInfoService.getRequestInfo()
             };
+
         }
 
         return this.requestService.getJson<ResponseAPI<SettingsResponseAPI>>(
@@ -112,7 +91,7 @@ export class TestService {
         );
     }
 
-    public newMeasurement(lmapControl?: LmapControl): Observable<LmapControl> {
+    public newMeasurement(lmapControl?: LmapControl, speedMeasurementPeer?: SpeedMeasurementPeer): Observable<LmapControl> {
         return of(this.userService.user).pipe(
             mergeMap((user: UserInfo) => {
                 if (!user.uuid) {
@@ -175,23 +154,26 @@ export class TestService {
                     };
                 }
 
+                if (speedMeasurementPeer) {
+                    lmapControl.capabilities.tasks.some(value => {
+                        if (value.name === 'SPEED') {
+                            value.selected_measurement_peer_identifier = speedMeasurementPeer.identifier;
+                            return true;
+                        }
+                        return false;
+                    });
+                }
+
                 const deviceInfo: DeviceInfo = this.deviceService.getDeviceInfo();
 
-                lmapControl['additional-request-info'] = {
-                    agent_type: testSettings.agent_type,
-                    agent_uuid: context.user.uuid,
-                    api_level: undefined,
-                    app_git_revision: testSettings.app_revision,
-                    app_version_code: testSettings.app_version_code,
-                    app_version_name: testSettings.app_version_name,
-                    code_name: deviceInfo.browser_version,
-                    geo_location: this.getFirstLocation(),
-                    language: agentSettings.language,
-                    model: deviceInfo.browser,
-                    os_name: deviceInfo.os,
-                    os_version: deviceInfo.os_version,
-                    timezone: agentSettings.timezone
-                };
+                let requestInfo = this.requestInfoService.getRequestInfo();
+                requestInfo.agent_uuid = context.user.uuid;
+                requestInfo.code_name = deviceInfo.browser_version;
+                requestInfo.model = deviceInfo.browser;
+                requestInfo.os_name = deviceInfo.os;
+                requestInfo.os_version = deviceInfo.os_version;
+
+                lmapControl['additional-request-info'] = requestInfo;
 
                 return this.requestService.postJson<LmapControl>(
                     `${this.configService.getServerControl()}measurements`, lmapControl);
@@ -233,21 +215,14 @@ export class TestService {
 
         const deviceInfo: DeviceInfo = this.deviceService.getDeviceInfo();
 
-        lmapReport.additional_request_info = {
-            agent_type: testSettings.agent_type,
-            agent_uuid: this.userService.user.uuid,
-            api_level: undefined,
-            app_git_revision: testSettings.app_revision,
-            app_version_code: testSettings.app_version_code,
-            app_version_name: testSettings.app_version_name,
-            code_name: deviceInfo.browser_version,
-            geo_location: this.getFirstLocation(),
-            language: agentSettings.language,
-            model: deviceInfo.browser,
-            os_name: deviceInfo.os,
-            os_version: deviceInfo.os_version,
-            timezone: agentSettings.timezone
-        };
+        let requestInfo = this.requestInfoService.getRequestInfo();
+                requestInfo.agent_uuid = this.userService.user.uuid;
+                requestInfo.code_name = deviceInfo.browser_version;
+                requestInfo.model = deviceInfo.browser;
+                requestInfo.os_name = deviceInfo.os;
+                requestInfo.os_version = deviceInfo.os_version;
+
+        lmapReport.additional_request_info = requestInfo;
         lmapReport['agent-id'] = this.userService.user.uuid;
 
         if (serverCollectorUrl === undefined || serverCollectorUrl === null || serverCollectorUrl === '') {
