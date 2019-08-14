@@ -250,6 +250,34 @@ export class UserService {
         });
     }
 
+    loadFullMeasurement(measurementUuid: string, user: UserInfo = null): Observable<any> {
+        if (!user) {
+            user = this.user;
+        }
+        if (!user || !user.uuid) {
+            return throwError('No user set');
+        }
+
+        return new Observable((observer: any) => {
+            this.requests.getJson<any>(
+                // TODO: take result-service url from settings request
+                Location.joinWithSlash(this.config.servers.result, 'measurement-agents/' + user.uuid + '/measurements/' + measurementUuid),
+                {}
+            ).subscribe(
+                (data: any) => {
+                    this.logger.debug('User full measurement: ', data);
+
+                    observer.next(data);
+                },
+                (error: HttpErrorResponse) => {
+                    this.logger.error('Error retrieving measurement', error);
+                    observer.error();
+                },
+                () => observer.complete()
+            );
+        });
+    }
+
     /**
      * Disassociate a measurement from user
      *

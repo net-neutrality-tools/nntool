@@ -9,7 +9,6 @@ import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { ResultGroupResponse } from './model/result.groups';
 
-
 @Component({
     templateUrl: './history.view.component.html'
 })
