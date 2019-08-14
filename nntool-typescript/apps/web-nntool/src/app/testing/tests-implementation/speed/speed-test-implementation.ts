@@ -136,99 +136,99 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
           extendedConfig.wsWss = 1;
         }
 
-        this.setupCallback(extendedConfig);
+        this.zone.runOutsideAngular(() => {
+          this.setupCallback(extendedConfig);
 
-        this.ias = new Ias();
-        this.ias.measurementStart(JSON.stringify(extendedConfig));
+          this.ias = new Ias();
+          this.ias.measurementStart(JSON.stringify(extendedConfig));
+        });
     }
 
     private setupCallback = (config: SpeedTestConfig): void => {
-        this.zone.runOutsideAngular(() => {
-            const state = this.generateInitState(config);
+      const state = this.generateInitState(config);
 
-            (window as any).iasCallback = (data: any) => { // TODO: inject window object properly
-                if (!this.$state) {
-                    return;
-                }
-                const currentState = JSON.parse(data);
-                state.device = currentState.device_info.browser_info.name.split(' ')[0];
-                switch (currentState.test_case) {
-                    case 'rtt':
-                        if (currentState.cmd === 'report') {
-                            state.speedTestState = SpeedTestStateEnum.PING;
-                            state.ping = currentState.rtt_info.average_ns / (1000 * 1000);
-                            state.progress = (
-                                currentState.rtt_info.num_received
-                                + currentState.rtt_info.num_missing
-                                + currentState.rtt_info.num_error
-                            ) / config.wsRttRequests;
-                        }
-                        if (currentState.cmd === 'finish') {
-                            state.speedTestState = SpeedTestStateEnum.PING_OK;
-                            state.ping = currentState.rtt_info.average_ns / (1000 * 1000);
-                            state.progress = 1;
-                        }
-                        break;
-                    case 'download':
-                        let currentDownload;
-                        if (currentState.cmd === 'report') {
-                            state.speedTestState = SpeedTestStateEnum.DOWN;
-                            currentDownload = currentState.download_info[currentState.download_info.length - 1];
-                            state.downBit = currentDownload.throughput_avg_bps;
-                            state.downMBit = state.downBit / (1000 * 1000);
-                            state.progress = (currentDownload.duration_ns / (1000.0 * 1000.0)) / config.wsMeasureTime;
-                        }
-                        if (currentState.cmd === 'finish') {
-                            currentDownload = currentState.download_info[currentState.download_info.length - 1];
-                            state.speedTestState = SpeedTestStateEnum.DOWN_OK;
-                            state.downBit = currentDownload.throughput_avg_bps;
-                            state.downMBit = state.downBit / (1000 * 1000);
-                            state.progress = 1;
-                            this.$state.next(state);
-                            // this.testGauge.onStateChange(state);
-                            state.speedTestState = SpeedTestStateEnum.UP_PRE;
-                            state.progress = 0;
-                            this.$state.next(state);
-                            // this.testGauge.onStateChange(state);
-                            state.speedTestState = SpeedTestStateEnum.UP_PRE_OK;
-                            state.progress = 0;
-                        }
-                        break;
-                    case 'upload':
-                        let currentUpload;
-                        if (currentState.cmd === 'report') {
-                            state.speedTestState = SpeedTestStateEnum.UP;
-                            currentUpload = currentState.upload_info[currentState.upload_info.length - 1];
-                            state.upMBit = currentUpload.throughput_avg_bps / (1000 * 1000);
-                            state.upBit = currentUpload.throughput_avg_bps;
-                            state.progress = (currentUpload.duration_ns / (1000 * 1000)) / config.wsMeasureTime;
-                        }
-                        if (currentState.cmd === 'completed') {
-                            //only store the full result on completion
-                            state.completeTestResult = currentState;
-                            state.speedTestState = SpeedTestStateEnum.UP_OK;
-                            currentUpload = currentState.upload_info[currentState.upload_info.length - 1];
-                            state.upMBit = currentUpload.throughput_avg_bps / (1000 * 1000);
-                            state.upBit = currentUpload.throughput_avg_bps;
-                            state.progress = 1;
-                            this.$state.next(state);
-                            // this.testGauge.onStateChange(state);
-                            state.speedTestState = SpeedTestStateEnum.COMPLETE;
-                            state.progress = 0;
+      (window as any).iasCallback = (data: any) => { // TODO: inject window object properly
+          if (!this.$state) {
+              return;
+          }
+          const currentState = JSON.parse(data);
+          state.device = currentState.device_info.browser_info.name.split(' ')[0];
+          switch (currentState.test_case) {
+              case 'rtt':
+                  if (currentState.cmd === 'report') {
+                      state.speedTestState = SpeedTestStateEnum.PING;
+                      state.ping = currentState.rtt_info.average_ns / (1000 * 1000);
+                      state.progress = (
+                          currentState.rtt_info.num_received
+                          + currentState.rtt_info.num_missing
+                          + currentState.rtt_info.num_error
+                      ) / config.wsRttRequests;
+                  }
+                  if (currentState.cmd === 'finish') {
+                      state.speedTestState = SpeedTestStateEnum.PING_OK;
+                      state.ping = currentState.rtt_info.average_ns / (1000 * 1000);
+                      state.progress = 1;
+                  }
+                  break;
+              case 'download':
+                  let currentDownload;
+                  if (currentState.cmd === 'report') {
+                      state.speedTestState = SpeedTestStateEnum.DOWN;
+                      currentDownload = currentState.download_info[currentState.download_info.length - 1];
+                      state.downBit = currentDownload.throughput_avg_bps;
+                      state.downMBit = state.downBit / (1000 * 1000);
+                      state.progress = (currentDownload.duration_ns / (1000.0 * 1000.0)) / config.wsMeasureTime;
+                  }
+                  if (currentState.cmd === 'finish') {
+                      currentDownload = currentState.download_info[currentState.download_info.length - 1];
+                      state.speedTestState = SpeedTestStateEnum.DOWN_OK;
+                      state.downBit = currentDownload.throughput_avg_bps;
+                      state.downMBit = state.downBit / (1000 * 1000);
+                      state.progress = 1;
+                      this.$state.next(state);
+                      // this.testGauge.onStateChange(state);
+                      state.speedTestState = SpeedTestStateEnum.UP_PRE;
+                      state.progress = 0;
+                      this.$state.next(state);
+                      // this.testGauge.onStateChange(state);
+                      state.speedTestState = SpeedTestStateEnum.UP_PRE_OK;
+                      state.progress = 0;
+                  }
+                  break;
+              case 'upload':
+                  let currentUpload;
+                  if (currentState.cmd === 'report') {
+                      state.speedTestState = SpeedTestStateEnum.UP;
+                      currentUpload = currentState.upload_info[currentState.upload_info.length - 1];
+                      state.upMBit = currentUpload.throughput_avg_bps / (1000 * 1000);
+                      state.upBit = currentUpload.throughput_avg_bps;
+                      state.progress = (currentUpload.duration_ns / (1000 * 1000)) / config.wsMeasureTime;
+                  }
+                  if (currentState.cmd === 'completed') {
+                      //only store the full result on completion
+                      state.completeTestResult = currentState;
+                      state.speedTestState = SpeedTestStateEnum.UP_OK;
+                      currentUpload = currentState.upload_info[currentState.upload_info.length - 1];
+                      state.upMBit = currentUpload.throughput_avg_bps / (1000 * 1000);
+                      state.upBit = currentUpload.throughput_avg_bps;
+                      state.progress = 1;
+                      this.$state.next(state);
+                      // this.testGauge.onStateChange(state);
+                      state.speedTestState = SpeedTestStateEnum.COMPLETE;
+                      state.progress = 0;
 
-                            this.logger.debug('Mes uuids', data);
-                            state.basicState = BasicTestState.ENDED;
-                            // this.testInProgress = false;
-                            this.ias = undefined;
-                        }
-                        break;
-                }
-                this.$state.next(state);
-                // this.testGauge.onStateChange(state);
-            };
-            // this.testGauge.onStateChange(state);
-            this.$state.next(state);
-        });
+                      this.logger.debug('Mes uuids', data);
+                      state.basicState = BasicTestState.ENDED;
+                      // this.testInProgress = false;
+                      this.ias = undefined;
+                  }
+                  break;
+          }
+          this.$state.next(state);
+          // this.testGauge.onStateChange(state);
+      };
+      // this.testGauge.onStateChange(state);
+      this.$state.next(state);
     }
 
     protected clean = (): void => {
