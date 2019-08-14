@@ -25,6 +25,7 @@ spring:
         entities:
           - QoSMeasurementObjective
           - Settings
+          - Translation
 
   #datasource:
   #  driver-class-name: org.postgresql.Driver

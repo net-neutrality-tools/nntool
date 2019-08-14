@@ -10,7 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
 import at.alladin.nettest.service.collector.config.CollectorServiceProperties;
-import at.alladin.nettest.shared.server.helper.spring.DevelopmentWebCorsConfiguration;
+import at.alladin.nettest.shared.server.config.spring.DevelopmentWebCorsConfiguration;
+import at.alladin.nettest.shared.server.config.spring.MessageSourceConfiguration;
 import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
 import at.alladin.nettest.shared.server.storage.couchdb.config.EnableCouchDbStorage;
 
@@ -31,7 +32,10 @@ import at.alladin.nettest.shared.server.storage.couchdb.config.EnableCouchDbStor
 	"at.alladin.nettest.service.collector", 
 	"at.alladin.nettest.shared.server.web.api.v1",
 })
-@Import({ DevelopmentWebCorsConfiguration.class })
+@Import({
+	DevelopmentWebCorsConfiguration.class,
+	MessageSourceConfiguration.class
+})
 @EnableCouchDbStorage
 public class CollectorServiceApplication extends SpringBootServletInitializer {
 

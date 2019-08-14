@@ -1,4 +1,4 @@
-package at.alladin.nettest.shared.server.helper.spring;
+package at.alladin.nettest.shared.server.config.spring;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

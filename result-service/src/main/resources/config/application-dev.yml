@@ -24,6 +24,7 @@ spring:
         entities:
           - QoSMeasurementObjective
           - Settings
+          - Translation
 
 server:
   port: 8082
