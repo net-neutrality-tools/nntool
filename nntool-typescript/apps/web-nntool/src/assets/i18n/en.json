@@ -197,6 +197,7 @@
     "UP": "Up (Mbit/s)",
     "PING": "RTT (ms)",
     "SIGNAL": "Signal (dBm)",
+    "TIME": "Date",
     "MORE": "Show more..",
     "LOADING": "Loading..",
     "NO_DATA": "Currently no measurements",
