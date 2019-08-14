@@ -1,6 +1,8 @@
 package at.alladin.nettest.service.collector;
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -19,6 +21,9 @@ import at.alladin.nettest.shared.server.storage.couchdb.config.EnableCouchDbStor
  *
  */
 @SpringBootApplication
+@EnableAutoConfiguration(exclude = {
+	DataSourceAutoConfiguration.class // will be included based on property spring.datasource.url
+})
 @EnableConfigurationProperties({
 	CollectorServiceProperties.class
 })

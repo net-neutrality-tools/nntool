@@ -16,7 +16,7 @@ server:
 data-export:
   cache-threshold-sec: 60
   compress: false
-  suffix: FROM measurements m LEFT JOIN network_types n ON m.initial_network_type_id = n.id LEFT JOIN speed_measurements sm ON m.uuid = sm.measurement_uuid
+  suffix: FROM measurements m LEFT JOIN network_types n ON m.initial_network_type_id = n.id LEFT JOIN speed_measurements sm ON m.open_data_uuid = sm.measurement_open_data_uuid
   where-clause: status = 'FINISHED'
 
   where-open-test-uuid-clause: AND open_data_uuid = ?::uuid

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import at.alladin.nettest.service.search.config.SearchServiceProperties.ElasticSearchProperties;
+import at.alladin.nettest.shared.server.config.ElasticSearchProperties;
 
 /**
  * 

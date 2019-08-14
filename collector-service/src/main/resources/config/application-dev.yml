@@ -11,6 +11,7 @@ spring:
   couchdb:
     connection:
       url: http://localhost:5984
+      #url: http://localhost:15984
       #username:
       #password:
     databases:
@@ -19,6 +20,17 @@ spring:
         entities:
           - Measurement
           - MeasurementAgent
+      - name: settings
+        create-if-not-exists: true
+        entities:
+          - QoSMeasurementObjective
+          - Settings
+
+  #datasource:
+  #  driver-class-name: org.postgresql.Driver
+  #  url: jdbc:postgresql://localhost:15432/nntool
+  #  username: nntool
+  #  password: nntool
 
 server:
   port: 8081
@@ -26,3 +38,11 @@ server:
 logging:
   level:
     at.alladin.nettest: DEBUG
+
+#collector:
+#  elasticsearch:
+#    host: localhost
+#    port: 19200
+#    scheme: http
+#    index: nntool
+#    queryTimeout: 10s

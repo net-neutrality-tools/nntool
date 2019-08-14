@@ -1,10 +1,20 @@
 apply from: "${project.rootDir}/gradle/spring_boot_project.gradle"
 
+ext['elasticsearch.version'] = elasticsearch_rest_client_version
+
 dependencies {
 	implementation project(path: ':nettest-shared-server-storage-couchdb', configuration: 'default')
 
     // Server
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-undertow', version: spring_boot_version
+
+	// Elasticsearch
+  	implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: elasticsearch_rest_client_version
+
+	// PostgreSQL
+	implementation group: 'org.postgresql', name: 'postgresql', version: postgresql_version
+
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: spring_boot_version
 
     ////
 

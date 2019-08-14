@@ -86,9 +86,9 @@ public class Measurement {
 	private String openDataUuid;
 
 	/**
-	 * A tag provided by the client.
+	 * A tag provided by the agent.
 	 */
-	@JsonPropertyDescription("A tag provided by the client.")
+	@JsonPropertyDescription("A tag provided by the agent.")
 	@Expose
 	@SerializedName("tag")
 	@JsonProperty("tag")
