@@ -27,6 +27,7 @@ data-export:
   order-by: m.start_time
   fields:
     open_test_uuid: ('O' || (open_data_uuid)::text)
+    system_uuid: m.system_uuid
     time_utc: to_char(m.start_time AT TIME ZONE 'UTC', 'YYYY-MM-DD HH24:MI:SS')
     cat_technology: network_group_name
     network_type: n.name

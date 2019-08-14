@@ -110,14 +110,6 @@ public class MeasurementResultService {
 	public MeasurementResultResponse saveResult(LmapReportDto lmapReportDto) throws StorageServiceException {
 		final String systemUuid = collectorServiceProperties.getSystemUuid();
 		
-		logger.warn(lmapReportDto.getAgentId());
-		logger.warn(lmapReportDto.getAgentId());
-		logger.warn(lmapReportDto.getAgentId());
-		logger.warn(lmapReportDto.getAgentId());
-		logger.warn(lmapReportDto.getAgentId());
-		logger.warn(lmapReportDto.getAgentId());
-		logger.warn(lmapReportDto.getAgentId());
-		
 		// Store measurement result into CouchDB
 		final MeasurementResultResponse resultResponse = storageService.save(lmapReportDto, systemUuid);
 		
