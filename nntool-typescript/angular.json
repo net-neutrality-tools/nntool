@@ -99,8 +99,8 @@
                 "bundleName": "ias.web"
               },
               {
-                "input": "../ias/build/uglified/web/Worker.js",
-                "bundleName": "Worker",
+                "input": "../ias/build/uglified/web/WebWorker.js",
+                "bundleName": "WebWorker",
                 "lazy": true
               },
               {
@@ -202,8 +202,8 @@
                 "bundleName": "ias.web"
               },
               {
-                "input": "../ias/build/uglified/web/Worker.js",
-                "bundleName": "Worker",
+                "input": "../ias/build/uglified/web/WebWorker.js",
+                "bundleName": "WebWorker",
                 "lazy": true
               },
               {
@@ -431,8 +431,8 @@
                 "bundleName": "ias.web"
               },
               {
-                "input": "../ias/build/uglified/desktop/Worker.js",
-                "bundleName": "Worker"
+                "input": "../ias/build/uglified/desktop/WebWorker.js",
+                "bundleName": "WebWorker"
               },
               {
                 "input": "../ias/build/uglified/desktop/JSTool.js",
