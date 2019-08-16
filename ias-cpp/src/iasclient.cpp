@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-07
+ *      \date Last update: 2019-08-16
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -176,7 +176,7 @@ int main(int argc, char** argv)
 	jMeasurementParameters["wsAuthTimestamp"] = "placeholderTimestamp";
 
 	Json::array jTargets;
-	jTargets.push_back("ubuntuserver");
+	jTargets.push_back("peer-ias-de-01");
 	jMeasurementParameters["wsTargets"] = Json(jTargets);
 	jMeasurementParameters["wsTargetsRtt"] = Json(jTargets);
 
