@@ -12,6 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
+ *      \date Last update: 2019-08-09
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
