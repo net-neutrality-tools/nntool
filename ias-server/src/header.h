@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-17
+ *      \date Last update: 2019-08-07
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -86,6 +86,7 @@
 #include "tcphandler.h"
 #include "tcptraceroutehandler.h"
 #include "udpserver.h"
+#include "load_monitoring.h"
 
 
 using namespace std;
@@ -103,34 +104,14 @@ using namespace json11;
 #define TRC_CRIT(s)   CTrace::getInstance().logCritical(s)
 
 
-//http header fields
-#define HTTP_GET			"GET / HTTP/1.1"
-#define HTTP_POST 			"POST / HTTP/1.1"
-#define HTTP_OTPIONS 		"OPTIONS / HTTP/1.1"
-#define HTTP_CONTENT_LENGTH	"Content-Length:"
-#define HTTP_HOST 			"Host:"
-#define HTTP_ACCESS_METHOD	"Access-Control-Request-Method:"
-#define HTTP_ACCESS_HEADERS	"Access-Control-Request-Headers:"
-#define HTTP_ORIGIN			"Origin:"
-#define HTTP_CONNECTION		"Connection:"
-#define HTTP_COOKIE			"Cookie"
-#define HTTP_DATA			"/data.img"
-#define HTTP_USER_AGENT		"User-Agent"
-#define HTTP_BAD_REQUEST	"HTTP/1.1 400 Bad Request\r\n\r\n";
-
-
-extern bool DEBUG;
 extern bool DEBUG_NOPOLL;
 extern bool DEBUG_NOPOLL_ERROR;
 extern bool DEBUG_NOPOLL_CRITICAL;
-extern bool RUNNING;
 extern bool OVERLOADED;
 extern bool SERVERMONITORING;
 extern Json CONFIG;
 
 #define IF_SCAN_PATTERN " %[^:]:%llu %llu %*d %*d %*d %*d %*d %*d %llu %llu"
-	
 #define MEM_SCAN_PATTERN "%[^:]: %u"
-#define UPTIME_SCAN_PATTERN "%d.%ds %d.%ds"
 
 #endif
