@@ -36,25 +36,21 @@ class CConnection
 		int mTls;
 		string mTlsSubjectValidation;
 
-		/*!
-		\struct sockaddr addr;
-		\brief Struct of Socket-Address
-		- Initialisation of the struct named sockaddr
-		*/
 		struct sockaddr_in sockinfo_in;
 		struct sockaddr_in6 sockinfo_in6;
 
-		SSL*     			ssl;
+		SSL_CTX* ctx;
+		SSL* ssl;
 
-		int connectTLS();
+		void tlsSetup(bool client);
+		int tlsConnect();
+		void tlsPrintError();
 
 	public:
 		int mSocket;
 
-		//!Standard Constructor
 		CConnection();
 
-		//! Virtual Destructor
 		virtual ~CConnection();
 
 		//! UDP Client Sockets
@@ -63,19 +59,22 @@ class CConnection
 		
 		//! UDP Server Sockets
 		int udpSocketServer( int &nPort );
-		int udpSocketServer(int &nPort, string sIp);
+		int udpSocketServer(int &nPort, string sIp );
 		int udp6SocketServer( int &nPort );
 		int udp6SocketServer( int &nPort, string sIp );
 
 		//! TCP Client Sockets
 		int tcpSocket( string &interface, string &sServer, int &nPort );
 		int tcpSocket( string &interface, string &sServer, int &nPort, int nTls, string sTlsSubjectValidation );
-		int tcp6Socket(string &interface, string &sServer, int &nPort );
-		int tcp6Socket(string &interface, string &sServer, int &nPort, int nTls, string sTlsSubjectValidation );
+		int tcp6Socket( string &interface, string &sServer, int &nPort );
+		int tcp6Socket( string &interface, string &sServer, int &nPort, int nTls, string sTlsSubjectValidation );
 
 		//! TCP Server Sockets
 		int tcpSocketServer( int &nPort );
 		int tcp6SocketServer( int &nPort );
+
+		//! TLS specific functions
+		int tlsServe();
 
 		//! Generic send function
 		int send(const void *buf, int num, int flags );

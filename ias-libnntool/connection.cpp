@@ -31,6 +31,7 @@ CConnection::CConnection()
 //!	Virtual Destructor
 CConnection::~CConnection()
 {
+	close();
 }
 
 
@@ -242,7 +243,7 @@ int CConnection::tcpSocket(string &interface, string &sServer, int &nPort, int n
 		return -1;
 	}
 
-	if (mTls && connectTLS() != 0)
+	if (mTls && tlsConnect() != 0)
 	{
 		return -1;
 	}
@@ -321,7 +322,7 @@ int CConnection::tcp6Socket(string &interface, string &sServer, int &nPort, int 
 		return -1;
 	}
 
-	if (mTls && connectTLS() != 0)
+	if (mTls && tlsConnect() != 0)
 	{
 		return -1;
 	}
@@ -399,6 +400,92 @@ int CConnection::tcp6SocketServer( int &nPort )
 	return mSocket;
 }
 
+int CConnection::tlsServe()
+{
+	mTls			= 1;
+
+	tlsSetup(false);
+
+    if (!ctx)
+    {
+        TRC_ERR("TLS Error while creating context: ");
+        tlsPrintError();
+		return -1;
+    }
+
+    SSL_CTX_set_ecdh_auto(ctx, 1);
+
+    string certDir = "/var/opt/ias-server/certs/";
+    DIR *dir;
+    struct dirent *ent;
+
+    if ((dir = opendir(certDir.c_str())) != NULL)
+    {
+        while ((ent = readdir(dir)) != NULL)
+        {
+            string dirName = ent->d_name;
+            string certFile;
+            string keyFile;
+            
+            if (!dirName.compare(".") == 0 && !dirName.compare("..") == 0)
+            {
+                certFile = certDir + dirName + "/" + dirName + ".crt";
+                keyFile = certDir + dirName + "/" + dirName + ".key";
+                                 
+                //Set cert
+			    if (SSL_CTX_use_certificate_file(ctx, certFile.c_str(), SSL_FILETYPE_PEM) <= 0)
+			    {
+			        TRC_ERR("TLS Error while setting certificate file: ");
+			        tlsPrintError();
+					return -1;
+			    }
+
+			    //Set key
+			    if (SSL_CTX_use_PrivateKey_file(ctx, keyFile.c_str(), SSL_FILETYPE_PEM) <= 0 )
+			    {
+			        TRC_ERR("TLS Error while setting key file: ");
+			        tlsPrintError();
+					return -1;
+			    }
+            }
+        }
+        closedir (dir);
+    } 
+    else 
+    {
+        TRC_CRIT("TLS error: failed to open TLS certificate Directory: " + certDir);
+        return -1;
+    }
+
+	ssl = SSL_new (ctx);
+	SSL_set_fd(ssl, mSocket);
+
+    if (SSL_accept(ssl) <= 0)
+    {
+		TRC_ERR("TLS Error while accepting TLS connection: ");
+		tlsPrintError();
+        return -1;
+    }
+    else
+    {
+        TRC_INFO("TLS Connection established");
+    }
+
+    return 0;
+}
+
+void CConnection::tlsPrintError()
+{
+    BIO *bio = BIO_new(BIO_s_mem());
+    ERR_print_errors(bio);
+    char *rbuffer;
+    size_t len = BIO_get_mem_data(bio, &rbuffer);
+    string ret(rbuffer, len);
+    BIO_free(bio);
+
+    TRC_ERR(ret);
+}
+
 
 int CConnection::send(const void *buf, int num, int flags)
 {
@@ -414,6 +501,7 @@ int CConnection::send(const void *buf, int num, int flags)
 	return -1;
 }
 
+
 int CConnection::receive(void *buf, int num, int flags)
 {
 	if ( mTls == 0 )
@@ -428,9 +516,21 @@ int CConnection::receive(void *buf, int num, int flags)
 	return -1;
 }
 
+
 int CConnection::close()
 {
-	return ::close(mSocket);
+
+	int close = ::close(mSocket);
+
+	if (mTls)
+	{
+	 	ERR_free_strings();
+    	EVP_cleanup();
+	 	SSL_shutdown(ssl);
+    	SSL_CTX_free(ctx);
+	}
+
+	return close;
 }
 
 
@@ -456,23 +556,38 @@ static int tlsVerifyCertificateCallback(int ok, X509_STORE_CTX *store_ctx)
 }
 
 
-int CConnection::connectTLS()
+void CConnection::tlsSetup(bool client)
 {
-  	int ssl_error = 0;
-
-	OpenSSL_add_ssl_algorithms();
-	const SSL_METHOD *method = TLS_client_method();
+	SSL_library_init();
+    OpenSSL_add_all_algorithms();
 	SSL_load_error_strings();
-	SSL_CTX* ctx = SSL_CTX_new (method);
+	ERR_load_crypto_strings();
+
+	const SSL_METHOD *method;
+	if (client)
+	{
+		method = TLS_client_method();
+	}
+	else
+	{
+		method = TLS_server_method();
+	}
+	
+	ctx = SSL_CTX_new(method);
+}
+
+
+int CConnection::tlsConnect()
+{
+  	tlsSetup(true);
 
 	ssl = SSL_new (ctx);
 	SSL_set_fd(ssl, mSocket);
-	ssl_error = SSL_connect(ssl);
 
-	if (ssl_error <= 0)
+	if (SSL_connect(ssl) <= 0)
 	{
-		ssl_error = SSL_get_error(ssl, -1);
-		TRC_ERR("SSL Error " + to_string(ssl_error) + " while negotiating TLS connection");
+		TRC_ERR("SSL Error while negotiating TLS connection: ");
+		tlsPrintError();
 		return -1;
 	}
 	else
@@ -511,4 +626,3 @@ int CConnection::connectTLS()
 
 	return 0;
 }
-
