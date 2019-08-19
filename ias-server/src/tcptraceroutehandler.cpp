@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-03-21
+ *      \date Last update: 2019-08-07
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -71,7 +71,7 @@ int CTcpTracerouteHandler::handle_tcp_traceroute()
     
     print_request(rHost, rAccessMethod, rAccessHeaders, rOrigin, rConnection, rContentLength);
 
-    if (    ((request.find(HTTP_OTPIONS)        != string::npos) || (request.find(get_lower_string(HTTP_OTPIONS))           != string::npos))
+    if (    ((request.find(HTTP_OPTIONS)        != string::npos) || (request.find(get_lower_string(HTTP_OPTIONS))           != string::npos))
         &&  ((request.find(HTTP_HOST)           != string::npos) || (request.find(get_lower_string(HTTP_HOST))              != string::npos))
         &&  ((request.find(HTTP_ACCESS_METHOD)  != string::npos) || (request.find(get_lower_string(HTTP_ACCESS_METHOD))     != string::npos))
         &&  ((request.find(HTTP_ACCESS_HEADERS) != string::npos) || (request.find(get_lower_string(HTTP_ACCESS_HEADERS))    != string::npos))

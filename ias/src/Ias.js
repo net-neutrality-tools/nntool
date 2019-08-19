@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-03
+ *      \date Last update: 2019-07-25
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -83,6 +83,8 @@ function Ias()
     var waitTimeClassChangeDownload     = 8000;
     var waitTimeClassChangeUpload       = 15000;
 
+    var useWebWorkers                    = true;
+
 
 
 
@@ -104,7 +106,15 @@ function Ias()
 
         wsControlReset();
 
-        if (typeof wsMeasurementParameters.platform !== 'undefined') platform = String(wsMeasurementParameters.platform);
+        if (typeof wsMeasurementParameters.platform !== 'undefined')
+        {
+            platform = String(wsMeasurementParameters.platform);
+        }
+
+        if (typeof wsMeasurementParameters.useWebWorkers === 'undefined')
+        {
+            wsMeasurementParameters.useWebWorkers = useWebWorkers;
+        }
 
         globalKPIs.start_time           = jsTool.getFormattedDate();
 
@@ -117,23 +127,23 @@ function Ias()
         if (wsMeasurementParameters.platform === 'mobile')
         {
             //WebSocket streams are natively threaded, so we dont need WebWorkers
-            wsMeasurementParameters.singleThread = true;
+            wsMeasurementParameters.useWebWorkers = false;
         }
         else
         {
             //catch Firefox < 38, as it has no WebSocket in WebWorker Support
             if ((deviceKPIs.browser_info.name.search('Firefox') !== -1) && Number(deviceKPIs.browser_info.version) < 38)
             {
-                wsMeasurementParameters.singleThread = true;
+                wsMeasurementParameters.useWebWorkers = false;
             }
 
             //catch ie11 and Edge > 13
             //ie11: no WebSocket in WebWorker Support
             //edge14: no WebSocket in WebWorker Support
-            //edge>14: WebSocket in WebWorker Support, but poor (/4) upload performance
+            //edge>14: WebSocket in WebWorker Support, but poor performance
             if ((deviceKPIs.browser_info.name.search('Internet Explorer 11') !== -1) || ((deviceKPIs.browser_info.name.search('Edge') !== -1) && (Number(deviceKPIs.browser_info.version) > 13)))
             {
-                wsMeasurementParameters.singleThread = true;
+                wsMeasurementParameters.useWebWorkers = false;
             }
 
             //catch Safari 5, 6 and 7, as they only have partial WebSocket support
@@ -162,7 +172,7 @@ function Ias()
 
         startGcTimer();
 
-        if (typeof wsMeasurementParameters.singleThread !== 'undefined')
+        if (wsMeasurementParameters.useWebWorkers === false)
         {
             console.log('WebWorkers:        inactive');
             deviceKPIs.web_workers_active = false;
@@ -694,15 +704,7 @@ function Ias()
     {
         delete wsControl;
         wsControl = null;
-
-        if (typeof wsMeasurementParameters.singleThread !== 'undefined')
-        {
-            wsControl   = new WSControlSingleThread();
-        }
-        else
-        {
-            wsControl   = new WSControl();
-        }
+        wsControl = new WSControl();
         wsControl.wsMeasurement = this;
         wsControl.callback      = 'wsMeasurement';
     }

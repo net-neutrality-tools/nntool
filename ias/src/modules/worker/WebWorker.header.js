@@ -12,41 +12,27 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-07
+ *      \date Last update: 2019-07-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
-#ifndef TIMER_H
-#define TIMER_H
 
-#include "header.h"
-#include "callback.h"
 
-using namespace std;
 
-/*!
-\class CTimer
-\brief Thread CTimer
-*/
-class CTimer : public CBasisThread
+/*-------------------------class WSWebWorker------------------------*/
+
+/**
+ * @class WSWebWorker
+ * @description WebSocket Web Worker Class
+ */
+var WSWebWorker = function ()
 {
-	private:
-		int mInstances;
+    this.wsControl	= 'undefined';
 
-		CCallback *mCallback;
-
-		bool unreachableSignaled;
-		bool forbiddenSignaled;
-		bool overloadSignaled;
-	
-	public:
-		CTimer();
-		
-		virtual ~CTimer();
-		
-		CTimer( int nInstances, CCallback *pCallback );
-		
-		int run();
+    return(this);
 };
 
-#endif
+var ulDataSize		= 2246915;
+
+var useWebWorkers	= true;
+var jsTool;
