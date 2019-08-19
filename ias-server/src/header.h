@@ -37,7 +37,6 @@
 #include <thread>
 #include <vector>
 #include <cmath>
-#include <dirent.h>
 #include <strings.h>
 #include <iomanip> 
 #include <algorithm>
