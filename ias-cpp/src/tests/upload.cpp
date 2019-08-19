@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-07
+ *      \date Last update: 2019-08-19
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -157,7 +157,8 @@ int Upload::run()
 			if( mConnection->tcp6Socket(mClient, mServer, mPort, mTls, mServerName) < 0 )
 			{
 				//Error
-				TRC_ERR("Creating socket failed - Could not establish connection");
+				::UNREACHABLE = true;
+				TRC_ERR("no connection to measurement peer: " + mServer);
 				return -1;
 			}
 			
@@ -169,7 +170,8 @@ int Upload::run()
 			if( mConnection->tcpSocket(mClient, mServer, mPort, mTls, mServerName) < 0 )
 			{
 				//Error
-				TRC_ERR("Creating socket failed - Could not establish connection");
+				::UNREACHABLE = true;
+				TRC_ERR("no connection to measurement peer: " + mServer);
 				return -1;
 			}
 			
