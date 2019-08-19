@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-07
+ *      \date Last update: 2019-08-19
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -95,6 +95,7 @@ using namespace json11;
 
 #define MAX_PACKET_SIZE 1500
 #define MAXBUFFER 1580
+#define AUTHENTICATION_MAX_AGE 120
 
 
 #define TRC_DEBUG(s)  CTrace::getInstance().logDebug(s)
