@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-20
+ *      \date Last update: 2019-08-19
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -57,42 +57,24 @@ class CConnection
 		//! Virtual Destructor
 		virtual ~CConnection();
 
-		int rawSocketEth();
- 
-		//! Open Datagram-Socket in UNIX
+		//! UDP Client Sockets
 		int udpSocket( string &interface );
-		
-		//! Open Datagram-Socket in UNIX
-		int udpSocketServer( int &nPort );
-
-		//! Open Datagram-Socket in UNIX
-		int udpSocketServer(int &nPort, string sIp);
-		
-		//! Open Datagram-Socket in UNIX
 		int udp6Socket( string &interface );
 		
-		//! Open Datagram-Socket in UNIX
+		//! UDP Server Sockets
+		int udpSocketServer( int &nPort );
+		int udpSocketServer(int &nPort, string sIp);
 		int udp6SocketServer( int &nPort );
-		
-		//! Open Datagram-Socket in UNIX
 		int udp6SocketServer( int &nPort, string sIp );
 
-		//! Open TCP-Socket in UNIX
+		//! TCP Client Sockets
 		int tcpSocket( string &interface, string &sServer, int &nPort );
-
-		//! Open TCP-Socket in UNIX
 		int tcpSocket( string &interface, string &sServer, int &nPort, int nTls, string sTlsSubjectValidation );
-		
-		//! Open TCP-Socket in UNIX
-		int tcpSocketServer( int &nPort );
-		
-		//! Open TCP-Socket in UNIX
 		int tcp6Socket(string &interface, string &sServer, int &nPort );
-		
-		//! Open TCP-Socket in UNIX
 		int tcp6Socket(string &interface, string &sServer, int &nPort, int nTls, string sTlsSubjectValidation );
-		
-		//! Open TCP-Socket in UNIX
+
+		//! TCP Server Sockets
+		int tcpSocketServer( int &nPort );
 		int tcp6SocketServer( int &nPort );
 
 		//! Generic send function

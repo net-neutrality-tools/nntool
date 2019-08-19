@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-18
+ *      \date Last update: 2019-08-19
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -33,27 +33,9 @@ CConnection::~CConnection()
 {
 }
 
-//! \brief
-//!	Open Raw-Socket in UNIX
-//! \param &interface
-//! \return mSocket
-int CConnection::rawSocketEth()
-{
-	//Open Socket
-	mSocket = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
-	if( mSocket == -1 )
-	{
-		TRC_ERR("Error [rawSocketEth]: Could not create socket" );
-		return -1;
-	}
-	
-	return mSocket;
-}
 
-//! \brief
-//!    Open UDP-Socket in UNIX
-//! \param &interface
-//! \return mSocket
+//! UDP Client Sockets
+
 int CConnection::udpSocket(string &interface)
 {
 	//Open Socket
@@ -79,18 +61,46 @@ int CConnection::udpSocket(string &interface)
 	return mSocket;
 }
 
-//! \brief
-//!    Open UDP-Socket in UNIX
-//! \param &interface
-//! \return mSocket
+int CConnection::udp6Socket(string &interface)
+{
+	int no = 0;
+	
+	//Open Socket
+	mSocket = socket( AF_INET6, SOCK_DGRAM, IPPROTO_UDP );
+	if( mSocket == -1 )
+	{
+		TRC_ERR("Error [udp6Socket]: Could not create socket" );
+		return -1;
+	}
+	
+	//Parameterset for Socket
+	memset(&sockinfo_in6, 0, sizeof(sockinfo_in6));
+	sockinfo_in6.sin6_flowinfo 	= 0;
+	sockinfo_in6.sin6_family 	= AF_INET6;
+	
+
+	setsockopt(mSocket, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&no, sizeof(no));
+	
+	(void) inet_pton (AF_INET6, interface.c_str(), sockinfo_in6.sin6_addr.s6_addr);
+	
+	//Bind Socket to Interface
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
+	{
+		TRC_ERR("Error [udp6Socket]: Could not bind socket to interface" );
+		return -1;
+	}
+
+	return mSocket;
+}
+
+
+//! UDP Server Sockets
+
 int CConnection::udpSocketServer(int &nPort)
 {
 	return udpSocketServer(nPort, "");
 }
 
-//! \brief
-//!    Open UDP-Socket in UNIX
-//! \return mSocket
 int CConnection::udpSocketServer(int &nPort, string sIp)
 {
 	//Open Socket
@@ -125,55 +135,11 @@ int CConnection::udpSocketServer(int &nPort, string sIp)
 	return mSocket;
 }
 
-//! \brief
-//!    Open UDP-Socket v6 in UNIX
-//! \param &interface
-//! \return mSocket
-int CConnection::udp6Socket(string &interface)
-{
-	int no = 0;
-	
-	//Open Socket
-	mSocket = socket( AF_INET6, SOCK_DGRAM, IPPROTO_UDP );
-	if( mSocket == -1 )
-	{
-		TRC_ERR("Error [udp6Socket]: Could not create socket" );
-		return -1;
-	}
-	
-	//Parameterset for Socket
-	memset(&sockinfo_in6, 0, sizeof(sockinfo_in6));
-	sockinfo_in6.sin6_flowinfo 	= 0;
-	sockinfo_in6.sin6_family 	= AF_INET6;
-	
-
-	setsockopt(mSocket, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&no, sizeof(no));
-	
-	(void) inet_pton (AF_INET6, interface.c_str(), sockinfo_in6.sin6_addr.s6_addr);
-	
-	//Bind Socket to Interface
-	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
-	{
-		TRC_ERR("Error [udp6Socket]: Could not bind socket to interface" );
-		return -1;
-	}
-
-	return mSocket;
-}
-
-//! \brief
-//!    Open UDP-Socket v6 in UNIX
-//! \param &interface
-//! \return mSocket
 int CConnection::udp6SocketServer(int &nPort)
 {
 	return udp6SocketServer(nPort, "");
 }
 
-//! \brief
-//!    Open UDP-Socket v6 in UNIX
-//! \param &interface
-//! \return mSocket
 int CConnection::udp6SocketServer(int &nPort, string sIp)
 {
 	int no = 0;
@@ -209,19 +175,14 @@ int CConnection::udp6SocketServer(int &nPort, string sIp)
 	return mSocket;
 }
 
-//! \brief
-//!    Open TCP-Socket in UNIX
-//! \param &interface
-//! \return mSocket
+
+//! TCP Client Sockets
+
 int CConnection::tcpSocket(string &interface, string &sServer, int &nPort )
 {
 	return tcpSocket(interface, sServer, nPort, 0, "");
 }
 
-//! \brief
-//!    Open TCP-Socket in UNIX
-//! \param &interface
-//! \return mSocket
 int CConnection::tcpSocket(string &interface, string &sServer, int &nPort, int nTls, string sTlsSubjectValidation)
 {	
 	int flags = 0;
@@ -289,55 +250,11 @@ int CConnection::tcpSocket(string &interface, string &sServer, int &nPort, int n
 	return mSocket;
 }
 
-//! \brief
-//!    Open TCP-Socket in UNIX
-//! \param &interface
-//! \return mSocket
-int CConnection::tcpSocketServer( int &nPort )
-{	
-	int on = 1;
-	
-	//Open Socket
-	mSocket = socket( AF_INET, SOCK_STREAM, 0 );
-	if( mSocket == -1 )
-	{
-		TRC_ERR( "Error [tcpSocketServer]: Could not create socket" );
-		return -1;
-	}
-	
-	//Parameterset for Socket
-	memset(&sockinfo_in, 0, sizeof(sockinfo_in));
-	sockinfo_in.sin_family 		= AF_INET;
-	sockinfo_in.sin_addr.s_addr = htonl(INADDR_ANY);
-	sockinfo_in.sin_port		= htons(nPort);
-	
-	setsockopt(mSocket, SOL_SOCKET,SO_REUSEADDR,(const char *) &on, sizeof(on));
-	
-	//Bind Socket to Interface
-	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in) ) == -1 )
-	{
-		TRC_ERR( "Error [tcpSocketServer]: Could not bind socket to interface" );
-		return -1;
-	}
-	
-	listen(mSocket, -1);
-	
-	return mSocket;
-}
-
-//! \brief
-//!    Open TCP-Socket in UNIX
-//! \param &interface
-//! \return mSocket
 int CConnection::tcp6Socket(string &interface, string &sServer, int &nPort )
 {
 	return tcp6Socket(interface, sServer, nPort, 0, "");
 }
 
-//! \brief
-//!    Open TCP-Socket v6 in UNIX
-//! \param &interface
-//! \return mSocket
 int CConnection::tcp6Socket(string &interface, string &sServer, int &nPort, int nTls, string sTlsSubjectValidation )
 {
 	int on = 1;
@@ -412,10 +329,41 @@ int CConnection::tcp6Socket(string &interface, string &sServer, int &nPort, int 
 	return mSocket;
 }
 
-//! \brief
-//!    Open TCP-Socket v6 in UNIX
-//! \param &interface
-//! \return mSocket
+
+//! TCP Server Sockets
+
+int CConnection::tcpSocketServer( int &nPort )
+{	
+	int on = 1;
+	
+	//Open Socket
+	mSocket = socket( AF_INET, SOCK_STREAM, 0 );
+	if( mSocket == -1 )
+	{
+		TRC_ERR( "Error [tcpSocketServer]: Could not create socket" );
+		return -1;
+	}
+	
+	//Parameterset for Socket
+	memset(&sockinfo_in, 0, sizeof(sockinfo_in));
+	sockinfo_in.sin_family 		= AF_INET;
+	sockinfo_in.sin_addr.s_addr = htonl(INADDR_ANY);
+	sockinfo_in.sin_port		= htons(nPort);
+	
+	setsockopt(mSocket, SOL_SOCKET,SO_REUSEADDR,(const char *) &on, sizeof(on));
+	
+	//Bind Socket to Interface
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in) ) == -1 )
+	{
+		TRC_ERR( "Error [tcpSocketServer]: Could not bind socket to interface" );
+		return -1;
+	}
+	
+	listen(mSocket, -1);
+	
+	return mSocket;
+}
+
 int CConnection::tcp6SocketServer( int &nPort )
 {
 	int on = 1;
@@ -450,6 +398,7 @@ int CConnection::tcp6SocketServer( int &nPort )
 	
 	return mSocket;
 }
+
 
 int CConnection::send(const void *buf, int num, int flags)
 {
@@ -503,10 +452,8 @@ static int tlsVerifyCertificateCallback(int ok, X509_STORE_CTX *store_ctx)
 		}
 	}
 
-
     return(ok);
 }
-
 
 
 int CConnection::connectTLS()
@@ -561,7 +508,6 @@ int CConnection::connectTLS()
 
 		TRC_INFO("TLS Connection established");
 	}
-
 
 	return 0;
 }
