@@ -20,7 +20,7 @@ import MeasurementAgentKit
 import CodableJSON
 
 let MEASUREMENT_AGENT =
-    MeasurementAgentBuilder(controlServiceBaseUrl: /*"http://localhost:18080/api/v1"*/ "https://controller-de-01.net-neutrality.tools/api/v1")
+    MeasurementAgentBuilder(controllerServiceBaseUrl: "https://controller-de-01.net-neutrality.tools/api/v1" /*"http://localhost:18080/api/v1"*/)
         .program(task: .speed, config: ProgramConfiguration(name: "IAS", version: "1.0.0") { (taskDto: LmapTaskDto) in
             let p = IASProgram()
 

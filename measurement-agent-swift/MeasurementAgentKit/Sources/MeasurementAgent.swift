@@ -20,43 +20,29 @@ import Foundation
 ///
 public class MeasurementAgent {
 
-    private let standardUserDefaults = UserDefaults.standard
+    var controlService: ControlService!
+    public private(set) var resultService: ResultService?
 
-    let uuidKey: String
-    let tcKey = "tc_accepted_version"
+    private var settings: LocalSettings
 
-    var controlService: ControlService! // !
-    public private(set) var resultService: ResultService? // !
-
-    public private(set) var uuid: String? {
-        get {
-            return standardUserDefaults.string(forKey: uuidKey)
-        }
-        set {
-            standardUserDefaults.set(newValue, forKey: uuidKey)
-        }
-    }
-
-    var tcAcceptedVersion: Int? {
-        get {
-            return standardUserDefaults.integer(forKey: tcKey)
-        }
-        set {
-            standardUserDefaults.set(newValue, forKey: tcKey)
-        }
+    public var uuid: String? {
+        return settings.uuid
     }
 
     private var programs = [MeasurementTypeDto: ProgramConfiguration]()
     private var programOrder = [MeasurementTypeDto]()
 
     public init(configuration: MeasurementAgentConfiguration) {
-        uuidKey = URL(string: configuration.controlServiceBaseUrl)?.host ?? "default_uuid_key" // TODO: based on controller url or system uuid
+        do {
+            settings = try MeasurementAgentSettingsHelper.getLocalSettings(controllerServiceBaseUrl: configuration.controllerServiceBaseUrl)
+        } catch {
+            settings = LocalSettings(controllerServiceBaseUrl: configuration.controllerServiceBaseUrl)
+        }
 
-        controlService = ControlService(baseURL: configuration.controlServiceBaseUrl, agent: self)
+        createServices(localSettings: self.settings)
 
-        resultService = ResultService(baseURL: "https://result-de-01.net-neutrality.tools/api/v1", agent: self) // TODO: use baseUrl from settings request
-
-        // TODO: check if registered -> get settings
+        // TODO: check if registered -> get settings // currently done in AppDelegate
+        // TODO: allow override of specific urls via config.
     }
 
     public func registerProgramForTask(_ task: MeasurementTypeDto, withConfiguration config: ProgramConfiguration) {
@@ -80,12 +66,12 @@ public class MeasurementAgent {
         registrationRequest.groupName = "test_group_name"
 
         controlService.registerAgent(registrationRequest: registrationRequest, onSuccess: { response in
-            self.uuid = response.agentUuid
-            self.tcAcceptedVersion = registrationRequest.termsAndConditionsAcceptedVersion
+            self.settings.uuid = response.agentUuid
+            self.settings.tcAcceptedVersion = registrationRequest.termsAndConditionsAcceptedVersion
 
-            //response.settings
-
-            //response.settings
+            if let s = response.settings {
+                self.updateAndSaveSettings(settings: s)
+            }
 
             success()
         }, onFailure: { _ in
@@ -101,12 +87,40 @@ public class MeasurementAgent {
             return
         }
 
-        controlService.getSettings(agentUuid: agentUuid, onSuccess: { _ in
+        controlService.getSettings(agentUuid: agentUuid, onSuccess: { response in
+            self.updateAndSaveSettings(settings: response)
+
             success?()
         }, onFailure: { _ in
             // TODO
             failure?()
         })
+    }
+
+    private func updateAndSaveSettings(settings: SettingsResponse) {
+        guard let controllerServiceBaseUrl = settings.urls.controllerService else {
+            return
+        }
+
+        self.settings.controllerServiceBaseUrl = controllerServiceBaseUrl
+        self.settings.controllerServiceBaseUrlIpv4 = settings.urls.controllerServiceIpv4
+        self.settings.controllerServiceBaseUrlIpv6 = settings.urls.controllerServiceIpv6
+
+        self.settings.resultServiceBaseUrl = settings.urls.resultService
+        self.settings.mapServiceUrl = settings.urls.mapService
+        self.settings.websiteUrl = settings.urls.website
+
+        createServices(localSettings: self.settings)
+
+        try? MeasurementAgentSettingsHelper.saveLocalSettings(self.settings)
+    }
+
+    private func createServices(localSettings: LocalSettings) {
+        controlService = ControlService(baseURL: localSettings.controllerServiceBaseUrl, agent: self)
+
+        if let resultServiceBaseUrl = localSettings.resultServiceBaseUrl {
+            resultService = ResultService(baseURL: resultServiceBaseUrl, agent: self)
+        }
     }
 
     public func newMeasurementRunner() -> MeasurementRunner? {
@@ -118,7 +132,7 @@ public class MeasurementAgent {
     }
 
     public func getSpeedMeasurementPeers(onSuccess: @escaping ([SpeedMeasurementPeerResponse.SpeedMeasurementPeer]) -> Void, onFailure: @escaping (Error) -> Void) {
-        controlService.getSpeedMeasuremnetPeers(onSuccess: { response in
+        controlService.getSpeedMeasurementPeers(onSuccess: { response in
             if response.speedMeasurementPeers.isEmpty {
                 onFailure(NSError(domain: "todo", code: -1234, userInfo: nil)) // TODO: improve error
             } else {
@@ -130,26 +144,26 @@ public class MeasurementAgent {
     }
 
     public func newIPConnectivityInfo() -> IPConnectivityInfo {
-        var controlServiceV4: ControlService?
-        var controlServiceV6: ControlService?
+        let controllerServiceBaseUrlV4 = settings.controllerServiceBaseUrlIpv4 ?? settings.controllerServiceBaseUrl
+        let controllerServiceBaseUrlV6 = settings.controllerServiceBaseUrlIpv6 ?? settings.controllerServiceBaseUrl
+
+        let createIPConnectivityInfo = { () -> IPConnectivityInfo in
+            let controlServiceV4 = ControlService(baseURL: controllerServiceBaseUrlV4, agent: self)
+            let controlServiceV6 = ControlService(baseURL: controllerServiceBaseUrlV6, agent: self)
+
+            return IPConnectivityInfo(controlServiceV4: controlServiceV4, controlServiceV6: controlServiceV6)
+        }
+
+        var connectivityInfo: IPConnectivityInfo!
 
         if Thread.isMainThread {
-            controlServiceV4 = ControlService(baseURL: "https://controller-de-01-ipv4.net-neutrality.tools/api/v1", agent: self)
-            controlServiceV6 = ControlService(baseURL: "https://controller-de-01-ipv6.net-neutrality.tools/api/v1", agent: self)
+            connectivityInfo = createIPConnectivityInfo()
         } else {
             DispatchQueue.main.sync {
-                controlServiceV4 = ControlService(baseURL: "https://controller-de-01-ipv4.net-neutrality.tools/api/v1", agent: self)
-                controlServiceV6 = ControlService(baseURL: "https://controller-de-01-ipv6.net-neutrality.tools/api/v1", agent: self)
+                connectivityInfo = createIPConnectivityInfo()
             }
         }
 
-        // TODO: from settings request
-        return IPConnectivityInfo(controlServiceV4: controlServiceV4!, controlServiceV6: controlServiceV6!)
-    }
-
-    var settings = Settings()
-
-    class Settings {
-
+        return connectivityInfo
     }
 }

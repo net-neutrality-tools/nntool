@@ -21,8 +21,8 @@ public class MeasurementAgentBuilder {
 
     let measurementAgent: MeasurementAgent
 
-    public init(controlServiceBaseUrl baseUrl: String) {
-        measurementAgent = MeasurementAgent(configuration: MeasurementAgentConfiguration(controlServiceBaseUrl: baseUrl))
+    public init(controllerServiceBaseUrl baseUrl: String) {
+        measurementAgent = MeasurementAgent(configuration: MeasurementAgentConfiguration(controllerServiceBaseUrl: baseUrl))
     }
 
     /*public func controlServiceBaseUrl(baseUrl: String) -> Self {

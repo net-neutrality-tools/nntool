@@ -21,7 +21,7 @@ import Siesta
 ///
 class ControlService: RestApiService {
 
-    init(baseURL: URLConvertible = "http://localhost:8080/api/v1", agent: MeasurementAgent) {
+    init(baseURL: URLConvertible, agent: MeasurementAgent) {
         super.init(baseURL: baseURL, agent: agent)
 
         configureTransformer("/measurement-agents", forType: ApiResponse<RegistrationResponse>.self)
@@ -48,7 +48,7 @@ class ControlService: RestApiService {
         request("/measurements", method: .post, requestEntity: controlDto, wrapInApiRequest: false, responseEntityType: LmapControlDto.self, onSuccess: onSuccess, onFailure: onFailure)
     }
 
-    func getSpeedMeasuremnetPeers(onSuccess: SuccessCallback<SpeedMeasurementPeerResponse>?, onFailure: FailureCallback?) {
+    func getSpeedMeasurementPeers(onSuccess: SuccessCallback<SpeedMeasurementPeerResponse>?, onFailure: FailureCallback?) {
         request("/speed-measurement-peers", method: .get, responseEntityType: SpeedMeasurementPeerResponse.self, onSuccess: onSuccess, onFailure: onFailure)
     }
 

@@ -36,6 +36,8 @@
 		E00F4AFD2266218400EAD0C0 /* AnyProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AFC2266218400EAD0C0 /* AnyProgram.swift */; };
 		E00F4B0522676BD100EAD0C0 /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4B0422676BCF00EAD0C0 /* Program.swift */; };
 		E01DEE832253B5AC00983B1C /* MeasurementResultResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01DEE822253B5AC00983B1C /* MeasurementResultResponse.swift */; };
+		E021C71E230AE0040090729F /* LocalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E021C71D230AE0040090729F /* LocalSettings.swift */; };
+		E021C720230AEB4F0090729F /* MeasurementAgentSettingsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E021C71F230AEB4F0090729F /* MeasurementAgentSettingsHelper.swift */; };
 		E029274722D630D3001FCAEC /* NetworkInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029274622D630D3001FCAEC /* NetworkInfo.swift */; };
 		E029274A22D78CE2001FCAEC /* ApiRequestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029274922D78CE2001FCAEC /* ApiRequestHelper.swift */; };
 		E029274C22D78EAD001FCAEC /* BundleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029274B22D78EAD001FCAEC /* BundleHelper.swift */; };
@@ -158,6 +160,8 @@
 		E00F4AFC2266218400EAD0C0 /* AnyProgram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyProgram.swift; sourceTree = "<group>"; };
 		E00F4B0422676BCF00EAD0C0 /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
 		E01DEE822253B5AC00983B1C /* MeasurementResultResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasurementResultResponse.swift; sourceTree = "<group>"; };
+		E021C71D230AE0040090729F /* LocalSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSettings.swift; sourceTree = "<group>"; };
+		E021C71F230AEB4F0090729F /* MeasurementAgentSettingsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementAgentSettingsHelper.swift; sourceTree = "<group>"; };
 		E029274622D630D3001FCAEC /* NetworkInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfo.swift; sourceTree = "<group>"; };
 		E029274922D78CE2001FCAEC /* ApiRequestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequestHelper.swift; sourceTree = "<group>"; };
 		E029274B22D78EAD001FCAEC /* BundleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleHelper.swift; sourceTree = "<group>"; };
@@ -415,10 +419,12 @@
 				E00F4AEE2264B41C00EAD0C0 /* MeasurementAgentConfiguration.swift */,
 				E00F4AFA22660B2B00EAD0C0 /* MeasurementRunner.swift */,
 				E00F4AF02264B51300EAD0C0 /* MeasurementRunnerDelegate.swift */,
-				E0B9A408224E6321002AB640 /* Servers */,
-				E0B9A3E9224D574A002AB640 /* DTO */,
 				E029274922D78CE2001FCAEC /* ApiRequestHelper.swift */,
 				E029274B22D78EAD001FCAEC /* BundleHelper.swift */,
+				E021C71D230AE0040090729F /* LocalSettings.swift */,
+				E021C71F230AEB4F0090729F /* MeasurementAgentSettingsHelper.swift */,
+				E0B9A408224E6321002AB640 /* Servers */,
+				E0B9A3E9224D574A002AB640 /* DTO */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -479,6 +485,7 @@
 				E0B9A411224E65AA002AB640 /* Controller */,
 				E01DEE812253B58A00983B1C /* Collector */,
 				E0CC268B22E8755C005DEED0 /* Result */,
+				E0B9A3CC224D4131002AB640 /* Lmap */,
 				E0B9A3D5224D46FC002AB640 /* GeoLocationDto.swift */,
 				E0B9A41D224E6910002AB640 /* VersionResponse.swift */,
 				E0B9A3D3224D4661002AB640 /* MeasurementAgentTypeDto.swift */,
@@ -499,7 +506,6 @@
 				E0EA84DF22806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift */,
 				B180E11F2284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift */,
 				E00F48C8225F3BDF00EAD0C0 /* MeasurementTypeDto.swift */,
-				E0B9A3CC224D4131002AB640 /* Lmap */,
 				E0C4522A22CA6B6300FA4B44 /* DTO+DebugExtensions.swift */,
 			);
 			path = DTO;
@@ -831,6 +837,7 @@
 				E0B9A3E4224D52CE002AB640 /* LmapOptionDto.swift in Sources */,
 				E0B9A3F1224D5A93002AB640 /* LmapFunctionDto.swift in Sources */,
 				E0B9A3ED224D5900002AB640 /* LmapCapabilityDto.swift in Sources */,
+				E021C720230AEB4F0090729F /* MeasurementAgentSettingsHelper.swift in Sources */,
 				E0B9A40C224E6373002AB640 /* CollectorService.swift in Sources */,
 				E0B9A3F5224D5C4D002AB640 /* LmapTaskDto.swift in Sources */,
 				E0CC268F22E8763A005DEED0 /* DetailMeasurementGroup.swift in Sources */,
@@ -882,6 +889,7 @@
 				E00F4AF52265DC3E00EAD0C0 /* ProgramConfiguration.swift in Sources */,
 				E0F3774222E9A82F00550948 /* BriefIASMeasurement.swift in Sources */,
 				E00F4AF12264B51300EAD0C0 /* MeasurementRunnerDelegate.swift in Sources */,
+				E021C71E230AE0040090729F /* LocalSettings.swift in Sources */,
 				E044DE0722D4896B00BB70CE /* CpuUsageInfo.swift in Sources */,
 				B141591F22B79A3400DD5C96 /* BaseInformationCollector.swift in Sources */,
 				E0B9A3E6224D544B002AB640 /* MeasurementTypeParametersDto.swift in Sources */,
