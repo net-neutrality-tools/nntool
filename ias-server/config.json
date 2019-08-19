@@ -13,7 +13,7 @@
   "authentication": {
     "enabled" : false,
     "secret": "my_auth_secret"
-  }
+  },
   "hostname": "my_hostname",
   "tcp_timeout": "25",
   "random_data_size": 1123457,
