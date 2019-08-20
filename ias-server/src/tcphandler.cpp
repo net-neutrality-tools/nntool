@@ -885,7 +885,7 @@ void CTcpHandler::sendRoundTripTimeResponse(noPollCtx *ctx, noPollConn *conn)
     {
         Json rttReport = Json::object{
             {"cmd",         "rttReport"},
-            {"avg",         to_string_precision(rttAvg, 3)},
+            {"avg",         CTool::to_string_precision(rttAvg, 3)},
             {"med",         rttMed},  
             {"min",         rttMin},
             {"max",         rttMax},
@@ -894,7 +894,7 @@ void CTcpHandler::sendRoundTripTimeResponse(noPollCtx *ctx, noPollConn *conn)
             {"err",         rttErrors},
             {"mis",         rttMissing},
             {"pSz",         rttPacketsize},
-            {"std_dev_pop", to_string_precision(rttStdDevPop, 3)},
+            {"std_dev_pop", CTool::to_string_precision(rttStdDevPop, 3)},
             {"srv",         hostname},
             {"rtts",        jRtts},
         };
@@ -1132,11 +1132,4 @@ void CTcpHandler::printTcpMetrics()
                 "   tcpi_rcv_mss:           " + to_string(tcp_info.tcpi_rcv_mss) + ""
                 );
     }
-}
-
-string CTcpHandler::to_string_precision(double value, const int precision)
-{
-    std::ostringstream out;
-    out << std::fixed << std::setprecision(precision) << value;
-    return out.str();
 }
