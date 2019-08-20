@@ -90,6 +90,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
             this.locationService.startTracking();
             this.startTimeStamp = (new Date()).toJSON().slice(0, -1);
         });
+        this.measurementLink = null;
     }
 
     private processTestControl(measurementControl: LmapControl): void {
@@ -170,6 +171,11 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
             this.speedControl.option.reduce(
                 (url: string, option: LmapOption) => option.name === 'result_collector_base_url' ? (url + option.value) : url, '')
         ).subscribe(response => {
+            if (response.data.uuid !== null && response.data.uuid !== '') {
+                if (this.zone) {
+                    this.zone.run(() => {this.measurementLink = '/history/' + response.data.uuid});
+                }
+            }
         });
 
         this.testResults = [];

@@ -33,7 +33,7 @@ export abstract class BaseNetTestComponent implements OnInit, OnDestroy {
 
     protected config: WebsiteSettings;
     errorMsg: string = null;
-    measurementLink: string = null;
+    protected measurementLink: string = null;
     protected _screenNr = 0;
     private _testInProgress = false;
 
@@ -74,8 +74,9 @@ export abstract class BaseNetTestComponent implements OnInit, OnDestroy {
         protected testService: TestService, protected configService: ConfigService,
         protected userService: UserService, protected translateService: TranslateService,
         protected requests: RequestsService, protected elementRef: ElementRef,
-        protected zone: NgZone, protected activatedRoute: ActivatedRoute, protected appService: AppService,
+        protected zone: NgZone, protected activatedRoute: ActivatedRoute, protected appService: AppService
     ) {
+        this.measurementLink = null;
     }
 
     ngOnInit() {
@@ -95,4 +96,5 @@ export abstract class BaseNetTestComponent implements OnInit, OnDestroy {
         this.user.acceptTC = true;
         this.userService.save();
     }
+
 }
