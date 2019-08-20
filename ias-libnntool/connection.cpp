@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-19
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -402,7 +402,7 @@ int CConnection::tcp6SocketServer( int &nPort )
 
 int CConnection::tlsServe()
 {
-	mTls			= 1;
+	mTls = 1;
 
 	tlsSetup(false);
 
