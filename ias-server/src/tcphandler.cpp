@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-19
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -870,22 +870,33 @@ void CTcpHandler::setRoundTripTimeKPIs()
 
 void CTcpHandler::sendRoundTripTimeResponse(noPollCtx *ctx, noPollConn *conn)
 {
+    Json::array jRtts;
+
+    for (double rtt : rttVector)
+    {
+        Json jRtt = Json::object{
+            {"rtt_ns", rtt},
+        };
+        jRtts.push_back(jRtt);
+    }
+
     //only send the first, then every second and the last RTT Report
     if (((rttRequestsSend-1)%2 == 1) || (rttRequestsSend == rttRequests))
     {
         Json rttReport = Json::object{
             {"cmd",         "rttReport"},
-            {"avg",         to_string_precision(rttAvg / 1000, 3)},
-            {"med",         rttMed / 1000},  
-            {"min",         rttMin / 1000},
-            {"max",         rttMax / 1000},
+            {"avg",         CTool::to_string_precision(rttAvg, 3)},
+            {"med",         rttMed},  
+            {"min",         rttMin},
+            {"max",         rttMax},
             {"req",         rttRequestsSend - 1},
             {"rep",         rttReplies},
             {"err",         rttErrors},
             {"mis",         rttMissing},
             {"pSz",         rttPacketsize},
-            {"std_dev_pop", to_string_precision(rttStdDevPop / 1000, 3)},
+            {"std_dev_pop", CTool::to_string_precision(rttStdDevPop, 3)},
             {"srv",         hostname},
+            {"rtts",        jRtts},
         };
 
         nopoll_conn_send_text(conn, rttReport.dump().c_str(), rttReport.dump().length());
@@ -1121,11 +1132,4 @@ void CTcpHandler::printTcpMetrics()
                 "   tcpi_rcv_mss:           " + to_string(tcp_info.tcpi_rcv_mss) + ""
                 );
     }
-}
-
-string CTcpHandler::to_string_precision(double value, const int precision)
-{
-    std::ostringstream out;
-    out << std::fixed << std::setprecision(precision) << value;
-    return out.str();
 }

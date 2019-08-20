@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-18
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -114,6 +114,8 @@ class CTool
 		static int randomData(vector<char> &vVector, int size);
 
 		static void print_stacktrace();
+
+		static string to_string_precision(double value, const int precision);
 		
 		//Template Code-------------------------------------------------------
 		//! \brief
