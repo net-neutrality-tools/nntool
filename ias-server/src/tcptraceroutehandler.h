@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-19
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -46,7 +46,7 @@ class CTcpTracerouteHandler
         int tcpSocket;
         string clientIp;
         bool mTlsSocket;
-        std::unique_ptr<CConnection> mConnection;
+        std::unique_ptr<CConnection> mAcceptedConnection;
 
         //http additional header fields
         string cache            = "Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0";

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-19
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -36,8 +36,8 @@ CTcpTracerouteHandler::~CTcpTracerouteHandler()
 
 CTcpTracerouteHandler::CTcpTracerouteHandler(int nSocket, string nClientIp, bool nTlsSocket)
 {
-    mConnection = std::make_unique<CConnection>();
-    mConnection->mSocket = nSocket;
+    mAcceptedConnection          = std::make_unique<CConnection>();
+    mAcceptedConnection->mSocket = nSocket;
 
     tcpSocket   = nSocket;
     clientIp    = nClientIp;
@@ -48,7 +48,7 @@ int CTcpTracerouteHandler::handle_tcp_traceroute()
 {
     TRC_DEBUG("TCP traceroute handler: started");
 
-    if (mTlsSocket && !mConnection->tlsServe() -1)
+    if (mTlsSocket && mAcceptedConnection->tlsServe() < 0)
     {
         TRC_ERR("TCP traceroute handler: TLS negotiation failed");
         TRC_DEBUG("TCP traceroute handler: stopped");
@@ -63,7 +63,7 @@ int CTcpTracerouteHandler::handle_tcp_traceroute()
     
     bzero(rbuffer, MAXBUFFER);
 
-    mConnection->receive(rbuffer, MAXBUFFER, 0);
+    mAcceptedConnection->receive(rbuffer, MAXBUFFER, 0);
 
     request = string(rbuffer);
     
@@ -135,7 +135,7 @@ void CTcpTracerouteHandler::handle_preflight_request(string rAccessMethod, strin
     response += "access-control-allow-methods: " + rAccessMethod + "\r\n";
     response += "access-control-allow-origin: " + rOrigin + "\r\n\r\n";
     
-    mConnection->send(response.c_str(), response.size(), 0);
+    mAcceptedConnection->send(response.c_str(), response.size(), 0);
     
     TRC_DEBUG("TCP traceroute handler: sent 200 OK");
     
@@ -188,7 +188,7 @@ void CTcpTracerouteHandler::handle_invalid_request()
     response += "Content-Language: en\r\n\r\n";
     response += responseBody;
     
-    mConnection->send(response.c_str(), response.size(), 0);
+    mAcceptedConnection->send(response.c_str(), response.size(), 0);
     
     TRC_DEBUG("TCP traceroute handler: sent 404 Not Found");
     
@@ -210,7 +210,7 @@ void CTcpTracerouteHandler::send_response(string rOrigin, string rConnection, st
     response += "access-control-allow-HTTP_ORIGIN: " + rOrigin + "\r\n\r\n";
     response += responseBody;
     
-    mConnection->send(response.c_str(), response.size(), 0);
+    mAcceptedConnection->send(response.c_str(), response.size(), 0);
 }
 
 string CTcpTracerouteHandler::get_value_from_string(string message, string key)
@@ -247,8 +247,8 @@ void CTcpTracerouteHandler::print_request(string rHost, string rAccessMethod, st
     TRC_DEBUG("Host: "                              + rHost);
     TRC_DEBUG("Access-Control-Request-Method: "     + rAccessMethod);
     TRC_DEBUG("Access-Control-Request-Headers: "    + rAccessHeaders);
-    TRC_DEBUG("HTTP_ORIGIN: "                            + rOrigin);
-    TRC_DEBUG("HTTP_CONNECTION: "                        + rConnection);
+    TRC_DEBUG("HTTP_ORIGIN: "                       + rOrigin);
+    TRC_DEBUG("HTTP_CONNECTION: "                   + rConnection);
     TRC_DEBUG("Content-Length: "                    + rContentLength);
     
     return;
