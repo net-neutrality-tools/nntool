@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-25
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -44,7 +44,7 @@ class CCallback
 		Json::object getMeasurementResults(struct measurement tempMeasurement, struct measurement_data data, string cmd);
 
 		Json::object jMeasurementResultsTime;
-		Json::array jMeasurementResultsRttUdp;
+		Json::object jMeasurementResultsRttUdp;
 		Json::array jMeasurementResultsDownload;
 		Json::array jMeasurementResultsUpload;
 	
