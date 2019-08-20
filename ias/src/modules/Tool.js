@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-02-21
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -361,9 +361,10 @@ JSTool.prototype.extend = function ()
     return extended;
 };
 
-JSTool.prototype.performRouteToClientLookup = function(target, port)
+JSTool.prototype.performRouteToClientLookup = function(target, port, https)
 {
-    var xhr = createCORSRequest('POST', 'http://' + target + ':' + port);
+    var protocol = https ? 'https://' : 'http://';
+    var xhr = createCORSRequest('POST', protocol + target + ':' + port);
     if (xhr)
     {
         xhr.setRequestHeader('Content-Type', 'application/json');

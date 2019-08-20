@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-25
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -48,6 +48,8 @@ function Ias()
     var performRouteToClientLookup      = false;
     var performedRouteToClientLookup    = false;
     var routeToClientTargetPort         = '8080';
+    var routeToClientTargetPortTls      = '8443';
+    var routeToClientUseHttps           = true;
 
     var wsMeasurementParameters         = {};
 
@@ -221,6 +223,14 @@ function Ias()
         if (typeof wsMeasurementParameters.routeToClientTargetPort !== 'undefined')
         {
             routeToClientTargetPort     = Number(wsMeasurementParameters.routeToClientTargetPort);
+        }
+        if (typeof wsMeasurementParameters.routeToClientTargetPortTls !== 'undefined')
+        {
+            routeToClientTargetPortTls  = Number(wsMeasurementParameters.routeToClientTargetPortTls);
+        }
+        if (typeof wsMeasurementParameters.routeToClientUseHttps !== 'undefined')
+        {
+            routeToClientUseHttps  = Boolean(wsMeasurementParameters.routeToClientUseHttps);
         }
 
         if (!platform || (!performRttMeasurement && !performDownloadMeasurement && !performUploadMeasurement))
@@ -511,7 +521,8 @@ function Ias()
 
         if (performRouteToClientLookup && !performedRouteToClientLookup && (performDownloadMeasurement || performUploadMeasurement))
         {
-            jsTool.performRouteToClientLookup(wsMeasurementParameters.wsTargets[Math.floor(Math.random() * wsMeasurementParameters.wsTargets.length)] + '.' + wsMeasurementParameters.wsTLD, routeToClientTargetPort);
+            var port = routeToClientUseHttps ? routeToClientTargetPortTls : routeToClientTargetPort;
+            jsTool.performRouteToClientLookup(wsMeasurementParameters.wsTargets[Math.floor(Math.random() * wsMeasurementParameters.wsTargets.length)] + '.' + wsMeasurementParameters.wsTLD, port, routeToClientUseHttps);
             performedRouteToClientLookup = true;
         }
 
