@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -373,8 +373,9 @@
 				2782F70421188D6200C9E246 /* Frameworks */,
 				2782F70521188D6200C9E246 /* Resources */,
 				2782F73121188E2300C9E246 /* Embed Frameworks */,
-				273C63F02118B1D500235BC3 /* TNS Copy app */,
 				F9AB71B1277ABCCD07F43438 /* [CP] Embed Pods Frameworks */,
+				273C63F02118B1D500235BC3 /* TNS Copy app */,
+				3CF289DF22D4899C00EFC720 /* Thinning out Frameworks */,
 			);
 			buildRules = (
 			);
@@ -524,7 +525,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"/${SRCROOT}/../ias-mobile/copy_app_ios.sh\"\n";
+			shellScript = "\"/${SRCROOT}/../ias-mobile/copy_app_ios.sh\"\n \n";
 		};
 		27A618E521199B1B001351E0 /* TNS Create Metadata */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -539,6 +540,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd \"$PROJECT_DIR/../ias-mobile/platforms/ios/internal/metadata-generator/bin\" && ./build-step-metadata-generator.py\n";
+		};
+		3CF289DF22D4899C00EFC720 /* Thinning out Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Thinning out Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#Adapted from https://github.com/realm/realm-cocoa/blob/master/scripts/strip-frameworks.sh\n# This script strips all non-valid architectures from dynamic libraries in\n# the application's `Frameworks` directory which is required for App Store submission.\n#\n# The following environment variables are required:\n#\n# BUILT_PRODUCTS_DIR\n# FRAMEWORKS_FOLDER_PATH\n# VALID_ARCHS\n# EXPANDED_CODE_SIGN_IDENTITY\nif [[ \"${CONFIGURATION}\" != \"Release\" ]]; then\necho \"Building for non-release, no need to thin frameworks.\"\nexit 0\nfi\nif [[ \"${TARGET_BUILD_DIR}\" == *\"iphonesimulator\" ]]; then\necho \"Building for simulator, no need to thin frameworks.\"\nexit 0\nfi\n# Signs a framework with the provided identity\ncode_sign() {\n# Use the current code_sign_identitiy\necho \"Code Signing $1 with Identity ${EXPANDED_CODE_SIGN_IDENTITY_NAME}\"\necho \"/usr/bin/codesign --force --sign ${EXPANDED_CODE_SIGN_IDENTITY} --preserve-metadata=identifier,entitlements $1\"\n/usr/bin/codesign --force --sign ${EXPANDED_CODE_SIGN_IDENTITY} --preserve-metadata=identifier,entitlements \"$1\"\n}\n# Set working directory to product’s embedded frameworks\ncd \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\nif [ \"$ACTION\" = \"install\" ]; then\necho \"Copy .bcsymbolmap files to .xcarchive\"\nfind . -name '*.bcsymbolmap' -type f -exec mv {} \"${CONFIGURATION_BUILD_DIR}\" \\;\nelse\n# Delete *.bcsymbolmap files from framework bundle unless archiving\nfind . -name '*.bcsymbolmap' -type f -exec rm -rf \"{}\" +\\;\nfi\necho \"Stripping frameworks\"\nfor file in $(find . -type f -perm +111); do\n# Skip non-dynamic libraries\nif ! [[ \"$(file \"$file\")\" == *\"dynamically linked shared library\"* ]]; then\ncontinue\nfi\n# Get architectures for current file\narchs=\"$(lipo -info \"${file}\" | rev | cut -d ':' -f1 | rev)\"\nstripped=\"\"\nfor arch in $archs; do\nif ! [[ \"${VALID_ARCHS}\" == *\"$arch\"* ]]; then\n# Strip non-valid architectures in-place\nlipo -remove \"$arch\" -output \"$file\" \"$file\" || exit 1\nstripped=\"$stripped $arch\"\nfi\ndone\nif [[ \"$stripped\" != \"\" ]]; then\necho \"Stripped $file of architectures:$stripped\"\nif [ \"${CODE_SIGNING_REQUIRED}\" == \"YES\" ]; then\ncode_sign \"${file}\"\nfi\nfi\ndone\n";
 		};
 		BC7B456202F8F20ADACB5C30 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -872,18 +891,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 499LGG5WHR;
-				INFOPLIST_FILE = "$(SRCROOT)/demo/Info.plist";
+				INFOPLIST_FILE = demo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.zafaco.Demo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zafaco.Demo.berec;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = wildcard;
+				PROVISIONING_PROFILE_SPECIFIER = "berec demo";
 				SWIFT_OBJC_BRIDGING_HEADER = "Demo/Demo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
@@ -897,18 +916,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: zafaco GmbH ";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 499LGG5WHR;
-				INFOPLIST_FILE = "$(SRCROOT)/demo/Info.plist";
+				INFOPLIST_FILE = demo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.zafaco.Demo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zafaco.Demo.berec;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = wildcard;
+				PROVISIONING_PROFILE = "bf5153b8-cd46-47bb-b1e6-077515e6db5b";
+				PROVISIONING_PROFILE_SPECIFIER = "berec demo";
 				SWIFT_OBJC_BRIDGING_HEADER = "Demo/Demo-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
