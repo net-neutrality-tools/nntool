@@ -183,14 +183,15 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
         speedMeasurementResult.relative_end_time_ns = null;
         speedMeasurementResult.relative_start_time_ns = null;
         speedMeasurementResult.status = null;
-        speedMeasurementResult.bytes_download = speedTestResult.downBit / 8;
-        speedMeasurementResult.bytes_upload = speedTestResult.upBit / 8;
         speedMeasurementResult.rtt_info = new RttInfo();
         if (typeof speedTestResult.completeTestResult !== 'undefined') {
             const completeResult = speedTestResult.completeTestResult;
             if (completeResult.download_info !== undefined && completeResult.download_info.length > 0) {
                 const currentDownload = completeResult.download_info[completeResult.download_info.length - 1];
-                speedMeasurementResult.duration_download_ns = currentDownload.duration_ns_total;
+                //we sent the duration (not the duration_total), as the mbps are calculated from the duration => the total duration can be calculated from the relative starttimes
+                speedMeasurementResult.duration_download_ns = currentDownload.duration_ns;
+                speedMeasurementResult.bytes_download = currentDownload.bytes;
+                speedMeasurementResult.bytes_download_including_slow_start = currentDownload.bytes_including_slow_start;
             }
             if (completeResult.rtt_info !== undefined) {
                 const currentRtt = completeResult.rtt_info;
@@ -217,11 +218,16 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
             }
             if (completeResult.upload_info !== undefined && completeResult.upload_info.length > 0) {
                 const currentUpload = completeResult.upload_info[completeResult.upload_info.length - 1];
-                speedMeasurementResult.duration_upload_ns = currentUpload.duration_ns_total;
-
+                //we sent the duration (not the duration_total), as the mbps are calculated from the duration => the total duration can be calculated from the relative starttimes
+                speedMeasurementResult.duration_upload_ns = currentUpload.duration_ns;
+                speedMeasurementResult.bytes_upload = currentUpload.bytes;
+                speedMeasurementResult.bytes_upload_including_slow_start = currentUpload.bytes_including_slow_start;
             }
 
         } else {
+            //TODO: probably remove this!
+            speedMeasurementResult.bytes_download = speedTestResult.downBit / 8;
+            speedMeasurementResult.bytes_upload = speedTestResult.upBit / 8;
             speedMeasurementResult.rtt_info.rtts = [
                 {
                     rtt_ns: speedTestResult.ping * 1000 * 1000,
