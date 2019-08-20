@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-19
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -41,6 +41,8 @@ int mPortTls            = 443;
 int mPortTraceroute     = 8080;
 int mPortTracerouteTls  = 8443;
 int mPortUdp            = 80;
+
+pthread_mutex_t mutexLoad;
 
 
 

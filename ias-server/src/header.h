@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-19
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -86,6 +86,7 @@
 #include "tcptraceroutehandler.h"
 #include "udpserver.h"
 #include "load_monitoring.h"
+#include "load_balancing.h"
 
 
 using namespace std;
@@ -113,5 +114,7 @@ extern Json CONFIG;
 
 #define IF_SCAN_PATTERN " %[^:]:%llu %llu %*d %*d %*d %*d %*d %*d %llu %llu"
 #define MEM_SCAN_PATTERN "%[^:]: %u"
+
+extern pthread_mutex_t mutexLoad;
 
 #endif
