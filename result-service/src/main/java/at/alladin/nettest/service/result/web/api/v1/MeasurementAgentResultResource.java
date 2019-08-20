@@ -26,9 +26,11 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.disassoc
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeneralMeasurementTypeDto;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
+import at.alladin.nettest.shared.server.helper.swagger.ApiPageable;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import io.swagger.annotations.ApiParam;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * This controller provides the REST API end-point relevant for all measurement result specific calls.
@@ -60,10 +62,11 @@ public class MeasurementAgentResultResource {
 		@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ApiResponse.class),
 		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
 	})
+	@ApiPageable
 	@GetMapping(value = "/{agentUuid}/measurements", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<ApiResponse<ApiPagination<BriefMeasurementResponse>>> getMeasurements(
 		@ApiParam(value = "The measurement agent's UUID", required = true) @PathVariable String agentUuid,
-		Pageable pageable) {
+		@ApiIgnore Pageable pageable) {
 
 		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
 			return ResponseEntity.badRequest().build();
@@ -100,6 +103,7 @@ public class MeasurementAgentResultResource {
 		}
 		
 		logger.debug("{}", includedMeasurementTypes);
+		// TODO: includedMeasurementTypes
 		
 		return ResponseHelper.ok(storageService.getFullMeasurementByAgentAndMeasurementUuid(agentUuid, uuid, locale));
 	}
@@ -127,6 +131,8 @@ public class MeasurementAgentResultResource {
 		if (!storageService.isValidMeasurementAgentUuid(agentUuid)) {
 			throw new StorageServiceException("Invalid agent uuid");
 		}
+		
+		// TODO: grouped vs. not grouped
 		
 		return ResponseHelper.ok(storageService.getDetailMeasurementByAgentAndMeasurementUuid(agentUuid, uuid, properties.getSettingsUuid(), locale));
 	}

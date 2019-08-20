@@ -54,7 +54,7 @@ public abstract class AbstractDocumentationResource {
 	 */
 	@io.swagger.annotations.ApiOperation(value = "Redirects to the swagger UI.", notes = "This request redirects the user to the swagger UI at /swagger-ui.html.")
 	@ResponseStatus(code = HttpStatus.MOVED_PERMANENTLY)
-	@GetMapping("/swagger-ui")
+	@GetMapping({"", "/", "/swagger-ui"})
 	public void redirectToSwaggerUi(HttpServletResponse response) throws IOException {
 		response.sendRedirect("/swagger-ui.html");
 	}

@@ -1,13 +1,14 @@
 package at.alladin.nettest.service.statistic.web.api.v1;
 
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import at.alladin.nettest.service.statistic.export.ExportException;
 import at.alladin.nettest.service.statistic.service.DataExportService;
 import at.alladin.nettest.service.statistic.service.DataExportService.ExportExtension;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
@@ -23,7 +24,7 @@ import io.undertow.util.BadRequestException;
 @RequestMapping("/api/v1/exports")
 public class ExportResource {
 
-	@Inject
+	@Autowired
 	private DataExportService dataExportService;
 	
 	/**
@@ -40,7 +41,7 @@ public class ExportResource {
 	})
 	@GetMapping("/{year}/{month:\\d+}")
     public void exportMonthlyData(@PathVariable Integer year, @PathVariable Integer month, HttpServletResponse response) {
-		this.exportMonthlyMeasurements(year, month, ExportExtension.CSV, response, false);
+		exportMonthlyMeasurements(year, month, ExportExtension.CSV, response, false);
 	}
 	
 	/**
@@ -58,11 +59,7 @@ public class ExportResource {
 	})
 	@GetMapping("/{year}/{month:\\d+}.{extension:[^\\.]+}")
     public void exportMonthlyData(@PathVariable Integer year, @PathVariable Integer month, @PathVariable String extension, HttpServletResponse response) throws BadRequestException {
-		final ExportExtension ext = ExportExtension.getByName(extension);
-		if (ext == null) {
-			throw new BadRequestException("Unsupported extension of type: " + extension);
-		}
-		this.exportMonthlyMeasurements(year, month, ext, response, false);
+		exportMonthlyMeasurements(year, month, validateAndGetExtension(extension), response, false);
 	}
 	
 	/**
@@ -80,11 +77,7 @@ public class ExportResource {
 	})
 	@GetMapping("/{year}/{month:\\d+}.{extension:[^\\.]+}.zip")
     public void exportMonthlyZippedData(@PathVariable Integer year, @PathVariable Integer month, @PathVariable String extension, HttpServletResponse response) throws BadRequestException {
-		final ExportExtension ext = ExportExtension.getByName(extension);
-		if (ext == null) {
-			throw new BadRequestException("Unsupported extension of type: " + extension);
-		}
-		this.exportMonthlyMeasurements(year, month, ext, response, true);
+		exportMonthlyMeasurements(year, month, validateAndGetExtension(extension), response, true);
 	}
 
 	/**
@@ -120,11 +113,7 @@ public class ExportResource {
 	})
 	@GetMapping("/{year}/{month}/{day:\\d+}.{extension:[^\\.]+}")
     public void exportDailyData(@PathVariable Integer year, @PathVariable Integer month, @PathVariable Integer day, @PathVariable String extension, HttpServletResponse response) throws BadRequestException {
-		final ExportExtension ext = ExportExtension.getByName(extension);
-		if (ext == null) {
-			throw new BadRequestException("Unsupported extension of type: " + extension);
-		}
-		exportDailyMeasurement(day, month, year, ext, response, false);
+		exportDailyMeasurement(day, month, year, validateAndGetExtension(extension), response, false);
 	}
 	
 	/**
@@ -142,11 +131,7 @@ public class ExportResource {
 	})
 	@GetMapping("/{year}/{month}/{day:\\d+}.{extension:[^\\.]+}.zip")
     public void exportZippedDailyData(@PathVariable Integer year, @PathVariable Integer month, @PathVariable Integer day, @PathVariable String extension, HttpServletResponse response) throws BadRequestException {
-		final ExportExtension ext = ExportExtension.getByName(extension);
-		if (ext == null) {
-			throw new BadRequestException("Unsupported extension of type: " + extension);
-		}
-		exportDailyMeasurement(day, month, year, ext, response, true);
+		exportDailyMeasurement(day, month, year, validateAndGetExtension(extension), response, true);
 	}
 	
 	/**
@@ -162,11 +147,7 @@ public class ExportResource {
 	@GetMapping({"/{openDataUuid:[^\\.]+}.{extension:[^\\.]+}"})
 	public void exportSingleMeasurement(@PathVariable String openDataUuid, @PathVariable String extension,
 										HttpServletResponse response) throws Exception {
-		final ExportExtension ext = ExportExtension.getByName(extension);
-		if (ext == null) {
-			throw new BadRequestException("Unsupported extension of type: " + extension);
-		}
-		exportSingleMeasurement(openDataUuid, ext, response);
+		exportSingleMeasurement(openDataUuid, validateAndGetExtension(extension), response);
 	}
 	
 	/**
@@ -184,38 +165,52 @@ public class ExportResource {
 		exportSingleMeasurement(openDataUuid, ExportExtension.CSV, response);
 	}
 	
+	////
+	
 	private void exportSingleMeasurement(final String openDataUuid, final ExportExtension extension, HttpServletResponse response) {
+		writeResponseHeader(extension, dataExportService.getExportFilename(openDataUuid, extension, false), response);
+		
 		try {
-			response.setContentType("text/" + extension.toString());
-			response.setHeader("Content-disposition", "attachment; filename=" +	
-					dataExportService.getExportFilename(openDataUuid, extension, false));
 			dataExportService.writeExportData(response.getOutputStream(), openDataUuid, extension, false);
 		} catch (final Exception ex) {
-			ex.printStackTrace();
+			throw new ExportException(ex);
 		}
 	}
 	
 	private void exportMonthlyMeasurements(final int year, final int month, final ExportExtension extension, 
 			final HttpServletResponse response, final boolean isCompress) {
+		writeResponseHeader(extension, dataExportService.getExportFilename(month, year, extension, isCompress), response);
+		
 		try {
-			response.setContentType("text/" + extension.toString());
-			response.setHeader("Content-disposition", "attachment; filename=" +	
-					dataExportService.getExportFilename(month, year, extension, isCompress));
 			dataExportService.writeExportData(response.getOutputStream(), month, year, extension, isCompress);
 		} catch (final Exception ex) {
-			ex.printStackTrace();
+			throw new ExportException(ex);
 		}
 	}
 	
 	private void exportDailyMeasurement(final int day, final int month, final int year,
 			final ExportExtension extension, final HttpServletResponse response, final boolean isCompress) {
+		writeResponseHeader(extension, dataExportService.getExportFilename(day, month, year, extension, isCompress), response);
+		
 		try {
-			response.setContentType("text/" + extension.toString());
-			response.setHeader("Content-disposition", "attachment; filename=" +	
-					dataExportService.getExportFilename(day, month, year, extension, isCompress));
 			dataExportService.writeExportData(response.getOutputStream(), day, month, year, extension, isCompress);
 		} catch (final Exception ex) {
-			ex.printStackTrace();
+			throw new ExportException(ex);
 		}
+	}
+	
+	private void writeResponseHeader(ExportExtension ext, String filename, HttpServletResponse response) {
+		response.setContentType("text/" + ext.toString());
+		response.setHeader("Content-disposition", "attachment; filename=" +	filename);
+	}
+	
+	private ExportExtension validateAndGetExtension(String extension) throws BadRequestException {
+		final ExportExtension ext = ExportExtension.getByName(extension);
+		
+		if (ext == null) {
+			throw new BadRequestException("Unsupported extension of type: " + extension);
+		}
+		
+		return ext;
 	}
 }

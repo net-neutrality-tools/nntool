@@ -5,8 +5,8 @@ volumes:
     driver: local
   data-postgresql:
     driver: local
-  #data-elasticsearch:
-  #  driver: local
+  data-elasticsearch:
+    driver: local
 
 services:
   couchdb:
@@ -17,10 +17,14 @@ services:
     ports:
       - "15432:5432"
 
-  #elasticsearch:
-  #  ports:
-  #    - "19200:9200"
-  #    - "19300:9300"
+  elasticsearch:
+    ports:
+      - "19200:9200"
+      - "19300:9300"
+
+  kibana:
+    ports:
+      - "15601:5601"
 
   controller-service:
     volumes:
