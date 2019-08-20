@@ -36,6 +36,7 @@ import {InsecureSanitizeHtml} from './pipes/insecure.sanitizer.pipe';
 import {LoggerService} from './services/log.service';
 import {UTCLocalDateFormatPipe} from './pipes/utc.date.format.pipe';
 import {HistoryDetailViewComponent} from './history/view-detail.component';
+import {HistoryDeletionComponent} from './history/history.deletion.component';
 import {HistoryViewComponent} from './history/history.view.component';
 import {QoSResultComponent} from './qos-result/qos-result.component'
 import {MeasurementClassifiedValueComponent} from './measurement/classified.value.component';
@@ -99,6 +100,7 @@ const MAIN_DECLARATIONS = [
     InsecureSanitizeHtml,
     UTCLocalDateFormatPipe,
     HistoryDetailViewComponent,
+    HistoryDeletionComponent,
     HistoryViewComponent,
     QoSResultComponent,
     MeasurementClassifiedValueComponent,

@@ -297,7 +297,7 @@ export class UserService {
         }
 
         return this.requests.deleteJson<any>(
-            Location.joinWithSlash(this.config.servers.control, 'clients/' + clientUUID + '/measurements/' + measurementUUID)
+            Location.joinWithSlash(this.config.servers.result, 'measurement-agents/' + clientUUID + '/measurements/' + measurementUUID)
         );
     }
 
