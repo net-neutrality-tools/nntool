@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-07
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -57,7 +57,8 @@ var wsRttValues =
     missing:            undefined,
     packetsize:         undefined,
     stDevPop:           undefined,
-    server:             undefined
+    server:             undefined,
+    rtts:               undefined
 };
 
 var wsAuthToken;
@@ -394,6 +395,15 @@ function connect()
                     wsRttValues.packetsize  = Number(data.pSz);
                     wsRttValues.stDevPop    = Number(data.std_dev_pop) * 1000;
                     wsRttValues.server      = String(data.srv);
+
+                    if (typeof data.rtts !== 'undefined')
+                    {
+                        wsRttValues.rtts = [];
+                        for (var rtt in data.rtts)
+                        {
+                            wsRttValues.rtts.push({"rtt_ns": data.rtts[rtt].rtt_ns * 1000});
+                        }
+                    }
                 }
             }
         }

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-19
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -870,6 +870,16 @@ void CTcpHandler::setRoundTripTimeKPIs()
 
 void CTcpHandler::sendRoundTripTimeResponse(noPollCtx *ctx, noPollConn *conn)
 {
+    Json::array jRtts;
+
+    for (double rtt : rttVector)
+    {
+        Json jRtt = Json::object{
+            {"rtt_ns", rtt},
+        };
+        jRtts.push_back(jRtt);
+    }
+
     //only send the first, then every second and the last RTT Report
     if (((rttRequestsSend-1)%2 == 1) || (rttRequestsSend == rttRequests))
     {
@@ -886,6 +896,7 @@ void CTcpHandler::sendRoundTripTimeResponse(noPollCtx *ctx, noPollConn *conn)
             {"pSz",         rttPacketsize},
             {"std_dev_pop", to_string_precision(rttStdDevPop, 3)},
             {"srv",         hostname},
+            {"rtts",        jRtts},
         };
 
         nopoll_conn_send_text(conn, rttReport.dump().c_str(), rttReport.dump().length());
