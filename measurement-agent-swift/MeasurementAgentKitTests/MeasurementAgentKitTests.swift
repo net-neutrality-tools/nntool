@@ -31,7 +31,7 @@ class MeasurementAgentKitTests: XCTestCase {
         }
     }
 
-    func testCollector() {
+    /*func testCollector() {
 
         let expectation = XCTestExpectation(description: "Test")
 
@@ -68,11 +68,11 @@ class MeasurementAgentKitTests: XCTestCase {
             print(response.openDataUuid)
 
             expectation.fulfill()
-        }) { err in
+        }, onFailure: { err in
             print(err)
 
             expectation.fulfill()
-        }
+        })
 
         wait(for: [expectation], timeout: 10.0)
     }
@@ -113,11 +113,11 @@ class MeasurementAgentKitTests: XCTestCase {
             print(r.settings)
 
             expectation.fulfill()
-        }) { err in
+        }, onFailure: { err in
             print(err)
 
             expectation.fulfill()
-        }
+        })
 
         /*let controlDto = LmapControlDto()
         controlDto.agent = LmapAgentDto()
@@ -148,7 +148,7 @@ class MeasurementAgentKitTests: XCTestCase {
         }*/
 
         wait(for: [expectation], timeout: 10.0)
-    }
+     }*/
 
     func testX() {
 

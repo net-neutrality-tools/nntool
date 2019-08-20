@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-01
+ *      \date Last update: 2019-08-07
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -62,6 +62,7 @@
 #include <iostream>
 #include <algorithm>
 #include <exception>
+#include <atomic>
 
 
 #include <pthread.h>
@@ -102,6 +103,9 @@ using namespace json11;
 
 extern bool DEBUG;
 extern bool RUNNING;
+extern bool UNREACHABLE;
+extern bool FORBIDDEN;
+extern bool OVERLOADED;
 extern const char* PLATFORM;
 extern const char* CLIENT_OS;
 
@@ -115,7 +119,7 @@ extern bool TIMER_ACTIVE;
 extern bool TIMER_RUNNING;
 extern bool TIMER_STOPPED;
 
-extern bool hasError;
+extern std::atomic_bool hasError;
 extern std::exception recentException;
 
 extern int TIMER_INDEX;

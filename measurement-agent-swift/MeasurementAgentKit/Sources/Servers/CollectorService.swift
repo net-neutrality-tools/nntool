@@ -21,14 +21,14 @@ import Siesta
 ///
 class CollectorService: RestApiService {
 
-    init(baseURL: URLConvertible = "http://localhost:8081/api/v1") {
-        super.init(baseURL: baseURL)
+    init(baseURL: URLConvertible = "http://localhost:8081/api/v1/measurements", agent: MeasurementAgent) {
+        super.init(baseURL: baseURL, agent: agent)
 
-        configureTransformer("/measurements", forType: ApiResponse<MeasurementResultResponse>.self)
+        configureTransformer("/", forType: ApiResponse<MeasurementResultResponse>.self)
     }
 
     ///
     func storeMeasurement(reportDto: LmapReportDto, onSuccess: SuccessCallback<MeasurementResultResponse>?, onFailure: FailureCallback?) {
-        request("/measurements", method: .post, requestEntity: reportDto, wrapInApiRequest: false, responseEntityType: MeasurementResultResponse.self, onSuccess: onSuccess, onFailure: onFailure)
+        request("/", method: .post, requestEntity: reportDto, wrapInApiRequest: false, responseEntityType: MeasurementResultResponse.self, onSuccess: onSuccess, onFailure: onFailure)
     }
 }

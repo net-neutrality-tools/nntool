@@ -1,4 +1,5 @@
 import Foundation
+import CodableJSON
 
 class TcpPortTask: QoSBidirectionalIpTask {
 
@@ -7,22 +8,29 @@ class TcpPortTask: QoSBidirectionalIpTask {
 
     private var resultResponse: String?
 
-    override var statusKey: String {
+    override var statusKey: String? {
         return direction == .outgoing ? "tcp_result_out" : "tcp_result_in"
+    }
+
+    override var objectiveTimeoutKey: String? {
+        return "tcp_objective_timeout"
     }
 
     override var result: QoSTaskResult {
         var r = super.result
 
         // TODO: r["tcp_result_error_details"] = "?"
-        // TODO: set objective values?
 
         switch direction {
         case .outgoing:
-            r["tcp_result_out_response"] = resultResponse
+            r["tcp_objective_out_port"] = JSON(portOut)
+
+            r["tcp_result_out_response"] = JSON(resultResponse)
 
         case .incoming:
-            r["tcp_result_in_response"] = resultResponse
+            r["tcp_objective_in_port"] = JSON(portIn)
+
+            r["tcp_result_in_response"] = JSON(resultResponse)
 
         default:
             break
@@ -80,7 +88,7 @@ class TcpPortTask: QoSBidirectionalIpTask {
             port: 0, // gets set in switch/case
             outgoing: true,
             timeoutNs: timeoutNs,
-            payload: TcpPortTaskExecutor.PAYLOAD
+            payload: TcpPortTask.PAYLOAD
         )
 
         switch direction {

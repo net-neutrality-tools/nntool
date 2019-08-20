@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-04-29
+ *      \date Last update: 2019-08-07
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -31,11 +31,13 @@ using namespace std;
 class CTimer : public CBasisThread
 {
 	private:
-		string mHostname;
-		int mPort;
 		int mInstances;
 
 		CCallback *mCallback;
+
+		bool unreachableSignaled;
+		bool forbiddenSignaled;
+		bool overloadSignaled;
 	
 	public:
 		CTimer();

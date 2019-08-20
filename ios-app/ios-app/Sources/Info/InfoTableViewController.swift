@@ -17,6 +17,7 @@
 
 import Foundation
 import UIKit
+import MeasurementAgentKit
 
 ///
 class InfoTableViewController: UITableViewController {
@@ -25,7 +26,6 @@ class InfoTableViewController: UITableViewController {
         super.viewDidLoad()
 
         navigationItem.applyIconFontAttributes()
-        //navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 
     ///
@@ -44,8 +44,50 @@ class InfoTableViewController: UITableViewController {
                     }
                 }
             }
+        } else if indexPath.section == 2 {
+            if indexPath.row == 0 {
+                cell.detailTextLabel?.text = MEASUREMENT_AGENT.uuid ?? "n/a"
+            } else if indexPath.row == 1 {
+                let (versionStr, versionInt, buildDate) = BundleHelper.getAppVersionInfo()
+                let gitInfo = BundleHelper.getBundleGitInfoString()
+
+                if let vs = versionStr, let vi = versionInt, let bd = buildDate, let gi = gitInfo {
+                    cell.detailTextLabel?.text = "\(vs) (\(vi), \(bd)), \(gi)"
+                } else {
+                    cell.detailTextLabel?.text = "n/a"
+                }
+            }
         }
 
         return cell
     }
+
+    /*override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 1 {
+            if indexPath.row == 0 { // website tapped
+                
+                
+                return
+            } else if indexPath.row == 1 { // email tapped
+                
+                return
+            }
+        }
+        
+        super.tableView(tableView, didSelectRowAt: indexPath)
+    }*/
+
+    /*override func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
+        return indexPath.section == 2
+    }
+    
+    override func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
+        return action == #selector(copy(_:))
+    }
+    
+    override func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
+        if action == #selector(copy(_:)) {
+            UIPasteboard.general.string = MEASUREMENT_AGENT.uuid
+        }
+    }*/
 }

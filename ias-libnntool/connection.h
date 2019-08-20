@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-20
+ *      \date Last update: 2019-08-19
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -36,68 +36,45 @@ class CConnection
 		int mTls;
 		string mTlsSubjectValidation;
 
-		/*!
-		\struct sockaddr addr;
-		\brief Struct of Socket-Address
-		- Initialisation of the struct named sockaddr
-		*/
-		struct sockaddr_ll sockinfo_ll;
 		struct sockaddr_in sockinfo_in;
 		struct sockaddr_in6 sockinfo_in6;
 
-	  	SSL_CTX* 			ctx;
-		SSL*     			ssl;
-		X509*    			server_cert;
-		const SSL_METHOD	*method;
+		SSL_CTX* ctx;
+		SSL* ssl;
 
-		int connectTLS();
+		void tlsSetup(bool client);
+		int tlsConnect();
+		void tlsPrintError();
 
 	public:
 		int mSocket;
 
-		//!Standard Constructor
 		CConnection();
 
-		//! Virtual Destructor
 		virtual ~CConnection();
 
-		int rawSocketEth();
- 
-		//! Open Datagram-Socket in UNIX
+		//! UDP Client Sockets
 		int udpSocket( string &interface );
-		
-		//! Open Datagram-Socket in UNIX
-		int udpSocketServer( int &nPort );
-
-		//! Open Datagram-Socket in UNIX
-		int udpSocketServer(int &nPort, string sIp);
-		
-		//! Open Datagram-Socket in UNIX
 		int udp6Socket( string &interface );
 		
-		//! Open Datagram-Socket in UNIX
+		//! UDP Server Sockets
+		int udpSocketServer( int &nPort );
+		int udpSocketServer(int &nPort, string sIp );
 		int udp6SocketServer( int &nPort );
-		
-		//! Open Datagram-Socket in UNIX
 		int udp6SocketServer( int &nPort, string sIp );
 
-		//! Open TCP-Socket in UNIX
+		//! TCP Client Sockets
 		int tcpSocket( string &interface, string &sServer, int &nPort );
-
-		//! Open TCP-Socket in UNIX
 		int tcpSocket( string &interface, string &sServer, int &nPort, int nTls, string sTlsSubjectValidation );
-		
-		//! Open TCP-Socket in UNIX
+		int tcp6Socket( string &interface, string &sServer, int &nPort );
+		int tcp6Socket( string &interface, string &sServer, int &nPort, int nTls, string sTlsSubjectValidation );
+
+		//! TCP Server Sockets
 		int tcpSocketServer( int &nPort );
-		
-		//! Open TCP-Socket in UNIX
-		int tcp6Socket(string &interface, string &sServer, int &nPort );
-		
-		//! Open TCP-Socket in UNIX
-		int tcp6Socket(string &interface, string &sServer, int &nPort, int nTls, string sTlsSubjectValidation );
-		
-		//! Open TCP-Socket in UNIX
 		int tcp6SocketServer( int &nPort );
+
+		//! TLS specific functions
+		int tlsServe();
 
 		//! Generic send function
 		int send(const void *buf, int num, int flags );

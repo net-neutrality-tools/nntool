@@ -1,0 +1,43 @@
+<LinearLayout android:layout_height="wrap_content"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:descendantFocusability="blocksDescendants"
+    android:background="@drawable/rectangle_fill"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <at.alladin.nettest.nntool.android.app.view.AlladinTextView
+            android:layout_margin="1dp"
+            android:id="@+id/result_list_group_icon"
+            style="@style/Nettest.Result.Group.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ifont_hourglass"
+            android:textSize="40sp"
+            android:paddingEnd="5dp"/>
+
+        <TextView
+            android:id="@+id/result_list_group_title"
+            style="@style/Nettest.Result.Group.Header"
+            android:layout_margin="1dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Network"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_margin="1dp"
+        android:id="@+id/result_list_group_description"
+        style="@style/Nettest.Result.Group.Description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Description is a long text, with many interesting tidbits that enhance every user's life without question. Some restrictions apply."/>
+
+</LinearLayout>

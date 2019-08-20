@@ -19,7 +19,7 @@ The file `default_couchDB_data.json` contains the necessary data to fill the cou
 (Note that the databases will be constructed on the first startup of a server which needs the settings database, e.g. the controller service).
 The `default_couchDB_data.json` file contains the body of a bulk update request to the couchDB, which adds the specific files to the database.
 Using a tool, like e.g. CURL or Postman, a POST request to the location of the couchDB to the `/settings/_bulk_docs` path (e.g. `http://localhost:5984/settings/_bulk_docs`) 
-adds all provided documents to the couchDB. 
+adds all provided documents to the couchDB.
 The `default_couchDB_data.json` file can be used as is as the body of said POST request to the couchDB. 
 An exemplary curl command to be executed from the `docs\build_instructions` folder, if the couchdb is setup on localhost:5984 and the settings database has already been constructed (either manually or by starting the controller): 
 
@@ -30,6 +30,18 @@ curl -X POST \
   -H 'cache-control: no-cache' \
   -d @default_couchDB_data.json
 ```
+
+Additional configuration regarding the measurement database is located in the `default_couchdb_design_doc_measurement.json`.
+As this relates to a different database (the measurement database) another request needs to be made:
+
+```
+curl -X POST \
+  http://localhost:15984/measurement/_design/Measurement \
+  -H 'Content-Type: application/json' \
+  -H 'cache-control: no-cache' \
+  -d @default_couchdb_design_doc_measurement.json
+```
+
 
 ==== CouchDB server integration
 

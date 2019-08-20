@@ -196,6 +196,8 @@ public class ClientHolder
                     params.put("qostest", "echo_protocol");
                     params.put(AbstractEchoProtocolTask.RESULT_PROTOCOL, "tcp");
                     params.put(AbstractEchoProtocolTask.PARAM_PAYLOAD, "TCP payload!");
+                    params.put(AbstractEchoProtocolTask.PARAM_SERVER_ADDRESS, echoServiceHost);
+                    params.put(AbstractEchoProtocolTask.PARAM_SERVER_PORT, Integer.toString(port));
                     final TaskDesc task = new TaskDesc(echoServiceHost, port, false, fakeToken,
                             0, 1, 0, System.nanoTime(), params, "echo_protocol");
                     taskDescList.add(task);
@@ -212,6 +214,8 @@ public class ClientHolder
                     params.put("qostest", "echo_protocol");
                     params.put(AbstractEchoProtocolTask.RESULT_PROTOCOL, "udp");
                     params.put(AbstractEchoProtocolTask.PARAM_PAYLOAD, "UDP payload!");
+                    params.put(AbstractEchoProtocolTask.PARAM_SERVER_ADDRESS, echoServiceHost);
+                    params.put(AbstractEchoProtocolTask.PARAM_SERVER_PORT, Integer.toString(port));
                     final TaskDesc task = new TaskDesc(echoServiceHost, port, false, fakeToken,
                             0, 1, 0, System.nanoTime(), params, "echo_protocol");
                     taskDescList.add(task);

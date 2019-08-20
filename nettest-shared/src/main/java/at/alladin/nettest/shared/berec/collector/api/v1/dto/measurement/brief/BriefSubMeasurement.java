@@ -5,6 +5,8 @@ import org.joda.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -16,6 +18,14 @@ import com.google.gson.annotations.SerializedName;
  */
 @io.swagger.annotations.ApiModel(description = "Brief/short information of a sub measurement.")
 @JsonClassDescription("Brief/short information of a sub measurement.")
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "deserialize_type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = BriefSpeedMeasurement.class, name = "speed_measurement"),
+        @JsonSubTypes.Type(value = BriefQoSMeasurement.class, name = "qos_measurement")
+})
 public class BriefSubMeasurement {
 
 	/**

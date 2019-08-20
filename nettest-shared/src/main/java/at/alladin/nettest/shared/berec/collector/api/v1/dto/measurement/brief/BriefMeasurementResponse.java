@@ -5,14 +5,15 @@ import java.util.Map;
 import org.joda.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
 
 /**
  * The BriefMeasurementResponse contains the most important values of a measurement.
@@ -208,6 +209,7 @@ public class BriefMeasurementResponse {
 	 * Convenience method to check if this BriefMeasurementResponse contains a speed measurement.
 	 * @return true if there is a speed measurement, false otherwise.
 	 */
+	@JsonIgnore
 	public boolean isSpeedMeasurementAvailable() {
 		return measurements != null && measurements.containsKey(MeasurementTypeDto.SPEED);
 	}
@@ -216,6 +218,7 @@ public class BriefMeasurementResponse {
 	 * Convenience method to check if this BriefMeasurementResponse contains a QoS measurement.
 	 * @return true if there is a QoS measurement, false otherwise.
 	 */
+	@JsonIgnore
 	public boolean isQoSMeasurementAvailable() {
 		return measurements != null && measurements.containsKey(MeasurementTypeDto.QOS);
 	}

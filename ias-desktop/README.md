@@ -1,8 +1,8 @@
 ## Building ##
 
 ### Prerequisites ###
-Node.js >= 8
-npm >= 5
+Node.js >= 10
+npm >= 6
 uglify-es >= 3
 Linux or macOS (any Version, required for uglify)
 
@@ -13,7 +13,7 @@ Linux or macOS (any Version, required for uglify)
 
 There are two build options available:
 1. For uglifying, run *npm run build* on Linux or macOS with fullfilled prerequisites. The output in *build/* will be usable in other electron projects.
-2. For creating an executable, run *npm run dist:{mac|linux|win}* with fullfilled prerequisites. The executable will be build in os-specific formats (see *package.json*) and placed in *dist/*. 
+2. For creating an executable, run *npm run dist:{mac|linux|win}* with fullfilled prerequisites. The executable will be build in os-specific formats (see *package.json*) and placed in *dist/*. Currently, there is *no* cross-compiling available, i.e., every :dist has to be build on the target OS.
 
 ---------------
 

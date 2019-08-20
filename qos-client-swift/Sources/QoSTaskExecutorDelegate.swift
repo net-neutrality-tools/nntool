@@ -6,6 +6,8 @@ public protocol QoSTaskExecutorDelegate: AnyObject {
 
     func taskExecutorDidFail(_ taskExecutor: QoSTaskExecutor, withError error: Error?)
 
+    func taskExecutorDidStop(_ taskExecutor: QoSTaskExecutor)
+
     func taskExecutorDidUpdateProgress(_ progress: Double, ofGroup group: QoSTaskGroup, totalProgress: Double)
 
     func taskExecutorDidFinishWithResult(_ result: [QoSTaskResult])

@@ -1,5 +1,6 @@
 excluded:
   - Pods
+  - ios-app/Sources/Generated/*.swift
 
 disabled_rules:
   - identifier_name

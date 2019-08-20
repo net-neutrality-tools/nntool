@@ -47,8 +47,11 @@ public class ResultComparerTest {
 		assertEquals("null comparison not working", 1, ResultComparer.compare("", null));
 		assertEquals("null comparison not working", -1, ResultComparer.compare(null, new Double(5)));
 		assertEquals("null comparison not working", 0, ResultComparer.compare(null, null));
-		
-		
+
+		assertEquals("long comparison not working", -1, ResultComparer.compare(new Long(7), new Long(14)));
+		assertEquals("long comparison not working", 1, ResultComparer.compare(new Long(14), new Long(7)));
+		assertEquals("long comparison not working", 0, ResultComparer.compare(new Long(7), new Long(7)));
+
 		assertEquals("double comparison not working", -1, ResultComparer.compare(new Double(7.2), new Double(14.2)));
 		assertEquals("double comparison not working", 1, ResultComparer.compare(new Double(14.2), new Double(7.2)));
 		assertEquals("double comparison not working", 0, ResultComparer.compare(new Double(7.2), new Double(7.2)));

@@ -54,6 +54,16 @@ public class VersionResponse extends BasicResponse {
 	private String resultServiceVersion;
 	
 	/**
+	 * Search service version number.
+	 */
+	@io.swagger.annotations.ApiModelProperty("Search service version number.")
+	@JsonPropertyDescription("Search service version number.")
+	@Expose
+	@SerializedName("search_service_version")
+	@JsonProperty("search_service_version")
+	private String searchServiceVersion;
+	
+	/**
 	 * Map service version number.
 	 */
 	@io.swagger.annotations.ApiModelProperty("Map service version number.")
@@ -119,6 +129,22 @@ public class VersionResponse extends BasicResponse {
 	 */
 	public void setResultServiceVersion(String resultServiceVersion) {
 		this.resultServiceVersion = resultServiceVersion;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getSearchServiceVersion() {
+		return searchServiceVersion;
+	}
+	
+	/**
+	 * 
+	 * @param searchServiceVersion
+	 */
+	public void setSearchServiceVersion(String searchServiceVersion) {
+		this.searchServiceVersion = searchServiceVersion;
 	}
 	
 	/**

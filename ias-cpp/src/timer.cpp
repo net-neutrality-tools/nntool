@@ -12,11 +12,15 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-08
+ *      \date Last update: 2019-08-05
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
 #include "timer.h"
+
+#ifdef __ANDROID__
+    #include "android_connector.h"
+#endif
 
 //! \brief
 //!	Standard Destructor
@@ -34,8 +38,11 @@ CTimer::~CTimer()
 //!	Standard Destructor
 CTimer::CTimer( int nInstances, CCallback *pCallback )
 {
-	mInstances 	= nInstances;
-	mCallback	= pCallback;
+	mInstances 				= nInstances;
+	mCallback				= pCallback;
+	unreachableSignaled		= false;
+	forbiddenSignaled 		= false;
+	overloadSignaled 		= false;
 
 	::TIMER_ACTIVE 			= true;
 	::TIMER_RUNNING 		= false;
@@ -66,6 +73,37 @@ int CTimer::run()
 	//++++++MAIN++++++
 	while( RUNNING && !TIMER_STOPPED && !m_fStop)
 	{
+		if (::UNREACHABLE && !unreachableSignaled)
+		{
+			unreachableSignaled = true;
+			mCallback->callback("error", "no connection to measurement peer", 7, "no connection to measurement peer");
+
+	        ::hasError 		= true;
+			::TIMER_STOPPED = true;
+
+        	break;
+		}
+		if (::FORBIDDEN && !forbiddenSignaled)
+		{
+			forbiddenSignaled = true;
+			mCallback->callback("error", "authorization unsuccessful", 4, "authorization unsuccessful");
+
+	        ::hasError 		= true;
+			::TIMER_STOPPED = true;
+
+        	break;
+		}
+		if (::OVERLOADED && !overloadSignaled)
+		{
+			overloadSignaled = true;
+			mCallback->callback("error", "measurement peer overloaded", 6, "measurement peer overloaded");
+
+	        ::hasError 		= true;
+			::TIMER_STOPPED = true;
+
+        	break;
+		}
+		
 		//If Timer is not running
 		if( !TIMER_RUNNING )
 		{
@@ -143,11 +181,15 @@ int CTimer::run()
 			break;
 	}
 
-    if (::RUNNING) {
+    if (::RUNNING && !::hasError) {
 	    mCallback->callback("finish", "measurement completed", 0, "");
 	}
 	
 	TIMER_ACTIVE = false;
+
+	#ifdef __ANDROID__
+	    AndroidConnector::detachCurrentThreadFromJavaVM();
+	#endif
 	
 	//++++++END+++++++
 

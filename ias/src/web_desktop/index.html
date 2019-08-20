@@ -107,7 +107,7 @@
 
         /*!
          *      \author zafaco GmbH <info@zafaco.de>
-         *      \date Last update: 2019-04-08
+         *      \date Last update: 2019-08-09
          *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
          */
 
@@ -175,10 +175,6 @@
             iasParameters.wsAuthToken                   = 'placeholderToken';
             iasParameters.wsAuthTimestamp               = 'placeholderTimestamp';
 
-            iasParameters.wsWorkerPath                  = 'Worker.js';
-            iasParameters.performRouteToClientLookup    = true;
-            iasParameters.routeToClientTargetPort       = 8080;
-
             iasParameters.download  = {};
             iasParameters.upload    = {};
             iasParameters.rtt       = {};
@@ -186,6 +182,11 @@
 
             //dl/ul parameters if no speed classes are used or singleStream is active
             var singleStream = document.getElementsByName('singleStream')[1].checked;
+
+            if (typeof require !== "undefined")
+            {
+                iasParameters.platform = 'desktop';
+            }
 
             iasParameters.download.streams      = 4;
             iasParameters.download.frameSize    = 32768;
@@ -221,7 +222,7 @@
                 downloadClassLow.streams            = 4;
                 downloadClassLow.frameSize          = 2048;
                 downloadClassLow.bounds             = {};
-                downloadClassLow.bounds.lower       = 0.01;
+                downloadClassLow.bounds.lower       = 0.00;
                 downloadClassLow.bounds.upper       = 1.05;
 
                 var downloadClassDefault            = {};
@@ -248,6 +249,28 @@
                 downloadClassVeryHigh.bounds.lower  = 950;
                 downloadClassVeryHigh.bounds.upper  = 9000;
 
+                if (iasParameters.platform === 'web')
+                {
+                    var jsTool = new JSTool();
+                    var browserReport = jsTool.getBrowserReport();
+                    if (browserReport.browser.name.search('Chrome') !== -1)
+                    {
+                        downloadClassDefault.default        = true;
+                        downloadClassDefault.streams        = 4;
+                        downloadClassDefault.frameSize      = 32768;
+                        downloadClassDefault.bounds         = {};
+                        downloadClassDefault.bounds.lower   = 0.95;
+                        downloadClassDefault.bounds.upper   = 340;
+
+                        downloadClassHigh.default           = false;
+                        downloadClassHigh.streams           = 4;
+                        downloadClassHigh.frameSize         = 524288;
+                        downloadClassHigh.bounds            = {};
+                        downloadClassHigh.bounds.lower      = 310;
+                        downloadClassHigh.bounds.upper      = 1050;
+                    }
+                }
+
                 iasParameters.download.classes.push(downloadClassLow);
                 iasParameters.download.classes.push(downloadClassDefault);
                 iasParameters.download.classes.push(downloadClassHigh);
@@ -258,7 +281,7 @@
                 uploadClassLow.streams              = 4;
                 uploadClassLow.frameSize            = 2048;
                 uploadClassLow.bounds               = {};
-                uploadClassLow.bounds.lower         = 0.01;
+                uploadClassLow.bounds.lower         = 0.00;
                 uploadClassLow.bounds.upper         = 1.05;
                 uploadClassLow.framesPerCall        = 1;
 
@@ -269,7 +292,7 @@
                 uploadClassDefault.bounds           = {};
                 uploadClassDefault.bounds.lower     = 0.95;
                 uploadClassDefault.bounds.upper     = 525;
-                uploadClassDefault.framesPerCall    = 1;
+                uploadClassDefault.framesPerCall    = 2;
 
                 var uploadClassHigh                 = {};
                 uploadClassHigh.default             = false;
@@ -288,6 +311,28 @@
                 uploadClassVeryHigh.bounds.lower    = 950;
                 uploadClassVeryHigh.bounds.upper    = 9000;
                 uploadClassVeryHigh.framesPerCall   = 20;
+
+                if (iasParameters.platform === 'web')
+                {
+                    if (browserReport.browser.name.search('Chrome') !== -1)
+                    {
+                        uploadClassDefault.default          = true;
+                        uploadClassDefault.streams          = 4;
+                        uploadClassDefault.frameSize        = 65535;
+                        uploadClassDefault.bounds           = {};
+                        uploadClassDefault.bounds.lower     = 0.95;
+                        uploadClassDefault.bounds.upper     = 210;
+                        uploadClassDefault.framesPerCall    = 2;
+
+                        uploadClassHigh.default             = false;
+                        uploadClassHigh.streams             = 4;
+                        uploadClassHigh.frameSize           = 65535;
+                        uploadClassHigh.bounds              = {};
+                        uploadClassHigh.bounds.lower        = 190;
+                        uploadClassHigh.bounds.upper        = 1050;
+                        uploadClassHigh.framesPerCall       = 4;
+                    }
+                }
 
                 iasParameters.upload.classes.push(uploadClassLow);
                 iasParameters.upload.classes.push(uploadClassDefault);
@@ -341,7 +386,7 @@
                 }
             }
 
-            if (typeof require === "undefined")
+            if (iasParameters.platform === 'web')
             {
                 delete ias;
                 ias = null;
@@ -349,9 +394,8 @@
 
                 ias.measurementStart(JSON.stringify(iasParameters));
             }
-            else
+            else if (iasParameters.platform = 'desktop')
             {
-                iasParameters.platform                  = 'desktop';
                 iasSendToControl('start', JSON.stringify(iasParameters));
             }
         }
@@ -486,15 +530,15 @@
                     outputToHtml('Measurement running', 'status');
                     var output = '';
 
-                    if (data.test_case === 'rtt' && data.rtt_info.average_ns !== 0)
+                    if (data.test_case === 'rtt' && typeof data.rtt_info !== 'undefined' && data.rtt_info.average_ns !== 0)
                     {
                         outputToHtml(data.rtt_info.average_ns, 'rtt');
                     }
-                    if (data.test_case === 'download' && data.download_info[data.download_info.length-1].throughput_avg_bps !== 0)
+                    if (data.test_case === 'download' && typeof data.download_info !== 'undefined' && data.download_info[data.download_info.length-1].throughput_avg_bps !== 0)
                     {
                         outputToHtml((data.download_info[data.download_info.length-1].throughput_avg_bps / 1000 / 1000).toFixed(2), 'download');
                     }
-                    if (data.test_case === 'upload' && data.upload_info[data.upload_info.length-1].throughput_avg_bps !== 0)
+                    if (data.test_case === 'upload' && typeof data.upload_info !== 'undefined' && data.upload_info[data.upload_info.length-1].throughput_avg_bps !== 0)
                     {
                         outputToHtml((data.upload_info[data.upload_info.length-1].throughput_avg_bps / 1000 / 1000).toFixed(2), 'upload');
                     }

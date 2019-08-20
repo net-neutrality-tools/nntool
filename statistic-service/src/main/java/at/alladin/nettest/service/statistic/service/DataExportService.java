@@ -1,18 +1,5 @@
 package at.alladin.nettest.service.statistic.service;
 
-import org.apache.commons.io.IOUtils;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
-import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.dataformat.csv.CsvFactory;
-import com.fasterxml.jackson.dataformat.csv.CsvGenerator;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,7 +19,19 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.inject.Inject;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.dataformat.csv.CsvFactory;
+import com.fasterxml.jackson.dataformat.csv.CsvGenerator;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import at.alladin.nettest.service.statistic.config.DataExportConfiguration;
 import at.alladin.nettest.service.statistic.domain.model.RawExportData;
@@ -52,10 +51,10 @@ public class DataExportService {
     private static final String FILENAME_EXTENSION_CURRENT = "nntool.%EXTENSION%";
     private static final String FILENAME_ZIP_CURRENT = "nntool.zip";
     
-    @Inject
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 	 
-    @Inject
+    @Autowired
     private DataExportConfiguration dataExportConfiguration;
     
     public enum ExportExtension {
@@ -107,12 +106,17 @@ public class DataExportService {
      */
     private class ExportDataResultExtractor implements ResultSetExtractor<RawExportData> {
     	
+    	/*
+    	 * (non-Javadoc)
+    	 * @see org.springframework.jdbc.core.ResultSetExtractor#extractData(java.sql.ResultSet)
+    	 */
 		@Override
 		public RawExportData extractData(ResultSet rs) throws SQLException, DataAccessException {
 			final RawExportData rawData = new RawExportData();
 			final List<List<String>> resultList = new ArrayList<>();
             final ResultSetMetaData meta = rs.getMetaData();
             final int colCount = meta.getColumnCount();
+            
             rawData.setColumns(new ArrayList<>());
             rawData.getColumns().addAll(dataExportConfiguration.getFields().keySet());
 
@@ -153,16 +157,16 @@ public class DataExportService {
     	writeExportData(os, getRawExportData(day, month, year), getExportFilename(day, month, year, extension, false), extension, isCompress);
     }
     
-    private void writeExportData (final OutputStream os, final RawExportData rawData, 
-    		final String exportFilename, final ExportExtension extension, final boolean isCompress) throws FileNotFoundException, IOException{
+    private void writeExportData(final OutputStream os, final RawExportData rawData, 
+    		final String exportFilename, final ExportExtension extension, final boolean isCompress) throws FileNotFoundException, IOException {
     	try(OutputStream outf = (!isCompress ? 
     			os : new ZipOutputStream(os))) {
     		writeToOutputStream(rawData, outf, exportFilename, extension, isCompress);
     	}
     }
     
-    public String getExportFilename (final int month, final int year, final ExportExtension extension, final boolean isCompress) {
-	    //allow filtering by month/year
+    public String getExportFilename(final int month, final int year, final ExportExtension extension, final boolean isCompress) {
+	    // Allow filtering by month/year.
 	    if (year < 2099 && month > 0 && month <= 12 && year > 2000) {
 	    	if (isCompress) {
 	    		return FILENAME_ZIP.replace("%YEAR%", Integer.toString(year)).replace("%MONTH%",String.format("%02d",month));
@@ -182,7 +186,7 @@ public class DataExportService {
     }
     
     public String getExportFilename (final int day, final int month, final int year, final ExportExtension extension, final boolean isCompress) {
-	    //allow filtering by day/month/year
+	    // Allow filtering by day/month/year.
 	    if (year < 2099 && month > 0 && month <= 12 && year > 2000 && day > 0 && day <= 31) {
 	    	if (isCompress) {
 	    		return FILENAME_DAILY_ZIP.replace("%YEAR%", Integer.toString(year)).replace("%MONTH%",String.format("%02d",month))
@@ -216,7 +220,7 @@ public class DataExportService {
 		if (isCompress) {
             final ZipEntry zeLicense = new ZipEntry("LICENSE.txt");
             ((ZipOutputStream)os).putNextEntry(zeLicense);
-            try(final InputStream licenseIS = getClass().getResourceAsStream("DATA_LICENSE.txt")) {
+            try (final InputStream licenseIS = getClass().getResourceAsStream("DATA_LICENSE.txt")) {
 	            if (licenseIS != null) {
 	            	IOUtils.copy(licenseIS, os);
 	            }
@@ -224,14 +228,18 @@ public class DataExportService {
             
             final ZipEntry zeCsv = new ZipEntry(filename);
             ((ZipOutputStream)os).putNextEntry(zeCsv);
-            
         }
 		
 		writeToOutputStream(exportData, os, extension);
 	}
 	
 	/**
-	 * Writes the given data to the outputstream in the given file extension
+	 * Writes the given data to the OutputStream in the given file extension.
+	 * 
+	 * @param exportData
+	 * @param os
+	 * @param extension
+	 * @throws IOException
 	 */
 	private void writeToOutputStream (final RawExportData exportData, final OutputStream os, 
 			final ExportExtension extension) throws IOException {
@@ -244,7 +252,7 @@ public class DataExportService {
 			jsonGenerator.writeStartArray();
 		}
 		
-		// if csv is used, we need to manually include the headers
+		// If CSV is used, we need to manually include the headers.
 		if (extension == ExportExtension.CSV) {
 			
 			CsvSchema.Builder schemeBuilder = CsvSchema.builder().setUseHeader(true);

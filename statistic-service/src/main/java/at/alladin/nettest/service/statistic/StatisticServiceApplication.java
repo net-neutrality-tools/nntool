@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-
 import at.alladin.nettest.service.statistic.config.DataExportConfiguration;
 import at.alladin.nettest.shared.server.helper.spring.DevelopmentWebCorsConfiguration;
 import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;

@@ -1,12 +1,12 @@
 package at.alladin.nettest.shared.server.storage.couchdb.domain.model;
 
-import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.time.LocalDateTime;
 
 /**
  * Contains signal information from a point in time.
@@ -16,6 +16,16 @@ import com.google.gson.annotations.SerializedName;
  */
 @JsonClassDescription("Contains signal information from a point in time.")
 public class Signal {
+
+	/**
+	 * Cell location information from a point in time on the measurement agent.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "Cell identity information from a point in time on the measurement agent.")
+	@JsonPropertyDescription("Cell identity information from a point in time on the measurement agent.")
+	@Expose
+	@SerializedName("cell_info")
+	@JsonProperty(required = true, value = "cell_info")
+	private CellInfo cellInfo;
 
 	/**
 	 * Network type id as it gets returned by the Android API.
@@ -94,8 +104,8 @@ public class Signal {
      */
 	@JsonPropertyDescription("The LTE reference signal received quality, in dB (If available).")
     @Expose
-    @SerializedName("lte_rsrp_db")
-    @JsonProperty("lte_rsrp_db")
+    @SerializedName("lte_rsrq_db")
+    @JsonProperty("lte_rsrq_db")
     private Integer lteRsrqDb;
     
     /**
@@ -133,6 +143,14 @@ public class Signal {
     @SerializedName("wifi_bssid")
 	@JsonProperty("wifi_bssid")
     private String wifiBssid;
+
+	public CellInfo getCellInfo() {
+		return cellInfo;
+	}
+
+	public void setCellInfo(CellInfo cellInfo) {
+		this.cellInfo = cellInfo;
+	}
 
 	public Integer getNetworkTypeId() {
 		return networkTypeId;

@@ -5,6 +5,8 @@ import org.joda.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -19,6 +21,14 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
  */
 @io.swagger.annotations.ApiModel(description = "This DTO class is a base class for all specific full measurement classes.")
 @JsonClassDescription("This DTO class is a base class for all specific full measurement classes.")
+@JsonTypeInfo(
+		use = JsonTypeInfo.Id.NAME,
+		property = "deserialize_type"	//TODO: rename all deserialize_type to _deserialize_type
+)
+@JsonSubTypes({
+		@JsonSubTypes.Type(value = FullSpeedMeasurement.class, name = "full_speed_measurement"),
+		@JsonSubTypes.Type(value = FullQoSMeasurement.class, name = "full_qos_measurement")
+})
 public class FullSubMeasurement {
 
 	/**

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-29
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -50,6 +50,9 @@ function WSControl()
     var wsOverheadPerFrame;
     var wsWorkers;
     var wsWorkersStatus;
+    var wsWorkersCounterData;
+    var wsWorkersCounterFrames;
+    var wsWorkersCounterTimes;
     var wsWorkerTime;
     var wsInterval;
     var wsMeasurementRunningTime;
@@ -114,22 +117,26 @@ function WSControl()
     var dlStartupTime               = 3000;
     var dlMeasurementRunningTime    = 10000;
     var dlParallelStreams           = 4;
-    var dlTimeout                   = 10000;
+    var dlTimeout                   = 20000;
     var dlFrameSize                 = 32768;
 
     var ulStartupTime               = 3000;
     var ulMeasurementRunningTime    = 10000;
     var ulParallelStreams           = 4;
-    var ulTimeout                   = 10000;
+    var ulTimeout                   = 20000;
     var ulFrameSize                 = 65535;
     var uploadFramesPerCall         = 1;
 
     var wsParallelStreams;
     var wsStartupTime;
 
-    var singleThread                = false;
+    var useWebWorkers               = true;
 
-    var wsWorkerPath                = 'Worker.js';
+    var wsWorkerPath                = 'WebWorker.js';
+
+    var fetchCounterTimeout;
+    var fetchCounterTime            = 500;
+    var fetchCounterLimitReached    = false;
 
 
 
@@ -154,7 +161,8 @@ function WSControl()
         missing:            undefined,
         packetsize:         undefined,
         stDevPop:           undefined,
-        server:             undefined
+        server:             undefined,
+        rtts:               undefined
     };
 
     var wsDownloadValues =
@@ -190,6 +198,19 @@ function WSControl()
         overhead:         undefined,
         overheadTotal:    undefined,
         framePerCall:     undefined
+    };
+
+    var classCheckValues = 
+    {
+        rateAvg:          undefined,
+        dataTotal:        undefined,
+        durationTotal:    undefined,
+        streamsStart:     undefined,
+        frameSize:        undefined,
+        framesTotal:      undefined,
+        overheadPerFrame: undefined,
+        overheadTotal:    undefined,
+        classCheck:       true 
     };
 
 
@@ -366,7 +387,10 @@ function WSControl()
         {
             if (wsTargetsRtt.length > 0)
             {
-                wsTargetRtt = wsTargetsRtt[Math.floor(Math.random() * wsTargetsRtt.length)] + '.' + wsTLD;
+                wsTargetRtt = wsTargetsRtt[Math.floor(Math.random() * wsTargetsRtt.length)];
+                if (wsTLD) {
+                    wsTargetRtt += '.' + wsTLD;
+                }
             }
             console.log('target:            ' + wsWssString + wsTargetRtt + ':' + wsTargetPort);
             console.log('protocol:          ' + rttProtocol);
@@ -380,7 +404,10 @@ function WSControl()
         {
             if (wsTargets.length > 0)
             {
-                wsTarget = wsTargets[Math.floor(Math.random() * wsTargets.length)] + '.' + wsTLD;
+                wsTarget = wsTargets[Math.floor(Math.random() * wsTargets.length)];
+                if (wsTLD) {
+                    wsTarget += '.' + wsTLD;
+                }
             }
             console.log('target:            ' + wsWssString + wsTarget + ':' + wsTargetPort);
             console.log('protocol:          ' + wsProtocol);
@@ -391,8 +418,18 @@ function WSControl()
             console.log('timeout:           ' + wsTimeout);
         }
 
-        wsWorkers       = new Array(wsParallelStreams);
-        wsWorkersStatus = new Array(wsParallelStreams);
+        wsWorkers               = new Array(wsParallelStreams);
+        wsWorkersStatus         = new Array(wsParallelStreams);
+        wsWorkersCounterData    = new Array(wsParallelStreams);
+        wsWorkersCounterFrames  = new Array(wsParallelStreams);
+        wsWorkersCounterTimes   = new Array(wsParallelStreams);
+
+        for (var wsID = 0; wsID < wsWorkers.length; wsID++)
+        {
+            wsWorkersCounterData[wsID] = new Array();
+            wsWorkersCounterFrames[wsID]  = new Array();
+            wsWorkersCounterTimes[wsID]  = new Array();
+        }
 
         for (var wsID = 0; wsID < wsWorkers.length; wsID++)
         {
@@ -403,13 +440,15 @@ function WSControl()
 
             var workerData = prepareWorkerData('connect', wsID);
 
-            if (typeof measurementParameters.singleThread !== 'undefined')
+            if (measurementParameters.useWebWorkers === false)
             {
-                singleThread                    = true;
+                useWebWorkers                   = false;
+                
                 delete(wsWorkers[wsID]);
                 wsWorkers[wsID]                 = new WSWorker();
                 wsWorkers[wsID].wsControl       = this;
-                setTimeout(wsWorkers[wsID].onmessage, 100,  workerData);
+                wsWorkers[wsID].wsID            = wsID;
+                setTimeout(sendToWorker, 100, wsID, workerData);
             }
             else
             {
@@ -420,7 +459,7 @@ function WSControl()
                     var ipcRendererMeasurement  = require('electron').ipcRenderer;
 
                     wsWorkersStatus[wsID]       = wsStateClosed;
-                    wsWorkers[wsID]             = new WorkerNode(path.join(__dirname, 'modules/Worker.js'));
+                    wsWorkers[wsID]             = new WorkerNode(path.join(__dirname, 'modules/WebWorker.js'));
 
                     ipcRendererMeasurement.send('iasSetWorkerPID', wsWorkers[wsID].child.pid),
 
@@ -439,7 +478,7 @@ function WSControl()
                     workerCallback(JSON.parse(event.data));
                 };
 
-                wsWorkers[wsID].postMessage(workerData);
+                sendToWorker(wsID, workerData);
             }
         }
 
@@ -456,6 +495,7 @@ function WSControl()
         clearInterval(wsTimeoutTimer);
         clearInterval(wsInterval);
         clearTimeout(wsStartupTimeout);
+        clearTimeout(fetchCounterTimeout);
 
         console.log(wsTestCase + ': stopping measurement');
 
@@ -465,14 +505,14 @@ function WSControl()
 
             for (var wsID = 0; wsID < wsWorkers.length; wsID++)
             {
-                wsWorkers[wsID].postMessage(workerData);
+                sendToWorker(wsID, workerData);
             }
         }
     };
 
     /**
      * @function workerCallback
-     * @description Function to receive callbacks from the WSWorkers
+     * @description Function to receive callbacks from a worker
      * @public
      * @param {string} data JSON coded measurement Results
      */
@@ -488,7 +528,7 @@ function WSControl()
 
     /**
      * @function workerCallback
-     * @description Function to receive callbacks from the WSWorkers
+     * @description Function to receive callbacks from a worker
      * @private
      * @param {string} data measurement Results
      */
@@ -503,6 +543,109 @@ function WSControl()
                 {
                     console.log('wsWorker ' + data.wsID + ' command: \'' + data.cmd + '\' message: \'' + data.msg);
                 }
+
+                if (data.msg === 'counter' && wsMeasurementTime === 0)
+                {
+                    wsWorkersCounterData[data.wsID].push(data.wsData);
+                    wsWorkersCounterFrames[data.wsID].push(data.wsFrames);
+                    wsWorkersCounterTimes[data.wsID].push(performance.now());
+
+                    var allCountersFetched = true;
+                    var streamsOpen = 0;
+
+                    for (var wsID = 0; wsID < wsWorkersStatus.length; wsID++)
+                    {
+                        if (typeof wsWorkersCounterTimes[wsID][wsWorkersCounterTimes[wsID].length-1] === 'undefined' || typeof wsWorkersCounterTimes[wsID][wsWorkersCounterTimes[wsID].length-2] === 'undefined')
+                        {
+                            allCountersFetched = false;
+                        }
+
+                        if (wsWorkersStatus[wsID] === wsStateOpen) streamsOpen++;
+                    }
+
+                    //on upload, make sure that at least one != 0 report was received per stream to account for jitter
+                    if (allCountersFetched && wsTestCase === 'upload' && !fetchCounterLimitReached)
+                    {
+                        for (var wsID = 0; wsID < wsWorkersStatus.length; wsID++)
+                        {
+                            var validReportReceived = false;
+                            var reportsReceived = 0;
+
+                            for (var i = 0; i < wsWorkersCounterData.length; i++)
+                            {
+                                if (typeof wsWorkersCounterData[wsID][i] !== 'undefined')
+                                {
+                                    reportsReceived++;
+                                    if (wsWorkersCounterData[wsID][i] !== 0)
+                                    {
+                                        validReportReceived = true;
+                                    }
+                                }
+                            }
+
+                            if (reportsReceived >= 3)
+                            {
+                                //if one stream received at least 3 reports, break
+                                console.log(reportsReceived + " upload reports received on #" + wsID);
+                                fetchCounterLimitReached = true;
+                                break;
+                            }
+
+                            if (!validReportReceived)
+                            {
+                                setTimeout(fetchCounter, 500, wsID);
+
+                                console.log("Missing upload report on #" + wsID + ", requesting again in 500ms");
+                                allCountersFetched = false;
+                            }
+                            else
+                            {
+                                console.log("At least one != 0 upload report received on #" + wsID);
+                            }
+                        }
+                    }
+
+                    if (allCountersFetched || fetchCounterLimitReached)
+                    {
+                        classCheckValues.dataTotal = 0;
+                        classCheckValues.durationTotal = 0;
+                        classCheckValues.streamsStart = streamsOpen;
+                        classCheckValues.frameSize = wsFrameSize;
+                        classCheckValues.framesTotal = 0;
+                        classCheckValues.overheadPerFrame = wsOverheadPerFrame;
+
+                        for (var wsID = 0; wsID < wsWorkersStatus.length; wsID++)
+                        {
+                            classCheckValues.dataTotal += wsWorkersCounterData[wsID][wsWorkersCounterData[wsID].length-1] - wsWorkersCounterData[wsID][wsWorkersCounterData[wsID].length-2];
+                            classCheckValues.framesTotal += wsWorkersCounterFrames[wsID][wsWorkersCounterFrames[wsID].length-1] - wsWorkersCounterFrames[wsID][wsWorkersCounterFrames[wsID].length-2];
+                            classCheckValues.durationTotal += wsWorkersCounterTimes[wsID][wsWorkersCounterTimes[wsID].length-1] - wsWorkersCounterTimes[wsID][wsWorkersCounterTimes[wsID].length-2];
+                        }
+
+                        if (wsTestCase === 'download')
+                        {
+                            classCheckValues.durationTotal = Math.round(classCheckValues.durationTotal / wsWorkersCounterTimes.length);
+                        }
+                        if (wsTestCase === 'upload')
+                        {
+                            classCheckValues.durationTotal = 500;
+                        }
+
+                        classCheckValues.overheadTotal = classCheckValues.framesTotal * wsOverheadPerFrame;
+                        classCheckValues.rateAvg = Math.round((((classCheckValues.dataTotal * 8) + (classCheckValues.overheadTotal * 8)) / (Math.round(classCheckValues.durationTotal) / 1000)));
+                        classCheckValues.durationTotal = Math.round(classCheckValues.durationTotal * 1000 * 1000);
+                        classCheckValues.dataTotal = classCheckValues.dataTotal + classCheckValues.overheadTotal;
+
+                        if (isNaN(classCheckValues.rateAvg) || classCheckValues.rateAvg === null)
+                        {
+                            classCheckValues.rateAvg = 0;
+                        }
+
+                        //console.log(JSON.stringify(classCheckValues));
+
+                        reportToMeasurement('classCheck', '');
+                    }
+                }
+
                 break;
             }
 
@@ -536,7 +679,7 @@ function WSControl()
 
                         for (var wsID = 0; wsID < wsWorkers.length; wsID++)
                         {
-                            wsWorkers[wsID].postMessage(workerData);
+                            sendToWorker(wsID, workerData);
                         }
                     }
 
@@ -545,20 +688,23 @@ function WSControl()
                     if (wsTestCase === 'rtt')
                     {
                         measurementStart(true);
-                        break;
                     }
 
                     if (wsTestCase === 'download')
                     {
                         wsStartupStartTime = performance.now()+500;
                         wsStartupTimeout = setTimeout(measurementStart, wsStartupTime+500);
-                        break;
                     }
-                    else
+
+                    if (wsTestCase === 'upload')
                     {
                         wsStartupStartTime = performance.now();
                         wsStartupTimeout = setTimeout(measurementStart, wsStartupTime);
-                        break;
+                    }
+
+                    if (wsTestCase === 'download' || wsTestCase === 'upload')
+                    {
+                        fetchCounterTimeout = setTimeout(fetchCounter, fetchCounterTime);
                     }
                 }
                 break;
@@ -606,7 +752,7 @@ function WSControl()
                     if (wsTestCase === 'upload')
                     {
                         ulStartupData   += data.wsData;
-                        ulStartupFrames    += data.wsFrames;
+                        ulStartupFrames += data.wsFrames;
                     }
 
                     break;
@@ -651,8 +797,14 @@ function WSControl()
                 if (data.msg === 'authorizationConnection' && !wsMeasurementError && this.wsTestCase !== 'rtt')
                 {
                     wsMeasurementError = true;
-                    measurementError('webSocket authorization unsuccessful or no connection to measurement server', 4, 1, 0);
+                    measurementError('authorization unsuccessful or no connection to measurement peer', 4, 1, 0);
                 }
+                if (data.msg === 'overload' && !wsMeasurementError)
+                {
+                    wsMeasurementError = true;
+                    measurementError('measurement peer overloaded', 6, 1, 0);
+                }
+
                 break;
             }
 
@@ -680,7 +832,7 @@ function WSControl()
         if ((errorCode === 2 || errorCode === 4) && wsTestCase === 'rtt')
         {
             wsMeasurementError = true;
-            reportToMeasurement('info', 'no connection to measurement server');
+            reportToMeasurement('info', 'no connection to measurement peer');
             measurementFinish();
             return;
         }
@@ -695,14 +847,7 @@ function WSControl()
         {
             var workerData = prepareWorkerData('close', wsID);
 
-            if (!singleThread)
-            {
-                wsWorkers[wsID].postMessage(workerData);
-            }
-            else
-            {
-                wsWorkers[wsID].onmessage(workerData);
-            }
+            sendToWorker(wsID, workerData);
         }
         resetValues();
     }
@@ -716,6 +861,32 @@ function WSControl()
     {
         wsMeasurementError = true;
         measurementError('webSocket timeout error', 2, 1, 0);
+    }
+
+    function fetchCounter(id)
+    {
+        clearTimeout(fetchCounterTimeout);
+        
+        if (wsWorkersCounterData[0].length === 0)
+        {
+            fetchCounterTimeout = setTimeout(fetchCounter, fetchCounterTime);
+        }
+
+        if (typeof id !== 'undefined')
+        {
+            var workerData = prepareWorkerData('fetchCounter', id);
+
+            sendToWorker(id, workerData);
+        }
+        else
+        {
+            for (var wsID = 0; wsID < wsWorkers.length; wsID++)
+            {
+                var workerData = prepareWorkerData('fetchCounter', wsID);
+
+                sendToWorker(wsID, workerData);
+            }
+        }
     }
 
     /**
@@ -734,14 +905,7 @@ function WSControl()
                 if (wsWorkersStatus[wsID] === wsStateOpen) wsStreamsStart++;
                 var workerData = prepareWorkerData('resetCounter', wsID);
 
-                if (!singleThread)
-                {
-                    wsWorkers[wsID].postMessage(workerData);
-                }
-                else
-                {
-                    wsWorkers[wsID].onmessage(workerData);
-                }
+                sendToWorker(wsID, workerData);
             }
         }
 
@@ -772,14 +936,7 @@ function WSControl()
                 if (wsWorkersStatus[wsID] === wsStateOpen) wsStreamsEnd++;
                 var workerData = prepareWorkerData('close', wsID);
 
-                if (!singleThread)
-                {
-                    wsWorkers[wsID].postMessage(workerData);
-                }
-                else
-                {
-                    wsWorkers[wsID].onmessage(workerData);
-                }
+                sendToWorker(wsID, workerData);
             }
             wsEndTime = performance.now();
             setTimeout(measurementFinish, 100);
@@ -790,14 +947,7 @@ function WSControl()
             {
                 var workerData = prepareWorkerData('report', wsID);
 
-                if (!singleThread)
-                {
-                    wsWorkers[wsID].postMessage(workerData);
-                }
-                else
-                {
-                    wsWorkers[wsID].onmessage(workerData);
-                }
+                sendToWorker(wsID, workerData);
             }
             wsMeasurementTime       = performance.now() - wsStartTime;
             wsMeasurementTimeTotal  = performance.now() - wsStartupStartTime;
@@ -900,6 +1050,11 @@ function WSControl()
             wsOverhead           = (wsFrames * wsOverheadPerFrame);
             wsOverheadTotal      = (wsFramesTotal * wsOverheadPerFrame);
             wsSpeedAvgBitS       = (((wsData * 8) + (wsOverhead * 8)) / (Math.round(wsMeasurementTime) / 1000));
+            
+            if (isNaN(wsSpeedAvgBitS))
+            {
+                wsSpeedAvgBitS = 0;
+            }
         }
 
         var finishString     = '';
@@ -927,6 +1082,7 @@ function WSControl()
             console.log(finishString + 'RTT Packet Size:        ' + wsRttValues.packetsize);
             console.log(finishString + 'RTT Standard Deviation: ' + wsRttValues.stDevPop + ' ns');
             console.log(finishString + 'RTT Peer:               ' + wsRttValues.server);
+            console.log(finishString + 'RTT single results:     ' + JSON.stringify(wsRttValues.rtts));
         }
         else if (logReports)
         {
@@ -987,10 +1143,17 @@ function WSControl()
         report.msg          = msg;
         report.test_case    = wsTestCase;
 
-        if (wsTestCase === 'rtt')       report = getKPIsRtt(report);
-        if (wsTestCase === 'download')  report = getKPIsDownload(report);
-        if (wsTestCase === 'upload')    report = getKPIsUpload(report);
-        report = getKPIsAvailability(report);
+        if (cmd === 'classCheck')
+        {
+            report = getKPIsClassCheck(report);
+        }
+        else
+        {
+            if (wsTestCase === 'rtt')       report = getKPIsRtt(report);
+            if (wsTestCase === 'download')  report = getKPIsDownload(report);
+            if (wsTestCase === 'upload')    report = getKPIsUpload(report);
+            report = getKPIsAvailability(report);
+        }
 
         if (wsControl !== null && wsControl.callback !== null && wsControl.callback === 'wsMeasurement' && typeof this.wsMeasurement !== 'undefined')  this.wsMeasurement.controlCallback(JSON.stringify(report));
     }
@@ -1005,7 +1168,7 @@ function WSControl()
     {
         report.duration_ns              = wsRttValues.duration;
         report.average_ns               = wsRttValues.avg;
-        report.median_ms                = wsRttValues.med;
+        report.median_ns                = wsRttValues.med;
         report.min_ns                   = wsRttValues.min;
         report.max_ns                   = wsRttValues.max;
         report.num_sent                 = wsRttValues.requests;
@@ -1014,10 +1177,14 @@ function WSControl()
         report.num_missing              = wsRttValues.missing;
         report.packet_size              = wsRttValues.packetsize;
         report.standard_deviation_ns    = wsRttValues.stDevPop;
+        report.rtts                     = wsRttValues.rtts;
 
         if (typeof wsRttValues.server !== 'undefined')
         {
-            report.peer                 = wsRttValues.server + '.' + wsTLD;
+            report.peer                 = wsRttValues.server;
+            if (wsTLD) {
+                report.peer += '.' + wsTLD;
+            }
         }
 
         return report;
@@ -1074,6 +1241,21 @@ function WSControl()
         return report;
     }
 
+    function getKPIsClassCheck(report)
+    {
+        report.throughput_avg_bps                       = classCheckValues.rateAvg;
+        report.bytes_including_slow_start               = classCheckValues.dataTotal;
+        report.duration_ns_total                        = classCheckValues.durationTotal;
+        report.num_streams_start                        = classCheckValues.streamsStart;
+        report.frame_size                               = classCheckValues.frameSize;
+        report.frame_count_including_slow_start         = classCheckValues.framesTotal;
+        report.overhead_including_slow_start            = classCheckValues.overheadTotal;
+        report.overhead_per_frame                       = classCheckValues.overheadPerFrame;
+        report.classCheck                               = classCheckValues.classCheck;
+
+        return report;
+    }
+
     /**
      * @function getKPIsAvailability
      * @description Function to collect Availability KPIs
@@ -1093,7 +1275,7 @@ function WSControl()
      * @description Function to prepare the WSWorker control data
      * @private
      * @param {string} cmd Command to execute
-     * @param {int} wsID ID of the WSWorker
+     * @param {int} wsID ID of the worker
      */
     function prepareWorkerData(cmd, wsID)
     {
@@ -1125,6 +1307,25 @@ function WSControl()
     }
 
     /**
+     * @function sendToWorker
+     * @description Function to send data to a worker
+     * @private
+     * @param {int} wsID ID of the worker
+     * @param {string} workerData data to send
+     */
+    function sendToWorker(wsID, workerData)
+    {
+        if (useWebWorkers)
+        {
+            wsWorkers[wsID].postMessage(workerData);
+        }
+        else
+        {
+            wsWorkers[wsID].onmessageWorker(workerData);
+        };
+    }
+
+    /**
      * @function resetValues
      * @description Initialize all variables with default values
      * @private
@@ -1136,7 +1337,7 @@ function WSControl()
         wsTestCase                  = '';
         wsData                      = 0;
         wsDataTotal                 = 0;
-        wsFrames                    = 0;
+        wsFrames                    = 0;    
         wsFramesTotal               = 0;
         wsSpeedAvgBitS              = 0;
         wsOverhead                  = 0;

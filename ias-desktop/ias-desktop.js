@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-04-08
+ *      \date Last update: 2019-08-09
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -223,8 +223,15 @@ function iasCallback(data)
             tool.getRouteToTarget(measurementParameters.wsTargets[Math.floor(Math.random() * measurementParameters.wsTargets.length)] + '.' + measurementParameters.wsTLD, routeToTargetMaxHops, measurementParameters.ndServerFamily);
             
             routeToClientCalled = true;
-            jsTool.performRouteToClientLookup(measurementParameters.wsTargets[Math.floor(Math.random() * measurementParameters.wsTargets.length)] + '.' + measurementParameters.wsTLD, routeToClientTargetPort);
-            
+            if (typeof performRouteToClientLookup !== 'undefined' && performRouteToClientLookup)
+            {
+                jsTool.performRouteToClientLookup(measurementParameters.wsTargets[Math.floor(Math.random() * measurementParameters.wsTargets.length)] + '.' + measurementParameters.wsTLD, routeToClientTargetPort);
+            }
+            else
+            {
+                routeToClientCallbackCalled = true;
+            }
+
             if (typeof networkKPIs.dsk_interface_ipv4_gateway !== 'undefined' && networkKPIs.dsk_interface_ipv4_gateway !== '-')
             {
                 tool.getRttToTarget(networkKPIs.dsk_interface_ipv4_gateway, rttGatewayRequests);
@@ -306,11 +313,11 @@ function getRouteToTargetCallback(data)
 
 function getRouteToClientCallback(data)
 {
-    data                            	= JSON.parse(data);
-    routeKPIs.server_client_route_hops  = data.server_client_route_hops;
-    routeKPIs.server_client_route 		= data.server_client_route;
+    data                                  = JSON.parse(data);
+    routeKPIs.server_client_route_hops    = data.server_client_route_hops;
+    routeKPIs.server_client_route         = data.server_client_route;
 
-    routeToClientCallbackCalled     	= true;
+    routeToClientCallbackCalled           = true;
 }
 
 function getRttToTargetCallback(data)

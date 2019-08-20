@@ -17,17 +17,16 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.Br
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefSubMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.DeviceInfo;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.EmbeddedNetworkType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.GeoLocation;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
 
-@Mapper(componentModel = "spring")
-public interface BriefMeasurementResponseMapper extends DateTimeMapper {
+@Mapper(componentModel = "spring", uses = { DateTimeMapper.class })
+public interface BriefMeasurementResponseMapper {
 	
-	List<BriefMeasurementResponse> map (List<Measurement> measurementList);
-
 	@Mappings({
 		@Mapping(target="firstAccurateGeoLocation", expression="java(parseFirstGeoLocation(measurement))"),
 		@Mapping(target="startTime", source="measurementTime.startTime"),
@@ -36,7 +35,7 @@ public interface BriefMeasurementResponseMapper extends DateTimeMapper {
 		@Mapping(target="measurements", expression="java(parseMeasurementMap(measurement))"),
 		@Mapping(target="networkTypeName", expression="java(parseNetworkName(measurement))")
 	})
-	BriefMeasurementResponse map (Measurement measurement);
+	BriefMeasurementResponse map(Measurement measurement);
 	
 	@Mappings({
 		@Mapping(target="averageCpuUsage", source="osInfo.cpuUsage.average"),
@@ -46,7 +45,7 @@ public interface BriefMeasurementResponseMapper extends DateTimeMapper {
 		@Mapping(target="osName", source="osInfo.name"),
 		@Mapping(target="osVersion", source="osInfo.version"),
 	})
-	BriefDeviceInfo map (DeviceInfo deviceInfo);
+	BriefDeviceInfo map(DeviceInfo deviceInfo);
 	
 	@Mappings({
 		@Mapping(target="objectiveCount", expression="java(qosMeasurement.getResults().size())"),
@@ -96,7 +95,10 @@ public interface BriefMeasurementResponseMapper extends DateTimeMapper {
 	
 	public default String parseNetworkName(Measurement measurement) {
 		if (measurement.getNetworkInfo() != null && measurement.getNetworkInfo().getNetworkPointsInTime() != null && measurement.getNetworkInfo().getNetworkPointsInTime().size() > 0) {
-			return measurement.getNetworkInfo().getNetworkPointsInTime().get(0).getNetworkType().getGroupName();
+			final EmbeddedNetworkType networkType = measurement.getNetworkInfo().getNetworkPointsInTime().get(0).getNetworkType();
+			if (networkType != null) {
+				return networkType.getGroupName();
+			}
 		}
 		return null;
 	}

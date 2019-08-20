@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Before;
@@ -23,6 +24,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurem
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective.QoSTranslationKeys;
+import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapper;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
@@ -36,9 +38,15 @@ public class QoSEvaluationServiceTest {
 	@Injectable 
 	@Mocked 
 	private QoSMeasurementObjectiveRepository objectiveRepo;
-	
+
 	@Injectable
 	private GsonBuilder builder;
+
+	@Injectable
+	@Mocked
+	private FullMeasurementResponseMapper fullMeasurementResponseMapper;
+
+	private Locale locale = Locale.US;
 	
 	private QoSMeasurement qosMeasurement;
 	
@@ -104,9 +112,12 @@ public class QoSEvaluationServiceTest {
 		new Expectations() {{
 			objectiveRepo.findAllByEnabled(anyBoolean);
 			result = objectiveList;
+
+			fullMeasurementResponseMapper.map((QoSMeasurement) any);
+			result = new FullQoSMeasurement();
 		}};
 		
-		final FullQoSMeasurement res = evaluationService.evaluateQoSMeasurement(qosMeasurement);
+		final FullQoSMeasurement res = evaluationService.evaluateQoSMeasurement(qosMeasurement, locale);
 		final List<EvaluatedQoSResult> evalList = res.getResults();
 		assertEquals("unexpected result size", 1, evalList.size());
 		final EvaluatedQoSResult evalRes = evalList.get(0);
@@ -117,9 +128,9 @@ public class QoSEvaluationServiceTest {
 		assertEquals("Unexpected failure count", 0, (int) evalRes.getFailureCount());
 		assertEquals("unexpected evaluation count", 2, (int) evalRes.getEvaluationCount());
 		assertFalse("unexpected implausible flag", evalRes.isImplausible());
-		assertFalse("unexpected tcp failure found in results", evalRes.getEvaluationKeyMap().containsKey("tcp.failure"));
-		assertTrue("no tcp success found in results", evalRes.getEvaluationKeyMap().containsKey("tcp.success"));
-		assertEquals("tcp success carrying wrong message", "ok", evalRes.getEvaluationKeyMap().get("tcp.success"));
+		assertFalse("unexpected tcp failure found in results", evalRes.getResultKeyMap().containsKey("tcp.failure"));
+		assertTrue("no tcp success found in results", evalRes.getResultKeyMap().containsKey("tcp.success"));
+		assertEquals("tcp success carrying wrong message", EvaluatedQoSResult.QoSResultOutcome.OK, evalRes.getResultKeyMap().get("tcp.success"));
 	}
 	
 	@Test
@@ -155,9 +166,12 @@ public class QoSEvaluationServiceTest {
 		new Expectations() {{
 			objectiveRepo.findAllByEnabled(anyBoolean);
 			result = objectiveList;
+
+			fullMeasurementResponseMapper.map((QoSMeasurement) any);
+			result = new FullQoSMeasurement();
 		}};
 		
-		final FullQoSMeasurement res = evaluationService.evaluateQoSMeasurement(qosMeasurement);
+		final FullQoSMeasurement res = evaluationService.evaluateQoSMeasurement(qosMeasurement, locale);
 		final List<EvaluatedQoSResult> evalList = res.getResults();
 		assertEquals("unexpected result size", 1, evalList.size());
 		final EvaluatedQoSResult evalRes = evalList.get(0);
@@ -168,9 +182,9 @@ public class QoSEvaluationServiceTest {
 		assertEquals("Unexpected failure count", 2, (int) evalRes.getFailureCount());
 		assertEquals("unexpected evaluation count", 2, (int) evalRes.getEvaluationCount());
 		assertFalse("unexpected implausible flag", evalRes.isImplausible());
-		assertFalse("tcp success found in results", evalRes.getEvaluationKeyMap().containsKey("tcp.success"));
-		assertTrue("no tcp failure found in results", evalRes.getEvaluationKeyMap().containsKey("tcp.failure"));
-		assertEquals("tcp failure carrying wrong message", "fail", evalRes.getEvaluationKeyMap().get("tcp.failure"));
+		assertFalse("tcp success found in results", evalRes.getResultKeyMap().containsKey("tcp.success"));
+		assertTrue("no tcp failure found in results", evalRes.getResultKeyMap().containsKey("tcp.failure"));
+		assertEquals("tcp failure carrying wrong message", EvaluatedQoSResult.QoSResultOutcome.FAIL, evalRes.getResultKeyMap().get("tcp.failure"));
 	}
 	
 	@Test
@@ -258,9 +272,12 @@ public class QoSEvaluationServiceTest {
 		new Expectations() {{
 			objectiveRepo.findAllByEnabled(anyBoolean);
 			result = objectiveList;
+
+			fullMeasurementResponseMapper.map((QoSMeasurement) any);
+			result = new FullQoSMeasurement();
 		}};
 		
-		final FullQoSMeasurement fullMeasurement = evaluationService.evaluateQoSMeasurement(qosMeasurement);
+		final FullQoSMeasurement fullMeasurement = evaluationService.evaluateQoSMeasurement(qosMeasurement, locale);
 		final List<EvaluatedQoSResult> evalList = fullMeasurement.getResults();
 		assertEquals("unexpected result size", 1, evalList.size());
 		final EvaluatedQoSResult evalRes = evalList.get(0);
@@ -272,21 +289,21 @@ public class QoSEvaluationServiceTest {
 		assertEquals("unexpected summary", SUMMARY, evalRes.getSummary());
 		assertEquals("unexpected implausible flag", false, evalRes.isImplausible());
 		
-		assertTrue("wrong message found in evaluation", evalRes.getEvaluationKeyMap().containsKey("voip.jitter.incoming.failure"));
-		assertFalse("wrong message found in evaluation", evalRes.getEvaluationKeyMap().containsKey("voip.jitter.incoming.success"));
-		assertEquals("wrong message found in evaluation", "fail", evalRes.getEvaluationKeyMap().get("voip.jitter.incoming.failure"));
+		assertTrue("wrong message found in evaluation", evalRes.getResultKeyMap().containsKey("voip.jitter.incoming.failure"));
+		assertFalse("wrong message found in evaluation", evalRes.getResultKeyMap().containsKey("voip.jitter.incoming.success"));
+		assertEquals("wrong message found in evaluation", EvaluatedQoSResult.QoSResultOutcome.FAIL, evalRes.getResultKeyMap().get("voip.jitter.incoming.failure"));
 		
-		assertFalse("wrong message found in evaluation", evalRes.getEvaluationKeyMap().containsKey("voip.jitter.outgoing.failure"));
-		assertTrue("wrong message found in evaluation", evalRes.getEvaluationKeyMap().containsKey("voip.jitter.outgoing.success"));
-		assertEquals("wrong message found in evaluation", "ok", evalRes.getEvaluationKeyMap().get("voip.jitter.outgoing.success"));
+		assertFalse("wrong message found in evaluation", evalRes.getResultKeyMap().containsKey("voip.jitter.outgoing.failure"));
+		assertTrue("wrong message found in evaluation", evalRes.getResultKeyMap().containsKey("voip.jitter.outgoing.success"));
+		assertEquals("wrong message found in evaluation", EvaluatedQoSResult.QoSResultOutcome.OK, evalRes.getResultKeyMap().get("voip.jitter.outgoing.success"));
 		
-		assertTrue("wrong message found in evaluation", evalRes.getEvaluationKeyMap().containsKey("voip.incoming.packet.success"));
-		assertFalse("wrong message found in evaluation", evalRes.getEvaluationKeyMap().containsKey("voip.incoming.packet.failure"));
-		assertEquals("wrong message found in evaluation", "ok", evalRes.getEvaluationKeyMap().get("voip.incoming.packet.success"));
+		assertTrue("wrong message found in evaluation", evalRes.getResultKeyMap().containsKey("voip.incoming.packet.success"));
+		assertFalse("wrong message found in evaluation", evalRes.getResultKeyMap().containsKey("voip.incoming.packet.failure"));
+		assertEquals("wrong message found in evaluation", EvaluatedQoSResult.QoSResultOutcome.OK, evalRes.getResultKeyMap().get("voip.incoming.packet.success"));
 		
-		assertTrue("wrong message found in evaluation", evalRes.getEvaluationKeyMap().containsKey("voip.outgoing.packet.success"));
-		assertFalse("wrong message found in evaluation", evalRes.getEvaluationKeyMap().containsKey("voip.outgoing.packet.failure"));
-		assertEquals("wrong message found in evaluation", "ok", evalRes.getEvaluationKeyMap().get("voip.outgoing.packet.success"));
+		assertTrue("wrong message found in evaluation", evalRes.getResultKeyMap().containsKey("voip.outgoing.packet.success"));
+		assertFalse("wrong message found in evaluation", evalRes.getResultKeyMap().containsKey("voip.outgoing.packet.failure"));
+		assertEquals("wrong message found in evaluation", EvaluatedQoSResult.QoSResultOutcome.OK, evalRes.getResultKeyMap().get("voip.outgoing.packet.success"));
 	}
 	
 }

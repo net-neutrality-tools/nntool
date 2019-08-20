@@ -36,18 +36,9 @@ public class EchoProtocolTcpTask extends AbstractEchoProtocolTask {
 	 *
 	 * @param taskDesc
 	 */
+
 	public EchoProtocolTcpTask(QualityOfServiceTest nnTest, TaskDesc taskDesc, int threadId) {
 		super(nnTest, taskDesc, threadId, threadId);
-
-		this.testPort = taskDesc.getPort();
-
-		String value = (String) taskDesc.getParams().get(PARAM_TIMEOUT);
-		this.timeout = value != null ? Long.valueOf(value) : DEFAULT_TIMEOUT;
-
-		value = (String) taskDesc.getParams().get(PARAM_PAYLOAD);
-		this.payload = value != null ? value : "default_payload";
-
-		this.testHost = taskDesc.getHost();
 	}
 
 	/**

@@ -48,7 +48,7 @@ class QoSMeasurementViewController: UITableViewController {
 
     ///
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "qos_group_progress_cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.qos_group_progress_cell.identifier, for: indexPath)
 
         if let qosCell = cell as? QoSGroupProgressCell {
             let group = groups[indexPath.row]

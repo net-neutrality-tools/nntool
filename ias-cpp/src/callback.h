@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-25
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -34,6 +34,8 @@ using namespace std;
 */
 class CCallback
 {
+    friend void startTestCase(int nTestCase);
+    friend void measurementStart(std::string measurementParameters);
 	private:
 		void callbackToPlatform(string cmd, string msg, int error_code, string error_description);
 		void rttUdpCallback(string cmd);
@@ -41,9 +43,8 @@ class CCallback
 		void uploadCallback(string cmd);
 		Json::object getMeasurementResults(struct measurement tempMeasurement, struct measurement_data data, string cmd);
 
-		Json::object jMeasurementResults;
 		Json::object jMeasurementResultsTime;
-		Json::array jMeasurementResultsRttUdp;
+		Json::object jMeasurementResultsRttUdp;
 		Json::array jMeasurementResultsDownload;
 		Json::array jMeasurementResultsUpload;
 	

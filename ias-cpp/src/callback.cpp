@@ -22,6 +22,8 @@
     #include "android_connector.h"
 #endif
 
+extern MeasurementPhase currentTestPhase;
+
 //! \brief
 //!	Standard Destructor
 CCallback::CCallback()
@@ -79,18 +81,19 @@ void CCallback::callback(string cmd, string msg, int error_code, string error_de
         }
     }
 
-    callbackToPlatform(cmd, msg, error_code, error_description);
-
     if (cmd.compare("finish") == 0 && ::RTT == PERFORMED_RTT && ::DOWNLOAD == PERFORMED_DOWNLOAD && ::UPLOAD == PERFORMED_UPLOAD)
     {
+        currentTestPhase = MeasurementPhase::END;
         callbackToPlatform("completed", msg, error_code, error_description);
+    } else {
+        callbackToPlatform(cmd, msg, error_code, error_description);
     }
 }
 
 void CCallback::callbackToPlatform(string cmd, string msg, int error_code, string error_description)
 {
     //construct JSON callback
-    jMeasurementResults = Json::object{};
+    Json::object jMeasurementResults = Json::object{};
     jMeasurementResults["cmd"] = cmd;
     jMeasurementResults["msg"] = msg;
     jMeasurementResults["test_case"] = conf.sTestName;
@@ -138,6 +141,7 @@ void CCallback::callbackToPlatform(string cmd, string msg, int error_code, strin
     #ifdef __ANDROID__
 	    if (cmd == "completed") 
 	    {
+	        connector.callback(jMeasurementResults);
 	        connector.callbackFinished(jMeasurementResults);
 	        connector.detachCurrentThreadFromJvm();
 	    } 
@@ -232,11 +236,21 @@ void CCallback::rttUdpCallback(string cmd)
 		tempMeasurement.ping.service_availability 	= pingThread->service_availability;
 		tempMeasurement.ping.error_code				= pingThread->error;
 		tempMeasurement.ping.error_description		= pingThread->error_description;
+
+		Json::array jRtts;
+
+		for ( auto &rtt : tempMeasurement.ping.interim_values )
+		{
+	        Json jRtt = Json::object{
+	            {"rtt_ns", rtt * 1000},
+	        };
+	        jRtts.push_back(jRtt);
+		}
 			
 	//Unlock Mutex
 	pthread_mutex_unlock(&mutex1);
 
-	TRC_INFO( ("RTT UDP: " + CTool::toString(tempMeasurement.ping.avg )).c_str());
+	TRC_INFO( "RTT UDP AVG MS: " + CTool::to_string_precision(tempMeasurement.ping.avg / 1000.0, 3) );
 
 
 	Json::object jMeasurementResults;
@@ -252,9 +266,10 @@ void CCallback::rttUdpCallback(string cmd)
 	jMeasurementResults["packet_size"] = to_string(tempMeasurement.ping.packetsize);
 	jMeasurementResults["standard_deviation_ns"] = to_string(tempMeasurement.ping.standard_deviation_ns);
 	jMeasurementResults["peer"] = tempMeasurement.ping.servername;
+	jMeasurementResults["rtts"] = jRtts;
 	jMeasurementResults["progress"] = tempMeasurement.ping.measurement_phase_progress;
 
-	jMeasurementResultsRttUdp.push_back(jMeasurementResults);
+	jMeasurementResultsRttUdp = jMeasurementResults;
 }
 
 void CCallback::downloadCallback(string cmd)
@@ -387,7 +402,7 @@ void CCallback::downloadCallback(string cmd)
 	//Calculate Min, Avg, Max
 	CTool::calculateResults( tempMeasurement.download, 0.5, 0 );
 
-	TRC_INFO( ("DOWNLOAD: " + CTool::toString(tempMeasurement.download.avg )).c_str());
+	TRC_INFO( "DOWNLOAD AVG MBPS: " + CTool::to_string_precision(tempMeasurement.download.avg * 1e-6, 3) );
 
 	//measurement duration is given in seconds
 	tempMeasurement.download.measurement_phase_progress = tempMeasurement.download.duration_ns / (MEASUREMENT_DURATION * 1e9);
@@ -535,7 +550,7 @@ void CCallback::uploadCallback(string cmd)
 	//calculcate progress based on TIMER_DURATION to account for UPLOAD_ADDITIONAL_MEASUREMENT_DURATION required for server response receive
 	tempMeasurement.upload.measurement_phase_progress = (TIMER_DURATION - (TIMER_DURATION % 500000)) / (MEASUREMENT_DURATION * 1e6);
 
-	TRC_INFO( ("UPLOAD: " + CTool::toString(tempMeasurement.upload.avg )).c_str());
+	TRC_INFO( "UPLOAD AVG MBPS: " + CTool::to_string_precision(tempMeasurement.upload.avg * 1e-6, 3) );
 
 	Json::object jMeasurementResults = getMeasurementResults(tempMeasurement, tempMeasurement.upload, cmd);
 

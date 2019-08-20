@@ -4,9 +4,15 @@ PODS:
   - CocoaLumberjack (3.5.2):
     - CocoaLumberjack/Core (= 3.5.2)
   - CocoaLumberjack/Core (3.5.2)
+  - CodableJSON (1.1.4)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
+  - nntool-shared-swift (0.0.1):
+    - CodableJSON (~> 1.1.4)
+    - Repeat (~> 0.5.7)
+    - SwiftLint (~> 0.31.0)
+    - XCGLogger (~> 7.0.0)
   - ObjcExceptionBridging (1.0.1):
     - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
   - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
@@ -22,7 +28,9 @@ PODS:
   - QoSKit (0.0.1):
     - Alamofire (~> 4.8.2)
     - CocoaAsyncSocket (~> 7.6.3)
-    - XCGLogger (~> 7.0.0)
+    - nntool-shared-swift (~> 0.0.1)
+  - Repeat (0.5.7)
+  - SwiftLint (0.31.0)
   - XCGLogger (7.0.0):
     - XCGLogger/Core (= 7.0.0)
   - XCGLogger/Core (7.0.0):
@@ -31,6 +39,7 @@ PODS:
 DEPENDENCIES:
   - CocoaLumberjack (>= 3.4.2)
   - FMDB (>= 2.7.2)
+  - nntool-shared-swift (from `../nntool-shared-swift`)
   - PocketSocket (from `../PocketSocket`)
   - QoSKit (from `../qos-client-swift`)
 
@@ -39,11 +48,16 @@ SPEC REPOS:
     - Alamofire
     - CocoaAsyncSocket
     - CocoaLumberjack
+    - CodableJSON
     - FMDB
     - ObjcExceptionBridging
+    - Repeat
+    - SwiftLint
     - XCGLogger
 
 EXTERNAL SOURCES:
+  nntool-shared-swift:
+    :path: "../nntool-shared-swift"
   PocketSocket:
     :path: "../PocketSocket"
   QoSKit:
@@ -53,12 +67,16 @@ SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
+  CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  nntool-shared-swift: 7955a6c51917bcf2f42316eb259da095c80a7398
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   PocketSocket: 9c6867d66fb4f962af96b9b07f4b45bb561b2c2a
-  QoSKit: 08c162a7212e936aa9017f057550dde425faeb3f
+  QoSKit: d85bee1116e983af2b481d9cb3458ed71244ba41
+  Repeat: 73c5ee602aed8f3c7bf1aa12d4cd0d3dc3edea0a
+  SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: 835e91dfcd89a2a0ad0cf924eeb97fdbe93fa3bc
+PODFILE CHECKSUM: 6f53dcca099f580d26d49d9900cb8b2bf46341be
 
-COCOAPODS: 1.7.3
+COCOAPODS: 1.7.4

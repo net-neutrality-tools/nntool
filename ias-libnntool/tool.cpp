@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-18
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -197,7 +197,7 @@ int CTool::calculateResults(struct measurement_data &sMeasurement, double increm
 	double avgDouble			= 0;
 
 	#ifdef NNTOOL
-	vector<double> medianVector;
+		vector<double> medianVector;
 	#endif
 	
 	map<int, unsigned long long>::iterator AI;
@@ -214,8 +214,8 @@ int CTool::calculateResults(struct measurement_data &sMeasurement, double increm
 		sum +=  (*AI).second;
 
 		#ifdef NNTOOL
-		medianVector.push_back((*AI).second);
-		sumSq += (*AI).second * (*AI).second;
+			medianVector.push_back((*AI).second);
+			sumSq += (*AI).second * (*AI).second;
 		#endif
 
 		count += increment;
@@ -230,24 +230,26 @@ int CTool::calculateResults(struct measurement_data &sMeasurement, double increm
 		sMeasurement.max = max;
 
 		#ifdef NNTOOL
-		sMeasurement.duration_ns = count * 1000 * 1000 * 1000;
+			sMeasurement.duration_ns = count * 1000 * 1000 * 1000;
 
-		//calculate median
-        sort(medianVector.begin(), medianVector.end());
-        size_t samples = medianVector.size();
-        
-        if (samples%2 == 0)
-        {
-            sMeasurement.median_ns  = ((medianVector[samples/2-1] + medianVector[samples/2])/2) * 1000;
-        }
-        else
-        {
-            sMeasurement.median_ns  = medianVector[samples/2] * 1000;
-        }
+			sMeasurement.interim_values = medianVector;
 
-        //calculate population standard deviation
-        double variancePopulation = (double)sumSq / (double)count - avgDouble * avgDouble;
-        sMeasurement.standard_deviation_ns = sqrt(variancePopulation) * 1000;
+			//calculate median
+	        sort(medianVector.begin(), medianVector.end());
+	        size_t samples = medianVector.size();
+	        
+	        if (samples%2 == 0)
+	        {
+	            sMeasurement.median_ns  = ((medianVector[samples/2-1] + medianVector[samples/2])/2) * 1000;
+	        }
+	        else
+	        {
+	            sMeasurement.median_ns  = medianVector[samples/2] * 1000;
+	        }
+
+	        //calculate population standard deviation
+	        double variancePopulation = (double)sumSq / (double)count - avgDouble * avgDouble;
+	        sMeasurement.standard_deviation_ns = sqrt(variancePopulation) * 1000;
 		#endif
 	}
 	
@@ -671,4 +673,11 @@ void CTool::print_stacktrace()
 	free(symbollist);
 
 	#endif
+}
+
+string CTool::to_string_precision(double value, const int precision)
+{
+    std::ostringstream out;
+    out << std::fixed << std::setprecision(precision) << value;
+    return out.str();
 }

@@ -2,6 +2,7 @@ package at.alladin.nettest.nntool.android.app.workflow.measurement;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import at.alladin.nettest.nntool.android.app.view.AlladinTextView;
 import at.alladin.nettest.nntool.android.app.view.BottomMeasurementResultSummaryView;
 import at.alladin.nettest.nntool.android.app.view.CanvasArcDoubleGaugeWithLabels;
 import at.alladin.nettest.nntool.android.app.view.TopProgressBarView;
+import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
@@ -39,7 +41,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.M
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
  */
-public class SpeedFragment  extends Fragment implements ServiceConnection {
+public class SpeedFragment extends ActionBarFragment implements ServiceConnection {
 
     private final static String TAG = "SPEED_FRAGMENT";
 
@@ -93,7 +95,15 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
         getView().requestFocus();
         getView().setOnKeyListener((v, keyCode, event) -> {
 
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                AlertDialogUtil.showCancelDialog(getContext(), R.string.alert_cancel_measurement_title, R.string.alert_cancel_measurement_content,
+                        (dialog, which) -> {
+                            measurementService.stopSpeedMeasurement();
+                            ((MainActivity) getActivity()).navigateTo(WorkflowTarget.TITLE);
+                            dialog.cancel();
+                        },
+                            (dialog, which) -> dialog.cancel()
+                        );
                 return true;
             }
 
@@ -226,4 +236,13 @@ public class SpeedFragment  extends Fragment implements ServiceConnection {
         }
     };
 
+    @Override
+    public Integer getTitleStringId() {
+        return R.string.app_name;
+    }
+
+    @Override
+    public boolean showHelpButton() {
+        return false;
+    }
 }

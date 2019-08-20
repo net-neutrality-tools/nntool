@@ -20,20 +20,22 @@ import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.SendReportTask;
-import at.alladin.nettest.nntool.android.app.support.telephony.CellInfoWrapper;
 import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
 import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationCollector;
 import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
+import at.alladin.nettest.nntool.android.app.util.info.interfaces.CurrentInterfaceTraffic;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
+import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
 import at.alladin.nettest.nntool.android.speed.jni.JniSpeedMeasurementClient;
 import at.alladin.nettest.qos.QoSMeasurementClientControlAdapter;
@@ -43,8 +45,9 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.M
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.TimeBasedResultDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.TrafficDto;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.TaskDesc;
 
@@ -67,15 +70,29 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     public static String EXTRAS_KEY_SPEED_TASK_DESC = "speed_task_desc";
 
+    public static String EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE = "speed_task_client_ipv4_private";
+
+    public static String EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE = "speed_task_client_ipv6_private";
+
+    public static String EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PUBLIC = "speed_task_client_ipv4_public";
+
+    public static String EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC = "speed_task_client_ipv6_public";
+
     public static String EXTRAS_KEY_FOLLOW_UP_ACTIONS = "measurement_follow_up_actions";
+
+    public final static String IF_TRAFFIC_LIST_UPLOAD_TAG = "UPLOAD";
+
+    public final static String IF_TRAFFIC_LIST_DOWNLOAD_TAG = "DOWNLOAD";
+
+    public final static String IF_TRAFFIC_LIST_PING_TAG = "PING";
 
     final MeasurementServiceBinder binder = new MeasurementServiceBinder();
 
     final AtomicBoolean isBound = new AtomicBoolean(false);
 
-    private Long overallStartTime;
+    private Long overallStartTimeNs;
 
-    private Long startTime;
+    private Long subMeasurementStartTimeNs;
 
     private LocalDateTime startDateTime;
 
@@ -111,7 +128,6 @@ public class MeasurementService extends Service implements ServiceConnection {
         Log.d(TAG, "onCreate");
         final Intent serviceIntent = new Intent(this, InformationService.class);
         bindService(serviceIntent, this, Context.BIND_AUTO_CREATE);
-        informationCollector = new InformationCollector(new InformationProvider(getApplicationContext()));
     }
 
     @Override
@@ -153,25 +169,89 @@ public class MeasurementService extends Service implements ServiceConnection {
     public void startMeasurement(final Bundle options) {
         this.bundle = options;
         followUpActions = (ArrayList<MeasurementType>) options.getSerializable(EXTRAS_KEY_FOLLOW_UP_ACTIONS);
-        overallStartTime = System.nanoTime();
-        startTime = overallStartTime;
-        startDateTime = LocalDateTime.now(DateTimeZone.UTC);
+        subMeasurementStartTimeNs = System.nanoTime();
 
         final String speedTaskCollectorUrl = options.getString(EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL);
         final SpeedTaskDesc speedTaskDesc = (SpeedTaskDesc) options.getSerializable(EXTRAS_KEY_SPEED_TASK_DESC);
+        final String clientIpv4 = options.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE);
+        final String clientIpv6 = options.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE);
+
+        //if ipV6 is available, use it
+        if (clientIpv6 != null) {
+            speedTaskDesc.setUseIpV6(true);
+            speedTaskDesc.setClientIp(clientIpv6);
+        } else {
+            speedTaskDesc.setClientIp(clientIpv4);
+        }
 
         jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskDesc);
         jniSpeedMeasurementClient.setCollectorUrl(speedTaskCollectorUrl);
+
         jniSpeedMeasurementClient.addMeasurementFinishedListener(new JniSpeedMeasurementClient.MeasurementFinishedListener() {
             @Override
             public void onMeasurementFinished(JniSpeedMeasurementResult result, SpeedTaskDesc taskDesc) {
-                final SpeedMeasurementResult speedMeasurementResult = ResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
-                speedMeasurementResult.setRelativeStartTimeNs(overallStartTime);
+                final SpeedMeasurementResult speedMeasurementResult = SubMeasurementResultParseUtil.parseIntoSpeedMeasurementResult(result, taskDesc);
+                speedMeasurementResult.setRelativeStartTimeNs(overallStartTimeNs);
                 speedMeasurementResult.setStatus(StatusDto.FINISHED);
+
+                final Map<String, CurrentInterfaceTraffic> ifMap = informationCollector.getInterfaceTrafficMap();
+                if (ifMap != null && ifMap.size() > 0) {
+                    if (speedMeasurementResult.getConnectionInfo() == null) {
+                        speedMeasurementResult.setConnectionInfo(new ConnectionInfoDto());
+                    }
+
+                    final CurrentInterfaceTraffic ifUp = ifMap.get(MeasurementService.IF_TRAFFIC_LIST_UPLOAD_TAG);
+                    if (ifUp != null) {
+                        final TrafficDto trafficDto = new TrafficDto();
+                        trafficDto.setBytesRx(ifUp.getRxBytes());
+                        trafficDto.setBytesTx(ifUp.getTxBytes());
+                        speedMeasurementResult.getConnectionInfo().setAgentInterfaceUploadMeasurementTraffic(trafficDto);
+                    }
+
+                    final CurrentInterfaceTraffic ifDown = ifMap.get(MeasurementService.IF_TRAFFIC_LIST_DOWNLOAD_TAG);
+                    if (ifDown != null) {
+                        final TrafficDto trafficDto = new TrafficDto();
+                        trafficDto.setBytesRx(ifDown.getRxBytes());
+                        trafficDto.setBytesTx(ifDown.getTxBytes());
+                        speedMeasurementResult.getConnectionInfo().setAgentInterfaceDownloadMeasurementTraffic(trafficDto);
+                    }
+
+                    final CurrentInterfaceTraffic ifTotal = informationCollector.getAggregatedIfValues();
+                    if (ifTotal != null) {
+                        final TrafficDto trafficDto = new TrafficDto();
+                        trafficDto.setBytesRx(ifTotal.getRxBytes());
+                        trafficDto.setBytesTx(ifTotal.getTxBytes());
+                        speedMeasurementResult.getConnectionInfo().setAgentInterfaceTotalTraffic(trafficDto);
+                    }
+                }
+
                 Log.d(TAG, speedMeasurementResult.toString());
                 addSubMeasurementResult(speedMeasurementResult);
             }
         });
+
+        jniSpeedMeasurementClient.addMeasurementPhaseListener(new JniSpeedMeasurementClient.MeasurementPhaseListener() {
+            @Override
+            public void onMeasurementPhaseStarted(SpeedMeasurementState.MeasurementPhase startedPhase) {
+
+            }
+
+            @Override
+            public void onMeasurementPhaseFinished(SpeedMeasurementState.MeasurementPhase finishedPhase) {
+                switch (finishedPhase) {
+                    case PING:
+                        informationCollector.takeTrafficSnapshot(IF_TRAFFIC_LIST_PING_TAG);
+                        break;
+                    case UPLOAD:
+                        informationCollector.takeTrafficSnapshot(IF_TRAFFIC_LIST_UPLOAD_TAG);
+                        break;
+                    case DOWNLOAD:
+                        informationCollector.takeTrafficSnapshot(IF_TRAFFIC_LIST_DOWNLOAD_TAG);
+                        break;
+                }
+            }
+        });
+
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -185,20 +265,19 @@ public class MeasurementService extends Service implements ServiceConnection {
         });
     }
 
+    public void stopSpeedMeasurement () {
+        try {
+            jniSpeedMeasurementClient.stopMeasurement();
+        } catch (final Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void startQosMeasurement(final Bundle options) {
         //TODO: remove & replace
-        /*
-        ClientHolder client = ClientHolder.getInstance(getResources().getString(R.string.default_qos_control_host),
-                Integer.toString(getResources().getInteger(R.integer.default_qos_control_port)),
-                getResources().getIntArray(R.array.qos_tcp_test_port_list),
-                getResources().getIntArray(R.array.qos_udp_test_port_list),
-                getResources().getString(R.string.qos_echo_service_host),
-                getResources().getIntArray(R.array.qos_echo_service_tcp_ports),
-                getResources().getIntArray(R.array.qos_echo_service_udp_ports));
-                */
         this.bundle = options;
         followUpActions = (ArrayList<MeasurementType>) options.getSerializable(EXTRAS_KEY_FOLLOW_UP_ACTIONS);
-        startTime = System.nanoTime();
+        subMeasurementStartTimeNs = System.nanoTime();
 
         final List<TaskDesc> taskDescList = (List<TaskDesc>) options.getSerializable(EXTRAS_KEY_QOS_TASK_DESC_LIST);
         final String collectorUrl = options.getString(EXTRAS_KEY_QOS_TASK_COLLECTOR_URL);
@@ -213,7 +292,6 @@ public class MeasurementService extends Service implements ServiceConnection {
         final Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                //startMeasurement();
                 qosMeasurementClient.run();
             }
         });
@@ -229,6 +307,13 @@ public class MeasurementService extends Service implements ServiceConnection {
         if (intent != null) {
             //if this is the first action of the current total measurement start the listeners
             if (!isFollowUpAction.getAndSet(true)) {
+                if (informationCollector != null) {
+                    informationCollector.stop();
+                }
+                informationCollector = new InformationCollector(InformationProvider.createMeasurementDefault(getApplicationContext()));
+                startDateTime = LocalDateTime.now(DateTimeZone.UTC);
+                overallStartTimeNs = System.nanoTime();
+                informationCollector.setStartTimeNs(overallStartTimeNs);
                 informationCollector.start();
             }
             Log.d(TAG, "Got intent with action: '" + intent.getAction() + "'");
@@ -263,9 +348,16 @@ public class MeasurementService extends Service implements ServiceConnection {
     public boolean sendResults(final MainActivity mainActivity, final AtomicBoolean sendingResults) {
         if (!sendingResults.getAndSet(true)) {
             endDateTime = LocalDateTime.now(DateTimeZone.UTC);
-            isFollowUpAction.set(false);
-            //stop collecting information and allow new measurements to start as not followupaction
+            //stop collecting information and allow new measurements to start as non-followupaction
             informationCollector.stop();
+            isFollowUpAction.set(false);
+            if (bundle.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC) != null) {
+                informationCollector.setClientIpPublic(bundle.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC));
+                informationCollector.setClientIpPrivate(bundle.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE));
+            } else {
+                informationCollector.setClientIpPublic(bundle.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PUBLIC));
+                informationCollector.setClientIpPrivate(bundle.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE));
+            }
             final LmapReportDto reportDto = RequestUtil.prepareLmapReportForMeasurement(subMeasurementResultList, informationCollector, mainActivity);
             if (reportDto.getTimeBasedResult() == null) {
                 reportDto.setTimeBasedResult(new TimeBasedResultDto());
@@ -325,8 +417,8 @@ public class MeasurementService extends Service implements ServiceConnection {
      * @param result
      */
     public void addSubMeasurementResult(final SubMeasurementResult result) {
-        result.setRelativeStartTimeNs(startTime - overallStartTime);
-        result.setRelativeEndTimeNs(System.nanoTime() - overallStartTime);
+        result.setRelativeStartTimeNs(subMeasurementStartTimeNs - overallStartTimeNs);
+        result.setRelativeEndTimeNs(System.nanoTime() - overallStartTimeNs);
         subMeasurementResultList.add(result);
     }
 

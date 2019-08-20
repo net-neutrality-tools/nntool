@@ -58,6 +58,7 @@ public class TitleWithRecentResultFragment extends TitleFragment implements Serv
         bottomMeasurementResultSummaryView = v.findViewById(R.id.bottom_measurement_result_summary_view);
         if (recentSpeedMeasurementState != null) {
             setMeasurementStateInBottomView();
+            measurementRecentResultSelectorView.setMeasurementUuid(recentSpeedMeasurementState.getMeasurementUuid());
         }
         return v;
     }
@@ -107,6 +108,7 @@ public class TitleWithRecentResultFragment extends TitleFragment implements Serv
         if (bottomMeasurementResultSummaryView != null) {
             setMeasurementStateInBottomView();
             bottomMeasurementResultSummaryView.invalidate();
+            measurementRecentResultSelectorView.setMeasurementUuid(recentSpeedMeasurementState.getMeasurementUuid());
         }
 
     }

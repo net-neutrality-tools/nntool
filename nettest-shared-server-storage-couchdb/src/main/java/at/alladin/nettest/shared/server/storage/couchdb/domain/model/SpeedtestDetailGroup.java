@@ -103,6 +103,25 @@ public class SpeedtestDetailGroup {
 		@Expose
 		private String value;
 		
+		/**
+		 * If the entry has a share text, it will be added to the share text sent to the clients
+		 * An additional share priority may be provided to sort the share text as desired
+		 */
+		@JsonProperty
+		@SerializedName("share_text")
+		@Expose
+		private String shareText;
+		
+		/*
+		 * The order in which the corresponding share texts are assembled
+		 * Lower means earlier and ties are broken arbitrarily
+		 * If no value is provided, Integer.MAX will be assigned
+		 */
+		@JsonProperty
+		@SerializedName("share_priority")
+		@Expose
+		private Integer sharePriority;
+		
 		public String getTranslationKey() {
 			return translationKey;
 		}
@@ -143,6 +162,22 @@ public class SpeedtestDetailGroup {
 			this.value = value;
 		}
 		
+		public String getShareText() {
+			return shareText;
+		}
+
+		public void setShareText(String shareText) {
+			this.shareText = shareText;
+		}
+
+		public Integer getSharePriority() {
+			return sharePriority;
+		}
+
+		public void setSharePriority(Integer sharePriority) {
+			this.sharePriority = sharePriority;
+		}
+
 		@Override
 		public String toString() {
 			return "SpeedtestDetailGroupEntry [key=" + key + ", translationKey=" + translationKey + ", unit=" + unit

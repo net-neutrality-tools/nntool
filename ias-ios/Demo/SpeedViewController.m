@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-03-20
+ *      \date Last update: 2019-08-07
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -224,7 +224,6 @@
     self.speed.performRttMeasurement              = rtt;
     self.speed.performDownloadMeasurement         = download;
     self.speed.performUploadMeasurement           = upload;
-    self.speed.performRouteToClientLookup         = true;
     self.speed.performGeolocationLookup           = true;
     
     
@@ -261,7 +260,7 @@
         [class setObject:[NSNumber numberWithBool:false] forKey:@"default"];
         [class setObject:[NSNumber numberWithInt:4] forKey:@"streams"];
         [class setObject:[NSNumber numberWithInt:2048] forKey:@"frameSize"];
-        [classBounds setObject:[NSNumber numberWithDouble:0.01] forKey:@"lower"];
+        [classBounds setObject:[NSNumber numberWithDouble:0.00] forKey:@"lower"];
         [classBounds setObject:[NSNumber numberWithDouble:1.05] forKey:@"upper"];
         [class setObject:classBounds forKey:@"bounds"];
         [self.speed.downloadClasses addObject:class];
@@ -304,9 +303,10 @@
         [class setObject:[NSNumber numberWithBool:false] forKey:@"default"];
         [class setObject:[NSNumber numberWithInt:4] forKey:@"streams"];
         [class setObject:[NSNumber numberWithInt:2048] forKey:@"frameSize"];
-        [classBounds setObject:[NSNumber numberWithDouble:0.01] forKey:@"lower"];
+        [classBounds setObject:[NSNumber numberWithDouble:0.00] forKey:@"lower"];
         [classBounds setObject:[NSNumber numberWithDouble:1.05] forKey:@"upper"];
         [class setObject:classBounds forKey:@"bounds"];
+        [class setObject:[NSNumber numberWithInt:1] forKey:@"framesPerCall"];
         [self.speed.uploadClasses addObject:class];
         
         //ul default
@@ -314,10 +314,11 @@
         classBounds = [NSMutableDictionary new];
         [class setObject:[NSNumber numberWithBool:true] forKey:@"default"];
         [class setObject:[NSNumber numberWithInt:4] forKey:@"streams"];
-        [class setObject:[NSNumber numberWithInt:32768] forKey:@"frameSize"];
+        [class setObject:[NSNumber numberWithInt:65535] forKey:@"frameSize"];
         [classBounds setObject:[NSNumber numberWithDouble:0.95] forKey:@"lower"];
         [classBounds setObject:[NSNumber numberWithDouble:525] forKey:@"upper"];
         [class setObject:classBounds forKey:@"bounds"];
+        [class setObject:[NSNumber numberWithInt:2] forKey:@"framesPerCall"];
         [self.speed.uploadClasses addObject:class];
         
         //ul high
@@ -329,6 +330,7 @@
         [classBounds setObject:[NSNumber numberWithDouble:475] forKey:@"lower"];
         [classBounds setObject:[NSNumber numberWithDouble:1050] forKey:@"upper"];
         [class setObject:classBounds forKey:@"bounds"];
+        [class setObject:[NSNumber numberWithInt:4] forKey:@"framesPerCall"];
         [self.speed.uploadClasses addObject:class];
         
         //ul very high
@@ -340,27 +342,8 @@
         [classBounds setObject:[NSNumber numberWithDouble:950] forKey:@"lower"];
         [classBounds setObject:[NSNumber numberWithDouble:9000] forKey:@"upper"];
         [class setObject:classBounds forKey:@"bounds"];
+        [class setObject:[NSNumber numberWithInt:20] forKey:@"framesPerCall"];
         [self.speed.uploadClasses addObject:class];
-        
-        
-        /*
-         case 1:
-         {
-         self.speed.parallelStreamsUpload = [NSNumber numberWithInt:4];
-         self.speed.frameSizeUpload = [NSNumber numberWithInt:32768];
-         self.speed.uploadThroughputLowerBoundMbps = [NSNumber numberWithDouble:0.95];
-         self.speed.uploadThroughputUpperBoundMbps = [NSNumber numberWithInt:525];
-         break;
-         }
-         case 2:
-         {
-         self.speed.parallelStreamsUpload = [NSNumber numberWithInt:4];
-         self.speed.frameSizeUpload = [NSNumber numberWithInt:65535];
-         self.speed.uploadThroughputLowerBoundMbps = [NSNumber numberWithInt:475];
-         self.speed.uploadThroughputUpperBoundMbps = [NSNumber numberWithInt:1050];
-         break;
-         }
-         */
     }
     
     [self.speed measurementStart];
@@ -415,11 +398,12 @@
     {
         DDLogError(@"Measurement failed with Error: %@", [error.userInfo objectForKey:@"NSLocalizedDescription"]);
         self.statusLabel.text = [error.userInfo objectForKey:@"NSLocalizedDescription"];
-        return;
     }
-    
-    DDLogInfo(@"Measurement successful");
-    self.statusLabel.text = @"Measurement successful";
+    else
+    {
+        DDLogInfo(@"Measurement successful");
+        self.statusLabel.text = @"Measurement successful";
+    }
     
     self.loadButton.enabled         = true;
     self.stopButton.enabled         = false;

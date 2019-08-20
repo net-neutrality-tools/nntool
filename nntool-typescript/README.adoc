@@ -1,0 +1,57 @@
+= Website
+
+== Prerequisites
+
+- node >= v8.0.0
+- npm v6
+
+== Setup
+
+The following steps are needed to setup the development environment:
+
+- install dependencies using `npm install`
+- build IAS module (automatically done when using `npm run ...` commands)
+- serve or build website
+
+[source, bash]
+----
+npm install
+npm start # runs npm build:ias and ng serve
+----
+
+== Development
+
+The website is based on Angular 8 and is built using Angular CLI.
+
+TODO: add documentation for nx, xplat, etc.
+
+=== Commands
+
+==== npm
+
+===== build:ias
+
+Run `npm run build:ias` to build the IAS module.
+
+==== ng
+
+===== ng serve
+
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+===== build
+
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+
+===== Running unit tests
+
+Run `ng test` to execute the unit tests via https://karma-runner.github.io[Karma].
+
+===== Running end-to-end tests
+
+Run `ng e2e` to execute the end-to-end tests via http://www.protractortest.org/[Protractor].
+
+=== Electron desktop app
+
+TODO: add documentation for desktop app
+

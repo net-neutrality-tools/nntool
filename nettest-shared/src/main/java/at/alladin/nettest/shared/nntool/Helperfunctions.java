@@ -54,7 +54,7 @@ import com.google.common.net.InetAddresses;
  *
  */
 public abstract class Helperfunctions {
-    
+		
 	/**
 	 * 
 	 * @param secret
@@ -318,6 +318,31 @@ public abstract class Helperfunctions {
         }
     }
     
+    public static Integer getIpVersion(final String ipAddress) {
+    	if (ipAddress == null) {
+    		return null;
+    	}
+    	
+    	try {
+    		final InetAddress inetAddress = InetAddress.getByName(ipAddress);
+            if (inetAddress instanceof Inet4Address) {
+                return 4;
+            } 
+            else if (inetAddress instanceof Inet6Address) {
+                return 6;
+            } 
+            else {
+                return null;
+            }
+
+    	}
+    	catch (final Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return null;
+    }
+    
     /**
      * 
      * @param inetAddress
@@ -352,7 +377,7 @@ public abstract class Helperfunctions {
      * @param publicAdr
      * @return
      */
-    public static String getNatType(final InetAddress localAdr, final InetAddress publicAdr) {
+    public static String getNatTypeString(final InetAddress localAdr, final InetAddress publicAdr) {
         if (localAdr == null || publicAdr == null) {
             return "illegal_ip";
         }
@@ -377,7 +402,7 @@ public abstract class Helperfunctions {
             return "illegal_ip";
         }
     }
-    
+
     /**
      * 
      * @param adr
