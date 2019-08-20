@@ -1168,7 +1168,7 @@ function WSControl()
     {
         report.duration_ns              = wsRttValues.duration;
         report.average_ns               = wsRttValues.avg;
-        report.median_ms                = wsRttValues.med;
+        report.median_ns                = wsRttValues.med;
         report.min_ns                   = wsRttValues.min;
         report.max_ns                   = wsRttValues.max;
         report.num_sent                 = wsRttValues.requests;
