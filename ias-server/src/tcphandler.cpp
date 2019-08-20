@@ -875,16 +875,16 @@ void CTcpHandler::sendRoundTripTimeResponse(noPollCtx *ctx, noPollConn *conn)
     {
         Json rttReport = Json::object{
             {"cmd",         "rttReport"},
-            {"avg",         to_string_precision(rttAvg / 1000, 3)},
-            {"med",         rttMed / 1000},  
-            {"min",         rttMin / 1000},
-            {"max",         rttMax / 1000},
+            {"avg",         to_string_precision(rttAvg, 3)},
+            {"med",         rttMed},  
+            {"min",         rttMin},
+            {"max",         rttMax},
             {"req",         rttRequestsSend - 1},
             {"rep",         rttReplies},
             {"err",         rttErrors},
             {"mis",         rttMissing},
             {"pSz",         rttPacketsize},
-            {"std_dev_pop", to_string_precision(rttStdDevPop / 1000, 3)},
+            {"std_dev_pop", to_string_precision(rttStdDevPop, 3)},
             {"srv",         hostname},
         };
 
