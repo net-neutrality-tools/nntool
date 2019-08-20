@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-07
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -33,7 +33,7 @@ vector<string>      allowedProtocols;
 unsigned long long  tcpTimeout;
 string              sClientIp;
 
-string              shared_secret;
+string              authentication_secret;
 
 string              hostname;
 
@@ -118,13 +118,13 @@ CTcpHandler::CTcpHandler(int nSocket, string nClientIp, bool nTlsSocket, sockadd
     
     sClientIp                   = nClientIp;
     
-    if (::CONFIG["shared_secret"].string_value().compare("") != 0)
+    if (::CONFIG["authentication"]["secret"].string_value().compare("") != 0)
     {
-        shared_secret = ::CONFIG["shared_secret"].string_value();
+        authentication_secret   = ::CONFIG["authentication"]["secret"].string_value();
     }
     else
     {
-        shared_secret           = "default_shared_secret";
+        authentication_secret   = "default_authentication_secret";
     }
 
     if (::CONFIG["hostname"].string_value().compare("") != 0)
@@ -870,22 +870,33 @@ void CTcpHandler::setRoundTripTimeKPIs()
 
 void CTcpHandler::sendRoundTripTimeResponse(noPollCtx *ctx, noPollConn *conn)
 {
+    Json::array jRtts;
+
+    for (double rtt : rttVector)
+    {
+        Json jRtt = Json::object{
+            {"rtt_ns", rtt},
+        };
+        jRtts.push_back(jRtt);
+    }
+
     //only send the first, then every second and the last RTT Report
     if (((rttRequestsSend-1)%2 == 1) || (rttRequestsSend == rttRequests))
     {
         Json rttReport = Json::object{
             {"cmd",         "rttReport"},
-            {"avg",         to_string_precision(rttAvg / 1000, 3)},
-            {"med",         rttMed / 1000},  
-            {"min",         rttMin / 1000},
-            {"max",         rttMax / 1000},
+            {"avg",         CTool::to_string_precision(rttAvg, 3)},
+            {"med",         rttMed},  
+            {"min",         rttMin},
+            {"max",         rttMax},
             {"req",         rttRequestsSend - 1},
             {"rep",         rttReplies},
             {"err",         rttErrors},
             {"mis",         rttMissing},
             {"pSz",         rttPacketsize},
-            {"std_dev_pop", to_string_precision(rttStdDevPop / 1000, 3)},
+            {"std_dev_pop", CTool::to_string_precision(rttStdDevPop, 3)},
             {"srv",         hostname},
+            {"rtts",        jRtts},
         };
 
         nopoll_conn_send_text(conn, rttReport.dump().c_str(), rttReport.dump().length());
@@ -1061,23 +1072,23 @@ unsigned long long CTcpHandler::formatCurrentTime(unsigned long long endTime, un
 
 bool CTcpHandler::checkAuth(string authToken, string authTimestamp, string handler)
 {
-	/*
+    if (!::CONFIG["authentication"]["enabled"].bool_value())
+    {
+        TRC_WARN(handler + " handler: authentication deactivated");
+        return true;
+    }
+
     long long currentTimestamp = CTool::get_timestamp();
     long long requestedTimestamp = CTool::toLL(authTimestamp);
     
-    if ((currentTimestamp - requestedTimestamp) > 120000000)
+    //check if authentication is older dan allow maximum
+    if ( ((currentTimestamp - requestedTimestamp) > (AUTHENTICATION_MAX_AGE * 1e6)) || ((currentTimestamp - requestedTimestamp) < 0) )
     {
         TRC_WARN("WebSocket handler: authentication failed: token expired: " + to_string((currentTimestamp - requestedTimestamp)));
         return false;
     }
-    
-    if ((currentTimestamp - requestedTimestamp) < 0)
-    {
-        TRC_WARN("WebSocket handler: authentication failed: token expired: " + to_string((currentTimestamp - requestedTimestamp)));
-        return false;
-    }
-    
-    string authTokenComputed = sha1(authTimestamp + shared_secret);
+
+    string authTokenComputed = sha1(authTimestamp + authentication_secret);
     
     TRC_DEBUG("WebSocket handler: computed token:       \"" + authTokenComputed + "\"");
     
@@ -1086,7 +1097,6 @@ bool CTcpHandler::checkAuth(string authToken, string authTimestamp, string handl
         TRC_WARN("WebSocket handler: authentication failed: token mismatch");
         return false;
     }
-	*/
     
     TRC_DEBUG(handler + " handler: authentication successful");
     return true;
@@ -1122,11 +1132,4 @@ void CTcpHandler::printTcpMetrics()
                 "   tcpi_rcv_mss:           " + to_string(tcp_info.tcpi_rcv_mss) + ""
                 );
     }
-}
-
-string CTcpHandler::to_string_precision(double value, const int precision)
-{
-    std::ostringstream out;
-    out << std::fixed << std::setprecision(precision) << value;
-    return out.str();
 }

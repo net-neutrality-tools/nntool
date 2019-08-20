@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-18
+ *      \date Last update: 2019-08-19
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -43,7 +43,7 @@ CTcpServer::CTcpServer(int nTargetPort, int nTargetPortTraceroute, bool nTlsSock
     mTargetPortTraceroute 	= nTargetPortTraceroute;
     mTlsSocket  			= nTlsSocket;
 	
-    mSocket                 = std::make_unique<CConnection>();
+    mConnection             = std::make_unique<CConnection>();
 }
 
 //! \brief
@@ -58,7 +58,7 @@ int CTcpServer::run()
     struct sockaddr_in6 client;
     unsigned int clientlen = sizeof(client);
 
-    if ((mSock = mSocket->tcp6SocketServer(mTargetPort)) == 1)
+    if ((mSock = mConnection->tcp6SocketServer(mTargetPort)) == 1)
     {
         TRC_CRIT("Socket creation failed - Could not establish connection on target Port " + to_string(mTargetPort));
         return EXIT_FAILURE;
@@ -97,13 +97,13 @@ int CTcpServer::run()
             if (mTargetPort != mTargetPortTraceroute)
             {
             	//start tcp handler
-	            CTcpHandler *pTcpHandler = new CTcpHandler(nSocket, ip, mTlsSocket, &client);
+                std::unique_ptr<CTcpHandler> pTcpHandler = std::make_unique<CTcpHandler>( nSocket, ip, mTlsSocket, &client );
             	pTcpHandler->handle_tcp();
             }
             else
             {
             	//start tcp traceroute handler
-            	CTcpTracerouteHandler *pTcpTracerouteHandler = new CTcpTracerouteHandler(nSocket, ip);
+            	std::unique_ptr<CTcpTracerouteHandler> pTcpTracerouteHandler = std::make_unique<CTcpTracerouteHandler>(nSocket, ip, mTlsSocket );
             	pTcpTracerouteHandler->handle_tcp_traceroute();
             }
 

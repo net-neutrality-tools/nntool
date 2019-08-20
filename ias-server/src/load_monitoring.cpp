@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-07
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -46,11 +46,6 @@ int CLoadMonitoring::run()
     {
         nBandwidthFree = ::CONFIG["load"]["monitoring"]["bandwidth"]["bits_free"].int_value();
     }
-
-    if (::CONFIG["load"]["balancer"]["enabled"].bool_value())
-    {
-        balancer = true;
-    }
     
     txBytes_traffic     = 0;
     txPackets_traffic   = 0;
@@ -65,8 +60,20 @@ int CLoadMonitoring::run()
     
     if (getInterfaceMetrics(interface, true) != 0)
     {
-        TRC_CRIT("Load Monitoring: configured interface " + interface + "not found");
+        TRC_CRIT("Load Monitoring: configured interface " + interface + " not found");
         return -1;
+    }
+
+    if (::CONFIG["load"]["balancer"]["enabled"].bool_value())
+    {
+        balancer = true;
+
+        CLoadBalancing *loadBalancing = new CLoadBalancing(&jLoad);
+
+        if (loadBalancing->createThread() != 0)
+        {
+            TRC_ERR("Error: Failure while creating Load Balancing Thread");
+        }
     }
 
     while(RUNNING)
@@ -232,38 +239,37 @@ int CLoadMonitoring::getInterfaceMetrics(string interface, bool mem)
     return interfaceFound;
 }
 
-
 void CLoadMonitoring::setBalancerMetrics()
 {
-    //TRC_DEBUG("OVERLOADED: " + to_string(OVERLOADED));
+    pthread_mutex_lock(&mutexLoad);
+    
+        jLoad["timestamp"] = to_string(CTool::get_timestamp_sec());
+        jLoad["timezone"] = to_string(CTool::get_timestamp_offset());
+        jLoad["overloaded"] = OVERLOADED;
 
-    jLoad["timestamp"] = to_string(CTool::get_timestamp_sec());
-    jLoad["timezone"] = to_string(CTool::get_timestamp_offset());
-    jLoad["overloaded"] = OVERLOADED;
+        Json::object jTx;
+        jTx["pps"] = to_string(txPackets_rate);
+        jTx["bps"] = to_string(txBytes_rate * 8);
 
-    Json::object jTx;
-    jTx["pps"] = to_string(txPackets_rate);
-    jTx["bps"] = to_string(txBytes_rate * 8);
+        Json::object jRx;
+        jRx["pps"] = to_string(rxPackets_rate);
+        jRx["bps"] = to_string(rxBytes_rate * 8);
 
-    Json::object jRx;
-    jRx["pps"] = to_string(rxPackets_rate);
-    jRx["bps"] = to_string(rxBytes_rate * 8);
+        Json::object jMem;
+        jMem["total"] = to_string(mem_total * 1024);
+        jMem["free"] = to_string(mem_free * 1024);
+        jMem["buffers"] = to_string(mem_buffers * 1024);
+        jMem["cached"] = to_string(mem_cached * 1024);
 
-    Json::object jMem;
-    jMem["total"] = to_string(mem_total * 1024);
-    jMem["free"] = to_string(mem_free * 1024);
-    jMem["buffers"] = to_string(mem_buffers * 1024);
-    jMem["cached"] = to_string(mem_cached * 1024);
+        Json::object jCpu;
+        jCpu["1"] = to_string(cpu_usage1);
+        jCpu["5"] = to_string(cpu_usage5);
+        jCpu["15"] = to_string(cpu_usage15);
 
-    Json::object jCpu;
-    jCpu["1"] = to_string(cpu_usage1);
-    jCpu["5"] = to_string(cpu_usage5);
-    jCpu["15"] = to_string(cpu_usage15);
+        jLoad["tx_rates"] = jTx;
+        jLoad["rx_rates"] = jRx;
+        jLoad["mem_bytes"] = jMem;
+        jLoad["cpu_avg"] = jCpu;
 
-    jLoad["tx_rates"] = jTx;
-    jLoad["rx_rates"] = jRx;
-    jLoad["mem_bytes"] = jMem;
-    jLoad["cpu_avg"] = jCpu;
-
-    //TRC_DEBUG(Json(jLoad).dump());
+    pthread_mutex_unlock(&mutexLoad);
 }

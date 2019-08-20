@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-07
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -161,7 +161,8 @@ function WSControl()
         missing:            undefined,
         packetsize:         undefined,
         stDevPop:           undefined,
-        server:             undefined
+        server:             undefined,
+        rtts:               undefined
     };
 
     var wsDownloadValues =
@@ -1081,6 +1082,7 @@ function WSControl()
             console.log(finishString + 'RTT Packet Size:        ' + wsRttValues.packetsize);
             console.log(finishString + 'RTT Standard Deviation: ' + wsRttValues.stDevPop + ' ns');
             console.log(finishString + 'RTT Peer:               ' + wsRttValues.server);
+            console.log(finishString + 'RTT single results:     ' + JSON.stringify(wsRttValues.rtts));
         }
         else if (logReports)
         {
@@ -1166,7 +1168,7 @@ function WSControl()
     {
         report.duration_ns              = wsRttValues.duration;
         report.average_ns               = wsRttValues.avg;
-        report.median_ms                = wsRttValues.med;
+        report.median_ns                = wsRttValues.med;
         report.min_ns                   = wsRttValues.min;
         report.max_ns                   = wsRttValues.max;
         report.num_sent                 = wsRttValues.requests;
@@ -1175,6 +1177,7 @@ function WSControl()
         report.num_missing              = wsRttValues.missing;
         report.packet_size              = wsRttValues.packetsize;
         report.standard_deviation_ns    = wsRttValues.stDevPop;
+        report.rtts                     = wsRttValues.rtts;
 
         if (typeof wsRttValues.server !== 'undefined')
         {
