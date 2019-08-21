@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-03
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -55,7 +55,6 @@ class CTcpHandler
         static unsigned long long formatCurrentTime     (unsigned long long endTime, unsigned long long currentTime);
         static bool checkAuth                           (string authToken, string authTimestamp, string handler);
         static void printTcpMetrics                     ();
-        static string to_string_precision(double value, const int precision);
 };
 
 #endif

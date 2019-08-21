@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-12
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -33,7 +33,7 @@ vector<string>      allowedProtocols;
 unsigned long long  tcpTimeout;
 string              sClientIp;
 
-string              shared_secret;
+string              authentication_secret;
 
 string              hostname;
 
@@ -82,6 +82,8 @@ string              certDir;
 bool                connectionIsValidWebSocket;
 bool                connectionIsValidHttp;
 
+bool                overloadSignaled;
+
 
 
 
@@ -116,13 +118,13 @@ CTcpHandler::CTcpHandler(int nSocket, string nClientIp, bool nTlsSocket, sockadd
     
     sClientIp                   = nClientIp;
     
-    if (::CONFIG["shared_secret"].string_value().compare("") != 0)
+    if (::CONFIG["authentication"]["secret"].string_value().compare("") != 0)
     {
-        shared_secret = ::CONFIG["shared_secret"].string_value();
+        authentication_secret   = ::CONFIG["authentication"]["secret"].string_value();
     }
     else
     {
-        shared_secret           = "default_shared_secret";
+        authentication_secret   = "default_authentication_secret";
     }
 
     if (::CONFIG["hostname"].string_value().compare("") != 0)
@@ -173,6 +175,8 @@ CTcpHandler::CTcpHandler(int nSocket, string nClientIp, bool nTlsSocket, sockadd
 
     connectionIsValidWebSocket  = false;
     connectionIsValidHttp       = false;
+
+    overloadSignaled            = false;
 }
 
 
@@ -289,7 +293,8 @@ int CTcpHandler::websocket_open_handler(noPollCtx *ctx, noPollConn *conn, noPoll
     CTool::tokenize(sProtocol, requestestedProtocols, delimiter);
     
     bool protocolAllowed = false;
-    
+    bool overloadCheck = false;
+
     string acceptedProtocol;
     
     for (vector<string>::iterator itAllowedProtocols = allowedProtocols.begin(); itAllowedProtocols != allowedProtocols.end(); ++itAllowedProtocols)
@@ -301,17 +306,23 @@ int CTcpHandler::websocket_open_handler(noPollCtx *ctx, noPollConn *conn, noPoll
             {
                 if (requestestedProtocols.size() > 2)
                 {
-                    acceptedProtocol        = requestestedProtocols.at(0);
-                    string authToken        = requestestedProtocols.at(1);
-                    string authTimestamp    = requestestedProtocols.at(2);
-                    TRC_DEBUG("WebSocket handler: requested protocol:   			\"" + requestedProtocol + "\"");
+                    int i = 0;
+                    acceptedProtocol = requestestedProtocols.at(i);
+                    if (requestestedProtocols.at(i+1).compare("overload") == 0)
+                    {
+                        i++;
+                        overloadCheck = true;
+                    }
+                    string authToken        = requestestedProtocols.at(i+1);
+                    string authTimestamp    = requestestedProtocols.at(i+2);
+                    TRC_DEBUG("WebSocket handler: requested protocol:               \"" + requestedProtocol + "\"");
                     TRC_DEBUG("WebSocket handler: requested token:                  \"" + authToken + "\"");
-                    TRC_DEBUG("WebSocket handler: requested timestamp:  			\"" + authTimestamp + "\"");
+                    TRC_DEBUG("WebSocket handler: requested timestamp:              \"" + authTimestamp + "\"");
 					
-					if (acceptedProtocol.compare("download") == 0 && requestestedProtocols.size() > 3)
+					if (acceptedProtocol.compare("download") == 0 && ( (i == 0 && requestestedProtocols.size() > 3) || (i == 1 && requestestedProtocols.size() > 4) ))
 					{
-						downloadFrameSize = atoi(requestestedProtocols.at(3).c_str());
-						TRC_DEBUG("WebSocket handler: requested download frame size:	\"" + to_string(downloadFrameSize) + "\"");
+						downloadFrameSize = atoi(requestestedProtocols.at(i+3).c_str());
+						TRC_DEBUG("WebSocket handler: requested download frame size:      \"" + to_string(downloadFrameSize) + "\"");
 					}
                 
                     protocolAllowed = checkAuth(authToken, authTimestamp, "WebSocket");
@@ -324,15 +335,25 @@ int CTcpHandler::websocket_open_handler(noPollCtx *ctx, noPollConn *conn, noPoll
     
     if (protocolAllowed)
     {
-        nopoll_conn_set_accepted_protocol(conn, acceptedProtocol.c_str());
-        TRC_DEBUG("WebSocket handler: requested protocol: \"" + acceptedProtocol + "\" is allowed");
         connectionIsValidWebSocket = true;
+        if (overloadCheck && OVERLOADED)
+        {
+            nopoll_conn_set_accepted_protocol(conn, "overload");
+            TRC_WARN("WebSocket handler: peer overloaded");
+
+            overloadSignaled = true;
+        }
+        else
+        {
+            nopoll_conn_set_accepted_protocol(conn, acceptedProtocol.c_str());
+            TRC_DEBUG("WebSocket handler: requested protocol: \"" + acceptedProtocol + "\" is allowed");
+        }
     }
     else if (!protocolAllowed)
     {
-        TRC_ERR("WebSocket handler: requested protocol: \"" + sProtocol + "\" is not allowed");
+        TRC_ERR("WebSocket handler: requested protocol: \"" + sProtocol + "\" is not allowed or authorization failed");
 
-        char response[] = HTTP_BAD_REQUEST;
+        char response[] = HTTP_FORBIDDEN;
         int responseSize = strlen(response);
 
         nopoll_conn_default_send(conn, response, responseSize);
@@ -349,6 +370,11 @@ int CTcpHandler::websocket_ready_handler(noPollCtx *ctx, noPollConn *conn, noPol
     TRC_DEBUG("WebSocket handler: ready for IP: " + sClientIp + " on Port: " + string(nopoll_conn_port(conn)));
     
     string sProtocol = string(nopoll_conn_get_accepted_protocol(conn));
+
+    if (overloadSignaled)
+    {
+        return 0;
+    }
 	
     if (sProtocol.compare("rtt") == 0)
     {
@@ -424,6 +450,7 @@ int CTcpHandler::handle_http(Json::object http_header_values, noPollCtx *ctx, no
     CTool::tokenize(cookie, cookies, delimiter);
 
     bool auth = false;
+    bool overloadCheck = false;
 
     if (cookies.size() > 1)
     {
@@ -437,6 +464,10 @@ int CTcpHandler::handle_http(Json::object http_header_values, noPollCtx *ctx, no
             vector<string> cookieVector;
             CTool::tokenize(cookie, cookieVector, delimiter);
             
+            if (cookieVector.at(0).compare("overload") == 0)
+            {
+                overloadCheck = true;
+            }
             if (cookieVector.at(0).compare("tk") == 0)
             {
                 authToken = cookieVector.at(1);
@@ -455,9 +486,28 @@ int CTcpHandler::handle_http(Json::object http_header_values, noPollCtx *ctx, no
         
         if (auth)
         {
-            TRC_DEBUG("HTTP handler: requested protocol: \"HTTP " + http_header_values["http_method"].string_value() + "\" is allowed");
             connectionIsValidHttp = true;
             nopoll_conn_set_http_on(conn, true);
+
+            if (overloadCheck && OVERLOADED)
+            {
+                TRC_WARN("HTTP handler: peer overloaded");
+
+                char response[] = HTTP_BANDWIDTH_LIMIT_EXCEEDED;
+                int responseSize = strlen(response);
+
+                nopoll_conn_default_send(conn, response, responseSize);
+
+                overloadSignaled = true;
+
+                nopoll_conn_close(conn);
+                
+                TRC_DEBUG("Socket: Connection Shutdown for Client IP: " + sClientIp);
+
+                return 0;
+            }
+
+            TRC_DEBUG("HTTP handler: requested protocol: \"HTTP " + http_header_values["http_method"].string_value() + "\" is allowed");
 
             TRC_DEBUG("HTTP handler: ready for IP: " + sClientIp + " on Port: " + string(nopoll_conn_port(conn)));
 
@@ -499,9 +549,9 @@ int CTcpHandler::handle_http(Json::object http_header_values, noPollCtx *ctx, no
         }
         else if (!auth)
         {
-            TRC_ERR("HTTP handler: requested protocol: \"HTTP " + http_header_values["http_method"].string_value() + "\" is not allowed");
+            TRC_ERR("HTTP handler: requested protocol: \"HTTP " + http_header_values["http_method"].string_value() + "\" is not allowed or authorization failed");
 
-            char response[] = HTTP_BAD_REQUEST;
+            char response[] = HTTP_FORBIDDEN;
             int responseSize = strlen(response);
 
             nopoll_conn_default_send(conn, response, responseSize);
@@ -820,22 +870,33 @@ void CTcpHandler::setRoundTripTimeKPIs()
 
 void CTcpHandler::sendRoundTripTimeResponse(noPollCtx *ctx, noPollConn *conn)
 {
+    Json::array jRtts;
+
+    for (double rtt : rttVector)
+    {
+        Json jRtt = Json::object{
+            {"rtt_ns", rtt},
+        };
+        jRtts.push_back(jRtt);
+    }
+
     //only send the first, then every second and the last RTT Report
     if (((rttRequestsSend-1)%2 == 1) || (rttRequestsSend == rttRequests))
     {
         Json rttReport = Json::object{
             {"cmd",         "rttReport"},
-            {"avg",         to_string_precision(rttAvg / 1000, 3)},
-            {"med",         rttMed / 1000},  
-            {"min",         rttMin / 1000},
-            {"max",         rttMax / 1000},
+            {"avg",         CTool::to_string_precision(rttAvg, 3)},
+            {"med",         rttMed},  
+            {"min",         rttMin},
+            {"max",         rttMax},
             {"req",         rttRequestsSend - 1},
             {"rep",         rttReplies},
             {"err",         rttErrors},
             {"mis",         rttMissing},
             {"pSz",         rttPacketsize},
-            {"std_dev_pop", to_string_precision(rttStdDevPop / 1000, 3)},
+            {"std_dev_pop", CTool::to_string_precision(rttStdDevPop, 3)},
             {"srv",         hostname},
+            {"rtts",        jRtts},
         };
 
         nopoll_conn_send_text(conn, rttReport.dump().c_str(), rttReport.dump().length());
@@ -1011,23 +1072,23 @@ unsigned long long CTcpHandler::formatCurrentTime(unsigned long long endTime, un
 
 bool CTcpHandler::checkAuth(string authToken, string authTimestamp, string handler)
 {
-	/*
+    if (!::CONFIG["authentication"]["enabled"].bool_value())
+    {
+        TRC_WARN(handler + " handler: authentication deactivated");
+        return true;
+    }
+
     long long currentTimestamp = CTool::get_timestamp();
     long long requestedTimestamp = CTool::toLL(authTimestamp);
     
-    if ((currentTimestamp - requestedTimestamp) > 120000000)
+    //check if authentication is older dan allow maximum
+    if ( ((currentTimestamp - requestedTimestamp) > (AUTHENTICATION_MAX_AGE * 1e6)) || ((currentTimestamp - requestedTimestamp) < 0) )
     {
         TRC_WARN("WebSocket handler: authentication failed: token expired: " + to_string((currentTimestamp - requestedTimestamp)));
         return false;
     }
-    
-    if ((currentTimestamp - requestedTimestamp) < 0)
-    {
-        TRC_WARN("WebSocket handler: authentication failed: token expired: " + to_string((currentTimestamp - requestedTimestamp)));
-        return false;
-    }
-    
-    string authTokenComputed = sha1(authTimestamp + shared_secret);
+
+    string authTokenComputed = sha1(authTimestamp + authentication_secret);
     
     TRC_DEBUG("WebSocket handler: computed token:       \"" + authTokenComputed + "\"");
     
@@ -1036,7 +1097,6 @@ bool CTcpHandler::checkAuth(string authToken, string authTimestamp, string handl
         TRC_WARN("WebSocket handler: authentication failed: token mismatch");
         return false;
     }
-	*/
     
     TRC_DEBUG(handler + " handler: authentication successful");
     return true;
@@ -1072,11 +1132,4 @@ void CTcpHandler::printTcpMetrics()
                 "   tcpi_rcv_mss:           " + to_string(tcp_info.tcpi_rcv_mss) + ""
                 );
     }
-}
-
-string CTcpHandler::to_string_precision(double value, const int precision)
-{
-    std::ostringstream out;
-    out << std::fixed << std::setprecision(precision) << value;
-    return out.str();
 }

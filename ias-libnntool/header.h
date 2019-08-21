@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-05-20
+ *      \date Last update: 2019-08-19
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -57,6 +57,7 @@
 #include <ifaddrs.h>
 
 #include <cmath>
+#include <dirent.h>
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
@@ -99,6 +100,31 @@
 #define TRC_WARN(s)   CTrace::getInstance().logWarn(s)
 #define TRC_ERR(s)    CTrace::getInstance().logErr(s)
 #define TRC_CRIT(s)   CTrace::getInstance().logCritical(s)
+
+
+//http status codes
+#define HTTP_CONTINUE 					"HTTP/1.1 100 Continue\r\n\r\n"
+#define HTTP_OK 						"HTTP/1.1 200 OK\r\n\r\n"
+#define HTTP_BAD_REQUEST				"HTTP/1.1 400 Bad Request\r\n\r\n"
+#define HTTP_FORBIDDEN					"HTTP/1.1 403 Forbidden\r\n\r\n"
+#define HTTP_BANDWIDTH_LIMIT_EXCEEDED	"HTTP/1.1 509 Bandwidth Limit Exceeded\r\n\r\n"
+
+
+//http header fields
+#define HTTP_GET						"GET / HTTP/1.1"
+#define HTTP_GET_DATA					"GET /data.img"
+#define HTTP_POST 						"POST / HTTP/1.1"
+#define HTTP_POST_DATA 					"POST /data.img"
+#define HTTP_OPTIONS 					"OPTIONS / HTTP/1.1"
+#define HTTP_CONTENT_LENGTH				"Content-Length:"
+#define HTTP_HOST 						"Host:"
+#define HTTP_ACCESS_METHOD				"Access-Control-Request-Method:"
+#define HTTP_ACCESS_HEADERS				"Access-Control-Request-Headers:"
+#define HTTP_ORIGIN						"Origin:"
+#define HTTP_CONNECTION					"Connection:"
+#define HTTP_COOKIE						"Cookie"
+#define HTTP_DATA						"/data.img"
+#define HTTP_USER_AGENT					"User-Agent"
 
 
 extern bool DEBUG;

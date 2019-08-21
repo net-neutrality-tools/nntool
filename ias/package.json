@@ -20,6 +20,7 @@
     "karma-generic-preprocessor": "^1.1.1",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "~1.4.0",
+    "replace-in-file": "^4.1.1",
     "uglify-es": "~3.3.9"
   }
 }

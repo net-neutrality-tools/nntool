@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-01
+ *      \date Last update: 2019-08-19
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -28,6 +28,9 @@
 
 bool DEBUG;
 bool RUNNING;
+bool UNREACHABLE;
+bool FORBIDDEN;
+bool OVERLOADED;
 const char* PLATFORM;
 const char* CLIENT_OS;
 
@@ -87,6 +90,9 @@ int main(int argc, char** argv)
 {
 	::DEBUG 			= false;
 	::RUNNING 			= true;
+	::UNREACHABLE 		= false;
+	::FORBIDDEN 		= false;
+	::OVERLOADED 		= false;
 
 	::RTT				= false;
 	::DOWNLOAD 			= false;
@@ -245,17 +251,17 @@ void measurementStart(string measurementParameters)
 	string wsTLD = jMeasurementParameters["wsTLD"].string_value();
 
 	#ifdef __ANDROID__
-	pXml->writeString(conf.sProvider, "DNS_HOSTNAME", jTargets[0].string_value() /* + "." + wsTLD*/);
+		pXml->writeString(conf.sProvider, "DNS_HOSTNAME", jTargets[0].string_value());
 	#else
-	pXml->writeString(conf.sProvider, "DNS_HOSTNAME", jTargets[0].string_value() + "." + wsTLD);
+		pXml->writeString(conf.sProvider, "DNS_HOSTNAME", jTargets[0].string_value() + "." + wsTLD);
 	#endif
 
 	jTargets = jMeasurementParameters["wsTargetsRtt"].array_items();
 	
 	#ifdef __ANDROID__
-    pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value() /*+ "." + wsTLD*/);
+    	pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value());
     #else
-    pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value() + "." + wsTLD);
+    	pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value() + "." + wsTLD);
     #endif
 
 	pXml->writeString(conf.sProvider,"DL_PORT",jMeasurementParameters["wsTargetPort"].string_value());
@@ -289,52 +295,59 @@ void measurementStart(string measurementParameters)
 
 	pCallback = std::make_unique<CCallback>();
 
-    if (!::RTT && !::DOWNLOAD && !::UPLOAD)
+	try
+	{
+	    if (!::RTT && !::DOWNLOAD && !::UPLOAD)
+	    {
+	    	pCallback->callback("error", "no test case enabled", 1, "no test case enabled");
+
+	    	shutdown();
+	    }
+
+		//perform requested test cases
+		if (::RTT)
+		{
+			conf.nTestCase = 2;
+			conf.sTestName = "rtt_udp";
+			TRC_INFO( ("Taking Testcase RTT UDP ("+CTool::toString(conf.nTestCase)+")").c_str() );
+			currentTestPhase = MeasurementPhase::PING;
+			startTestCase(conf.nTestCase);
+		}
+
+		if (::hasError) {
+	        throw ::recentException;
+		}
+
+		if (::DOWNLOAD)
+		{
+			conf.nTestCase = 3;
+			conf.sTestName = "download";
+			TRC_INFO( ("Taking Testcase DOWNLOAD ("+CTool::toString(conf.nTestCase)+")").c_str() );
+			currentTestPhase = MeasurementPhase::DOWNLOAD;
+			startTestCase(conf.nTestCase);
+		}
+
+		if (::hasError) {
+	        throw ::recentException;
+	    }
+
+		if (::UPLOAD)
+		{
+			CTool::randomData( randomDataValues, 1123457*10 );
+			conf.nTestCase = 4;
+			conf.sTestName = "upload";
+			TRC_INFO( ("Taking Testcase UPLOAD ("+CTool::toString(conf.nTestCase)+")").c_str() );
+			currentTestPhase = MeasurementPhase::UPLOAD;
+			startTestCase(conf.nTestCase);
+		}
+
+	    if (::hasError) {
+	        throw ::recentException;
+	    }
+    } 
+    catch (std::exception & ex)
     {
-    	pCallback->callback("error", "no test case enabled", 1, "no test case enabled");
-
-    	shutdown();
-    }
-
-	//perform requested test cases
-	if (::RTT)
-	{
-		conf.nTestCase = 2;
-		conf.sTestName = "rtt_udp";
-		TRC_INFO( ("Taking Testcase RTT UDP ("+CTool::toString(conf.nTestCase)+")").c_str() );
-		currentTestPhase = MeasurementPhase::PING;
-		startTestCase(conf.nTestCase);
-	}
-
-	if (::hasError) {
-        throw ::recentException;
-	}
-
-	if (::DOWNLOAD)
-	{
-		conf.nTestCase = 3;
-		conf.sTestName = "download";
-		TRC_INFO( ("Taking Testcase DOWNLOAD ("+CTool::toString(conf.nTestCase)+")").c_str() );
-		currentTestPhase = MeasurementPhase::DOWNLOAD;
-		startTestCase(conf.nTestCase);
-	}
-
-	if (::hasError) {
-        throw ::recentException;
-    }
-
-	if (::UPLOAD)
-	{
-		CTool::randomData( randomDataValues, 1123457*10 );
-		conf.nTestCase = 4;
-		conf.sTestName = "upload";
-		TRC_INFO( ("Taking Testcase UPLOAD ("+CTool::toString(conf.nTestCase)+")").c_str() );
-		currentTestPhase = MeasurementPhase::UPLOAD;
-		startTestCase(conf.nTestCase);
-	}
-
-    if (::hasError) {
-        throw ::recentException;
+    	
     }
 
 	currentTestPhase = MeasurementPhase::END;

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-01
+ *      \date Last update: 2019-08-07
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -103,6 +103,9 @@ using namespace json11;
 
 extern bool DEBUG;
 extern bool RUNNING;
+extern bool UNREACHABLE;
+extern bool FORBIDDEN;
+extern bool OVERLOADED;
 extern const char* PLATFORM;
 extern const char* CLIENT_OS;
 
