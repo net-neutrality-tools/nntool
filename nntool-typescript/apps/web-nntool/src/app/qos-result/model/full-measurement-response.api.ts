@@ -1,3 +1,5 @@
+import { SlideableItem } from '../../animation/slideable-item';
+
 export class FullMeasurementResponse {
 
     uuid: string;
@@ -38,7 +40,7 @@ export class QoSResponse {
     qos_type_to_description_map: Map<string, QoSTypeDescription>; //TODO: make key an enum
 }
 
-export class QoSResult {
+export class QoSResult extends SlideableItem {
     type: string;
     summary: string;
     description: string;

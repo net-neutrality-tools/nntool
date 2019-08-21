@@ -6,8 +6,8 @@
             </div>
             <div class="flex--columns">
                 <ng-container *ngFor="let group of qosGroups">
-                    <div class="content--column" (click)="TODO">
-                        <header class="column-header clickable">
+                    <div class="content--column">
+                        <header class="column-header clickable" (click)="toggleSlideAnimation(group)">
                             <div class="icon" [ngClass]="group.icon" [title]="group.title"></div>
                             <h3>{{ group.title }}</h3>
                             <p><span class="qos-test-status" [ngClass]="{
@@ -17,7 +17,7 @@
                                 }"></span>
                                 {{ group.successes }}/{{ group.failures + group.successes }}</p>
                         </header>
-                        <div class="flex--content">
+                        <div [@slide]="group.slideAnimationState">
                             <p>{{ group.description }}</p>
                             <table class="no-stack">
                                 <colgroup>
@@ -26,7 +26,7 @@
                                 </colgroup>
                                 <tbody>
                                 <ng-container *ngFor="let test of group.tests">
-                                    <tr class="qos-test-message-toggle clickable" (click)="TODO">
+                                    <tr class="qos-test-message-toggle clickable" (click)="toggleSlideAnimation(test)">
                                         <td>
                                             <span
                                                   [title]="test.summary"
@@ -34,37 +34,33 @@
                                                   [class.icon-close]="test.failure_count > 0"
                                             ></span>
                                         </td>
-    
-                                        <!--
+                                        
                                         <td>
                                             <div>
                                                 <span [innerHTML]="test.summary"></span>
-                                                <div class="qos-test-message">
+                                                <div class="qos-test-message" [@slide]="test.slideAnimationState">
                                                     <table class="no-stack">
                                                         <colgroup>
                                                             <col width="10%">
                                                             <col width="90%">
                                                         </colgroup>
                                                         <tbody>
-                                                            <tr *ngFor="let res of test.sub_succ">
-                                                                <td>
+                                                            <tr *ngFor="let res of test.result_keys | keyvalue">
+                                                                <td *ngIf="res.value === 'ok'">
                                                                     <span class="icon icon-check" [title]="test.summary"></span>
                                                                 </td>
-                                                                <td>{{ res.msg }}</td>
-                                                            </tr>
-                                                            <tr *ngFor="let res of test.sub_fail">
-                                                                <td>
+                                                                <td *ngIf="res.value !== 'ok'">
                                                                     <span class="icon icon-close" [title]="test.summary"></span>
                                                                 </td>
-                                                                <td>{{ res.msg }}</td>
+                                                                <td>{{ res.key }}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
-                                                    <p [innerHTML]="test.desc"></p>
+                                                    <p [innerHTML]="test.description"></p>
                                                 </div>
                                             </div>
                                         </td>
-                                        -->
+                                        
                                     </tr>
                                 </ng-container>
                                 </tbody>

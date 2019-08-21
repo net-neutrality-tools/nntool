@@ -1,50 +1,42 @@
 import {MeasurementViewComponent} from '../measurement/view.component';
-import {Component, OnInit} from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { ConfigService } from '../services/config.service';
-import { RequestsService } from '../services/requests.service';
+import {Component, OnInit, NgZone} from '@angular/core';
 import { LoggerService, Logger } from '../services/log.service';
-import { WebsiteSettings } from '../settings/settings.interface';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { FullMeasurementResponse, QoSResult, QoSTypeDescription } from './model/full-measurement-response.api';
+import { SlideAnimation } from '../animation/animation';
+import { SlideableItem } from '../animation/slideable-item';
 
 
 @Component({
     templateUrl: './qos.result.component.html',
-    selector: 'qos-result-component'
+    selector: 'qos-result-component',
+    animations: [SlideAnimation]
 })
 export class QoSResultComponent extends MeasurementViewComponent implements OnInit {
 
-    private configService: ConfigService;
-    private requests: RequestsService;
     private logger: Logger = LoggerService.getLogger('HistoryViewComponent');
-    private config: WebsiteSettings;
-    private translationKey: string;
-    private urlpath: string;
     private measurementUuid: string;
-    private loading: boolean;
     private response: FullMeasurementResponse;
     private qosGroups: QoSResultGroupHolder[];
-    private testTypeShown: boolean = false;
 
-    constructor(private translationService: TranslateService, private activatedRoute: ActivatedRoute,
-                private userService: UserService) {
+    constructor(private activatedRoute: ActivatedRoute,
+                private userService: UserService, private ngZone: NgZone) {
         super();
-        this.loading = true;
-        this.urlpath = '/history/';
-        this.translationKey = 'RESULT.DETAIL';
         this.measurementUuid = activatedRoute.snapshot.paramMap.get('uuid');
     }
 
     protected resetData(cb?: () => void): void {}
 
+    //common visibility toggler for both tests and groups
+    toggleSlideAnimation(slideableItem: SlideableItem) {
+        SlideableItem.toggleSlideAnimation(slideableItem);
+    }
 
     ngOnInit() {
         this.activatedRoute.paramMap.subscribe( paramMap => this.measurementUuid = paramMap.get('uuid'));
         this.userService.loadFullMeasurement(this.measurementUuid).subscribe(
             (data: any) => {
-                this.loading = false;
                 this.response = data.data;
                 this.logger.debug("result: ", this.response);
                 this.logger.debug("measurements: ", this.response.measurements.QOS);
@@ -63,6 +55,8 @@ export class QoSResultComponent extends MeasurementViewComponent implements OnIn
                     let group: QoSResultGroupHolder = resultMap[result.type];
                     group.successes += result.success_count;
                     group.failures += result.failure_count;
+                    //need to manually add hidden here, as the preset value doesn't apply correctly w/the deserialization
+                    result.slideAnimationState = "hidden";
                     group.tests.push(result);
                 });
             }
@@ -71,12 +65,11 @@ export class QoSResultComponent extends MeasurementViewComponent implements OnIn
 
 }
 
-export class QoSResultGroupHolder {
+export class QoSResultGroupHolder extends SlideableItem {
     icon: string;
     title: string;
     description: string;
     successes: number = 0;
     failures: number = 0;
     tests: QoSResult[] = new Array();
-
 }
