@@ -242,10 +242,10 @@ export class HistoryComponent extends ResultListComponent implements OnInit {
                         /* tslint:disable:no-string-literal */
                         down: speedResult ? '' + Math.round(speedResult['throughput_avg_download_bps'] / (1000 * 10)) / 100 : '',
                         up: speedResult ? '' + Math.round(speedResult['throughput_avg_upload_bps'] / (1000 * 10)) / 100 : '',
+                        ping: speedResult ? '' + Math.round(speedResult['rtt_average_ns'] / (1000 * 1000)) : '',
                         /* tslint:enable:no-string-literal */
                         name,
                         signal: null,
-                        ping: '',
                         uuid: briefMeasurementResponse.uuid
                     });
                 }

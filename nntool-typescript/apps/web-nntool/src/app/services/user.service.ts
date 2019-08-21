@@ -10,6 +10,7 @@ import {BrowserStorageService} from './storage.service';
 import {RequestsService} from './requests.service';
 import {ConfigService} from './config.service';
 import {WebsiteSettings} from '../settings/settings.interface';
+import { ResultGroupResponse } from '../history/model/result.groups';
 
 
 export class UserInfo {
@@ -221,6 +222,62 @@ export class UserService {
         });
     }
 
+    loadMeasurementDetail(measurementUuid: string, user: UserInfo = null): Observable<any> {
+        if (!user) {
+            user = this.user;
+        }
+        if (!user || !user.uuid) {
+            return throwError('No user set');
+        }
+
+        return new Observable((observer: any) => {
+            this.requests.getJson<any>(
+                // TODO: take result-service url from settings request
+                Location.joinWithSlash(this.config.servers.result, 'measurement-agents/' + user.uuid + '/measurements/' + measurementUuid + '/details'),
+                {}
+            ).subscribe(
+                (data: any) => {
+                    this.logger.debug('User measurement details: ', data);
+
+                    observer.next(data);
+                },
+                (error: HttpErrorResponse) => {
+                    this.logger.error('Error retrieving measurement', error);
+                    observer.error();
+                },
+                () => observer.complete()
+            );
+        });
+    }
+
+    loadFullMeasurement(measurementUuid: string, user: UserInfo = null): Observable<any> {
+        if (!user) {
+            user = this.user;
+        }
+        if (!user || !user.uuid) {
+            return throwError('No user set');
+        }
+
+        return new Observable((observer: any) => {
+            this.requests.getJson<any>(
+                // TODO: take result-service url from settings request
+                Location.joinWithSlash(this.config.servers.result, 'measurement-agents/' + user.uuid + '/measurements/' + measurementUuid),
+                {}
+            ).subscribe(
+                (data: any) => {
+                    this.logger.debug('User full measurement: ', data);
+
+                    observer.next(data);
+                },
+                (error: HttpErrorResponse) => {
+                    this.logger.error('Error retrieving measurement', error);
+                    observer.error();
+                },
+                () => observer.complete()
+            );
+        });
+    }
+
     /**
      * Disassociate a measurement from user
      *
@@ -240,7 +297,7 @@ export class UserService {
         }
 
         return this.requests.deleteJson<any>(
-            Location.joinWithSlash(this.config.servers.control, 'clients/' + clientUUID + '/measurements/' + measurementUUID)
+            Location.joinWithSlash(this.config.servers.result, 'measurement-agents/' + clientUUID + '/measurements/' + measurementUUID)
         );
     }
 
