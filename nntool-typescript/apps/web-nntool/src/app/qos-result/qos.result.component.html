@@ -17,7 +17,7 @@
                                 }"></span>
                                 {{ group.successes }}/{{ group.failures + group.successes }}</p>
                         </header>
-                        <div [@slide]="group.slideAnimationState">
+                        <div [@slide]="group.showSlideableItem">
                             <p>{{ group.description }}</p>
                             <table class="no-stack">
                                 <colgroup>
@@ -38,7 +38,7 @@
                                         <td>
                                             <div>
                                                 <span [innerHTML]="test.summary"></span>
-                                                <div class="qos-test-message" [@slide]="test.slideAnimationState">
+                                                <div class="qos-test-message" [@slide]="test.showSlideableItem">
                                                     <table class="no-stack">
                                                         <colgroup>
                                                             <col width="10%">

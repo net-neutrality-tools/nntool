@@ -1,13 +1,13 @@
 
 export abstract class SlideableItem {
-    slideAnimationState: string;
+    showSlideableItem: boolean = false;
 
     constructor () {
-        this.slideAnimationState = 'hidden';
+        this.showSlideableItem = false;
     }
 
     //for reasons the method is not always available when it is a class function => constructing it as static method works
     static toggleSlideAnimation(slideableItem: SlideableItem) {
-        slideableItem.slideAnimationState = slideableItem.slideAnimationState === 'hidden' ? 'shown' : 'hidden';
+        slideableItem.showSlideableItem = !slideableItem.showSlideableItem;
     }
 }

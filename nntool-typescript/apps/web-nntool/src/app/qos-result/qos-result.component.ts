@@ -56,7 +56,7 @@ export class QoSResultComponent extends MeasurementViewComponent implements OnIn
                     group.successes += result.success_count;
                     group.failures += result.failure_count;
                     //need to manually add hidden here, as the preset value doesn't apply correctly w/the deserialization
-                    result.slideAnimationState = "hidden";
+                    result.showSlideableItem = false;
                     group.tests.push(result);
                 });
             }
