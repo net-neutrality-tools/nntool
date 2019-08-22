@@ -12,6 +12,7 @@ import at.alladin.nettest.qos.QoSMeasurementClient;
 import at.alladin.nettest.qos.QoSMeasurementClientControlListener;
 import at.alladin.nettest.qos.QoSMeasurementContext;
 import at.alladin.nettest.qos.android.exception.ClientNotYetRegisteredException;
+import at.alladin.nettest.qos.android.exception.NoClientProvidedException;
 import at.alladin.nettest.qos.android.exception.NoContextProvidedException;
 import at.alladin.nettest.qos.android.impl.TracerouteAndroidImpl;
 import at.alladin.nettest.qos.android.impl.TrafficServiceImpl;
@@ -84,6 +85,10 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
     public void run() {
         try {
 
+            if (client == null) {
+                throw new NoClientProvidedException("Called run without providing the necessary client");
+            }
+
             running.set(true);
 
             //notify of start
@@ -92,18 +97,6 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
             }
 
             //Do basic preparation for the QoS tests
-            if (client == null) {
-                Log.i(TAG, "Preparing a client object");
-                Log.i(TAG, "Using control server @ " + measurementContext.toString());
-
-                final String uuid = HelperFunctions.getUuid(context.getApplicationContext());
-                // No measurement request without the server
-                final Object request = null;
-
-                // default initialization is not needed for the demo application
-                client = ClientHolder.getInstance(measurementContext.getControlServerHost(), "5233", new int[8], new int[5],
-                        null, null, null);
-            }
 
             final TestSettings qosTestSettings = new TestSettings();
             qosTestSettings.setCacheFolder(context.getCacheDir());

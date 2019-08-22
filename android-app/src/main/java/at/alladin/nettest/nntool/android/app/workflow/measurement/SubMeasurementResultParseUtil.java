@@ -74,7 +74,7 @@ public class SubMeasurementResultParseUtil {
             final JniSpeedMeasurementResult.BandwidthResult lastUploadEntry = result.getUploadInfoList().get(result.getUploadInfoList().size() - 1);
             ret.setBytesUpload(lastUploadEntry.getBytes());
             ret.setBytesUploadIncludingSlowStart(lastUploadEntry.getBytesIncludingSlowStart());
-            ret.setDurationUploadNs(lastUploadEntry.getDurationNsTotal());
+            ret.setDurationUploadNs(lastUploadEntry.getDurationNs());
             if (timeInfo != null && timeInfo.getUploadStart() != null ) {
                 ret.setRelativeStartTimeUploadNs(timeInfo.getRttUdpStart() != null ? timeInfo.getUploadStart() - timeInfo.getRttUdpStart() :
                         timeInfo.getDownloadStart() != null ? timeInfo.getUploadStart() - timeInfo.getDownloadStart() : 0);

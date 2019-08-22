@@ -42,13 +42,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        final ActionBar actionBar = ((MainActivity)getActivity()).getSupportActionBar();
-        actionBar.setTitle(R.string.title_settings);
-    }
-
-    @Override
     public void onNavigateToScreen(PreferenceScreen preferenceScreen) {
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -57,7 +50,20 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 .commit();
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        final ActionBar actionBar = ((MainActivity)getActivity()).getSupportActionBar();
+        if (rootKey == null) {
+            actionBar.setTitle(R.string.title_settings);
+        } else {
+            switch (rootKey) {
+                case SINGLE_TEST_SELECTION_SCREEN_KEY:
+                    actionBar.setTitle(R.string.title_settings_test_selection);
+                    break;
+            }
+        }
+    }
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {

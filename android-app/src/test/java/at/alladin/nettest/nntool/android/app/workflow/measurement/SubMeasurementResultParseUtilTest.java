@@ -285,8 +285,8 @@ public class SubMeasurementResultParseUtilTest {
         Assert.assertEquals("unexpected upload bytes", lastBytesUploadIncludingSlowStart, result.getBytesUploadIncludingSlowStart().longValue());
 
         Assert.assertEquals("unexpected duration", lastDurationRttNs, result.getDurationRttNs().longValue());
-        Assert.assertEquals("unexpected duration", durationDownloadTotal, result.getDurationDownloadNs().longValue());
-        Assert.assertEquals("unexpected duration", durationUploadTotal, result.getDurationUploadNs().longValue());
+        Assert.assertEquals("unexpected duration", lastDurationDownloadNs, result.getDurationDownloadNs().longValue());
+        Assert.assertEquals("unexpected duration", lastDurationUploadNs, result.getDurationUploadNs().longValue());
 
         Assert.assertEquals("unexpected relative start time", 0, result.getRelativeStartTimeRttNs().longValue());
         Assert.assertEquals("unexpected relative start time", downloadStart - rttUdpStart, result.getRelativeStartTimeDownloadNs().longValue());
