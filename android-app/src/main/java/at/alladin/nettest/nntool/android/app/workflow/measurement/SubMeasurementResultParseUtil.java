@@ -54,7 +54,8 @@ public class SubMeasurementResultParseUtil {
             final JniSpeedMeasurementResult.BandwidthResult lastDownloadEntry = result.getDownloadInfoList().get(result.getDownloadInfoList().size() - 1);
             ret.setBytesDownload(lastDownloadEntry.getBytes());
             ret.setBytesDownloadIncludingSlowStart(lastDownloadEntry.getBytesIncludingSlowStart());
-            ret.setDurationDownloadNs(lastDownloadEntry.getDurationNsTotal());
+            //we sent the duration (not the duration_total), as the mbps are calculated from the duration => the total duration can be calculated from the relative starttimes
+            ret.setDurationDownloadNs(lastDownloadEntry.getDurationNs());
             if (timeInfo != null && timeInfo.getDownloadStart() != null ) {
                 ret.setRelativeStartTimeDownloadNs(timeInfo.getRttUdpStart() != null ? timeInfo.getDownloadStart() - timeInfo.getRttUdpStart() : 0);
             }

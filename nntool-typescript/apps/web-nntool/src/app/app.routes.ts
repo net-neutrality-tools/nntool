@@ -14,7 +14,7 @@ import {OpendataComponent} from './opendata/opendata.component';
 import {TCComponent} from './tc/tc.component';
 import {HomeComponent} from './home/home.component';
 import {HistoryDetailViewComponent} from './history/view-detail.component';
-import {HistoryViewComponent} from './history/view.component';
+import {HistoryViewComponent} from './history/history.view.component';
 import {OpentestViewComponent} from './result/view.component';
 import {OpentestDetailViewComponent} from './result/view-detail.component';
 import {SettingsComponent} from './user/settings.component';

@@ -30,7 +30,9 @@
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Please Allow In Use Geolocation Data</string>
+	<string>Um regionale Unterschiede festzustellen, stimmen Sie bitte der Standorterkennung zu.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Um regionale Unterschiede festzustellen, stimmen Sie bitte der Standorterkennung zu.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

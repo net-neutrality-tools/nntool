@@ -37,4 +37,29 @@ export class RttInfo {
      * The actual size of RTT packets.
      */
     packet_size: number;
+
+    /**
+     * Average rtt in nanoseconds
+	 */
+    average_ns: number;
+
+    /**
+     * Maximum rtt in nanoseconds
+	 */
+    maximum_ns: number;
+
+    /**
+     * Median rtt in nanoseconds
+	 */
+    median_ns: number;
+
+    /**
+     * Minimum rtt in nanoseconds
+	 */
+    minimum_ns: number;
+
+    /**
+     * Standard deviation rtt in nanoseconds
+	 */
+    standard_deviation_ns: number;
 }

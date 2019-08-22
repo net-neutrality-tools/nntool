@@ -1,5 +1,6 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import {FormsModule} from '@angular/forms';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 
@@ -36,7 +37,9 @@ import {InsecureSanitizeHtml} from './pipes/insecure.sanitizer.pipe';
 import {LoggerService} from './services/log.service';
 import {UTCLocalDateFormatPipe} from './pipes/utc.date.format.pipe';
 import {HistoryDetailViewComponent} from './history/view-detail.component';
-import {HistoryViewComponent} from './history/view.component';
+import {HistoryDeletionComponent} from './history/history.deletion.component';
+import {HistoryViewComponent} from './history/history.view.component';
+import {QoSResultComponent} from './qos-result/qos-result.component'
 import {MeasurementClassifiedValueComponent} from './measurement/classified.value.component';
 import {MeasurementFormattedValueComponent} from './measurement/formatted.value.component';
 import {TimestampLocalDateFormatPipe} from './pipes/timestamp.date.format.pipe';
@@ -98,7 +101,9 @@ const MAIN_DECLARATIONS = [
     InsecureSanitizeHtml,
     UTCLocalDateFormatPipe,
     HistoryDetailViewComponent,
+    HistoryDeletionComponent,
     HistoryViewComponent,
+    QoSResultComponent,
     MeasurementClassifiedValueComponent,
     MeasurementFormattedValueComponent,
     TimestampLocalDateFormatPipe,
@@ -116,6 +121,7 @@ const MAIN_DECLARATIONS = [
 @NgModule({
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         FormsModule,
         HttpClientModule,
         routing,

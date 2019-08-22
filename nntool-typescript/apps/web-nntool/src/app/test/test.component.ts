@@ -90,6 +90,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
             this.locationService.startTracking();
             this.startTimeStamp = (new Date()).toJSON().slice(0, -1);
         });
+        this.measurementLink = null;
     }
 
     private processTestControl(measurementControl: LmapControl): void {
@@ -157,6 +158,8 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
         const networkPointInTime: MeasurementResultNetworkPointInTimeAPI = new MeasurementResultNetworkPointInTimeAPI();
         networkPointInTime.network_type_id = this.webNetworkType;
         networkPointInTime.time = endTimeStamp;
+        lmapReport.time_based_result.start_time = this.startTimeStamp;
+        lmapReport.time_based_result.end_time = endTimeStamp;
         lmapReport.time_based_result.network_points_in_time = [];
         lmapReport.time_based_result.network_points_in_time.push(networkPointInTime);
 
@@ -168,6 +171,11 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
             this.speedControl.option.reduce(
                 (url: string, option: LmapOption) => option.name === 'result_collector_base_url' ? (url + option.value) : url, '')
         ).subscribe(response => {
+            if (response.data.uuid !== null && response.data.uuid !== '') {
+                if (this.zone) {
+                    this.zone.run(() => {this.measurementLink = '/history/' + response.data.uuid});
+                }
+            }
         });
 
         this.testResults = [];
@@ -181,31 +189,58 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
         speedMeasurementResult.relative_end_time_ns = null;
         speedMeasurementResult.relative_start_time_ns = null;
         speedMeasurementResult.status = null;
-        speedMeasurementResult.bytes_download = speedTestResult.downBit / 8;
-        speedMeasurementResult.bytes_upload = speedTestResult.upBit / 8;
+        speedMeasurementResult.rtt_info = new RttInfo();
         if (typeof speedTestResult.completeTestResult !== 'undefined') {
             const completeResult = speedTestResult.completeTestResult;
             if (completeResult.download_info !== undefined && completeResult.download_info.length > 0) {
                 const currentDownload = completeResult.download_info[completeResult.download_info.length - 1];
-                speedMeasurementResult.duration_download_ns = currentDownload.duration_ns_total;
+                //we sent the duration (not the duration_total), as the mbps are calculated from the duration => the total duration can be calculated from the relative starttimes
+                speedMeasurementResult.duration_download_ns = currentDownload.duration_ns;
+                speedMeasurementResult.bytes_download = currentDownload.bytes;
+                speedMeasurementResult.bytes_download_including_slow_start = currentDownload.bytes_including_slow_start;
             }
             if (completeResult.rtt_info !== undefined) {
-                speedMeasurementResult.duration_rtt_ns = completeResult.rtt_info.duration_ns;
-
+                const currentRtt = completeResult.rtt_info;
+                speedMeasurementResult.duration_rtt_ns = currentRtt.duration_ns;
+                speedMeasurementResult.rtt_info = {
+                    rtts: [
+                        {
+                            rtt_ns: speedTestResult.ping * 1000 * 1000,
+                            relative_time_ns: undefined
+                        }    
+                    ],
+                    requested_num_packets: 10, //TODO: fill w/server setting
+                    num_sent: currentRtt.num_sent,
+                    num_received: currentRtt.num_received,
+                    num_error: currentRtt.num_error,
+                    num_missing: currentRtt.num_missing,
+                    packet_size: currentRtt.packet_size,
+                    average_ns: currentRtt.average_ns,
+                    maximum_ns: currentRtt.max_ns,
+                    median_ns: currentRtt.median_ms,
+                    minimum_ns: currentRtt.min_ns,
+                    standard_deviation_ns: currentRtt.standard_deviation_ns
+                }
             }
             if (completeResult.upload_info !== undefined && completeResult.upload_info.length > 0) {
                 const currentUpload = completeResult.upload_info[completeResult.upload_info.length - 1];
-                speedMeasurementResult.duration_upload_ns = currentUpload.duration_ns_total;
+                //we sent the duration (not the duration_total), as the mbps are calculated from the duration => the total duration can be calculated from the relative starttimes
+                speedMeasurementResult.duration_upload_ns = currentUpload.duration_ns;
+                speedMeasurementResult.bytes_upload = currentUpload.bytes;
+                speedMeasurementResult.bytes_upload_including_slow_start = currentUpload.bytes_including_slow_start;
+            }
 
-            }
+        } else {
+            //TODO: probably remove this!
+            speedMeasurementResult.bytes_download = speedTestResult.downBit / 8;
+            speedMeasurementResult.bytes_upload = speedTestResult.upBit / 8;
+            speedMeasurementResult.rtt_info.rtts = [
+                {
+                    rtt_ns: speedTestResult.ping * 1000 * 1000,
+                    relative_time_ns: undefined
+                }
+            ];
         }
-        speedMeasurementResult.rtt_info = new RttInfo();
-        speedMeasurementResult.rtt_info.rtts = [
-            {
-                rtt_ns: speedTestResult.ping * 1000 * 1000,
-                relative_time_ns: undefined
-            }
-        ];
 
         this.testResults.push(speedMeasurementResult);
     }

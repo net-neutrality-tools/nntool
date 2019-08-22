@@ -611,7 +611,10 @@ pre {
 .stacktable,
 .no-stack {
     width: 100%;
+    /* At least temporarily remove the margin bottom to allow for smooth transitions w/the angular animation 
+    (TODO: find a way to add this to angular, now that jQuery is out of the picture)
     margin-bottom:2em;
+    */
 }
 .st-head-row {
     padding-top: 1em;
