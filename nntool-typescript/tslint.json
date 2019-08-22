@@ -1,4 +1,5 @@
 {
+  "defaultSeverity": "warning",
   "rulesDirectory": [
     "node_modules/@nrwl/workspace/src/tslint",
     "node_modules/codelyzer"
