@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import at.alladin.nettest.service.search.service.SearchService;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiPagination;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeneralMeasurementTypeDto;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
 import at.alladin.nettest.shared.server.helper.swagger.ApiPageable;
@@ -60,11 +59,10 @@ public class MeasurementSearchResource {
 	})
 	@ApiPageable
 	@GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<ApiResponse<ApiPagination<Map<String, Object>>>> getMeasurementList(
+    public ResponseEntity<ApiResponse<ApiPagination<Map<String, Object>>>> getSearchedMeasurementList(
     	@ApiParam(value = "The full text search string", required = false) @RequestParam(name = "q", required = false) String queryString, 
     	@ApiIgnore @PageableDefault(page = 0, size = 50) @SortDefaults({ @SortDefault(sort = "end_time", direction = Sort.Direction.DESC )}) Pageable pageable
-    ) {
-		
+    ) {	
 		// TODO: BriefMeasurementResponse or FullMeasurementResponse?
 		
 		return ResponseHelper.ok(searchService.findAll(queryString, pageable));
@@ -83,7 +81,7 @@ public class MeasurementSearchResource {
 		@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ApiResponse.class),
 		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
 	})
-	@GetMapping(value = "/{openDataUuid}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@GetMapping(value = "/{openDataUuid:[^\\.]+}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<ApiResponse<Map<String, Object>>> getMeasurement(
 		@ApiParam(value = "The open-data UUID", required = true) @PathVariable String openDataUuid, 
 		@ApiParam(value = "Set of included measurement types (e.g. SPEED, TCP_PORT, VOIP, ...). If nothing is provided all measurement types are returned") @RequestParam(name = "include", required = false) Set<GeneralMeasurementTypeDto> includedMeasurementTypes) {
@@ -91,33 +89,5 @@ public class MeasurementSearchResource {
 		// TODO: remove measurement types not included in includedMeasurementTypes!
 		
 		return ResponseHelper.ok(searchService.findOneByOpenDataUuid(openDataUuid));
-	}
-	
-	/**
-	 * Get details of an open-data measurement.
-	 * Returns the open-data measurement details, either in grouped or plain form.
-	 *
-	 * @param openDataUuid
-	 * @param grouped
-	 * @return
-	 */
-	@io.swagger.annotations.ApiOperation(value = "Get details of an open-data measurement.", notes = "Returns the open-data measurement details, either in grouped or plain form.")
-	@io.swagger.annotations.ApiResponses({
-		@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ApiResponse.class),
-		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
-	})
-	@GetMapping(value = "/{openDataUuid}/details", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<ApiResponse<DetailMeasurementResponse>> getMeasurementDetails(
-		@ApiParam(value = "The open-data UUID", required = true) @PathVariable String openDataUuid, 
-		@ApiParam(value = "Flag that indicates if the details should be grouped") @RequestParam(value = "grouped", defaultValue = "false") boolean grouped) {
-		
-		// TODO: raw/grouped
-		// raw = one group filled?
-		
-		//if (grouped) {
-			return ResponseHelper.ok(new DetailMeasurementResponse());		
-		//} else {
-		//	return ResponseHelper.ok(new DetailMeasurementResponse());
-		//}
 	}
 }
