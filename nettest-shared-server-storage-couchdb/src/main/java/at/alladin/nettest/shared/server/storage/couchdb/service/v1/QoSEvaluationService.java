@@ -10,8 +10,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -19,11 +22,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.EvaluatedQoSResult;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.EvaluatedQoSResult.QoSResultOutcome;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.QoSTypeDescription;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
-import at.alladin.nettest.shared.model.qos.QosMeasurementDescription;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
@@ -54,6 +56,9 @@ public class QoSEvaluationService {
 
 	@Autowired
 	private GsonBuilder gsonBuilder;
+	
+	@Autowired
+	private MessageSource messageSource;
 
 	private Map<Long, QoSMeasurementObjective> objectiveIdToMeasurementObjectiveMap;
 
@@ -97,11 +102,16 @@ public class QoSEvaluationService {
 	}
 
 	private Map<String, String> getKeyToTranslationMapForKeys(final Set<String> resultTranslationKeys, final Locale locale) {
-		final Map<String, String> ret = new HashMap<>();
-		resultTranslationKeys.forEach( key -> {
-			ret.put(key, key); //TODO: ret.put(key, getLocalizedMessage(key, locale);
-		});
-		return ret;
+		return resultTranslationKeys
+			.stream()
+			.collect(
+				Collectors.toMap(
+					Function.identity(),
+					key -> {
+						return messageSource.getMessage(key, null, locale);
+					}
+				)
+			);
 	}
 
 	private Map<QoSMeasurementTypeDto, QoSTypeDescription> getQosMeasurementDecriptionMap (final Locale locale) {
@@ -150,13 +160,14 @@ public class QoSEvaluationService {
 		
 		if (objective != null && objective.getEvaluations() != null) {
 			for (Map<String, String> evaluation : objective.getEvaluations()) {
-				//TODO: fix double gson call!
-				AbstractResult res = gson.fromJson(gson.toJson(evaluation), resultClass);
+				// TODO: fix double gson call!
+				final AbstractResult res = gson.fromJson(gson.toJson(evaluation), resultClass);
+				
 				if (res.getPriority() != null && res.getPriority() == Integer.MAX_VALUE) {
 					res.setPriority(maxPriority--);
 				}
+				
 				expResultSet.add(res);
-			
 			}
 
 			final Map<String, EvaluatedQoSResult.QoSResultOutcome> resultKeyMap = new HashMap<>();
@@ -206,6 +217,7 @@ public class QoSEvaluationService {
 			} catch (IllegalArgumentException ex) {
 				ex.printStackTrace();
 			}
+			
 			ret.setFailureCount(qosResult.getFailureCount());
 			ret.setSuccessCount(qosResult.getSuccessCount());
 			ret.setResultKeyMap(resultKeyMap);
@@ -213,7 +225,9 @@ public class QoSEvaluationService {
 			ret.setImplausible(qosResult.isImplausible());
 			ret.setDescription(objective.getTranslationKeys().getDescription());
 			ret.setSummary(objective.getTranslationKeys().getSummary());
+			
 			final Map<String, String> evaluationKeyMap = new HashMap<>();
+			
 			qosResult.getResults().forEach((string, obj) -> {
 				if (obj != null) {
 					//do some ugly parsing
@@ -231,7 +245,8 @@ public class QoSEvaluationService {
 					//TODO: do we add null values?
 					evaluationKeyMap.put(string, "");
 				}
-			}); 
+			});
+			
 			ret.setEvaluationKeyMap(evaluationKeyMap);
 			return ret;
 		}
@@ -239,7 +254,7 @@ public class QoSEvaluationService {
 		return null;
 	}
 	
-	private Class<? extends AbstractResult> getResultClass (final QoSMeasurementType type) {
+	private Class<? extends AbstractResult> getResultClass(final QoSMeasurementType type) {
 		try {
 			return QosMeasurementType.fromValue(type.toString().toLowerCase()).getResultClass();
 		} catch (IllegalArgumentException ex) {
