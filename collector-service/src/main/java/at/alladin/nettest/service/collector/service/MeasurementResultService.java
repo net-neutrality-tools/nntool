@@ -132,7 +132,7 @@ public class MeasurementResultService {
 						storeMeasurementInElasticsearch(measurementDto);
 						logger.info("Saved result (uuid: {}, open_data_uuid: {}) in Elasticsearch", uuid, openDataUuid);
 					} catch (Exception ex) {
-						logger.error("Could not save result (uuid: " + uuid + ", open_data_uuid: " + openDataUuid + ") in Elasticsearch", ex);
+						logger.error("Could not save result (uuid: {}, open_data_uuid: {}) in Elasticsearch", uuid, openDataUuid, ex);
 					}
 				}
 				
@@ -142,7 +142,7 @@ public class MeasurementResultService {
 						storeMeasurementInPostgresql(measurementDto);
 						logger.info("Saved result (uuid: {}, open_data_uuid: {}) in PostgreSQL", uuid, openDataUuid);
 					} catch (Exception ex) {
-						logger.error("Could not save result (uuid: " + uuid + ", open_data_uuid: " + openDataUuid + ") in PostgreSQL", ex);
+						logger.error("Could not save result (uuid: {}, open_data_uuid: {}) in PostgreSQL", uuid, openDataUuid, ex);
 					}
 				}
 			}

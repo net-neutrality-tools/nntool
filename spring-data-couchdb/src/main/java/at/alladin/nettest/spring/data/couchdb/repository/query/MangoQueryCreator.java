@@ -169,7 +169,7 @@ public class MangoQueryCreator extends AbstractQueryCreator<String, Selector> {
 			final PropertyPath sortPath = PropertyPath.from(sortString, resultClass);
 			return toCustomDotPath(sortPath);
 		} catch (Exception ex) {
-			logger.error("Could not transform sort query (original sort string: " + sortString + ")", ex);
+			logger.error("Could not transform sort query (original sort string: {})", sortString, ex);
 		}
 		
 		return sortString;
