@@ -9,12 +9,6 @@ import { NxModule } from '@nrwl/nx';
 // app
 import { environment } from './environments/environment';
 import { CORE_PROVIDERS, PlatformLanguageToken } from './services';
-import { LogService } from './services/log.service';
-
-/**
- * DEBUGGING
- */
-LogService.DEBUG.LEVEL_4 = !environment.production;
 
 export const BASE_PROVIDERS: any[] = [
   ...CORE_PROVIDERS,

@@ -1,9 +1,9 @@
 import { Component, NgZone, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NGXLogger } from 'ngx-logger';
 import { SlideAnimation } from '../animation/animation';
 import { SlideableItem } from '../animation/slideable-item';
 import { MeasurementViewComponent } from '../measurement/view.component';
-import { Logger, LoggerService } from '../services/log.service';
 import { UserService } from '../services/user.service';
 import { FullMeasurementResponse, QoSResult, QoSTypeDescription } from './model/full-measurement-response.api';
 
@@ -13,12 +13,16 @@ import { FullMeasurementResponse, QoSResult, QoSTypeDescription } from './model/
   animations: [SlideAnimation]
 })
 export class QoSResultComponent extends MeasurementViewComponent implements OnInit {
-  private logger: Logger = LoggerService.getLogger('HistoryViewComponent');
   private measurementUuid: string;
   private response: FullMeasurementResponse;
   private qosGroups: QoSResultGroupHolder[];
 
-  constructor(private activatedRoute: ActivatedRoute, private userService: UserService, private ngZone: NgZone) {
+  constructor(
+    private logger: NGXLogger,
+    private activatedRoute: ActivatedRoute,
+    private userService: UserService,
+    private ngZone: NgZone
+  ) {
     super();
     this.measurementUuid = activatedRoute.snapshot.paramMap.get('uuid');
   }

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { MeasurementViewComponent } from '../measurement/view.component';
-import { Logger, LoggerService } from '../services/log.service';
 import { UserInfo, UserService } from '../services/user.service';
 
 @Component({
@@ -13,11 +13,11 @@ import { UserInfo, UserService } from '../services/user.service';
 export class HistoryDeletionComponent extends MeasurementViewComponent implements OnInit {
   protected subs: Subscription[] = [];
 
-  private logger: Logger = LoggerService.getLogger('HistoryDeletionComponent');
   private measurementUuid: string;
   private translationKey: string;
 
   constructor(
+    private logger: NGXLogger,
     private translationService: TranslateService,
     private activatedRoute: ActivatedRoute,
     private userService: UserService,

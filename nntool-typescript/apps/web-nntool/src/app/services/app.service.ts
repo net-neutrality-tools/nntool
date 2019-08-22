@@ -1,5 +1,4 @@
 import { HostListener, Injectable } from '@angular/core';
-import { Logger, LoggerService } from './log.service';
 
 @Injectable()
 export class AppService {
@@ -21,7 +20,6 @@ export class AppService {
     this._showScrollElement = value;
   }
 
-  private logger: Logger = LoggerService.getLogger('AppService');
   private _trackScroll: boolean;
   private _showScrollElement: boolean;
   private _disabledNavigation = false;

@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { GeoLocation } from '../test/models/api/request-info.api';
 import { LocationService } from './location.service';
-import { Logger, LoggerService } from './log.service';
 import { TestSettingsService } from './test/test-settings.service';
 import { UserService } from './user.service';
 
@@ -12,8 +11,6 @@ import { UserService } from './user.service';
  */
 @Injectable()
 export class RequestInfoService {
-  private static logger: Logger = LoggerService.getLogger('RequestInfoService');
-
   constructor(
     private readonly testSettingsService: TestSettingsService,
     private readonly locationService: LocationService,

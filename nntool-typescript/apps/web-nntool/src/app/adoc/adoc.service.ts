@@ -5,14 +5,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscriber } from 'rxjs';
 import { first } from 'rxjs/operators';
 
-import { Logger, LoggerService } from '../services/log.service';
+import { NGXLogger } from 'ngx-logger';
 import { RequestsService } from '../services/requests.service';
 
 @Injectable()
 export class ADocService {
-  private logger: Logger = LoggerService.getLogger('ADocService');
-
-  constructor(private requests: RequestsService, private translate: TranslateService, private http: HttpClient) {}
+  constructor(
+    private logger: NGXLogger,
+    private requests: RequestsService,
+    private translate: TranslateService,
+    private http: HttpClient
+  ) {}
 
   public getAdoc(adoc: string, lang: string): Observable<string> {
     return this.http.get('/assets/i18n/view/' + lang + '/' + adoc + '.html', { responseType: 'text' }).pipe(first());

@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Logger, LoggerService } from '../../../services/log.service';
+import { NGXLogger } from 'ngx-logger';
 import { MeasurementSettings } from '../../../test/models/measurement-settings';
 import { BasicTestState } from '../../enums/basic-test-state.enum';
 import { TestSchedulerService } from '../../test-scheduler.service';
@@ -15,11 +15,10 @@ declare var Ias: any;
   providedIn: 'root'
 })
 export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig, SpeedTestState> {
-  protected logger: Logger = LoggerService.getLogger('SpeedTestImplementation');
   private $state: Subject<SpeedTestState>;
   private ias: any = undefined;
 
-  constructor(testSchedulerService: TestSchedulerService, private zone: NgZone) {
+  constructor(private logger: NGXLogger, testSchedulerService: TestSchedulerService, private zone: NgZone) {
     // TODO: Add missing services
     super(testSchedulerService);
   }

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { ConfigService } from '../services/config.service';
-import { Logger, LoggerService } from '../services/log.service';
 import { RequestInfoService } from '../services/request-info.service';
 import { RequestsService } from '../services/requests.service';
 import { ResponseAPI } from './models/api/response.api';
@@ -13,8 +12,6 @@ import { SpeedMeasurementPeerResponseAPI } from './models/server-selection/speed
   templateUrl: './test.server_selection.html'
 })
 export class ServerSelectionComponent implements OnInit {
-  private static logger: Logger = LoggerService.getLogger('ServerSelectionComponent');
-
   private speedServerList: SpeedMeasurementPeer[];
 
   private currentSpeedServer: SpeedMeasurementPeer;

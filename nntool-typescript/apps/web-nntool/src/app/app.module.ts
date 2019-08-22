@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
 // import {NvD3Component} from 'ng2-nvd3';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -50,7 +51,6 @@ import { ColorService } from './services/color.service';
 import { ConfigService } from './services/config.service';
 import { Guard } from './services/guard.service';
 import { LocationService } from './services/location.service';
-import { LoggerService } from './services/log.service';
 import { MapService } from './services/map.service';
 import { RequestsService } from './services/requests.service';
 import { BrowserStorageService } from './services/storage.service';
@@ -119,6 +119,11 @@ const MAIN_DECLARATIONS = [
 
 @NgModule({
   imports: [
+    LoggerModule.forRoot({
+      level: NgxLoggerLevel.DEBUG,
+      serverLogLevel: NgxLoggerLevel.OFF,
+      enableSourceMaps: true
+    }),
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
@@ -150,7 +155,6 @@ const MAIN_DECLARATIONS = [
     Guard,
     ADocService,
     ColorService,
-    LoggerService,
     BrowserStorageService,
     UserService,
     MeasurementService,

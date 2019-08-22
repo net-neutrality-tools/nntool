@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { format as formatUtils } from '../pipes/utils';
 import { AppService } from '../services/app.service';
 import { ConfigService } from '../services/config.service';
-import { Logger, LoggerService } from '../services/log.service';
 import { RequestsService } from '../services/requests.service';
 import { TestService } from '../services/test/test.service';
 import { UserInfo, UserService } from '../services/user.service';
@@ -60,8 +59,6 @@ export abstract class BaseNetTestComponent implements OnInit, OnDestroy {
   public errorMsg: string = null;
 
   public format: (value: any, setting: any) => any = formatUtils;
-
-  protected logger: Logger = LoggerService.getLogger('BaseNetTestComponent');
 
   protected config: WebsiteSettings;
   protected measurementLink: string = null;

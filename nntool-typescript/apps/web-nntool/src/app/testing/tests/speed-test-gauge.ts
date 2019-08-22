@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { NGXLogger } from 'ngx-logger';
 import { ConfigService } from '../../services/config.service';
 import { WINDOW } from '../../services/window.service';
 import { SpeedTestStateEnum } from '../tests-implementation/speed/enums/speed-test-state.enum';
@@ -23,12 +24,13 @@ export class SpeedTestGaugeComponent extends GaugeUIComponent<
   // TODO: rethink DI in this use case, testImplementation should not be one instance, if there were more than one test at once
   // TODO: Remove this constructor when DI on generic type figured out
   constructor(
+    protected logger: NGXLogger,
     testImplementation: SpeedTestImplementation,
     configService: ConfigService,
     translateService: TranslateService,
     @Inject(WINDOW) window: Window
   ) {
-    super(testImplementation, configService, translateService, window);
+    super(logger, testImplementation, configService, translateService, window);
   }
 
   protected testStateToUIState = (state: SpeedTestState): GaugeUIState => {

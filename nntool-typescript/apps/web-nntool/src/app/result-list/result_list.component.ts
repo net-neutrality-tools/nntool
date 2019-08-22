@@ -1,5 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
+import { NGXLogger } from 'ngx-logger';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -10,8 +11,6 @@ import { PingFormatPipe } from '../pipes/ping.format.pipe';
 import { RoundPipe } from '../pipes/round.pipe';
 import { SpeedFormatPipe } from '../pipes/speed.format.pipe';
 import { ConfigService } from '../services/config.service';
-import { Logger } from '../services/log.service';
-import { LoggerService } from '../services/log.service';
 import { RequestsService } from '../services/requests.service';
 import { UserInfo } from '../services/user.service';
 import { WebsiteSettings } from '../settings/settings.interface';
@@ -45,13 +44,13 @@ export class ResultListComponent implements OnInit, AfterViewInit, OnDestroy {
   protected configService: ConfigService;
   protected translationService: TranslateService;
   protected activatedRoute: ActivatedRoute;
-  protected logger: Logger = LoggerService.getLogger('ResultListComponent');
   protected config: WebsiteSettings;
   protected subs: Subscription[] = [];
   protected queryParams: any = {};
   protected rmbtwsTrans: string = null;
 
   constructor(
+    protected logger: NGXLogger,
     elementRef: ElementRef,
     router: Router,
     configService: ConfigService,

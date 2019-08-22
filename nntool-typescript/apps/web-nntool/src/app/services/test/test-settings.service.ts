@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MeasurementAgentType } from '../../test/models/api/request-info.api';
 import { ConfigService } from '../config.service';
-import { Logger, LoggerService } from '../log.service';
 import { UserInfo, UserService } from '../user.service';
 
 export interface AgentSettings {
@@ -115,7 +114,6 @@ export interface TestSettings {
 
 @Injectable()
 export class TestSettingsService {
-  private static logger: Logger = LoggerService.getLogger('TestSettingsService');
   private _agentSettings: AgentSettings;
   private _testSettings: TestSettings;
 

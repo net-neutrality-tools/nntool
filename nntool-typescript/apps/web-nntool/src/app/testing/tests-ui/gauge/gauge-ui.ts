@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, Inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { NGXLogger } from 'ngx-logger';
 import { forkJoin, Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { ConfigService } from '../../../services/config.service';
@@ -28,6 +29,7 @@ export abstract class GaugeUIComponent<
   private renderingConfig: WebsiteSettings;
 
   protected constructor(
+    protected logger: NGXLogger,
     testImplementation: T,
     configService: ConfigService,
     protected translateService: TranslateService,
@@ -92,6 +94,7 @@ export abstract class GaugeUIComponent<
       }
     }
     const gauge: any = new MeasurementGauge(
+      this.logger,
       document.getElementById('nettest-gauge') as HTMLCanvasElement,
       document.getElementById('nettest-gauge-2') as HTMLCanvasElement,
       document.getElementById('nettest-state'),

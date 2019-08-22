@@ -19,7 +19,6 @@ import { SettingsRequestAPI } from '../../test/models/settings/settings-request.
 import { SettingsResponseAPI } from '../../test/models/settings/settings-response.api';
 import { ConfigService } from '../config.service';
 import { LocationService } from '../location.service';
-import { Logger, LoggerService } from '../log.service';
 import { RequestInfoService } from '../request-info.service';
 import { RequestsService } from '../requests.service';
 import { UserInfo, UserService } from '../user.service';
@@ -27,8 +26,6 @@ import { TestSettingsService } from './test-settings.service';
 
 @Injectable()
 export class TestService {
-  private static logger: Logger = LoggerService.getLogger('TestService');
-
   private settings: SettingsResponseAPI;
 
   constructor(

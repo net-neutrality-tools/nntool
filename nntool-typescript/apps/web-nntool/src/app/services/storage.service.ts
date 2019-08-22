@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Logger, LoggerService } from './log.service';
+import { NGXLogger } from 'ngx-logger';
 
 export interface StorageService {
   save(key: string, value: any, clientOnly?: boolean): void;
@@ -9,8 +9,9 @@ export interface StorageService {
 
 @Injectable()
 export class BrowserStorageService implements StorageService {
-  private logger: Logger = LoggerService.getLogger('BrowserStorageService');
   private cookie: string;
+
+  constructor(private logger: NGXLogger) {}
 
   public save(key: string, value: any, clientOnly: boolean = true): void {
     if (typeof Storage === 'undefined') {

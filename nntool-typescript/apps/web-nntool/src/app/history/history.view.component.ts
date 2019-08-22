@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MeasurementViewComponent } from '../measurement/view.component';
 import { ConfigService } from '../services/config.service';
-import { Logger, LoggerService } from '../services/log.service';
 import { RequestsService } from '../services/requests.service';
 import { UserService } from '../services/user.service';
 import { WebsiteSettings } from '../settings/settings.interface';
@@ -15,7 +14,6 @@ import { ResultGroupResponse } from './model/result.groups';
 export class HistoryViewComponent extends MeasurementViewComponent implements OnInit {
   private configService: ConfigService;
   private requests: RequestsService;
-  private logger: Logger = LoggerService.getLogger('HistoryViewComponent');
   private config: WebsiteSettings;
   private translationKey: string;
   private urlpath: string;

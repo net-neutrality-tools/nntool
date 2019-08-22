@@ -1,17 +1,16 @@
 import { Inject, Injectable } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
 import { GeoLocation } from '../test/models/api/request-info.api';
-import { Logger, LoggerService } from './log.service';
 import { WINDOW } from './window.service';
 
 @Injectable()
 export class LocationService {
-  private logger: Logger = LoggerService.getLogger('BrowserLocation');
   private positions: GeoLocation[] = [];
   private watchId: number = null;
   private running = false;
   private navigator: Navigator = null;
 
-  constructor(@Inject(WINDOW) private window: Window) {
+  constructor(private logger: NGXLogger, @Inject(WINDOW) private window: Window) {
     if (this.window) {
       this.navigator = this.window.navigator;
     }

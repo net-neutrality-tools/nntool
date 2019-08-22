@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
 
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin, Observable, Observer, throwError } from 'rxjs';
@@ -8,7 +9,6 @@ import { forkJoin, Observable, Observer, throwError } from 'rxjs';
 import { ResultGroupResponse } from '../history/model/result.groups';
 import { WebsiteSettings } from '../settings/settings.interface';
 import { ConfigService } from './config.service';
-import { Logger, LoggerService } from './log.service';
 import { RequestsService } from './requests.service';
 import { BrowserStorageService } from './storage.service';
 
@@ -117,11 +117,11 @@ export class UserService {
     this.userInfo.apply(other);
   }
 
-  private logger: Logger = LoggerService.getLogger('UserService');
   private userInfo: UserInfo = null;
   private config: WebsiteSettings;
 
   constructor(
+    private logger: NGXLogger,
     private storage: BrowserStorageService,
     private requests: RequestsService,
     private configService: ConfigService,

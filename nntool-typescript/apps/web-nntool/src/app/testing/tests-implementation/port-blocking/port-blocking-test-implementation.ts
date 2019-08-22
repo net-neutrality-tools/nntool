@@ -1,6 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Logger, LoggerService } from '../../../services/log.service';
 import { BasicTestState } from '../../enums/basic-test-state.enum';
 import { TestSchedulerService } from '../../test-scheduler.service';
 import { TestImplementation } from '../test-implementation';
@@ -25,7 +24,6 @@ export class PortBlockingTestImplementation extends TestImplementation<PortBlock
     timeout: 5000
   };
 
-  protected logger: Logger = LoggerService.getLogger('PortBlockingImplementation');
   private $state: Subject<PortBlockingTestState>;
   private portBlocking: any;
 

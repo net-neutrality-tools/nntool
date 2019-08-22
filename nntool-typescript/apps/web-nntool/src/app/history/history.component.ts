@@ -8,7 +8,6 @@ declare let d3: any;
 
 import { ResultListComponent } from '../result-list/result_list.component';
 import { ConfigService } from '../services/config.service';
-import { LoggerService } from '../services/log.service';
 import { RequestsService } from '../services/requests.service';
 import { UserInfo, UserService } from '../services/user.service';
 import { PaginationAPI } from '../test/models/api/pagination.api';
@@ -17,6 +16,7 @@ import {
   BriefMeasurementResponseAPI,
   BriefSubMeasurement
 } from '../test/models/results/brief-measurement-response.api';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   templateUrl: '../result-list/result_list.component.html'
@@ -44,6 +44,7 @@ export class HistoryComponent extends ResultListComponent implements OnInit {
   private transDown = '';
 
   constructor(
+    protected logger: NGXLogger,
     elementRef: ElementRef,
     router: Router,
     configService: ConfigService,
@@ -52,8 +53,7 @@ export class HistoryComponent extends ResultListComponent implements OnInit {
     activatedRoute: ActivatedRoute,
     private userService: UserService
   ) {
-    super(elementRef, router, configService, requests, translationService, activatedRoute);
-    this.logger = LoggerService.getLogger('HistoryComponent');
+    super(logger, elementRef, router, configService, requests, translationService, activatedRoute);
     this.urlpath = '/history/';
     this.translationKey = 'HISTORY';
     this.graph = {

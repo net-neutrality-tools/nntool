@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { WebsiteSettings } from '../settings/settings.interface';
-import { Logger, LoggerService } from './log.service';
 
 import { environment } from '../../environments/environment';
 
@@ -26,7 +25,6 @@ declare var __TEST_CONFIG__: any;
 
 @Injectable()
 export class ConfigService {
-  private logger: Logger = LoggerService.getLogger('ConfigService');
   private config: WebsiteSettings = environment;
   private constants: any = __TEST_CONFIG__;
 

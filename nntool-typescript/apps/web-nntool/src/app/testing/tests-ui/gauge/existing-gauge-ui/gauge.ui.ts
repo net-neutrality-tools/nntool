@@ -1,4 +1,4 @@
-import { LoggerService } from '../../../../services/log.service';
+import { NGXLogger } from 'ngx-logger';
 import { BaseMeasurementGauge, Point, ProgressType, StateView } from './base.gauge.ui';
 
 export class MeasurementGauge extends BaseMeasurementGauge {
@@ -17,6 +17,7 @@ export class MeasurementGauge extends BaseMeasurementGauge {
   private canvasPartitionContext: CanvasRenderingContext2D;
 
   constructor(
+    protected logger: NGXLogger,
     private canvas: HTMLCanvasElement,
     private canvasPartition: HTMLCanvasElement,
     private stateView: HTMLElement,
@@ -34,8 +35,7 @@ export class MeasurementGauge extends BaseMeasurementGauge {
     public gaugeFont: string = null,
     public hasQos: boolean = false
   ) {
-    super(translations, gaugeColors);
-    this.logger = LoggerService.getLogger('MeasurementGauge');
+    super(logger, translations, gaugeColors);
     this.canvasContext = this.canvas.getContext('2d');
     this.canvasPartitionContext = this.canvasPartition.getContext('2d');
 

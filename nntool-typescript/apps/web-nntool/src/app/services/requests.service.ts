@@ -1,19 +1,16 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ElementRef, Injectable } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
 
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 
-import { Logger, LoggerService } from './log.service';
-
 @Injectable()
 export class RequestsService {
-  private static logger: Logger = LoggerService.getLogger('RequestsService');
-
-  constructor(private http: HttpClient) {}
+  constructor(private logger: NGXLogger, private http: HttpClient) {}
 
   public getJson<T>(uri: string, params?: { [key: string]: any }, headers?: { [key: string]: any }): Observable<T> {
-    RequestsService.logger.debug('getJson', 'uri', uri, 'params', params);
+    this.logger.debug('getJson', 'uri', uri, 'params', params);
 
     return this.http
       .get<T>(uri, {
@@ -29,7 +26,7 @@ export class RequestsService {
     params?: { [key: string]: any },
     headers?: { [key: string]: any }
   ): Observable<T> {
-    RequestsService.logger.debug('putJson', 'uri', uri, 'params', params, 'data', data);
+    this.logger.debug('putJson', 'uri', uri, 'params', params, 'data', data);
 
     return this.http
       .put<T>(uri, JSON.stringify(data), {
@@ -45,7 +42,7 @@ export class RequestsService {
     params?: { [key: string]: any },
     headers?: { [key: string]: any }
   ): Observable<T> {
-    RequestsService.logger.debug('postJson', 'uri', uri, 'params', params, 'data', data);
+    this.logger.debug('postJson', 'uri', uri, 'params', params, 'data', data);
     return this.http
       .post<T>(uri, JSON.stringify(data), {
         headers: this.prepareHeaders(headers),
@@ -55,7 +52,7 @@ export class RequestsService {
   }
 
   public deleteJson<T>(uri: string, params?: { [key: string]: any }, headers?: { [key: string]: any }): Observable<T> {
-    RequestsService.logger.debug('deleteJson', 'uri', uri, 'params', params);
+    this.logger.debug('deleteJson', 'uri', uri, 'params', params);
 
     return this.http
       .delete<T>(uri, {

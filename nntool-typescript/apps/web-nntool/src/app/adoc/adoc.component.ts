@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
 
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 import { ConfigService } from '../services/config.service';
-import { LoggerService } from '../services/log.service';
 import { ADocService } from './adoc.service';
 
 @Component({
@@ -15,11 +15,11 @@ export class ADocComponent implements AfterViewInit, OnDestroy, OnInit {
   public key = '';
   public loading = false;
 
-  protected logger = LoggerService.getLogger('ADocComponent');
   protected injectedVars: { [key: string]: string };
   private subs: Subscription[] = [];
 
   constructor(
+    private logger: NGXLogger,
     private elementRef: ElementRef,
     private renderer: Renderer2,
     private translateService: TranslateService,

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
 import { ConfigService } from '../services/config.service';
-import { Logger, LoggerService } from '../services/log.service';
 import { UserInfo, UserService } from '../services/user.service';
 import { WebsiteSettings } from '../settings/settings.interface';
 
@@ -9,7 +9,6 @@ import { WebsiteSettings } from '../settings/settings.interface';
 })
 export class SettingsComponent implements OnInit {
   // TODO i18n
-  private logger: Logger = LoggerService.getLogger('SettingsComponent');
   private settings: WebsiteSettings;
 
   private user: UserInfo;
@@ -58,7 +57,7 @@ export class SettingsComponent implements OnInit {
     return this.user.uuid;
   }
 
-  constructor(private configService: ConfigService, private userService: UserService) {}
+  constructor(private logger: NGXLogger, private configService: ConfigService, private userService: UserService) {}
 
   public ngOnInit() {
     this.settings = this.configService.getConfig();

@@ -1,4 +1,4 @@
-import { Logger, LoggerService } from '../../../../services/log.service';
+import { NGXLogger } from 'ngx-logger';
 import { GaugeUIStateEnum } from '../enums/gauge-ui-state.enum';
 import { GaugeUIState } from '../gauge-ui-state';
 
@@ -59,7 +59,6 @@ export abstract class BaseMeasurementGauge {
   }
   public currentState: GaugeUIState = null;
 
-  protected logger: Logger = LoggerService.getLogger('BaseMeasurementGauge');
   protected drawing = false;
 
   protected _value = 0;
@@ -77,7 +76,11 @@ export abstract class BaseMeasurementGauge {
   protected downContent = '';
   protected dirty = false;
 
-  constructor(public translations: { [key: string]: any }, public gaugeColors: { [key: string]: string } = null) {}
+  constructor(
+    protected logger: NGXLogger,
+    public translations: { [key: string]: any },
+    public gaugeColors: { [key: string]: string } = null
+  ) {}
 
   public resizeEvent(): void {}
 

@@ -14,7 +14,6 @@ import { LmapOption, MeasurementTypeParameters } from '../lmap/models/shared/lma
 import { AppService } from '../services/app.service';
 import { ConfigService } from '../services/config.service';
 import { LocationService } from '../services/location.service';
-import { LoggerService } from '../services/log.service';
 import { RequestsService } from '../services/requests.service';
 import { TestService } from '../services/test/test.service';
 import { UserService } from '../services/user.service';
@@ -73,7 +72,6 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
       activatedRoute,
       appService
     );
-    this.logger = LoggerService.getLogger('NetTestComponent');
   }
 
   public ngOnInit() {

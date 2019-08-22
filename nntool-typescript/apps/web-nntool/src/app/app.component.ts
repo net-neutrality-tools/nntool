@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NGXLogger } from 'ngx-logger';
 
 import { LangChangeEvent, TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -10,7 +11,6 @@ import { filter } from 'rxjs/operators';
 import { AppService } from './services/app.service';
 import { ConfigService } from './services/config.service';
 import { Guard } from './services/guard.service';
-import { Logger, LoggerService } from './services/log.service';
 import { BrowserStorageService } from './services/storage.service';
 import { UserInfo, UserService } from './services/user.service';
 import { FeatureSettings } from './settings/features.settings.interface';
@@ -28,11 +28,11 @@ export class AppComponent implements OnInit, OnDestroy {
   public config: WebsiteSettings;
   public guard: Guard;
 
-  private logger: Logger = LoggerService.getLogger('AppComponent');
   private subs: Subscription[] = [];
   private localUrlRegex: any = /\/\w+#\w+.*/;
 
   constructor(
+    private logger: NGXLogger,
     private titleService: Title,
     private router: Router,
     private location: Location,
