@@ -21,7 +21,7 @@ import Siesta
 ///
 class CollectorService: RestApiService {
 
-    init(baseURL: URLConvertible = "http://localhost:8081/api/v1/measurements", agent: MeasurementAgent) {
+    init(baseURL: URLConvertible, agent: MeasurementAgent) {
         super.init(baseURL: baseURL, agent: agent)
 
         configureTransformer("/", forType: ApiResponse<MeasurementResultResponse>.self)

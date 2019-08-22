@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
+ * Exception that is thrown if the search request did fail.
  * 
  * @author alladin-IT GmbH (bp@alladin.at)
  *

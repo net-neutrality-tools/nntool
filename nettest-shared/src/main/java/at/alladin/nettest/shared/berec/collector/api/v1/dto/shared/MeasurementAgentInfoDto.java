@@ -16,15 +16,15 @@ import com.google.gson.annotations.SerializedName;
 @JsonClassDescription("Contains information about the measurement agent.")
 public class MeasurementAgentInfoDto {
 
-//	/**
-//	 * The client UUID.
-//	 */
-//	@io.swagger.annotations.ApiModelProperty("The client UUID.")
-//	@JsonPropertyDescription("The client UUID.")
-//	@Expose
-//	@SerializedName("uuid")
-//	@JsonProperty("uuid")
-//	private String uuid;
+	/**
+	 * The agent UUID.
+	 */
+	@io.swagger.annotations.ApiModelProperty("The agent UUID.")
+	@JsonPropertyDescription("The agent UUID.")
+	@Expose
+	@SerializedName("uuid")
+	@JsonProperty("uuid")
+	private String uuid;
 	
 	/**
 	 * Application version name (e.g. 1.0.0).
@@ -86,6 +86,14 @@ public class MeasurementAgentInfoDto {
     @JsonProperty(required = true, value = "type")
     private MeasurementAgentTypeDto type;
 
+	public String getUuid() {
+		return uuid;
+	}
+	
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+	
 	public String getAppVersionName() {
 		return appVersionName;
 	}

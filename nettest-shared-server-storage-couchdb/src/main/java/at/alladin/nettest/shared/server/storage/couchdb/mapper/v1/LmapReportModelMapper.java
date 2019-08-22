@@ -86,7 +86,9 @@ public interface LmapReportModelMapper {
 //	Signal map(SignalDto signalDto);
 	
 	@Mappings({
-		@Mapping(target = "uuid", ignore = true),
+		@Mapping(target = "uuid", ignore = true), // generate
+		@Mapping(target = "openDataUuid", ignore = true), // generate
+		@Mapping(target = "systemUuid", ignore = true), // generate
 		
 		@Mapping(target = "id", ignore = true),
 		@Mapping(target = "rev", ignore = true),
@@ -118,7 +120,7 @@ public interface LmapReportModelMapper {
 		// ApiRequestInfo
 
 		@Mapping(source = "additionalRequestInfo.language", 	target = "agentInfo.language"),
-		@Mapping(source = "additionalRequestInfo.timezone", 	target = "agentInfo.timezone"),		
+		@Mapping(source = "additionalRequestInfo.timezone", 	target = "agentInfo.timezone"),
 		@Mapping(source = "additionalRequestInfo.agentType", 	target = "agentInfo.type"),
 		@Mapping(source = "additionalRequestInfo.osName", 		target = "deviceInfo.osInfo.name"),
 		@Mapping(source = "additionalRequestInfo.osVersion", 	target = "deviceInfo.osInfo.version"),

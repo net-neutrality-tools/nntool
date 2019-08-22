@@ -86,7 +86,7 @@ public class LmapScheduleDto {
 	@JsonPropertyDescription("A set of Suppression tags that are used to select Schedules to be suppressed.")
 	@Expose
 	@SerializedName("suppression-tag")
-	@JsonProperty(required = true, value = "suppression-tag")
+	@JsonProperty(required = false, value = "suppression-tag")
 	private List<String> suppressionTags = new ArrayList<>();
 	
 	/**
@@ -96,7 +96,7 @@ public class LmapScheduleDto {
 	@JsonPropertyDescription("The current state of the Schedule (One of: enabled, disabled, running, suppressed).")
 	@Expose
 	@SerializedName("state")
-	@JsonProperty(required = true, value = "state")
+	@JsonProperty(required = false, value = "state")
 	private LmapStateDto state;
 	
 	/**
@@ -108,7 +108,7 @@ public class LmapScheduleDto {
 	@JsonPropertyDescription("The amount of secondary storage (e.g., allocated in a file system) holding temporary data allocated to the Schedule in bytes.  This object reports the amount of allocated physical storage and not the storage used by logical data records.")
 	@Expose
 	@SerializedName("storage")
-	@JsonProperty(required = true, value = "storage")
+	@JsonProperty(required = false, value = "storage")
 	private Long storage;
 	
 	/**
@@ -120,7 +120,7 @@ public class LmapScheduleDto {
 	@JsonPropertyDescription("Number of invocations of this Schedule. This counter does not include suppressed invocations or invocations that were prevented due to an overlap with a previous invocation of this Schedule.")
 	@Expose
 	@SerializedName("invocations")
-	@JsonProperty(required = true, value = "invocations")
+	@JsonProperty(required = false, value = "invocations")
 	private Integer invocations;
 
 	/**
@@ -130,7 +130,7 @@ public class LmapScheduleDto {
 	@JsonPropertyDescription("Number of suppressed executions of this Schedule.")
 	@Expose
 	@SerializedName("suppressions")
-	@JsonProperty(required = true, value = "suppressions")
+	@JsonProperty(required = false, value = "suppressions")
 	private Integer suppressions;
 	
 	/**
@@ -140,7 +140,7 @@ public class LmapScheduleDto {
 	@JsonPropertyDescription("Number of executions prevented due to overlaps with a previous invocation of this Schedule.")
 	@Expose
 	@SerializedName("overlaps")
-	@JsonProperty(required = true, value = "overlaps")
+	@JsonProperty(required = false, value = "overlaps")
 	private Integer overlaps;
 	
 	/**
@@ -150,7 +150,7 @@ public class LmapScheduleDto {
 	@JsonPropertyDescription("Number of failed executions of this Schedule. A failed execution is an execution where at least one Action failed.")
 	@Expose
 	@SerializedName("failures")
-	@JsonProperty(required = true, value = "failures")
+	@JsonProperty(required = false, value = "failures")
 	private Integer failures;
 	
 	/**

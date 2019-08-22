@@ -62,6 +62,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if isNewlyLaunched {
             logger.debug(BundleHelper.getAppVersionInfo())
             logger.debug(BundleHelper.getBundleGitInfoString())
+
+            logger.debugExec {
+                MeasurementAgentSettingsHelper.debugSavedSettings()
+            }
         }
 
         // Refresh MeasurementAgent settings after App launch

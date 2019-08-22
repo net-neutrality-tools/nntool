@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.MessageSource;
 
 import com.google.gson.GsonBuilder;
 
@@ -20,11 +21,12 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.Ful
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective.QoSTranslationKeys;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective.QoSTranslationKeys;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapper;
+import at.alladin.nettest.shared.server.storage.couchdb.util.ReturnCodeMessageSource;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
@@ -41,6 +43,9 @@ public class QoSEvaluationServiceTest {
 
 	@Injectable
 	private GsonBuilder builder;
+	
+	@Injectable
+	private MessageSource messageSource = new ReturnCodeMessageSource();
 
 	@Injectable
 	@Mocked

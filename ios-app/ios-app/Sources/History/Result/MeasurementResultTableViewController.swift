@@ -56,9 +56,9 @@ class MeasurementResultTableViewController: UITableViewController {
                         guard (fullQoSMeasurement.results?.count ?? 0) > 0 else {
                             return
                         }
-                        
+
                         self.qosData = fullQoSMeasurement
-                        
+
                         let qosGroup = DetailMeasurementGroup()
                         qosGroup.title = "QoS"
                         qosGroup.iconCharacter = IconFont.qos.rawValue

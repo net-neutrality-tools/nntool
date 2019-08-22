@@ -57,12 +57,6 @@ public class CouchDbConfiguration {
 		//Converters.registerLocalDateTime(gsonBuilder);
 		//Converters.registerDateTime(gsonBuilder);
 		
-//		final LocalDateTime now = LocalDateTime.now();
-//		System.out.println(now);
-//		final String json = gsonBuilder.create().toJson(now);
-//		System.out.println(json);
-//		System.out.println(gsonBuilder.create().fromJson(json, LocalDateTime.class));
-		
 		return gsonBuilder;
 	}
 	
