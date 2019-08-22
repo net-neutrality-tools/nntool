@@ -154,16 +154,32 @@ public class TitleFragment extends ActionBarFragment {
                                 }
                             }
 
+                            final ArrayList<MeasurementType> followUpActions = new ArrayList<>();
+
                             if (PreferencesUtil.isQoSEnabled(getContext())) {
-                                final ArrayList<MeasurementType> followUpActions = new ArrayList<>();
                                 followUpActions.add(MeasurementType.QOS);
-                                bundle.putSerializable(MeasurementService.EXTRAS_KEY_FOLLOW_UP_ACTIONS, followUpActions);
                             }
 
-                            ((MainActivity) getActivity()).startMeasurement(MeasurementType.SPEED, bundle);
+                            MeasurementType toExecute = null;
+                            if (PreferencesUtil.isSpeedEnabled(getContext()) &&
+                                    (PreferencesUtil.isPingEnabled(getContext()) || PreferencesUtil.isDownloadEnabled(getContext()) || PreferencesUtil.isUploadEnabled(getContext()))) {
+                                toExecute = MeasurementType.SPEED;
+                            } else if (followUpActions.size() > 0) {
+                                toExecute = followUpActions.remove(0);
+
                             }
+
+                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_FOLLOW_UP_ACTIONS, followUpActions);
+
+                            if (toExecute != null) {
+                                ((MainActivity) getActivity()).startMeasurement(toExecute, bundle);
+                            } else {
+                                //TODO: display a warning about the not having any measurements selected?
+                            }
+
                         }
-                    });
+                    }
+                });
 
         task.execute();
     }

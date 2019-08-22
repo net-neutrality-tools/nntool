@@ -28,6 +28,7 @@ import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.SendReportTask;
 import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
+import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationCollector;
 import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
@@ -183,6 +184,11 @@ public class MeasurementService extends Service implements ServiceConnection {
         } else {
             speedTaskDesc.setClientIp(clientIpv4);
         }
+
+        //fetch user settings to adapt provided taskDesc
+        speedTaskDesc.setPerformRtt(PreferencesUtil.isPingEnabled(getApplicationContext()));
+        speedTaskDesc.setPerformDownload(PreferencesUtil.isDownloadEnabled(getApplicationContext()));
+        speedTaskDesc.setPerformUpload(PreferencesUtil.isUploadEnabled(getApplicationContext()));
 
         jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskDesc);
         jniSpeedMeasurementClient.setCollectorUrl(speedTaskCollectorUrl);

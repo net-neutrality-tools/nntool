@@ -2,11 +2,14 @@ package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +19,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsResponse.TranslatedQoSTypeInfo;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
@@ -29,6 +33,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.M
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse.SpeedMeasurementPeer;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
@@ -68,6 +74,9 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsRespon
  */
 @Service
 public class CouchDbStorageService implements StorageService {
+	
+	@SuppressWarnings("unused")
+	private final Logger logger = LoggerFactory.getLogger(CouchDbStorageService.class);
 
 	@Autowired
 	private MeasurementRepository measurementRepository;
@@ -267,11 +276,25 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Override
 	public SettingsResponse getSettings(String settingsUuid) throws StorageServiceException {
+		SettingsResponse ret = null;
 		try {
-			return settingsResponseMapper.map(settingsRepository.findByUuid(settingsUuid));
+			ret = settingsResponseMapper.map(settingsRepository.findByUuid(settingsUuid));
 		} catch (Exception ex) {
 			throw new StorageServiceException(ex);
 		}
+		ret.setQosTypeInfo(new LinkedHashMap<>());
+		for (QosMeasurementType type : QosMeasurementType.values()) {
+			final TranslatedQoSTypeInfo qosInfo = new TranslatedQoSTypeInfo();
+			qosInfo.setName(type.getNameKey()); //TODO: Messagesource
+			qosInfo.setDescription(type.getDescriptionKey()); //TODO: Messagesource
+			try {
+				ret.getQosTypeInfo().put(QoSMeasurementTypeDto.valueOf(type.getValue().toUpperCase()),  qosInfo);				
+			} catch (Exception ex) {
+				logger.error("Trying to map invalid enum w/value: " + type.getValue());
+				ex.printStackTrace();
+			}
+		}
+		return ret;
 	}
 	
 	@Override

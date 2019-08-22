@@ -104,12 +104,31 @@
     <string name="result_qos_single_result">Result</string>
     <string name="result_qos_single_details">Details</string>
 
-    <!-- Help specific string -->
+    <!-- Help specific strings -->
     <string name="help_link_history_section">history</string>
     <string name="help_link_result_section">result</string>
     <string name="help_link_qos_result_section">qos</string>
     <string name="help_link_statistics_section">statistics</string>
     <string name="help_link_map_section">map</string>
     <string name="help_link_settings_section">settings</string>
+
+    <!-- Preference specific strings -->
+
+    <string name="preference_enable_speed_title">Speed</string>
+    <string name="preference_enable_speed_summary">Enable speed testing</string>
+    <string name="preference_enable_qos_title">Quality of Service</string>
+    <string name="preference_enable_qos_summary">Enable Quality of Service testing</string>
+    <string name="preference_single_test_selection_title">Test selection</string>
+    <string name="preference_single_test_selection_summary">Enable/Disable specific tests</string>
+    <string name="preference_category_test_selection">Test selection</string>
+
+    <!-- Preference test selection specific strings -->
+
+    <string name="preference_category_speed_test_selection">Speed Tests</string>
+    <string name="preference_category_qos_test_selection">Quality of Service Tests</string>
+    <string name="preference_enable_ping_title">Ping</string>
+    <string name="preference_enable_download_title">Download</string>
+    <string name="preference_enable_upload_title">Upload</string>
+
 
 </resources>
