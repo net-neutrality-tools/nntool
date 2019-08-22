@@ -40,19 +40,20 @@ export class QoSResultComponent extends MeasurementViewComponent implements OnIn
                 this.response = data.data;
                 this.logger.debug("result: ", this.response);
                 this.logger.debug("measurements: ", this.response.measurements.QOS);
-                let resultMap: Map<string, QoSResultGroupHolder> = new Map();
+                const resultMap: Map<string, QoSResultGroupHolder> = new Map();
                 this.qosGroups = new Array();
                 this.response.measurements.QOS.results.forEach( result => {
                     if (!resultMap[result.type]) {
-                        let group: QoSResultGroupHolder = new QoSResultGroupHolder();
+                        const groupHolder = new QoSResultGroupHolder();
                         const desc: QoSTypeDescription = this.response.measurements.QOS.qos_type_to_description_map[result.type];
-                        group.icon = desc.icon;
-                        group.title = desc.name;
-                        group.description = desc.description;
-                        resultMap[result.type] = group;
-                        this.qosGroups.push(group);
+                        groupHolder.icon = desc.icon;
+                        groupHolder.title = desc.name;
+                        groupHolder.description = desc.description;
+                        resultMap[result.type] = groupHolder;
+                        this.qosGroups.push(groupHolder);
                     }
-                    let group: QoSResultGroupHolder = resultMap[result.type];
+
+                    const group = resultMap[result.type];
                     group.successes += result.success_count;
                     group.failures += result.failure_count;
                     //need to manually add hidden here, as the preset value doesn't apply correctly w/the deserialization
@@ -69,7 +70,7 @@ export class QoSResultGroupHolder extends SlideableItem {
     icon: string;
     title: string;
     description: string;
-    successes: number = 0;
-    failures: number = 0;
-    tests: QoSResult[] = new Array();
+    successes = 0;
+    failures = 0;
+    tests = new Array<QoSResult>();
 }

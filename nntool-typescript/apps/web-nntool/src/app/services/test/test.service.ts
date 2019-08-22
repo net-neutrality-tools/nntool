@@ -166,7 +166,7 @@ export class TestService {
 
                 const deviceInfo: DeviceInfo = this.deviceService.getDeviceInfo();
 
-                let requestInfo = this.requestInfoService.getRequestInfo();
+                const requestInfo = this.requestInfoService.getRequestInfo();
                 requestInfo.agent_uuid = context.user.uuid;
                 requestInfo.code_name = deviceInfo.browser_version;
                 requestInfo.model = deviceInfo.browser;
@@ -215,7 +215,7 @@ export class TestService {
 
         const deviceInfo: DeviceInfo = this.deviceService.getDeviceInfo();
 
-        let requestInfo = this.requestInfoService.getRequestInfo();
+        const requestInfo = this.requestInfoService.getRequestInfo();
                 requestInfo.agent_uuid = this.userService.user.uuid;
                 requestInfo.code_name = deviceInfo.browser_version;
                 requestInfo.model = deviceInfo.browser;

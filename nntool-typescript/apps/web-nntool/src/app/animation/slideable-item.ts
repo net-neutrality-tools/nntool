@@ -1,6 +1,6 @@
 
 export abstract class SlideableItem {
-    showSlideableItem: boolean = false;
+    showSlideableItem = false;
 
     constructor () {
         this.showSlideableItem = false;

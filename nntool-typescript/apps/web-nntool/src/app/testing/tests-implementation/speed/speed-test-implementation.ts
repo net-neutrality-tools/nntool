@@ -129,7 +129,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
             wsMeasureTime: downloadUploadDuration,
         };
 
-        if (window.location.protocol == "https:") {
+        if (window.location.protocol === "https:") {
           extendedConfig.wsTargetPort = "443";
           extendedConfig.wsWss = 1;
         }

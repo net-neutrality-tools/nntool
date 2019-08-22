@@ -20,110 +20,109 @@ import {OpentestDetailViewComponent} from './result/view-detail.component';
 import {SettingsComponent} from './user/settings.component';
 import {DocuComponent} from './docu/docu.component';
 
-
 export const routes: Routes = [{
-    path: '',
-    canActivate: [Guard],
-    canActivateChild: [Guard],
-    runGuardsAndResolvers: 'always',
-    children: [
-        {
-            path: 'home',
-            component: HomeComponent
-        },
-        {
-            path: 'tc',
-            component: TCComponent
-        },
-        {
-            path: 'statistics',
-            component: StatisticsComponent
-        },
-        {
-            path: 'opendata',
-            component: OpendataComponent
-        },
-        {
-            path: 'map',
-            component: MapComponent
-        },
-        {
-            path: 'testresults',
-            children: [
-                {
-                    path: '',
-                    component: ResultListComponent,
-                    pathMatch: 'full'
-                },
-                {
-                    path: ':uuid',
-                    children: [
-                        {
-                            path: '',
-                            component: OpentestViewComponent,
-                            pathMatch: 'full'
-                        },
-                        {
-                            path: 'details',
-                            component: OpentestDetailViewComponent
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            path: 'nettest',
-            component: NetTestComponent,
-            canDeactivate: [TestGuard]
-        },
-        {
-            path: 'about',
-            component: AboutComponent
-        },
-        {
-            path: 'docu',
-            component: DocuComponent
-        },
-        {
-            path: 'history',
-            children: [
-                {
-                    path: '',
-                    component: HistoryComponent,
-                    pathMatch: 'full'
-                },
-                {
-                    path: ':uuid',
-                    children: [
-                        {
-                            path: '',
-                            component: HistoryViewComponent,
-                            pathMatch: 'full'
-                        },
-                        {
-                            path: 'details',
-                            component: HistoryDetailViewComponent
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            path: 'help',
-            component: HelpComponent
-        },
-        {
-            path: 'settings',
-            component: SettingsComponent
-        }
-    ]
-}, {
-    path: '404',
-    component: NotFoundComponent
-}, {
-    path: '**',
-    redirectTo: '404'
-}
+  path: '',
+  canActivate: [Guard],
+  canActivateChild: [Guard],
+  runGuardsAndResolvers: 'always',
+  children: [
+      {
+          path: 'home',
+          component: HomeComponent
+      },
+      {
+          path: 'tc',
+          component: TCComponent
+      },
+      {
+          path: 'statistics',
+          component: StatisticsComponent
+      },
+      {
+          path: 'opendata',
+          component: OpendataComponent
+      },
+      {
+          path: 'map',
+          component: MapComponent
+      },
+      {
+          path: 'testresults',
+          children: [
+              {
+                  path: '',
+                  component: ResultListComponent,
+                  pathMatch: 'full'
+              },
+              {
+                  path: ':uuid',
+                  children: [
+                      {
+                          path: '',
+                          component: OpentestViewComponent,
+                          pathMatch: 'full'
+                      },
+                      {
+                          path: 'details',
+                          component: OpentestDetailViewComponent
+                      }
+                  ]
+              }
+          ]
+      },
+      {
+          path: 'nettest',
+          component: NetTestComponent,
+          canDeactivate: [TestGuard]
+      },
+      {
+          path: 'about',
+          component: AboutComponent
+      },
+      {
+          path: 'docu',
+          component: DocuComponent
+      },
+      {
+          path: 'history',
+          children: [
+              {
+                  path: '',
+                  component: HistoryComponent,
+                  pathMatch: 'full'
+              },
+              {
+                  path: ':uuid',
+                  children: [
+                      {
+                          path: '',
+                          component: HistoryViewComponent,
+                          pathMatch: 'full'
+                      },
+                      {
+                          path: 'details',
+                          component: HistoryDetailViewComponent
+                      }
+                  ]
+              }
+          ]
+      },
+      {
+          path: 'help',
+          component: HelpComponent
+      },
+      {
+          path: 'settings',
+          component: SettingsComponent
+      }
+  ]
+  }, {
+      path: '404',
+      component: NotFoundComponent
+  }, {
+      path: '**',
+      redirectTo: '404'
+  }
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(

@@ -40,11 +40,11 @@ export class ServerSelectionComponent implements OnInit {
             `${this.configService.getServerControl()}speed-measurement-peers`,
              measurementPeerRequest).subscribe( (response: ResponseAPI<SpeedMeasurementPeerResponseAPI>) => {
                 this.speedServerList = response.data.peers;
-                let foundDefault: boolean = false;
-                for (let server of this.speedServerList) {
+                let foundDefault = false;
+                for (const server of this.speedServerList) {
                     if (server.default) {
                         this.currentSpeedServer = server;
-                        foundDefault = true;    
+                        foundDefault = true;
                         break;
                     }
                 }
@@ -52,7 +52,7 @@ export class ServerSelectionComponent implements OnInit {
                     this.currentSpeedServer = this.speedServerList[0];
                 }
             });
-        
+
     }
 
     public getCurrentSpeedServer () : SpeedMeasurementPeer {

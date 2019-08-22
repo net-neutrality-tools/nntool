@@ -42,7 +42,6 @@ export class HistoryViewComponent extends MeasurementViewComponent implements On
             (data: any) => {
                 this.loading = false;
                 this.response = data.data;
-                this.response.groups[0].items[0].title
             }
         );
     }

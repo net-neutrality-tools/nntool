@@ -15,7 +15,7 @@ export class RequestInfoService {
 
     private static logger: Logger = LoggerService.getLogger('RequestInfoService');
 
-    constructor (private readonly testSettingsService: TestSettingsService, 
+    constructor (private readonly testSettingsService: TestSettingsService,
                 private readonly locationService: LocationService,
                 private readonly userService: UserService,
                 private readonly deviceService: DeviceDetectorService) {
@@ -23,12 +23,12 @@ export class RequestInfoService {
     }
 
     getRequestInfo(): any {
-        
+
         const { agentSettings, testSettings } = this.testSettingsService;
 
         const deviceInfo: DeviceInfo = this.deviceService.getDeviceInfo();
-        
-        let request_info = {
+
+        const request_info = {
             agent_type: testSettings.agent_type,
             agent_id: this.userService.user.uuid, // TODO: check which uuid is which
             api_level: undefined,
@@ -43,8 +43,8 @@ export class RequestInfoService {
             os_version: agentSettings.os_version,
             timezone: agentSettings.timezone
         };
-        return request_info;
 
+        return request_info;
     }
 
     private getFirstLocation(): GeoLocation {
