@@ -26,11 +26,6 @@
     <string name="task_measurement_initiation_dialog_info">Initiating measurement…</string>
     <string name="task_send_report_dialog_info">Sending report to collector…</string>
 
-    <string name="alert_send_measurement_result_title">Sending results</string>
-    <string name="alert_send_measurement_results_error">An error occurred while sending measurement results.</string>
-    <string name="alert_cancel_measurement_title">Abort measurement</string>
-    <string name="alert_cancel_measurement_content">Abort current measurement?</string>
-
     <string name="measurement_data_consumption_warning">I am a data consumption warning!</string>
 
     <string name="interface_traffic_in">Traffic in</string>
@@ -41,6 +36,17 @@
 
     <string name="ipv4_text">IPv4</string>
     <string name="ipv6_text">IPv6</string>
+
+    <!-- Alert dialog strings -->
+    <string name="alert_send_measurement_result_title">Sending results</string>
+    <string name="alert_send_measurement_results_error">An error occurred while sending measurement results.</string>
+    <string name="alert_cancel_measurement_title">Abort measurement</string>
+    <string name="alert_cancel_measurement_content">Abort current measurement?</string>
+    <string name="alert_no_measurement_selected_title">No measurement enabled</string>
+    <string name="alert_no_measurement_selected_content">There are no measurements enabled for execution. Please enable measurements in the settings.</string>
+    <string name="alert_no_measurement_selected_to_settings">Go to settings!</string>
+    <string name="alert_error_during_measurement_title">Error</string>
+    <string name="alert_error_during_measurement_content">There has been an unexpected error during this measurement</string>
 
     <!-- Geo-location specific strings -->
     <string name="geo_location_km_h">km/h</string>

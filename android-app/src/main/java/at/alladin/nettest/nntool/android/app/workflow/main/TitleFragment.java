@@ -20,6 +20,7 @@ import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.RequestAgentIpTask;
 import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
 import at.alladin.nettest.nntool.android.app.async.RequestSpeedMeasurementPeersTask;
+import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
 import at.alladin.nettest.nntool.android.app.util.LmapUtil;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
@@ -30,11 +31,12 @@ import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.system.SystemInfoGatherer;
 import at.alladin.nettest.nntool.android.app.view.CpuAndRamView;
 import at.alladin.nettest.nntool.android.app.view.GeoLocationView;
+import at.alladin.nettest.nntool.android.app.view.InterfaceTrafficView;
 import at.alladin.nettest.nntool.android.app.view.Ipv4v6View;
 import at.alladin.nettest.nntool.android.app.view.MeasurementServerSelectionView;
 import at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView;
-import at.alladin.nettest.nntool.android.app.view.InterfaceTrafficView;
 import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
+import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ip.IpResponse;
@@ -174,7 +176,11 @@ public class TitleFragment extends ActionBarFragment {
                             if (toExecute != null) {
                                 ((MainActivity) getActivity()).startMeasurement(toExecute, bundle);
                             } else {
-                                //TODO: display a warning about the not having any measurements selected?
+                                AlertDialogUtil.showCustomDialog(getContext(), R.string.alert_no_measurement_selected_title, R.string.alert_no_measurement_selected_content, R.string.alert_no_measurement_selected_to_settings, android.R.string.ok,
+                                        (dialog, which) -> {
+                                            ((MainActivity) getActivity()).navigateTo(WorkflowTarget.SETTINGS);
+                                            dialog.cancel();
+                                        }, null);
                             }
 
                         }

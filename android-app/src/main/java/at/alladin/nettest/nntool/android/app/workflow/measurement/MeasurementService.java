@@ -118,6 +118,8 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     private ArrayList<MeasurementType> followUpActions;
 
+    private OnMeasurementErrorListener onMeasurementErrorListener;
+
     public class MeasurementServiceBinder extends Binder {
         public MeasurementService getService() {
             return MeasurementService.this;
@@ -267,6 +269,9 @@ public class MeasurementService extends Service implements ServiceConnection {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     //TODO: handle errors during measurement
+                    if (onMeasurementErrorListener != null) {
+                        onMeasurementErrorListener.onMeasurementError(ex);
+                    }
                 }
             }
         });
@@ -442,6 +447,18 @@ public class MeasurementService extends Service implements ServiceConnection {
             }
         }
         return ret;
+    }
+
+    public void setOnMeasurementErrorListener(final OnMeasurementErrorListener listener) {
+        this.onMeasurementErrorListener = listener;
+    }
+
+    public void removeOnMeasurementErrorListener() {
+        this.onMeasurementErrorListener = null;
+    }
+
+    public interface OnMeasurementErrorListener {
+        void onMeasurementError(final Exception ex);
     }
 
 }

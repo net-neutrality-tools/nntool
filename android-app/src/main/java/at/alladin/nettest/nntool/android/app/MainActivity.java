@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case SETTINGS:
                 targetFragment = SettingsFragment.newInstance();
+                navigation.getMenu().findItem(R.id.navigation_settings).setChecked(true);
                 break;
             case MAP:
                 targetFragment = MapFragment.newInstance();
