@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FooterComponent } from './footer.component';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { FooterComponent } from './footer.component';
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
@@ -21,9 +21,8 @@ describe('FooterComponent', () => {
         }),
         HttpClientModule
       ],
-      declarations: [ FooterComponent ]
-    })
-    .compileComponents();
+      declarations: [FooterComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

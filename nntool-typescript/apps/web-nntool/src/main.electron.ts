@@ -3,7 +3,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { environment } from './environments/environment'; // TODO
 // libs
-//import { environment } from '@nntool-typescript/core';
+// import { environment } from '@nntool-typescript/core';
 
 // app
 import { AppElectronModule } from './app/app.electron.module';

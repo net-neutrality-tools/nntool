@@ -1,11 +1,11 @@
 export class Traffic {
-    /**
-     * Bytes received.
-     */
-    bytes_rx: number;
+  /**
+   * Bytes received.
+   */
+  public bytes_rx: number;
 
-    /**
-     * Bytes transmitted.
-     */
-    bytes_tx: number;
+  /**
+   * Bytes transmitted.
+   */
+  public bytes_tx: number;
 }

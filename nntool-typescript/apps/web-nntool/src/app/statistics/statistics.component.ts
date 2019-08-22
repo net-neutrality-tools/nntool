@@ -1,9 +1,6 @@
-import {Component} from '@angular/core';
-
+import { Component } from '@angular/core';
 
 @Component({
-    templateUrl: './statistics.component.html'
+  templateUrl: './statistics.component.html'
 })
-export class StatisticsComponent {
-
-}
+export class StatisticsComponent {}

@@ -1,7 +1,6 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-    templateUrl: './opendata.component.html'
+  templateUrl: './opendata.component.html'
 })
-export class OpendataComponent {
-}
+export class OpendataComponent {}

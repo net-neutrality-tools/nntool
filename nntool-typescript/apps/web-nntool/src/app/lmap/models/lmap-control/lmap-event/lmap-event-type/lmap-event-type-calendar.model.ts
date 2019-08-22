@@ -1,29 +1,27 @@
-import {LmapEventType} from '../lmap-event-type.api';
-import {LmapEventTypeEventType} from './lmap-event-type-event-type.enum';
+import { LmapEventType } from '../lmap-event-type.api';
+import { LmapEventTypeEventType } from './lmap-event-type-event-type.enum';
 
 export class LmapEventTypeControllerConnected extends LmapEventType {
+  /**
+   * Type identifier of the given event.
+   */
+  public type: LmapEventTypeEventType = LmapEventTypeEventType.CALENDAR;
 
-    /**
-     * Type identifier of the given event.
-     */
-    type: LmapEventTypeEventType = LmapEventTypeEventType.CALENDAR;
+  public month: string;
 
-    month: string;
+  public 'day-of-month': string;
 
-    'day-of-month': string;
+  public 'day-of-week': string;
 
-    'day-of-week': string;
+  public hour: number;
 
-    hour: number;
+  public minute: number;
 
-    minute: number;
+  public second: number;
 
-    second: number;
+  public 'timezone-offset'?: number;
 
-    'timezone-offset'?: number;
+  public start?: string; // TODO: Change back to Date
 
-    start?: string; // TODO: Change back to Date
-
-    end: string; // TODO: Change back to Date
+  public end: string; // TODO: Change back to Date
 }
-

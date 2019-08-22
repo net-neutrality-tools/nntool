@@ -1,7 +1,7 @@
-export const isString = function(arg: any) {
+export const isString = (arg: any) => {
   return typeof arg === 'string';
 };
 
-export const isObject = function(arg: any) {
+export const isObject = (arg: any) => {
   return arg && typeof arg === 'object';
 };

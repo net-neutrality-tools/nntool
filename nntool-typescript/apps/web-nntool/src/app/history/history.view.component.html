@@ -1,61 +1,57 @@
 <!-- #section-intro -->
 <section class="section" id="section-intro">
-    <div class="wrapper">
-        <header class="section-header">
-            <h1 [innerHTML]="translationKey + '.HEADER' | translate"></h1>
-            <figure *ngIf="loading">
-                <img src="assets/img/watch-anim.svg" alt="loading content" class="load-animation">
-                <figcaption>{{ 'RESULT_LIST.LOADING' | translate }}</figcaption>
-            </figure>
-            <div class="icon icon-watch" *ngIf="!loading"></div>
-        </header>
-        <div class="section-content no-data">
-            <h2 *ngIf="!loading && (!response || response.groups.length === 0)">{{ 'RESULT_LIST.NO_DATA' | translate }}</h2>
-            <!--h2 *ngIf="translationKey === 'HISTORY' && !uuid">{{ translationKey + '.NO_USER_UUID' | translate }}</h2-->
-        </div>
+  <div class="wrapper">
+    <header class="section-header">
+      <h1 [innerHTML]="translationKey + '.HEADER' | translate"></h1>
+      <figure *ngIf="loading">
+        <img src="assets/img/watch-anim.svg" alt="loading content" class="load-animation" />
+        <figcaption>{{ 'RESULT_LIST.LOADING' | translate }}</figcaption>
+      </figure>
+      <div class="icon icon-watch" *ngIf="!loading"></div>
+    </header>
+    <div class="section-content no-data">
+      <h2 *ngIf="!loading && (!response || response.groups.length === 0)">{{ 'RESULT_LIST.NO_DATA' | translate }}</h2>
+      <!--h2 *ngIf="translationKey === 'HISTORY' && !uuid">{{ translationKey + '.NO_USER_UUID' | translate }}</h2-->
     </div>
+  </div>
 </section>
 <!-- #section-intro end -->
 
 <!-- #section-arguments -->
 <section *ngIf="response !== undefined" class="section" id="section-arguments">
-    <div class="wrapper">
-        <div class="section-content">
-            <div *ngFor="let group of response.groups">
-                <div class="column-header">
-                <div class="icon icon-font">{{ group.icon_character }}</div>
-                <h2>{{ group.title }}</h2>
-                </div>
-                <div class="section-table">
-                    <!-- stacktable start -->
-                    <table id="result" class="no-stack">
-                        <colgroup>
-                            <col width="50%" />
-                            <col width="40%" />
-                        </colgroup>
-                        <tbody>
-                        <tr *ngFor="let item of group.items">
-                            <td class="text-left">{{ item.title }}</td>
-                            <td class="text-right">{{ item.value }} {{ item.unit }}</td>
-                        </tr>
-                        <tr *ngIf="loading">
-                            <td class="text-left"> . . . </td>
-                            <td class="text-right"> . . . </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <!-- stacktable end -->
-                </div>
-            </div>
+  <div class="wrapper">
+    <div class="section-content">
+      <div *ngFor="let group of response.groups">
+        <div class="column-header">
+          <div class="icon icon-font">{{ group.icon_character }}</div>
+          <h2>{{ group.title }}</h2>
         </div>
+        <div class="section-table">
+          <!-- stacktable start -->
+          <table id="result" class="no-stack">
+            <colgroup>
+              <col width="50%" />
+              <col width="40%" />
+            </colgroup>
+            <tbody>
+              <tr *ngFor="let item of group.items">
+                <td class="text-left">{{ item.title }}</td>
+                <td class="text-right">{{ item.value }} {{ item.unit }}</td>
+              </tr>
+              <tr *ngIf="loading">
+                <td class="text-left">. . .</td>
+                <td class="text-right">. . .</td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- stacktable end -->
+        </div>
+      </div>
     </div>
+  </div>
 </section>
 <!-- #section-arguments end -->
 
-<qos-result-component>
+<qos-result-component> </qos-result-component>
 
-</qos-result-component>
-
-<history-deletion-component>
-
-</history-deletion-component>
+<history-deletion-component> </history-deletion-component>

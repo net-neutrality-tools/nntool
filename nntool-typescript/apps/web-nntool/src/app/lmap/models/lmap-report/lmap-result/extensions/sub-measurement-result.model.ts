@@ -1,28 +1,28 @@
-import {Status} from './status.enum';
-import {Reason} from './reason.enum';
+import { Reason } from './reason.enum';
+import { Status } from './status.enum';
 
 export abstract class SubMeasurementResult {
-    /**
-     * Start time in nanoseconds relative to the start time of the overall measurement object.
-     */
-    relative_start_time_ns: number;
+  /**
+   * Start time in nanoseconds relative to the start time of the overall measurement object.
+   */
+  public relative_start_time_ns: number;
 
-    /**
-     * End time in nanoseconds relative to the end time of the overall measurement object.
-     */
-    relative_end_time_ns: number;
+  /**
+   * End time in nanoseconds relative to the end time of the overall measurement object.
+   */
+  public relative_end_time_ns: number;
 
-    // MeasurementStatusInfo
+  // MeasurementStatusInfo
 
-    /**
-     * @see StatusDto
-     */
-    status: Status;
+  /**
+   * @see StatusDto
+   */
+  public status: Status;
 
-    /**
-     * @see ReasonDto
-     */
-    reason: Reason;
+  /**
+   * @see ReasonDto
+   */
+  public reason: Reason;
 
-    deserialize_type: string;
+  public deserialize_type: string;
 }

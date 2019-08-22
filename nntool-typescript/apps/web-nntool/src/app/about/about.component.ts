@@ -1,6 +1,5 @@
-import {ADocComponent} from '../adoc/adoc.component';
-
+import { ADocComponent } from '../adoc/adoc.component';
 
 export class AboutComponent extends ADocComponent {
-    key = 'about';
+  public key = 'about';
 }

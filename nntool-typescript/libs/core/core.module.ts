@@ -1,16 +1,10 @@
-import {
-  ModuleWithProviders,
-  NgModule,
-  Optional,
-  SkipSelf,
-  Inject
-} from '@angular/core';
 import { APP_BASE_HREF, CommonModule } from '@angular/common';
+import { Inject, ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
 
 // libs
-import { NxModule } from '@nrwl/nx';
 import { TranslateService } from '@ngx-translate/core';
 import { throwIfAlreadyLoaded } from '@nntool-typescript/utils';
+import { NxModule } from '@nrwl/nx';
 
 // app
 import { environment } from './environments/environment';
@@ -35,7 +29,7 @@ export const BASE_PROVIDERS: any[] = [
 })
 export class CoreModule {
   // configuredProviders: *required to configure WindowService and others per platform
-  static forRoot(configuredProviders: Array<any>): ModuleWithProviders {
+  public static forRoot(configuredProviders: any[]): ModuleWithProviders {
     return {
       ngModule: CoreModule,
       providers: [...BASE_PROVIDERS, ...configuredProviders]

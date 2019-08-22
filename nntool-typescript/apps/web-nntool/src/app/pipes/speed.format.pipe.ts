@@ -1,11 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-
-@Pipe({name: 'formatSpeed'})
+@Pipe({ name: 'formatSpeed' })
 export class SpeedFormatPipe implements PipeTransform {
-
-    transform(value: number): string {
-        /*
+  public transform(value: number): string {
+    /*
         if (value >= 10) {
             return value.toFixed(0);
         } else if (value >= 1) {
@@ -15,9 +13,9 @@ export class SpeedFormatPipe implements PipeTransform {
         } else {
             return value.toFixed(3);
         }*/
-        if (!value) {
-            return '' + value;
-        }
-        return '' + Math.round(value * 100) / 100;
+    if (!value) {
+      return '' + value;
     }
+    return '' + Math.round(value * 100) / 100;
+  }
 }

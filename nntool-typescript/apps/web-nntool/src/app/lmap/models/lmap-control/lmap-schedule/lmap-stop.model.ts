@@ -1,4 +1,1 @@
-export abstract class LmapStop {
-
-}
-
+export abstract class LmapStop {}

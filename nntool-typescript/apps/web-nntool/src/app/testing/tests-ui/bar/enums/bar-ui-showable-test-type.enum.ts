@@ -1,3 +1,3 @@
 export enum BarUIShowableTestTypeEnum {
-    UDP = 'UDP'
+  UDP = 'UDP'
 }

@@ -1,3 +1,3 @@
 export interface KeySettings {
-    google?: string;
+  google?: string;
 }

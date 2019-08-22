@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   pure: true
 })
 export class DateOrderPipe implements PipeTransform {
-  transform(value: any[], sortBy: string): any {
+  public transform(value: any[], sortBy: string): any {
     if (value) {
       return value.sort((a, b) => {
         if (!a[sortBy]) {

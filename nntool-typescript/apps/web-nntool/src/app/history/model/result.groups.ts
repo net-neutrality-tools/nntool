@@ -1,29 +1,25 @@
 export class ResultGroupResponse {
+  public share_measurement_text: string;
 
-    share_measurement_text: string;
-
-    groups: ResultGroup[];
+  public groups: ResultGroup[];
 }
 
 export class ResultGroup {
+  public title: string;
 
-    title: string;
+  public description: string;
 
-    description: string;
+  public icon_character: string;
 
-    icon_character: string;
-
-    items: ResultGroupItem[];
-
+  public items: ResultGroupItem[];
 }
 
 export class ResultGroupItem {
+  public key?: string;
 
-    key?: string;
+  public title: string;
 
-    title: string;
+  public unit: string;
 
-    unit: string;
-
-    value: string;
+  public value: string;
 }

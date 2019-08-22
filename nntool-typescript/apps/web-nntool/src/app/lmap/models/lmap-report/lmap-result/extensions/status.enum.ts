@@ -5,8 +5,8 @@
  *
  */
 export enum Status {
-    STARTED = 'STARTED',
-    FINISHED = 'FINISHED',
-    FAILED = 'FAILED',
-    ABORTED = 'ABORTED'
+  STARTED = 'STARTED',
+  FINISHED = 'FINISHED',
+  FAILED = 'FAILED',
+  ABORTED = 'ABORTED'
 }

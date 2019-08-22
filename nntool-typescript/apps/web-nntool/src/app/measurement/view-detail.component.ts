@@ -1,4 +1,1 @@
-
-export abstract class MeasurementDetailViewComponent {
-
-}
+export abstract class MeasurementDetailViewComponent {}

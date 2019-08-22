@@ -1,11 +1,11 @@
-import {Component, Input} from '@angular/core';
-import {FormattedValue} from './measurement.model';
+import { Component, Input } from '@angular/core';
+import { FormattedValue } from './measurement.model';
 
 @Component({
-    selector: 'app-measurement-value-formatted',
-    template: ``
+  selector: 'app-measurement-value-formatted',
+  template: ``
 })
 export class MeasurementFormattedValueComponent {
-    @Input()
-    value: FormattedValue;
+  @Input()
+  public value: FormattedValue;
 }

@@ -1,6 +1,5 @@
-// angular
-import { TestBed, inject } from '@angular/core/testing';
-// app
+import { inject, TestBed } from '@angular/core/testing';
+
 import { LogService } from './log.service';
 
 const reset = () => {
@@ -8,6 +7,9 @@ const reset = () => {
     LogService.DEBUG[key] = false;
   }
 };
+
+/* tslint:disable:no-console */
+
 describe('core: LogService', () => {
   beforeEach(() => {
     // ensure statics are in default state
@@ -31,19 +33,16 @@ describe('core: LogService', () => {
       expect(log.info).toBeDefined();
     }));
 
-    it('should not log anything by default', inject(
-      [LogService],
-      (log: LogService) => {
-        log.debug('debug');
-        expect(console.log).not.toHaveBeenCalledWith(['debug']);
-        log.error('error');
-        expect(console.error).not.toHaveBeenCalledWith(['error']);
-        log.warn('warn');
-        expect(console.warn).not.toHaveBeenCalledWith(['warn']);
-        log.info('info');
-        expect(console.info).not.toHaveBeenCalledWith(['info']);
-      }
-    ));
+    it('should not log anything by default', inject([LogService], (log: LogService) => {
+      log.debug('debug');
+      expect(console.log).not.toHaveBeenCalledWith(['debug']);
+      log.error('error');
+      expect(console.error).not.toHaveBeenCalledWith(['error']);
+      log.warn('warn');
+      expect(console.warn).not.toHaveBeenCalledWith(['warn']);
+      log.info('info');
+      expect(console.info).not.toHaveBeenCalledWith(['info']);
+    }));
   });
 
   describe('debug levels', () => {
@@ -79,33 +78,30 @@ describe('core: LogService', () => {
       expect(console.warn).toHaveBeenCalledWith(['warn']);
     }));
 
-    it('LEVEL_3: log + all the above', inject(
-      [LogService],
-      (log: LogService) => {
-        LogService.DEBUG.LEVEL_3 = true;
+    it('LEVEL_3: log + all the above', inject([LogService], (log: LogService) => {
+      LogService.DEBUG.LEVEL_3 = true;
 
-        log.info('info');
-        expect(console.info).not.toHaveBeenCalledWith(['info']);
-        log.debug('debug');
-        expect(console.log).toHaveBeenCalledWith(['debug']);
-        log.error('error');
-        expect(console.error).toHaveBeenCalledWith(['error']);
-        log.warn('warn');
-        expect(console.warn).toHaveBeenCalledWith(['warn']);
+      log.info('info');
+      expect(console.info).not.toHaveBeenCalledWith(['info']);
+      log.debug('debug');
+      expect(console.log).toHaveBeenCalledWith(['debug']);
+      log.error('error');
+      expect(console.error).toHaveBeenCalledWith(['error']);
+      log.warn('warn');
+      expect(console.warn).toHaveBeenCalledWith(['warn']);
 
-        // always overrides lower levels and allows them to come through
-        LogService.DEBUG.LEVEL_4 = true;
+      // always overrides lower levels and allows them to come through
+      LogService.DEBUG.LEVEL_4 = true;
 
-        log.info('info w/level_4');
-        expect(console.info).toHaveBeenCalledWith(['info w/level_4']);
-        log.debug('debug w/level_4');
-        expect(console.log).toHaveBeenCalledWith(['debug w/level_4']);
-        log.error('error w/level_4');
-        expect(console.error).toHaveBeenCalledWith(['error w/level_4']);
-        log.warn('warn w/level_4');
-        expect(console.warn).toHaveBeenCalledWith(['warn w/level_4']);
-      }
-    ));
+      log.info('info w/level_4');
+      expect(console.info).toHaveBeenCalledWith(['info w/level_4']);
+      log.debug('debug w/level_4');
+      expect(console.log).toHaveBeenCalledWith(['debug w/level_4']);
+      log.error('error w/level_4');
+      expect(console.error).toHaveBeenCalledWith(['error w/level_4']);
+      log.warn('warn w/level_4');
+      expect(console.warn).toHaveBeenCalledWith(['warn w/level_4']);
+    }));
 
     it('LEVEL_2: error only', inject([LogService], (log: LogService) => {
       LogService.DEBUG.LEVEL_2 = true;
@@ -134,3 +130,5 @@ describe('core: LogService', () => {
     }));
   });
 });
+
+/* tslint:enable:no-console */

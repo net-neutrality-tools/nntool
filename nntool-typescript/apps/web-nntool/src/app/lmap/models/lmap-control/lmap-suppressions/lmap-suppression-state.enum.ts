@@ -1,5 +1,5 @@
 export enum LmapSuppressionState {
-    ENABLED,
-    DISABLED,
-    ACTIVE
+  ENABLED,
+  DISABLED,
+  ACTIVE
 }
