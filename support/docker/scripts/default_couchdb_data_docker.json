@@ -165,14 +165,14 @@
                             "frameSize": 2048,
                             "framesPerCall": 1,
                             "bounds": {
-                                "upper": 0.01,
+                                "upper": 0.00,
                                 "lower": 1.05
                             }
                         },
                         {
                             "streams": 4,
                             "frameSize": 65535,
-                            "framesPerCall": 1,
+                            "framesPerCall": 2,
                             "bounds": {
                                 "upper": 0.95,
                                 "lower": 525
@@ -203,7 +203,7 @@
                             "streams": 4,
                             "frameSize": 2048,
                             "bounds": {
-                                "upper": 0.01,
+                                "upper": 0.00,
                                 "lower": 1.05
                             }
                         },
