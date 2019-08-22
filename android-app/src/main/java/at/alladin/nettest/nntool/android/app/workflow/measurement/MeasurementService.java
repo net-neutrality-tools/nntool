@@ -49,6 +49,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.T
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.TrafficDto;
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.TaskDesc;
 
@@ -289,6 +290,7 @@ public class MeasurementService extends Service implements ServiceConnection {
         final String collectorUrl = options.getString(EXTRAS_KEY_QOS_TASK_COLLECTOR_URL);
         final ClientHolder client = ClientHolder.getInstance(taskDescList, collectorUrl);
         qosMeasurementClient = new QoSMeasurementClientAndroid(client, getApplicationContext());
+        qosMeasurementClient.setEnabledTypes(getQoSEnabledTypeList(getApplicationContext()));
         qosMeasurementClient.addControlListener(new QoSMeasurementClientControlAdapter() {
             @Override
             public void onMeasurementError(Exception e) {
@@ -430,6 +432,16 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     public String getSpeedCollectorUrl () {
         return jniSpeedMeasurementClient.getCollectorUrl();
+    }
+
+    private List<QosMeasurementType> getQoSEnabledTypeList(final Context context) {
+        final List<QosMeasurementType> ret = new ArrayList<>();
+        for (QosMeasurementType type : QosMeasurementType.values()) {
+            if (PreferencesUtil.isQoSTypeEnabled(context, type)) {
+                ret.add(type);
+            }
+        }
+        return ret;
     }
 
 }

@@ -14,6 +14,7 @@ import java.util.UUID;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -163,6 +164,14 @@ public class PreferencesUtil {
 
     public static String getStatisticsServiceUrl(final Context context) {
         return getDefaultPreferences(context).getString(SETTINGS_URLS_STATISTICS_SERVICE_BASE_URL, null);
+    }
+
+    public static boolean isQoSTypeEnabled(final Context context, final QosMeasurementType type) {
+        return getDefaultPreferences(context).getBoolean(QOS_TYPE_PREFERENCE_PREFIX + type.name(), true);
+    }
+
+    public static void setQoSTypeEnabled(final Context context, final QosMeasurementType type, final boolean isEnabled) {
+        getDefaultPreferences(context).edit().putBoolean(QOS_TYPE_PREFERENCE_PREFIX + type.name(), isEnabled).commit();
     }
 
 }

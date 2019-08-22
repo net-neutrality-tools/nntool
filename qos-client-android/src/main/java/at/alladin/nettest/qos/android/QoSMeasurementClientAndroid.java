@@ -10,24 +10,18 @@ import java.util.List;
 
 import at.alladin.nettest.qos.QoSMeasurementClient;
 import at.alladin.nettest.qos.QoSMeasurementClientControlListener;
-import at.alladin.nettest.qos.QoSMeasurementContext;
-import at.alladin.nettest.qos.android.exception.ClientNotYetRegisteredException;
 import at.alladin.nettest.qos.android.exception.NoClientProvidedException;
 import at.alladin.nettest.qos.android.exception.NoContextProvidedException;
 import at.alladin.nettest.qos.android.impl.TracerouteAndroidImpl;
 import at.alladin.nettest.qos.android.impl.TrafficServiceImpl;
 import at.alladin.nettest.qos.android.impl.WebsiteTestServiceImpl;
 import at.alladin.nettest.qos.android.util.HelperFunctions;
-import at.alladin.nettest.qos.android.util.ObtainQoSSettingsTask;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
-import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.ClientHolder;
-import at.alladin.nntool.client.helper.Config;
+import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.helper.TestStatus;
 import at.alladin.nntool.client.v2.task.QoSTestEnum;
 import at.alladin.nntool.client.v2.task.TaskDesc;
-import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 import at.alladin.nntool.client.v2.task.service.TestSettings;
 
 import static at.alladin.nntool.client.v2.task.AbstractQoSTask.PARAM_QOS_CONCURRENCY_GROUP;
@@ -38,15 +32,9 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
 
     private static final String TAG = "QoSMeasurementClientAnd";
 
-    private QoSMeasurementContext measurementContext;
-
     private Context context;
 
     private String latestTestUuid;
-
-    public QoSMeasurementClientAndroid(final Context context) {
-        this(null, context);
-    }
 
     public QoSMeasurementClientAndroid(final ClientHolder client, final Context context) {
         this.client = client;
