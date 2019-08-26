@@ -64,7 +64,8 @@ public class TcpClientHandlerSipItegrationTest {
 	}
 
 	@Test
-	public void testClientHandlerWithSimpleSipWorkflowAndMockedCompetencesIncludingInviteAndTrying(@Mocked FilterOutputStream fos) throws Exception {
+	public void testClientHandlerWithSimpleSipWorkflowAndMockedCompetencesIncludingInviteAndTrying(
+			@Mocked FilterOutputStream fos) throws Exception {
 		TestServer.getInstance().serverPreferences = new ServerPreferences();
 		final AtomicReference<String[]> results = new AtomicReference<>(new String[2]);
 		SocketCommunicationExpectationsUtil.createExpectationWithMultipleResultStrings(socket, fos, results,
@@ -112,7 +113,8 @@ public class TcpClientHandlerSipItegrationTest {
 	}
 	
 	@Test
-	public void testClientHandlerWithSimpleSipWorkflowAndMockedCompetencesIncludingInviteAndTryingAndCheckDelayBetweenPackets(@Mocked FilterOutputStream fos) throws Exception {
+	public void testClientHandlerWithSimpleSipWorkflowAndMockedCompetencesIncludingInviteAndTryingAndCheckDelayBetweenPackets(
+			@Mocked FilterOutputStream fos) throws Exception {
 		TestServer.getInstance().serverPreferences = new ServerPreferences();
 		final AtomicReference<String[]> results = new AtomicReference<>(new String[2]);
 		SocketCommunicationExpectationsUtil.createExpectationWithMultipleResultStrings(socket, fos, results,
@@ -146,23 +148,31 @@ public class TcpClientHandlerSipItegrationTest {
 
 		final List<ConsoleLog> lc = tscm.getLogList();
 		assertNotNull("Log is null", lc);
+		//TestServer.getInstance().getTempOut().println(lc);
 		assertTrue("Log size < 2", lc.size() >= 2);
-		
+
 		final ConsoleLog tryingLog = lc.get(lc.size()-2);
 		final ConsoleLog ringingLog = lc.get(lc.size()-1);
 		assertNotNull("tryingLog is null", tryingLog);
 		assertNotNull("ringingLog is null", ringingLog);
 		
 		assertTrue("tryingLog not after ringingLog", ringingLog.getTimeMs() > tryingLog.getTimeMs());
-		assertTrue("tryingLog and ringingLog time diff < 100", (ringingLog.getTimeMs() - tryingLog.getTimeMs()) >= 100);
+		assertTrue("tryingLog and ringingLog time diff < 100 (=" + ((ringingLog.getTimeMs() - tryingLog.getTimeMs())) + ")", (ringingLog.getTimeMs() - tryingLog.getTimeMs()) >= 100);
+		
 	}
 	
 	@Test
-	public void testClientHandlerWithSimpleSipWorkflowIncludingInviteAndTryingAndCheckDelayBetweenPackets(@Mocked FilterOutputStream fos) throws Exception {
+	public void testClientHandlerWithSimpleSipWorkflowIncludingInviteAndTryingAndCheckDelayBetweenPackets(
+			@Mocked FilterOutputStream fos) throws Exception {
 		TestServer.getInstance().serverPreferences = new ServerPreferences();
 		final AtomicReference<String[]> results = new AtomicReference<>(new String[2]);
 		SocketCommunicationExpectationsUtil.createExpectationWithMultipleResultStrings(socket, fos, results,
 						"INVITE sip:bob@home SIP/2.0\n" + 
+						"Via: SIP/2.0/TCP localhost:5060\n" + 
+						"Max-Forwards: 70\n" + 
+						"From: Alice <sip:alice@home>\n" + 
+						"To: Bob <sip:bob@home>\n\n",
+						"BYE sip:bob@home SIP/2.0\n" + 
 						"Via: SIP/2.0/TCP localhost:5060\n" + 
 						"Max-Forwards: 70\n" + 
 						"From: Alice <sip:alice@home>\n" + 
@@ -183,23 +193,25 @@ public class TcpClientHandlerSipItegrationTest {
 				};
 			}
 		};
-		
+
 		tch.run();
-		
+	
 		final boolean reachedZeroCountdown = latch.await(10L, TimeUnit.SECONDS);
-				
+
 		assertTrue("CountDownLatch hasn't reached 0 and ran into a timeout", reachedZeroCountdown);
 
 		final List<ConsoleLog> lc = tscm.getLogList();
-		assertNotNull("Log is null", lc);
-		assertTrue("Log size < 2", lc.size() >= 2);
 		
-		final ConsoleLog tryingLog = lc.get(lc.size()-2);
-		final ConsoleLog ringingLog = lc.get(lc.size()-1);
+		assertNotNull("Log is null", lc);
+		assertTrue("Log size < 3", lc.size() >= 3);
+		
+		final ConsoleLog tryingLog = lc.get(2);
+		final ConsoleLog ringingLog = lc.get(3);
 		assertNotNull("tryingLog is null", tryingLog);
 		assertNotNull("ringingLog is null", ringingLog);
-		
+				
 		assertTrue("tryingLog not after ringingLog", ringingLog.getTimeMs() > tryingLog.getTimeMs());
-		assertTrue("tryingLog and ringingLog time diff < 100", (ringingLog.getTimeMs() - tryingLog.getTimeMs()) >= 100);
+		
+		assertTrue("tryingLog and ringingLog time diff < 100 (=" + ((ringingLog.getTimeMs() - tryingLog.getTimeMs())) + ")", (ringingLog.getTimeMs() - tryingLog.getTimeMs()) >= 100);
 	}
 }

@@ -1,13 +1,13 @@
 package at.alladin.nntool.qos.testserver.tcp.competences.sip;
 
-import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import at.alladin.nntool.qos.testserver.tcp.competences.Action;
 import at.alladin.nntool.qos.testserver.tcp.competences.Competence;
+import at.alladin.nntool.qos.testserver.tcp.competences.RepeatAction;
 import at.alladin.nntool.qos.testserver.tcp.competences.ResponseAction;
-import at.alladin.nntool.qos.testserver.tcp.competences.WaitAction;
+import at.alladin.nntool.qos.testserver.tcp.competences.SleepAction;
 import at.alladin.nntool.util.net.sip.SipMessage;
 import at.alladin.nntool.util.net.sip.SipRequestMessage;
 import at.alladin.nntool.util.net.sip.SipResponseMessage;
@@ -22,28 +22,21 @@ import at.alladin.nntool.util.net.sip.SipUtil;
 public class SipCompetence implements Competence {
 
 	@Override
-	public boolean appliesTo(String firstLine) {
+	public boolean appliesTo(final byte[] data) {
 		//try to parse first line
-		return (SipUtil.parseRequestData(firstLine) != null || SipUtil.parseResponseData(firstLine) != null);
+		return (SipUtil.parseRequestData(data) != null || SipUtil.parseResponseData(data) != null);
 	}
 
 	@Override
-	public List<Action> processRequest(String firstLine, BufferedReader br) {
+	public List<Action> processRequest(final byte[] data) {
 		try {
 			final List<Action> resultList = new ArrayList<>();
 			
-			final StringBuilder sb = new StringBuilder();
-			sb.append(firstLine).append("\n");
-			String line = null;
-			while ((line = br.readLine()) != null) {
-				sb.append(line).append("\n");
-			}
-			
-			final byte[] data = sb.toString().getBytes();
-			SipMessage msg = SipUtil.parseResponseData(data);
+			final String sipData = new String(data);
+			SipMessage msg = SipUtil.parseResponseData(sipData);
 			
 			if (msg == null) {
-				msg = SipUtil.parseRequestData(data);
+				msg = SipUtil.parseRequestData(sipData);
 			}
 			
 			if (msg != null) {
@@ -71,9 +64,10 @@ public class SipCompetence implements Competence {
 					case INVITE:
 						resultList.add(new ResponseAction(
 								new SipResponseMessage(SipResponseType.TRYING, (SipRequestMessage) msg).getData()));
-						resultList.add(new WaitAction(100));
+						resultList.add(new SleepAction(100));
 						resultList.add(new ResponseAction(
 								new SipResponseMessage(SipResponseType.RINGING, (SipRequestMessage) msg).getData()));
+						resultList.add(new RepeatAction());
 						break;
 					}
 				}

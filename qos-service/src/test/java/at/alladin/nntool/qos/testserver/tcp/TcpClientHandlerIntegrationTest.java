@@ -3,7 +3,6 @@ package at.alladin.nntool.qos.testserver.tcp;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -70,12 +69,12 @@ public class TcpClientHandlerIntegrationTest {
 	public void testClientHandlerWithSingleLineRequestMessage() throws Exception {
 		TestServer.getInstance().serverPreferences = new ServerPreferences();
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();		
-		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MESSAGE");		
+		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MESSAGE\n");		
 		TcpClientHandler tch = new TcpClientHandler(socket, tcpServer);
 
 		new Expectations() {
 			{
-				tcpServer.getCompetences(); 
+				tcpServer.getCompetences();
 				result = new Delegate<Deque<Competence>>() {
 					public Deque<Competence> delegate() {
 						final Deque<Competence> r = new ArrayDeque<>();
@@ -98,7 +97,7 @@ public class TcpClientHandlerIntegrationTest {
 	public void testClientHandlerWithSingleMultiLineRequestMessage() throws Exception {
 		TestServer.getInstance().serverPreferences = new ServerPreferences();
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();
-		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MULTILINE\nMESSAGE");		
+		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MULTILINE\n");		
 		TcpClientHandler tch = new TcpClientHandler(socket, tcpServer);
 
 		new Expectations() {
@@ -126,7 +125,7 @@ public class TcpClientHandlerIntegrationTest {
 	public void testClientHandlerWithSingleMultiLineRequestMessageAndCustomCompetenceBeingUsed() throws Exception {
 		TestServer.getInstance().serverPreferences = new ServerPreferences();
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();
-		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MULTILINE\nMESSAGE");		
+		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MULTILINE\nMESSAGE\n");		
 		TcpClientHandler tch = new TcpClientHandler(socket, tcpServer);
 
 		new Expectations() {
@@ -139,15 +138,15 @@ public class TcpClientHandlerIntegrationTest {
 						r.addFirst(new Competence() {
 							
 							@Override
-							public List<Action> processRequest(String firstLine, BufferedReader br) {
+							public List<Action> processRequest(final byte[] data) {
 								final List<Action> result = new ArrayList<>();
-								result.add(new ResponseAction((firstLine + firstLine + "\n").getBytes()));
+								result.add(new ResponseAction(data));
 								return result;
 							}
 							
 							@Override
-							public boolean appliesTo(String incomingDataLine) {
-								return "MULTILINE".equals(incomingDataLine);
+							public boolean appliesTo(byte[] data) {
+								return "MULTILINE\nMESSAGE\n".equals(new String(data));
 							}
 						});
 						return r;
@@ -160,7 +159,7 @@ public class TcpClientHandlerIntegrationTest {
 		
 		final boolean reachedZeroCountdown = latch.await(10L, TimeUnit.SECONDS);
 		assertTrue("CountDownLatch hasn't reached 0 and ran into a timeout", reachedZeroCountdown);
-		assertEquals("TCP/NTP response != 'MULTILINEMULTILINE\n'", "MULTILINEMULTILINE\n", os.toString());		
+		assertEquals("TCP/NTP response != 'MULTILINE\nMESSAGE\n'", "MULTILINE\nMESSAGE\n", os.toString());		
 	}
 	
 	@Test
@@ -180,15 +179,17 @@ public class TcpClientHandlerIntegrationTest {
 						r.addFirst(new Competence() {
 							
 							@Override
-							public List<Action> processRequest(String firstLine, BufferedReader br) {
+							public List<Action> processRequest(byte[] data) {
 								final List<Action> result = new ArrayList<>();
-								result.add(new ResponseAction((firstLine + firstLine + "\n").getBytes()));
+								result.add(new ResponseAction("MULTILINES\n".getBytes()));
 								return result;
 							}
 							
 							@Override
-							public boolean appliesTo(String incomingDataLine) {
-								return "MULTILINE".equals(incomingDataLine);
+							public boolean appliesTo(byte[] data) {
+								final String s = new String(data);
+								final boolean a = "MULTILINES\nMESSAGE".equals(s);
+								return a;
 							}
 						});
 						return r;
@@ -233,7 +234,7 @@ public class TcpClientHandlerIntegrationTest {
 		};
 				
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();		
-		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MESSAGE");		
+		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MESSAGE\n");		
 		TcpClientHandler tch = new TcpClientHandler(socket, tcpServer);
 
 		tch.run();

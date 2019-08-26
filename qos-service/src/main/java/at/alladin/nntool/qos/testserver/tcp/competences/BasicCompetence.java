@@ -1,6 +1,5 @@
 package at.alladin.nntool.qos.testserver.tcp.competences;
 
-import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,14 +13,14 @@ import at.alladin.nntool.qos.testserver.ClientHandler;
 public class BasicCompetence implements Competence {
 
 	@Override
-	public boolean appliesTo(String incomingDataLine) {
+	public boolean appliesTo(final byte[] data) {
 		return true;
 	}
 
 	@Override
-	public List<Action> processRequest(String firstLine, BufferedReader br) {
+	public List<Action> processRequest(final byte[] data) {
 		final List<Action> result = new ArrayList<>();
-		result.add(new ResponseAction(ClientHandler.getBytesWithNewline(firstLine)));
+		result.add(new ResponseAction(ClientHandler.getBytesWithNewline(new String(data))));
 		return result;
 	}
 }

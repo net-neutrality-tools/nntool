@@ -1,8 +1,9 @@
 package at.alladin.nntool.qos.testserver.tcp.competences;
 
-import java.io.OutputStream;
+import java.io.FilterOutputStream;
 
 import at.alladin.nntool.qos.testserver.ServerPreferences.TestServerServiceEnum;
+import at.alladin.nntool.qos.testserver.tcp.TcpClientHandler;
 import at.alladin.nntool.qos.testserver.tcp.TcpMultiClientServer;
 import at.alladin.nntool.qos.testserver.util.TestServerConsole;
 
@@ -19,7 +20,7 @@ public class ResponseAction implements Action {
 	}
 	
 	@Override
-	public boolean execute(OutputStream os) {
+	public boolean execute(final TcpClientHandler tcpClientHandler, final byte[] requestData, FilterOutputStream os) {
 		if (data != null) {
 			try {
 				os.write(data);

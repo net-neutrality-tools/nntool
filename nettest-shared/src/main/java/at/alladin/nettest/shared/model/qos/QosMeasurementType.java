@@ -27,6 +27,7 @@ import at.alladin.nntool.shared.qos.DnsResult;
 import at.alladin.nntool.shared.qos.EchoProtocolResult;
 import at.alladin.nntool.shared.qos.HttpProxyResult;
 import at.alladin.nntool.shared.qos.NonTransparentProxyResult;
+import at.alladin.nntool.shared.qos.SipResult;
 import at.alladin.nntool.shared.qos.TcpResult;
 import at.alladin.nntool.shared.qos.TracerouteResult;
 import at.alladin.nntool.shared.qos.UdpResult;
@@ -89,8 +90,17 @@ public enum QosMeasurementType {
     @SerializedName("website")
     WEBSITE("website", "test.website", "name.website", WebsiteResult.class),
 
+    /**
+     * 
+     */
     @SerializedName("echo_protocol")
-    ECHO_PROTOCOL("echo_protocol", "test.echo", "name.echo", EchoProtocolResult.class);
+    ECHO_PROTOCOL("echo_protocol", "test.echo", "name.echo", EchoProtocolResult.class),
+    
+    /**
+     * 
+     */
+    @SerializedName("sip")
+    SIP("sip", "test.sip", "name.sip", SipResult.class);
 
     /**
      * 

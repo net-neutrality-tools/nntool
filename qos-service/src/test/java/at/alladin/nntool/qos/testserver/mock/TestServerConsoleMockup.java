@@ -10,7 +10,7 @@ import mockit.MockUp;
 
 /**
  * 
- * @author lb@alladin.at
+ * @author Lukasz Budryk (lb@alladin.at)
  *
  */
 public class TestServerConsoleMockup extends MockUp<TestServerConsole> {
@@ -20,9 +20,15 @@ public class TestServerConsoleMockup extends MockUp<TestServerConsole> {
 		final int verboseLevel;
 		final TestServerServiceEnum service;
 		final long timeMs = System.currentTimeMillis();
+		final Throwable t;
 		
 		public ConsoleLog(final String msg, final int verboseLevel, final TestServerServiceEnum service) {
+			this(msg, null, verboseLevel, service);
+		}
+		
+		public ConsoleLog(final String msg, final Throwable t, final int verboseLevel, final TestServerServiceEnum service) {
 			this.msg = msg;
+			this.t = t;
 			this.verboseLevel = verboseLevel;
 			this.service = service;
 		}
@@ -43,21 +49,35 @@ public class TestServerConsoleMockup extends MockUp<TestServerConsole> {
 			return timeMs;
 		}
 
+		public Throwable getT() {
+			return t;
+		}
+
 		@Override
 		public String toString() {
 			return "LogClass [msg=" + msg + ", verboseLevel=" + verboseLevel + ", service=" + service + ", timeMs="
-					+ timeMs + "]";
+					+ timeMs + (t != null ? ", t=" + t.getCause() : "") + "]";
 		}
 	}
 	
 	public final List<ConsoleLog> logList = new ArrayList<>();
+	public final List<ConsoleLog> errorList = new ArrayList<>();
 	
 	@Mock
 	public void log(String msg, int verboseLevelNeeded, TestServerServiceEnum service) {
 		logList.add(new ConsoleLog(msg, verboseLevelNeeded, service));
 	}
 	
+	@Mock
+	public void error(String info, Throwable t, int verboseLevelNeeded, TestServerServiceEnum service) {
+		errorList.add(new ConsoleLog(info, t, verboseLevelNeeded, service));
+	}
+	
 	public List<ConsoleLog> getLogList() {
 		return logList;
+	}
+	
+	public List<ConsoleLog> getErrorList() {
+		return errorList;
 	}
 }

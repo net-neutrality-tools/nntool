@@ -160,7 +160,7 @@ public class ServerPreferencesTest {
 		assertTrue("Port 5060 is missing SIP competence", sp.getTcpCompetenceMap().get(5060).hasSipCompetence());
 		assertTrue("Port 5061 is missing SIP competence", sp.getTcpCompetenceMap().get(5061).hasSipCompetence());
 		assertTrue("Port 5062 is missing SIP competence", sp.getTcpCompetenceMap().get(5062).hasSipCompetence());
-		assertNull("Port 5063 has additional competence", sp.getTcpCompetenceMap().get(5063));
+		assertNull("Port 5063 has additional competences", sp.getTcpCompetenceMap().get(5063));
 	}
 	
 	@Test
