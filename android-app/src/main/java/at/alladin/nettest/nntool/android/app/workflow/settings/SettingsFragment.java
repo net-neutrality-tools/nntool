@@ -2,7 +2,6 @@ package at.alladin.nettest.nntool.android.app.workflow.settings;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
@@ -12,6 +11,7 @@ import java.util.Map;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.util.FunctionalityHelper;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
@@ -22,6 +22,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasuremen
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     private final static String TAG = SettingsFragment.class.getSimpleName();
+
     private final static String SINGLE_TEST_SELECTION_SCREEN_KEY = "single_test_selection_screen";
     private final static String QOS_TEST_SELECTION_CATEGORY_KEY = "selection_qos";
 
@@ -53,13 +54,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onResume() {
         super.onResume();
-        final ActionBar actionBar = ((MainActivity)getActivity()).getSupportActionBar();
         if (rootKey == null) {
-            actionBar.setTitle(R.string.title_settings);
+            ((MainActivity)getActivity()).updateActionBar(getString(R.string.title_settings));
         } else {
             switch (rootKey) {
                 case SINGLE_TEST_SELECTION_SCREEN_KEY:
-                    actionBar.setTitle(R.string.title_settings_test_selection);
+                    ((MainActivity)getActivity()).updateActionBar(getString(R.string.title_settings_test_selection), true);
                     break;
             }
         }
@@ -81,7 +81,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             final PreferenceCategory qosCategory = (PreferenceCategory) findPreference(QOS_TEST_SELECTION_CATEGORY_KEY);
             if (qosCategory != null) {
                 for (QoSMeasurementTypeDto value : QoSMeasurementTypeDto.values()) {
-                    //TODO: exempt some types?
+                    if (!FunctionalityHelper.isQoSTypeAvailable(value, getContext())) {
+                        continue;
+                    }
                     final SettingsResponse.TranslatedQoSTypeInfo translationInfo = qosTranslationInfo.get(value);
                     if (translationInfo == null) {
                         continue;

@@ -20,6 +20,7 @@ import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
+import at.alladin.nettest.nntool.android.app.workflow.help.HelpFragment;
 import at.alladin.nettest.nntool.android.app.workflow.history.HistoryFragment;
 import at.alladin.nettest.nntool.android.app.workflow.main.TitleFragment;
 import at.alladin.nettest.nntool.android.app.workflow.map.MapFragment;
@@ -133,10 +134,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setActionBarTitle (final String title) {
+    public void updateActionBar(final String title) {
+        updateActionBar(title, false);
+    }
+
+    public void updateActionBar(final String title, final boolean displayHome) {
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null && title != null) {
             actionBar.setTitle(title);
+            actionBar.setDisplayHomeAsUpEnabled(displayHome);
         }
     }
 
@@ -209,6 +215,16 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

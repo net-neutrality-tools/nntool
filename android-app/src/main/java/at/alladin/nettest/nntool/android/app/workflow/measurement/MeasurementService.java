@@ -19,6 +19,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,6 +29,7 @@ import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.SendReportTask;
 import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
+import at.alladin.nettest.nntool.android.app.util.FunctionalityHelper;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationCollector;
@@ -295,7 +297,15 @@ public class MeasurementService extends Service implements ServiceConnection {
         final String collectorUrl = options.getString(EXTRAS_KEY_QOS_TASK_COLLECTOR_URL);
         final ClientHolder client = ClientHolder.getInstance(taskDescList, collectorUrl);
         qosMeasurementClient = new QoSMeasurementClientAndroid(client, getApplicationContext());
-        qosMeasurementClient.setEnabledTypes(getQoSEnabledTypeList(getApplicationContext()));
+        final List<QosMeasurementType> enabledTypeList = getQoSEnabledTypeList(getApplicationContext());
+        Iterator<QosMeasurementType> it = enabledTypeList.iterator();
+        while (it.hasNext()) {
+            QosMeasurementType t = it.next();
+            if (!FunctionalityHelper.isQoSTypeAvailable(t, getApplicationContext())) {
+                it.remove();
+            }
+        }
+        qosMeasurementClient.setEnabledTypes(enabledTypeList);
         qosMeasurementClient.addControlListener(new QoSMeasurementClientControlAdapter() {
             @Override
             public void onMeasurementError(Exception e) {

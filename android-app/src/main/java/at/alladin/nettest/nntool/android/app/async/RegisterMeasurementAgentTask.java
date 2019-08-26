@@ -51,6 +51,9 @@ public class RegisterMeasurementAgentTask extends AsyncTask<Void, Void, Registra
             if (result.getSettings() != null && result.getSettings().getQosTypeInfo() != null && result.getSettings().getQosTypeInfo().size() > 0) {
                 PreferencesUtil.setQoSTypeInfo(context, result.getSettings().getQosTypeInfo());
             }
+            if (result.getSettings() != null && result.getSettings().getUrls() != null) {
+                PreferencesUtil.setSettingsUrls(context, result.getSettings().getUrls());
+            }
         }
 
         if (callback != null) {
