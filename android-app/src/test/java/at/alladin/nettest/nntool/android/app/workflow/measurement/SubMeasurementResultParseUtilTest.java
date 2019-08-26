@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
@@ -152,104 +153,24 @@ public class SubMeasurementResultParseUtilTest {
         up.setThroughputAvgBps(515092080L);
         uploadResultList.add(up);
 
-        final List<JniSpeedMeasurementResult.RttUdpResult> rttResultList = new ArrayList<>();
-        jniSpeedResult.setRttUdpResultList(rttResultList);
+        final JniSpeedMeasurementResult.RttUdpResult rttResult = new JniSpeedMeasurementResult.RttUdpResult();
+        jniSpeedResult.setRttUdpResult(rttResult);
 
-        JniSpeedMeasurementResult.RttUdpResult rtt = new JniSpeedMeasurementResult.RttUdpResult();
-        rtt.setAverageNs(23294000000L);
-        rtt.setDurationNs(3686543000000L);
-        rtt.setMaxNs(24296000000L);
-        rtt.setMedianNs(23526000000L);
-        rtt.setMinNs(22062000000L);
-        rtt.setNumError(0);
-        rtt.setNumMissing(0);
-        rtt.setNumReceived(3);
-        rtt.setNumSent(3);
-        rtt.setPacketSize(0);
-        rtt.setPeer("peer-ias-de-01.net-neutrality.tools");
-        rtt.setProgress(0.5f);
-        rtt.setStandardDeviationNs(926579852L);
-        rttResultList.add(rtt);
+        rttResult.setAverageNs(22796000000L);
+        rttResult.setDurationNs(lastDurationRttNs);
+        rttResult.setMaxNs(24296000000L);
+        rttResult.setMedianNs(22625000000L);
+        rttResult.setMinNs(22062000000L);
+        rttResult.setNumError(0);
+        rttResult.setNumMissing(1);
+        rttResult.setNumReceived(5);
+        rttResult.setNumSent(6);
+        rttResult.setPacketSize(0);
+        rttResult.setPeer("peer-ias-de-01.net-neutrality.tools");
+        rttResult.setProgress(1.0f);
+        rttResult.setStandardDeviationNs(893248332L);
 
-        rtt = new JniSpeedMeasurementResult.RttUdpResult();
-        rtt.setAverageNs(23294000000L);
-        rtt.setDurationNs(4195873000000L);
-        rtt.setMaxNs(24296000000L);
-        rtt.setMedianNs(23526000000L);
-        rtt.setMinNs(22062000000L);
-        rtt.setNumError(0);
-        rtt.setNumMissing(0);
-        rtt.setNumReceived(3);
-        rtt.setNumSent(3);
-        rtt.setPacketSize(0);
-        rtt.setPeer("peer-ias-de-01.net-neutrality.tools");
-        rtt.setProgress(0.5f);
-        rtt.setStandardDeviationNs(926579852L);
-        rttResultList.add(rtt);
-
-        rtt = new JniSpeedMeasurementResult.RttUdpResult();
-        rtt.setAverageNs(23076000000L);
-        rtt.setDurationNs(4684975000000L);
-        rtt.setMaxNs(24296000000L);
-        rtt.setMedianNs(22974000000L);
-        rtt.setMinNs(22062000000L);
-        rtt.setNumError(0);
-        rtt.setNumMissing(0);
-        rtt.setNumReceived(4);
-        rtt.setNumSent(4);
-        rtt.setPacketSize(0);
-        rtt.setPeer("peer-ias-de-01.net-neutrality.tools");
-        rtt.setProgress(0.66666f);
-        rtt.setStandardDeviationNs(886962654L);
-        rttResultList.add(rtt);
-
-        rtt = new JniSpeedMeasurementResult.RttUdpResult();
-        rtt.setAverageNs(23076000000L);
-        rtt.setDurationNs(4684975000000L);
-        rtt.setMaxNs(24296000000L);
-        rtt.setMedianNs(22974000000L);
-        rtt.setMinNs(22062000000L);
-        rtt.setNumError(0);
-        rtt.setNumMissing(0);
-        rtt.setNumReceived(4);
-        rtt.setNumSent(4);
-        rtt.setPacketSize(0);
-        rtt.setPeer("peer-ias-de-01.net-neutrality.tools");
-        rtt.setProgress(0.66666f);
-        rtt.setStandardDeviationNs(886962654L);
-        rttResultList.add(rtt);
-
-        rtt = new JniSpeedMeasurementResult.RttUdpResult();
-        rtt.setAverageNs(23076000000L);
-        rtt.setDurationNs(4684975000000L);
-        rtt.setMaxNs(24296000000L);
-        rtt.setMedianNs(22974000000L);
-        rtt.setMinNs(22062000000L);
-        rtt.setNumError(0);
-        rtt.setNumMissing(1);
-        rtt.setNumReceived(4);
-        rtt.setNumSent(5);
-        rtt.setPacketSize(0);
-        rtt.setPeer("peer-ias-de-01.net-neutrality.tools");
-        rtt.setProgress(0.83333f);
-        rtt.setStandardDeviationNs(799526459L);
-        rttResultList.add(rtt);
-
-        rtt = new JniSpeedMeasurementResult.RttUdpResult();
-        rtt.setAverageNs(22796000000L);
-        rtt.setDurationNs(lastDurationRttNs);
-        rtt.setMaxNs(24296000000L);
-        rtt.setMedianNs(22625000000L);
-        rtt.setMinNs(22062000000L);
-        rtt.setNumError(0);
-        rtt.setNumMissing(1);
-        rtt.setNumReceived(5);
-        rtt.setNumSent(6);
-        rtt.setPacketSize(0);
-        rtt.setPeer("peer-ias-de-01.net-neutrality.tools");
-        rtt.setProgress(1.0f);
-        rtt.setStandardDeviationNs(893248332L);
-        rttResultList.add(rtt);
+        rttResult.setSingleRtts(Arrays.asList(24796000000L, 20796000000L, 19796000000L, 25796000000L, 22796000000L));
 
         taskDesc = new SpeedTaskDesc();
 
@@ -301,7 +222,7 @@ public class SubMeasurementResultParseUtilTest {
     @Test
     public void parsePartialResultContainingAvailableResults () {
         jniSpeedResult.setDownloadInfoList(null);
-        jniSpeedResult.setRttUdpResultList(null);
+        jniSpeedResult.setRttUdpResult(null);
         SpeedMeasurementResult result = SubMeasurementResultParseUtil.parseIntoSpeedMeasurementResult(jniSpeedResult, taskDesc);
 
         Assert.assertEquals("unexpected task description", "peer-ias-de-01.net-neutrality.tools", result.getConnectionInfo().getAddress());
@@ -321,7 +242,7 @@ public class SubMeasurementResultParseUtilTest {
 
         Assert.assertNull("unexpected duration", result.getDurationRttNs());
         Assert.assertNull("unexpected duration", result.getDurationDownloadNs());
-        Assert.assertEquals("unexpected duration", durationUploadTotal, result.getDurationUploadNs().longValue());
+        Assert.assertEquals("unexpected duration", lastDurationUploadNs, result.getDurationUploadNs().longValue());
 
         Assert.assertEquals("unexpected relative start time", 0, result.getRelativeStartTimeRttNs().longValue());
         Assert.assertNull("unexpected relative start time", result.getRelativeStartTimeDownloadNs());

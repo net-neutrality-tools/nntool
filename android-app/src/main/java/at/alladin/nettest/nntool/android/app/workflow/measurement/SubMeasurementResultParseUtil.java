@@ -90,8 +90,8 @@ public class SubMeasurementResultParseUtil {
             ret.setUploadRawData(uploadResults);
         }
 
-        if (result.getRttUdpResultList() != null && result.getRttUdpResultList().size() > 0) {
-            final JniSpeedMeasurementResult.RttUdpResult lastRttResult = result.getRttUdpResultList().get(result.getRttUdpResultList().size() - 1);
+        if (result.getRttUdpResult() != null) {
+            final JniSpeedMeasurementResult.RttUdpResult lastRttResult = result.getRttUdpResult();
             ret.setDurationRttNs(lastRttResult.getDurationNs());
 
             rttInfoDto.setNumSent(lastRttResult.getNumSent());
@@ -105,8 +105,7 @@ public class SubMeasurementResultParseUtil {
             rttInfoDto.setMedianNs(lastRttResult.getMedianNs());
             rttInfoDto.setMinimumNs(lastRttResult.getMinNs());
             rttInfoDto.setStandardDeviationNs(lastRttResult.getStandardDeviationNs());
-
-            rttInfoDto.setRtts(parseRttListForSingleEntries(result.getRttUdpResultList()));
+            rttInfoDto.setRtts(parseIntoRttDto(result.getRttUdpResult().getSingleRtts()));
 
         }
 
@@ -129,62 +128,12 @@ public class SubMeasurementResultParseUtil {
         return ret;
     }
 
-    private static List<RttDto> parseRttListForSingleEntries(final List<JniSpeedMeasurementResult.RttUdpResult> rttResults) {
+    private static List<RttDto> parseIntoRttDto(final List<Long> singleRttList) {
         final List<RttDto> ret = new ArrayList<>();
-        boolean foundFirstEntry = false;
-        int lastCount = 0;
-        long previousAvgSum = 0;
-        for (JniSpeedMeasurementResult.RttUdpResult res : rttResults) {
-            //if we have less than 4 received rtts, we can reconstruct single values
-            if (!foundFirstEntry && res.getNumReceived() < 4) {
-                foundFirstEntry = true;
-                lastCount = res.getNumReceived();
-                switch (res.getNumReceived()) {
-                    case 1:
-                    case 3: {
-                        final RttDto rtt = new RttDto();
-                        rtt.setRttNs(res.getAverageNs());
-                        rtt.setRelativeTimeNs(res.getDurationNs());
-                        ret.add(rtt);
-                        if (res.getNumReceived() == 1) {
-                            break;
-                        }
-                    }
-                    case 2: {
-                        RttDto rtt = new RttDto();
-                        rtt.setRttNs(res.getMaxNs());
-                        rtt.setRelativeTimeNs(res.getDurationNs());
-                        ret.add(rtt);
-
-                        rtt = new RttDto();
-                        rtt.setRttNs(res.getMinNs());
-                        rtt.setRelativeTimeNs(res.getDurationNs());
-                        ret.add(rtt);
-                        break;
-                    }
-                }
-                previousAvgSum = res.getAverageNs();
-            } else if (foundFirstEntry && lastCount != res.getNumReceived()) {
-
-                int newRtts = res.getNumReceived() - lastCount;
-                /*
-                 * the newest (n-th) rtt is given as
-                 * rtt_n = (CurrentAverage * CurrentNumReceived) - (PreviousAverage * PreviousNumReceived)
-                 *
-                 * depending on the number of newly received rtts, we divide to get the specific results
-                 *
-                 */
-                long rttVal = (res.getAverageNs() * res.getNumReceived() - (previousAvgSum * lastCount)) / newRtts;
-                for (int i = 0; i < newRtts; ++i) {
-                    final RttDto rtt = new RttDto();
-                    rtt.setRttNs(rttVal);
-                    rtt.setRelativeTimeNs(res.getDurationNs());
-                    ret.add(rtt);
-                }
-
-                lastCount = res.getNumReceived();
-                previousAvgSum = res.getAverageNs();
-            }
+        for (Long rtt : singleRttList) {
+            RttDto dto = new RttDto();
+            dto.setRttNs(rtt);
+            ret.add(dto);
         }
         return ret;
     }
