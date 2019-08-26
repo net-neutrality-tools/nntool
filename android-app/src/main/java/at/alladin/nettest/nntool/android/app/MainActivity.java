@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 targetFragment = QosFragment.newInstance();
                 break;
             case MEASUREMENT_RECENT_RESULT:
-                targetFragment = TitleWithRecentResultFragment.newInstance();
+                targetFragment = TitleWithRecentResultFragment.newInstance(workflowParameter);
                 break;
             case SETTINGS:
                 targetFragment = SettingsFragment.newInstance();

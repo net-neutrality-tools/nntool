@@ -102,6 +102,8 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     private LocalDateTime endDateTime;
 
+    private String collectorUrl;
+
     /**
      *  Boolean indicating if the currently started submeasurement is a follow up measurement to another (already executed) sub-measurement (true)
      *  or if the currently started submeasurement is the first (false)
@@ -177,7 +179,7 @@ public class MeasurementService extends Service implements ServiceConnection {
         followUpActions = (ArrayList<MeasurementType>) options.getSerializable(EXTRAS_KEY_FOLLOW_UP_ACTIONS);
         subMeasurementStartTimeNs = System.nanoTime();
 
-        final String speedTaskCollectorUrl = options.getString(EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL);
+        this.collectorUrl = options.getString(EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL);
         final SpeedTaskDesc speedTaskDesc = (SpeedTaskDesc) options.getSerializable(EXTRAS_KEY_SPEED_TASK_DESC);
         final String clientIpv4 = options.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE);
         final String clientIpv6 = options.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE);
@@ -196,7 +198,6 @@ public class MeasurementService extends Service implements ServiceConnection {
         speedTaskDesc.setPerformUpload(PreferencesUtil.isUploadEnabled(getApplicationContext()));
 
         jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskDesc);
-        jniSpeedMeasurementClient.setCollectorUrl(speedTaskCollectorUrl);
 
         jniSpeedMeasurementClient.addMeasurementFinishedListener(new JniSpeedMeasurementClient.MeasurementFinishedListener() {
             @Override
@@ -270,7 +271,6 @@ public class MeasurementService extends Service implements ServiceConnection {
                     jniSpeedMeasurementClient.startMeasurement();
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    //TODO: handle errors during measurement
                     if (onMeasurementErrorListener != null) {
                         onMeasurementErrorListener.onMeasurementError(ex);
                     }
@@ -294,7 +294,7 @@ public class MeasurementService extends Service implements ServiceConnection {
         subMeasurementStartTimeNs = System.nanoTime();
 
         final List<TaskDesc> taskDescList = (List<TaskDesc>) options.getSerializable(EXTRAS_KEY_QOS_TASK_DESC_LIST);
-        final String collectorUrl = options.getString(EXTRAS_KEY_QOS_TASK_COLLECTOR_URL);
+        this.collectorUrl = options.getString(EXTRAS_KEY_QOS_TASK_COLLECTOR_URL);
         final ClientHolder client = ClientHolder.getInstance(taskDescList, collectorUrl);
         qosMeasurementClient = new QoSMeasurementClientAndroid(client, getApplicationContext());
         final List<QosMeasurementType> enabledTypeList = getQoSEnabledTypeList(getApplicationContext());
@@ -309,7 +309,9 @@ public class MeasurementService extends Service implements ServiceConnection {
         qosMeasurementClient.addControlListener(new QoSMeasurementClientControlAdapter() {
             @Override
             public void onMeasurementError(Exception e) {
-                //TODO: handle error
+                if (onMeasurementErrorListener != null) {
+                    onMeasurementErrorListener.onMeasurementError(e);
+                }
             }
         });
         final Thread t = new Thread(new Runnable() {
@@ -390,19 +392,28 @@ public class MeasurementService extends Service implements ServiceConnection {
 
             final SendReportTask task = new SendReportTask(mainActivity,
                     reportDto,
-                    getSpeedCollectorUrl(), new OnTaskFinishedCallback<MeasurementResultResponse>() {
+                    this.collectorUrl, new OnTaskFinishedCallback<MeasurementResultResponse>() {
                 @Override
                 public void onTaskFinished(MeasurementResultResponse result) {
                     if (result == null) {
                         AlertDialogUtil.showAlertDialog(mainActivity,
                                 R.string.alert_send_measurement_result_title,
                                 R.string.alert_send_measurement_results_error);
-                    } else {
-                        jniSpeedMeasurementClient.getSpeedMeasurementState().setMeasurementUuid(result.getUuid());
                     }
+
                     //if the result has been sent, reset the list of previous measurements
                     subMeasurementResultList.clear();
-                    mainActivity.navigateTo(WorkflowTarget.MEASUREMENT_RECENT_RESULT);
+
+                    WorkflowRecentResultParameter parameter = null;
+                    if (jniSpeedMeasurementClient != null) {
+                        jniSpeedMeasurementClient.getSpeedMeasurementState().setMeasurementUuid(result.getUuid());
+                    } else {
+                        parameter = new WorkflowRecentResultParameter();
+                        parameter.setRecentResultUuid(result.getUuid());
+                        parameter.setRecentResultOpenDataUuid(result.getOpenDataUuid());
+                    }
+
+                    mainActivity.navigateTo(WorkflowTarget.MEASUREMENT_RECENT_RESULT, parameter);
                 }
             });
             task.execute();
@@ -443,10 +454,6 @@ public class MeasurementService extends Service implements ServiceConnection {
         result.setRelativeStartTimeNs(subMeasurementStartTimeNs - overallStartTimeNs);
         result.setRelativeEndTimeNs(System.nanoTime() - overallStartTimeNs);
         subMeasurementResultList.add(result);
-    }
-
-    public String getSpeedCollectorUrl () {
-        return jniSpeedMeasurementClient.getCollectorUrl();
     }
 
     private List<QosMeasurementType> getQoSEnabledTypeList(final Context context) {

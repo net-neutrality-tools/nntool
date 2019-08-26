@@ -18,6 +18,7 @@ import java.util.Locale;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.view.BottomMeasurementResultSummaryView;
 import at.alladin.nettest.nntool.android.app.view.MeasurementRecentResultSelectorView;
+import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
 import at.alladin.nettest.nntool.android.app.workflow.main.TitleFragment;
 import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 
@@ -42,6 +43,19 @@ public class TitleWithRecentResultFragment extends TitleFragment implements Serv
      */
     public static TitleWithRecentResultFragment newInstance() {
         final TitleWithRecentResultFragment fragment = new TitleWithRecentResultFragment();
+        return fragment;
+    }
+
+    public static TitleWithRecentResultFragment newInstance(final WorkflowParameter parameter) {
+        TitleWithRecentResultFragment fragment = newInstance();
+        if (parameter instanceof WorkflowRecentResultParameter) {
+             fragment = new TitleWithRecentResultFragment();
+             final SpeedMeasurementState state = new SpeedMeasurementState();
+             state.setMeasurementPhase(SpeedMeasurementState.MeasurementPhase.END);
+             state.setProgress(1.0f);
+             state.setMeasurementUuid(((WorkflowRecentResultParameter) parameter).getRecentResultUuid());
+             fragment.setRecentSpeedMeasurementState(state);
+        }
         return fragment;
     }
 
@@ -104,18 +118,28 @@ public class TitleWithRecentResultFragment extends TitleFragment implements Serv
     public void onServiceConnected(ComponentName name, IBinder service) {
         Log.d(TAG, "ON SERVICE CONNECTED");
         measurementService = ((MeasurementService.MeasurementServiceBinder) service).getService();
-        recentSpeedMeasurementState = measurementService.getJniSpeedMeasurementClient().getSpeedMeasurementState();
-        if (bottomMeasurementResultSummaryView != null) {
+        if (measurementService.getJniSpeedMeasurementClient() != null) {
+            recentSpeedMeasurementState = measurementService.getJniSpeedMeasurementClient().getSpeedMeasurementState();
+        }
+        //the recent speed measurement state will be instantiated by the newInstance if no speedmeasurement was executed
+        if (recentSpeedMeasurementState != null && bottomMeasurementResultSummaryView != null) {
             setMeasurementStateInBottomView();
             bottomMeasurementResultSummaryView.invalidate();
             measurementRecentResultSelectorView.setMeasurementUuid(recentSpeedMeasurementState.getMeasurementUuid());
         }
-
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
         Log.d(TAG, "ON SERVICE DISCONNECTED");
         measurementService = null;
+    }
+
+    public SpeedMeasurementState getRecentSpeedMeasurementState() {
+        return recentSpeedMeasurementState;
+    }
+
+    public void setRecentSpeedMeasurementState(SpeedMeasurementState recentSpeedMeasurementState) {
+        this.recentSpeedMeasurementState = recentSpeedMeasurementState;
     }
 }
