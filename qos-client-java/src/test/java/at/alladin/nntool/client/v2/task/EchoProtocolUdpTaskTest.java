@@ -11,6 +11,7 @@ import java.net.SocketTimeoutException;
 
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.QualityOfServiceTest;
+import at.alladin.nntool.client.helper.TaskDescriptionHelper;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
 import at.alladin.nntool.client.v2.task.service.TestSettings;
 import mockit.Delegate;
@@ -48,8 +49,8 @@ public class EchoProtocolUdpTaskTest {
         testSettings = new TestSettings();
         testSettings.setUseSsl(false);
         testSettings.setStartTimeNs(12);
-        clientHolder = ClientHolder.getInstance(ECHO_SERVICE_HOST, "80",
-                null, null, ECHO_SERVICE_HOST, new int[0], new int[]{76});
+        clientHolder = ClientHolder.getInstance(TaskDescriptionHelper.createTaskDescList(ECHO_SERVICE_HOST, "80",
+                null, null, ECHO_SERVICE_HOST, new int[0], new int[]{76}), null);
 
         qosTest = new QualityOfServiceTest(clientHolder, testSettings);
 

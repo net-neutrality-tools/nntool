@@ -18,7 +18,7 @@
 
 #include "trace.h"
 
-std::function<void(std::string)> CTrace::logFunction = nullptr;
+std::function<void(std::string, std::string)> CTrace::logFunction = nullptr;
 
 //! \brief
 //!	Standard Constructor
@@ -130,7 +130,7 @@ void CTrace::logToPlatform(const string &category, const string &sMessage)
 //	string platform = ::PLATFORM;
 //	string clientos = ::CLIENT_OS;
 	if (CTrace::logFunction != nullptr) {
-		CTrace::logFunction("[" + CTool::get_timestamp_string() + "] " + category + ": " + sMessage + "\n");
+		CTrace::logFunction(category, sMessage);
 	}
 //	if (platform.compare("desktop") == 0 && clientos.compare("linux") == 0)
 	{

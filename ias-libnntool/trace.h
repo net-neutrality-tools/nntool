@@ -36,16 +36,16 @@ class CTrace
 		    string mCategory;
 		#endif
 
-		static std::function<void(std::string)> logFunction;
+	static std::function<void(std::string, std::string)> logFunction;
 		
 		CTrace();
 	public:
 	
 		static CTrace& getInstance();
 
-		static void setLogFunction(std::function<void(std::string)> func) {
+		static void setLogFunction(std::function<void(std::string, std::string)> func) {
 			CTrace::logFunction = func;
-			func("Assigned log function to trace");
+			func("INFO", "Assigned log function to trace");
 		}
 		
 		#ifdef NNTOOL_SERVER
