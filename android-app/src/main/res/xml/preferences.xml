@@ -25,6 +25,7 @@
             <PreferenceCategory
                 android:key="selection_speed"
                 android:title="@string/preference_category_speed_test_selection"
+                android:icon="@drawable/ic_result_speed"
                 >
 
                 <SwitchPreferenceCompat
@@ -49,6 +50,7 @@
             <PreferenceCategory
                 android:key="selection_qos"
                 android:title="@string/preference_category_qos_test_selection"
+                android:icon="@drawable/ic_result_qos"
                 >
 
             </PreferenceCategory>

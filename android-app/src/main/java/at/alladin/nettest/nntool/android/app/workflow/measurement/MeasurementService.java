@@ -395,22 +395,24 @@ public class MeasurementService extends Service implements ServiceConnection {
                     this.collectorUrl, new OnTaskFinishedCallback<MeasurementResultResponse>() {
                 @Override
                 public void onTaskFinished(MeasurementResultResponse result) {
-                    if (result == null) {
-                        AlertDialogUtil.showAlertDialog(mainActivity,
-                                R.string.alert_send_measurement_result_title,
-                                R.string.alert_send_measurement_results_error);
-                    }
-
                     //if the result has been sent, reset the list of previous measurements
                     subMeasurementResultList.clear();
 
                     WorkflowRecentResultParameter parameter = null;
-                    if (jniSpeedMeasurementClient != null) {
-                        jniSpeedMeasurementClient.getSpeedMeasurementState().setMeasurementUuid(result.getUuid());
+
+                    if (result == null) {
+                        AlertDialogUtil.showAlertDialog(mainActivity,
+                                R.string.alert_send_measurement_result_title,
+                                R.string.alert_send_measurement_results_error);
                     } else {
-                        parameter = new WorkflowRecentResultParameter();
-                        parameter.setRecentResultUuid(result.getUuid());
-                        parameter.setRecentResultOpenDataUuid(result.getOpenDataUuid());
+                        if (jniSpeedMeasurementClient != null) {
+                            jniSpeedMeasurementClient.getSpeedMeasurementState().setMeasurementUuid(result.getUuid());
+                        } else {
+                            //if no speed measurement has been executed, the corresponding result uuid needs be set via the workflowparameter
+                            parameter = new WorkflowRecentResultParameter();
+                            parameter.setRecentResultUuid(result.getUuid());
+                            parameter.setRecentResultOpenDataUuid(result.getOpenDataUuid());
+                        }
                     }
 
                     mainActivity.navigateTo(WorkflowTarget.MEASUREMENT_RECENT_RESULT, parameter);

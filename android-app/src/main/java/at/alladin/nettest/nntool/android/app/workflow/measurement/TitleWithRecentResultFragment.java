@@ -42,14 +42,12 @@ public class TitleWithRecentResultFragment extends TitleFragment implements Serv
      * @return
      */
     public static TitleWithRecentResultFragment newInstance() {
-        final TitleWithRecentResultFragment fragment = new TitleWithRecentResultFragment();
-        return fragment;
+        return newInstance(null);
     }
 
     public static TitleWithRecentResultFragment newInstance(final WorkflowParameter parameter) {
-        TitleWithRecentResultFragment fragment = newInstance();
+        final TitleWithRecentResultFragment fragment = new TitleWithRecentResultFragment();
         if (parameter instanceof WorkflowRecentResultParameter) {
-             fragment = new TitleWithRecentResultFragment();
              final SpeedMeasurementState state = new SpeedMeasurementState();
              state.setMeasurementPhase(SpeedMeasurementState.MeasurementPhase.END);
              state.setProgress(1.0f);
@@ -70,10 +68,6 @@ public class TitleWithRecentResultFragment extends TitleFragment implements Serv
         //and enable the result specific views
         measurementRecentResultSelectorView = v.findViewById(R.id.measurement_recent_result_selector_view);
         bottomMeasurementResultSummaryView = v.findViewById(R.id.bottom_measurement_result_summary_view);
-        if (recentSpeedMeasurementState != null) {
-            setMeasurementStateInBottomView();
-            measurementRecentResultSelectorView.setMeasurementUuid(recentSpeedMeasurementState.getMeasurementUuid());
-        }
         return v;
     }
 
@@ -125,7 +119,13 @@ public class TitleWithRecentResultFragment extends TitleFragment implements Serv
         if (recentSpeedMeasurementState != null && bottomMeasurementResultSummaryView != null) {
             setMeasurementStateInBottomView();
             bottomMeasurementResultSummaryView.invalidate();
+        }
+        //control of the "View your measurement" button is independent of the result summary
+        if (recentSpeedMeasurementState != null && recentSpeedMeasurementState.getMeasurementUuid() != null) {
             measurementRecentResultSelectorView.setMeasurementUuid(recentSpeedMeasurementState.getMeasurementUuid());
+            measurementRecentResultSelectorView.setVisibility(View.VISIBLE);
+        } else {
+            measurementRecentResultSelectorView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -142,4 +142,5 @@ public class TitleWithRecentResultFragment extends TitleFragment implements Serv
     public void setRecentSpeedMeasurementState(SpeedMeasurementState recentSpeedMeasurementState) {
         this.recentSpeedMeasurementState = recentSpeedMeasurementState;
     }
+
 }
