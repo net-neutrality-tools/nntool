@@ -161,6 +161,7 @@ int Download::run()
 			{
 				//Error
 				::UNREACHABLE = true;
+				::hasError = true;
 				TRC_ERR("no connection to measurement peer: " + mServer);
 				return -1;
 			}
@@ -177,6 +178,7 @@ int Download::run()
 			{
 				//Error
 				::UNREACHABLE = true;
+				::hasError = true;
 				TRC_ERR("no connection to measurement peer: " + mServer);
 				return -1;
 			}
@@ -225,6 +227,8 @@ int Download::run()
 				::OVERLOADED = true;
 				TRC_ERR("measurement peer overloaded: " + mServer);
 			}
+
+			::hasError = true;
 
 			mConnection->close();
 

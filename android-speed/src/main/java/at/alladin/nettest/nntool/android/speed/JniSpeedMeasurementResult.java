@@ -233,7 +233,6 @@ public class JniSpeedMeasurementResult {
 
         @Keep
         public void addSingleRtt(Long rtt) {
-            System.out.println("got rtt: " + rtt);
             singleRtts.add(rtt);
         }
 

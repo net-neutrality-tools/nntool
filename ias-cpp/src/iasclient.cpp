@@ -184,7 +184,7 @@ int main(int argc, char** argv)
 
     #ifdef NNTOOL_CLIENT
     //register callback
-    CTrace::setLogFunction([] (const std::string &s) { std::cout << s; });
+    CTrace::setLogFunction([] (std::string const & cat, std::string const  &s) { std::cout << "[" + CTool::get_timestamp_string() + "] " + cat + ": " + s + "\n"; });
     #endif
 
 	measurementStart(jMeasurementParametersJson.dump());

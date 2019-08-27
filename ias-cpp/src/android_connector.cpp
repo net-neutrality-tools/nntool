@@ -534,15 +534,27 @@ void AndroidConnector::setBandwidthResult (JNIEnv * env, json11::Json const & js
 
 }
 
-void AndroidConnector::printLog(const std::string& message) const {
-    __android_log_write(ANDROID_LOG_DEBUG, TAG, message.c_str());
+void AndroidConnector::printLog(std::string const & category, std::string const & message) const {
+    android_LogPriority logPriority = ANDROID_LOG_INFO;
+
+    if (category == "DEBUG") {
+        logPriority = ANDROID_LOG_DEBUG;
+    } else if (category == "INFO") {
+        logPriority = ANDROID_LOG_INFO;
+    } else if (category == "WARN") {
+        logPriority = ANDROID_LOG_WARN;
+    } else if (category == "CRITICAL") {
+        logPriority = ANDROID_LOG_ERROR;
+    } else if (category == "ERROR") {
+        logPriority = ANDROID_LOG_FATAL;
+    }
+    __android_log_write(logPriority, TAG, message.c_str());
 }
 
 
 void AndroidConnector::startMeasurement() {
     try {
-        CTrace::setLogFunction(std::bind(&AndroidConnector::printLog, this, std::placeholders::_1));
-//        signalFunction = std::function<void(int)>(std::bind(&AndroidConnector::callbackError, this, std::placeholders::_1));
+        CTrace::setLogFunction(std::bind(&AndroidConnector::printLog, this, std::placeholders::_1, std::placeholders::_2));
 
         //init from ias-client
 
