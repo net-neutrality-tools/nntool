@@ -19,60 +19,62 @@ package at.alladin.nntool.shared.qos;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import at.alladin.nntool.shared.qos.util.SipTaskHelper;
+
 /**
  * @author lb@alladin.at
  */
 public class SipResult extends AbstractResult {
 
-	@SerializedName("sip_objective_port")
+	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_PORT)
 	@Expose
 	private Integer port;
 
-	@SerializedName("sip_objective_timeout")
+	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_TIMEOUT)
 	@Expose
 	private Long timeout;
 	
-	@SerializedName("sip_objective_call_duration")
+	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_CALL_DURATION)
 	@Expose
 	private Long callDuration;
 
-	@SerializedName("sip_objective_to")
+	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_TO)
 	@Expose
 	private String objectiveTo;
 	
-	@SerializedName("sip_objective_from")
+	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_FROM)
 	@Expose
 	private String objectivefrom;
 
-	@SerializedName("sip_objective_via")
+	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_VIA)
 	@Expose
 	private String objectiveVia;
 	
-	@SerializedName("sip_result_to")
+	@SerializedName(SipTaskHelper.PARAM_RESULT_TO)
 	@Expose
 	private String resultTo;
 	
-	@SerializedName("sip_result_from")
+	@SerializedName(SipTaskHelper.PARAM_RESULT_FROM)
 	@Expose
 	private String resultFrom;
 
-	@SerializedName("sip_result_via")
+	@SerializedName(SipTaskHelper.PARAM_RESULT_VIA)
 	@Expose
 	private String resultVia;
 
-	@SerializedName("sip_result")
+	@SerializedName(SipTaskHelper.PARAM_RESULT)
 	@Expose
 	private String result;
 	
-	@SerializedName("sip_result_ccsr")
+	@SerializedName(SipTaskHelper.PARAM_RESULT_CCSR)
 	@Expose	
 	private Double callCompletionSuccessRate;
 
-	@SerializedName("sip_result_cssr")
+	@SerializedName(SipTaskHelper.PARAM_RESULT_CSSR)
 	@Expose	
 	private Double callSetupSuccessRate;
 
-	@SerializedName("sip_result_dcr")
+	@SerializedName(SipTaskHelper.PARAM_RESULT_DCR)
 	@Expose	
 	private Double callDroppedCallRate;
 

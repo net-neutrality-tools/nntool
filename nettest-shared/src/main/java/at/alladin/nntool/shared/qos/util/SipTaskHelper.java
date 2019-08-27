@@ -1,6 +1,7 @@
 package at.alladin.nntool.shared.qos.util;
 
 import java.util.Map;
+import java.util.Random;
 
 import com.google.common.base.Strings;
 
@@ -26,6 +27,40 @@ public class SipTaskHelper {
 	
 	public final static String PARAM_VIA = "via";
 	
+	public final static String PARAM_PREFIX_RESULT = "sip_result";
+
+	public final static String PARAM_PREFIX_OBJECTIVE = "sip_objective";
+
+	//results and objectives:
+
+	public final static String PARAM_OBJECTIVE_PORT = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_PORT;
+
+	public final static String PARAM_OBJECTIVE_TIMEOUT = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_TIMEOUT;
+
+	public final static String PARAM_OBJECTIVE_CALL_DURATION = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_CALL_DURATION;
+
+	public final static String PARAM_OBJECTIVE_TO = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_TO;
+
+	public final static String PARAM_OBJECTIVE_FROM = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_FROM;
+
+	public final static String PARAM_OBJECTIVE_VIA = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_VIA;
+
+	public final static String PARAM_RESULT_TO = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_TO;
+
+	public final static String PARAM_RESULT_FROM = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_FROM;
+
+	public final static String PARAM_RESULT_VIA = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_VIA;
+
+	public final static String PARAM_RESULT = PARAM_PREFIX_RESULT;
+
+	public final static String PARAM_RESULT_DURATION = PARAM_PREFIX_RESULT + "_duration";
+
+	public final static String PARAM_RESULT_CCSR = PARAM_PREFIX_RESULT + "_ccsr";
+	
+	public final static String PARAM_RESULT_CSSR = PARAM_PREFIX_RESULT + "_cssr";
+	
+	public final static String PARAM_RESULT_DCR = PARAM_PREFIX_RESULT + "_dcr";
+	
 	public static void preProcess(final QosMeasurementObjective objective) {
 		if (objective == null || objective.getParams() == null) {
 			return;
@@ -36,15 +71,27 @@ public class SipTaskHelper {
 		generateRandomViaAddrIfNullOrEmpty(objective.getParams(), PARAM_VIA);
 	}
 	
-	private static void generateRandomSipAddrIfNullOrEmpty(final Map<String, Object> params, final String key) {
-		if (Strings.isNullOrEmpty((String)params.get(key))) {
-			
+	public static void generateRandomSipAddrIfNullOrEmpty(final Map<String, Object> params, final String key) {
+		final String param = (String)params.get(key);
+		if (Strings.isNullOrEmpty(param)) {
+		    final String generatedString = generateRandomString(5, 8);
+			params.put(key, generatedString + " <sip:" + generatedString + "@home>");
 		}
 	}
 	
-	private static void generateRandomViaAddrIfNullOrEmpty(final Map<String, Object> params, final String key) {
+	public static void generateRandomViaAddrIfNullOrEmpty(final Map<String, Object> params, final String key) {
 		if (Strings.isNullOrEmpty((String)params.get(key))) {
-			params.put(key, "SIP/2.0/TCP random.domain:5060");
+			final String generatedString = generateRandomString(5, 8);
+			params.put(key, "SIP/2.0/TCP random." + generatedString + ".domain:5060");
 		}
+	}
+	
+	public static String generateRandomString(final int minLength, final int maxLength) {
+		final Random rnd = new Random();
+		final byte[] buffer = new byte[rnd.nextInt(maxLength-minLength+1) + minLength];
+		for (int i = 0; i < buffer.length; i++) {
+			buffer[i] = (byte) ((rnd.nextFloat() * (122-97)) + 97);
+		}
+		return new String(buffer);
 	}
 }
