@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.service.collector.config.CollectorServiceProperties;
+import at.alladin.nettest.service.collector.service.MeasurementResultService;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
@@ -53,9 +54,12 @@ public class MeasurementResultResourceIntegrationTest {
 	
 	@Before
 	public void setup() {
+		final MeasurementResultService measurementResultService = new MeasurementResultService();
+		ReflectionTestUtils.setField(measurementResultService, "storageService", storageService);
+		ReflectionTestUtils.setField(measurementResultService, "collectorServiceProperties", collectorServiceProperties);
+		
 		final MeasurementResultResource controller = new MeasurementResultResource();
-		ReflectionTestUtils.setField(controller, "storageService", storageService);
-		ReflectionTestUtils.setField(controller, "collectorServiceProperties", collectorServiceProperties);
+		ReflectionTestUtils.setField(controller, "measurementResultService", measurementResultService);
 		
 		this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 	}

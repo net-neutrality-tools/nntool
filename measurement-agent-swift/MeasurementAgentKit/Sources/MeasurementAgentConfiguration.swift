@@ -20,9 +20,9 @@ import Foundation
 ///
 public struct MeasurementAgentConfiguration {
 
-    public var controlServiceBaseUrl: String
+    public var controllerServiceBaseUrl: String
 
-    public init(controlServiceBaseUrl: String) {
-        self.controlServiceBaseUrl = controlServiceBaseUrl
+    public init(controllerServiceBaseUrl: String) {
+        self.controllerServiceBaseUrl = controllerServiceBaseUrl
     }
 }

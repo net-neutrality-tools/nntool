@@ -143,7 +143,7 @@ class IASProgram: NSObject, ProgramProtocol {
         if let lastDownloadInfo = (r["download_info"] as? [[AnyHashable: Any]])?.last {
             res.bytesDownload = lastDownloadInfo["bytes"] as? UInt64
             res.bytesDownloadIncludingSlowStart = lastDownloadInfo["bytes_including_slow_start"] as? UInt64
-            res.durationDownloadNs = lastDownloadInfo["duration_ns_total"] as? UInt64
+            res.durationDownloadNs = lastDownloadInfo["duration_ns"] as? UInt64
 
             res.connectionInfo?.actualNumStreamsDownload = lastDownloadInfo["num_streams_end"] as? Int
             res.connectionInfo?.requestedNumStreamsDownload = lastDownloadInfo["num_streams_start"] as? Int
@@ -160,7 +160,7 @@ class IASProgram: NSObject, ProgramProtocol {
         if let lastUploadInfo = (r["upload_info"] as? [[AnyHashable: Any]])?.last {
             res.bytesUpload = lastUploadInfo["bytes"] as? UInt64
             res.bytesUploadIncludingSlowStart = lastUploadInfo["bytes_including_slow_start"] as? UInt64
-            res.durationUploadNs = lastUploadInfo["duration_ns_total"] as? UInt64
+            res.durationUploadNs = lastUploadInfo["duration_ns"] as? UInt64
 
             res.connectionInfo?.actualNumStreamsUpload = lastUploadInfo["num_streams_end"] as? Int
             res.connectionInfo?.requestedNumStreamsUpload = lastUploadInfo["num_streams_start"] as? Int

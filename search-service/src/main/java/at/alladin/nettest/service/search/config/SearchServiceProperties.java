@@ -1,6 +1,10 @@
 package at.alladin.nettest.service.search.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import at.alladin.nettest.shared.server.config.ElasticSearchProperties;
 
 /**
  * The search service YAML configuration object.
@@ -9,12 +13,27 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  */
 @ConfigurationProperties(prefix = "search-service", ignoreUnknownFields = true)
+@EnableConfigurationProperties(ExportProperties.class)
 public class SearchServiceProperties {
 	
-	final ElasticSearchProperties elasticsearch = new ElasticSearchProperties();
+	@NestedConfigurationProperty
+	private final ElasticSearchProperties elasticsearch = new ElasticSearchProperties();
+	
+	@NestedConfigurationProperty
+	private final ExportProperties export = new ExportProperties();
+	
+	private final Search search = new Search();
 	
 	public ElasticSearchProperties getElasticsearch() {
 		return elasticsearch;
+	}
+	
+	public ExportProperties getExport() {
+		return export;
+	}
+	
+	public Search getSearch() {
+		return search;
 	}
 	
 	/**
@@ -22,53 +41,16 @@ public class SearchServiceProperties {
 	 * @author alladin-IT GmbH (bp@alladin.at)
 	 *
 	 */
-	public static class ElasticSearchProperties {
+	public static class Search {
 		
-		private String host;		
-		private int port;
-		private String scheme;
+		private int maxPageSize = 100;
 		
-		private String index;
-		private String queryTimeout; 
-		
-		public String getHost() {
-			return host;
+		public int getMaxPageSize() {
+			return maxPageSize;
 		}
 		
-		public void setHost(String host) {
-			this.host = host;
-		}
-		
-		public int getPort() {
-			return port;
-		}
-		
-		public void setPort(int port) {
-			this.port = port;
-		}
-		
-		public String getScheme() {
-			return scheme;
-		}
-		
-		public void setScheme(String scheme) {
-			this.scheme = scheme;
-		}
-		
-		public String getIndex() {
-			return index;
-		}
-		
-		public void setIndex(String index) {
-			this.index = index;
-		}
-		
-		public String getQueryTimeout() {
-			return queryTimeout;
-		}
-		
-		public void setQueryTimeout(String queryTimeout) {
-			this.queryTimeout = queryTimeout;
+		public void setMaxPageSize(int maxPageSize) {
+			this.maxPageSize = maxPageSize;
 		}
 	}
 }

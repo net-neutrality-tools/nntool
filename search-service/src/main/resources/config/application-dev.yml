@@ -11,6 +11,7 @@ spring:
 logging:
   level:
     at.alladin.nettest: DEBUG
+    org.springframework.web: TRACE
 
 search-service:
   elasticsearch:

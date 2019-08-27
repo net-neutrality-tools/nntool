@@ -10,13 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import at.alladin.nettest.service.collector.config.CollectorServiceProperties;
+import at.alladin.nettest.service.collector.service.MeasurementResultService;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
-import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
-import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import io.swagger.annotations.ApiParam;
 
 /**
@@ -31,12 +29,9 @@ public class MeasurementResultResource {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(MeasurementResultResource.class);
-	
-	@Autowired
-	private StorageService storageService;
 
 	@Autowired
-	private CollectorServiceProperties collectorServiceProperties;
+	private MeasurementResultService measurementResultService;
 	
 	/**
 	 * Store measurement result.
@@ -52,13 +47,7 @@ public class MeasurementResultResource {
 	})
 	@PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ApiResponse<MeasurementResultResponse>> postMeasurement(@ApiParam("Measurement result") @RequestBody LmapReportDto lmapReportDto) {
-		final MeasurementResultResponse resultResponse;
-		try {
-			resultResponse = storageService.save(lmapReportDto, collectorServiceProperties.getSystemUuid());
-		} catch (Exception ex) {
-			throw new StorageServiceException(ex);
-		}
-		logger.info(String.format("Saved result with uuid: %s and open-data uuid: %s", resultResponse.getUuid(), resultResponse.getOpenDataUuid()));
+		final MeasurementResultResponse resultResponse = measurementResultService.saveResult(lmapReportDto);
 		return ResponseHelper.ok(resultResponse);
 	}
 }

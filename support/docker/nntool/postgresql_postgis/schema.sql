@@ -1,8 +1,8 @@
-create schema public;
+-- create schema public;
 
-comment on schema public is 'standard public schema';
+-- comment on schema public is 'standard public schema';
 
-alter schema public owner to postgres;
+alter schema public owner to nntool;
 
 create table settings
 (
@@ -13,6 +13,8 @@ create table settings
 );
 
 comment on column settings.json is 'Contains the settings';
+
+alter table settings owner to nntool;
 
 create table devices
 (
@@ -27,6 +29,8 @@ comment on column devices.code_name is 'Device code name.';
 
 comment on column devices.full_name is 'The device name that is commonly known to users (e.g. Google Pixel).';
 
+alter table devices owner to nntool;
+
 create table translations
 (
 	language_code varchar(50) not null
@@ -37,30 +41,7 @@ create table translations
 
 comment on column translations.json is 'Contains the specific key-value pairs for the given language';
 
-create table measurement_agents
-(
-	type varchar(40),
-	registration_time timestamp,
-	terms_and_conditions_accepted boolean,
-	terms_and_conditions_accepted_version integer,
-	terms_and_conditions_accepted_time timestamp,
-	uuid uuid not null
-		constraint measurement_agents_pkey
-			primary key,
-	group_name varchar
-);
-
-comment on column measurement_agents.type is 'The type of agent (e.g. MOBILE, BROWSER, DESKTOP)';
-
-comment on column measurement_agents.registration_time is 'Time stamp in UTC when the agent was registered.';
-
-comment on column measurement_agents.terms_and_conditions_accepted is 'Flag if the terms and conditions were accepted by the agent.';
-
-comment on column measurement_agents.terms_and_conditions_accepted_version is 'Version of the terms and conditions that was accepted by the agent.';
-
-comment on column measurement_agents.terms_and_conditions_accepted_time is 'Time stamp when the latest terms and conditions were accepted by the agent.';
-
-comment on column measurement_agents.group_name is 'The agent''s group name/identifier';
+alter table translations owner to nntool;
 
 create table qos_objectives
 (
@@ -90,6 +71,8 @@ comment on column qos_objectives.parameters is 'A map of QoS objective parameter
 
 comment on column qos_objectives.evaluations is 'A list of custom evaluations for this QoS objective. Evaluations are used to present human readable results to the end user.';
 
+alter table qos_objectives owner to nntool;
+
 create table network_types
 (
 	id bigserial not null
@@ -106,12 +89,14 @@ comment on column network_types.group_name is 'Network group name (e.g. 2G, 3G, 
 
 comment on column network_types.category is 'Contains the different network categories.';
 
+alter table network_types owner to nntool;
+
 create table measurements
 (
-	uuid uuid not null
+	open_data_uuid uuid not null
 		constraint measurements_pkey
 			primary key,
-	opendata_source varchar,
+	system_uuid varchar,
 	start_time timestamp,
 	end_time timestamp,
 	duration_ns bigint,
@@ -130,17 +115,13 @@ create table measurements
 	provider_country_asn varchar(8),
 	provider_name varchar,
 	provider_shortname varchar,
-	open_data_uuid uuid,
 	agent_app_version_name varchar,
 	agent_app_version_code integer,
 	agent_language varchar(8),
 	agent_app_git_rev varchar,
 	agent_timezone varchar,
-	agent_uuid uuid not null
-		constraint measurements_measurement_agent_uuid_fkey
-			references measurement_agents,
+	agent_uuid uuid not null,
 	network_signal_info jsonb,
-	network_cell_location_info jsonb,
 	mobile_network_operator_mcc integer,
 	mobile_network_operator_mnc integer,
 	mobile_network_country_code varchar(10),
@@ -157,7 +138,7 @@ create table measurements
 	geo_location_accuracy double precision,
 	mobile_network_signal_strength_2g3g_dbm integer,
 	mobile_network_lte_rsrp_dbm integer,
-	mobile_network_lte_rsrp_db integer,
+	mobile_network_lte_rsrq_db integer,
 	mobile_network_lte_rssnr_db integer,
 	wifi_network_link_speed_bps integer,
 	wifi_network_rssi_dbm integer,
@@ -166,15 +147,15 @@ create table measurements
 	agent_type varchar,
 	geo_location_latitude double precision,
 	geo_location_longitude double precision,
-	network_cell_location_arfcn integer,
+	mobile_network_frequency integer,
 	tag varchar,
 	wifi_initial_bssid varchar,
 	wifi_initial_ssid varchar
 );
 
-comment on column measurements.uuid is 'The unique identifier (UUIDv4) of the measurement';
+comment on column measurements.open_data_uuid is 'The unique identifier (UUIDv4) of the measurement';
 
-comment on column measurements.opendata_source is 'Measurement source. Can be either own system or imported from open-data.';
+comment on column measurements.system_uuid is 'Measurement source. Can be either own system or imported from open-data.';
 
 comment on column measurements.start_time is 'Start date and time for this measurement';
 
@@ -212,8 +193,6 @@ comment on column measurements.provider_name is 'The name of the provider';
 
 comment on column measurements.provider_shortname is 'The short name (or shortcut) of the provider';
 
-comment on column measurements.open_data_uuid is 'The open-data identifier (UUIDv4) of the measurement.';
-
 comment on column measurements.agent_app_version_name is 'Application version name (e.g. 1.0.0).';
 
 comment on column measurements.agent_app_version_code is 'Application version code number (e.g. 10).';
@@ -227,8 +206,6 @@ comment on column measurements.agent_timezone is 'The agent''s time zone.';
 comment on column measurements.agent_uuid is 'The agent''s UUID.';
 
 comment on column measurements.network_signal_info is 'Contains signal information captured during the test.';
-
-comment on column measurements.network_cell_location_info is 'Contains cell location information captured during the test.';
 
 comment on column measurements.mobile_network_operator_mcc is 'The MCC of the mobile network operator';
 
@@ -258,7 +235,7 @@ comment on column measurements.mobile_network_signal_strength_2g3g_dbm is 'The r
 
 comment on column measurements.mobile_network_lte_rsrp_dbm is 'The LTE reference signal received power, in dBm';
 
-comment on column measurements.mobile_network_lte_rsrp_db is 'The LTE reference signal received quality, in dB';
+comment on column measurements.mobile_network_lte_rsrq_db is 'The LTE reference signal received quality, in dB';
 
 comment on column measurements.mobile_network_lte_rssnr_db is 'The LTE reference signal signal-to-noise ratio, in dB';
 
@@ -276,13 +253,15 @@ comment on column measurements.geo_location_latitude is 'Geographic location lat
 
 comment on column measurements.geo_location_longitude is 'Geographic location longitude.';
 
-comment on column measurements.network_cell_location_arfcn is 'Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN)';
+comment on column measurements.mobile_network_frequency is 'Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN)';
 
 comment on column measurements.tag is 'Contains a tag provided by the agent.';
 
 comment on column measurements.wifi_initial_bssid is 'Initial BSSID of the network.';
 
 comment on column measurements.wifi_initial_ssid is 'Initial SSID of the network.';
+
+alter table measurements owner to nntool;
 
 create table qos_measurements
 (
@@ -294,8 +273,8 @@ create table qos_measurements
 	start_time timestamp,
 	end_time timestamp,
 	duration_ns bigint,
-	measurement_uuid uuid
-		constraint qos_measurements_measurement_uuid_fkey
+	measurement_open_data_uuid uuid
+		constraint qos_measurements_measurement_open_data_uuid_fkey
 			references measurements,
 	status varchar,
 	reason varchar,
@@ -323,6 +302,8 @@ comment on column qos_measurements.version_protocol is 'The protocol version thi
 comment on column qos_measurements.version_library is 'The library version this measurement used';
 
 comment on column qos_measurements.implausible is 'Flag to mark a measurement as implausible';
+
+alter table qos_measurements owner to nntool;
 
 create table qos_measurement_results
 (
@@ -352,7 +333,9 @@ comment on column qos_measurement_results.success_count is 'The count of positiv
 
 comment on column qos_measurement_results.failure_count is 'The count of negative evalutations (failures)';
 
-create table speed_measurements
+alter table qos_measurement_results owner to nntool;
+
+create table ias_measurements
 (
 	id bigserial not null
 		constraint speed_measurements_pkey
@@ -362,8 +345,8 @@ create table speed_measurements
 	start_time timestamp,
 	end_time timestamp,
 	duration_ns bigint,
-	measurement_uuid uuid
-		constraint speed_measurements_measurement_uuid_fkey
+	measurement_open_data_uuid uuid
+		constraint speed_measurements_measurement_open_data_uuid_fkey
 			references measurements,
 	status varchar,
 	reason varchar,
@@ -393,67 +376,69 @@ create table speed_measurements
 	requested_duration_download_slow_start_ns bigint
 );
 
-comment on column speed_measurements.relative_start_time_ns is 'Start time in nanoseconds relative to the start time of the overall measurement object.';
+comment on column ias_measurements.relative_start_time_ns is 'Start time in nanoseconds relative to the start time of the overall measurement object.';
 
-comment on column speed_measurements.relative_end_time_ns is 'End time in nanoseconds relative to the end time of the overall measurement object.';
+comment on column ias_measurements.relative_end_time_ns is 'End time in nanoseconds relative to the end time of the overall measurement object.';
 
-comment on column speed_measurements.start_time is 'Start Date and time for this speed measurement. Date and time is always stored as UTC.';
+comment on column ias_measurements.start_time is 'Start Date and time for this speed measurement. Date and time is always stored as UTC.';
 
-comment on column speed_measurements.end_time is 'End date and time for this speed measurement. Date and time is always stored as UTC.';
+comment on column ias_measurements.end_time is 'End date and time for this speed measurement. Date and time is always stored as UTC.';
 
-comment on column speed_measurements.duration_ns is 'Duration of a measurement.';
+comment on column ias_measurements.duration_ns is 'Duration of a measurement.';
 
-comment on column speed_measurements.status is 'The status of a measurement.';
+comment on column ias_measurements.status is 'The status of a measurement.';
 
-comment on column speed_measurements.reason is 'The reason why a measurement failed.';
+comment on column ias_measurements.reason is 'The reason why a measurement failed.';
 
-comment on column speed_measurements.version_protocol is 'The protocol version this measurement used';
+comment on column ias_measurements.version_protocol is 'The protocol version this measurement used';
 
-comment on column speed_measurements.version_library is 'The library version this measurement used';
+comment on column ias_measurements.version_library is 'The library version this measurement used';
 
-comment on column speed_measurements.implausible is 'Flag to mark a measurement as implausible.';
+comment on column ias_measurements.implausible is 'Flag to mark a measurement as implausible.';
 
-comment on column speed_measurements.throughput_avg_download_bps is 'The calculated (average) download throughput in bits per second.';
+comment on column ias_measurements.throughput_avg_download_bps is 'The calculated (average) download throughput in bits per second.';
 
-comment on column speed_measurements.throughput_avg_upload_bps is 'The calculated (average) upload throughput in bits per second.';
+comment on column ias_measurements.throughput_avg_upload_bps is 'The calculated (average) upload throughput in bits per second.';
 
-comment on column speed_measurements.throughput_avg_download_log is 'Common logarithm of the (average) download throughput.';
+comment on column ias_measurements.throughput_avg_download_log is 'Common logarithm of the (average) download throughput.';
 
-comment on column speed_measurements.throughput_avg_upload_log is 'Common logarithm of the average upload throughput.';
+comment on column ias_measurements.throughput_avg_upload_log is 'Common logarithm of the average upload throughput.';
 
-comment on column speed_measurements.bytes_download is 'Bytes received during the speed measurement (Download).';
+comment on column ias_measurements.bytes_download is 'Bytes received during the speed measurement (Download).';
 
-comment on column speed_measurements.requested_duration_download_ns is 'The nominal measurement duration of the download measurement.';
+comment on column ias_measurements.requested_duration_download_ns is 'The nominal measurement duration of the download measurement.';
 
-comment on column speed_measurements.requested_duration_upload_ns is 'The nominal measurement duration of the upload measurement.';
+comment on column ias_measurements.requested_duration_upload_ns is 'The nominal measurement duration of the upload measurement.';
 
-comment on column speed_measurements.duration_upload_ns is 'Duration of the upload measurement.';
+comment on column ias_measurements.duration_upload_ns is 'Duration of the upload measurement.';
 
-comment on column speed_measurements.duration_download_ns is 'Duration of the download measurement.';
+comment on column ias_measurements.duration_download_ns is 'Duration of the download measurement.';
 
-comment on column speed_measurements.relative_start_time_upload_ns is 'Relative start time of the upload measurement in nanoseconds.';
+comment on column ias_measurements.relative_start_time_upload_ns is 'Relative start time of the upload measurement in nanoseconds.';
 
-comment on column speed_measurements.relative_start_time_download_ns is 'Relative start time of the download measurement in nanoseconds.';
+comment on column ias_measurements.relative_start_time_download_ns is 'Relative start time of the download measurement in nanoseconds.';
 
-comment on column speed_measurements.duration_rtt_ns is 'Duration of the RTT measurement.';
+comment on column ias_measurements.duration_rtt_ns is 'Duration of the RTT measurement.';
 
-comment on column speed_measurements.relative_start_time_rtt_ns is 'Relative start time of the RTT measurement in nanoseconds.';
+comment on column ias_measurements.relative_start_time_rtt_ns is 'Relative start time of the RTT measurement in nanoseconds.';
 
-comment on column speed_measurements.connection_info is 'Contains information about the connection(s) used for the speed measurement.';
+comment on column ias_measurements.connection_info is 'Contains information about the connection(s) used for the speed measurement.';
 
-comment on column speed_measurements.rtt_median_ns is 'RTT median in ns';
+comment on column ias_measurements.rtt_median_ns is 'RTT median in ns';
 
-comment on column speed_measurements.rtt_median_log is 'Common logarithm of the median RTT';
+comment on column ias_measurements.rtt_median_log is 'Common logarithm of the median RTT';
 
-comment on column speed_measurements.speed_raw_data is 'Stores the raw data (amount of bytes in time) values for download and upload.';
+comment on column ias_measurements.speed_raw_data is 'Stores the raw data (amount of bytes in time) values for download and upload.';
 
-comment on column speed_measurements.bytes_upload is 'Bytes transferred during the speed measurement (Upload).';
+comment on column ias_measurements.bytes_upload is 'Bytes transferred during the speed measurement (Upload).';
 
-comment on column speed_measurements.rtt_info is 'Bytes transferred during the speed measurement (Upload).';
+comment on column ias_measurements.rtt_info is 'Bytes transferred during the speed measurement (Upload).';
 
-comment on column speed_measurements.requested_duration_upload_slow_start_ns is 'The nominal duration for the upload slow-start phase.';
+comment on column ias_measurements.requested_duration_upload_slow_start_ns is 'The nominal duration for the upload slow-start phase.';
 
-comment on column speed_measurements.requested_duration_download_slow_start_ns is 'The nominal duration for the download slow-start phase.';
+comment on column ias_measurements.requested_duration_download_slow_start_ns is 'The nominal duration for the download slow-start phase.';
+
+alter table ias_measurements owner to nntool;
 
 create table providers
 (
@@ -473,6 +458,8 @@ comment on column providers.short_name is 'The short name (or shortcut) of the p
 comment on column providers.asn_mappings is 'Contains a list of all valid/possible ASN mappings for this provider.';
 
 comment on column providers.mcc_mnc_mappings is 'Contains a list of all valid/possible MCC/MNC mappings for this provider.';
+
+alter table providers owner to nntool;
 
 create table measurement_servers
 (
@@ -517,4 +504,5 @@ comment on column measurement_servers.geo_location_latitude is 'Geographic locat
 
 comment on column measurement_servers.geo_location_longitude is 'Geographic location longitude.';
 
+alter table measurement_servers owner to nntool;
 

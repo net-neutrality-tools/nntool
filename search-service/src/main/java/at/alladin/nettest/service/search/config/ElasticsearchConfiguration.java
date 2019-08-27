@@ -7,9 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import at.alladin.nettest.service.search.config.SearchServiceProperties.ElasticSearchProperties;
+import at.alladin.nettest.shared.server.config.ElasticSearchProperties;
 
 /**
+ * Configuration class which creates an {@link RestHighLevelClient} client to access the Elasticsearch database. 
  * 
  * @author alladin-IT GmbH (bp@alladin.at)
  *
@@ -21,8 +22,9 @@ public class ElasticsearchConfiguration {
 	private SearchServiceProperties searchServiceProperties;
 	
 	/**
+	 * Creates the Elasticsearch client bean.
 	 * 
-	 * @return
+	 * @return the Elasticsearch client bean.
 	 */
 	@Bean(destroyMethod = "close")
 	public RestHighLevelClient elasticsearchClient() {
