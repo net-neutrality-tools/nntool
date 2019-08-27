@@ -36,7 +36,7 @@ import mockit.Mocked;
 
 /**
  * 
- * @author lb
+ * @author Lukasz Budryk (lb@alladin.at)
  *
  */
 public class TcpClientHandlerSipItegrationTest {
