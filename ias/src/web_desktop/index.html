@@ -34,6 +34,14 @@
                         <td></td>
                         <td></td>
                     </tr>
+
+                    <tr>
+                        <td>TLS</td>
+                        <td><input type='radio' name='tls' checked >off</td>
+                        <td><input type='radio' name='tls'         >on</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                 </table>
 
                 <br>
@@ -107,7 +115,7 @@
 
         /*!
          *      \author zafaco GmbH <info@zafaco.de>
-         *      \date Last update: 2019-08-09
+         *      \date Last update: 2019-08-28
          *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
          */
 
@@ -178,6 +186,12 @@
             iasParameters.download  = {};
             iasParameters.upload    = {};
             iasParameters.rtt       = {};
+
+            if (document.getElementsByName('tls')[1].checked)
+            {
+                iasParameters.wsTargetPort  = '443';
+                iasParameters.wsWss         = 1;
+            }
 
 
             //dl/ul parameters if no speed classes are used or singleStream is active
