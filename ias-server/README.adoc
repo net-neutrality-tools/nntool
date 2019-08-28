@@ -91,3 +91,19 @@ cd <nntool_eu_directory>
 docker build -f ias-server.Dockerfile -t nntool.eu/ias-server . 
 docker run --rm -it -p 20080:80 -p 20443:443 -p 28080:8080 -p 28443:8443 -p 44301:44301 nntool.eu/ias-server
 ----
+
+== IAS turnserver module
+
+==== Build
+
+For a Debian based Linux perform the following steps as root:
+
+1. Customize `ias-turnserver` for credentials, realm, ports and ip bindings
+2. Add execute-permission to `ias-turnserver`
+3. Copy `ias-turnserver` to `/etc/init.d/`
+4. Run `update-rc.d ias-turnserver defaults`
+5. To enable startup on boot, run `update-rc.d ias-turnserver enable`
+
+=== Execution
+
+Use `service ias-turnserver {start|stop|status} for starting, stopping, status information.
