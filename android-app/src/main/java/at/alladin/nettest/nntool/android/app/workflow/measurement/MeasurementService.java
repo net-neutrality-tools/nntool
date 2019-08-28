@@ -84,6 +84,10 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     public static String EXTRAS_KEY_FOLLOW_UP_ACTIONS = "measurement_follow_up_actions";
 
+    public static String EXTRAS_KEY_SPEED_EXECUTE = "speed_execute_measurement";
+
+    public static String EXTRAS_KEY_QOS_EXECUTE = "qos_execute_measurement";
+
     public final static String IF_TRAFFIC_LIST_UPLOAD_TAG = "UPLOAD";
 
     public final static String IF_TRAFFIC_LIST_DOWNLOAD_TAG = "DOWNLOAD";

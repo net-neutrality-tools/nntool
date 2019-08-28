@@ -29,6 +29,7 @@ import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementTyp
 import at.alladin.nettest.nntool.android.app.workflow.measurement.QosFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.SpeedFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.TitleWithRecentResultFragment;
+import at.alladin.nettest.nntool.android.app.workflow.measurement.WorkflowMeasurementParameter;
 import at.alladin.nettest.nntool.android.app.workflow.result.ResultFragment;
 import at.alladin.nettest.nntool.android.app.workflow.settings.SettingsFragment;
 import at.alladin.nettest.nntool.android.app.workflow.statistics.StatisticsFragment;
@@ -89,11 +90,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case MEASUREMENT_SPEED:
                 isBottomNavigationVisible = false;
-                targetFragment = SpeedFragment.newInstance();
+                targetFragment = SpeedFragment.newInstance(workflowParameter);
                 break;
             case MEASUREMENT_QOS:
                 isBottomNavigationVisible = false;
-                targetFragment = QosFragment.newInstance();
+                targetFragment = QosFragment.newInstance(workflowParameter);
                 break;
             case MEASUREMENT_RECENT_RESULT:
                 targetFragment = TitleWithRecentResultFragment.newInstance(workflowParameter);
@@ -151,16 +152,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startMeasurement(final MeasurementType measurementType, final Bundle options) {
+        final WorkflowMeasurementParameter parameter = new WorkflowMeasurementParameter();
+        if (options != null) {
+            parameter.setQoSEnabled(options.getBoolean(MeasurementService.EXTRAS_KEY_QOS_EXECUTE, true));
+            parameter.setSpeedEnabled(options.getBoolean(MeasurementService.EXTRAS_KEY_SPEED_EXECUTE, true));
+        }
         switch (measurementType) {
             case SPEED:
-                navigateTo(WorkflowTarget.MEASUREMENT_SPEED);
+                navigateTo(WorkflowTarget.MEASUREMENT_SPEED, parameter);
                 final Intent speedIntent = new Intent(MeasurementService.ACTION_START_SPEED_MEASUREMENT,
                         null, this, MeasurementService.class);
                 speedIntent.putExtras(options);
                 startService(speedIntent);
                 break;
             case QOS:
-                navigateTo(WorkflowTarget.MEASUREMENT_QOS);
+                navigateTo(WorkflowTarget.MEASUREMENT_QOS, parameter);
                 final Intent intent = new Intent(MeasurementService.ACTION_START_QOS_MEASUREMENT,
                         null, this, MeasurementService.class);
                 intent.putExtras(options);
