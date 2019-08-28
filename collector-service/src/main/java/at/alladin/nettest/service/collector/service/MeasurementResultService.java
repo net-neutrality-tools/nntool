@@ -14,6 +14,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Service;
@@ -96,6 +97,7 @@ public class MeasurementResultService {
 	private StorageService storageService;
 	
 	@Autowired(required = false)
+	@Qualifier("elasticSearchClient")
 	private RestHighLevelClient elasticSearchClient;
 	
 	@Autowired(required = false)

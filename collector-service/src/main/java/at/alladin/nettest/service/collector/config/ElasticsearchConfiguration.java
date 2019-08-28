@@ -35,7 +35,7 @@ public class ElasticsearchConfiguration {
 	 * 
 	 * @return
 	 */
-	@Bean(destroyMethod = "close")
+	@Bean(destroyMethod = "close", name = {"elasticSearchClient"})
 	public RestHighLevelClient elasticsearchClient() {
 		final ElasticSearchProperties e = collectorServiceProperties.getElasticsearch();
 		

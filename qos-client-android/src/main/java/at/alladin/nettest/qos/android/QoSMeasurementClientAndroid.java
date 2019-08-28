@@ -2,6 +2,7 @@ package at.alladin.nettest.qos.android;
 
 import android.content.Context;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import at.alladin.nettest.qos.QoSMeasurementClient;
 import at.alladin.nettest.qos.QoSMeasurementClientControlListener;
 import at.alladin.nettest.qos.android.exception.NoClientProvidedException;
 import at.alladin.nettest.qos.android.exception.NoContextProvidedException;
+import at.alladin.nettest.qos.android.impl.MkitServiceAndroidImpl;
 import at.alladin.nettest.qos.android.impl.TracerouteAndroidImpl;
 import at.alladin.nettest.qos.android.impl.TrafficServiceImpl;
 import at.alladin.nettest.qos.android.impl.WebsiteTestServiceImpl;
@@ -20,9 +22,14 @@ import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.helper.TestStatus;
+import at.alladin.nntool.client.v2.task.AbstractQoSTask;
 import at.alladin.nntool.client.v2.task.QoSTestEnum;
 import at.alladin.nntool.client.v2.task.TaskDesc;
 import at.alladin.nntool.client.v2.task.service.TestSettings;
+import at.alladin.nntool.shared.qos.MkitResult;
+import at.alladin.qos.android.R;
+import io.ooni.mk.MKVersion;
+import io.ooni.mk.android.MKResources;
 
 import static at.alladin.nntool.client.v2.task.AbstractQoSTask.PARAM_QOS_CONCURRENCY_GROUP;
 
@@ -31,6 +38,9 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
     //private static final MeasurementAgentTypeDto RMBT_CLIENT_TYPE = MeasurementAgentTypeDto.MOBILE;
 
     private static final String TAG = "QoSMeasurementClientAnd";
+
+    //as the raw data needs be copied only once, keep track of it
+    private static final String PREFERENCE_MKIT_RAW_DATA_COPIED = "qos_mkit_raw_data_copied";
 
     private Context context;
 
@@ -85,12 +95,14 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
             }
 
             //Do basic preparation for the QoS tests
+            initiateMkitEnvironment();
 
             final TestSettings qosTestSettings = new TestSettings();
             qosTestSettings.setCacheFolder(context.getCacheDir());
             qosTestSettings.setWebsiteTestService(new WebsiteTestServiceImpl(context));
             qosTestSettings.setTrafficService(new TrafficServiceImpl());
             qosTestSettings.setTracerouteServiceClazz(TracerouteAndroidImpl.class);
+            qosTestSettings.setMkitServiceClazz(MkitServiceAndroidImpl.class);
 //            if (client != null && client.getControlConnection() != null) {
 //                qosTestSettings.setStartTimeNs(client.getControlConnection().getStartTimeNs());
 //            }
@@ -117,11 +129,13 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
                 final TaskDesc desc = it.next();
                 if (!toExecute.contains((String) desc.getParams().get(TaskDesc.QOS_TEST_IDENTIFIER_KEY))) {
                     it.remove();
+                    continue;
                 } else if (skipConcurrencyGroups != null && skipConcurrencyGroups.size() > 0) {
                     try {
                         final String concurrencyGroup = String.valueOf(desc.getParams().get(PARAM_QOS_CONCURRENCY_GROUP));
                         if (skipConcurrencyGroups.contains(Integer.valueOf(concurrencyGroup))) {
                             it.remove();
+                            continue;
                         }
                     } catch (IllegalArgumentException ex) {
                         Log.e(TAG, "Invalid concurrency group given");
@@ -130,7 +144,7 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
                 }
             }
 
-            //TODO: probably any other method is better than this:
+            //TODO: find a better method to do this
             if (client.getTaskDescList() != null && client.getTaskDescList().size() > 0) {
                 qosTestSettings.setUseSsl(client.getTaskDescList().get(0).isEncryption());
             }
@@ -180,6 +194,25 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
 
     public void setContext(final Context context) {
         this.context = context;
+    }
+
+    private void initiateMkitEnvironment() {
+        System.loadLibrary("measurement_kit");
+
+        if (!PreferenceManager.getDefaultSharedPreferences(context).getBoolean(PREFERENCE_MKIT_RAW_DATA_COPIED, false)) {
+
+            Log.i(TAG, "Copying mkit data");
+            MKResources.copyCABundle(this.context, R.raw.cacert);
+            MKResources.copyGeoIPCountryDB(this.context, R.raw.country);
+            MKResources.copyGeoIPASNDB(this.context, R.raw.asn);
+
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(PREFERENCE_MKIT_RAW_DATA_COPIED, true).apply();
+        }
+
+        MkitServiceAndroidImpl.caBundlePath = MKResources.getCABundlePath(this.context);
+        MkitServiceAndroidImpl.geoIPASNDBPath = MKResources.getGeoIPASNDBPath(this.context);
+        MkitServiceAndroidImpl.geoIPCountryDBPath = MKResources.getGeoIPCountryDBPath(this.context);
+        Log.i(TAG, "Initiated mkit measurement-environment w/version: " + MKVersion.getVersionMK());
     }
 
 }

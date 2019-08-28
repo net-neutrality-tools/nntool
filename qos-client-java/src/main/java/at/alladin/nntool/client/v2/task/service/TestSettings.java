@@ -33,6 +33,7 @@ public class TestSettings {
 	private TrafficService trafficService;
 	private WebsiteTestService websiteTestService;
 	private Class<? extends TracerouteService> tracerouteServiceClazz;
+	private Class<? extends MkitService> mkitServiceClazz;
 	private final List<TestProgressListener> testProgressListenerList = new ArrayList<TestProgressListener>();
 	/**
 	 * Provides the option to provide custom dns servers to be used
@@ -154,6 +155,14 @@ public class TestSettings {
 	 */
 	public void setTracerouteServiceClazz(Class<? extends TracerouteService> tracerouteServiceClazz) {
 		this.tracerouteServiceClazz = tracerouteServiceClazz;
+	}
+
+	public Class<? extends MkitService> getMkitServiceClazz() {
+		return mkitServiceClazz;
+	}
+
+	public void setMkitServiceClazz(Class<? extends MkitService> mkitServiceClazz) {
+		this.mkitServiceClazz = mkitServiceClazz;
 	}
 
 	public List<TestProgressListener> getTestProgressListener() {

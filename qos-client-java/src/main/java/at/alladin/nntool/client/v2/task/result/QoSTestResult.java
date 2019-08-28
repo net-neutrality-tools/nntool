@@ -55,7 +55,7 @@ public class QoSTestResult extends TestResult {
 	public QoSTestResult(QoSTestResultEnum testType, AbstractQoSTask qosTask) {
 		this.testType = testType;
 		this.qosTask = qosTask;
-		resultMap = new HashMap<String, Object>();
+		resultMap = new HashMap<>();
 		resultMap.put("test_type", testType.name().toLowerCase(Locale.US));
 	}
 

@@ -40,6 +40,7 @@ import at.alladin.nntool.client.v2.task.DnsTask;
 import at.alladin.nntool.client.v2.task.EchoProtocolTcpTask;
 import at.alladin.nntool.client.v2.task.EchoProtocolUdpTask;
 import at.alladin.nntool.client.v2.task.HttpProxyTask;
+import at.alladin.nntool.client.v2.task.MkitTask;
 import at.alladin.nntool.client.v2.task.NonTransparentProxyTask;
 import at.alladin.nntool.client.v2.task.QoSControlConnection;
 import at.alladin.nntool.client.v2.task.QoSTestEnum;
@@ -73,25 +74,27 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
     public final static String TASK_WEBSITE = "website";
     public final static String TASK_TRACEROUTE = "traceroute";
     public final static String TASK_ECHO_PROTOCOL = "echo_protocol";
+    public final static String TASK_MKIT_WEB_CONNECTIVITY = "mkit_web_connectivity";
+    public final static String TASK_MKIT_DASH = "mkit_dash";
 
     private final ClientHolder client;
     
     private final AtomicInteger progress = new AtomicInteger(); 
     private final AtomicInteger testCount = new AtomicInteger();
     private final AtomicInteger concurrentGroupCount = new AtomicInteger();
-    private final AtomicReference<QoSTestEnum> status = new AtomicReference<QoSTestEnum>();
-    private final AtomicReference<QoSTestErrorEnum> errorStatus = new AtomicReference<QoSTestErrorEnum>(QoSTestErrorEnum.NONE);
+    private final AtomicReference<QoSTestEnum> status = new AtomicReference<>();
+    private final AtomicReference<QoSTestErrorEnum> errorStatus = new AtomicReference<>(QoSTestErrorEnum.NONE);
 
     private final ExecutorService executor;
     private final ExecutorCompletionService<QoSTestResult> executorService;
     
     private final TestSettings qoSTestSettings;
     
-    final TreeMap<Integer, List<AbstractQoSTask>> concurrentTasks = new TreeMap<Integer, List<AbstractQoSTask>>();
-    final TreeMap<QoSTestResultEnum, List<AbstractQoSTask>> testMap = new TreeMap<QoSTestResultEnum, List<AbstractQoSTask>>();
-    final TreeMap<String, QoSControlConnection> controlConnectionMap = new TreeMap<String, QoSControlConnection>();
+    final TreeMap<Integer, List<AbstractQoSTask>> concurrentTasks = new TreeMap<>();
+    final TreeMap<QoSTestResultEnum, List<AbstractQoSTask>> testMap = new TreeMap<>();
+    final TreeMap<String, QoSControlConnection> controlConnectionMap = new TreeMap<>();
     		
-    private TreeMap<QoSTestResultEnum, Counter> testGroupCounterMap = new TreeMap<QoSTestResultEnum, Counter>();
+    private TreeMap<QoSTestResultEnum, Counter> testGroupCounterMap = new TreeMap<>();
 
     private final List<QoSMeasurementClientProgressListener> progressListeners = new ArrayList<>();
 
@@ -197,6 +200,10 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 				} else {
 					System.out.println("No protocol specified for the EchoProtocol test. Skipping " + taskDesc);
 				}
+			} else if (TASK_MKIT_WEB_CONNECTIVITY.equals(taskId)) {
+				test = new MkitTask(this, taskId, taskDesc, threadCounter++);
+			} else if (TASK_MKIT_DASH.equals(taskId)) {
+				test = new MkitTask(this, taskId, taskDesc, threadCounter++);
 			}
 			
 			if (test != null) {
@@ -463,7 +470,6 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
      * @param newStatus
      */
     public void setStatus(QoSTestEnum newStatus) {
-//    	this.status.set(newStatus);
 		updateQoSStatus(newStatus);
     }
 

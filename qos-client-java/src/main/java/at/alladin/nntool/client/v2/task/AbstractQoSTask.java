@@ -112,11 +112,13 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 		this.id = id;
 
 		//test objective uid
-		String value = String.valueOf(taskDesc.getParams().get(PARAM_QOS_TEST_OBJECTIVE_ID));
-		this.qoSTestObjectiveUid = value != null ? Long.valueOf(value) : null;
+		Object objVal = taskDesc.getParams().get(PARAM_QOS_TEST_OBJECTIVE_ID);
+		String value = objVal != null ? String.valueOf(objVal) : null;
+		this.qoSTestObjectiveUid = value != null ? Long.valueOf(value) : 0L;
 
 		//server port
-		value = String.valueOf(taskDesc.getParams().get(PARAM_QOS_TEST_OBJECTIVE_PORT));
+		objVal = taskDesc.getParams().get(PARAM_QOS_TEST_OBJECTIVE_PORT);
+		value = objVal != null ? String.valueOf(objVal) : null;
 		int parsedServerPort = 0;
 		try {
 			parsedServerPort = value != null ? Integer.valueOf(value) : 0;
@@ -129,7 +131,8 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 		}
 
 		//concurrency group
-		value = String.valueOf(taskDesc.getParams().get(PARAM_QOS_CONCURRENCY_GROUP));
+		objVal = taskDesc.getParams().get(PARAM_QOS_CONCURRENCY_GROUP);
+		value = objVal != null ? String.valueOf(objVal) : null;
 		int parsedConcurrencyGroup = 0;
 		try {
 			parsedConcurrencyGroup = value != null ? Integer.valueOf(value) : 0;

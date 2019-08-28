@@ -18,4 +18,5 @@ package at.alladin.nntool.client.v2.task.result;
 
 public enum QoSTestResultEnum {
 	TRACEROUTE, VOIP, HTTP_PROXY, WEBSITE, NON_TRANSPARENT_PROXY, DNS, TCP, UDP, ECHO_PROTOCOL,
+	MKIT_WEB_CONNECTIVITY, MKIT_DASH
 }
