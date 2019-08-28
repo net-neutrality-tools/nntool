@@ -89,5 +89,5 @@ The usage of a TLS-secured connection is mandatory for the Load Balancing API.
 ----
 cd <nntool_eu_directory>
 docker build -f ias-server.Dockerfile -t nntool.eu/ias-server . 
-docker run --rm -it -p 20080:80 -p 20443:443 -p 28080:8080 nntool.eu/ias-server
+docker run --rm -it -p 20080:80 -p 20443:443 -p 28080:8080 -p 28443:8443 -p 44301:44301 nntool.eu/ias-server
 ----
