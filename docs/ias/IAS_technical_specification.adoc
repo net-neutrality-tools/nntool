@@ -72,6 +72,7 @@ For Chromium-based Browsers, the default and high speed classes differ to reduce
 [cols=3*,options=header]
 |===
 |Speed class
+|Speed
 |default
 |0.95 - 340 Mbit/s
 |high
@@ -162,6 +163,7 @@ For Chromium-based Browsers, the default and high speed classes differ to reduce
 [cols=3*,options=header]
 |===
 |Speed class
+|Speed
 |default
 |0.95 - 210 Mbit/s
 |high
