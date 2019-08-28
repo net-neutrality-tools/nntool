@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-20
+ *      \date Last update: 2019-08-28
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -65,7 +65,9 @@ function Ias()
     var globalKPIs                      = {};
     var rttKPIs                         = {};
     var downloadKPIs                    = [];
+    var downloadStreamKPIs              = [];
     var uploadKPIs                      = [];
+    var uploadStreamKPIs                = [];
     var timestampKPIs                   = {};
     var clientKPIs                      = {};
     var deviceKPIs                      = {};
@@ -430,14 +432,30 @@ function Ias()
             rttKPIs = cleanedData;
         }
 
-        if (data.test_case === 'download' && typeof data.throughput_avg_bps !== 'undefined')
+        if (data.test_case === 'download' && typeof data.downloadKPIs !== 'undefined' && typeof data.downloadKPIs.throughput_avg_bps !== 'undefined')
         {
-            downloadKPIs.push(cleanedData);
+            downloadKPIs.push(cleanedData.downloadKPIs);
+
+            if (typeof cleanedData.downloadStreamKPIs !== 'undefined')
+            {
+                for (index in cleanedData.downloadStreamKPIs)
+                {
+                    downloadStreamKPIs.push(cleanedData.downloadStreamKPIs[index]);
+                }
+            }
         }
 
-        if (data.test_case === 'upload' && typeof data.throughput_avg_bps !== 'undefined')
+        if (data.test_case === 'upload' && typeof data.uploadKPIs !== 'undefined' && typeof data.uploadKPIs.throughput_avg_bps !== 'undefined')
         {
-            uploadKPIs.push(cleanedData);
+            uploadKPIs.push(cleanedData.uploadKPIs);
+
+            if (typeof cleanedData.uploadStreamKPIs !== 'undefined')
+            {
+                for (index in cleanedData.uploadStreamKPIs)
+                {
+                    uploadStreamKPIs.push(cleanedData.uploadStreamKPIs[index]);
+                }
+            }
         }
 
         if (data.cmd === 'error')
@@ -689,13 +707,15 @@ function Ias()
     {
         var kpis = {};
         kpis = jsTool.extend(globalKPIs);
-        if (!jsTool.isEmpty(rttKPIs))       kpis.rtt_info       = rttKPIs;
-        if (!jsTool.isEmpty(downloadKPIs))  kpis.download_info  = downloadKPIs;
-        if (!jsTool.isEmpty(uploadKPIs))    kpis.upload_info    = uploadKPIs;
-        if (!jsTool.isEmpty(timestampKPIs)) kpis.time_info      = timestampKPIs;
-        if (!jsTool.isEmpty(clientKPIs))    kpis.client_info    = clientKPIs;
-        if (!jsTool.isEmpty(deviceKPIs))    kpis.device_info    = deviceKPIs;
-        if (!jsTool.isEmpty(routeKPIs))     kpis.route_info     = routeKPIs;
+        if (!jsTool.isEmpty(rttKPIs))            kpis.rtt_info          = rttKPIs;
+        if (!jsTool.isEmpty(downloadKPIs))       kpis.download_info     = downloadKPIs;
+        if (!jsTool.isEmpty(downloadStreamKPIs)) kpis.download_raw_data = downloadStreamKPIs;
+        if (!jsTool.isEmpty(uploadKPIs))         kpis.upload_info       = uploadKPIs;
+        if (!jsTool.isEmpty(uploadStreamKPIs))   kpis.upload_raw_data   = uploadStreamKPIs;
+        if (!jsTool.isEmpty(timestampKPIs))      kpis.time_info         = timestampKPIs;
+        if (!jsTool.isEmpty(clientKPIs))         kpis.client_info       = clientKPIs;
+        if (!jsTool.isEmpty(deviceKPIs))         kpis.device_info       = deviceKPIs;
+        if (!jsTool.isEmpty(routeKPIs))          kpis.route_info        = routeKPIs;
 
         return kpis;
     }
