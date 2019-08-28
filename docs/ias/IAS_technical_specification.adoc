@@ -69,7 +69,7 @@ The speed classes mentioned above are defined below.
 |===
 
 For Chromium-based Browsers, the default and high speed classes differ to reduce client load (see *Calculating speed based on TCP payload*):
-[cols=3*,options=header]
+[cols=2*,options=header]
 |===
 |Speed class
 |Speed
@@ -160,7 +160,7 @@ The speed classes mentioned above are defined below.
 |===
 
 For Chromium-based Browsers, the default and high speed classes differ to reduce client load:
-[cols=3*,options=header]
+[cols=2*,options=header]
 |===
 |Speed class
 |Speed
