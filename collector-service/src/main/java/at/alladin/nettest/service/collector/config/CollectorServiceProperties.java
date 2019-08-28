@@ -2,6 +2,8 @@ package at.alladin.nettest.service.collector.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import at.alladin.nettest.shared.server.config.ElasticSearchProperties;
+
 /**
  * The collector service YAML configuration object.
  * 
@@ -11,7 +13,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "collector", ignoreUnknownFields = true)
 public class CollectorServiceProperties {
 
-    private String systemUuid;
+	final ElasticSearchProperties elasticsearch = new ElasticSearchProperties();
+	
+	private String systemUuid;
+    
+	public ElasticSearchProperties getElasticsearch() {
+		return elasticsearch;
+	}
 
     public String getSystemUuid() {
         return systemUuid;

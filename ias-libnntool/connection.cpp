@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-18
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -31,29 +31,12 @@ CConnection::CConnection()
 //!	Virtual Destructor
 CConnection::~CConnection()
 {
+	close();
 }
 
-//! \brief
-//!	Open Raw-Socket in UNIX
-//! \param &interface
-//! \return mSocket
-int CConnection::rawSocketEth()
-{
-	//Open Socket
-	mSocket = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
-	if( mSocket == -1 )
-	{
-		TRC_ERR("Error [rawSocketEth]: Could not create socket" );
-		return -1;
-	}
-	
-	return mSocket;
-}
 
-//! \brief
-//!    Open UDP-Socket in UNIX
-//! \param &interface
-//! \return mSocket
+//! UDP Client Sockets
+
 int CConnection::udpSocket(string &interface)
 {
 	//Open Socket
@@ -79,18 +62,46 @@ int CConnection::udpSocket(string &interface)
 	return mSocket;
 }
 
-//! \brief
-//!    Open UDP-Socket in UNIX
-//! \param &interface
-//! \return mSocket
+int CConnection::udp6Socket(string &interface)
+{
+	int no = 0;
+	
+	//Open Socket
+	mSocket = socket( AF_INET6, SOCK_DGRAM, IPPROTO_UDP );
+	if( mSocket == -1 )
+	{
+		TRC_ERR("Error [udp6Socket]: Could not create socket" );
+		return -1;
+	}
+	
+	//Parameterset for Socket
+	memset(&sockinfo_in6, 0, sizeof(sockinfo_in6));
+	sockinfo_in6.sin6_flowinfo 	= 0;
+	sockinfo_in6.sin6_family 	= AF_INET6;
+	
+
+	setsockopt(mSocket, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&no, sizeof(no));
+	
+	(void) inet_pton (AF_INET6, interface.c_str(), sockinfo_in6.sin6_addr.s6_addr);
+	
+	//Bind Socket to Interface
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
+	{
+		TRC_ERR("Error [udp6Socket]: Could not bind socket to interface" );
+		return -1;
+	}
+
+	return mSocket;
+}
+
+
+//! UDP Server Sockets
+
 int CConnection::udpSocketServer(int &nPort)
 {
 	return udpSocketServer(nPort, "");
 }
 
-//! \brief
-//!    Open UDP-Socket in UNIX
-//! \return mSocket
 int CConnection::udpSocketServer(int &nPort, string sIp)
 {
 	//Open Socket
@@ -125,55 +136,11 @@ int CConnection::udpSocketServer(int &nPort, string sIp)
 	return mSocket;
 }
 
-//! \brief
-//!    Open UDP-Socket v6 in UNIX
-//! \param &interface
-//! \return mSocket
-int CConnection::udp6Socket(string &interface)
-{
-	int no = 0;
-	
-	//Open Socket
-	mSocket = socket( AF_INET6, SOCK_DGRAM, IPPROTO_UDP );
-	if( mSocket == -1 )
-	{
-		TRC_ERR("Error [udp6Socket]: Could not create socket" );
-		return -1;
-	}
-	
-	//Parameterset for Socket
-	memset(&sockinfo_in6, 0, sizeof(sockinfo_in6));
-	sockinfo_in6.sin6_flowinfo 	= 0;
-	sockinfo_in6.sin6_family 	= AF_INET6;
-	
-
-	setsockopt(mSocket, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&no, sizeof(no));
-	
-	(void) inet_pton (AF_INET6, interface.c_str(), sockinfo_in6.sin6_addr.s6_addr);
-	
-	//Bind Socket to Interface
-	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in6, sizeof(sockinfo_in6)) == -1 )
-	{
-		TRC_ERR("Error [udp6Socket]: Could not bind socket to interface" );
-		return -1;
-	}
-
-	return mSocket;
-}
-
-//! \brief
-//!    Open UDP-Socket v6 in UNIX
-//! \param &interface
-//! \return mSocket
 int CConnection::udp6SocketServer(int &nPort)
 {
 	return udp6SocketServer(nPort, "");
 }
 
-//! \brief
-//!    Open UDP-Socket v6 in UNIX
-//! \param &interface
-//! \return mSocket
 int CConnection::udp6SocketServer(int &nPort, string sIp)
 {
 	int no = 0;
@@ -209,19 +176,14 @@ int CConnection::udp6SocketServer(int &nPort, string sIp)
 	return mSocket;
 }
 
-//! \brief
-//!    Open TCP-Socket in UNIX
-//! \param &interface
-//! \return mSocket
+
+//! TCP Client Sockets
+
 int CConnection::tcpSocket(string &interface, string &sServer, int &nPort )
 {
 	return tcpSocket(interface, sServer, nPort, 0, "");
 }
 
-//! \brief
-//!    Open TCP-Socket in UNIX
-//! \param &interface
-//! \return mSocket
 int CConnection::tcpSocket(string &interface, string &sServer, int &nPort, int nTls, string sTlsSubjectValidation)
 {	
 	int flags = 0;
@@ -281,7 +243,7 @@ int CConnection::tcpSocket(string &interface, string &sServer, int &nPort, int n
 		return -1;
 	}
 
-	if (mTls && connectTLS() != 0)
+	if (mTls && tlsConnect() != 0)
 	{
 		return -1;
 	}
@@ -289,55 +251,11 @@ int CConnection::tcpSocket(string &interface, string &sServer, int &nPort, int n
 	return mSocket;
 }
 
-//! \brief
-//!    Open TCP-Socket in UNIX
-//! \param &interface
-//! \return mSocket
-int CConnection::tcpSocketServer( int &nPort )
-{	
-	int on = 1;
-	
-	//Open Socket
-	mSocket = socket( AF_INET, SOCK_STREAM, 0 );
-	if( mSocket == -1 )
-	{
-		TRC_ERR( "Error [tcpSocketServer]: Could not create socket" );
-		return -1;
-	}
-	
-	//Parameterset for Socket
-	memset(&sockinfo_in, 0, sizeof(sockinfo_in));
-	sockinfo_in.sin_family 		= AF_INET;
-	sockinfo_in.sin_addr.s_addr = htonl(INADDR_ANY);
-	sockinfo_in.sin_port		= htons(nPort);
-	
-	setsockopt(mSocket, SOL_SOCKET,SO_REUSEADDR,(const char *) &on, sizeof(on));
-	
-	//Bind Socket to Interface
-	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in) ) == -1 )
-	{
-		TRC_ERR( "Error [tcpSocketServer]: Could not bind socket to interface" );
-		return -1;
-	}
-	
-	listen(mSocket, -1);
-	
-	return mSocket;
-}
-
-//! \brief
-//!    Open TCP-Socket in UNIX
-//! \param &interface
-//! \return mSocket
 int CConnection::tcp6Socket(string &interface, string &sServer, int &nPort )
 {
 	return tcp6Socket(interface, sServer, nPort, 0, "");
 }
 
-//! \brief
-//!    Open TCP-Socket v6 in UNIX
-//! \param &interface
-//! \return mSocket
 int CConnection::tcp6Socket(string &interface, string &sServer, int &nPort, int nTls, string sTlsSubjectValidation )
 {
 	int on = 1;
@@ -404,7 +322,7 @@ int CConnection::tcp6Socket(string &interface, string &sServer, int &nPort, int 
 		return -1;
 	}
 
-	if (mTls && connectTLS() != 0)
+	if (mTls && tlsConnect() != 0)
 	{
 		return -1;
 	}
@@ -412,10 +330,41 @@ int CConnection::tcp6Socket(string &interface, string &sServer, int &nPort, int 
 	return mSocket;
 }
 
-//! \brief
-//!    Open TCP-Socket v6 in UNIX
-//! \param &interface
-//! \return mSocket
+
+//! TCP Server Sockets
+
+int CConnection::tcpSocketServer( int &nPort )
+{	
+	int on = 1;
+	
+	//Open Socket
+	mSocket = socket( AF_INET, SOCK_STREAM, 0 );
+	if( mSocket == -1 )
+	{
+		TRC_ERR( "Error [tcpSocketServer]: Could not create socket" );
+		return -1;
+	}
+	
+	//Parameterset for Socket
+	memset(&sockinfo_in, 0, sizeof(sockinfo_in));
+	sockinfo_in.sin_family 		= AF_INET;
+	sockinfo_in.sin_addr.s_addr = htonl(INADDR_ANY);
+	sockinfo_in.sin_port		= htons(nPort);
+	
+	setsockopt(mSocket, SOL_SOCKET,SO_REUSEADDR,(const char *) &on, sizeof(on));
+	
+	//Bind Socket to Interface
+	if( ::bind( mSocket, (struct sockaddr*)&sockinfo_in, sizeof(sockinfo_in) ) == -1 )
+	{
+		TRC_ERR( "Error [tcpSocketServer]: Could not bind socket to interface" );
+		return -1;
+	}
+	
+	listen(mSocket, -1);
+	
+	return mSocket;
+}
+
 int CConnection::tcp6SocketServer( int &nPort )
 {
 	int on = 1;
@@ -451,6 +400,93 @@ int CConnection::tcp6SocketServer( int &nPort )
 	return mSocket;
 }
 
+int CConnection::tlsServe()
+{
+	mTls = 1;
+
+	tlsSetup(false);
+
+    if (!ctx)
+    {
+        TRC_ERR("TLS Error while creating context: ");
+        tlsPrintError();
+		return -1;
+    }
+
+    SSL_CTX_set_ecdh_auto(ctx, 1);
+
+    string certDir = "/var/opt/ias-server/certs/";
+    DIR *dir;
+    struct dirent *ent;
+
+    if ((dir = opendir(certDir.c_str())) != NULL)
+    {
+        while ((ent = readdir(dir)) != NULL)
+        {
+            string dirName = ent->d_name;
+            string certFile;
+            string keyFile;
+            
+            if (!dirName.compare(".") == 0 && !dirName.compare("..") == 0)
+            {
+                certFile = certDir + dirName + "/" + dirName + ".crt";
+                keyFile = certDir + dirName + "/" + dirName + ".key";
+                                 
+                //Set cert
+			    if (SSL_CTX_use_certificate_file(ctx, certFile.c_str(), SSL_FILETYPE_PEM) <= 0)
+			    {
+			        TRC_ERR("TLS Error while setting certificate file: ");
+			        tlsPrintError();
+					return -1;
+			    }
+
+			    //Set key
+			    if (SSL_CTX_use_PrivateKey_file(ctx, keyFile.c_str(), SSL_FILETYPE_PEM) <= 0 )
+			    {
+			        TRC_ERR("TLS Error while setting key file: ");
+			        tlsPrintError();
+					return -1;
+			    }
+            }
+        }
+        closedir (dir);
+    } 
+    else 
+    {
+        TRC_CRIT("TLS error: failed to open TLS certificate Directory: " + certDir);
+        return -1;
+    }
+
+	ssl = SSL_new (ctx);
+	SSL_set_fd(ssl, mSocket);
+
+    if (SSL_accept(ssl) <= 0)
+    {
+		TRC_ERR("TLS Error while accepting TLS connection: ");
+		tlsPrintError();
+        return -1;
+    }
+    else
+    {
+        TRC_INFO("TLS Connection established");
+    }
+
+    return 0;
+}
+
+void CConnection::tlsPrintError()
+{
+    BIO *bio = BIO_new(BIO_s_mem());
+    ERR_print_errors(bio);
+    char *rbuffer;
+    size_t len = BIO_get_mem_data(bio, &rbuffer);
+    string ret(rbuffer, len);
+    BIO_free(bio);
+
+    TRC_ERR(ret);
+}
+
+
 int CConnection::send(const void *buf, int num, int flags)
 {
 	if ( mTls == 0 )
@@ -464,6 +500,7 @@ int CConnection::send(const void *buf, int num, int flags)
 
 	return -1;
 }
+
 
 int CConnection::receive(void *buf, int num, int flags)
 {
@@ -479,9 +516,21 @@ int CConnection::receive(void *buf, int num, int flags)
 	return -1;
 }
 
+
 int CConnection::close()
 {
-	return ::close(mSocket);
+
+	int close = ::close(mSocket);
+
+	if (mTls)
+	{
+	 	ERR_free_strings();
+    	EVP_cleanup();
+	 	SSL_shutdown(ssl);
+    	SSL_CTX_free(ctx);
+	}
+
+	return close;
 }
 
 
@@ -503,29 +552,42 @@ static int tlsVerifyCertificateCallback(int ok, X509_STORE_CTX *store_ctx)
 		}
 	}
 
-
     return(ok);
 }
 
 
-
-int CConnection::connectTLS()
+void CConnection::tlsSetup(bool client)
 {
-  	int ssl_error = 0;
-
-	OpenSSL_add_ssl_algorithms();
-	const SSL_METHOD *method = TLS_client_method();
+	SSL_library_init();
+    OpenSSL_add_all_algorithms();
 	SSL_load_error_strings();
-	SSL_CTX* ctx = SSL_CTX_new (method);
+	ERR_load_crypto_strings();
+
+	const SSL_METHOD *method;
+	if (client)
+	{
+		method = TLS_client_method();
+	}
+	else
+	{
+		method = TLS_server_method();
+	}
+	
+	ctx = SSL_CTX_new(method);
+}
+
+
+int CConnection::tlsConnect()
+{
+  	tlsSetup(true);
 
 	ssl = SSL_new (ctx);
 	SSL_set_fd(ssl, mSocket);
-	ssl_error = SSL_connect(ssl);
 
-	if (ssl_error <= 0)
+	if (SSL_connect(ssl) <= 0)
 	{
-		ssl_error = SSL_get_error(ssl, -1);
-		TRC_ERR("SSL Error " + to_string(ssl_error) + " while negotiating TLS connection");
+		TRC_ERR("SSL Error while negotiating TLS connection: ");
+		tlsPrintError();
 		return -1;
 	}
 	else
@@ -562,7 +624,5 @@ int CConnection::connectTLS()
 		TRC_INFO("TLS Connection established");
 	}
 
-
 	return 0;
 }
-

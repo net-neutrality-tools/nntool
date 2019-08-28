@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-03
+ *      \date Last update: 2019-08-07
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -398,11 +398,12 @@
     {
         DDLogError(@"Measurement failed with Error: %@", [error.userInfo objectForKey:@"NSLocalizedDescription"]);
         self.statusLabel.text = [error.userInfo objectForKey:@"NSLocalizedDescription"];
-        return;
     }
-    
-    DDLogInfo(@"Measurement successful");
-    self.statusLabel.text = @"Measurement successful";
+    else
+    {
+        DDLogInfo(@"Measurement successful");
+        self.statusLabel.text = @"Measurement successful";
+    }
     
     self.loadButton.enabled         = true;
     self.stopButton.enabled         = false;

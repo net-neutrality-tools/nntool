@@ -18,6 +18,7 @@ import java.util.Locale;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.view.BottomMeasurementResultSummaryView;
 import at.alladin.nettest.nntool.android.app.view.MeasurementRecentResultSelectorView;
+import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
 import at.alladin.nettest.nntool.android.app.workflow.main.TitleFragment;
 import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 
@@ -41,7 +42,18 @@ public class TitleWithRecentResultFragment extends TitleFragment implements Serv
      * @return
      */
     public static TitleWithRecentResultFragment newInstance() {
+        return newInstance(null);
+    }
+
+    public static TitleWithRecentResultFragment newInstance(final WorkflowParameter parameter) {
         final TitleWithRecentResultFragment fragment = new TitleWithRecentResultFragment();
+        if (parameter instanceof WorkflowRecentResultParameter) {
+             final SpeedMeasurementState state = new SpeedMeasurementState();
+             state.setMeasurementPhase(SpeedMeasurementState.MeasurementPhase.END);
+             state.setProgress(1.0f);
+             state.setMeasurementUuid(((WorkflowRecentResultParameter) parameter).getRecentResultUuid());
+             fragment.setRecentSpeedMeasurementState(state);
+        }
         return fragment;
     }
 
@@ -56,10 +68,6 @@ public class TitleWithRecentResultFragment extends TitleFragment implements Serv
         //and enable the result specific views
         measurementRecentResultSelectorView = v.findViewById(R.id.measurement_recent_result_selector_view);
         bottomMeasurementResultSummaryView = v.findViewById(R.id.bottom_measurement_result_summary_view);
-        if (recentSpeedMeasurementState != null) {
-            setMeasurementStateInBottomView();
-            measurementRecentResultSelectorView.setMeasurementUuid(recentSpeedMeasurementState.getMeasurementUuid());
-        }
         return v;
     }
 
@@ -104,13 +112,21 @@ public class TitleWithRecentResultFragment extends TitleFragment implements Serv
     public void onServiceConnected(ComponentName name, IBinder service) {
         Log.d(TAG, "ON SERVICE CONNECTED");
         measurementService = ((MeasurementService.MeasurementServiceBinder) service).getService();
-        recentSpeedMeasurementState = measurementService.getJniSpeedMeasurementClient().getSpeedMeasurementState();
-        if (bottomMeasurementResultSummaryView != null) {
+        if (measurementService.getJniSpeedMeasurementClient() != null) {
+            recentSpeedMeasurementState = measurementService.getJniSpeedMeasurementClient().getSpeedMeasurementState();
+        }
+        //the recent speed measurement state will be instantiated by the newInstance if no speedmeasurement was executed
+        if (recentSpeedMeasurementState != null && bottomMeasurementResultSummaryView != null) {
             setMeasurementStateInBottomView();
             bottomMeasurementResultSummaryView.invalidate();
-            measurementRecentResultSelectorView.setMeasurementUuid(recentSpeedMeasurementState.getMeasurementUuid());
         }
-
+        //control of the "View your measurement" button is independent of the result summary
+        if (recentSpeedMeasurementState != null && recentSpeedMeasurementState.getMeasurementUuid() != null) {
+            measurementRecentResultSelectorView.setMeasurementUuid(recentSpeedMeasurementState.getMeasurementUuid());
+            measurementRecentResultSelectorView.setVisibility(View.VISIBLE);
+        } else {
+            measurementRecentResultSelectorView.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -118,4 +134,13 @@ public class TitleWithRecentResultFragment extends TitleFragment implements Serv
         Log.d(TAG, "ON SERVICE DISCONNECTED");
         measurementService = null;
     }
+
+    public SpeedMeasurementState getRecentSpeedMeasurementState() {
+        return recentSpeedMeasurementState;
+    }
+
+    public void setRecentSpeedMeasurementState(SpeedMeasurementState recentSpeedMeasurementState) {
+        this.recentSpeedMeasurementState = recentSpeedMeasurementState;
+    }
+
 }

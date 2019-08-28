@@ -54,6 +54,12 @@ class MeasurementResultNetworkPointInTimeDto: Codable {
     var simOperatorName: String?
 
     ///
+    var agentPublicIp: String?
+
+    ///
+    var agentPrivateIp: String?
+
+    ///
     enum CodingKeys: String, CodingKey {
         case time
         case relativeTimeNs        = "relative_time_ns"
@@ -66,5 +72,7 @@ class MeasurementResultNetworkPointInTimeDto: Codable {
         case simCountry            = "sim_country"
         case simOperatorMccMnc     = "sim_operator_mcc_mnc"
         case simOperatorName       = "sim_operator_name"
+        case agentPublicIp         = "client_public_ip"
+        case agentPrivateIp        = "client_private_ip"
     }
 }

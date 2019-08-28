@@ -99,7 +99,7 @@ public class RttInfoDto {
 	@JsonProperty(required = true, value = "packet_size")
 	private Integer packetSize;
 
-		/**
+	/**
      * Average rtt in nanoseconds
 	 */
 	@io.swagger.annotations.ApiModelProperty(required = true, value = "Average rtt in nanoseconds.")

@@ -30,11 +30,17 @@ public class PartTreeMangoBasedCouchDbQuery extends AbstractCouchDbRepositoryQue
 
 	@Override
 	public Object execute(Object[] parameters) {
-		final ParametersParameterAccessor paramAccessor = new ParametersParameterAccessor(method.getParameters(), parameters);
+		// Mango queries don't support aggregate functions (see https://github.com/apache/couchdb/issues/1254) so it's not 
+		// possible to execute pagination queries.
+		if (method.isPageQuery()) {
+			throw new IllegalArgumentException("Pageination queries are currently not possible with Mango queries.");
+		}
+		
+		final ParametersParameterAccessor accessor = new ParametersParameterAccessor(method.getParameters(), parameters);
 
 		final MangoQueryCreator creator = new MangoQueryCreator(
 			partTree, 
-			paramAccessor, 
+			accessor, 
 			method.getDocType(),
 			method.getResultProcessor().getReturnedType().getDomainType()
 		);
@@ -49,13 +55,11 @@ public class PartTreeMangoBasedCouchDbQuery extends AbstractCouchDbRepositoryQue
 		
 		if (method.isCollectionQuery()) {
 			return docs;
-		}
-		
-		if (method.isStreamQuery()) {
+		} else if (method.isStreamQuery()) {
 			return docs.stream();
-		}
-		
-		if (docs.size() > 0) {
+		} /*else if (method.isPageQuery()) {
+			return new PageImpl<>(docs, accessor.getPageable(), ...);
+		}*/ else if (docs.size() > 0) {
 			return docs.get(0);
 		}
 		

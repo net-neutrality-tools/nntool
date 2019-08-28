@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-06-24
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -39,7 +39,10 @@ Json CONFIG;
 int mPort               = 80;
 int mPortTls            = 443;
 int mPortTraceroute     = 8080;
+int mPortTracerouteTls  = 8443;
 int mPortUdp            = 80;
+
+pthread_mutex_t mutexLoad;
 
 
 
@@ -143,6 +146,10 @@ int main(int argc, char** argv)
         {
             mPortTraceroute = ::CONFIG["port_bindings"]["tcp_traceroute"].int_value();
         }
+        if (::CONFIG["port_bindings"]["tcp_traceroute_tls"].int_value() != 0)
+        {
+            mPortTracerouteTls = ::CONFIG["port_bindings"]["tcp_traceroute_tls"].int_value();
+        }
         if (::CONFIG["port_bindings"]["udp"].int_value() != 0)
         {
             mPortUdp= ::CONFIG["port_bindings"]["udp"].int_value();
@@ -164,7 +171,7 @@ int main(int argc, char** argv)
     {
         if (tcpTlsListener->createThread() != 0)
         {
-            TRC_ERR("Error: Failure while creating TCP Listener Thread on target Port " + to_string(mPortTls));
+            TRC_ERR("Error: Failure while creating TCP TLS Listener Thread on target Port " + to_string(mPortTls));
             return EXIT_FAILURE;
         }
     }
@@ -174,7 +181,17 @@ int main(int argc, char** argv)
     {
         if (tcpTracerouteListener->createThread() != 0)
         {
-            TRC_ERR("Error: Failure while creating TCP Listener Thread on target Port " + to_string(mPortTraceroute));
+            TRC_ERR("Error: Failure while creating TCP Traceroute Listener Thread on target Port " + to_string(mPortTraceroute));
+            return EXIT_FAILURE;
+        }
+    }
+
+    CTcpServer *tcpTracerouteTlsListener = new CTcpServer(mPortTracerouteTls, mPortTracerouteTls, true);
+    if (mPortTracerouteTls != 0)
+    {
+        if (tcpTracerouteTlsListener->createThread() != 0)
+        {
+            TRC_ERR("Error: Failure while creating TCP Traceroute TLS Listener Thread on target Port " + to_string(mPortTracerouteTls));
             return EXIT_FAILURE;
         }
     }
@@ -219,15 +236,29 @@ int main(int argc, char** argv)
         }
     }
 
+    CLoadMonitoring *pLoadMonitoring = new CLoadMonitoring();
+    if (::CONFIG["load"]["monitoring"]["enabled"].bool_value())
+    {
+        if(pLoadMonitoring->createThread() != 0 )
+        {
+            TRC_ERR("Error: Failure while creating Load Monitoring Thread");
+            return EXIT_FAILURE;
+        }
+    }       
+    
+    pLoadMonitoring->waitForEnd();
     tcpListener->waitForEnd();
     tcpTlsListener->waitForEnd();
     tcpTracerouteListener->waitForEnd();
+    tcpTracerouteTlsListener->waitForEnd();
     pUdpListenerGeneric->waitForEnd();
     pUdpListenerIPv4->waitForEnd();
     
+    delete(pLoadMonitoring);
     delete(tcpListener);
     delete(tcpTlsListener);
     delete(tcpTracerouteListener);
+    delete(tcpTracerouteTlsListener);
     delete(pUdpListenerGeneric);
     delete(pUdpListenerIPv4);
     

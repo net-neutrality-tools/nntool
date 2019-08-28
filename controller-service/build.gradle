@@ -16,4 +16,7 @@ dependencies {
     //testImplementation group: 'com.jayway.jsonpath', name: 'json-path'
     //testImplementation group: 'com.jayway.awaitility', name: 'awaitility', version: awaility_version
     //testImplementation group: 'org.assertj', name: 'assertj-core', version: assertj_core_version
+
+    // https://mvnrepository.com/artifact/com.github.ua-parser/uap-java
+    compile group: 'com.github.ua-parser', name: 'uap-java', version: ua_parser_version
 }

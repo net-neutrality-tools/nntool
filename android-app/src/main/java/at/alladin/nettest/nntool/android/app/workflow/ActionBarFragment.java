@@ -1,6 +1,5 @@
 package at.alladin.nettest.nntool.android.app.workflow;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -70,12 +69,12 @@ public abstract class ActionBarFragment extends Fragment {
         if (titleStringId != null) {
             final Object[] titleArgs = getTitleArgs();
             if (titleArgs != null) {
-                ((MainActivity) getActivity()).setActionBarTitle(getString(titleStringId, titleArgs));
+                ((MainActivity) getActivity()).updateActionBar(getString(titleStringId, titleArgs));
             } else {
-                ((MainActivity) getActivity()).setActionBarTitle(getString(titleStringId));
+                ((MainActivity) getActivity()).updateActionBar(getString(titleStringId));
             }
         } else {
-            ((MainActivity) getActivity()).setActionBarTitle(new String());
+            ((MainActivity) getActivity()).updateActionBar(new String());
         }
         setHasOptionsMenu(true);
         super.onResume();

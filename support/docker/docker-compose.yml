@@ -7,7 +7,7 @@ version: '3'
 volumes:
   data-couchdb:
   data-postgresql:
-  #data-elasticsearch:
+  data-elasticsearch:
 
 services:
   couchdb:
@@ -17,17 +17,27 @@ services:
     restart: on-failure
 
   postgresqldb:
-    image: nntool.eu/postgresql-postgis-quantile:latest
-    build: ./nntool/postgresql_postgis_quantile
+    image: nntool.eu/postgresql-postgis:latest
+    build: ./nntool/postgresql_postgis
     volumes:
       - data-postgresql:/var/lib/postgresql/data
     restart: on-failure
 
-  #elasticsearch:
-  #  image: elasticsearch:7.1.0
-  #  volumes:
-  #    - data-elasticsearch:/usr/share/elasticsearch/data
-  #  restart: on-failure
+  elasticsearch:
+    image: elasticsearch:7.3.0
+    volumes:
+      - data-elasticsearch:/usr/share/elasticsearch/data
+    environment: 
+      - discovery.type=single-node
+    restart: on-failure
+
+  kibana:
+    image: kibana:7.3.0
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch
+    restart: on-failure
 
   controller-service:
     #image: nntool.eu/controller-service:1.0
@@ -56,14 +66,14 @@ services:
       - couchdb
     restart: on-failure
 
-#  search-service:
-#    #image: nntool.eu/search-service:1.0
-#    image: nntool.eu/search-service:latest
-#    depends_on:
-#      - elasticsearch
-#    links:
-#      - elasticsearch
-#    restart: on-failure
+  search-service:
+    #image: nntool.eu/search-service:1.0
+    image: nntool.eu/search-service:latest
+    depends_on:
+      - elasticsearch
+    links:
+      - elasticsearch
+    restart: on-failure
 
   statistic-service:
     #image: nntool.eu/statistic-service:1.0

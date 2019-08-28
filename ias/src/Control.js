@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-03
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -130,9 +130,9 @@ function WSControl()
     var wsParallelStreams;
     var wsStartupTime;
 
-    var singleThread                = false;
+    var useWebWorkers               = true;
 
-    var wsWorkerPath                = 'Worker.js';
+    var wsWorkerPath                = 'WebWorker.js';
 
     var fetchCounterTimeout;
     var fetchCounterTime            = 500;
@@ -161,7 +161,8 @@ function WSControl()
         missing:            undefined,
         packetsize:         undefined,
         stDevPop:           undefined,
-        server:             undefined
+        server:             undefined,
+        rtts:               undefined
     };
 
     var wsDownloadValues =
@@ -386,7 +387,10 @@ function WSControl()
         {
             if (wsTargetsRtt.length > 0)
             {
-                wsTargetRtt = wsTargetsRtt[Math.floor(Math.random() * wsTargetsRtt.length)] + '.' + wsTLD;
+                wsTargetRtt = wsTargetsRtt[Math.floor(Math.random() * wsTargetsRtt.length)];
+                if (wsTLD) {
+                    wsTargetRtt += '.' + wsTLD;
+                }
             }
             console.log('target:            ' + wsWssString + wsTargetRtt + ':' + wsTargetPort);
             console.log('protocol:          ' + rttProtocol);
@@ -400,7 +404,10 @@ function WSControl()
         {
             if (wsTargets.length > 0)
             {
-                wsTarget = wsTargets[Math.floor(Math.random() * wsTargets.length)] + '.' + wsTLD;
+                wsTarget = wsTargets[Math.floor(Math.random() * wsTargets.length)];
+                if (wsTLD) {
+                    wsTarget += '.' + wsTLD;
+                }
             }
             console.log('target:            ' + wsWssString + wsTarget + ':' + wsTargetPort);
             console.log('protocol:          ' + wsProtocol);
@@ -416,6 +423,7 @@ function WSControl()
         wsWorkersCounterData    = new Array(wsParallelStreams);
         wsWorkersCounterFrames  = new Array(wsParallelStreams);
         wsWorkersCounterTimes   = new Array(wsParallelStreams);
+
         for (var wsID = 0; wsID < wsWorkers.length; wsID++)
         {
             wsWorkersCounterData[wsID] = new Array();
@@ -432,13 +440,15 @@ function WSControl()
 
             var workerData = prepareWorkerData('connect', wsID);
 
-            if (typeof measurementParameters.singleThread !== 'undefined')
+            if (measurementParameters.useWebWorkers === false)
             {
-                singleThread                    = true;
+                useWebWorkers                   = false;
+                
                 delete(wsWorkers[wsID]);
                 wsWorkers[wsID]                 = new WSWorker();
                 wsWorkers[wsID].wsControl       = this;
-                setTimeout(wsWorkers[wsID].onmessage, 100,  workerData);
+                wsWorkers[wsID].wsID            = wsID;
+                setTimeout(sendToWorker, 100, wsID, workerData);
             }
             else
             {
@@ -449,7 +459,7 @@ function WSControl()
                     var ipcRendererMeasurement  = require('electron').ipcRenderer;
 
                     wsWorkersStatus[wsID]       = wsStateClosed;
-                    wsWorkers[wsID]             = new WorkerNode(path.join(__dirname, 'modules/Worker.js'));
+                    wsWorkers[wsID]             = new WorkerNode(path.join(__dirname, 'modules/WebWorker.js'));
 
                     ipcRendererMeasurement.send('iasSetWorkerPID', wsWorkers[wsID].child.pid),
 
@@ -468,7 +478,7 @@ function WSControl()
                     workerCallback(JSON.parse(event.data));
                 };
 
-                wsWorkers[wsID].postMessage(workerData);
+                sendToWorker(wsID, workerData);
             }
         }
 
@@ -495,14 +505,14 @@ function WSControl()
 
             for (var wsID = 0; wsID < wsWorkers.length; wsID++)
             {
-                wsWorkers[wsID].postMessage(workerData);
+                sendToWorker(wsID, workerData);
             }
         }
     };
 
     /**
      * @function workerCallback
-     * @description Function to receive callbacks from the WSWorkers
+     * @description Function to receive callbacks from a worker
      * @public
      * @param {string} data JSON coded measurement Results
      */
@@ -518,7 +528,7 @@ function WSControl()
 
     /**
      * @function workerCallback
-     * @description Function to receive callbacks from the WSWorkers
+     * @description Function to receive callbacks from a worker
      * @private
      * @param {string} data measurement Results
      */
@@ -669,7 +679,7 @@ function WSControl()
 
                         for (var wsID = 0; wsID < wsWorkers.length; wsID++)
                         {
-                            wsWorkers[wsID].postMessage(workerData);
+                            sendToWorker(wsID, workerData);
                         }
                     }
 
@@ -685,7 +695,8 @@ function WSControl()
                         wsStartupStartTime = performance.now()+500;
                         wsStartupTimeout = setTimeout(measurementStart, wsStartupTime+500);
                     }
-                    else
+
+                    if (wsTestCase === 'upload')
                     {
                         wsStartupStartTime = performance.now();
                         wsStartupTimeout = setTimeout(measurementStart, wsStartupTime);
@@ -741,7 +752,7 @@ function WSControl()
                     if (wsTestCase === 'upload')
                     {
                         ulStartupData   += data.wsData;
-                        ulStartupFrames    += data.wsFrames;
+                        ulStartupFrames += data.wsFrames;
                     }
 
                     break;
@@ -786,8 +797,14 @@ function WSControl()
                 if (data.msg === 'authorizationConnection' && !wsMeasurementError && this.wsTestCase !== 'rtt')
                 {
                     wsMeasurementError = true;
-                    measurementError('webSocket authorization unsuccessful or no connection to measurement server', 4, 1, 0);
+                    measurementError('authorization unsuccessful or no connection to measurement peer', 4, 1, 0);
                 }
+                if (data.msg === 'overload' && !wsMeasurementError)
+                {
+                    wsMeasurementError = true;
+                    measurementError('measurement peer overloaded', 6, 1, 0);
+                }
+
                 break;
             }
 
@@ -815,7 +832,7 @@ function WSControl()
         if ((errorCode === 2 || errorCode === 4) && wsTestCase === 'rtt')
         {
             wsMeasurementError = true;
-            reportToMeasurement('info', 'no connection to measurement server');
+            reportToMeasurement('info', 'no connection to measurement peer');
             measurementFinish();
             return;
         }
@@ -830,14 +847,7 @@ function WSControl()
         {
             var workerData = prepareWorkerData('close', wsID);
 
-            if (!singleThread)
-            {
-                wsWorkers[wsID].postMessage(workerData);
-            }
-            else
-            {
-                wsWorkers[wsID].onmessage(workerData);
-            }
+            sendToWorker(wsID, workerData);
         }
         resetValues();
     }
@@ -866,14 +876,7 @@ function WSControl()
         {
             var workerData = prepareWorkerData('fetchCounter', id);
 
-            if (!singleThread)
-            {
-                wsWorkers[id].postMessage(workerData);
-            }
-            else
-            {
-                wsWorkers[id].onmessage(workerData);
-            }
+            sendToWorker(id, workerData);
         }
         else
         {
@@ -881,14 +884,7 @@ function WSControl()
             {
                 var workerData = prepareWorkerData('fetchCounter', wsID);
 
-                if (!singleThread)
-                {
-                    wsWorkers[wsID].postMessage(workerData);
-                }
-                else
-                {
-                    wsWorkers[wsID].onmessage(workerData);
-                }
+                sendToWorker(wsID, workerData);
             }
         }
     }
@@ -909,14 +905,7 @@ function WSControl()
                 if (wsWorkersStatus[wsID] === wsStateOpen) wsStreamsStart++;
                 var workerData = prepareWorkerData('resetCounter', wsID);
 
-                if (!singleThread)
-                {
-                    wsWorkers[wsID].postMessage(workerData);
-                }
-                else
-                {
-                    wsWorkers[wsID].onmessage(workerData);
-                }
+                sendToWorker(wsID, workerData);
             }
         }
 
@@ -947,14 +936,7 @@ function WSControl()
                 if (wsWorkersStatus[wsID] === wsStateOpen) wsStreamsEnd++;
                 var workerData = prepareWorkerData('close', wsID);
 
-                if (!singleThread)
-                {
-                    wsWorkers[wsID].postMessage(workerData);
-                }
-                else
-                {
-                    wsWorkers[wsID].onmessage(workerData);
-                }
+                sendToWorker(wsID, workerData);
             }
             wsEndTime = performance.now();
             setTimeout(measurementFinish, 100);
@@ -965,14 +947,7 @@ function WSControl()
             {
                 var workerData = prepareWorkerData('report', wsID);
 
-                if (!singleThread)
-                {
-                    wsWorkers[wsID].postMessage(workerData);
-                }
-                else
-                {
-                    wsWorkers[wsID].onmessage(workerData);
-                }
+                sendToWorker(wsID, workerData);
             }
             wsMeasurementTime       = performance.now() - wsStartTime;
             wsMeasurementTimeTotal  = performance.now() - wsStartupStartTime;
@@ -1107,6 +1082,7 @@ function WSControl()
             console.log(finishString + 'RTT Packet Size:        ' + wsRttValues.packetsize);
             console.log(finishString + 'RTT Standard Deviation: ' + wsRttValues.stDevPop + ' ns');
             console.log(finishString + 'RTT Peer:               ' + wsRttValues.server);
+            console.log(finishString + 'RTT single results:     ' + JSON.stringify(wsRttValues.rtts));
         }
         else if (logReports)
         {
@@ -1192,7 +1168,7 @@ function WSControl()
     {
         report.duration_ns              = wsRttValues.duration;
         report.average_ns               = wsRttValues.avg;
-        report.median_ms                = wsRttValues.med;
+        report.median_ns                = wsRttValues.med;
         report.min_ns                   = wsRttValues.min;
         report.max_ns                   = wsRttValues.max;
         report.num_sent                 = wsRttValues.requests;
@@ -1201,10 +1177,14 @@ function WSControl()
         report.num_missing              = wsRttValues.missing;
         report.packet_size              = wsRttValues.packetsize;
         report.standard_deviation_ns    = wsRttValues.stDevPop;
+        report.rtts                     = wsRttValues.rtts;
 
         if (typeof wsRttValues.server !== 'undefined')
         {
-            report.peer                 = wsRttValues.server + '.' + wsTLD;
+            report.peer                 = wsRttValues.server;
+            if (wsTLD) {
+                report.peer += '.' + wsTLD;
+            }
         }
 
         return report;
@@ -1295,7 +1275,7 @@ function WSControl()
      * @description Function to prepare the WSWorker control data
      * @private
      * @param {string} cmd Command to execute
-     * @param {int} wsID ID of the WSWorker
+     * @param {int} wsID ID of the worker
      */
     function prepareWorkerData(cmd, wsID)
     {
@@ -1324,6 +1304,25 @@ function WSControl()
         }
 
         return JSON.stringify(workerData);
+    }
+
+    /**
+     * @function sendToWorker
+     * @description Function to send data to a worker
+     * @private
+     * @param {int} wsID ID of the worker
+     * @param {string} workerData data to send
+     */
+    function sendToWorker(wsID, workerData)
+    {
+        if (useWebWorkers)
+        {
+            wsWorkers[wsID].postMessage(workerData);
+        }
+        else
+        {
+            wsWorkers[wsID].onmessageWorker(workerData);
+        };
     }
 
     /**

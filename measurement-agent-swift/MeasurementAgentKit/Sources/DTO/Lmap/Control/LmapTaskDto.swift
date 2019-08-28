@@ -50,6 +50,14 @@ public class LmapTaskDto: Codable {
 public extension LmapTaskDto {
 
     func getOptionByName(_ name: String) -> String? {
-        return options?.filter({ $0.name == name }).first?.value
+        return getOptionByName(name, type: String.self)
+    }
+
+    func getOptionByName<T>(_ name: String, type: T.Type) -> T? {
+        return options?.filter({ $0.name == name }).first?.value as? T
+    }
+
+    func getMeasurementParametersByName(_ name: String) -> MeasurementTypeParametersWrapperDto? {
+        return options?.filter({ $0.name == name && $0.measurementParameters != nil }).first?.measurementParameters
     }
 }

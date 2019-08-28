@@ -15,13 +15,22 @@ public class JniSpeedMeasurementResult {
 
     private List<BandwidthResult> uploadInfoList = new ArrayList<>();
 
-    private List<RttUdpResult> rttUdpResultList = new ArrayList<>();
+    private RttUdpResult rttUdpResult;
 
     private TimeInfo timeInfo;
 
     private String measurementServerIp;
 
     private String clientIp;
+
+    public RttUdpResult getRttUdpResult() {
+        return rttUdpResult;
+    }
+
+    @Keep
+    public void setRttUdpResult(RttUdpResult rttUdpResult) {
+        this.rttUdpResult = rttUdpResult;
+    }
 
     public List<BandwidthResult> getDownloadInfoList() {
         return downloadInfoList;
@@ -39,14 +48,6 @@ public class JniSpeedMeasurementResult {
         this.uploadInfoList = uploadInfoList;
     }
 
-    public List<RttUdpResult> getRttUdpResultList() {
-        return rttUdpResultList;
-    }
-
-    public void setRttUdpResultList(List<RttUdpResult> rttUdpResultList) {
-        this.rttUdpResultList = rttUdpResultList;
-    }
-
     @Keep
     public void addDownloadInfo(final BandwidthResult downloadResult) {
         this.downloadInfoList.add(downloadResult);
@@ -55,11 +56,6 @@ public class JniSpeedMeasurementResult {
     @Keep
     public void addUploadInfo(final BandwidthResult uploadResult) {
         this.uploadInfoList.add(uploadResult);
-    }
-
-    @Keep
-    public void addRttUdpResult(final RttUdpResult rttResult) {
-        rttUdpResultList.add(rttResult);
     }
 
     public TimeInfo getTimeInfo() {
@@ -91,11 +87,13 @@ public class JniSpeedMeasurementResult {
 
     @Override
     public String toString() {
-        return "SpeedMeasurementResult{" +
+        return "JniSpeedMeasurementResult{" +
                 "downloadInfoList=" + downloadInfoList +
                 ", uploadInfoList=" + uploadInfoList +
-                ", rttUdpInfoList=" + rttUdpResultList +
+                ", rttUdpResult=" + rttUdpResult +
                 ", timeInfo=" + timeInfo +
+                ", measurementServerIp='" + measurementServerIp + '\'' +
+                ", clientIp='" + clientIp + '\'' +
                 '}';
     }
 
@@ -230,6 +228,21 @@ public class JniSpeedMeasurementResult {
         private Float progress;
 
         private Long standardDeviationNs;
+
+        private List<Long> singleRtts = new ArrayList<>();
+
+        @Keep
+        public void addSingleRtt(Long rtt) {
+            singleRtts.add(rtt);
+        }
+
+        public List<Long> getSingleRtts() {
+            return singleRtts;
+        }
+
+        public void setSingleRtts(List<Long> singleRtts) {
+            this.singleRtts = singleRtts;
+        }
 
         public Long getAverageNs() {
             return averageNs;

@@ -17,6 +17,7 @@ import java.util.Map;
 
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.QualityOfServiceTest;
+import at.alladin.nntool.client.helper.TaskDescriptionHelper;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
 import at.alladin.nntool.client.v2.task.service.TestSettings;
 import mockit.Delegate;
@@ -49,8 +50,8 @@ public class TcpTaskTest {
         testSettings = new TestSettings();
         testSettings.setUseSsl(false);
         testSettings.setStartTimeNs(12);
-        clientHolder = ClientHolder.getInstance("host", "80",
-                new int[] {80}, null, "host", null, null);
+        clientHolder = ClientHolder.getInstance(TaskDescriptionHelper.createTaskDescList("host", "80",
+                new int[] {80}, null, "host", null, null), null);
 
         qosTest = new QualityOfServiceTest(clientHolder, testSettings);
 

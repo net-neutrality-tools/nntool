@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-01
+ *      \date Last update: 2019-08-05
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -29,8 +29,6 @@ CMeasurement::CMeasurement()
 //!	Virtual Destructor
 CMeasurement::~CMeasurement()
 {
-	mTimer->stopThread();
-	mTimer->waitForEnd();
 }
 
 //! \brief

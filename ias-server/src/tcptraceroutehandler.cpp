@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-03-21
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -34,22 +34,36 @@ CTcpTracerouteHandler::~CTcpTracerouteHandler()
 {
 }
 
-CTcpTracerouteHandler::CTcpTracerouteHandler(int nSocket, string nClientIp)
+CTcpTracerouteHandler::CTcpTracerouteHandler(int nSocket, string nClientIp, bool nTlsSocket)
 {
+    mAcceptedConnection          = std::make_unique<CConnection>();
+    mAcceptedConnection->mSocket = nSocket;
+
     tcpSocket   = nSocket;
     clientIp    = nClientIp;
+    mTlsSocket  = nTlsSocket;
 }
 
 int CTcpTracerouteHandler::handle_tcp_traceroute()
 {
     TRC_DEBUG("TCP traceroute handler: started");
+
+    if (mTlsSocket && mAcceptedConnection->tlsServe() < 0)
+    {
+        TRC_ERR("TCP traceroute handler: TLS negotiation failed");
+        TRC_DEBUG("TCP traceroute handler: stopped");
+
+        return -1;
+    }
     
-    char rbuffer[MAXBUFFER];
+    std::unique_ptr<char[]> rbufferOwner = std::make_unique<char[]>(MAXBUFFER);
+    char *rbuffer = rbufferOwner.get();
+
     string request;
     
     bzero(rbuffer, MAXBUFFER);
 
-    recv(tcpSocket, rbuffer, MAXBUFFER, 0);
+    mAcceptedConnection->receive(rbuffer, MAXBUFFER, 0);
 
     request = string(rbuffer);
     
@@ -71,7 +85,7 @@ int CTcpTracerouteHandler::handle_tcp_traceroute()
     
     print_request(rHost, rAccessMethod, rAccessHeaders, rOrigin, rConnection, rContentLength);
 
-    if (    ((request.find(HTTP_OTPIONS)        != string::npos) || (request.find(get_lower_string(HTTP_OTPIONS))           != string::npos))
+    if (    ((request.find(HTTP_OPTIONS)        != string::npos) || (request.find(get_lower_string(HTTP_OPTIONS))           != string::npos))
         &&  ((request.find(HTTP_HOST)           != string::npos) || (request.find(get_lower_string(HTTP_HOST))              != string::npos))
         &&  ((request.find(HTTP_ACCESS_METHOD)  != string::npos) || (request.find(get_lower_string(HTTP_ACCESS_METHOD))     != string::npos))
         &&  ((request.find(HTTP_ACCESS_HEADERS) != string::npos) || (request.find(get_lower_string(HTTP_ACCESS_HEADERS))    != string::npos))
@@ -121,7 +135,7 @@ void CTcpTracerouteHandler::handle_preflight_request(string rAccessMethod, strin
     response += "access-control-allow-methods: " + rAccessMethod + "\r\n";
     response += "access-control-allow-origin: " + rOrigin + "\r\n\r\n";
     
-    send(tcpSocket, response.c_str(), response.size(), 0);
+    mAcceptedConnection->send(response.c_str(), response.size(), 0);
     
     TRC_DEBUG("TCP traceroute handler: sent 200 OK");
     
@@ -174,7 +188,7 @@ void CTcpTracerouteHandler::handle_invalid_request()
     response += "Content-Language: en\r\n\r\n";
     response += responseBody;
     
-    send(tcpSocket, response.c_str(), response.size(), 0);
+    mAcceptedConnection->send(response.c_str(), response.size(), 0);
     
     TRC_DEBUG("TCP traceroute handler: sent 404 Not Found");
     
@@ -196,7 +210,7 @@ void CTcpTracerouteHandler::send_response(string rOrigin, string rConnection, st
     response += "access-control-allow-HTTP_ORIGIN: " + rOrigin + "\r\n\r\n";
     response += responseBody;
     
-    send(tcpSocket, response.c_str(), response.size(), 0);
+    mAcceptedConnection->send(response.c_str(), response.size(), 0);
 }
 
 string CTcpTracerouteHandler::get_value_from_string(string message, string key)
@@ -233,8 +247,8 @@ void CTcpTracerouteHandler::print_request(string rHost, string rAccessMethod, st
     TRC_DEBUG("Host: "                              + rHost);
     TRC_DEBUG("Access-Control-Request-Method: "     + rAccessMethod);
     TRC_DEBUG("Access-Control-Request-Headers: "    + rAccessHeaders);
-    TRC_DEBUG("HTTP_ORIGIN: "                            + rOrigin);
-    TRC_DEBUG("HTTP_CONNECTION: "                        + rConnection);
+    TRC_DEBUG("HTTP_ORIGIN: "                       + rOrigin);
+    TRC_DEBUG("HTTP_CONNECTION: "                   + rConnection);
     TRC_DEBUG("Content-Length: "                    + rContentLength);
     
     return;

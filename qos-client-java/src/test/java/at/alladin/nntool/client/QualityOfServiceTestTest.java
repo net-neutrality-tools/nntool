@@ -11,6 +11,7 @@ import java.util.Map;
 
 import at.alladin.nettest.qos.QoSMeasurementClientProgressListener;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.client.helper.TaskDescriptionHelper;
 import at.alladin.nntool.client.v2.task.AbstractEchoProtocolTask;
 import at.alladin.nntool.client.v2.task.DnsTask;
 import at.alladin.nntool.client.v2.task.EchoProtocolTcpTask;
@@ -91,8 +92,8 @@ public class QualityOfServiceTestTest {
 
     @Before
     public void init () {
-        clientHolder = ClientHolder.getInstance("host", "80",
-                null, null, "host", null, null);
+        clientHolder = ClientHolder.getInstance(TaskDescriptionHelper.createTaskDescList("host", "80",
+                null, null, "host", null, null), null);
         testSettings = new TestSettings();
 
         final List<InetAddress> dnsServerAddressList = new ArrayList<>();

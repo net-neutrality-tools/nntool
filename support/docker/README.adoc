@@ -10,7 +10,9 @@ Useful commands:
 
 === nntool dev environment
 
-In the Git root directory run `./gradlew jibDockerBuild -Dskip-android` to create Docker images.
+In the Git root directory run `./gradlew clean build jibDockerBuild -Dskip-android -x test` to create Docker images.
+Optionally, apply the parameter `-Ddocker-registry='<registry_name>` to change the registry part of the Docker image name.
+
 Then run the following commands to start docker-compose:
 
   cd support/docker

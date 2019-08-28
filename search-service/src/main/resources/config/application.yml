@@ -1,0 +1,60 @@
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+spring:
+  application:
+    name: search-service
+
+  jackson:
+    serialization:
+      indent-output: true
+      write-dates-as-timestamps: false
+
+server:
+  port: 8083
+
+# ===================================================================
+# Search service specific properties
+# ===================================================================
+
+search-service:
+  search:
+    maxPageSize: 100
+  export:
+    maxPageSize: 100
+    prefix:
+      global: export
+      singleResult: O
+      dateRange: by_date
+      searchResult: by_query 
+    zip:
+      additionalFiles:
+        - title: LICENSE.txt
+          location: classpath:demo_LICENSE.txt
+    extensions:
+      #json:
+      #yaml:
+      csv:
+        fields:
+          - title: open_data_uuid
+            pointer: /open_data_uuid
+          - title: start_time
+            pointer: /start_time
+          - title: os_name
+            pointer: /device_info/os_info/name
+          - title: os_version
+            pointer: /device_info/os_info/version
+          - title: app_version_code
+            pointer: /agent_info/app_version_code
+          - title: dl_avg_bps
+            pointer: /measurements/SPEED/throughput_avg_download_bps
+          - title: ul_avg_bps
+            pointer: /measurements/SPEED/throughput_avg_upload_bps
+          - title: bytes_dl
+            pointer: /measurements/SPEED/bytes_download
+          - title: bytes_ul
+            pointer: /measurements/SPEED/bytes_pload
+      

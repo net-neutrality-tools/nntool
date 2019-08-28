@@ -1,0 +1,83 @@
+<!-- #section-intro -->
+<section class="section" id="section-intro">
+    <div class="wrapper">
+        <header class="section-header">
+            <h1 [innerHTML]="translationKey + '.HEADER' | translate"></h1>
+            <figure *ngIf="loading">
+                <img src="assets/img/watch-anim.svg" alt="loading content" class="load-animation">
+                <figcaption>{{ 'RESULT_LIST.LOADING' | translate }}</figcaption>
+            </figure>
+            <div class="icon icon-search" *ngIf="!loading"></div>
+        </header>
+        <div class="section-content no-data">
+            <h2 *ngIf="!loading && (!results || results.length === 0)">{{ 'RESULT_LIST.NO_DATA' | translate }}</h2>
+            <!--h2 *ngIf="translationKey === 'HISTORY' && !uuid">{{ translationKey + '.NO_USER_UUID' | translate }}</h2-->
+        </div>
+    </div>
+</section>
+<!-- #section-intro end -->
+
+<!-- #section-arguments -->
+<section class="section" id="section-arguments">
+    <div class="wrapper">
+        <div class="section-content">
+            <div class="section-columns" *ngIf="!loading && config && config.result_list && config.result_list.history_graph_enabled && graph && graph.data && results && results.length > 0">
+                <div class="column">
+                    <!--header class="column-header">
+                        <h2> {{ translationKey + '.GRAPH.HEADER' | translate }}</h2>
+                    </header-->
+                    <div class="canvas-container">
+                        <!--<nvd3 id="historyGraph"
+                              [options]="graph.options" [data]="graph.data">
+                            <svg></svg>
+                        </nvd3>-->
+                    </div>
+                </div>
+            </div>
+            <div class="section-table">
+                <!-- stacktable start -->
+                <table id="results" class="no-stack">
+                    <tbody>
+                    <colgroup>
+                        <col width="26%" />
+                        <col width="26%" />
+                        <col width="12%" />
+                        <col width="12%" />
+                        <col width="12%" />
+                        <col width="12%"  *ngIf="translationKey === 'RESULT_LIST'"/>
+                    </colgroup>
+                    <tr>
+                        <th class="text-left">{{ 'RESULT_LIST.TIME' | translate}}</th>
+                        <th class="text-left">{{ translationKey + '.NAME' | translate }}</th>
+                        <th class="text-right">{{ 'RESULT_LIST.DOWN' | translate }}</th>
+                        <th class="text-right">{{ 'RESULT_LIST.UP' | translate }}</th>
+                        <th class="text-right">{{ 'RESULT_LIST.PING' | translate }}</th>
+                        <th class="text-right" *ngIf="translationKey === 'RESULT_LIST'">{{ 'RESULT_LIST.SIGNAL' | translate }}</th>
+                    </tr>
+                    <tr class="clickable" *ngFor="let result of results" (click)="openResult(result.uuid)">
+                        <td class="text-left">{{ result.time | formatDateUTCToLocal }}</td>
+                        <td class="text-left"><a href="{{ urlpath + result.uuid }}">{{ result.name || '-' }}</a></td>
+                        <td class="text-right">{{ result.down }}</td>
+                        <td class="text-right">{{ result.up }}</td>
+                        <td class="text-right">{{ result.ping }}</td>
+                        <td class="text-right" *ngIf="translationKey === 'RESULT_LIST'">{{ result.signal || '-' }}</td>
+                    </tr>
+                    <tr *ngIf="loading">
+                        <td class="text-left"> . . . </td>
+                        <td class="text-left"> . . . </td>
+                        <td class="text-right"> . . . </td>
+                        <td class="text-right"> . . . </td>
+                        <td class="text-right"> . . . </td>
+                        <td class="text-right" *ngIf="translationKey === 'RESULT_LIST'"> . . . </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!-- stacktable end -->
+            </div>
+            <div class="section-interaction">
+                <button class="button" (click)="more()" *ngIf="cursor">{{ 'RESULT_LIST.MORE' | translate }}</button>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- #section-arguments end -->

@@ -53,6 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applyAppearance() {
         UINavigationBar.appearance().tintColor = APP_TINT_COLOR
+        UINavigationBar.appearance().barTintColor = UIColor.white
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: APP_TINT_COLOR]
     }
 
@@ -61,6 +62,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if isNewlyLaunched {
             logger.debug(BundleHelper.getAppVersionInfo())
             logger.debug(BundleHelper.getBundleGitInfoString())
+
+            logger.debugExec {
+                MeasurementAgentSettingsHelper.debugSavedSettings()
+            }
         }
 
         // Refresh MeasurementAgent settings after App launch

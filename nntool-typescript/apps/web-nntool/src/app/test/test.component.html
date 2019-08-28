@@ -1,0 +1,148 @@
+<!-- #section-intro -->
+<section class="section" id="section-intro">
+    <div id="nettest-container">
+        <app-screen-start class="screen-start"
+             *ngIf="user && user.acceptTC && screenNr === 0"
+             [_screenNr]="screenNr"
+             (_screenNrChange)="screenNr = $event"
+        ></app-screen-start>
+        <app-test-series *ngIf="user && user.acceptTC"
+                     [autostart]="autostart"
+                     [hidden]="!(user && user.acceptTC && screenNr === 1)"
+                     [visible]="user && user.acceptTC && screenNr === 1"
+                     (statusChange)="handleTestSeriesStatusChange($event)"
+        >
+            <app-speed-test-gauge #startableTest
+                              [config]="speedConfig"
+                              (finished)="speedTestFinished($event)"
+                              (errorMsgChange)="errorMsg = $event"
+                              (statusChange)="$event"
+            >
+            </app-speed-test-gauge>
+            <app-port-blocking-test-bar #startableTest
+                                    [config]="qosConfig"
+                                    (finished)="portBlockingTestFinished($event)"
+                                    (errorMsgChange)="errorMsg = $event"
+                                    (statusChange)="$event"
+            >
+            </app-port-blocking-test-bar>
+        </app-test-series>
+        <div
+                class="screen-tc" id="nettest-tc"
+                *ngIf="user && !user.acceptTC"
+        >
+            <h2 class="text-center">{{ 'NETTEST.INTRO.HEADER' | translate }}</h2>
+            <span [innerHTML]="'NETTEST.INTRO.MESSAGE' | translate | insecureSanitizeHtml"></span>
+
+            <div class="section-interaction">
+                <p style="text-align: center" *ngIf="!config.nettest || !config.nettest.custom_tc">
+                    <a routerLink="/tc" style="cursor: pointer">{{ 'NAV.TC' | translate }}</a>
+                </p>
+                <p style="text-align: center" *ngIf="config.nettest && config.nettest.custom_tc">
+                    <a href="{{ 'NETTEST.TC_LINK' | translate }}" style="cursor: pointer">{{ 'NETTEST.TC' | translate }}</a>
+                </p>
+                <button class="button" (click)="agree()">
+                    {{ 'NETTEST.INTRO.AGREE' | translate }}
+                </button>
+            </div>
+        </div>
+
+    </div>
+</section>
+<!-- #section-intro end -->
+
+<!-- #section-features -->
+<section class="section" id="section-features" [hidden]="!shouldShowInfo()">
+    <div class="wrapper">
+
+        <!-- Test results -->
+        <div id="test-results">
+            <!-- Visible after test -->
+            <div class="section-interaction bottom-space" *ngIf="measurementLink"> 
+                <a [routerLink]="[measurementLink]" class="button">{{ 'NETTEST.VIEW_RESULT' | translate }}</a>
+            </div>
+
+            <!-- Visible in case of warning/error -->
+            <div class="warning-area" *ngIf="errorMsg">
+                <header class="column-header">
+                    <div class="icon icon-about"></div>
+                    <h2 class="warning-title">{{ 'NETTEST.ERROR.TITLE' | translate }}</h2>
+                </header>
+                <p class="warning-solution">{{ errorMsg | translate }}</p>
+            </div>
+
+            <div class="section-columns">
+                <div class="column">
+                    <header class="column-header">
+                        <div class="icon icon-ping" [title]="'RESULT.PING' | translate"></div>
+                        <h3>
+                            <span id="nettest-ping"></span>
+                        </h3>
+                        <p><small>{{ "RESULT.PING" | translate }}</small></p>
+                    </header>
+                </div>
+                <div class="column">
+                    <header class="column-header">
+                        <div class="icon icon-down" [title]="'RESULT.DOWNLOAD' | translate"></div>
+                        <h3>
+                            <span id="nettest-down"></span>
+                        </h3>
+                        <p><small>{{ "RESULT.DOWNLOAD" | translate }}</small></p>
+                    </header>
+                </div>
+                <div class="column">
+                    <header class="column-header">
+                        <div class="icon icon-up" [title]="'RESULT.UPLOAD' | translate"></div>
+                        <h3>
+                            <span id="nettest-up"></span>
+                        </h3>
+                        <p><small>{{ "RESULT.UPLOAD" | translate }}</small></p>
+                    </header>
+                </div>
+
+                <div class="column">
+                    <header class="column-header">
+                        <div class="icon icon-location" [title]="'RESULT.POSITION' | translate"></div>
+                        <h3 id="nettest-position"></h3>
+                        <p><small>{{ "RESULT.POSITION" | translate }}</small></p>
+                    </header>
+                </div>
+                <div class="column">
+                    <header class="column-header">
+                        <div class="icon icon-company" [title]="'RESULT.PROVIDER' | translate"></div>
+                        <h3 id="nettest-provider"></h3>
+                        <p><small>{{ "RESULT.PROVIDER" | translate }}</small></p>
+                    </header>
+                </div>
+                <div class="column">
+                    <header class="column-header">
+                        <div class="icon icon-device" [title]="'RESULT.DEVICE' | translate"></div>
+                        <h3 id="nettest-device"></h3>
+                        <p><small>{{ "RESULT.DEVICE" | translate }}</small></p>
+                    </header>
+                </div>
+                <div class="column">
+                    <header class="column-header">
+                        <div class="icon icon-wifi" [title]="'RESULT.TECHNOLOGY' | translate"></div>
+                        <h3 id="nettest-technology"></h3>
+                        <p><small>{{ "RESULT.TECHNOLOGY" | translate }}</small></p>
+                    </header>
+                </div>
+                <div class="column">
+                    <header class="column-header">
+                        <div class="icon icon-system" [title]="'RESULT.SERVER' | translate"></div>
+                        <h3 id="nettest-server"></h3>
+                        <p><small>{{ "RESULT.SERVER" | translate }}</small></p>
+                    </header>
+                </div>
+            </div>
+        </div>
+        <!-- Test results end -->
+
+        <app-test-server-selection id="server-selection">
+
+        </app-test-server-selection>
+        
+    </div>
+</section>
+<!-- #section-features end -->

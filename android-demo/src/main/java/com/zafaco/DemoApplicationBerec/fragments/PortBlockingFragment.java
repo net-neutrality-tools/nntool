@@ -27,6 +27,7 @@ import at.alladin.nettest.qos.QoSMeasurementClientProgressAdapter;
 import at.alladin.nettest.qos.android.QoSMeasurementClientAndroid;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.ClientHolder;
+import at.alladin.nntool.client.helper.TaskDescriptionHelper;
 import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 
 public class PortBlockingFragment extends Fragment implements FocusedFragment
@@ -87,13 +88,13 @@ public class PortBlockingFragment extends Fragment implements FocusedFragment
             textView.setVisibility(View.GONE);
         }
 
-        ClientHolder client = ClientHolder.getInstance(getResources().getString(R.string.default_qos_control_host),
+        ClientHolder client = ClientHolder.getInstance(TaskDescriptionHelper.createTaskDescList(getResources().getString(R.string.default_qos_control_host),
                 Integer.toString(getResources().getInteger(R.integer.default_qos_control_port)),
                 getResources().getIntArray(R.array.qos_tcp_test_port_list),
                 getResources().getIntArray(R.array.qos_udp_test_port_list),
                 getResources().getString(R.string.qos_echo_service_host),
                 getResources().getIntArray(R.array.qos_echo_service_tcp_ports),
-                getResources().getIntArray(R.array.qos_echo_service_udp_ports));
+                getResources().getIntArray(R.array.qos_echo_service_udp_ports)), null);
         qosClient = new QoSMeasurementClientAndroid(client, this.getContext().getApplicationContext());
 
         //Start button

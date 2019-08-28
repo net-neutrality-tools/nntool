@@ -58,6 +58,15 @@ public class FullMeasurementResponse extends BasicResponse {
 	private String systemUuid;
 	
 	/**
+	 * A tag provided by the agent.
+	 */
+	@JsonPropertyDescription("A tag provided by the agent.")
+	@Expose
+	@SerializedName("tag")
+	@JsonProperty("tag")
+	private String tag;
+	
+	/**
 	 * Contains the result of a Speed and/or QoS measurement.
 	 */
 	@io.swagger.annotations.ApiModelProperty(required = true, value = "Contains the result of a Speed and/or QoS measurement.")
@@ -169,6 +178,14 @@ public class FullMeasurementResponse extends BasicResponse {
 
 	public void setSystemUuid(String systemUuid) {
 		this.systemUuid = systemUuid;
+	}
+	
+	public String getTag() {
+		return tag;
+	}
+	
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 
 	public Map<MeasurementTypeDto, FullSubMeasurement> getMeasurements() {

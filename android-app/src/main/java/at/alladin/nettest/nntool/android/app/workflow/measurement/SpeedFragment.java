@@ -132,6 +132,13 @@ public class SpeedFragment extends ActionBarFragment implements ServiceConnectio
         measurementService = ((MeasurementService.MeasurementServiceBinder) service).getService();
         if (measurementService != null) {
             this.speedMeasurementState = measurementService.getJniSpeedMeasurementClient().getSpeedMeasurementState();
+            measurementService.setOnMeasurementErrorListener((ex) ->
+            {
+                getActivity().runOnUiThread(() -> {
+                    AlertDialogUtil.showAlertDialog(getContext(), R.string.alert_error_during_measurement_title, R.string.alert_error_during_measurement_content,
+                            (dialog, which) -> ((MainActivity) getActivity()).navigateTo(WorkflowTarget.TITLE));
+                });
+            });
         }
     }
 

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-03-21
+ *      \date Last update: 2019-08-20
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -38,14 +38,16 @@ class CTcpTracerouteHandler
 
         virtual ~CTcpTracerouteHandler();
 
-        CTcpTracerouteHandler(int nSocket, string nClientIp);
+        CTcpTracerouteHandler(int nSocket, string nClientIp, bool nTlsSocket);
         
         int handle_tcp_traceroute();
         
     private:
         int tcpSocket;
         string clientIp;
-        
+        bool mTlsSocket;
+        std::unique_ptr<CConnection> mAcceptedConnection;
+
         //http additional header fields
         string cache            = "Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0";
         string keepAlive        = "Keep-Alive: timeout=5, max=100\r\n";

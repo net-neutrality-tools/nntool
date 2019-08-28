@@ -1,10 +1,21 @@
 apply from: "${project.rootDir}/gradle/java8.gradle"
 
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
 if (gradle.ext.includeJibGradlePlugin) {
   apply plugin: 'com.google.cloud.tools.jib'
 
+  // Docker executable is not found automatically on macos...
+  if (DefaultNativePlatform.getCurrentOperatingSystem().isMacOsX()) {
+    jibDockerBuild {
+      dockerClient {
+        executable = '/usr/local/bin/docker'
+      }
+    }
+  }
+
   jib {
-    to.image = "nntool.eu/${project.name}:${version}"
+    to.image = "${gradle.ext.dockerRegistryName}/${project.name}:${version}"
     to.tags = ['latest']
     container {
       ports = ['20-10000', '20-10000/udp']

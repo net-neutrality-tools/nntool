@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-01
+ *      \date Last update: 2019-08-19
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -28,6 +28,9 @@
 
 bool DEBUG;
 bool RUNNING;
+bool UNREACHABLE;
+bool FORBIDDEN;
+bool OVERLOADED;
 const char* PLATFORM;
 const char* CLIENT_OS;
 
@@ -87,6 +90,9 @@ int main(int argc, char** argv)
 {
 	::DEBUG 			= false;
 	::RUNNING 			= true;
+	::UNREACHABLE 		= false;
+	::FORBIDDEN 		= false;
+	::OVERLOADED 		= false;
 
 	::RTT				= false;
 	::DOWNLOAD 			= false;
@@ -178,7 +184,7 @@ int main(int argc, char** argv)
 
     #ifdef NNTOOL_CLIENT
     //register callback
-    CTrace::setLogFunction([] (const std::string &s) { std::cout << s; });
+    CTrace::setLogFunction([] (std::string const & cat, std::string const  &s) { std::cout << "[" + CTool::get_timestamp_string() + "] " + cat + ": " + s + "\n"; });
     #endif
 
 	measurementStart(jMeasurementParametersJson.dump());
@@ -245,17 +251,17 @@ void measurementStart(string measurementParameters)
 	string wsTLD = jMeasurementParameters["wsTLD"].string_value();
 
 	#ifdef __ANDROID__
-	pXml->writeString(conf.sProvider, "DNS_HOSTNAME", jTargets[0].string_value() /* + "." + wsTLD*/);
+		pXml->writeString(conf.sProvider, "DNS_HOSTNAME", jTargets[0].string_value());
 	#else
-	pXml->writeString(conf.sProvider, "DNS_HOSTNAME", jTargets[0].string_value() + "." + wsTLD);
+		pXml->writeString(conf.sProvider, "DNS_HOSTNAME", jTargets[0].string_value() + "." + wsTLD);
 	#endif
 
 	jTargets = jMeasurementParameters["wsTargetsRtt"].array_items();
 	
 	#ifdef __ANDROID__
-    pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value() /*+ "." + wsTLD*/);
+    	pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value());
     #else
-    pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value() + "." + wsTLD);
+    	pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value() + "." + wsTLD);
     #endif
 
 	pXml->writeString(conf.sProvider,"DL_PORT",jMeasurementParameters["wsTargetPort"].string_value());
@@ -289,12 +295,12 @@ void measurementStart(string measurementParameters)
 
 	pCallback = std::make_unique<CCallback>();
 
-    if (!::RTT && !::DOWNLOAD && !::UPLOAD)
-    {
-    	pCallback->callback("error", "no test case enabled", 1, "no test case enabled");
+	if (!::RTT && !::DOWNLOAD && !::UPLOAD)
+	{
+		pCallback->callback("error", "no test case enabled", 1, "no test case enabled");
 
-    	shutdown();
-    }
+		shutdown();
+	}
 
 	//perform requested test cases
 	if (::RTT)
@@ -307,7 +313,7 @@ void measurementStart(string measurementParameters)
 	}
 
 	if (::hasError) {
-        throw ::recentException;
+		throw ::recentException;
 	}
 
 	if (::DOWNLOAD)
@@ -320,8 +326,8 @@ void measurementStart(string measurementParameters)
 	}
 
 	if (::hasError) {
-        throw ::recentException;
-    }
+		throw ::recentException;
+	}
 
 	if (::UPLOAD)
 	{
@@ -333,9 +339,9 @@ void measurementStart(string measurementParameters)
 		startTestCase(conf.nTestCase);
 	}
 
-    if (::hasError) {
-        throw ::recentException;
-    }
+	if (::hasError) {
+		throw ::recentException;
+	}
 
 	currentTestPhase = MeasurementPhase::END;
 

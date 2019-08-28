@@ -26,9 +26,6 @@ public class IasMeasurementTypeParametersDto: MeasurementTypeParametersDto {
 
         measurementConfiguration = try container.decode(IasMeasurementConfiguration.self, forKey: .measurementConfiguration)
 
-        print(measurementConfiguration?.download)
-        print(measurementConfiguration?.upload)
-
         try super.init(from: decoder)
     }
 

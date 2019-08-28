@@ -19,18 +19,15 @@ import Foundation
 import CoreLocation
 import nntool_shared_swift
 
-class GpsLocationInformationCollector: NSObject, InformationCollector {
+class GpsLocationInformationCollector: BaseInformationCollector {
 
     private let locationTracker = LocationTracker()
 
     private var latestReportedLocation: CLLocation?
 
-    private var timeBasedResult: TimeBasedResultDto?
-    private var startNs: UInt64?
-
-    func start(_ timeBasedResult: TimeBasedResultDto, startNs: UInt64) {
-        self.timeBasedResult = timeBasedResult
-        self.startNs = startNs
+    /// GPS location collector should only collect if there's an update and not be triggered by 1 second interval!
+    override func start(_ timeBasedResult: TimeBasedResultDto, startNs: UInt64) {
+        super.start(timeBasedResult, startNs: startNs)
 
         locationTracker.start(updateLocationCallback: { lastLocation in
             // don't add same location twice
@@ -50,24 +47,19 @@ class GpsLocationInformationCollector: NSObject, InformationCollector {
             geoLocation.speed = lastLocation.speed
 
             geoLocation.time = lastLocation.timestamp
-            if let ns = self.startNs {
-                geoLocation.relativeTimeNs = TimeHelper.currentTimeNs() - ns
-            }
+            geoLocation.relativeTimeNs = self.currentRelativeTimeNs()
 
             logger.debug("GEOLOCATION: \(geoLocation.debugDescription)")
 
             self.latestReportedLocation = lastLocation
-            self.timeBasedResult?.geoLocations?.append(geoLocation)
+            timeBasedResult.geoLocations?.append(geoLocation)
         })
     }
 
-    func stop() {
+    override func stop() {
+        super.stop()
+
         locationTracker.stop()
-    }
-
-    // GPS location collector should always collect if there's an update and not be triggered by 1 second interval!
-    func collect(into timeBasedResult: TimeBasedResultDto) {
-
     }
 
     func locationAlreadyStored(_ location: CLLocation) -> Bool {

@@ -13,8 +13,8 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NetworkPoin
  * @author alladin-IT GmbH (bp@alladin.at)
  *
  */
-@Mapper(componentModel = "spring")
-public interface MeasurementResultNetworkPointInTimeDtoMapper extends DateTimeMapper {
+@Mapper(componentModel = "spring", uses = { DateTimeMapper.class })
+public interface MeasurementResultNetworkPointInTimeDtoMapper {
 	
 	@Mappings({
 		@Mapping(source="ssid", target="networkWifiInfo.initialSsid"),

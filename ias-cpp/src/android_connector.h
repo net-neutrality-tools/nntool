@@ -105,7 +105,7 @@ class AndroidConnector {
         /*
         * The method forwarded to the trace to allow for easy android printing
         */
-        void printLog(const std::string& message) const;
+        void printLog(std::string const & category, std::string const & message) const;
 
         inline void detachCurrentThreadFromJvm() const {
             javaVM->DetachCurrentThread();

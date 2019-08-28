@@ -26,13 +26,13 @@ class SystemInformationCollector {
 
     private var collectors = [InformationCollector]()
 
-    class func defaultCollector() -> SystemInformationCollector {
+    class func defaultCollector(connectivityService: IPConnectivityInfo? = nil) -> SystemInformationCollector {
         let collector = SystemInformationCollector()
 
         collector.registerCollector(CpuUsageInformationCollector())
         collector.registerCollector(MemoryUsageInformationCollector())
         collector.registerCollector(GpsLocationInformationCollector())
-        collector.registerCollector(NetworkInformationCollector())
+        collector.registerCollector(NetworkInformationCollector(connectivityService: connectivityService))
 
         return collector
     }
@@ -58,6 +58,7 @@ class SystemInformationCollector {
         timeBasedResult.cpuUsage = [PointInTimeValueDto<Double>]()
         timeBasedResult.memUsage = [PointInTimeValueDto<Double>]()
         timeBasedResult.geoLocations = [GeoLocationDto]()
+        timeBasedResult.networkPointsInTime = [MeasurementResultNetworkPointInTimeDto]()
         ///
 
         logger.debug("STARTING SYSTEM INFO COLLECTOR TIMER")

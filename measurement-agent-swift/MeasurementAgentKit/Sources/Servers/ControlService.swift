@@ -21,18 +21,22 @@ import Siesta
 ///
 class ControlService: RestApiService {
 
-    init(baseURL: URLConvertible = "http://localhost:8080/api/v1") {
-        super.init(baseURL: baseURL)
+    init(baseURL: URLConvertible, agent: MeasurementAgent) {
+        super.init(baseURL: baseURL, agent: agent)
 
         configureTransformer("/measurement-agents", forType: ApiResponse<RegistrationResponse>.self)
-        configureTransformer("/measurement-agents/**/settings", forType: ApiResponse<SettingsResponse>.self)
+        configureTransformer("/measurement-agents/*/settings", forType: ApiResponse<SettingsResponse>.self)
         configureTransformer("/measurements", forType: LmapControlDto.self)
+        configureTransformer("/speed-measurement-peers", forType: ApiResponse<SpeedMeasurementPeerResponse>.self)
         configureTransformer("/ip", forType: ApiResponse<IpResponse>.self)
     }
 
     ///
     func registerAgent(registrationRequest: RegistrationRequest, onSuccess: SuccessCallback<RegistrationResponse>?, onFailure: FailureCallback?) {
-        request("/measurement-agents", method: .post, requestEntity: registrationRequest, wrapInApiRequest: true, responseEntityType: RegistrationResponse.self, onSuccess: onSuccess, onFailure: onFailure)
+        request(
+            "/measurement-agents", method: .post, requestEntity: registrationRequest, wrapInApiRequest: true,
+            responseEntityType: RegistrationResponse.self, onSuccess: onSuccess, onFailure: onFailure
+        )
     }
 
     ///
@@ -42,6 +46,10 @@ class ControlService: RestApiService {
 
     func initiateMeasurement(controlDto: LmapControlDto, onSuccess: SuccessCallback<LmapControlDto>?, onFailure: FailureCallback?) {
         request("/measurements", method: .post, requestEntity: controlDto, wrapInApiRequest: false, responseEntityType: LmapControlDto.self, onSuccess: onSuccess, onFailure: onFailure)
+    }
+
+    func getSpeedMeasurementPeers(onSuccess: SuccessCallback<SpeedMeasurementPeerResponse>?, onFailure: FailureCallback?) {
+        request("/speed-measurement-peers", method: .get, responseEntityType: SpeedMeasurementPeerResponse.self, onSuccess: onSuccess, onFailure: onFailure)
     }
 
     func getIp(onSuccess: SuccessCallback<IpResponse>?, onFailure: FailureCallback?) {
