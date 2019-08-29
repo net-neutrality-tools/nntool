@@ -3,12 +3,15 @@ package at.alladin.nntool.qos.testserver.tcp;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +23,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import at.alladin.nntool.qos.testserver.ServerPreferences;
-import at.alladin.nntool.qos.testserver.TestServer;
 import at.alladin.nntool.qos.testserver.ServerPreferences.TestServerServiceEnum;
+import at.alladin.nntool.qos.testserver.TestServer;
 import at.alladin.nntool.qos.testserver.entity.TestCandidate;
 import at.alladin.nntool.qos.testserver.mock.SocketWithCountDownLatchMockup;
 import at.alladin.nntool.qos.testserver.mock.util.SocketCommunicationExpectationsUtil;
-import at.alladin.nntool.qos.testserver.tcp.TcpClientHandler;
-import at.alladin.nntool.qos.testserver.tcp.TcpMultiClientServer;
+import at.alladin.nntool.qos.testserver.tcp.competences.Action;
+import at.alladin.nntool.qos.testserver.tcp.competences.BasicCompetence;
+import at.alladin.nntool.qos.testserver.tcp.competences.Competence;
+import at.alladin.nntool.qos.testserver.tcp.competences.ResponseAction;
+import at.alladin.nntool.qos.testserver.tcp.competences.sip.SipCompetence;
 import at.alladin.nntool.qos.testserver.util.TestServerConsole;
 import mockit.Delegate;
 import mockit.Expectations;
@@ -64,9 +70,23 @@ public class TcpClientHandlerIntegrationTest {
 	public void testClientHandlerWithSingleLineRequestMessage() throws Exception {
 		TestServer.getInstance().serverPreferences = new ServerPreferences();
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();		
-		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MESSAGE");		
+		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MESSAGE\n");		
 		TcpClientHandler tch = new TcpClientHandler(socket, tcpServer);
 
+		new Expectations() {
+			{
+				tcpServer.getCompetences();
+				result = new Delegate<Deque<Competence>>() {
+					public Deque<Competence> delegate() {
+						final Deque<Competence> r = new ArrayDeque<>();
+						r.addFirst(new BasicCompetence());
+						r.addFirst(new SipCompetence());
+						return r;
+					}
+				};
+			};
+		};
+		
 		tch.run();
 		
 		final boolean reachedZeroCountdown = latch.await(10L, TimeUnit.SECONDS);				
@@ -78,16 +98,124 @@ public class TcpClientHandlerIntegrationTest {
 	public void testClientHandlerWithSingleMultiLineRequestMessage() throws Exception {
 		TestServer.getInstance().serverPreferences = new ServerPreferences();
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();
-		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MULTILINE\nMESSAGE");		
+		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MULTILINE\n");		
 		TcpClientHandler tch = new TcpClientHandler(socket, tcpServer);
 
+		new Expectations() {
+			{
+				tcpServer.getCompetences(); 
+				result = new Delegate<Deque<Competence>>() {
+					public Deque<Competence> delegate() {
+						final Deque<Competence> r = new ArrayDeque<>();
+						r.addFirst(new BasicCompetence());
+						r.addFirst(new SipCompetence());
+						return r;
+					}
+				};
+			}
+		};
+		
 		tch.run();
 		
 		final boolean reachedZeroCountdown = latch.await(10L, TimeUnit.SECONDS);				
 		assertTrue("CountDownLatch hasn't reached 0 and ran into a timeout", reachedZeroCountdown);
 		assertEquals("TCP/NTP response != 'MULTILINE\n'", "MULTILINE\n", os.toString());
 	}
+
+	@Test
+	public void testClientHandlerWithSingleMultiLineRequestMessageAndCustomCompetenceBeingUsed() throws Exception {
+		TestServer.getInstance().serverPreferences = new ServerPreferences();
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
+		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MULTILINE\nMESSAGE\n");		
+		TcpClientHandler tch = new TcpClientHandler(socket, tcpServer);
+
+		new Expectations() {
+			{
+				tcpServer.getCompetences(); 
+				result = new Delegate<Deque<Competence>>() {
+					public Deque<Competence> delegate() {
+						final Deque<Competence> r = new ArrayDeque<>();
+						r.addFirst(new BasicCompetence());
+						r.addFirst(new Competence() {
+							
+							@Override
+							public List<Action> processRequest(String data) {
+								final List<Action> result = new ArrayList<>();
+								result.add(new ResponseAction(data.getBytes()));
+								return result;
+							}
+							
+							@Override
+							public boolean appliesTo(String data) {
+								return "MULTILINE\n".equals(data);
+							}
+
+							@Override
+							public String readFullRequest(String firstLine, BufferedReader br) throws IOException {
+								return "MULTILINE\nMESSAGE\n";
+							}
+						});
+						return r;
+					}
+				};
+			}
+		};
+		
+		tch.run();
+		
+		final boolean reachedZeroCountdown = latch.await(10L, TimeUnit.SECONDS);
+		assertTrue("CountDownLatch hasn't reached 0 and ran into a timeout", reachedZeroCountdown);
+		assertEquals("TCP/NTP response != 'MULTILINE\nMESSAGE\n'", "MULTILINE\nMESSAGE\n", os.toString());		
+	}
 	
+	@Test
+	public void testClientHandlerWithSingleMultiLineRequestMessageAndCustomCompetenceBeingIgnored() throws Exception {
+		TestServer.getInstance().serverPreferences = new ServerPreferences();
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
+		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MULTILINES\nMESSAGE");		
+		TcpClientHandler tch = new TcpClientHandler(socket, tcpServer);
+
+		new Expectations() {
+			{
+				tcpServer.getCompetences(); 
+				result = new Delegate<Deque<Competence>>() {
+					public Deque<Competence> delegate() {
+						final Deque<Competence> r = new ArrayDeque<>();
+						r.addFirst(new BasicCompetence());
+						r.addFirst(new Competence() {
+							
+							@Override
+							public List<Action> processRequest(String data) {
+								final List<Action> result = new ArrayList<>();
+								result.add(new ResponseAction("MULTILINES\n".getBytes()));
+								return result;
+							}
+							
+							@Override
+							public boolean appliesTo(String data) {
+								final String s = new String(data);
+								final boolean a = "MULTILINES\nMESSAGE".equals(s);
+								return a;
+							}
+
+							@Override
+							public String readFullRequest(String firstLine, BufferedReader br) throws IOException {
+								return firstLine;
+							}
+						});
+						return r;
+					}
+				};
+			}
+		};
+		
+		tch.run();
+		
+		final boolean reachedZeroCountdown = latch.await(10L, TimeUnit.SECONDS);
+		assertTrue("CountDownLatch hasn't reached 0 and ran into a timeout", reachedZeroCountdown);
+		assertEquals("TCP/NTP response != 'MULTILINES\n'", "MULTILINES\n", os.toString());		
+	}
+
 	@Test
 	public void testClientHandlerWithIpCheckEnabledAndClientSocketContainingValidSocketAddress() throws Exception {
 		TestServer.getInstance().serverPreferences = new ServerPreferences();
@@ -103,11 +231,21 @@ public class TcpClientHandlerIntegrationTest {
 						return map;
 					}
 				};
+				
+				tcpServer.getCompetences(); 
+				result = new Delegate<Deque<Competence>>() {
+					public Deque<Competence> delegate() {
+						final Deque<Competence> r = new ArrayDeque<>();
+						r.addFirst(new BasicCompetence());
+						r.addFirst(new SipCompetence());
+						return r;
+					}
+				};
 			}
 		};
-		
+				
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();		
-		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MESSAGE");		
+		SocketCommunicationExpectationsUtil.createExpectationWithOutputStream(socket, os, "MESSAGE\n");		
 		TcpClientHandler tch = new TcpClientHandler(socket, tcpServer);
 
 		tch.run();
@@ -151,7 +289,7 @@ public class TcpClientHandlerIntegrationTest {
 	public void testClientHandlerCatchingSocketTimeoutExceptionThenClosingSocket() throws Exception {
 		TestServer.getInstance().serverPreferences = new ServerPreferences();
 		SocketCommunicationExpectationsUtil.createExpectationWithThrownException(socket, new SocketTimeoutException(), "PING");		
-		TcpClientHandler tch = new TcpClientHandler(socket, tcpServer);
+		TcpClientHandler tch = new TcpClientHandler(socket, tcpServer);		
 		tch.run();
 		final boolean reachedZeroCountdown = latch.await(10L, TimeUnit.SECONDS);				
 		assertTrue("CountDownLatch hasn't reached 0 and ran into a timeout", reachedZeroCountdown);

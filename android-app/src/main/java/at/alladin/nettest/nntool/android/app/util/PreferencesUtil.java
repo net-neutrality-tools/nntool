@@ -22,7 +22,7 @@ import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 public class PreferencesUtil {
 
     //the prefix to be applied to all single qos types (TCP, UDP, ...) for storage in the SharedPreferences
-    public final static String QOS_TYPE_PREFERENCE_PREFIX = "setting_qos_execute_";
+    public final static String SETTING_QOS_TYPE_PREFERENCE_PREFIX = "setting_qos_execute_";
 
     private final static String SETTING_TC_VERSION_ACCEPTED = "setting_nettest_tc_version_accepted";
     private final static String SETTING_AGENT_UUID = "setting_nettest_agent_uuid";
@@ -167,11 +167,11 @@ public class PreferencesUtil {
     }
 
     public static boolean isQoSTypeEnabled(final Context context, final QosMeasurementType type) {
-        return getDefaultPreferences(context).getBoolean(QOS_TYPE_PREFERENCE_PREFIX + type.name(), true);
+        return getDefaultPreferences(context).getBoolean(SETTING_QOS_TYPE_PREFERENCE_PREFIX + type.name(), true);
     }
 
     public static void setQoSTypeEnabled(final Context context, final QosMeasurementType type, final boolean isEnabled) {
-        getDefaultPreferences(context).edit().putBoolean(QOS_TYPE_PREFERENCE_PREFIX + type.name(), isEnabled).commit();
+        getDefaultPreferences(context).edit().putBoolean(SETTING_QOS_TYPE_PREFERENCE_PREFIX + type.name(), isEnabled).commit();
     }
 
 }

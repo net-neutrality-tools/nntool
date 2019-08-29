@@ -123,8 +123,8 @@ public class ResultQoSFragment extends ActionBarFragment {
                 typeToBoxResult.put(r.getType(), boxResult);
             }
             if (r.getSuccessCount() != null && r.getEvaluationCount() != null) {
-                boxResult.setSuccessCount(boxResult.getSuccessCount() + r.getSuccessCount());
-                boxResult.setEvaluationCount(boxResult.getEvaluationCount() + r.getEvaluationCount());
+                boxResult.setSuccessCount(boxResult.getSuccessCount() + (r.getSuccessCount() == r.getEvaluationCount() ? 1 : 0));
+                boxResult.setEvaluationCount(boxResult.getEvaluationCount() + 1);
             }
         }
         return new ArrayList<>(typeToBoxResult.values());

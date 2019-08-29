@@ -39,10 +39,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 
 /**
  * 
@@ -115,7 +115,7 @@ public class HttpProxyTask extends AbstractQoSTask {
 	 * @see java.util.concurrent.Callable#call()
 	 */
 	public QoSTestResult call() throws Exception {
-		final QoSTestResult result = initQoSTestResult(QoSTestResultEnum.HTTP_PROXY);
+		final QoSTestResult result = initQoSTestResult(QosMeasurementType.HTTP_PROXY);
 		try {
 			result.getResultMap().put(RESULT_RANGE, range);
 			result.getResultMap().put(RESULT_TARGET, target);	
@@ -383,8 +383,8 @@ public class HttpProxyTask extends AbstractQoSTask {
 	 * (non-Javadoc)
 	 * @see at.alladin.rmbt.client.v2.task.QoSTask#getTestType()
 	 */
-	public QoSTestResultEnum getTestType() {
-		return QoSTestResultEnum.HTTP_PROXY;
+	public QosMeasurementType getTestType() {
+		return QosMeasurementType.HTTP_PROXY;
 	}
 
 	/*

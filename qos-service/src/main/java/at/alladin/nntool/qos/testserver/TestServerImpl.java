@@ -515,4 +515,20 @@ public class TestServerImpl {
 	public synchronized boolean isShutdownHookEnabled() {
 		return isShutdownHookEnabled.get();
 	}
+
+	/**
+	 * 
+	 * @return original error PrintStream
+	 */
+	public PrintStream getTempErr() {
+		return tempErr;
+	}
+
+	/**
+	 * 
+	 * @return original output PrintStream
+	 */
+	public PrintStream getTempOut() {
+		return tempOut;
+	}
 }

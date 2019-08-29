@@ -137,17 +137,17 @@ public class LmapUtil {
                         }
                     }
 
-                    if (qosParams != null && serverAddr != null && serverPort != null) {
+                    if (qosParams != null) {
                         for (final Map.Entry<QoSMeasurementTypeDto, List<Map<String, Object>>> e : qosParams.getObjectives().entrySet()) {
                             try {
                                 final QosMeasurementType qosType = QosMeasurementType.fromQosTypeDto(e.getKey());
                                 for (final Map<String, Object> qosTestParams : e.getValue()) {
-                                    if (!qosTestParams.containsKey("server_addr")) {
+                                    if (serverAddr != null && serverPort != null && !qosTestParams.containsKey("server_addr")) {
                                         qosTestParams.put("server_port", serverPort);
                                         qosTestParams.put("server_addr", serverAddr);
                                     }
 
-                                    final TaskDesc taskDesc = new TaskDesc(serverAddr, serverPort, encryption,
+                                    final TaskDesc taskDesc = new TaskDesc(serverAddr, serverPort != null ? serverPort : -1, encryption,
                                             fakeToken, 0, 1, 0,
                                             System.nanoTime(), qosTestParams, qosType.getValue());
 

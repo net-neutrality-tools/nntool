@@ -16,16 +16,15 @@
 
 package at.alladin.nntool.client.v2.task;
 
-import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 
 
 public class TcpTask extends AbstractQoSTask {
@@ -79,7 +78,7 @@ public class TcpTask extends AbstractQoSTask {
 	 * 
 	 */
 	public QoSTestResult call() throws Exception {
-		final QoSTestResult result = initQoSTestResult(QoSTestResultEnum.TCP);
+		final QoSTestResult result = initQoSTestResult(QosMeasurementType.TCP);
 		try {
 			onStart(result);
 			
@@ -200,8 +199,8 @@ public class TcpTask extends AbstractQoSTask {
 	 * (non-Javadoc)
 	 * @see at.alladin.rmbt.client.v2.task.QoSTask#getTestType()
 	 */
-	public QoSTestResultEnum getTestType() {
-		return QoSTestResultEnum.TCP;
+	public QosMeasurementType getTestType() {
+		return QosMeasurementType.TCP;
 	}
 
 	/*

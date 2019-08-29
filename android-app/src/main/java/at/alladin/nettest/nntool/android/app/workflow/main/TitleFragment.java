@@ -160,13 +160,18 @@ public class TitleFragment extends ActionBarFragment {
 
                             if (PreferencesUtil.isQoSEnabled(getContext())) {
                                 followUpActions.add(MeasurementType.QOS);
+                                bundle.putBoolean(MeasurementService.EXTRAS_KEY_QOS_EXECUTE, true);
+                            } else {
+                                bundle.putBoolean(MeasurementService.EXTRAS_KEY_QOS_EXECUTE, false);
                             }
 
                             MeasurementType toExecute = null;
                             if (PreferencesUtil.isSpeedEnabled(getContext()) &&
                                     (PreferencesUtil.isPingEnabled(getContext()) || PreferencesUtil.isDownloadEnabled(getContext()) || PreferencesUtil.isUploadEnabled(getContext()))) {
                                 toExecute = MeasurementType.SPEED;
+                                bundle.putBoolean(MeasurementService.EXTRAS_KEY_SPEED_EXECUTE, true);
                             } else if (followUpActions.size() > 0) {
+                                bundle.putBoolean(MeasurementService.EXTRAS_KEY_SPEED_EXECUTE, false);
                                 toExecute = followUpActions.remove(0);
 
                             }

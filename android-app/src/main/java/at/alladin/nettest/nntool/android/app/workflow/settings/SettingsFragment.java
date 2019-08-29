@@ -105,7 +105,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private SwitchPreferenceCompat createQoSSwitchPreference(final Context context, final QoSMeasurementTypeDto type, final SettingsResponse.TranslatedQoSTypeInfo translationInfo) {
         final SwitchPreferenceCompat ret = new SwitchPreferenceCompat(context);
-        ret.setKey(PreferencesUtil.QOS_TYPE_PREFERENCE_PREFIX + type.name());
+        ret.setKey(PreferencesUtil.SETTING_QOS_TYPE_PREFERENCE_PREFIX + type.name());
         ret.setDefaultValue(true);
         ret.setTitle(translationInfo.getName());
         ret.setSummary(translationInfo.getDescription());
