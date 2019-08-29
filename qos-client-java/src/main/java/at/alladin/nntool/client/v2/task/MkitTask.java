@@ -11,10 +11,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import at.alladin.nettest.shared.helper.GsonBasicHelper;
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 import at.alladin.nntool.client.v2.task.service.MkitService;
 import at.alladin.nntool.client.v2.task.service.TestSettings;
 
@@ -36,7 +36,7 @@ public class MkitTask extends AbstractQoSTask {
 
     private MkitService.MkitTestEnum mkitTestEnum;
 
-    private QoSTestResultEnum qosTestResultEnum;
+    private QosMeasurementType qosTestResultEnum;
 
     public final static String PARAM_TIMEOUT = "timeout";
 
@@ -59,7 +59,7 @@ public class MkitTask extends AbstractQoSTask {
 
         try {
             this.mkitTestEnum = MkitService.MkitTestEnum.valueOf(taskId.toUpperCase());
-            this.qosTestResultEnum = QoSTestResultEnum.valueOf(taskId.toUpperCase());
+            this.qosTestResultEnum = QosMeasurementType.fromValue(taskId);
         } catch (IllegalArgumentException ex) {
             System.out.println("Invalid test enum: " + mkitTestEnum.name());
             this.mkitTestEnum = null;
@@ -156,7 +156,7 @@ public class MkitTask extends AbstractQoSTask {
      * (non-Javadoc)
      * @see at.alladin.rmbt.client.v2.task.QoSTask#getTestType()
      */
-    public QoSTestResultEnum getTestType() {
+    public QosMeasurementType getTestType() {
         return qosTestResultEnum;
     }
 

@@ -16,16 +16,12 @@
 
 package at.alladin.nntool.client.v2.task;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.FilterInputStream;
-import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 
 /**
  *
@@ -45,7 +41,7 @@ public class EchoProtocolTcpTask extends AbstractEchoProtocolTask {
 	 * 
 	 */
 	public QoSTestResult call() throws Exception {
-		final QoSTestResult result = initQoSTestResult(QoSTestResultEnum.ECHO_PROTOCOL);
+		final QoSTestResult result = initQoSTestResult(QosMeasurementType.ECHO_PROTOCOL);
 		try {
 			onStart(result);
 

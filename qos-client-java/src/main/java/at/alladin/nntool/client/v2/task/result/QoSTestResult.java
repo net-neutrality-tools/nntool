@@ -19,6 +19,7 @@ package at.alladin.nntool.client.v2.task.result;
 import java.util.HashMap;
 import java.util.Locale;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.TestResult;
 import at.alladin.nntool.client.v2.task.AbstractQoSTask;
 
@@ -37,7 +38,7 @@ public class QoSTestResult extends TestResult {
 	/**
 	 * 
 	 */
-	private final QoSTestResultEnum testType; 
+	private final QosMeasurementType testType;
 	
 	/**
 	 * 
@@ -52,7 +53,7 @@ public class QoSTestResult extends TestResult {
 	/**
 	 * 
 	 */
-	public QoSTestResult(QoSTestResultEnum testType, AbstractQoSTask qosTask) {
+	public QoSTestResult(QosMeasurementType testType, AbstractQoSTask qosTask) {
 		this.testType = testType;
 		this.qosTask = qosTask;
 		resultMap = new HashMap<>();
@@ -63,7 +64,7 @@ public class QoSTestResult extends TestResult {
 	 * 
 	 * @return
 	 */
-	public QoSTestResultEnum getTestType() {
+	public QosMeasurementType getTestType() {
 		return testType;
 	}
 

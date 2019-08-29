@@ -31,9 +31,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 import at.alladin.nntool.util.net.rtp.RealtimeTransportProtocol.PayloadType;
 import at.alladin.nntool.util.net.rtp.RealtimeTransportProtocol.RtpException;
 import at.alladin.nntool.util.net.rtp.RtpPacket;
@@ -188,7 +188,7 @@ public class VoipTask extends AbstractQoSTask {
 	 */
 	public QoSTestResult call() throws Exception {
 		final AtomicInteger ssrc = new AtomicInteger(-1);
-		final QoSTestResult result = initQoSTestResult(QoSTestResultEnum.VOIP);
+		final QoSTestResult result = initQoSTestResult(QosMeasurementType.VOIP);
 		
 		result.getResultMap().put(RESULT_BITS_PER_SAMPLE, bitsPerSample);
 		result.getResultMap().put(RESULT_CALL_DURATION, callDuration);
@@ -383,8 +383,8 @@ public class VoipTask extends AbstractQoSTask {
 	 * (non-Javadoc)
 	 * @see at.alladin.rmbt.client.v2.task.QoSTask#getTestType()
 	 */
-	public QoSTestResultEnum getTestType() {
-		return QoSTestResultEnum.VOIP;
+	public QosMeasurementType getTestType() {
+		return QosMeasurementType.VOIP;
 	}
 
 	/*

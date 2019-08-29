@@ -53,7 +53,6 @@ import at.alladin.nntool.client.v2.task.VoipTask;
 import at.alladin.nntool.client.v2.task.WebsiteTask;
 import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 import at.alladin.nntool.client.v2.task.service.TestProgressListener.TestProgressEvent;
 import at.alladin.nntool.client.v2.task.service.TestSettings;
 import at.alladin.nntool.client.v2.task.service.TrafficService;
@@ -91,10 +90,10 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
     private final TestSettings qoSTestSettings;
     
     final TreeMap<Integer, List<AbstractQoSTask>> concurrentTasks = new TreeMap<>();
-    final TreeMap<QoSTestResultEnum, List<AbstractQoSTask>> testMap = new TreeMap<>();
+    final TreeMap<QosMeasurementType, List<AbstractQoSTask>> testMap = new TreeMap<>();
     final TreeMap<String, QoSControlConnection> controlConnectionMap = new TreeMap<>();
     		
-    private TreeMap<QoSTestResultEnum, Counter> testGroupCounterMap = new TreeMap<>();
+    private TreeMap<QosMeasurementType, Counter> testGroupCounterMap = new TreeMap<>();
 
     private final List<QoSMeasurementClientProgressListener> progressListeners = new ArrayList<>();
 
@@ -318,7 +317,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 						if (type == QosMeasurementType.MKIT_DASH || type == QosMeasurementType.MKIT_WEB_CONNECTIVITY) {
 							task.setQoSTestProgressListener(new AbstractQoSTask.QoSTestProgressListener() {
 								@Override
-								public void onProgress(float currentTestProgress, QoSTestResultEnum resultType) {
+								public void onProgress(float currentTestProgress, QosMeasurementType resultType) {
 									final QosMeasurementType type = QosMeasurementType.fromValue(resultType.toString().toLowerCase());
 									QualityOfServiceTest.this.qosTypeTestProgressMap.put(type, currentTestProgress);
 									final float totalProgress = calculateMeasurementTypeProgress(type) + currentTestProgress / (float) qosTypeTaskCountMap.get(type);
@@ -524,7 +523,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
      * 
      * @return
      */
-    public Map<QoSTestResultEnum, Counter> getTestGroupCounterMap() {
+    public Map<QosMeasurementType, Counter> getTestGroupCounterMap() {
     	return testGroupCounterMap;
     }
     
@@ -568,7 +567,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
      * 
      * @return
      */
-    public TreeMap<QoSTestResultEnum, List<AbstractQoSTask>> getTestMap() {
+    public TreeMap<QosMeasurementType, List<AbstractQoSTask>> getTestMap() {
     	return testMap;
     }
     
@@ -603,13 +602,13 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
      *
      */
     public final class Counter {
-    	public QoSTestResultEnum testType;
+    	public QosMeasurementType testType;
     	public int value;
     	public int target;
     	public int firstTest;
     	public int lastTest;
 
-		public Counter(QoSTestResultEnum testType, int target, int concurrencyGroup) {
+		public Counter(QosMeasurementType testType, int target, int concurrencyGroup) {
     		this.testType = testType;
     		this.value = 0;
     		this.target = target;

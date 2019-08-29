@@ -25,10 +25,10 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Locale;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.AbstractTest;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 import at.alladin.nntool.client.v2.task.service.TestProgressListener.TestProgressEvent;
 
 /**
@@ -246,7 +246,7 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 	 * @param testType
 	 * @return
 	 */
-	public QoSTestResult initQoSTestResult(QoSTestResultEnum testType) {
+	public QoSTestResult initQoSTestResult(QosMeasurementType testType) {
 		QoSTestResult nnResult = new QoSTestResult(testType, this);
 		nnResult.getResultMap().put(PARAM_QOS_TEST_OBJECTIVE_ID, qoSTestObjectiveUid);
 		return nnResult;
@@ -378,6 +378,6 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 	}
 
 	public interface QoSTestProgressListener {
-		void onProgress(final float currentTestProgress, final QoSTestResultEnum type);
+		void onProgress(final float currentTestProgress, final QosMeasurementType type);
 	}
 }
