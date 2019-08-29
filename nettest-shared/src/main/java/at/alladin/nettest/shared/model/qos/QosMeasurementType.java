@@ -222,6 +222,8 @@ public enum QosMeasurementType {
                 return NON_TRANSPARENT_PROXY;
             case TRACEROUTE:
                 return TRACEROUTE;
+            case SIP:
+                return SIP;
             default:
                 return null;
         }

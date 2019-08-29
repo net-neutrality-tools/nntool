@@ -5,20 +5,23 @@ import java.util.Random;
 
 import com.google.common.base.Strings;
 
-import at.alladin.nettest.shared.model.qos.QosMeasurementObjective;
-
 public class SipTaskHelper {
 
 	//default timeout = 5s
 	public final static long DEFAULT_TIMEOUT = 5000000000L;
-	
+
+	//default count = 3s
+	public final static long DEFAULT_COUNT = 3;
+
 	//default call duration = 2s
 	public final static long DEFAULT_CALL_DURATION = 2000000000L;
 	
 	public final static String PARAM_PORT = "port";
 	
 	public final static String PARAM_TIMEOUT = "timeout";
-	
+
+	public final static String PARAM_COUNT = "count";
+
 	public final static String PARAM_CALL_DURATION = "call_duration";
 	
 	public final static String PARAM_TO = "to";
@@ -35,6 +38,8 @@ public class SipTaskHelper {
 
 	public final static String PARAM_OBJECTIVE_PORT = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_PORT;
 
+	public final static String PARAM_OBJECTIVE_COUNT = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_COUNT;
+
 	public final static String PARAM_OBJECTIVE_TIMEOUT = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_TIMEOUT;
 
 	public final static String PARAM_OBJECTIVE_CALL_DURATION = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_CALL_DURATION;
@@ -45,11 +50,11 @@ public class SipTaskHelper {
 
 	public final static String PARAM_OBJECTIVE_VIA = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_VIA;
 
-	public final static String PARAM_RESULT_TO = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_TO;
+	public final static String PARAM_RESULT_TO = PARAM_PREFIX_RESULT + "_" + PARAM_TO;
 
-	public final static String PARAM_RESULT_FROM = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_FROM;
+	public final static String PARAM_RESULT_FROM = PARAM_PREFIX_RESULT + "_" + PARAM_FROM;
 
-	public final static String PARAM_RESULT_VIA = PARAM_PREFIX_OBJECTIVE + "_" + PARAM_VIA;
+	public final static String PARAM_RESULT_VIA = PARAM_PREFIX_RESULT + "_" + PARAM_VIA;
 
 	public final static String PARAM_RESULT = PARAM_PREFIX_RESULT;
 
@@ -61,14 +66,14 @@ public class SipTaskHelper {
 	
 	public final static String PARAM_RESULT_DCR = PARAM_PREFIX_RESULT + "_dcr";
 	
-	public static void preProcess(final QosMeasurementObjective objective) {
-		if (objective == null || objective.getParams() == null) {
+	public static void preProcess(final Map<String, Object> params) {
+		if (params == null) {
 			return;
 		}
 
-		generateRandomSipAddrIfNullOrEmpty(objective.getParams(), PARAM_TO);
-		generateRandomSipAddrIfNullOrEmpty(objective.getParams(), PARAM_FROM);
-		generateRandomViaAddrIfNullOrEmpty(objective.getParams(), PARAM_VIA);
+		generateRandomSipAddrIfNullOrEmpty(params, PARAM_TO);
+		generateRandomSipAddrIfNullOrEmpty(params, PARAM_FROM);
+		generateRandomViaAddrIfNullOrEmpty(params, PARAM_VIA);
 	}
 	
 	public static void generateRandomSipAddrIfNullOrEmpty(final Map<String, Object> params, final String key) {

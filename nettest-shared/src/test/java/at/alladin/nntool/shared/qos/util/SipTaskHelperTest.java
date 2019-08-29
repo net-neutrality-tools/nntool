@@ -41,7 +41,7 @@ public class SipTaskHelperTest {
 	@Test
 	public void testSipPreProcessAndRandomHeaderGeneration() {
 		final QosMeasurementObjective qos = new QosMeasurementObjective();
-		SipTaskHelper.preProcess(qos);
+		SipTaskHelper.preProcess(qos.getParams());
 		assertNotNull("SIP Header from == null", qos.getParams().get(SipTaskHelper.PARAM_FROM));
 		assertNotNull("SIP Header via == null", qos.getParams().get(SipTaskHelper.PARAM_VIA));
 		assertNotNull("SIP Header to == null", qos.getParams().get(SipTaskHelper.PARAM_TO));

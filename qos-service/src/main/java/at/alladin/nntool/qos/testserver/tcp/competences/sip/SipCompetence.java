@@ -1,7 +1,11 @@
 package at.alladin.nntool.qos.testserver.tcp.competences.sip;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.base.Strings;
 
 import at.alladin.nntool.qos.testserver.tcp.competences.Action;
 import at.alladin.nntool.qos.testserver.tcp.competences.Competence;
@@ -22,17 +26,30 @@ import at.alladin.nntool.util.net.sip.SipUtil;
 public class SipCompetence implements Competence {
 
 	@Override
-	public boolean appliesTo(final byte[] data) {
+	public boolean appliesTo(final String data) {
 		//try to parse first line
 		return (SipUtil.parseRequestData(data) != null || SipUtil.parseResponseData(data) != null);
 	}
 
 	@Override
-	public List<Action> processRequest(final byte[] data) {
+	public String readFullRequest(String firstLine, BufferedReader br) throws IOException {
+		final StringBuilder sb = new StringBuilder();
+		sb.append(firstLine).append("\n");
+		String line = null;
+		while((line = br.readLine()) != null) {
+			sb.append(line).append("\n");
+			if (Strings.isNullOrEmpty(line)) {
+				break;
+			}
+		}
+		return sb.toString();
+	}	
+
+	@Override
+	public List<Action> processRequest(final String sipData) {
 		try {
 			final List<Action> resultList = new ArrayList<>();
 			
-			final String sipData = new String(data);
 			SipMessage msg = SipUtil.parseResponseData(sipData);
 			
 			if (msg == null) {
@@ -79,5 +96,5 @@ public class SipCompetence implements Competence {
 			e.printStackTrace();
 			return null;
 		}		
-	}	
+	}
 }

@@ -58,7 +58,7 @@ public class SocketCommunicationExpectationsUtil {
 		};
 	}
 
-	public static Expectations createExpectationWithMultipleResultStrings(final Socket socket, 
+	public static Expectations createExpectationWithMultipleResultStringsUsingDataInputStream(final Socket socket, 
 			final FilterOutputStream fos,
 			//final InputStream dis,
 			final AtomicReference<String[]> results,
@@ -85,7 +85,39 @@ public class SocketCommunicationExpectationsUtil {
 			}
 		};
 	}
-	
+
+	public static Expectations createExpectationWithMultipleResultStrings(final Socket socket, 
+			final FilterOutputStream fos,
+			//final InputStream dis,
+			final AtomicReference<String[]> results,
+			final String...messages) throws IOException {
+		
+		final AtomicInteger index = new AtomicInteger(0);
+		final AtomicInteger indexAvailable = new AtomicInteger(0);
+		
+		StringBuilder sb = new StringBuilder();
+		for (String msg : messages) {
+			sb.append(msg);
+		}
+		
+		return new Expectations() {
+			{
+				socket.getInetAddress();
+				result = InetAddresses.forString("1.1.1.1");
+				
+				socket.getInputStream();
+				result = new ByteArrayInputStream(sb.toString().getBytes());
+				
+				fos.write((byte[]) any);
+				result = new Delegate() {
+					public void delegate(byte b[]) throws IOException {
+						results.get()[index.getAndAdd(1)] = new String(b);
+					}
+				};
+			}
+		};
+	}
+
 	public static byte[] concatStringsToByes(final byte[] delimiter, final String[] messages) {		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		for (int i = 0; i < messages.length; i++) {

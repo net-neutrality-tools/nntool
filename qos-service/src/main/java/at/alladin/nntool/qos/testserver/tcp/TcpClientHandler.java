@@ -16,8 +16,9 @@
 
 package at.alladin.nntool.qos.testserver.tcp;
 
-import java.io.DataInputStream;
+import java.io.BufferedReader;
 import java.io.FilterOutputStream;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Iterator;
@@ -56,7 +57,7 @@ public class TcpClientHandler implements Runnable {
 	 */
 	private final AtomicReference<TcpMultiClientServer> tcpServer;
 	
-	private final AtomicBoolean repeat = new AtomicBoolean(false);
+	private final AtomicBoolean repeat = new AtomicBoolean(true);
 	
 	public TcpClientHandler(Socket clientSocket, TcpMultiClientServer tcpServer) {
 		this.clientSocket = clientSocket;
@@ -68,9 +69,9 @@ public class TcpClientHandler implements Runnable {
 	public void run() {
 		TestServerConsole.log("New TCP ClientHander Thread started. Client: " + clientSocket, 1, TestServerServiceEnum.TCP_SERVICE);
 		
-		//try (BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		try (DataInputStream dis = new DataInputStream(clientSocket.getInputStream());
-				FilterOutputStream fos = new FilterOutputStream(clientSocket.getOutputStream());) {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+		//try (BufferedInputStream dis = new BufferedInputStream(clientSocket.getInputStream());
+				FilterOutputStream fos = new FilterOutputStream(clientSocket.getOutputStream())) {
 			clientSocket.setSoTimeout(TCP_HANDLER_TIMEOUT);
 			
 			boolean validCandidate = false;
@@ -101,27 +102,26 @@ public class TcpClientHandler implements Runnable {
 				}
 
 				do {
-					repeat.set(false);
 					tcpServer.get().refreshTtl(TcpMultiClientServer.TTL);
 										
-					//String clientRequest = br.readLine();
-					final int availableLen = dis.available();
-					final byte[] buffer = new byte[availableLen];
-					final int len = dis.read(buffer);
-					if (len < 0) {
-						break;
-					}
+					String clientRequest = br.readLine() + "\n";
+
+					repeat.set(false);
 					
-					TestServerConsole.log("TCP/NTP Server (" + tcpServer.get().getServerSocket() + ") (:" + tcpServer.get().getPort() + "), connection from: " + clientSocket.getInetAddress().toString() + ", request: " + new String(buffer), 
+					TestServerConsole.log("TCP/NTP Server (" + tcpServer.get().getServerSocket() + ") (:" + tcpServer.get().getPort() + "), connection from: " + clientSocket.getInetAddress().toString() + ", new request: " + clientRequest, 
 							TcpMultiClientServer.VERBOSE_LEVEL_REQUEST_RESPONSE, TestServerServiceEnum.TCP_SERVICE);
 		
 					//check competences and send echo or other response
 					List<Action> response = null;
-					final Iterator<Competence> compIt = tcpServer.get().getCompetences().iterator(); 
+					final Iterator<Competence> compIt = tcpServer.get().getCompetences().iterator();
+					
+					String fullRequest = null;
+					
 					while (compIt.hasNext()) {
 						final Competence competence = compIt.next();
-						if (competence.appliesTo(buffer)) {
-							response = competence.processRequest(buffer);
+						if (competence.appliesTo(clientRequest)) {
+							fullRequest = competence.readFullRequest(clientRequest, br);
+							response = competence.processRequest(fullRequest);
 							break;
 						}
 					}
@@ -135,7 +135,7 @@ public class TcpClientHandler implements Runnable {
 										+ new String(((ResponseAction) a).getData()) + " to: " + clientSocket.getInetAddress().toString(), 
 										TcpMultiClientServer.VERBOSE_LEVEL_REQUEST_RESPONSE, TestServerServiceEnum.TCP_SERVICE);
 							}
-							a.execute(this, buffer, fos);
+							a.execute(this, fullRequest.getBytes(), fos);
 						}
 					}
 				}

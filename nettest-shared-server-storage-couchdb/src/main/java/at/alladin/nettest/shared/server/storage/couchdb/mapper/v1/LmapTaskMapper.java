@@ -14,14 +14,15 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTas
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.QoSMeasurementTypeParameters;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.SpeedMeasurementTypeParameters;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.SpeedMeasurementTypeParameters.MeasurementServerConfig;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.SpeedMeasurementTypeParameters.SpeedMeasurementConfiguration;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.SpeedMeasurementTypeParameters.SpeedMeasurementConfiguration.SpeedMeasurementClass;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementServer;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
+import at.alladin.nntool.shared.qos.util.SipTaskHelper;
 
 @Mapper(componentModel = "spring")
 public interface LmapTaskMapper {
@@ -85,6 +86,11 @@ public interface LmapTaskMapper {
 			objectiveMap.put(QOS_TEST_TYPE, objective.getType().toString());
 			objective.getParameters().forEach((key, value) -> objectiveMap.put(key, value));
 			ret.getObjectives().get(dtoType).add(objectiveMap);
+			
+			if (QoSMeasurementType.SIP.equals(objective.getType())) {
+				SipTaskHelper.preProcess(objectiveMap);
+			}
+			
 		}
 		
 		return ret;

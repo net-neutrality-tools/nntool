@@ -148,11 +148,12 @@ public class TcpClientHandlerSipItegrationTest {
 
 		final List<ConsoleLog> lc = tscm.getLogList();
 		assertNotNull("Log is null", lc);
-		//TestServer.getInstance().getTempOut().println(lc);
-		assertTrue("Log size < 2", lc.size() >= 2);
+		TestServer.getInstance().getTempOut().println(lc);
+		
+		assertTrue("Log size < 4", lc.size() >= 4);
 
-		final ConsoleLog tryingLog = lc.get(lc.size()-2);
-		final ConsoleLog ringingLog = lc.get(lc.size()-1);
+		final ConsoleLog tryingLog = lc.get(2);
+		final ConsoleLog ringingLog = lc.get(3);
 		assertNotNull("tryingLog is null", tryingLog);
 		assertNotNull("ringingLog is null", ringingLog);
 		
@@ -203,7 +204,7 @@ public class TcpClientHandlerSipItegrationTest {
 		final List<ConsoleLog> lc = tscm.getLogList();
 		
 		assertNotNull("Log is null", lc);
-		assertTrue("Log size < 3", lc.size() >= 3);
+		assertTrue("Log size < 4", lc.size() >= 4);
 		
 		final ConsoleLog tryingLog = lc.get(2);
 		final ConsoleLog ringingLog = lc.get(3);

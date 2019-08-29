@@ -62,4 +62,11 @@ public class SipResponseMessage extends SipMessage {
 	String getFirstLine() {
 		return SIP_PROTOCOL_STRING + " " + type.getCode() + " " + type.toString();
 	}
+
+	@Override
+	public String toString() {
+		return "SipResponseMessage{" +
+				"type=" + type +
+				"} " + super.toString();
+	}
 }

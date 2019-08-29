@@ -32,9 +32,28 @@ public class SipUtil {
 	 */
 	public static SipRequestMessage generateInviteMessage(final String from, final String to, final String via) {
 		final SipRequestMessage sip = new SipRequestMessage(SipRequestType.INVITE);
+		sip.setFrom(from);
+		sip.setTo(to);
+		sip.setVia(via);
 		return sip;
 	}
-	
+
+	/**
+	 *
+	 * @param from
+	 * @param to
+	 * @param via
+	 * @return
+	 */
+	public static SipRequestMessage generateByeMessage(final String from, final String to, final String via) {
+		final SipRequestMessage sip = new SipRequestMessage(SipRequestType.BYE);
+		sip.setFrom(from);
+		sip.setTo(to);
+		sip.setVia(via);
+		return sip;
+	}
+
+
 	/**
 	 * 
 	 * @param data

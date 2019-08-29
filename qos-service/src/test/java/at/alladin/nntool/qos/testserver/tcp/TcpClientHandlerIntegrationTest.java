@@ -3,6 +3,7 @@ package at.alladin.nntool.qos.testserver.tcp;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -138,15 +139,20 @@ public class TcpClientHandlerIntegrationTest {
 						r.addFirst(new Competence() {
 							
 							@Override
-							public List<Action> processRequest(final byte[] data) {
+							public List<Action> processRequest(String data) {
 								final List<Action> result = new ArrayList<>();
-								result.add(new ResponseAction(data));
+								result.add(new ResponseAction(data.getBytes()));
 								return result;
 							}
 							
 							@Override
-							public boolean appliesTo(byte[] data) {
-								return "MULTILINE\nMESSAGE\n".equals(new String(data));
+							public boolean appliesTo(String data) {
+								return "MULTILINE\n".equals(data);
+							}
+
+							@Override
+							public String readFullRequest(String firstLine, BufferedReader br) throws IOException {
+								return "MULTILINE\nMESSAGE\n";
 							}
 						});
 						return r;
@@ -179,17 +185,22 @@ public class TcpClientHandlerIntegrationTest {
 						r.addFirst(new Competence() {
 							
 							@Override
-							public List<Action> processRequest(byte[] data) {
+							public List<Action> processRequest(String data) {
 								final List<Action> result = new ArrayList<>();
 								result.add(new ResponseAction("MULTILINES\n".getBytes()));
 								return result;
 							}
 							
 							@Override
-							public boolean appliesTo(byte[] data) {
+							public boolean appliesTo(String data) {
 								final String s = new String(data);
 								final boolean a = "MULTILINES\nMESSAGE".equals(s);
 								return a;
+							}
+
+							@Override
+							public String readFullRequest(String firstLine, BufferedReader br) throws IOException {
+								return firstLine;
 							}
 						});
 						return r;

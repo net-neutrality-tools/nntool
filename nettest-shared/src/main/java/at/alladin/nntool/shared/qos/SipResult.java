@@ -33,7 +33,11 @@ public class SipResult extends AbstractResult {
 	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_TIMEOUT)
 	@Expose
 	private Long timeout;
-	
+
+	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_COUNT)
+	@Expose
+	private Long count;
+
 	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_CALL_DURATION)
 	@Expose
 	private Long callDuration;
@@ -91,6 +95,14 @@ public class SipResult extends AbstractResult {
 
 	public void setPort(Integer port) {
 		this.port = port;
+	}
+
+	public Long getCount() {
+		return count;
+	}
+
+	public void setCount(Long count) {
+		this.count = count;
 	}
 
 	public Long getTimeout() {
@@ -191,10 +203,21 @@ public class SipResult extends AbstractResult {
 
 	@Override
 	public String toString() {
-		return "SipResult [port=" + port + ", timeout=" + timeout + ", callDuration=" + callDuration + ", objectiveTo="
-				+ objectiveTo + ", objectivefrom=" + objectivefrom + ", objectiveVia=" + objectiveVia + ", resultTo="
-				+ resultTo + ", resultFrom=" + resultFrom + ", resultVia=" + resultVia + ", result=" + result
-				+ ", callCompletionSuccessRate=" + callCompletionSuccessRate + ", callSetupSuccessRate="
-				+ callSetupSuccessRate + ", callDroppedCallRate=" + callDroppedCallRate + "]";
+		return "SipResult{" +
+				"port=" + port +
+				", timeout=" + timeout +
+				", count=" + count +
+				", callDuration=" + callDuration +
+				", objectiveTo='" + objectiveTo + '\'' +
+				", objectivefrom='" + objectivefrom + '\'' +
+				", objectiveVia='" + objectiveVia + '\'' +
+				", resultTo='" + resultTo + '\'' +
+				", resultFrom='" + resultFrom + '\'' +
+				", resultVia='" + resultVia + '\'' +
+				", result='" + result + '\'' +
+				", callCompletionSuccessRate=" + callCompletionSuccessRate +
+				", callSetupSuccessRate=" + callSetupSuccessRate +
+				", callDroppedCallRate=" + callDroppedCallRate +
+				"} " + super.toString();
 	}
 }

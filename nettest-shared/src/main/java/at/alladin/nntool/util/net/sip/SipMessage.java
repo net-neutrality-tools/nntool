@@ -67,13 +67,22 @@ public abstract class SipMessage {
 	}
 	
 	public byte[] getData() {
+		final String data = getDataAsString();
+		if (data != null) {
+			return data.getBytes();
+		}
+
+		return null;
+	}
+
+	public String getDataAsString() {
 		final StringBuilder sb = new StringBuilder();
 		sb.append(getFirstLine()).append("\n");
 
 		for (final Entry<String, String> header : headerMap.entrySet()) {
 			sb.append(header.getKey()).append(": ").append(header.getValue()).append("\n");
 		}
-		
+
 		if (body != null) {
 			sb.append("Content-Length: ").append(body.length).append("\n\n");
 			sb.append(body);
@@ -82,8 +91,8 @@ public abstract class SipMessage {
 			sb.append("Content-Length: 0").append("\n");
 			sb.append("\n");
 		}
-		
-		return sb.toString().getBytes();
+
+		return sb.toString();
 	}
 
 	@Override
