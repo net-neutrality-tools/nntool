@@ -168,7 +168,7 @@ public class ClientHandlerTest {
 	}
 	
 	@Test
-	public void testHandeshakeAndRunIncomingTcpTestAfterReceivingCommand() throws Exception {
+	public void testHandshakeAndRunIncomingTcpTestAfterReceivingCommand() throws Exception {
 
 		final List<String> clientMessages = new ArrayList<>();
 		
