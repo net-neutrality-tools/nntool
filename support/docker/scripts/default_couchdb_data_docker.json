@@ -237,6 +237,32 @@
             ]
         },
         {
+            "docType": "QoSMeasurementObjective",
+            "objective_id": 600,
+            "enabled": true,
+            "type": "SIP",
+            "concurrency_group": 600,
+            "measurement_server_uuid": "mServer",
+            "translation_keys": {
+                "summary": "SIP_summary",
+                "description": "SIP_description"
+            },
+            "parameters": {
+                "port": "15060",
+                "call_duration": "1000000000",
+                "timeout": "2000000000",
+                "count": "5"
+            },
+            "evaluations": [
+                {
+                    "operator": "eq",
+                    "on_failure": "sip.failure",
+                    "sip_result": "OK",
+                    "on_success": "sip.success"
+                }
+            ]
+        },
+        {
             "docType": "Settings",
             "uuid": "4e7567ef-175b-44f4-8436-8fd6d22dab48",
             "urls": {
