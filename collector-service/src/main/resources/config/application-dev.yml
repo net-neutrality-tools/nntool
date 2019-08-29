@@ -26,6 +26,7 @@ spring:
           - QoSMeasurementObjective
           - Settings
           - Translation
+          - EmbeddedNetworkType
 
   #datasource:
   #  driver-class-name: org.postgresql.Driver
