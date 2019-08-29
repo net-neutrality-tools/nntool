@@ -113,7 +113,7 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 		this.id = id;
 
 		//test objective uid
-		String value = (String) taskDesc.getParams().get(PARAM_QOS_TEST_OBJECTIVE_ID);
+		String value = String.valueOf(taskDesc.getParams().get(PARAM_QOS_TEST_OBJECTIVE_ID));
 		this.qoSTestObjectiveUid = value != null ? Long.valueOf(value) : null;
 
 		//server port
