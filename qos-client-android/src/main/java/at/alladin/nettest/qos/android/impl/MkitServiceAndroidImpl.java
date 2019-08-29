@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
+
 import at.alladin.nntool.client.v2.task.service.MkitService;
 import io.ooni.mk.MKAsyncTask;
 
@@ -48,10 +50,13 @@ public class MkitServiceAndroidImpl implements MkitService {
     public static String caBundlePath;
 
     private JSONArray mkitInputArray;
+    private JSONObject mkitFlagObject;
 
     private MkitTestEnum mkitTestEnum;
     private JSONObject mkitTestConfig;
     private MkitResult result;
+
+    private MkitTestProgressListener listener;
 
     private float currentProgress = 0;
 
@@ -91,6 +96,16 @@ public class MkitServiceAndroidImpl implements MkitService {
             mkitTestConfig.put("inputs", mkitInputArray);
         }
 
+        //add all provided flags to the previously set base options
+        if (mkitFlagObject != null && mkitTestConfig.has("options")) {
+            final JSONObject options = mkitTestConfig.getJSONObject("options");
+            final Iterator<String> it = mkitFlagObject.keys();
+            while (it.hasNext()) {
+                final String key = it.next();
+                options.put(key, mkitFlagObject.get(key));
+            }
+        }
+
         Log.i(TAG, "TEST CONFIG: " + mkitTestConfig.toString());
 
         MKAsyncTask task = MKAsyncTask.start(mkitTestConfig.toString());
@@ -98,13 +113,20 @@ public class MkitServiceAndroidImpl implements MkitService {
             final String event = task.waitForNextEvent();
             if (event != null) {
                 Log.i(TAG, "EVENT: " + event);
-                final JSONObject eventObj = new JSONObject(event);
-                if (eventObj.has("key")) {
-                    final String keyValue = eventObj.getString("key");
-                    if ("measurement".equals(keyValue) && eventObj.has("value")) {
-                        Log.i(TAG, "Measurement ended");
-                        result = new MkitResultJsonImpl(eventObj.getJSONObject("value").getString("json_str"));
+                try {
+                    final JSONObject eventObj = new JSONObject(event);
+                    if (eventObj.has("key") && eventObj.has("value")) {
+                        final String keyValue = eventObj.getString("key");
+                        final JSONObject valueObj = eventObj.getJSONObject("value");
+                        if ("measurement".equals(keyValue) && valueObj.has("json_str")) {
+                            result = new MkitResultJsonImpl(valueObj.getString("json_str"));
+                        } else if (listener != null && "status.progress".equals(keyValue) && valueObj.has("percentage")) {
+                             listener.onProgress((float) valueObj.getDouble("percentage"));
+                        }
                     }
+                } catch (JSONException ex) {
+                    Log.e(TAG, "Error during event parsing");
+                    ex.printStackTrace();
                 }
             }
         }
@@ -112,7 +134,6 @@ public class MkitServiceAndroidImpl implements MkitService {
 
         Log.i(TAG, "Finished MKAsync task");
 
-        //mkitTest.run();
         //remove potentially unwanted result entries
         postProcessResult();
         return result;
@@ -161,21 +182,6 @@ public class MkitServiceAndroidImpl implements MkitService {
         }
 
         switch (mkitTestEnum) {
-            /*
-            case MKIT_WEB_CONNECTIVITY:
-                try {
-                    final JSONObject json = result.toJson();
-                    final JSONArray jsonArray = json.getJSONObject("test_keys").getJSONArray("requests");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        jsonArray.getJSONObject(i).getJSONObject("response").remove("body");
-                    }
-                    result = new NdtResultJsonImpl(json.toString());
-                } catch(JSONException ex) {
-                    ex.printStackTrace();
-                    Log.e(TAG, "Error during parsing of result: " + result + "\nProceeding with unparsed result");
-                }
-                break;
-            */
             case MKIT_WEB_CONNECTIVITY:
             case MKIT_TELEGRAM_MESSENGER:
             case MKIT_WHATSAPP_MESSENGER:
@@ -214,6 +220,9 @@ public class MkitServiceAndroidImpl implements MkitService {
 
         config.put("log_level", "INFO");
         config.put("options", options);
+
+        //you can potentially disable some events
+        //JSONArray disabledEvents = new JSONArray();
         //config.put("disabled_events", ARRAY);
 
     }
@@ -232,16 +241,29 @@ public class MkitServiceAndroidImpl implements MkitService {
 
     @Override
     public void addFlags(final String flags) {
-        /*
-        if (flags != null && mkitTest != null) {
+
+        if (flags != null) {
+            if (mkitFlagObject == null) {
+                mkitFlagObject = new JSONObject();
+            }
             final String[] flagArray = flags.split(";");
             for (String s : flagArray) {
                 final String[] args = s.split(" ");
-                //if no value is provided, assume true as value
-                ndtTest.set_option(args[0], args.length > 1 && !args[1].equals("") ? args[1] : "1");
+                try {
+                    //if no value is provided, assume true as value
+                    mkitFlagObject.put(args[0], args.length > 1 && !args[1].equals("") ? args[1] : true);
+                } catch (JSONException ex) {
+                    Log.e(TAG, "Unable to add flag: " + s + " for test: " + this.mkitTestEnum + "\nProceeding w/out that flag");
+                    ex.printStackTrace();
+                }
             }
         }
-        */
+
+    }
+
+    @Override
+    public void setOnMkitTestProgressListener(final MkitTestProgressListener listener) {
+        this.listener = listener;
     }
 
 

@@ -27,7 +27,7 @@ public interface MkitService extends Callable<MkitService.MkitResult> {
     }
 
     /**
-     * Exception thrown if the requested NdtTestEnum is NOT supported by the underlying impl
+     * Exception thrown if the requested mkitTestEnum is NOT supported by the underlying impl
      */
     final class UnsupportedMkitTestException extends IOException {
 
@@ -59,19 +59,19 @@ public interface MkitService extends Callable<MkitService.MkitResult> {
      * NEEDS to be called before the call() method is called, otherwise call will always return null
      * Set the test to be executed (using one of the available enums)
      * @param testToExecute
-     * @throws UnsupportedMkitTestException if the ndtTestEnum is not supported by the NdtServiceImpl
+     * @throws UnsupportedMkitTestException if the mkitTestEnum is not supported by the mkitServiceImpl
      */
     void setTestToExecute (final MkitTestEnum testToExecute) throws UnsupportedMkitTestException;
 
     /**
-     * Set possible input for the given NDT test
+     * Set possible input for the given mkit test
      * setTestToExecute needs be called before addInput
      * @param input, may be null if no input is required
      */
     void addInput(final String input);
 
     /**
-     * Set flags for the given NDT test
+     * Set flags for the given mkit test
      * setTestToExecute needs be called before addFlags
      * Syntax:
      * 		FLAGNAME[ VALUE]
@@ -83,7 +83,7 @@ public interface MkitService extends Callable<MkitService.MkitResult> {
 
     /**
      *
-     * @return the current progress of the NDT tests in percent
+     * @return the current progress of the mkit tests in percent
      */
     float getProgress ();
 
@@ -92,5 +92,11 @@ public interface MkitService extends Callable<MkitService.MkitResult> {
      * (functionality of cancel depends on the possibilities of the underlying implementation)
      */
     void cancel ();
+
+    void setOnMkitTestProgressListener(final MkitTestProgressListener listener);
+
+    interface MkitTestProgressListener {
+        void onProgress(final float progress);
+    }
 
 }

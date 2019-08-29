@@ -100,6 +100,8 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 
     private final ConcurrentMap<QosMeasurementType, Integer> qosTypeTaskCountMap = new ConcurrentHashMap<>();
     private final ConcurrentMap<QosMeasurementType, Integer> qosTypeDoneCountMap = new ConcurrentHashMap<>();
+    //Contains the progress of the currently executed qosTests [0, 1]
+    private final ConcurrentMap<QosMeasurementType, Float> qosTypeTestProgressMap = new ConcurrentHashMap<>();
 
 	//provide a list of the test ids to the listeners out there
     private final List<String> taskIdList = new ArrayList<>();
@@ -141,6 +143,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 				final QosMeasurementType t = QosMeasurementType.fromValue(taskId);
 				if (!qosTypeTaskCountMap.containsKey(t)) {
 					qosTypeTaskCountMap.put(t, 1);
+					qosTypeTestProgressMap.put(t, 0f);
 				} else {
 					qosTypeTaskCountMap.put(t, qosTypeTaskCountMap.get(t) + 1);
 				}
@@ -311,6 +314,20 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 								l.onQoSTypeStarted(type);
 							}
 						}
+						//TODO: write config which types should listen themselves
+						if (type == QosMeasurementType.MKIT_DASH || type == QosMeasurementType.MKIT_WEB_CONNECTIVITY) {
+							task.setQoSTestProgressListener(new AbstractQoSTask.QoSTestProgressListener() {
+								@Override
+								public void onProgress(float currentTestProgress, QoSTestResultEnum resultType) {
+									final QosMeasurementType type = QosMeasurementType.fromValue(resultType.toString().toLowerCase());
+									QualityOfServiceTest.this.qosTypeTestProgressMap.put(type, currentTestProgress);
+									final float totalProgress = calculateMeasurementTypeProgress(type) + currentTestProgress / (float) qosTypeTaskCountMap.get(type);
+									for (QoSMeasurementClientProgressListener l : progressListeners) {
+										l.onQoSTypeProgress(type, totalProgress);
+									}
+								}
+							});
+						}
 					} catch (IllegalArgumentException ex) {
 						ex.printStackTrace();
 					}
@@ -346,7 +363,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 	            		try {
 	            			final QosMeasurementType type = QosMeasurementType.fromValue(curResult.getTestType().toString().toLowerCase());
 							qosTypeDoneCountMap.put(type, qosTypeDoneCountMap.get(type) + 1);	//this is safe, as we previously init map w/0 on the first test of each type
-							final float prog = qosTypeDoneCountMap.get(type) / (float) qosTypeTaskCountMap.get(type);
+							final float prog = calculateMeasurementTypeProgress(type);
 							for (QoSMeasurementClientProgressListener l : progressListeners) {
 								l.onQoSTypeProgress(type, prog);
 							}
@@ -420,6 +437,10 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 		for (int i = 0; i < listeners.length; i++) {
 			progressListeners.remove(listeners[i]);
 		}
+	}
+
+	private float calculateMeasurementTypeProgress(final QosMeasurementType type) {
+		return qosTypeDoneCountMap.get(type) / (float) qosTypeTaskCountMap.get(type);
 	}
 
 	/**
@@ -537,6 +558,10 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 	 */
 	public Map<QosMeasurementType, Integer> getQosTypeDoneCountMap() {
 		return qosTypeDoneCountMap;
+	}
+
+	public ConcurrentMap<QosMeasurementType, Float> getQosTypeTestProgressMap() {
+		return qosTypeTestProgressMap;
 	}
 
 	/**

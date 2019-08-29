@@ -120,9 +120,14 @@ public class QosFragment extends ActionBarFragment implements ServiceConnection 
             if (measurementService != null) {
                 final QualityOfServiceTest qosTest = measurementService.getQosMeasurementClient().getQosTest();
                 if (qosTest != null && qosTest.getQosTypeDoneCountMap() != null) {
+                    final Map<QosMeasurementType, Float> testTypeProgress = qosTest.getQosTypeTestProgressMap();
                     for (final Map.Entry<QosMeasurementType, Integer> e : qosTest.getQosTypeDoneCountMap().entrySet()) {
                         if (QoSTestEnum.QOS_RUNNING.equals(qosTest.getStatus())) {
-                            final float progress = (float) e.getValue() / (float) qosTest.getQosTypeTaskCountMap().get(e.getKey());
+                            float progress = (float) e.getValue() / (float) qosTest.getQosTypeTaskCountMap().get(e.getKey());
+                            //add progress made during single measurement
+                            if (testTypeProgress != null && testTypeProgress.containsKey(e.getKey())) {
+                                progress += testTypeProgress.get(e.getKey()) / (float) qosTest.getQosTypeTaskCountMap().get(e.getKey());
+                            }
                             qosProgressView.setQosProgress(e.getKey(), progress);
                             if (progress >= 1f) {
                                 qosProgressView.finishQosType(e.getKey());
@@ -144,7 +149,6 @@ public class QosFragment extends ActionBarFragment implements ServiceConnection 
                         }
                     }
                 }
-
             }
 
             if (!postResultRunnable) {

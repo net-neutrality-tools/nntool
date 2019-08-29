@@ -90,7 +90,9 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 	protected final int id;
 	
 	protected QoSControlConnection controlConnection;
-	
+
+	protected QoSTestProgressListener listener;
+
 	/**
 	 * this constructor set the priority to max 
 	 * @param taskDesc
@@ -369,5 +371,13 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 	@Override
 	public void interrupt() {
 
+	}
+
+	public void setQoSTestProgressListener(final QoSTestProgressListener listener) {
+		this.listener = listener;
+	}
+
+	public interface QoSTestProgressListener {
+		void onProgress(final float currentTestProgress, final QoSTestResultEnum type);
 	}
 }

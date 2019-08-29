@@ -108,6 +108,15 @@ public class MkitTask extends AbstractQoSTask {
                 return testResult;
             }
 
+            mkitService.setOnMkitTestProgressListener(new MkitService.MkitTestProgressListener() {
+                @Override
+                public void onProgress(float progress) {
+                    if (MkitTask.this.listener != null) {
+                        MkitTask.this.listener.onProgress(progress, qosTestResultEnum);
+                    }
+                }
+            });
+
             MkitService.MkitResult result = null;
 
             final Future<MkitService.MkitResult> ndtFuture = ClientHolder.getCommonThreadPool().submit(mkitService);
