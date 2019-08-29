@@ -72,6 +72,19 @@ public class ServerPreferences {
 		}	
 	}
 	
+	public class TcpCompetence {
+		boolean hasSipCompetence;
+		
+		public boolean hasSipCompetence() {
+			return hasSipCompetence;
+		}
+
+		public TcpCompetence setHasSipCompetence(boolean hasSipCompetence) {
+			this.hasSipCompetence = hasSipCompetence;
+			return this;
+		}
+	}
+	
 	public final static int TEST_SERVER_ID = 0;
 	public final static int TCP_SERVICE_ID = 1;
 	public final static int UDP_SERVICE_ID = 2;
@@ -109,6 +122,7 @@ public class ServerPreferences {
 	public static final String PARAM_SERVER_UDP_SERVICE_LOG_FILE = "server.log.udp";
 	public static final String PARAM_SERVER_TCP_SERVICE_LOG_FILE = "server.log.tcp";
 	public static final String PARAM_SERVER_TCP_IP_CHECK = "server.ip.check";
+	public static final String PARAM_SERVER_TCP_COMPETENCE_SIP = "server.tcp.competence.sip";
 	public static final String PARAM_SERVER_IP = "server.ip";
 	
 	public static final String REGEX_PORT_LIST = "([0-9]+)[,]?";
@@ -122,8 +136,9 @@ public class ServerPreferences {
 		public int compare(UdpPort o1, UdpPort o2) {
 			return Integer.compare(o1.port, o2.port);
 		}
-		
 	});
+	
+	private final Map<Integer, TcpCompetence> tcpCompetenceMap = new HashMap<>();
 	
 	private int maxThreads = 100;
 	private boolean useSsl = false;
@@ -390,6 +405,21 @@ public class ServerPreferences {
 	   			Matcher m = p.matcher(param);
    				while (m.find()) {
    					udpPortSet.add(new UdpPort(false, Integer.valueOf(m.group(1))));
+   				}
+	   		}
+
+	   		param = prop.getProperty(PARAM_SERVER_TCP_COMPETENCE_SIP);
+	   		if (param!=null) {
+	   			Pattern p = Pattern.compile(REGEX_PORT_LIST);
+	   			Matcher m = p.matcher(param);
+   				while (m.find()) {
+   					final Integer port = Integer.valueOf(m.group(1));
+   					TcpCompetence tcpCompetence = tcpCompetenceMap.get(port);
+   					if (tcpCompetence == null) {
+   						tcpCompetence = new TcpCompetence();
+   						tcpCompetenceMap.put(port, tcpCompetence);
+   					}
+   					tcpCompetence.setHasSipCompetence(true);
    				}
 	   		}
 
@@ -711,6 +741,10 @@ public class ServerPreferences {
 
 	public void setLoggingPattern(String loggingPattern) {
 		this.loggingPattern = loggingPattern;
+	}
+
+	public Map<Integer, TcpCompetence> getTcpCompetenceMap() {
+		return tcpCompetenceMap;
 	}
 
 	@Override

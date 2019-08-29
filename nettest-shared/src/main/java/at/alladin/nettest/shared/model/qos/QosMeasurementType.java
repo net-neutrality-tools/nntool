@@ -29,6 +29,7 @@ import at.alladin.nntool.shared.qos.HttpProxyResult;
 import at.alladin.nntool.shared.qos.MkitDashResult;
 import at.alladin.nntool.shared.qos.MkitWebConnectivityResult;
 import at.alladin.nntool.shared.qos.NonTransparentProxyResult;
+import at.alladin.nntool.shared.qos.SipResult;
 import at.alladin.nntool.shared.qos.TcpResult;
 import at.alladin.nntool.shared.qos.TracerouteResult;
 import at.alladin.nntool.shared.qos.UdpResult;
@@ -91,12 +92,27 @@ public enum QosMeasurementType {
     @SerializedName("website")
     WEBSITE("website", "test.website", "name.website", WebsiteResult.class),
 
+    /**
+     *
+     */
     @SerializedName("echo_protocol")
     ECHO_PROTOCOL("echo_protocol", "test.echo", "name.echo", EchoProtocolResult.class),
 
+    /**
+     *
+     */
+    @SerializedName("sip")
+    SIP("sip", "test.sip", "name.sip", SipResult.class),
+
+    /**
+     *
+     */
     @SerializedName("mkit_web_connectivity")
     MKIT_WEB_CONNECTIVITY("mkit_web_connectivity", "test.mkit_web_connectivity", "name.mkit_web_connectivity", MkitWebConnectivityResult.class),
 
+    /**
+     *
+     */
     @SerializedName("mkit_dash")
     MKIT_DASH("mkit_dash", "test.mkit_dash", "name.mkit_dash", MkitDashResult.class);
 
@@ -220,6 +236,8 @@ public enum QosMeasurementType {
                 return NON_TRANSPARENT_PROXY;
             case TRACEROUTE:
                 return TRACEROUTE;
+            case SIP:
+                return SIP;
             case MKIT_WEB_CONNECTIVITY:
                 return MKIT_WEB_CONNECTIVITY;
             case MKIT_DASH:

@@ -167,6 +167,9 @@ public class ClientHandler implements Runnable {
 						else if (command.startsWith(QoSServiceProtocol.CMD_VOIP_TEST)) {
 							runVoipTest(command, token);
 						}
+						else if (command.startsWith(QoSServiceProtocol.CMD_SIP_TEST)) {
+							runSipTest(command, token);
+						}
 						else if (command.startsWith(QoSServiceProtocol.REQUEST_UDP_PORT_RANGE)) {
 							sendCommand(TestServer.getInstance().serverPreferences.getUdpPortMin() +  " " + TestServer.getInstance().serverPreferences.getUdpPortMax(), command);
 						}
@@ -403,7 +406,43 @@ public class ClientHandler implements Runnable {
 			//tcpServer.removeCandidate(socket.getInetAddress());
 		}
     }
-    
+
+    /**
+     * 
+     * @param command
+     * @param token
+     * @throws IOException 
+     * @throws InterruptedException 
+     */
+    protected void runSipTest(String command, ClientToken token) throws Exception {
+    	int port;
+    	
+		Pattern p = Pattern.compile(QoSServiceProtocol.CMD_SIP_TEST + " ([\\d]*)");
+		Matcher m = p.matcher(command);
+		m.find();
+		if (m.groupCount()!=1) {
+			throw new IOException("SIP test command syntax error: " + command);
+		}
+		else {
+			port = Integer.parseInt(m.group(1));	
+		}
+		
+		try {
+			TestServer.getInstance().registerTcpCandidate(port, socket);
+					
+			Thread.sleep(100);
+			sendCommand(QoSServiceProtocol.RESPONSE_OK, command);
+		}
+		catch (Exception e) {
+			TestServerConsole.error(name + (command == null ? 
+					" [No command submitted]" : " [Command: " + command + "]"), e, 1, TestServerServiceEnum.TCP_SERVICE);
+		}
+		finally {
+			//is beeing done inside TcpServer now:
+			//tcpServer.removeCandidate(socket.getInetAddress());
+		}
+    }
+
     /**
      * 
      * @param command

@@ -3,6 +3,7 @@ package at.alladin.nntool.qos.testserver;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
@@ -150,6 +151,18 @@ public class ServerPreferencesTest {
 		assertEquals("Interface address [0] to bind to != 0.0.0.0", "0.0.0.0", ifSet.next().getHostAddress());
 	}
 
+	@Test
+	public void loadPreferencesWithDifferentTcpSipCompetences() throws TestServerException {
+		ServerPreferences sp = new ServerPreferences(getClass().getResourceAsStream("config_tcp_sip.properties"));
+		assertNotNull("ServerPreferences != null", sp);
+		
+		assertEquals("Amount of additional TCP competences != 3", 3, sp.getTcpCompetenceMap().size());
+		assertTrue("Port 5060 is missing SIP competence", sp.getTcpCompetenceMap().get(5060).hasSipCompetence());
+		assertTrue("Port 5061 is missing SIP competence", sp.getTcpCompetenceMap().get(5061).hasSipCompetence());
+		assertTrue("Port 5062 is missing SIP competence", sp.getTcpCompetenceMap().get(5062).hasSipCompetence());
+		assertNull("Port 5063 has additional competences", sp.getTcpCompetenceMap().get(5063));
+	}
+	
 	@Test
 	public void testWriteErrorString() {
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();

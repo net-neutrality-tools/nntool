@@ -45,6 +45,7 @@ import at.alladin.nntool.client.v2.task.NonTransparentProxyTask;
 import at.alladin.nntool.client.v2.task.QoSControlConnection;
 import at.alladin.nntool.client.v2.task.QoSTestEnum;
 import at.alladin.nntool.client.v2.task.QoSTestErrorEnum;
+import at.alladin.nntool.client.v2.task.SipTask;
 import at.alladin.nntool.client.v2.task.TaskDesc;
 import at.alladin.nntool.client.v2.task.TcpTask;
 import at.alladin.nntool.client.v2.task.TracerouteTask;
@@ -73,6 +74,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
     public final static String TASK_WEBSITE = "website";
     public final static String TASK_TRACEROUTE = "traceroute";
     public final static String TASK_ECHO_PROTOCOL = "echo_protocol";
+    public final static String TASK_SIP = "sip";
     public final static String TASK_MKIT_WEB_CONNECTIVITY = "mkit_web_connectivity";
     public final static String TASK_MKIT_DASH = "mkit_dash";
 
@@ -189,7 +191,8 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 				else {
 					System.out.println("No WebsiteTestService implementation: Skipping WebsiteTask: " + taskDesc);
 				}
-			} else if (TASK_ECHO_PROTOCOL.equals(taskId)) {
+			}
+			else if (TASK_ECHO_PROTOCOL.equals(taskId)) {
 				if (taskDesc.getParams().get(AbstractEchoProtocolTask.RESULT_PROTOCOL) != null) {
 					final String protocol = (String) taskDesc.getParams().get(AbstractEchoProtocolTask.RESULT_PROTOCOL);
 					if (AbstractEchoProtocolTask.PROTOCOL_TCP.equals(protocol)) {
@@ -202,12 +205,17 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 				} else {
 					System.out.println("No protocol specified for the EchoProtocol test. Skipping " + taskDesc);
 				}
-			} else if (TASK_MKIT_WEB_CONNECTIVITY.equals(taskId)) {
-				test = new MkitTask(this, taskId, taskDesc, threadCounter++);
-			} else if (TASK_MKIT_DASH.equals(taskId)) {
+			}
+			else if (TASK_MKIT_WEB_CONNECTIVITY.equals(taskId)) {
 				test = new MkitTask(this, taskId, taskDesc, threadCounter++);
 			}
-			
+			else if (TASK_MKIT_DASH.equals(taskId)) {
+				test = new MkitTask(this, taskId, taskDesc, threadCounter++);
+			}
+			else if (TASK_SIP.equals(taskId)) {
+				test = new SipTask(this, taskDesc, threadCounter++);
+			}
+
 			if (test != null) {
 				//manage taskMap:
 				List<AbstractQoSTask> testList = null;
