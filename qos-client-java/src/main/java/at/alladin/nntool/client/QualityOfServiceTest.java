@@ -40,6 +40,7 @@ import at.alladin.nntool.client.v2.task.DnsTask;
 import at.alladin.nntool.client.v2.task.EchoProtocolTcpTask;
 import at.alladin.nntool.client.v2.task.EchoProtocolUdpTask;
 import at.alladin.nntool.client.v2.task.HttpProxyTask;
+import at.alladin.nntool.client.v2.task.MkitTask;
 import at.alladin.nntool.client.v2.task.NonTransparentProxyTask;
 import at.alladin.nntool.client.v2.task.QoSControlConnection;
 import at.alladin.nntool.client.v2.task.QoSTestEnum;
@@ -53,7 +54,6 @@ import at.alladin.nntool.client.v2.task.VoipTask;
 import at.alladin.nntool.client.v2.task.WebsiteTask;
 import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 import at.alladin.nntool.client.v2.task.service.TestProgressListener.TestProgressEvent;
 import at.alladin.nntool.client.v2.task.service.TestSettings;
 import at.alladin.nntool.client.v2.task.service.TrafficService;
@@ -75,30 +75,34 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
     public final static String TASK_TRACEROUTE = "traceroute";
     public final static String TASK_ECHO_PROTOCOL = "echo_protocol";
     public final static String TASK_SIP = "sip";
+    public final static String TASK_MKIT_WEB_CONNECTIVITY = "mkit_web_connectivity";
+    public final static String TASK_MKIT_DASH = "mkit_dash";
 
     private final ClientHolder client;
     
     private final AtomicInteger progress = new AtomicInteger(); 
     private final AtomicInteger testCount = new AtomicInteger();
     private final AtomicInteger concurrentGroupCount = new AtomicInteger();
-    private final AtomicReference<QoSTestEnum> status = new AtomicReference<QoSTestEnum>();
-    private final AtomicReference<QoSTestErrorEnum> errorStatus = new AtomicReference<QoSTestErrorEnum>(QoSTestErrorEnum.NONE);
+    private final AtomicReference<QoSTestEnum> status = new AtomicReference<>();
+    private final AtomicReference<QoSTestErrorEnum> errorStatus = new AtomicReference<>(QoSTestErrorEnum.NONE);
 
     private final ExecutorService executor;
     private final ExecutorCompletionService<QoSTestResult> executorService;
     
     private final TestSettings qoSTestSettings;
     
-    final TreeMap<Integer, List<AbstractQoSTask>> concurrentTasks = new TreeMap<Integer, List<AbstractQoSTask>>();
-    final TreeMap<QoSTestResultEnum, List<AbstractQoSTask>> testMap = new TreeMap<QoSTestResultEnum, List<AbstractQoSTask>>();
-    final TreeMap<String, QoSControlConnection> controlConnectionMap = new TreeMap<String, QoSControlConnection>();
+    final TreeMap<Integer, List<AbstractQoSTask>> concurrentTasks = new TreeMap<>();
+    final TreeMap<QosMeasurementType, List<AbstractQoSTask>> testMap = new TreeMap<>();
+    final TreeMap<String, QoSControlConnection> controlConnectionMap = new TreeMap<>();
     		
-    private TreeMap<QoSTestResultEnum, Counter> testGroupCounterMap = new TreeMap<QoSTestResultEnum, Counter>();
+    private TreeMap<QosMeasurementType, Counter> testGroupCounterMap = new TreeMap<>();
 
     private final List<QoSMeasurementClientProgressListener> progressListeners = new ArrayList<>();
 
     private final ConcurrentMap<QosMeasurementType, Integer> qosTypeTaskCountMap = new ConcurrentHashMap<>();
     private final ConcurrentMap<QosMeasurementType, Integer> qosTypeDoneCountMap = new ConcurrentHashMap<>();
+    //Contains the progress of the currently executed qosTests [0, 1]
+    private final ConcurrentMap<QosMeasurementType, Float> qosTypeTestProgressMap = new ConcurrentHashMap<>();
 
 	//provide a list of the test ids to the listeners out there
     private final List<String> taskIdList = new ArrayList<>();
@@ -140,6 +144,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 				final QosMeasurementType t = QosMeasurementType.fromValue(taskId);
 				if (!qosTypeTaskCountMap.containsKey(t)) {
 					qosTypeTaskCountMap.put(t, 1);
+					qosTypeTestProgressMap.put(t, 0f);
 				} else {
 					qosTypeTaskCountMap.put(t, qosTypeTaskCountMap.get(t) + 1);
 				}
@@ -201,10 +206,16 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 					System.out.println("No protocol specified for the EchoProtocol test. Skipping " + taskDesc);
 				}
 			}
+			else if (TASK_MKIT_WEB_CONNECTIVITY.equals(taskId)) {
+				test = new MkitTask(this, taskId, taskDesc, threadCounter++);
+			}
+			else if (TASK_MKIT_DASH.equals(taskId)) {
+				test = new MkitTask(this, taskId, taskDesc, threadCounter++);
+			}
 			else if (TASK_SIP.equals(taskId)) {
 				test = new SipTask(this, taskDesc, threadCounter++);
 			}
-			
+
 			if (test != null) {
 				//manage taskMap:
 				List<AbstractQoSTask> testList = null;
@@ -310,6 +321,20 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 								l.onQoSTypeStarted(type);
 							}
 						}
+						//TODO: write config which types should listen themselves
+						if (type == QosMeasurementType.MKIT_DASH || type == QosMeasurementType.MKIT_WEB_CONNECTIVITY) {
+							task.setQoSTestProgressListener(new AbstractQoSTask.QoSTestProgressListener() {
+								@Override
+								public void onProgress(float currentTestProgress, QosMeasurementType resultType) {
+									final QosMeasurementType type = QosMeasurementType.fromValue(resultType.toString().toLowerCase());
+									QualityOfServiceTest.this.qosTypeTestProgressMap.put(type, currentTestProgress);
+									final float totalProgress = calculateMeasurementTypeProgress(type) + currentTestProgress / (float) qosTypeTaskCountMap.get(type);
+									for (QoSMeasurementClientProgressListener l : progressListeners) {
+										l.onQoSTypeProgress(type, totalProgress);
+									}
+								}
+							});
+						}
 					} catch (IllegalArgumentException ex) {
 						ex.printStackTrace();
 					}
@@ -345,7 +370,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 	            		try {
 	            			final QosMeasurementType type = QosMeasurementType.fromValue(curResult.getTestType().toString().toLowerCase());
 							qosTypeDoneCountMap.put(type, qosTypeDoneCountMap.get(type) + 1);	//this is safe, as we previously init map w/0 on the first test of each type
-							final float prog = qosTypeDoneCountMap.get(type) / (float) qosTypeTaskCountMap.get(type);
+							final float prog = calculateMeasurementTypeProgress(type);
 							for (QoSMeasurementClientProgressListener l : progressListeners) {
 								l.onQoSTypeProgress(type, prog);
 							}
@@ -421,6 +446,10 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 		}
 	}
 
+	private float calculateMeasurementTypeProgress(final QosMeasurementType type) {
+		return qosTypeDoneCountMap.get(type) / (float) qosTypeTaskCountMap.get(type);
+	}
+
 	/**
 	 * 
 	 * @return
@@ -469,7 +498,6 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
      * @param newStatus
      */
     public void setStatus(QoSTestEnum newStatus) {
-//    	this.status.set(newStatus);
 		updateQoSStatus(newStatus);
     }
 
@@ -503,7 +531,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
      * 
      * @return
      */
-    public Map<QoSTestResultEnum, Counter> getTestGroupCounterMap() {
+    public Map<QosMeasurementType, Counter> getTestGroupCounterMap() {
     	return testGroupCounterMap;
     }
     
@@ -539,11 +567,15 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 		return qosTypeDoneCountMap;
 	}
 
+	public ConcurrentMap<QosMeasurementType, Float> getQosTypeTestProgressMap() {
+		return qosTypeTestProgressMap;
+	}
+
 	/**
      * 
      * @return
      */
-    public TreeMap<QoSTestResultEnum, List<AbstractQoSTask>> getTestMap() {
+    public TreeMap<QosMeasurementType, List<AbstractQoSTask>> getTestMap() {
     	return testMap;
     }
     
@@ -578,13 +610,13 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
      *
      */
     public final class Counter {
-    	public QoSTestResultEnum testType;
+    	public QosMeasurementType testType;
     	public int value;
     	public int target;
     	public int firstTest;
     	public int lastTest;
 
-		public Counter(QoSTestResultEnum testType, int target, int concurrencyGroup) {
+		public Counter(QosMeasurementType testType, int target, int concurrencyGroup) {
     		this.testType = testType;
     		this.value = 0;
     		this.target = target;

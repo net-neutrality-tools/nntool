@@ -25,10 +25,10 @@ import java.util.concurrent.TimeoutException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 import at.alladin.nntool.util.tools.TracerouteService;
 import at.alladin.nntool.util.tools.TracerouteService.HopDetail;
 
@@ -86,7 +86,7 @@ public class TracerouteTask extends AbstractQoSTask {
 	 * 
 	 */
 	public QoSTestResult call() throws Exception {
-  		final QoSTestResult testResult = initQoSTestResult(QoSTestResultEnum.TRACEROUTE);
+  		final QoSTestResult testResult = initQoSTestResult(QosMeasurementType.TRACEROUTE);
 
   		testResult.getResultMap().put(RESULT_HOST, host);
   		testResult.getResultMap().put(RESULT_TIMEOUT, timeout);
@@ -154,8 +154,8 @@ public class TracerouteTask extends AbstractQoSTask {
 	 * (non-Javadoc)
 	 * @see at.alladin.rmbt.client.v2.task.QoSTask#getTestType()
 	 */
-	public QoSTestResultEnum getTestType() {
-		return QoSTestResultEnum.TRACEROUTE;
+	public QosMeasurementType getTestType() {
+		return QosMeasurementType.TRACEROUTE;
 	}
 
 	/*

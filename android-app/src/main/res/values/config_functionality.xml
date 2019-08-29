@@ -6,6 +6,7 @@
     <!-- if functionality_data_consumption_warning_enabled is set to true, this message will be shown in the data consumption pop up -->
     <string name="functionality_data_consumption_warning_message">@string/measurement_data_consumption_warning</string>
 
+    <!-- contains a list of QosMeasurementType values (tcp, udp, ...) that are to be ignored by the android app (in both the test selection and the test execution) -->
     <string-array name="functionality_unavailable_qos_types">
     </string-array>
 </resources>

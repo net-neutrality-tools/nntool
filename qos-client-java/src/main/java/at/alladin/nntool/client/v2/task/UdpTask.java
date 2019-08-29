@@ -40,14 +40,12 @@ import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.json.JSONObject;
-
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nettest.shared.qos.UdpPayload;
 import at.alladin.nettest.shared.qos.util.UdpPayloadUtil;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 import at.alladin.nntool.util.net.udp.NioUdpStreamSender;
 import at.alladin.nntool.util.net.udp.StreamSender.UdpStreamCallback;
 import at.alladin.nntool.util.net.udp.StreamSender.UdpStreamSenderSettings;
@@ -187,7 +185,7 @@ public class UdpTask extends AbstractQoSTask {
 	 *
 	 */
 	public QoSTestResult call() throws Exception {
-		final QoSTestResult result = initQoSTestResult(QoSTestResultEnum.UDP);
+		final QoSTestResult result = initQoSTestResult(QosMeasurementType.UDP);
 		try {
 			onStart(result);
 
@@ -593,8 +591,8 @@ public class UdpTask extends AbstractQoSTask {
 	 * (non-Javadoc)
 	 * @see at.alladin.rmbt.client.v2.task.QoSTask#getTestType()
 	 */
-	public QoSTestResultEnum getTestType() {
-		return QoSTestResultEnum.UDP;
+	public QosMeasurementType getTestType() {
+		return QosMeasurementType.UDP;
 	}
 
 	/*

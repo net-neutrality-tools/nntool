@@ -1,7 +1,7 @@
 package at.alladin.nntool.client.v2.task;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 
 /**
  * @author Felix Kendlbacher (fk@alladin.at)
@@ -63,8 +63,8 @@ public abstract class AbstractEchoProtocolTask extends AbstractQoSTask {
      * (non-Javadoc)
      * @see at.alladin.rmbt.client.v2.task.QoSTask#getTestType()
      */
-    public QoSTestResultEnum getTestType() {
-        return QoSTestResultEnum.ECHO_PROTOCOL;
+    public QosMeasurementType getTestType() {
+        return QosMeasurementType.ECHO_PROTOCOL;
     }
 
     /*

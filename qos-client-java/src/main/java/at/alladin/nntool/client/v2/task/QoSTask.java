@@ -18,8 +18,8 @@ package at.alladin.nntool.client.v2.task;
 
 import java.util.concurrent.Callable;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 
 /**
  * 
@@ -63,12 +63,12 @@ public interface QoSTask extends Callable<QoSTestResult>, Comparable<QoSTask> {
 	 * @return
 	 */
 	public String getTestServerAddr();
-	
+
 	/**
 	 * 
 	 * @return
 	 */
-	public QoSTestResultEnum getTestType();
+	public QosMeasurementType getTestType();
 	
 	/**
 	 * 

@@ -23,6 +23,8 @@ import java.util.Locale;
 
 import org.json.JSONObject;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+
 /**
  * contains the result of a test after evaluation
  * @author lb
@@ -67,7 +69,7 @@ public class QoSServerResult implements Serializable {
 	
 	public final static String JSON_KEY_UID = "uid";
 	
-	private QoSTestResultEnum testType;
+	private QosMeasurementType testType;
 	
 	private int successCount = 0;
 	
@@ -92,7 +94,7 @@ public class QoSServerResult implements Serializable {
 	@SuppressWarnings("unchecked")
 	public QoSServerResult(JSONObject json) {
 		try {
-			testType = QoSTestResultEnum.valueOf(json.optString(JSON_KEY_TESTTYPE).toUpperCase(Locale.US));
+			testType = QosMeasurementType.valueOf(json.optString(JSON_KEY_TESTTYPE));
 			testDescription = json.optString(JSON_KEY_TEST_DESCRIPTION);
 			testSummary = json.optString(JSON_KEY_TEST_SUMMARY);
 			successCount = Integer.valueOf(json.optString(JSON_KEY_SUCCESS_COUNT));
@@ -115,11 +117,11 @@ public class QoSServerResult implements Serializable {
 		}
 	}
 
-	public QoSTestResultEnum getTestType() {
+	public QosMeasurementType getTestType() {
 		return testType;
 	}
 
-	public void setTestType(QoSTestResultEnum testType) {
+	public void setTestType(QosMeasurementType testType) {
 		this.testType = testType;
 	}
 

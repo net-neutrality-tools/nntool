@@ -26,10 +26,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.Locale;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.AbstractTest;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 import at.alladin.nntool.client.v2.task.service.TestProgressListener.TestProgressEvent;
 
 /**
@@ -91,7 +91,9 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 	protected final int id;
 	
 	protected QoSControlConnection controlConnection;
-	
+
+	protected QoSTestProgressListener listener;
+
 	/**
 	 * this constructor set the priority to max 
 	 * @param taskDesc
@@ -113,11 +115,13 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 		this.id = id;
 
 		//test objective uid
-		String value = String.valueOf(taskDesc.getParams().get(PARAM_QOS_TEST_OBJECTIVE_ID));
-		this.qoSTestObjectiveUid = value != null ? Long.valueOf(value) : null;
+		Object objVal = taskDesc.getParams().get(PARAM_QOS_TEST_OBJECTIVE_ID);
+		String value = objVal != null ? String.valueOf(objVal) : null;
+		this.qoSTestObjectiveUid = value != null ? Long.valueOf(value) : 0L;
 
 		//server port
-		value = String.valueOf(taskDesc.getParams().get(PARAM_QOS_TEST_OBJECTIVE_PORT));
+		objVal = taskDesc.getParams().get(PARAM_QOS_TEST_OBJECTIVE_PORT);
+		value = objVal != null ? String.valueOf(objVal) : null;
 		int parsedServerPort = 0;
 		try {
 			parsedServerPort = value != null ? Integer.valueOf(value) : 0;
@@ -130,7 +134,8 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 		}
 
 		//concurrency group
-		value = String.valueOf(taskDesc.getParams().get(PARAM_QOS_CONCURRENCY_GROUP));
+		objVal = taskDesc.getParams().get(PARAM_QOS_CONCURRENCY_GROUP);
+		value = objVal != null ? String.valueOf(objVal) : null;
 		int parsedConcurrencyGroup = 0;
 		try {
 			parsedConcurrencyGroup = value != null ? Integer.valueOf(value) : 0;
@@ -277,7 +282,7 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 	 * @param testType
 	 * @return
 	 */
-	public QoSTestResult initQoSTestResult(QoSTestResultEnum testType) {
+	public QoSTestResult initQoSTestResult(QosMeasurementType testType) {
 		QoSTestResult nnResult = new QoSTestResult(testType, this);
 		nnResult.getResultMap().put(PARAM_QOS_TEST_OBJECTIVE_ID, qoSTestObjectiveUid);
 		return nnResult;
@@ -401,5 +406,13 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 	@Override
 	public void interrupt() {
 
+	}
+
+	public void setQoSTestProgressListener(final QoSTestProgressListener listener) {
+		this.listener = listener;
+	}
+
+	public interface QoSTestProgressListener {
+		void onProgress(final float currentTestProgress, final QosMeasurementType type);
 	}
 }

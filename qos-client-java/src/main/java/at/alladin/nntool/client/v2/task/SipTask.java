@@ -26,9 +26,9 @@ import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 import at.alladin.nntool.shared.qos.util.SipTaskHelper;
 import at.alladin.nntool.util.net.sip.SipRequestMessage;
 import at.alladin.nntool.util.net.sip.SipResponseMessage;
@@ -92,7 +92,7 @@ public class SipTask extends AbstractQoSTask {
 	 * @see java.util.concurrent.Callable#call()
 	 */
 	public QoSTestResult call() throws Exception {
-		final QoSTestResult result = initQoSTestResult(QoSTestResultEnum.SIP);
+		final QoSTestResult result = initQoSTestResult(QosMeasurementType.SIP);
 		try {
 			onStart(result);
 
@@ -234,8 +234,8 @@ public class SipTask extends AbstractQoSTask {
 	 * (non-Javadoc)
 	 * @see at.alladin.rmbt.client.v2.task.QoSTask#getTestType()
 	 */
-	public QoSTestResultEnum getTestType() {
-		return QoSTestResultEnum.NON_TRANSPARENT_PROXY;
+	public QosMeasurementType getTestType() {
+		return QosMeasurementType.SIP;
 	}
 
 	/*

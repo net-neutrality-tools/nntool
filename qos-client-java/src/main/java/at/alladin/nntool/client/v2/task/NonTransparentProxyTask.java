@@ -25,9 +25,9 @@ import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 
 /**
  * 
@@ -86,7 +86,7 @@ public class NonTransparentProxyTask extends AbstractQoSTask {
 	 * @see java.util.concurrent.Callable#call()
 	 */
 	public QoSTestResult call() throws Exception {
-		final QoSTestResult result = initQoSTestResult(QoSTestResultEnum.NON_TRANSPARENT_PROXY);
+		final QoSTestResult result = initQoSTestResult(QosMeasurementType.NON_TRANSPARENT_PROXY);
 		try {
 			onStart(result);
 			result.getResultMap().put(RESULT_PORT, port);
@@ -176,8 +176,8 @@ public class NonTransparentProxyTask extends AbstractQoSTask {
 	 * (non-Javadoc)
 	 * @see at.alladin.rmbt.client.v2.task.QoSTask#getTestType()
 	 */
-	public QoSTestResultEnum getTestType() {
-		return QoSTestResultEnum.NON_TRANSPARENT_PROXY;
+	public QosMeasurementType getTestType() {
+		return QosMeasurementType.NON_TRANSPARENT_PROXY;
 	}
 
 	/*

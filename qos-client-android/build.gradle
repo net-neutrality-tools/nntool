@@ -44,4 +44,7 @@ android {
 
 dependencies {
 	api project(path: ':qos-client-java', configuration: 'default')
+
+	api group: 'org.openobservatory.measurement_kit', name: 'android-libs', version: mkit_android_libs_version
+
 }
