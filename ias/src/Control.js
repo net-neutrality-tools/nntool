@@ -99,13 +99,10 @@ function WSControl()
     var ulSampleRate                = 500;
     var ulTailTime                  = 2000;
 
-    var wsTargets;
     var wsTarget;
-    var wsTargetsRtt;
-    var wsTargetRtt;
-    var wsTLD;
     var wsTargetPort;
     var wsWss;
+    var wsTLD;
 
     //default measurement parameters
     var rttRequests                 = 10;
@@ -336,17 +333,9 @@ function WSControl()
             }
         }
 
-        if (typeof measurementParameters.wsTargets !== 'undefined')
+        if (typeof measurementParameters.wsTarget !== 'undefined')
         {
-            wsTargets                   = measurementParameters.wsTargets;
-        }
-        if (typeof measurementParameters.wsTargetsRtt !== 'undefined')
-        {
-            wsTargetsRtt                = measurementParameters.wsTargetsRtt;
-        }
-        if (typeof measurementParameters.wsTLD !== 'undefined')
-        {
-            wsTLD                       = String(measurementParameters.wsTLD);
+            wsTarget                    = measurementParameters.wsTarget;
         }
         if (typeof measurementParameters.wsTargetPort !== 'undefined')
         {
@@ -355,6 +344,10 @@ function WSControl()
         if (typeof measurementParameters.wsWss !== 'undefined')
         {
             wsWss                       = String(measurementParameters.wsWss);
+        }
+        if (typeof measurementParameters.wsTLD !== 'undefined')
+        {
+            wsTLD                       = String(measurementParameters.wsTLD);
         }
         if (typeof measurementParameters.wsStartupTime !== 'undefined')
         {
@@ -383,34 +376,18 @@ function WSControl()
         var wsWssString                 = 'wss://';
         if (!Number(wsWss)) wsWssString = 'ws://';
 
+        console.log('target:            ' + wsWssString + wsTarget + ':' + wsTargetPort);
+        console.log('protocol:          ' + wsProtocol);
+
         if (wsTestCase === 'rtt')
         {
-            if (wsTargetsRtt.length > 0)
-            {
-                wsTargetRtt = wsTargetsRtt[Math.floor(Math.random() * wsTargetsRtt.length)];
-                if (wsTLD) {
-                    wsTargetRtt += '.' + wsTLD;
-                }
-            }
-            console.log('target:            ' + wsWssString + wsTargetRtt + ':' + wsTargetPort);
-            console.log('protocol:          ' + rttProtocol);
             console.log('requests:          ' + rttRequests);
             console.log('request timeout:   ' + rttRequestTimeout);
             console.log('request wait:      ' + rttRequestWait);
             console.log('timeout:           ' + rttTimeout);
         }
-
-        if (wsTestCase === 'download' || wsTestCase === 'upload')
+        else if (wsTestCase === 'download' || wsTestCase === 'upload')
         {
-            if (wsTargets.length > 0)
-            {
-                wsTarget = wsTargets[Math.floor(Math.random() * wsTargets.length)];
-                if (wsTLD) {
-                    wsTarget += '.' + wsTLD;
-                }
-            }
-            console.log('target:            ' + wsWssString + wsTarget + ':' + wsTargetPort);
-            console.log('protocol:          ' + wsProtocol);
             console.log('startup time:      ' + wsStartupTime);
             console.log('measurement time:  ' + wsMeasurementRunningTime);
             console.log('parallel streams:  ' + wsParallelStreams);
@@ -1103,7 +1080,6 @@ function WSControl()
             console.log(finishString + 'RTT Missing:            ' + wsRttValues.missing);
             console.log(finishString + 'RTT Packet Size:        ' + wsRttValues.packetsize);
             console.log(finishString + 'RTT Standard Deviation: ' + wsRttValues.stDevPop + ' ns');
-            console.log(finishString + 'RTT Peer:               ' + wsRttValues.server);
             console.log(finishString + 'RTT single results:     ' + JSON.stringify(wsRttValues.rtts));
         }
         else if (logReports)
@@ -1201,14 +1177,6 @@ function WSControl()
         report.standard_deviation_ns    = wsRttValues.stDevPop;
         report.rtts                     = wsRttValues.rtts;
 
-        if (typeof wsRttValues.server !== 'undefined')
-        {
-            report.peer                 = wsRttValues.server;
-            if (wsTLD) {
-                report.peer += '.' + wsTLD;
-            }
-        }
-
         return report;
     }
 
@@ -1234,7 +1202,6 @@ function WSControl()
         report.downloadKPIs.overhead                         = wsDownloadValues.overhead;
         report.downloadKPIs.overhead_including_slow_start    = wsDownloadValues.overheadTotal;
         report.downloadKPIs.overhead_per_frame               = wsDownloadValues.overheadPerFrame;
-
 
         report.downloadStreamKPIs = [];
         for (var wsID = 0; wsID < wsWorkers.length; wsID++)
@@ -1362,7 +1329,6 @@ function WSControl()
         workerData.wsTestCase           = wsTestCase;
         workerData.wsID                 = wsID;
         workerData.wsTarget             = wsTarget;
-        workerData.wsTargetRtt          = wsTargetRtt;
         workerData.wsTargetPort         = wsTargetPort;
         workerData.wsWss                = wsWss;
         workerData.wsProtocol           = wsProtocol;

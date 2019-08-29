@@ -72,6 +72,7 @@ function Ias()
     var clientKPIs                      = {};
     var deviceKPIs                      = {};
     var routeKPIs                       = {};
+    var peerKPIs                        = {};
 
     var wsRttTimer                      = 0;
     var wsDownloadTimer                 = 0;
@@ -232,8 +233,21 @@ function Ias()
         }
         if (typeof wsMeasurementParameters.routeToClientUseHttps !== 'undefined')
         {
-            routeToClientUseHttps  = Boolean(wsMeasurementParameters.routeToClientUseHttps);
+            routeToClientUseHttps       = Boolean(wsMeasurementParameters.routeToClientUseHttps);
         }
+
+        if (wsMeasurementParameters.wsTargets.length > 0)
+        {
+            wsMeasurementParameters.wsTarget = wsMeasurementParameters.wsTargets[Math.floor(Math.random() * wsMeasurementParameters.wsTargets.length)];
+            if (wsMeasurementParameters.wsTLD)
+            {
+                wsMeasurementParameters.wsTarget += '.' + wsMeasurementParameters.wsTLD;
+            }
+        }
+
+        peerKPIs.url  = wsMeasurementParameters.wsTarget;
+        peerKPIs.port = String(wsMeasurementParameters.wsTargetPort);
+        peerKPIs.tls  = String(wsMeasurementParameters.wsWss);
 
         if (!platform || (!performRttMeasurement && !performDownloadMeasurement && !performUploadMeasurement))
         {
@@ -716,6 +730,7 @@ function Ias()
         if (!jsTool.isEmpty(clientKPIs))         kpis.client_info       = clientKPIs;
         if (!jsTool.isEmpty(deviceKPIs))         kpis.device_info       = deviceKPIs;
         if (!jsTool.isEmpty(routeKPIs))          kpis.route_info        = routeKPIs;
+        if (!jsTool.isEmpty(peerKPIs))           kpis.peer_info         = peerKPIs;
 
         return kpis;
     }
