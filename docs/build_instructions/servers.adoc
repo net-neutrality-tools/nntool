@@ -75,25 +75,10 @@ The open data export service needs a functioning PostgreSQL database to work. Th
 
 == Additional servers
 
-=== Coturn TURN server
+=== IAS server
 
-To perform port blocking measurements, the *coturn TURN server (https://github.com/coturn/coturn)* has to be deployed on the measurement peer.
+*See /ias-server/README.adoc*
 
-The *coturn TURN server* can be installed via *apt install coturn* on debian-based systems. The current version 4.5.0.7 was verified for port blocking measurements.
-*coturn TURN server* can be executed with the following bash-script:
+=== IAS turnserver
 
-```
-#!/bin/bash
-
-credentials=berec:berec
-realmname=berec
-
-ports=(123 500 4500 5060)
-
-for port in "${ports[@]}"
-do
-    turnserver -n -v -o --no-dtls --no-tls -u $credentials -r $realmname -p $port [-L <first-ip-address> -L <second-ip-address> ...]
-done
-```
-
-Please note, that the stated credentials and realmname must match the configured values in the ias-module.
+*See /ias-server/README.adoc*
