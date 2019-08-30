@@ -13,7 +13,7 @@
 /*!
 
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-01
+ *      \date Last update: 2019-08-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -36,7 +36,7 @@ Ping::~Ping()
 //! \param &settings
 Ping::Ping( CConfigManager *pXml, CConfigManager *pService, string sProvider )
 {		
-	mServerName	= pXml->readString(sProvider,"DNS_HOSTNAME_RTT","default.com");
+	mServerName	= pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
 	mServer 	= pXml->readString(sProvider,"PING_DESTINATION","1.1.1.1");	
 	#ifdef __ANDROID__
         mClient = pXml->readString(sProvider, "CLIENT_IP", "0.0.0.0");

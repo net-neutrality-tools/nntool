@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-19
+ *      \date Last update: 2019-08-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -227,7 +227,6 @@ void measurementStart(string measurementParameters)
     //platform 			- "cli", "mobile"
     //clientos 			- "linux", "android"
     //wsTargets 		- ["peer-ias-de-01"]
-    //wsTargetsRtt 		- ["peer-ias-de-01"]
     //wsTLD 			- "net-neutrality.tools"
     //wsTargetPort		- "80"
     //wsWss 			- "0"
@@ -255,14 +254,6 @@ void measurementStart(string measurementParameters)
 	#else
 		pXml->writeString(conf.sProvider, "DNS_HOSTNAME", jTargets[0].string_value() + "." + wsTLD);
 	#endif
-
-	jTargets = jMeasurementParameters["wsTargetsRtt"].array_items();
-	
-	#ifdef __ANDROID__
-    	pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value());
-    #else
-    	pXml->writeString(conf.sProvider, "DNS_HOSTNAME_RTT", jTargets[0].string_value() + "." + wsTLD);
-    #endif
 
 	pXml->writeString(conf.sProvider,"DL_PORT",jMeasurementParameters["wsTargetPort"].string_value());
 	pXml->writeString(conf.sProvider,"UL_PORT",jMeasurementParameters["wsTargetPort"].string_value());

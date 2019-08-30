@@ -608,7 +608,6 @@ void AndroidConnector::startMeasurement() {
             measurementServerIp = CTool::getIpFromHostname( speedTaskDesc.measurementServerUrlV4, 4 );
         }
         jMeasurementParameters["wsTargets"] = json11::Json(jTargets);
-        jMeasurementParameters["wsTargetsRtt"] = json11::Json(jTargets);
 
         json11::Json jMeasurementParametersJson = jMeasurementParameters;
 
