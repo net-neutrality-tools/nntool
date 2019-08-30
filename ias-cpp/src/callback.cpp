@@ -278,7 +278,6 @@ void CCallback::rttUdpCallback(string cmd)
 	jMeasurementResults["num_missing"] = to_string(tempMeasurement.ping.missing);
 	jMeasurementResults["packet_size"] = to_string(tempMeasurement.ping.packetsize);
 	jMeasurementResults["standard_deviation_ns"] = to_string(tempMeasurement.ping.standard_deviation_ns);
-	jMeasurementResults["peer"] = tempMeasurement.ping.servername;
 	jMeasurementResults["rtts"] = jRtts;
 	jMeasurementResults["progress"] = tempMeasurement.ping.measurement_phase_progress;
 
