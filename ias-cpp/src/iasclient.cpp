@@ -284,7 +284,7 @@ void measurementStart(string measurementParameters)
 	#endif
 
 
-	pCallback = std::make_unique<CCallback>();
+	pCallback = std::make_unique<CCallback>(jMeasurementParameters);
 
 	if (!::RTT && !::DOWNLOAD && !::UPLOAD)
 	{

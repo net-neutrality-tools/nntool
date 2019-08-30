@@ -26,8 +26,9 @@ extern MeasurementPhase currentTestPhase;
 
 //! \brief
 //!	Standard Destructor
-CCallback::CCallback()
+CCallback::CCallback(Json measurementParameters)
 {
+	jMeasurementParameters = measurementParameters;
 }
 
 //! \brief
@@ -47,6 +48,13 @@ void CCallback::callback(string cmd, string msg, int error_code, string error_de
 	#endif
 
     TRC_DEBUG("Callback Received: cmd: " + cmd + ", msg: " + msg);
+
+    if (!jMeasurementResultsPeer.size())
+	{
+        jMeasurementResultsPeer["url"] = jMeasurementParameters["wsTargets"].array_items()[0].string_value() + "." + jMeasurementParameters["wsTLD"].string_value();
+        jMeasurementResultsPeer["port"] = jMeasurementParameters["wsTargetPort"].string_value();
+        jMeasurementResultsPeer["tls"] = jMeasurementParameters["wsWss"].string_value();
+    }
 
     if (cmd.compare("report") == 0 || cmd.compare("finish") == 0)
     {
@@ -136,6 +144,11 @@ void CCallback::callbackToPlatform(string cmd, string msg, int error_code, strin
     if (jMeasurementResultsTime.size())
 	{
         jMeasurementResults["time_info"] = Json(jMeasurementResultsTime);
+    }
+
+    if (jMeasurementResultsPeer.size())
+	{
+        jMeasurementResults["peer_info"] = Json(jMeasurementResultsPeer);
     }
 
     #ifdef __ANDROID__
