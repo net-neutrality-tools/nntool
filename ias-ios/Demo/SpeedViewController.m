@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-07
+ *      \date Last update: 2019-08-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -53,10 +53,9 @@
 
 @property (weak, nonatomic) IBOutlet UITextView *kpisTextView;
 
-@property (weak, nonatomic) IBOutlet UISegmentedControl *downloadParameters;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *uploadParameters;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *ipVersionParameters;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *singleStreamParameters;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *tlsParameters;
 
 
 
@@ -192,7 +191,6 @@
     self.speed.platform                           = @"mobile";
     
     self.speed.targets                            = [NSArray arrayWithObjects:@"peer-ias-de-01", nil];
-    self.speed.targetsRtt                         = [NSArray arrayWithObjects:@"peer-ias-de-01", nil];
     
     if ([self.ipVersionParameters selectedSegmentIndex] == 1 || [self.ipVersionParameters selectedSegmentIndex] == 2)
     {
@@ -213,12 +211,6 @@
         }
         self.speed.targets = targets;
         targets = [NSMutableArray new];
-        
-        for (int i=0; i<[self.speed.targetsRtt count]; i++)
-        {
-            [targets addObject:[self.speed.targetsRtt[i] stringByAppendingString:targetIpVersion]];
-        }
-        self.speed.targetsRtt = targets;
     }
     
     self.speed.performRttMeasurement              = rtt;
@@ -247,6 +239,12 @@
         {
             self.speed.frameSizeUpload      = [NSNumber numberWithInt:65535];
         }
+    }
+    
+    if ([self.tlsParameters selectedSegmentIndex] == 1)
+    {
+        self.speed.targetsPort = @"443";
+        self.speed.wss  = 1;
     }
     
     if ([self.singleStreamParameters selectedSegmentIndex] != 1)
