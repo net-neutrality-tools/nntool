@@ -14,7 +14,7 @@ package com.zafaco.DemoApplicationBerec;
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-03
+ *      \date Last update: 2019-08-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -54,7 +54,6 @@ public final class WSTool
 	private int performRouteToClientLookup          = 8080;
 
 	private String wsTargets						= "peer-ias-de-01";
-	private String wsTargetsRtt						= "peer-ias-de-01";
 	private String wsTLD 							= "net-neutrality.tools";
 
 	private int wsParallelStreamsDownload      		= 4;
@@ -207,7 +206,6 @@ public final class WSTool
 			mMeasurementParameter.put("cmd", "start");
 			mMeasurementParameter.put("platform", platform);
 			mMeasurementParameter.put("wsTargets", new JSONArray().put(wsTargets));
-			mMeasurementParameter.put("wsTargetsRtt", new JSONArray().put(wsTargetsRtt));
 			mMeasurementParameter.put("wsTLD", wsTLD);
 			mMeasurementParameter.put("wsTargetPort", 80);
 			mMeasurementParameter.put("wsWss", 0);
@@ -721,10 +719,6 @@ public final class WSTool
 		{
 			wsTargets = wsTargets.substring(0, wsTargets.lastIndexOf("-"));
 		}
-		if(wsTargetsRtt.contains("ipv"))
-		{
-			wsTargetsRtt = wsTargetsRtt.substring(0, wsTargetsRtt.lastIndexOf("-"));
-		}
 	}
 
 	/**
@@ -735,7 +729,6 @@ public final class WSTool
 		setIPAuto();
 
 		wsTargets = wsTargets+"-ipv4";
-		wsTargetsRtt = wsTargetsRtt+"-ipv4";
 	}
 
 	/**
@@ -746,7 +739,6 @@ public final class WSTool
 		setIPAuto();
 
 		wsTargets = wsTargets+"-ipv6";
-		wsTargetsRtt = wsTargetsRtt+"-ipv6";
 	}
 
 	/**

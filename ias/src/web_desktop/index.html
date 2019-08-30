@@ -166,11 +166,6 @@
                 {
                     iasParameters.wsTargets[index] = iasParameters.wsTargets[index] + targetIpVersion;
                 });
-
-                iasParameters.wsTargetsRtt.forEach(function(element, index)
-                {
-                    iasParameters.wsTargetsRtt[index] = iasParameters.wsTargetsRtt[index] + targetIpVersion;
-                });
             }
 
             iasParameters.wsTLD                         = 'net-neutrality.tools';
@@ -189,7 +184,6 @@
                 iasParameters.wsTargetPort  = '443';
                 iasParameters.wsWss         = 1;
             }
-
 
             //dl/ul parameters if no speed classes are used or singleStream is active
             var singleStream = document.getElementsByName('singleStream')[1].checked;
