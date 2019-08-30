@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-01
+ *      \date Last update: 2019-08-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -294,12 +294,6 @@ void CCallback::downloadCallback(string cmd)
 				jMeasurementResultsTime["download_end"] = to_string((*itThread)->measurementTimeEnd * 1000);
 			}
 	
-			unsigned long long nDownload0 = mDownload.results.begin()->first;
-			
-			//Get Max T0
-			if( tempMeasurement.download.totime < nDownload0 )
-				tempMeasurement.download.totime = nDownload0;
-			
 			//Starting multiple Instances for every Probe
 			for(map<int, unsigned long long>::iterator AI = mDownload.results.begin(); AI!= mDownload.results.end(); ++AI)
 			{
@@ -417,7 +411,7 @@ void CCallback::uploadCallback(string cmd)
 	struct measurement tempMeasurement;
 	tempMeasurement.upload.datasize_total = 0;
 	tempMeasurement.streams = 0;
-	tempMeasurement.upload.totime = 0;
+	tempMeasurement.upload.totime = 1e7;
 
 	for(vector<Upload*>::iterator itThread = vUploadThreads.begin(); itThread != vUploadThreads.end(); ++itThread)
 	{
@@ -437,7 +431,7 @@ void CCallback::uploadCallback(string cmd)
 			unsigned long long nUploadt0 = mUpload.results.begin()->first;
 			
 			//Get Max T0
-			if( tempMeasurement.upload.totime < nUploadt0 )
+			if( tempMeasurement.upload.totime > nUploadt0 )
 				tempMeasurement.upload.totime = nUploadt0;
 			
 			//Starting multiple Instances for every Probe

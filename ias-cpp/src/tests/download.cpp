@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-19
+ *      \date Last update: 2019-08-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -292,11 +292,7 @@ int Download::run()
 			//Lock Mutex
 			pthread_mutex_lock(&mutex1);
 
-				unsigned long long nDownload0 = mDownload.results.begin()->first;
-
-				//Get Max T0
-				if( measurements.download.totime < nDownload0 )
-					measurements.download.totime = nDownload0;
+				measurements.download.totime = 0;
 
 				//Starting multiple Instances for every Probe
 				for(map<int, unsigned long long>::iterator AI = mDownload.results.begin(); AI!= mDownload.results.end(); ++AI)

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-19
+ *      \date Last update: 2019-08-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -330,7 +330,7 @@ int Upload::run()
 				unsigned long long nUploadt0 = mUpload.results.begin()->first;
 				
 				//Get Max T0
-				if( measurements.upload.totime < nUploadt0 )
+				if( measurements.upload.totime > nUploadt0 )
 					measurements.upload.totime = nUploadt0;
 				
 				//Starting multiple Instances for every Probe
