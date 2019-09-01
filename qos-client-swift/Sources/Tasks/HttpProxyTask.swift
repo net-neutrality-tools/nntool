@@ -28,6 +28,9 @@ class HttpProxyTask: QoSTask {
     override var result: QoSTaskResult {
         var r = super.result
 
+        r["http_objective_url"] = JSON(url)
+        r["http_objective_range"] = JSON(range)
+
         r["http_result_status"] = JSON(resultStatusCode)
         r["http_result_duration"] = JSON(resultDuration)
         r["http_result_length"] = JSON(resultLength)
