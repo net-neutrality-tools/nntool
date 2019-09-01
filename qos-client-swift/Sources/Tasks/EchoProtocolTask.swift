@@ -4,8 +4,8 @@ import CodableJSON
 class EchoProtocolTask: QoSTask {
 
     public enum ProtocolType: String {
-        case tcp = "tcp"
-        case udp = "udp"
+        case tcp // = "tcp"
+        case udp // = "udp"
     }
 
     var host: String

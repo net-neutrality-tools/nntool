@@ -22,7 +22,7 @@ public class QoSTaskGroup {
         case "tcp": initializer = { TcpPortTask(config: $0) }
         case "echo_protocol": initializer = { EchoProtocolTask(config: $0) }
         case "http_proxy": initializer = { HttpProxyTask(config: $0) }
-        //case "traceroute": initializer = { return TracerouteTask(config: $0) }
+        case "traceroute": initializer = { TracerouteTask(config: $0) }
         case "website": initializer = { WebsiteRenderingTask(config: $0) }
         case "non_transparent_proxy": initializer = { NonTransparentProxyTask(config: $0) }
         default:

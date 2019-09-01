@@ -29,9 +29,9 @@ class DnsTask: QoSTask {
     }
 
     private static let recordDict = [
-        "A": ns_t_a,
-        "AAAA": ns_t_aaaa,
-        "MX": ns_t_mx,
+        "A":     ns_t_a,
+        "AAAA":  ns_t_aaaa,
+        "MX":    ns_t_mx,
         "CNAME": ns_t_cname
     ]
 
@@ -178,6 +178,8 @@ class DnsTask: QoSTask {
                             }
                         }
 
+                        taskLogger.debug("Adding entry \(entry)")
+                        
                         entries?.append(JSON(entry))
                     }
                 }
@@ -186,6 +188,6 @@ class DnsTask: QoSTask {
 
         res_9_ndestroy(&res)
 
-        logger.debug("finished DNS \(uid)")
+        taskLogger.debug("finished DNS \(uid)")
     }
 }

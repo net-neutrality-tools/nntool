@@ -120,7 +120,7 @@ class UdpPortTask: QoSBidirectionalIpTask {
             let port = direction == .outgoing ? portOut : portIn,
             let packetCount = direction == .outgoing ? packetCountOut : packetCountIn
             else {
-                logger.error("udp requirements not satisfied")
+                taskLogger.error("udp requirements not satisfied")
                 self.status = .error
                 return
         }
@@ -152,15 +152,15 @@ class UdpPortTask: QoSBidirectionalIpTask {
 
             if waitForAnswer {
                 guard let r = response, r.starts(with: "OK") else {
-                    logger.warning("controlconnection response is not ok: ")
-                    logger.warning(response)
+                    taskLogger.warning("controlconnection response is not ok: ")
+                    taskLogger.warning(response)
                     self.status = .error
                     return
                 }
             }
         } catch {
-            logger.warning("control connection response error")
-            logger.warning(error)
+            taskLogger.warning("control connection response error")
+            taskLogger.warning(error)
             self.status = .error
             return
         }
@@ -185,14 +185,14 @@ class UdpPortTask: QoSBidirectionalIpTask {
             resultCmdResponse = try executeCommand(cmd: resultCmd, waitForAnswer: true)
 
             guard let r = resultCmdResponse, r.starts(with: "RCV") else {
-                logger.warning("controlconnection response2 is not RCV: ")
-                logger.warning(resultCmdResponse)
+                taskLogger.warning("controlconnection response2 is not RCV: ")
+                taskLogger.warning(resultCmdResponse)
                 status = .error
                 return
             }
         } catch {
-            logger.warning("control connection response2 error")
-            logger.warning(error)
+            taskLogger.warning("control connection response2 error")
+            taskLogger.warning(error)
             status = .error
             return
         }

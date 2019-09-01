@@ -19,6 +19,7 @@
 		E044DDF322D39FEE00BB70CE /* WebsiteRenderingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DDF122D39FBB00BB70CE /* WebsiteRenderingTask.swift */; };
 		E044DDF822D3A19500BB70CE /* WebsiteTaskRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DDF622D3A19200BB70CE /* WebsiteTaskRunner.swift */; };
 		E044DDF922D3A19900BB70CE /* WebsiteTaskUrlProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DDF422D3A15000BB70CE /* WebsiteTaskUrlProtocol.swift */; };
+		E05487E3231B06C400B47184 /* TracerouteTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05487E2231B06C400B47184 /* TracerouteTask.swift */; };
 		E05D32C221F0F77D005E77F1 /* QoSKitUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D32C121F0F77D005E77F1 /* QoSKitUnitTests.swift */; };
 		E05D32C421F0F77D005E77F1 /* QoSKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0B1C7DE1CF4ADBA00F19282 /* QoSKit.framework */; };
 		E05D32E721F61ED8005E77F1 /* TcpStreamUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D32E621F61ED8005E77F1 /* TcpStreamUtil.swift */; };
@@ -79,6 +80,7 @@
 		E044DDF122D39FBB00BB70CE /* WebsiteRenderingTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsiteRenderingTask.swift; sourceTree = "<group>"; };
 		E044DDF422D3A15000BB70CE /* WebsiteTaskUrlProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsiteTaskUrlProtocol.swift; sourceTree = "<group>"; };
 		E044DDF622D3A19200BB70CE /* WebsiteTaskRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsiteTaskRunner.swift; sourceTree = "<group>"; };
+		E05487E2231B06C400B47184 /* TracerouteTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TracerouteTask.swift; sourceTree = "<group>"; };
 		E05D32BF21F0F77D005E77F1 /* QoSKitUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QoSKitUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E05D32C121F0F77D005E77F1 /* QoSKitUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSKitUnitTests.swift; sourceTree = "<group>"; };
 		E05D32C321F0F77D005E77F1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -296,6 +298,7 @@
 			isa = PBXGroup;
 			children = (
 				E0EA84C822804CE200EB73BF /* DnsTask.swift */,
+				E05487E2231B06C400B47184 /* TracerouteTask.swift */,
 				E0C4526D22CCCAA800FA4B44 /* HttpProxyTask.swift */,
 				E0EA84C922804CE200EB73BF /* UdpPortTask.swift */,
 				E0EA84CA22804CE200EB73BF /* TcpPortTask.swift */,
@@ -524,6 +527,7 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-All-QoSKitUnitTests/Pods-All-QoSKitUnitTests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/BlueSocket/Socket.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/CodableJSON/CodableJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/ObjcExceptionBridging/ObjcExceptionBridging.framework",
@@ -535,6 +539,7 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Socket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CodableJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjcExceptionBridging.framework",
@@ -579,6 +584,7 @@
 				E0EA84D022804CE200EB73BF /* QoSTaskStatus.swift in Sources */,
 				E05D331A21FA0255005E77F1 /* TaskType.swift in Sources */,
 				E029275122D79597001FCAEC /* TaskError.swift in Sources */,
+				E05487E3231B06C400B47184 /* TracerouteTask.swift in Sources */,
 				E0EA84D422804CE200EB73BF /* UdpPortTask.swift in Sources */,
 				B180E11E22849CA4000CF9E2 /* QoSBidirectionalIpTask.swift in Sources */,
 				E0EA84D322804CE200EB73BF /* DnsTask.swift in Sources */,

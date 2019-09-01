@@ -11,6 +11,7 @@ abstract_target 'All' do
   pod 'nntool-shared-swift', :path => '../nntool-shared-swift'
   
   pod 'CocoaAsyncSocket', '~> 7.6.3'
+  pod 'BlueSocket', '~> 1.0.46'
   pod 'Alamofire', '~> 4.8.2'
 
   target 'QoSKit_iOS' do

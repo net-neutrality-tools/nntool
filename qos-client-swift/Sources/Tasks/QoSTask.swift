@@ -8,7 +8,7 @@ public typealias QoSTaskCompletionCallback = (QoSTaskResult) -> Void
 
 class QoSTask: Operation, Codable {
 
-    var taskLogger: QoSLogger?
+    var taskLogger: QoSLogger!
 
     let progress = Progress(totalUnitCount: 100)
 

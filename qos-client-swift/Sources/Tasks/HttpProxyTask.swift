@@ -144,7 +144,7 @@ class HttpProxyTask: QoSTask {
             status = .timeout
         }
 
-        logger.debug("finished HTTP Proxy Task \(uid)")
+        taskLogger.debug("finished HTTP Proxy Task")
     }
 }
 
