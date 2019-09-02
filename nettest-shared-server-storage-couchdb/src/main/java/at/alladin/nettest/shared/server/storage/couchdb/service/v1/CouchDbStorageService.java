@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.PrioritizedParameterNameDiscoverer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -491,7 +490,7 @@ public class CouchDbStorageService implements StorageService {
 				}
 			}
 		}
-
+		
 		if (measurement.getNetworkInfo().getComputedNetworkInfo() == null) {
 			measurement.getNetworkInfo().setComputedNetworkInfo(new ComputedNetworkPointInTime());
 		}
@@ -514,6 +513,22 @@ public class CouchDbStorageService implements StorageService {
         logger.debug("rDNS for: {} is: {}", clientAddress, reverseDNS);
         cpit.setPublicIpRdns(reverseDNS);
 
+		//ASN:
+        final Long asn = Helperfunctions.getASN(clientAddress);
+
+        String asName = null;
+        String asCountry = null;
+
+        if (asn != null) {
+            asName = Helperfunctions.getASName(asn);
+            asCountry = Helperfunctions.getAScountry(asn);
+        }
+
+        final ProviderInfo providerInfo = new ProviderInfo();
+        providerInfo.setCountryCodeAsn(asCountry);
+        providerInfo.setPublicIpAsn(asn);
+        providerInfo.setPublicIpAsName(asName);
+        cpit.setProviderInfo(providerInfo);
         
 		return cpit;
 	}
