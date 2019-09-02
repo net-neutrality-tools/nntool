@@ -6,13 +6,11 @@ import { SearchApiService } from '../services/search-api.service';
 import { SpringServerDataSource } from '../services/table/spring-server.data-source';
 
 @Component({
-  templateUrl: './open-data-result-list.component.html',
-  styleUrls: ['./open-data-result-list.component.less']
+  templateUrl: './open-data-result-table.component.html',
+  styleUrls: ['./open-data-result-table.component.less']
 })
-export class OpenDataResultListComponent {
+export class OpenDataResultTableComponent {
   private loading = false;
-
-  public translationKey = 'RESULT_LIST';
 
   settings = {
     columns: {

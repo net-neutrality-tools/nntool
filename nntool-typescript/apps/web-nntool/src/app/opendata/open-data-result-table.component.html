@@ -1,0 +1,9 @@
+<nntool-standard-page titleTranslationKey="RESULT_LIST.HEADER" icon="icon-search">
+  <div class="section-table">
+    <nntool-result-table
+      [settings]="settings"
+      [source]="tableSource"
+      (rowSelect)="showOpenDataMeasurement($event)"
+    ></nntool-result-table>
+  </div>
+</nntool-standard-page>

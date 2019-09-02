@@ -13,8 +13,6 @@ import { UserService } from '../services/user.service';
 export class HistoryComponent {
   private loading = false;
 
-  public translationKey = 'HISTORY';
-
   settings = {
     columns: {
       start_time: {

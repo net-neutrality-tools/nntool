@@ -73,7 +73,7 @@ import { ComponentsModule } from './components/components.module';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './features/shared/shared.module';
 import { RequestInfoService } from './services/request-info.service';
-import { OpenDataResultListComponent } from './opendata/open-data-result-list.component';
+import { OpenDataResultTableComponent } from './opendata/open-data-result-table.component';
 import { SearchApiService } from './services/search-api.service';
 import { ResultApiService } from './services/result-api.service';
 
@@ -87,7 +87,7 @@ const MAIN_DECLARATIONS = [
   // NvD3Component,
   MapComponent,
   StatisticsComponent,
-  OpenDataResultListComponent,
+  OpenDataResultTableComponent,
   HelpComponent,
   AboutComponent,
   HistoryComponent,

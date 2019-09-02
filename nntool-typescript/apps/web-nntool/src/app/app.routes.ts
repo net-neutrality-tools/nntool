@@ -17,7 +17,7 @@ import { StatisticsComponent } from './statistics/statistics.component';
 import { TCComponent } from './tc/tc.component';
 import { NetTestComponent, TestGuard } from './test/test.component';
 import { SettingsComponent } from './user/settings.component';
-import { OpenDataResultListComponent } from './opendata/open-data-result-list.component';
+import { OpenDataResultTableComponent } from './opendata/open-data-result-table.component';
 
 export const routes: Routes = [
   {
@@ -51,7 +51,7 @@ export const routes: Routes = [
         children: [
           {
             path: '',
-            component: OpenDataResultListComponent,
+            component: OpenDataResultTableComponent,
             pathMatch: 'full'
           },
           {
@@ -70,30 +70,6 @@ export const routes: Routes = [
           }
         ]
       },
-      /*{
-        path: 'testresults',
-        children: [
-          {
-            path: '',
-            component: ResultListComponent,
-            pathMatch: 'full'
-          },
-          {
-            path: ':uuid',
-            children: [
-              {
-                path: '',
-                component: OpentestViewComponent,
-                pathMatch: 'full'
-              },
-              {
-                path: 'details',
-                component: OpentestDetailViewComponent
-              }
-            ]
-          }
-        ]
-      },*/
       {
         path: 'nettest',
         component: NetTestComponent,
