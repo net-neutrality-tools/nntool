@@ -1,0 +1,24 @@
+<!-- #section-intro -->
+<section class="section" id="section-intro">
+  <div class="wrapper">
+    <header class="section-header">
+      <h1 [innerHTML]="titleTranslationKey | translate"></h1>
+      <figure *ngIf="loading">
+        <img src="assets/img/watch-anim.svg" alt="loading content" class="load-animation" />
+        <figcaption>{{ 'LOADING' | translate }}</figcaption>
+      </figure>
+      <div [class]="'icon ' + icon" *ngIf="!loading"></div>
+    </header>
+  </div>
+</section>
+<!-- #section-intro end -->
+
+<!-- #section-arguments -->
+<section class="section" id="section-arguments">
+  <div class="wrapper">
+    <div class="section-content">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</section>
+<!-- #section-arguments end -->

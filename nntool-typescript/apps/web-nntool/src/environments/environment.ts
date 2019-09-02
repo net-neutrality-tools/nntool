@@ -135,9 +135,6 @@ export const environment = {
       }
     }
   },
-  result_list: {
-    history_graph_enabled: true
-  },
   result: {
     view: {
       zoom_initial: 15,

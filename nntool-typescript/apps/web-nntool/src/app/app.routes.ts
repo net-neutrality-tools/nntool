@@ -11,8 +11,6 @@ import { HistoryDetailViewComponent } from './history/view-detail.component';
 import { HomeComponent } from './home/home.component';
 import { MapComponent } from './map/map.component';
 import { OpendataComponent } from './opendata/opendata.component';
-import { ResultListComponent } from './result-list/result_list.component';
-import { OpentestDetailViewComponent } from './result/view-detail.component';
 import { OpentestViewComponent } from './result/view.component';
 import { Guard } from './services/guard.service';
 import { StatisticsComponent } from './statistics/statistics.component';

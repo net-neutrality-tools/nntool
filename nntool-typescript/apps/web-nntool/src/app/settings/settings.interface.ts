@@ -1,6 +1,5 @@
 import { MapSettings } from '../map/map.settings.interface';
 import { OpendataSettings } from '../opendata/opendata.settings.interface';
-import { ResultListSettings } from '../result-list/result_list.settings.interface';
 import { ResultSettings } from '../result/result.settings.interface';
 import { StatisticsSettings } from '../statistics/statistics.settings.interface';
 import { UserSettings } from '../user/user.settings.interface';
@@ -38,11 +37,6 @@ export interface WebsiteSettings {
    * Settings for opendata
    */
   opendata?: OpendataSettings;
-
-  /**
-   * Settings for result list
-   */
-  result_list: ResultListSettings;
 
   /**
    * Supported languages
