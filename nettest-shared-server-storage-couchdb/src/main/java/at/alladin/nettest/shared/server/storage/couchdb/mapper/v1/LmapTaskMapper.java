@@ -76,6 +76,9 @@ public interface LmapTaskMapper {
 	default QoSMeasurementTypeParameters createQoSParameters(List<QoSMeasurementObjective> qosObjectiveList) {
 		final QoSMeasurementTypeParameters ret = new QoSMeasurementTypeParameters();
 		for (QoSMeasurementObjective objective : qosObjectiveList)  {
+			if (objective.getType() == null) {
+				continue;
+			}
 			final QoSMeasurementTypeDto dtoType = QoSMeasurementTypeDto.valueOf(objective.getType().toString());
 			if (!ret.getObjectives().containsKey(dtoType)) {
 				ret.getObjectives().put(dtoType, new ArrayList<>());

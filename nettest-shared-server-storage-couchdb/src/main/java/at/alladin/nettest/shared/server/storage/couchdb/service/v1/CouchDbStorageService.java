@@ -1,5 +1,7 @@
 package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.LinkedHashMap;
@@ -40,6 +42,7 @@ import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ComputedNetworkPointInTime;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ConnectionInfo;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.EmbeddedNetworkType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MccMnc;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgent;
@@ -48,6 +51,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NatType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NatTypeInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NetworkMobileInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NetworkPointInTime;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ProviderInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.RoamingType;
@@ -55,6 +59,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.EmbeddedNetworkTypeRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
@@ -92,6 +97,9 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private MeasurementPeerRepository measurementPeerRepository;
+	
+	@Autowired
+	private EmbeddedNetworkTypeRepository embeddedNetworkTypeRepository;
 	
 	@Autowired
 	private QoSEvaluationService qosEvaluationService;
@@ -143,6 +151,15 @@ public class CouchDbStorageService implements StorageService {
 				cpit.setNatTypeInfo(computeNatType(measurement, cpit));
 				measurement.getNetworkInfo().setComputedNetworkInfo(cpit);
 			}
+			
+			measurement.getNetworkInfo().getNetworkPointsInTime().forEach(networkPoint -> {
+				if (networkPoint.getNetworkType() != null) {
+					final EmbeddedNetworkType dbNetworkType = getNetworkTypeById(networkPoint.getNetworkType().getNetworkTypeId());
+					if (dbNetworkType != null) {
+						networkPoint.setNetworkType(dbNetworkType);
+					}
+				}
+			});
 		}
 
 		calculateTotalMeasurementPayload(measurement);
@@ -482,16 +499,79 @@ public class CouchDbStorageService implements StorageService {
 			List<NetworkPointInTime> npitList = measurement.getNetworkInfo().getNetworkPointsInTime();
 			if (npitList != null && npitList.size() > 0) {
 				final NetworkPointInTime npit = npitList.get(0);
-				if (npit != null && npit.getClientPrivateIp() != null && npit.getClientPublicIp() != null) {
-					cpit = lmapReportModelMapper.map(npit);
+				if (npit != null) {
+					if (npit.getClientPrivateIp() != null && npit.getClientPublicIp() != null) {
+						cpit = lmapReportModelMapper.map(npit);
+					}
+					if (npit.getNetworkType() != null) {
+						final EmbeddedNetworkType dbNetworkType = getNetworkTypeById(npit.getNetworkType().getNetworkTypeId());
+						if (dbNetworkType != null) {
+							cpit.setNetworkType(dbNetworkType);
+						}
+					}
 				}
+				
 			}
 		}
-
+		
 		if (measurement.getNetworkInfo().getComputedNetworkInfo() == null) {
 			measurement.getNetworkInfo().setComputedNetworkInfo(new ComputedNetworkPointInTime());
 		}
+		
+		InetAddress clientAddress = null;
+		try {
+			cpit = measurement.getNetworkInfo().getComputedNetworkInfo();
+			clientAddress = InetAddress.getByName(cpit.getClientPublicIp());
+		}
+		catch (final UnknownHostException e) {
+			e.printStackTrace();
+		}
+		
+		//reverse DNS:
+        String reverseDNS = Helperfunctions.reverseDNSLookup(clientAddress);
+        if (reverseDNS != null) {
+        	//need to cut off last dot
+        	reverseDNS = reverseDNS.replaceFirst("\\.$", "");
+        }
+        logger.debug("rDNS for: {} is: {}", clientAddress, reverseDNS);
+        cpit.setPublicIpRdns(reverseDNS);
 
+		//ASN:
+        final Long asn = Helperfunctions.getASN(clientAddress);
+
+        String asName = null;
+        String asCountry = null;
+
+        if (asn != null) {
+            asName = Helperfunctions.getASName(asn);
+            asCountry = Helperfunctions.getAScountry(asn);
+        }
+
+        final ProviderInfo providerInfo = new ProviderInfo();
+        providerInfo.setCountryCodeAsn(asCountry);
+        providerInfo.setPublicIpAsn(asn);
+        providerInfo.setPublicIpAsName(asName);
+        cpit.setProviderInfo(providerInfo);
+        
 		return cpit;
 	}
+	
+	private EmbeddedNetworkType getNetworkTypeById(final Integer networkTypeId) {
+		if (networkTypeId == null) {
+			return null;
+		}
+		final EmbeddedNetworkType dbNetworkType = 
+				embeddedNetworkTypeRepository.findByNetworkTypeId(networkTypeId);
+		if (dbNetworkType != null) {
+			final EmbeddedNetworkType ret = new EmbeddedNetworkType();
+			ret.setNetworkTypeId(dbNetworkType.getNetworkTypeId());
+			ret.setCategory(dbNetworkType.getCategory());
+			ret.setGroupName(dbNetworkType.getGroupName());
+			ret.setName(dbNetworkType.getName());
+			ret.setDocType(null);
+			return ret;
+		}
+		return null;
+	}
+	
 }
