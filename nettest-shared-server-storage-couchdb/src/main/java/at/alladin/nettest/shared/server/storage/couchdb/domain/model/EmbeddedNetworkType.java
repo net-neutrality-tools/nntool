@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import at.alladin.nettest.spring.data.couchdb.core.mapping.DocTypeHelper;
+
 /**
  * Contains information about the network type.
  * 
@@ -14,6 +16,34 @@ import com.google.gson.annotations.SerializedName;
  */
 @JsonClassDescription("Contains information about the network type.")
 public class EmbeddedNetworkType {
+	
+	@Expose
+	@SerializedName("_id")
+	@JsonProperty("_id")
+	private String id;
+	
+	@Expose
+	@SerializedName("_rev")
+	@JsonProperty("_rev")
+	private String rev;
+	
+	@JsonProperty("docType")
+	@Expose
+	@SerializedName("docType") // TODO: rename to @docType
+	private String docType;
+	
+	public EmbeddedNetworkType() {
+		docType = DocTypeHelper.getDocType(getClass());
+	}
+	
+	/**
+	 * Network type id as it gets returned by the Android API.
+	 */
+	@JsonPropertyDescription("Network type id as it gets returned by the Android API.")
+	@Expose
+	@SerializedName("network_type_id")
+	@JsonProperty(required = true, value = "network_type_id")
+	private Integer networkTypeId;
 	
 	/**
 	 * Network type name.
@@ -65,4 +95,21 @@ public class EmbeddedNetworkType {
 	public void setCategory(NetworkTypeCategory category) {
 		this.category = category;
 	}
+
+	public Integer getNetworkTypeId() {
+		return networkTypeId;
+	}
+
+	public void setNetworkTypeId(Integer networkTypeId) {
+		this.networkTypeId = networkTypeId;
+	}
+
+	public String getDocType() {
+		return docType;
+	}
+
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
+	
 }

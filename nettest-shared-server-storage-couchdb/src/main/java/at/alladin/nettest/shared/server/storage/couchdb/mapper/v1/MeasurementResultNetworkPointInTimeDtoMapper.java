@@ -28,7 +28,8 @@ public interface MeasurementResultNetworkPointInTimeDtoMapper {
 		@Mapping(source="simCountry", target="networkMobileInfo.simCountry"),
 		@Mapping(expression="java(toMccMnc(measurementResultNetworkPointInTimeDto.getSimOperatorMccMnc()))",
 		target="networkMobileInfo.simOperatorMccMnc"),
-		@Mapping(source="simOperatorName", target="networkMobileInfo.simOperatorName")
+		@Mapping(source="simOperatorName", target="networkMobileInfo.simOperatorName"),
+		@Mapping(source="networkTypeId", target="networkType.networkTypeId")
 	})
 	NetworkPointInTime map(MeasurementResultNetworkPointInTimeDto arg0);
 
@@ -53,4 +54,5 @@ public interface MeasurementResultNetworkPointInTimeDtoMapper {
 		
 		return mccMnc;
 	}
+	
 }
