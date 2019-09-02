@@ -1,5 +1,7 @@
 package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.LinkedHashMap;
@@ -48,6 +50,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NatType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NatTypeInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NetworkMobileInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NetworkPointInTime;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ProviderInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.RoamingType;
@@ -487,11 +490,46 @@ public class CouchDbStorageService implements StorageService {
 				}
 			}
 		}
-
+		
 		if (measurement.getNetworkInfo().getComputedNetworkInfo() == null) {
 			measurement.getNetworkInfo().setComputedNetworkInfo(new ComputedNetworkPointInTime());
 		}
+		
+		InetAddress clientAddress = null;
+		try {
+			cpit = measurement.getNetworkInfo().getComputedNetworkInfo();
+			clientAddress = InetAddress.getByName(cpit.getClientPublicIp());
+		}
+		catch (final UnknownHostException e) {
+			e.printStackTrace();
+		}
+		
+		//reverse DNS:
+        String reverseDNS = Helperfunctions.reverseDNSLookup(clientAddress);
+        if (reverseDNS != null) {
+        	//need to cut off last dot
+        	reverseDNS = reverseDNS.replaceFirst("\\.$", "");
+        }
+        logger.debug("rDNS for: {} is: {}", clientAddress, reverseDNS);
+        cpit.setPublicIpRdns(reverseDNS);
 
+		//ASN:
+        final Long asn = Helperfunctions.getASN(clientAddress);
+
+        String asName = null;
+        String asCountry = null;
+
+        if (asn != null) {
+            asName = Helperfunctions.getASName(asn);
+            asCountry = Helperfunctions.getAScountry(asn);
+        }
+
+        final ProviderInfo providerInfo = new ProviderInfo();
+        providerInfo.setCountryCodeAsn(asCountry);
+        providerInfo.setPublicIpAsn(asn);
+        providerInfo.setPublicIpAsName(asName);
+        cpit.setProviderInfo(providerInfo);
+        
 		return cpit;
 	}
 }
