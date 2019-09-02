@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -21,8 +20,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
 import at.alladin.nettest.nntool.android.app.view.TopProgressBarView;
 import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
+import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
+import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
@@ -44,8 +46,13 @@ public class QosFragment extends ActionBarFragment implements ServiceConnection 
 
     private AtomicBoolean sendingResults = new AtomicBoolean(false);
 
-    public static QosFragment newInstance() {
+    private boolean isSpeedEnabled = true;
+
+    public static QosFragment newInstance(final WorkflowParameter parameter) {
         final QosFragment fragment = new QosFragment();
+        if (parameter instanceof WorkflowMeasurementParameter) {
+            fragment.setSpeedEnabled(((WorkflowMeasurementParameter)parameter).isSpeedEnabled());
+        }
         return fragment;
     }
 
@@ -68,8 +75,9 @@ public class QosFragment extends ActionBarFragment implements ServiceConnection 
         qosProgressView = view.findViewById(R.id.qos_progress_view);
         topProgressBarView = view.findViewById(R.id.top_progress_bar_view);
         if (topProgressBarView != null) {
-            topProgressBarView.setLeftText((int)(0.8 * 100) + "%");
+            topProgressBarView.setLeftText((int)(isSpeedEnabled ? 0.8 * 100 : 0) + "%");
         }
+
         return view;
     }
 
@@ -112,15 +120,24 @@ public class QosFragment extends ActionBarFragment implements ServiceConnection 
             if (measurementService != null) {
                 final QualityOfServiceTest qosTest = measurementService.getQosMeasurementClient().getQosTest();
                 if (qosTest != null && qosTest.getQosTypeDoneCountMap() != null) {
+                    final Map<QosMeasurementType, Float> testTypeProgress = qosTest.getQosTypeTestProgressMap();
                     for (final Map.Entry<QosMeasurementType, Integer> e : qosTest.getQosTypeDoneCountMap().entrySet()) {
                         if (QoSTestEnum.QOS_RUNNING.equals(qosTest.getStatus())) {
-                            final float progress = (float) e.getValue() / (float) qosTest.getQosTypeTaskCountMap().get(e.getKey());
+                            float progress = (float) e.getValue() / (float) qosTest.getQosTypeTaskCountMap().get(e.getKey());
+                            //add progress made during single measurement
+                            if (testTypeProgress != null && testTypeProgress.containsKey(e.getKey())) {
+                                progress += testTypeProgress.get(e.getKey()) / (float) qosTest.getQosTypeTaskCountMap().get(e.getKey());
+                            }
                             qosProgressView.setQosProgress(e.getKey(), progress);
                             if (progress >= 1f) {
                                 qosProgressView.finishQosType(e.getKey());
                             }
                             //the total progress (if QoS is enabled) is only from 0.8 to 1.0
-                            topProgressBarView.setLeftText((int)((qosTest.getTotalProgress() * 0.2 + 0.8) * 100) + "%");
+                            if (isSpeedEnabled) {
+                                topProgressBarView.setLeftText((int)((qosTest.getTotalProgress() * 0.2 + 0.8) * 100) + "%");
+                            } else {
+                                topProgressBarView.setLeftText((int)(qosTest.getTotalProgress() * 100) + "%");
+                            }
                             topProgressBarView.setRightText((int)(qosTest.getTotalProgress() * 100) + "%");
                         }
                         else if (QoSTestEnum.QOS_FINISHED.equals(qosTest.getStatus()) ||
@@ -132,7 +149,6 @@ public class QosFragment extends ActionBarFragment implements ServiceConnection 
                         }
                     }
                 }
-
             }
 
             if (!postResultRunnable) {
@@ -164,6 +180,15 @@ public class QosFragment extends ActionBarFragment implements ServiceConnection 
     public void onServiceConnected(ComponentName name, IBinder service) {
         Log.d(TAG, "ON SERVICE CONNECTED");
         measurementService = ((MeasurementService.MeasurementServiceBinder) service).getService();
+        if (measurementService != null) {
+            measurementService.setOnMeasurementErrorListener((ex) ->
+            {
+                getActivity().runOnUiThread(() -> {
+                    AlertDialogUtil.showAlertDialog(getContext(), R.string.alert_error_during_measurement_title, R.string.alert_error_during_measurement_content,
+                            (dialog, which) -> ((MainActivity) getActivity()).navigateTo(WorkflowTarget.TITLE));
+                });
+            });
+        }
 
     }
 
@@ -181,5 +206,13 @@ public class QosFragment extends ActionBarFragment implements ServiceConnection 
     @Override
     public boolean showHelpButton() {
         return false;
+    }
+
+    public boolean isSpeedEnabled() {
+        return isSpeedEnabled;
+    }
+
+    public void setSpeedEnabled(boolean speedEnabled) {
+        isSpeedEnabled = speedEnabled;
     }
 }

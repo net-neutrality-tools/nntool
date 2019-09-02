@@ -34,6 +34,7 @@ import at.alladin.nettest.nntool.android.app.view.BottomMeasurementResultSummary
 import at.alladin.nettest.nntool.android.app.view.CanvasArcDoubleGaugeWithLabels;
 import at.alladin.nettest.nntool.android.app.view.TopProgressBarView;
 import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
+import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
@@ -63,8 +64,11 @@ public class SpeedFragment extends ActionBarFragment implements ServiceConnectio
 
     private boolean isQoSEnabled = true;
 
-    public static SpeedFragment newInstance() {
+    public static SpeedFragment newInstance(final WorkflowParameter parameter) {
         final SpeedFragment fragment = new SpeedFragment();
+        if (parameter instanceof WorkflowMeasurementParameter) {
+            fragment.setQoSEnabled(((WorkflowMeasurementParameter)parameter).isQoSEnabled());
+        }
         return fragment;
     }
 
@@ -80,8 +84,6 @@ public class SpeedFragment extends ActionBarFragment implements ServiceConnectio
         bottomMeasurementResultSummary = view.findViewById(R.id.bottom_measurement_result_summary_view);
         bottomMeasurementResultSummary.setVisibility(View.VISIBLE);
         gaugePhaseIndicator = view.findViewById(R.id.gauge_phase_indicator);
-
-        isQoSEnabled = PreferencesUtil.isQoSEnabled(getContext());
 
         return view;
     }
@@ -132,6 +134,13 @@ public class SpeedFragment extends ActionBarFragment implements ServiceConnectio
         measurementService = ((MeasurementService.MeasurementServiceBinder) service).getService();
         if (measurementService != null) {
             this.speedMeasurementState = measurementService.getJniSpeedMeasurementClient().getSpeedMeasurementState();
+            measurementService.setOnMeasurementErrorListener((ex) ->
+            {
+                getActivity().runOnUiThread(() -> {
+                    AlertDialogUtil.showAlertDialog(getContext(), R.string.alert_error_during_measurement_title, R.string.alert_error_during_measurement_content,
+                            (dialog, which) -> ((MainActivity) getActivity()).navigateTo(WorkflowTarget.TITLE));
+                });
+            });
         }
     }
 
@@ -244,5 +253,13 @@ public class SpeedFragment extends ActionBarFragment implements ServiceConnectio
     @Override
     public boolean showHelpButton() {
         return false;
+    }
+
+    public boolean isQoSEnabled() {
+        return isQoSEnabled;
+    }
+
+    public void setQoSEnabled(boolean qoSEnabled) {
+        isQoSEnabled = qoSEnabled;
     }
 }

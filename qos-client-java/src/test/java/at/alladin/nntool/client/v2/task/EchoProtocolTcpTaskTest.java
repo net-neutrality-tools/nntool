@@ -13,6 +13,7 @@ import java.net.SocketTimeoutException;
 
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.QualityOfServiceTest;
+import at.alladin.nntool.client.helper.TaskDescriptionHelper;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
 import at.alladin.nntool.client.v2.task.service.TestSettings;
 import mockit.Expectations;
@@ -48,8 +49,8 @@ public class EchoProtocolTcpTaskTest {
         testSettings = new TestSettings();
         testSettings.setUseSsl(false);
         testSettings.setStartTimeNs(12);
-        clientHolder = ClientHolder.getInstance("host", "80",
-                null, null, ECHO_SERVICE_HOST, new int[]{76}, new int[0]);
+        clientHolder = ClientHolder.getInstance(TaskDescriptionHelper.createTaskDescList("host", "80",
+                null, null, ECHO_SERVICE_HOST, new int[]{76}, new int[0]), null);
 
         qosTest = new QualityOfServiceTest(clientHolder, testSettings);
 

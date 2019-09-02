@@ -19,6 +19,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,6 +29,8 @@ import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
 import at.alladin.nettest.nntool.android.app.async.SendReportTask;
 import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
+import at.alladin.nettest.nntool.android.app.util.FunctionalityHelper;
+import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationCollector;
 import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
@@ -48,6 +51,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.T
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.TrafficDto;
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.TaskDesc;
 
@@ -80,6 +84,10 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     public static String EXTRAS_KEY_FOLLOW_UP_ACTIONS = "measurement_follow_up_actions";
 
+    public static String EXTRAS_KEY_SPEED_EXECUTE = "speed_execute_measurement";
+
+    public static String EXTRAS_KEY_QOS_EXECUTE = "qos_execute_measurement";
+
     public final static String IF_TRAFFIC_LIST_UPLOAD_TAG = "UPLOAD";
 
     public final static String IF_TRAFFIC_LIST_DOWNLOAD_TAG = "DOWNLOAD";
@@ -98,6 +106,8 @@ public class MeasurementService extends Service implements ServiceConnection {
 
     private LocalDateTime endDateTime;
 
+    private String collectorUrl;
+
     /**
      *  Boolean indicating if the currently started submeasurement is a follow up measurement to another (already executed) sub-measurement (true)
      *  or if the currently started submeasurement is the first (false)
@@ -115,6 +125,8 @@ public class MeasurementService extends Service implements ServiceConnection {
     private Bundle bundle;
 
     private ArrayList<MeasurementType> followUpActions;
+
+    private OnMeasurementErrorListener onMeasurementErrorListener;
 
     public class MeasurementServiceBinder extends Binder {
         public MeasurementService getService() {
@@ -171,7 +183,7 @@ public class MeasurementService extends Service implements ServiceConnection {
         followUpActions = (ArrayList<MeasurementType>) options.getSerializable(EXTRAS_KEY_FOLLOW_UP_ACTIONS);
         subMeasurementStartTimeNs = System.nanoTime();
 
-        final String speedTaskCollectorUrl = options.getString(EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL);
+        this.collectorUrl = options.getString(EXTRAS_KEY_SPEED_TASK_COLLECTOR_URL);
         final SpeedTaskDesc speedTaskDesc = (SpeedTaskDesc) options.getSerializable(EXTRAS_KEY_SPEED_TASK_DESC);
         final String clientIpv4 = options.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE);
         final String clientIpv6 = options.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE);
@@ -184,8 +196,12 @@ public class MeasurementService extends Service implements ServiceConnection {
             speedTaskDesc.setClientIp(clientIpv4);
         }
 
+        //fetch user settings to adapt provided taskDesc
+        speedTaskDesc.setPerformRtt(PreferencesUtil.isPingEnabled(getApplicationContext()));
+        speedTaskDesc.setPerformDownload(PreferencesUtil.isDownloadEnabled(getApplicationContext()));
+        speedTaskDesc.setPerformUpload(PreferencesUtil.isUploadEnabled(getApplicationContext()));
+
         jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskDesc);
-        jniSpeedMeasurementClient.setCollectorUrl(speedTaskCollectorUrl);
 
         jniSpeedMeasurementClient.addMeasurementFinishedListener(new JniSpeedMeasurementClient.MeasurementFinishedListener() {
             @Override
@@ -259,7 +275,9 @@ public class MeasurementService extends Service implements ServiceConnection {
                     jniSpeedMeasurementClient.startMeasurement();
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    //TODO: handle errors during measurement
+                    if (onMeasurementErrorListener != null) {
+                        onMeasurementErrorListener.onMeasurementError(ex);
+                    }
                 }
             }
         });
@@ -280,13 +298,24 @@ public class MeasurementService extends Service implements ServiceConnection {
         subMeasurementStartTimeNs = System.nanoTime();
 
         final List<TaskDesc> taskDescList = (List<TaskDesc>) options.getSerializable(EXTRAS_KEY_QOS_TASK_DESC_LIST);
-        final String collectorUrl = options.getString(EXTRAS_KEY_QOS_TASK_COLLECTOR_URL);
+        this.collectorUrl = options.getString(EXTRAS_KEY_QOS_TASK_COLLECTOR_URL);
         final ClientHolder client = ClientHolder.getInstance(taskDescList, collectorUrl);
         qosMeasurementClient = new QoSMeasurementClientAndroid(client, getApplicationContext());
+        final List<QosMeasurementType> enabledTypeList = getQoSEnabledTypeList(getApplicationContext());
+        Iterator<QosMeasurementType> it = enabledTypeList.iterator();
+        while (it.hasNext()) {
+            QosMeasurementType t = it.next();
+            if (!FunctionalityHelper.isQoSTypeAvailable(t, getApplicationContext())) {
+                it.remove();
+            }
+        }
+        qosMeasurementClient.setEnabledTypes(enabledTypeList);
         qosMeasurementClient.addControlListener(new QoSMeasurementClientControlAdapter() {
             @Override
             public void onMeasurementError(Exception e) {
-                //TODO: handle error
+                if (onMeasurementErrorListener != null) {
+                    onMeasurementErrorListener.onMeasurementError(e);
+                }
             }
         });
         final Thread t = new Thread(new Runnable() {
@@ -367,19 +396,30 @@ public class MeasurementService extends Service implements ServiceConnection {
 
             final SendReportTask task = new SendReportTask(mainActivity,
                     reportDto,
-                    getSpeedCollectorUrl(), new OnTaskFinishedCallback<MeasurementResultResponse>() {
+                    this.collectorUrl, new OnTaskFinishedCallback<MeasurementResultResponse>() {
                 @Override
                 public void onTaskFinished(MeasurementResultResponse result) {
+                    //if the result has been sent, reset the list of previous measurements
+                    subMeasurementResultList.clear();
+
+                    WorkflowRecentResultParameter parameter = null;
+
                     if (result == null) {
                         AlertDialogUtil.showAlertDialog(mainActivity,
                                 R.string.alert_send_measurement_result_title,
                                 R.string.alert_send_measurement_results_error);
                     } else {
-                        jniSpeedMeasurementClient.getSpeedMeasurementState().setMeasurementUuid(result.getUuid());
+                        if (jniSpeedMeasurementClient != null) {
+                            jniSpeedMeasurementClient.getSpeedMeasurementState().setMeasurementUuid(result.getUuid());
+                        } else {
+                            //if no speed measurement has been executed, the corresponding result uuid needs be set via the workflowparameter
+                            parameter = new WorkflowRecentResultParameter();
+                            parameter.setRecentResultUuid(result.getUuid());
+                            parameter.setRecentResultOpenDataUuid(result.getOpenDataUuid());
+                        }
                     }
-                    //if the result has been sent, reset the list of previous measurements
-                    subMeasurementResultList.clear();
-                    mainActivity.navigateTo(WorkflowTarget.MEASUREMENT_RECENT_RESULT);
+
+                    mainActivity.navigateTo(WorkflowTarget.MEASUREMENT_RECENT_RESULT, parameter);
                 }
             });
             task.execute();
@@ -422,8 +462,26 @@ public class MeasurementService extends Service implements ServiceConnection {
         subMeasurementResultList.add(result);
     }
 
-    public String getSpeedCollectorUrl () {
-        return jniSpeedMeasurementClient.getCollectorUrl();
+    private List<QosMeasurementType> getQoSEnabledTypeList(final Context context) {
+        final List<QosMeasurementType> ret = new ArrayList<>();
+        for (QosMeasurementType type : QosMeasurementType.values()) {
+            if (PreferencesUtil.isQoSTypeEnabled(context, type)) {
+                ret.add(type);
+            }
+        }
+        return ret;
+    }
+
+    public void setOnMeasurementErrorListener(final OnMeasurementErrorListener listener) {
+        this.onMeasurementErrorListener = listener;
+    }
+
+    public void removeOnMeasurementErrorListener() {
+        this.onMeasurementErrorListener = null;
+    }
+
+    public interface OnMeasurementErrorListener {
+        void onMeasurementError(final Exception ex);
     }
 
 }

@@ -17,6 +17,7 @@ import at.alladin.nettest.shared.qos.UdpPayload;
 import at.alladin.nettest.shared.qos.util.UdpPayloadUtil;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.QualityOfServiceTest;
+import at.alladin.nntool.client.helper.TaskDescriptionHelper;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
 import at.alladin.nntool.client.v2.task.service.TestSettings;
 import mockit.Delegate;
@@ -50,8 +51,8 @@ public class UdpIncomingTaskTest {
         testSettings = new TestSettings();
         testSettings.setUseSsl(false);
         testSettings.setStartTimeNs(12);
-        clientHolder = ClientHolder.getInstance("host", "80",
-                null, new int[] {80}, "host", null, null);
+        clientHolder = ClientHolder.getInstance(TaskDescriptionHelper.createTaskDescList("host", "80",
+                null, new int[] {80}, "host", null, null), null);
 
         qosTest = new QualityOfServiceTest(clientHolder, testSettings);
 

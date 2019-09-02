@@ -244,7 +244,7 @@ void CCallback::rttUdpCallback(string cmd)
 	        Json jRtt = Json::object{
 	            {"rtt_ns", rtt * 1000},
 	        };
-	        jRtts.push_back(jRtt);
+			jRtts.push_back(rtt * 1000);
 		}
 			
 	//Unlock Mutex

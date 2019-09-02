@@ -24,8 +24,6 @@ public class JniSpeedMeasurementClient {
 
     private SpeedMeasurementState speedMeasurementState;
 
-    private String collectorUrl;
-
     private final SpeedTaskDesc speedTaskDesc;
 
     private List<MeasurementFinishedStringListener> finishedStringListeners = new ArrayList<>();
@@ -104,14 +102,6 @@ public class JniSpeedMeasurementClient {
 
     public void removeMeasurementPhaseListener (final MeasurementPhaseListener listener) {
         measurementPhaseListeners.remove(listener);
-    }
-
-    public String getCollectorUrl() {
-        return collectorUrl;
-    }
-
-    public void setCollectorUrl(String collectorUrl) {
-        this.collectorUrl = collectorUrl;
     }
 
     public interface MeasurementFinishedStringListener {

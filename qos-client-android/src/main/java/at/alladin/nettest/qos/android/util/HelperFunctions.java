@@ -14,57 +14,12 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-//import at.alladin.nettest.shared.model.request.BasicRequest;
-
-
 //TODO: rename
 public class HelperFunctions {
 
     private static final String DEBUG_TAG = "HelperFunctions";
 
     private static final String PLATTFORM_NAME = "Android";
-
-//    public static <T extends BasicRequest> T fillBasicInfo(Class<T> basicRequestClazz, Context ctx) {
-//
-//        final T basicRequest;
-//        try {
-//            basicRequest = basicRequestClazz.newInstance();
-//
-//            basicRequest.setPlatform(PLATTFORM_NAME);
-//            basicRequest.setOsVersion(android.os.Build.VERSION.RELEASE + "(" + android.os.Build.VERSION.INCREMENTAL + ")");
-//            basicRequest.setApiLevel(String.valueOf(android.os.Build.VERSION.SDK_INT));
-//            basicRequest.setDevice(android.os.Build.DEVICE);
-//            basicRequest.setModel(android.os.Build.MODEL);
-//            basicRequest.setProduct(android.os.Build.PRODUCT);
-//            basicRequest.setLanguage(Locale.getDefault().getLanguage());
-//            basicRequest.setTimezone(TimeZone.getDefault().getID());
-//            basicRequest.setSoftwareRevision(RevisionHelper.getVerboseRevision());
-//
-//            PackageInfo pInfo = null;
-//
-//            try {
-//                pInfo = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
-//            } catch (final PackageManager.NameNotFoundException e) {
-//                // e1.printStackTrace();
-//                Log.e(DEBUG_TAG, "version of the application cannot be found", e);
-//            }
-//
-//            if (pInfo != null) {
-//                basicRequest.setSoftwareVersionCode(pInfo.versionCode);
-//                basicRequest.setSoftwareVersionName(pInfo.versionName);
-//            }
-//
-//            basicRequest.setClientType(Client.ClientType.MOBILE);
-//
-//            return basicRequest;
-//        } catch (InstantiationException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return null;
-//    }
 
     public static String getUuid(final Context context) {
         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);

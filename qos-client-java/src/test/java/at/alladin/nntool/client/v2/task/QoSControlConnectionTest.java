@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.TestParameter;
+import at.alladin.nntool.client.helper.TaskDescriptionHelper;
 import mockit.Expectations;
 import mockit.Mocked;
 
@@ -50,8 +51,8 @@ public class QoSControlConnectionTest {
 
     @Before
     public void init () {
-        clientHolder = ClientHolder.getInstance("host", "80",
-                null, null, "host", null, null);
+        clientHolder = ClientHolder.getInstance(TaskDescriptionHelper.createTaskDescList("host", "80",
+                null, null, "host", null, null), null);
 
         testParameter = new TestParameter("host", 80, false, "token", 1, 1, 1, 1);
         sslTestParameter = new TestParameter("host", 80, true, 1, 1, 1);

@@ -147,6 +147,122 @@
             ]
         },
         {
+            "docType": "QoSMeasurementObjective",
+            "objective_id": 500,
+            "enabled": true,
+            "type": "MKIT_DASH",
+            "concurrency_group": 500,
+            "measurement_server_uuid": "mServer",
+            "translation_keys": {
+                "summary": "MKIT_DASH_summary",
+                "description": "MKIT_DASH_description"
+            },
+            "parameters": {
+                "timeout": "60000000000"
+            },
+            "evaluations": [
+                {
+                    "operator": "eq",
+                    "on_failure": "mkit.failure",
+                    "on_success": "mkit.success",
+                    "mkit_status": "OK"
+                },
+                {
+                    "evaluate": "%EVAL result=(!JSON.parse(mkit_result).test_keys.hasOwnProperty('failure')) || (JSON.parse(mkit_result).test_keys.failure === null);%",
+                    "on_failure": "dash.failure",
+                    "on_success": "dash.success"
+                }
+            ]
+        },
+        {
+            "docType": "QoSMeasurementObjective",
+            "objective_id": 520,
+            "enabled": true,
+            "type": "MKIT_WEB_CONNECTIVITY",
+            "concurrency_group": 520,
+            "measurement_server_uuid": "mServer",
+            "translation_keys": {
+                "summary": "MKIT_WEB_CONNECTIVITY_summary",
+                "description": "MKIT_WEB_CONNECTIVITY_description"
+            },
+            "parameters": {
+                "input": [
+                    "https://europa.eu/"
+                ],
+                "timeout": "10000000000"
+            },
+            "evaluations": [
+                {
+                    "operator": "eq",
+                    "on_failure": "mkit.failure",
+                    "on_success": "mkit.success",
+                    "mkit_status": "OK"
+                },
+                {
+                    "evaluate": "%EVAL result=JSON.parse(mkit_result).test_keys.accessible;%",
+                    "on_failure": "web_connectivity.failure",
+                    "on_success": "web_connectivity.success"
+                }
+            ]
+        },
+        {
+            "docType": "QoSMeasurementObjective",
+            "objective_id": 521,
+            "enabled": true,
+            "type": "MKIT_WEB_CONNECTIVITY",
+            "concurrency_group": 520,
+            "measurement_server_uuid": "mServer",
+            "translation_keys": {
+                "summary": "MKIT_WEB_CONNECTIVITY_summary",
+                "description": "MKIT_WEB_CONNECTIVITY_description"
+            },
+            "parameters": {
+                "input": [
+                    "https://berec.europa.eu/"
+                ],
+                "timeout": "10000000000"
+            },
+            "evaluations": [
+                {
+                    "operator": "eq",
+                    "on_failure": "mkit.failure",
+                    "on_success": "mkit.success",
+                    "mkit_status": "OK"
+                },
+                {
+                    "evaluate": "%EVAL result=JSON.parse(mkit_result).test_keys.accessible;%",
+                    "on_failure": "web_connectivity.failure",
+                    "on_success": "web_connectivity.success"
+                }
+            ]
+        },
+        {
+            "docType": "QoSMeasurementObjective",
+            "objective_id": 600,
+            "enabled": true,
+            "type": "SIP",
+            "concurrency_group": 600,
+            "measurement_server_uuid": "mServer",
+            "translation_keys": {
+                "summary": "SIP_summary",
+                "description": "SIP_description"
+            },
+            "parameters": {
+                "port": "15060",
+                "call_duration": "1000000000",
+                "timeout": "2000000000",
+                "count": "5"
+            },
+            "evaluations": [
+                {
+                    "operator": "eq",
+                    "on_failure": "sip.failure",
+                    "sip_result": "OK",
+                    "on_success": "sip.success"
+                }
+            ]
+        },
+        {
             "docType": "Settings",
             "uuid": "4e7567ef-175b-44f4-8436-8fd6d22dab48",
             "urls": {

@@ -186,15 +186,15 @@ int CTimer::run()
 	}
 	
 	TIMER_ACTIVE = false;
-
-	#ifdef __ANDROID__
-	    AndroidConnector::detachCurrentThreadFromJavaVM();
-	#endif
 	
 	//++++++END+++++++
 
 	//Log Message
 	TRC_INFO( ("Ending Timer Thread with PID: " + CTool::toString(syscall(SYS_gettid))).c_str() );
+
+	#ifdef __ANDROID__
+		AndroidConnector::detachCurrentThreadFromJavaVM();
+	#endif
 	
 	return 0;
 }

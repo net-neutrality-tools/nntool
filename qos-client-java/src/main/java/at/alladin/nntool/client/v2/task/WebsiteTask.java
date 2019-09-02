@@ -19,9 +19,9 @@ package at.alladin.nntool.client.v2.task;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 import at.alladin.nntool.client.v2.task.service.WebsiteTestService;
 import at.alladin.nntool.client.v2.task.service.WebsiteTestService.RenderingListener;
 
@@ -91,7 +91,7 @@ public class WebsiteTask extends AbstractQoSTask {
 	 * @see java.util.concurrent.Callable#call()
 	 */
 	public QoSTestResult call() throws Exception {
-		final QoSTestResult result = initQoSTestResult(QoSTestResultEnum.WEBSITE);
+		final QoSTestResult result = initQoSTestResult(QosMeasurementType.WEBSITE);
 		try {
 			onStart(result);
 			
@@ -194,8 +194,8 @@ public class WebsiteTask extends AbstractQoSTask {
 	 * (non-Javadoc)
 	 * @see at.alladin.rmbt.client.v2.task.QoSTask#getTestType()
 	 */
-	public QoSTestResultEnum getTestType() {
-		return QoSTestResultEnum.WEBSITE;
+	public QosMeasurementType getTestType() {
+		return QosMeasurementType.WEBSITE;
 	}
 
 	/*

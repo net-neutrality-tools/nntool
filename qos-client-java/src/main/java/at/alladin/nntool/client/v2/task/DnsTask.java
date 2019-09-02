@@ -31,11 +31,11 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.ResolverConfig;
 import org.xbill.DNS.Section;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.helper.Dig;
 import at.alladin.nntool.client.helper.Dig.DnsRequest;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 
 public class DnsTask extends AbstractQoSTask {
 
@@ -99,7 +99,7 @@ public class DnsTask extends AbstractQoSTask {
 	 * 
 	 */
 	public QoSTestResult call() throws Exception {
-  		final QoSTestResult testResult = initQoSTestResult(QoSTestResultEnum.DNS);
+  		final QoSTestResult testResult = initQoSTestResult(QosMeasurementType.DNS);
   		
 		try {
 			onStart(testResult);
@@ -220,8 +220,8 @@ public class DnsTask extends AbstractQoSTask {
 	 * (non-Javadoc)
 	 * @see at.alladin.rmbt.client.v2.task.QoSTask#getTestType()
 	 */
-	public QoSTestResultEnum getTestType() {
-		return QoSTestResultEnum.DNS;
+	public QosMeasurementType getTestType() {
+		return QosMeasurementType.DNS;
 	}
 
 	/*

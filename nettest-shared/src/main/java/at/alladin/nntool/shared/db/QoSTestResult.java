@@ -26,12 +26,15 @@ import at.alladin.nntool.shared.qos.AbstractResult;
 import at.alladin.nntool.shared.qos.DnsResult;
 import at.alladin.nntool.shared.qos.HttpProxyResult;
 import at.alladin.nntool.shared.qos.NonTransparentProxyResult;
+import at.alladin.nntool.shared.qos.SipResult;
 import at.alladin.nntool.shared.qos.TcpResult;
 import at.alladin.nntool.shared.qos.TracerouteResult;
 import at.alladin.nntool.shared.qos.UdpResult;
 import at.alladin.nntool.shared.qos.VoipResult;
 import at.alladin.nntool.shared.qos.WebsiteResult;
 import at.alladin.nntool.shared.qos.EchoProtocolResult;
+import at.alladin.nntool.shared.qos.MkitWebConnectivityResult;
+import at.alladin.nntool.shared.qos.MkitDashResult;
 
 /**
  * 
@@ -54,7 +57,10 @@ public class QoSTestResult implements Serializable {
 		NON_TRANSPARENT_PROXY(NonTransparentProxyResult.class),
 		TRACEROUTE(TracerouteResult.class),
 		VOIP(VoipResult.class),
-		ECHO_PROTOCOL(EchoProtocolResult.class);
+		ECHO_PROTOCOL(EchoProtocolResult.class),
+		MKIT_WEB_CONNECTIVITY(MkitWebConnectivityResult.class),
+		MKIT_DASH(MkitDashResult.class),
+		SIP(SipResult.class);
 
 		
 		protected Class<? extends AbstractResult> clazz; 

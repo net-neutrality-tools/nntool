@@ -20,6 +20,7 @@ import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
+import at.alladin.nettest.nntool.android.app.workflow.help.HelpFragment;
 import at.alladin.nettest.nntool.android.app.workflow.history.HistoryFragment;
 import at.alladin.nettest.nntool.android.app.workflow.main.TitleFragment;
 import at.alladin.nettest.nntool.android.app.workflow.map.MapFragment;
@@ -28,6 +29,7 @@ import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementTyp
 import at.alladin.nettest.nntool.android.app.workflow.measurement.QosFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.SpeedFragment;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.TitleWithRecentResultFragment;
+import at.alladin.nettest.nntool.android.app.workflow.measurement.WorkflowMeasurementParameter;
 import at.alladin.nettest.nntool.android.app.workflow.result.ResultFragment;
 import at.alladin.nettest.nntool.android.app.workflow.settings.SettingsFragment;
 import at.alladin.nettest.nntool.android.app.workflow.statistics.StatisticsFragment;
@@ -88,17 +90,18 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case MEASUREMENT_SPEED:
                 isBottomNavigationVisible = false;
-                targetFragment = SpeedFragment.newInstance();
+                targetFragment = SpeedFragment.newInstance(workflowParameter);
                 break;
             case MEASUREMENT_QOS:
                 isBottomNavigationVisible = false;
-                targetFragment = QosFragment.newInstance();
+                targetFragment = QosFragment.newInstance(workflowParameter);
                 break;
             case MEASUREMENT_RECENT_RESULT:
-                targetFragment = TitleWithRecentResultFragment.newInstance();
+                targetFragment = TitleWithRecentResultFragment.newInstance(workflowParameter);
                 break;
             case SETTINGS:
                 targetFragment = SettingsFragment.newInstance();
+                navigation.getMenu().findItem(R.id.navigation_settings).setChecked(true);
                 break;
             case MAP:
                 targetFragment = MapFragment.newInstance();
@@ -132,10 +135,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setActionBarTitle (final String title) {
+    public void updateActionBar(final String title) {
+        updateActionBar(title, false);
+    }
+
+    public void updateActionBar(final String title, final boolean displayHome) {
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null && title != null) {
             actionBar.setTitle(title);
+            actionBar.setDisplayHomeAsUpEnabled(displayHome);
         }
     }
 
@@ -144,16 +152,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startMeasurement(final MeasurementType measurementType, final Bundle options) {
+        final WorkflowMeasurementParameter parameter = new WorkflowMeasurementParameter();
+        if (options != null) {
+            parameter.setQoSEnabled(options.getBoolean(MeasurementService.EXTRAS_KEY_QOS_EXECUTE, true));
+            parameter.setSpeedEnabled(options.getBoolean(MeasurementService.EXTRAS_KEY_SPEED_EXECUTE, true));
+        }
         switch (measurementType) {
             case SPEED:
-                navigateTo(WorkflowTarget.MEASUREMENT_SPEED);
+                navigateTo(WorkflowTarget.MEASUREMENT_SPEED, parameter);
                 final Intent speedIntent = new Intent(MeasurementService.ACTION_START_SPEED_MEASUREMENT,
                         null, this, MeasurementService.class);
                 speedIntent.putExtras(options);
                 startService(speedIntent);
                 break;
             case QOS:
-                navigateTo(WorkflowTarget.MEASUREMENT_QOS);
+                navigateTo(WorkflowTarget.MEASUREMENT_QOS, parameter);
                 final Intent intent = new Intent(MeasurementService.ACTION_START_QOS_MEASUREMENT,
                         null, this, MeasurementService.class);
                 intent.putExtras(options);
@@ -208,6 +221,16 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

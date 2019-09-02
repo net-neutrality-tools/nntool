@@ -158,6 +158,7 @@ int Upload::run()
 			{
 				//Error
 				::UNREACHABLE = true;
+				::hasError = true;
 				TRC_ERR("no connection to measurement peer: " + mServer);
 				return -1;
 			}
@@ -171,6 +172,7 @@ int Upload::run()
 			{
 				//Error
 				::UNREACHABLE = true;
+				::hasError = true;
 				TRC_ERR("no connection to measurement peer: " + mServer);
 				return -1;
 			}
@@ -216,6 +218,7 @@ int Upload::run()
 				TRC_ERR("measurement peer overloaded: " + mServer);
 			}
 
+			::hasError = true;
 			mConnection->close();
 
 			//Syslog Message

@@ -22,13 +22,14 @@ import java.io.FilterInputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.Locale;
 
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nntool.client.AbstractTest;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
-import at.alladin.nntool.client.v2.task.result.QoSTestResultEnum;
 import at.alladin.nntool.client.v2.task.service.TestProgressListener.TestProgressEvent;
 
 /**
@@ -90,7 +91,9 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 	protected final int id;
 	
 	protected QoSControlConnection controlConnection;
-	
+
+	protected QoSTestProgressListener listener;
+
 	/**
 	 * this constructor set the priority to max 
 	 * @param taskDesc
@@ -112,11 +115,13 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 		this.id = id;
 
 		//test objective uid
-		String value = String.valueOf(taskDesc.getParams().get(PARAM_QOS_TEST_OBJECTIVE_ID));
-		this.qoSTestObjectiveUid = value != null ? Long.valueOf(value) : null;
+		Object objVal = taskDesc.getParams().get(PARAM_QOS_TEST_OBJECTIVE_ID);
+		String value = objVal != null ? String.valueOf(objVal) : null;
+		this.qoSTestObjectiveUid = value != null ? Long.valueOf(value) : 0L;
 
 		//server port
-		value = String.valueOf(taskDesc.getParams().get(PARAM_QOS_TEST_OBJECTIVE_PORT));
+		objVal = taskDesc.getParams().get(PARAM_QOS_TEST_OBJECTIVE_PORT);
+		value = objVal != null ? String.valueOf(objVal) : null;
 		int parsedServerPort = 0;
 		try {
 			parsedServerPort = value != null ? Integer.valueOf(value) : 0;
@@ -129,7 +134,8 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 		}
 
 		//concurrency group
-		value = String.valueOf(taskDesc.getParams().get(PARAM_QOS_CONCURRENCY_GROUP));
+		objVal = taskDesc.getParams().get(PARAM_QOS_CONCURRENCY_GROUP);
+		value = objVal != null ? String.valueOf(objVal) : null;
 		int parsedConcurrencyGroup = 0;
 		try {
 			parsedConcurrencyGroup = value != null ? Integer.valueOf(value) : 0;
@@ -207,7 +213,7 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 	public int compareTo(QoSTask o) {
 		return (Integer.valueOf(priority).compareTo(Integer.valueOf(o.getPriority())));
 	}
-	
+
 	/**
 	 * 
 	 * @param socket
@@ -218,10 +224,24 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 		FilterOutputStream fos = new FilterOutputStream(socket.getOutputStream());
 
 		String send;
-        send = String.format(Locale.US, message);        	
+        send = String.format(Locale.US,message);
 
 		fos.write(send.getBytes("US-ASCII"));
         fos.flush();
+	}
+
+	BufferedReader socketBr = null;
+
+	protected void resetSocketBufferedReader(final Socket socket) throws IOException {
+		FilterInputStream fis = new BufferedInputStream(socket.getInputStream());
+		socketBr = new BufferedReader(new InputStreamReader(fis, "US-ASCII"), 4096);
+	}
+
+	private synchronized void openSocketBufferedReader(final Socket socket) throws IOException {
+		if (socketBr == null) {
+			FilterInputStream fis = new BufferedInputStream(socket.getInputStream());
+			socketBr = new BufferedReader(new InputStreamReader(fis, "US-ASCII"), 4096);
+		}
 	}
 	
 	/**
@@ -231,9 +251,30 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 	 * @throws IOException
 	 */
 	public String readLine(Socket socket) throws IOException {
-		FilterInputStream fis = new BufferedInputStream(socket.getInputStream());
-        BufferedReader r = new BufferedReader(new InputStreamReader(fis, "US-ASCII"), 4096);
-        return r.readLine();
+		openSocketBufferedReader(socket);
+        return socketBr.readLine();
+	}
+
+	/**
+	 *
+	 * @param socket
+	 * @return
+	 * @throws IOException
+	 */
+	public String readMultiLine(final Socket socket) throws IOException {
+		openSocketBufferedReader(socket);
+		final StringBuilder sb = new StringBuilder();
+		String line = null;
+		int newLineCounter = 0;
+		while ((line = socketBr.readLine()) != null) {
+			line += "\n";
+			System.out.println("GOT LINE: " + line);
+			sb.append(line);
+			if ("\n".equals(line)) { /*second new line or command started with new line; both will terminate reading from socket */
+				break;
+			}
+		}
+		return sb.toString();
 	}
 	
 	/**
@@ -241,7 +282,7 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 	 * @param testType
 	 * @return
 	 */
-	public QoSTestResult initQoSTestResult(QoSTestResultEnum testType) {
+	public QoSTestResult initQoSTestResult(QosMeasurementType testType) {
 		QoSTestResult nnResult = new QoSTestResult(testType, this);
 		nnResult.getResultMap().put(PARAM_QOS_TEST_OBJECTIVE_ID, qoSTestObjectiveUid);
 		return nnResult;
@@ -356,8 +397,7 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 	/**
 	 * 
 	 * @param command
-	 * @param listener
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void sendCommand(String command, ControlConnectionResponseCallback callback) throws IOException {
 		controlConnection.sendTaskCommand(this, command, callback);
@@ -366,5 +406,13 @@ public abstract class AbstractQoSTask extends AbstractTest implements QoSTask {
 	@Override
 	public void interrupt() {
 
+	}
+
+	public void setQoSTestProgressListener(final QoSTestProgressListener listener) {
+		this.listener = listener;
+	}
+
+	public interface QoSTestProgressListener {
+		void onProgress(final float currentTestProgress, final QosMeasurementType type);
 	}
 }

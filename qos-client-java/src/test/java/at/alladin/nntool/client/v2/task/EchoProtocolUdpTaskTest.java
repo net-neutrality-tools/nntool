@@ -1,7 +1,6 @@
 package at.alladin.nntool.client.v2.task;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -9,15 +8,17 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.QualityOfServiceTest;
+import at.alladin.nntool.client.helper.TaskDescriptionHelper;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
 import at.alladin.nntool.client.v2.task.service.TestSettings;
 import mockit.Delegate;
 import mockit.Expectations;
 import mockit.Mocked;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Felix Kendlbacher (fk@alladin.at)
@@ -48,8 +49,8 @@ public class EchoProtocolUdpTaskTest {
         testSettings = new TestSettings();
         testSettings.setUseSsl(false);
         testSettings.setStartTimeNs(12);
-        clientHolder = ClientHolder.getInstance(ECHO_SERVICE_HOST, "80",
-                null, null, ECHO_SERVICE_HOST, new int[0], new int[]{76});
+        clientHolder = ClientHolder.getInstance(TaskDescriptionHelper.createTaskDescList(ECHO_SERVICE_HOST, "80",
+                null, null, ECHO_SERVICE_HOST, new int[0], new int[]{76}), null);
 
         qosTest = new QualityOfServiceTest(clientHolder, testSettings);
 

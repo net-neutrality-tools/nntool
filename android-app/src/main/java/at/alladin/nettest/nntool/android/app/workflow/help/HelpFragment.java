@@ -1,7 +1,6 @@
 package at.alladin.nettest.nntool.android.app.workflow.help;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,37 +15,11 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.DownloadListener;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
-import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
-import at.alladin.nettest.nntool.android.app.async.RequestAgentIpTask;
-import at.alladin.nettest.nntool.android.app.async.RequestMeasurementTask;
-import at.alladin.nettest.nntool.android.app.async.RequestSpeedMeasurementPeersTask;
-import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
-import at.alladin.nettest.nntool.android.app.util.LmapUtil;
-import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
-import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
-import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.interfaces.TrafficGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.system.SystemInfoGatherer;
-import at.alladin.nettest.nntool.android.app.view.CpuAndRamView;
-import at.alladin.nettest.nntool.android.app.view.GeoLocationView;
-import at.alladin.nettest.nntool.android.app.view.InterfaceTrafficView;
-import at.alladin.nettest.nntool.android.app.view.Ipv4v6View;
-import at.alladin.nettest.nntool.android.app.view.MeasurementServerSelectionView;
-import at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView;
-import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
-import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
-import at.alladin.nettest.nntool.android.app.workflow.result.ResultFragment;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
@@ -85,7 +58,7 @@ public class HelpFragment extends Fragment {
         setHasOptionsMenu(true);
 
         final Activity activity = getActivity();
-        ((MainActivity) activity).setActionBarTitle(getString(R.string.title_help));
+        ((MainActivity) activity).updateActionBar(getString(R.string.title_help));
 
         final WebView webview = new WebView(activity)
         {
