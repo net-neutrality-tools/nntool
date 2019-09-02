@@ -25,6 +25,8 @@ public class QoSTaskGroup {
         case "traceroute": initializer = { TracerouteTask(config: $0) }
         case "website": initializer = { WebsiteRenderingTask(config: $0) }
         case "non_transparent_proxy": initializer = { NonTransparentProxyTask(config: $0) }
+        // MeasurementKit
+        case "mkit_web_connectivity", "mkit_dash": initializer = { MeasurementKitTask(config: $0) }
         default:
             return nil
         }

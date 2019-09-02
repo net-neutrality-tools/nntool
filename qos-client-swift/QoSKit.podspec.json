@@ -16,9 +16,11 @@
     },
     "source_files": [
         "Sources/**/*.swift",
-        "Sources/NSString+IPAddress.{h,m}",
-        "Sources/PingUtil.{h,m}"
+        "Sources/MeasurementKit/*.{h,m}"
     ],
+    "ios": {
+        "vendored_frameworks": ["Pods/mkall/mkall.framework"]
+    },
     "dependencies": {
         "Alamofire": ["~> 4.8.2"],
         "BlueSocket": ["~> 1.0.46"],
@@ -31,7 +33,8 @@
     "requires_arc": true,
     "xcconfig": {
         "SWIFT_INCLUDE_PATHS[sdk=iphoneos*]": "$(SRCROOT)/../../qos-client-swift/Modules/QoSKitPrivate/iphoneos",
-        "SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]": "$(SRCROOT)/../../qos-client-swift/Modules/QoSKitPrivate/iphonesimulator"
+        "SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]": "$(SRCROOT)/../../qos-client-swift/Modules/QoSKitPrivate/iphonesimulator",
+        "OTHER_LDFLAGS": "-framework 'mkall'"
     },
     "preserve_paths": [ "Modules/*" ],
     "prepare_command": "Modules/QoSKitPrivate/injectXcodePath.sh"

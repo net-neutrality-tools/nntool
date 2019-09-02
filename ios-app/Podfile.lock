@@ -1,10 +1,11 @@
 PODS:
   - Alamofire (4.8.2)
   - BartyCrouch (3.13.0)
+  - BlueSocket (1.0.49)
   - CocoaAsyncSocket (7.6.3)
-  - CocoaLumberjack (3.5.2):
-    - CocoaLumberjack/Core (= 3.5.2)
-  - CocoaLumberjack/Core (3.5.2)
+  - CocoaLumberjack (3.5.3):
+    - CocoaLumberjack/Core (= 3.5.3)
+  - CocoaLumberjack/Core (3.5.3)
   - CodableJSON (1.1.4)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
@@ -32,6 +33,7 @@ PODS:
     - PocketSocket/Client
   - QoSKit (0.0.1):
     - Alamofire (~> 4.8.2)
+    - BlueSocket (~> 1.0.46)
     - CocoaAsyncSocket (~> 7.6.3)
     - nntool-shared-swift (~> 0.0.1)
   - R.swift (5.0.3):
@@ -66,6 +68,7 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
     - BartyCrouch
+    - BlueSocket
     - CocoaAsyncSocket
     - CocoaLumberjack
     - CodableJSON
@@ -94,15 +97,16 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   BartyCrouch: 69e5e6ec67e77951dc1c22aa48abbf05d175b81c
+  BlueSocket: 973993722fd579a62bb6469cdf7f1ccc8054796c
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
-  CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
+  CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
   CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   MeasurementAgentKit: ee7929596184ed2f8e1f1c00882ead4298f965d7
   nntool-shared-swift: 7955a6c51917bcf2f42316eb259da095c80a7398
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   PocketSocket: 9c6867d66fb4f962af96b9b07f4b45bb561b2c2a
-  QoSKit: d85bee1116e983af2b481d9cb3458ed71244ba41
+  QoSKit: f4bd5e9c6bfc4937a57af5c953dd8d0dfe8778d0
   R.swift: f5a87643b91ea569d23d6afb3eee9c743edde239
   R.swift.Library: cfe85d569d9bae6cb262922db130e7c3a7a5fad1
   ReachabilitySwift: 93a5956ef3f076d7e24bc65bfb1c5042e69b7276

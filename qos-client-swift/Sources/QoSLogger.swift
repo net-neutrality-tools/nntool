@@ -9,7 +9,16 @@ class QoSLogger: XCGLogger {
 
         super.init()
 
-        setup(level: logger.outputLevel, showLogIdentifier: true, showFunctionName: true, showThreadName: true, showLevel: true, showFileNames: true, showLineNumbers: true, showDate: true, writeToFile: nil, fileLevel: nil)
+        setup(level: logger.outputLevel,
+              showLogIdentifier: true,
+              showFunctionName: true,
+              showThreadName: false, //true,
+              showLevel: true,
+              showFileNames: true,
+              showLineNumbers: true,
+              showDate: true,
+              writeToFile: nil,
+              fileLevel: nil)
     }
 
     override func logln(_ level: XCGLogger.Level = .debug, functionName: String = #function, fileName: String = #file, lineNumber: Int = #line, userInfo: [String: Any] = [:], closure: () -> Any?) {
