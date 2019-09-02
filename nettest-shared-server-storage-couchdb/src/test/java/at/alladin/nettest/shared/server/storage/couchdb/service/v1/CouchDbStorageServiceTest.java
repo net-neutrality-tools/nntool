@@ -26,6 +26,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInf
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.EmbeddedNetworkTypeRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
@@ -86,6 +87,9 @@ public class CouchDbStorageServiceTest {
 	
 	@MockBean
 	private MeasurementPeerRepository measurementServerRepository;
+	
+	@MockBean
+	private EmbeddedNetworkTypeRepository embeddedNetworkTypeRepository;
 	
 	@MockBean
 	private DetailMeasurementService detailMeasurementService;
