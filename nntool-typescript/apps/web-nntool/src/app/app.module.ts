@@ -44,7 +44,6 @@ import { SpeedFormatPipe } from './pipes/speed.format.pipe';
 import { TimestampLocalDateFormatPipe } from './pipes/timestamp.date.format.pipe';
 import { UTCLocalDateFormatPipe } from './pipes/utc.date.format.pipe';
 import { QoSResultComponent } from './qos-result/qos-result.component';
-import { ResultListComponent } from './result-list/result_list.component';
 import { OpentestDetailViewComponent } from './result/view-detail.component';
 import { OpentestViewComponent } from './result/view.component';
 import { AppService } from './services/app.service';
@@ -75,7 +74,8 @@ import { CoreModule } from './core/core.module';
 import { SharedModule } from './features/shared/shared.module';
 import { RequestInfoService } from './services/request-info.service';
 import { OpenDataResultListComponent } from './opendata/open-data-result-list.component';
-import { SearchApiService } from './services/search-api.service.';
+import { SearchApiService } from './services/search-api.service';
+import { ResultApiService } from './services/result-api.service';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -87,7 +87,6 @@ const MAIN_DECLARATIONS = [
   // NvD3Component,
   MapComponent,
   StatisticsComponent,
-  ResultListComponent,
   OpenDataResultListComponent,
   HelpComponent,
   AboutComponent,
@@ -167,6 +166,7 @@ const MAIN_DECLARATIONS = [
     MeasurementService,
     AppService,
     MapService,
+    ResultApiService,
     SearchApiService,
     ...TEST_PROVIDERS,
     SpeedTestImplementation,

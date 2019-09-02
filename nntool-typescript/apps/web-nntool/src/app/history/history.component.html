@@ -1,0 +1,33 @@
+<!-- #section-intro -->
+<section class="section" id="section-intro">
+  <div class="wrapper">
+    <header class="section-header">
+      <h1 [innerHTML]="translationKey + '.HEADER' | translate"></h1>
+      <figure *ngIf="loading">
+        <img src="assets/img/watch-anim.svg" alt="loading content" class="load-animation" />
+        <figcaption>{{ 'RESULT_LIST.LOADING' | translate }}</figcaption>
+      </figure>
+      <div class="icon icon-search" *ngIf="!loading"></div>
+    </header>
+  </div>
+</section>
+<!-- #section-intro end -->
+
+<!-- #section-arguments -->
+<section class="section" id="section-arguments">
+  <div class="wrapper">
+    <div class="section-content">
+      <div class="section-table">
+        <nntool-result-table
+          [settings]="settings"
+          [source]="tableSource"
+          (rowSelect)="showMeasurement($event)"
+        ></nntool-result-table>
+      </div>
+      <div class="section-interaction">
+        <!-- TODO: export button etc. -->
+      </div>
+    </div>
+  </div>
+</section>
+<!-- #section-arguments end -->

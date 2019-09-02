@@ -2,7 +2,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { SearchApiService } from '../services/search-api.service.';
+import { SearchApiService } from '../services/search-api.service';
 import { SpringServerDataSource } from '../services/table/spring-server.data-source';
 
 @Component({
@@ -11,6 +11,8 @@ import { SpringServerDataSource } from '../services/table/spring-server.data-sou
 })
 export class OpenDataResultListComponent {
   private loading = false;
+
+  public translationKey = 'RESULT_LIST';
 
   settings = {
     columns: {
@@ -26,12 +28,12 @@ export class OpenDataResultListComponent {
         filter: false,
         sort: false // throws exception: Caused by: ElasticsearchException[Elasticsearch exception [type=illegal_argument_exception, reason=Fielddata is disabled on text fields by default. Set fielddata=true on [open_data_uuid] in order to load fielddata in memory ...
       },
-      'measurements.SPEED.rtt_info.medianNs': {
-        // or average?
+      'measurements.SPEED.rtt_info.average_ns': {
+        // or median?
         title: 'RTT (ms)',
         filter: false,
         valuePrepareFunction: (cell, row) => {
-          return (row.measurements.SPEED.rtt_info.medianNs / 1000000).toFixed(2);
+          return (row.measurements.SPEED.rtt_info.average_ns / 1000000).toFixed(2);
         }
       },
       'measurements.SPEED.throughput_avg_download_bps': {
@@ -54,7 +56,7 @@ export class OpenDataResultListComponent {
   tableSource: SpringServerDataSource;
 
   constructor(
-    protected logger: NGXLogger,
+    private logger: NGXLogger,
     private router: Router,
     private translationService: TranslateService,
     private searchApiService: SearchApiService

@@ -3,14 +3,11 @@ import { HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 
-import { TranslateService } from '@ngx-translate/core';
-import { forkJoin, Observable, Observer, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { ResultGroupResponse } from '../history/model/result.groups';
 import { WebsiteSettings } from '../settings/settings.interface';
 import { ConfigService } from './config.service';
 import { RequestsService } from './requests.service';
-import { BrowserStorageService } from './storage.service';
 import { SpringServerDataSource } from './table/spring-server.data-source';
 import { SpringServerSourceConf } from './table/spring-server-source.conf';
 
@@ -20,10 +17,8 @@ export class SearchApiService {
 
   constructor(
     private logger: NGXLogger,
-    private storage: BrowserStorageService,
     private requests: RequestsService,
     private configService: ConfigService,
-    private translateService: TranslateService,
     private http: HttpClient
   ) {
     this.config = this.configService.getConfig();
@@ -42,11 +37,7 @@ export class SearchApiService {
   public getSingleOpenDataMeasurement(openDataUuid: string): Observable<any> {
     return new Observable((observer: any) => {
       this.requests
-        .getJson<any>(
-          // TODO: use search-service url from settings request
-          Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid),
-          {}
-        )
+        .getJson<any>(Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid), {})
         .subscribe(
           (data: any) => {
             this.logger.debug('opendata measurement: ', data);
