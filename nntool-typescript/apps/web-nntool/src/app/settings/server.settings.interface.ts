@@ -3,4 +3,5 @@ export interface ServerSettings {
   control: string;
   statistic: string;
   result: string;
+  search: string;
 }

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 // import {NvD3Component} from 'ng2-nvd3';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -72,6 +73,8 @@ import { SettingsComponent } from './user/settings.component';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './features/shared/shared.module';
 import { RequestInfoService } from './services/request-info.service';
+import { OpenDataResultListComponent } from './opendata/open-data-result-list.component';
+import { SearchApiService } from './services/search-api.service.';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -84,6 +87,7 @@ const MAIN_DECLARATIONS = [
   MapComponent,
   StatisticsComponent,
   ResultListComponent,
+  OpenDataResultListComponent,
   HelpComponent,
   AboutComponent,
   HistoryComponent,
@@ -139,6 +143,7 @@ const MAIN_DECLARATIONS = [
     }),
     CoreModule,
     SharedModule,
+    Ng2SmartTableModule,
     NvD3Module
   ],
   declarations: [
@@ -160,6 +165,7 @@ const MAIN_DECLARATIONS = [
     MeasurementService,
     AppService,
     MapService,
+    SearchApiService,
     ...TEST_PROVIDERS,
     SpeedTestImplementation,
     PortBlockingTestImplementation,
