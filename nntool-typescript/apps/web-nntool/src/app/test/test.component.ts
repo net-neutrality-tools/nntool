@@ -25,6 +25,8 @@ import { MeasurementSettings } from './models/measurement-settings';
 import { MeasurementResultNetworkPointInTimeAPI } from './models/measurements/measurement-result-network-point-in-time.api';
 import { TimeBasedResultAPI } from './models/measurements/time-based-result.api';
 import { ServerSelectionComponent } from './test.server_selection';
+import { SpeedMeasurementPeer } from './models/server-selection/speed-measurement-peer';
+import { ConnectionInfo } from '../lmap/models/lmap-report/lmap-result/extensions/connection-info.model';
 
 export { TestGuard } from './test.guard';
 
@@ -47,6 +49,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
   private qosControl: LmapTask = undefined;
   private testResults: Array<SpeedMeasurementResult | QoSMeasurementResult> = [];
   private startTimeStamp: string = undefined;
+  private selectedSpeedMeasurementPeer: SpeedMeasurementPeer = undefined;
 
   constructor(
     testService: TestService,
@@ -102,6 +105,9 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
     speedMeasurementResult.relative_start_time_ns = null;
     speedMeasurementResult.status = null;
     speedMeasurementResult.rtt_info = new RttInfo();
+    speedMeasurementResult.connection_info = new ConnectionInfo();
+    speedMeasurementResult.connection_info.identifier = this.selectedSpeedMeasurementPeer.identifier;
+
     if (typeof speedTestResult.completeTestResult !== 'undefined') {
       const completeResult = speedTestResult.completeTestResult;
       if (completeResult.download_info !== undefined && completeResult.download_info.length > 0) {
@@ -181,8 +187,9 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
   }
 
   private requestMeasurement(): void {
+    this.selectedSpeedMeasurementPeer = this.serverSelectionComponent.getCurrentSpeedServer();
     this.testService
-      .newMeasurement(undefined, this.serverSelectionComponent.getCurrentSpeedServer())
+      .newMeasurement(undefined, this.selectedSpeedMeasurementPeer)
       .subscribe(response => {
         this.processTestControl(response);
         this.measurementControl = response;
@@ -231,7 +238,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
     if (this.testResults.length === 0) {
       return;
     }
-
+    
     const endTimeStamp = new Date().toJSON().slice(0, -1);
     let scheduleName: string;
     if (this.measurementControl.schedules && this.measurementControl.schedules.length > 0) {

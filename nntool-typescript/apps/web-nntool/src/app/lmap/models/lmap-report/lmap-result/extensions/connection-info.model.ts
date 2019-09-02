@@ -9,6 +9,11 @@ export class ConnectionInfo {
   public address: string;
 
   /**
+   * The identifier of the measurement server.
+   */
+  public identifier: string;
+
+  /**
    * Port used for the communication.
    */
   public port: number;

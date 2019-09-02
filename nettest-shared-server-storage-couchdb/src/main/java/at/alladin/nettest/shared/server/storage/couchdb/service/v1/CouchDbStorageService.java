@@ -23,6 +23,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.Setti
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapResultDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
@@ -30,6 +31,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.disassoc
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse.SpeedMeasurementPeer;
@@ -144,8 +147,35 @@ public class CouchDbStorageService implements StorageService {
 				measurement.getNetworkInfo().setComputedNetworkInfo(cpit);
 			}
 		}
-
+		
 		calculateTotalMeasurementPayload(measurement);
+		
+		//add speed server (if not already present)
+		if (measurement.getMeasurements().containsKey(MeasurementTypeDto.SPEED)) {
+			if (lmapReportDto != null && lmapReportDto.getResults() != null && lmapReportDto.getResults().size() > 0) {
+				SpeedMeasurementResult lmapResult = null;
+				for (SubMeasurementResult resultDto : lmapReportDto.getResults().get(0).getResults()) {
+					if (resultDto instanceof SpeedMeasurementResult) {
+						lmapResult = (SpeedMeasurementResult) resultDto;
+						break;
+					}
+				}
+				
+				if (lmapResult != null && lmapResult.getConnectionInfo() != null && lmapResult.getConnectionInfo().getIdentifier() != null) {
+					final SpeedMeasurement result = (SpeedMeasurement) measurement.getMeasurements().get(MeasurementTypeDto.SPEED);
+					if (result.getConnectionInfo() == null) {
+						result.setConnectionInfo(new ConnectionInfo());
+					}
+					final MeasurementServer server = measurementPeerRepository.findByPublicIdentifier(lmapResult.getConnectionInfo().getIdentifier());
+					if (server != null) {
+						result.getConnectionInfo().setIpAddress(server.getAddressIpv4());
+						result.getConnectionInfo().setPort(server.getPortTls() != null ? server.getPortTls() : server.getPort());
+					}
+				}
+				
+			}
+			
+		}
 
 		try {
 			measurementRepository.save(measurement);
