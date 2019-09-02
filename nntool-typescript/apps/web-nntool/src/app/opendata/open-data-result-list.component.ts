@@ -1,6 +1,6 @@
 import { NGXLogger } from 'ngx-logger';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SearchApiService } from '../services/search-api.service.';
 import { SpringServerDataSource } from '../services/table/spring-server.data-source';
@@ -13,25 +13,13 @@ export class OpenDataResultListComponent {
   private loading = false;
 
   settings = {
-    hideSubHeader: true,
-    //noDataMessage: , // TODO: translate
-    /*attr: {
-      //class: 'no-stack'
-    },*/
-    pager: {
-      display: true,
-      perPage: 25
-    },
-    mode: 'external',
-    actions: {
-      add: false,
-      edit: false,
-      delete: false
-    },
     columns: {
       start_time: {
         title: 'Time',
-        filter: false // TODO: use this for search query?
+        filter: false, // TODO: use this for search query?
+        valuePrepareFunction: (cell, row) => {
+          return new Date(Date.parse(row.start_time)).toLocaleString();
+        }
       },
       open_data_uuid: {
         title: 'OpenDataUuid',
@@ -40,21 +28,21 @@ export class OpenDataResultListComponent {
       },
       'measurements.SPEED.rtt_info.medianNs': {
         // or average?
-        title: 'RTT',
+        title: 'RTT (ms)',
         filter: false,
         valuePrepareFunction: (cell, row) => {
           return (row.measurements.SPEED.rtt_info.medianNs / 1000000).toFixed(2);
         }
       },
       'measurements.SPEED.throughput_avg_download_bps': {
-        title: 'Download',
+        title: 'Download (Mbit/s)',
         filter: false,
         valuePrepareFunction: (cell, row) => {
           return (row.measurements.SPEED.throughput_avg_download_bps / 1000 / 1000).toFixed(2);
         }
       },
       'measurements.SPEED.throughput_avg_upload_bps': {
-        title: 'Upload',
+        title: 'Upload (Mbit/s)',
         filter: false,
         valuePrepareFunction: (cell, row) => {
           return (row.measurements.SPEED.throughput_avg_upload_bps / 1000 / 1000).toFixed(2);
@@ -74,10 +62,7 @@ export class OpenDataResultListComponent {
     this.tableSource = this.searchApiService.getServerDataSource();
   }
 
-  public ngOnInit() {}
-
-  showOpenDataMeasurement(event: any) {
-    let measurement = event.data;
-    this.router.navigate(['/open-data-results', measurement.open_data_uuid]);
+  showOpenDataMeasurement(item: any) {
+    this.router.navigate(['/open-data-results', item.open_data_uuid]);
   }
 }

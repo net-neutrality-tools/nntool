@@ -18,8 +18,13 @@
   <div class="wrapper">
     <div class="section-content">
       <div class="section-table">
-        <ng2-smart-table [settings]="settings" [source]="tableSource" (userRowSelect)="showOpenDataMeasurement($event)">
-        </ng2-smart-table>
+        <!--<ng2-smart-table [settings]="settings" [source]="tableSource" (userRowSelect)="showOpenDataMeasurement($event)">
+        </ng2-smart-table>-->
+        <nntool-result-table
+          [settings]="settings"
+          [source]="tableSource"
+          (rowSelect)="showOpenDataMeasurement($event)"
+        ></nntool-result-table>
       </div>
       <div class="section-interaction">
         <!-- TODO: export button etc. -->

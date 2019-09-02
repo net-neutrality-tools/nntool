@@ -68,6 +68,7 @@ import { SpeedTestImplementation } from './testing/tests-implementation/speed/sp
 import { PortBlockingTestBarComponent } from './testing/tests/port-blocking-test-bar';
 import { SpeedTestGaugeComponent } from './testing/tests/speed-test-gauge';
 import { SettingsComponent } from './user/settings.component';
+import { ComponentsModule } from './components/components.module';
 
 // app
 import { CoreModule } from './core/core.module';
@@ -141,6 +142,7 @@ const MAIN_DECLARATIONS = [
         deps: [HttpClient]
       }
     }),
+    ComponentsModule,
     CoreModule,
     SharedModule,
     Ng2SmartTableModule,
