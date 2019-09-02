@@ -40,7 +40,7 @@
     "serve.electron.nntool.target": "ng serve electron-nntool",
     "serve.electron.nntool": "wait-on http-get://localhost:4200/ && electron apps/electron-nntool/src --serve",
     "start.electron.nntool": "npm run prepare.electron.nntool && npm-run-all -p serve.electron.nntool.target serve.electron.nntool",
-    "build:ias:if-not-exists": "[ -f ../ias/build/uglified/web/ias.web.js ] && echo \"Using cached ias\" || build:ias",
+    "build:ias:if-not-exists": "[ -f ../ias/build/uglified/web/ias.web.js ] && echo \"Using cached ias\" || npm run build:ias",
     "build:ias": "cd ../ias/ && ./build.sh",
     "pretty": "prettier --write \"./**/*.{ts,js,html,json}\""
   },
