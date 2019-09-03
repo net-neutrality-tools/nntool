@@ -27,6 +27,7 @@ spring:
           - Settings
           - Translation
           - MeasurementServer
+          - EmbeddedNetworkType
 
   #datasource:
   #  driver-class-name: org.postgresql.Driver
