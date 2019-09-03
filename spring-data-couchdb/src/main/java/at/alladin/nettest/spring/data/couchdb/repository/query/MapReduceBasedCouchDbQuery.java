@@ -136,7 +136,7 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 			builder.skip(view.skip());
 		}
 		
-		if (pageable != null) {
+		if (pageable != null && pageable.isPaged()) {
 			builder.limit(pageable.getPageSize());
 			builder.skip(pageable.getOffset());
 		}
@@ -188,14 +188,22 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 						final String placeholder = p.getName().orElse(p.getPlaceholder());
 						
 						if (k.value().equals(placeholder)) {
-							final String value = accessor.getBindableValue(p.getIndex()).toString();
-							
-							if (key == null) {
-								key = com.cloudant.client.api.views.Key.complex(value);
-							} else {
-								key.add(value);
+							final Object bindable = accessor.getBindableValue(p.getIndex());
+							if (bindable instanceof Long) {
+								if (key == null) {
+									key = com.cloudant.client.api.views.Key.complex((Long) bindable);
+								} else {
+									key.add((Long) bindable);
+								} 
 							}
-							
+							else {
+								if (key == null) {
+									key = com.cloudant.client.api.views.Key.complex(bindable.toString());
+								} else {
+									key.add(bindable.toString());
+								} 
+							}
+														
 							break; // break inner loop
 						}
 					}
