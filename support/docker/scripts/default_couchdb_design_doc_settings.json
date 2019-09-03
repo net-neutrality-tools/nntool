@@ -1,0 +1,9 @@
+{
+  "_id": "_design/Settings",
+  "views": {
+    "provider_by_asn": {
+      "map": "function(doc) { \n    if (doc.doctype == 'Provider') {\n    \tif (doc.asn_mappings.length > 0) {\n    \t\tfor (var i in doc.asn_mappings) {\n    \t\t\tvar mapping = doc.asn_mappings[i];\n    \t\t\tvar len = ! mapping.condition_rdns_suffix ? 0 : mapping.condition_rdns_suffix.length;\n    \t\t\temit([mapping.asn, len], null);\n    \t\t}\n    \t}\n    }\n}\n"
+    }
+  },
+  "language": "javascript"
+}
