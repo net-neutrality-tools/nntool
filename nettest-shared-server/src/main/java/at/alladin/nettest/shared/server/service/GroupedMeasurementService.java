@@ -1,4 +1,4 @@
-package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
+package at.alladin.nettest.shared.server.service;
 
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
@@ -6,7 +6,6 @@ import java.text.DecimalFormatSymbols;
 import java.text.Format;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.PriorityQueue;
@@ -18,15 +17,13 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.Measurem
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementGroup;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementGroupItem;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullSpeedMeasurement;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.GeoLocation;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedtestDetailGroup;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedtestDetailGroup.SpeedtestDetailGroupEntry;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedtestDetailGroup.SpeedtestDetailGroupEntry.FormatEnum;
-
+import at.alladin.nettest.shared.server.service.SpeedtestDetailGroup.SpeedtestDetailGroupEntry;
+import at.alladin.nettest.shared.server.service.SpeedtestDetailGroup.SpeedtestDetailGroupEntry.FormatEnum;
 
 /**
  * 
@@ -34,7 +31,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedtestDe
  *
  */
 @Service
-public class DetailMeasurementService {
+public class GroupedMeasurementService {
 
 	private static final Locale STRING_FORMAT_LOCALE = Locale.US;
 	
@@ -54,7 +51,7 @@ public class DetailMeasurementService {
 	 * @param groupStructure, the structure to be applied to the measurement as obtained w/ServerResource.getSetting(speedtestDetailGroups) TODO: make this more specific
 	 * @return a DetailMeasurementResponse with the grouped measurement result
 	 */
-	public DetailMeasurementResponse groupResult(final Measurement measurement, final List<SpeedtestDetailGroup> groupStructure, final Locale locale, 
+	public DetailMeasurementResponse groupResult(final FullMeasurementResponse measurement, final List<SpeedtestDetailGroup> groupStructure, final Locale locale, 
 			final int geoAccuracyDetailLimit) {
 		return groupResult(measurement, groupStructure, locale, geoAccuracyDetailLimit, false);
 	}
@@ -72,7 +69,7 @@ public class DetailMeasurementService {
 	 * @param includeKeys will include the internal keys in the result (e.g. speed_parameter_group)
 	 * @return
 	 */
-	public DetailMeasurementResponse groupResult(final Measurement measurement, final List<SpeedtestDetailGroup> groupStructure, final Locale locale, 
+	public DetailMeasurementResponse groupResult(final FullMeasurementResponse measurement, final List<SpeedtestDetailGroup> groupStructure, final Locale locale, 
 			final int geoAccuracyDetailLimit, final boolean includeKeys) {
 		final Format format = new DecimalFormat("0.00", new DecimalFormatSymbols(locale));
 		//final JsonArray groupedResultsJson = groupJsonResult(gson.toJson(measurement, Measurement.class), groupStructure).getAsJsonArray("groups");
@@ -87,7 +84,7 @@ public class DetailMeasurementService {
 		final List<DetailMeasurementGroup> responseGroupList = new ArrayList<>();
 		ret.setGroups(responseGroupList);
 		
-		final Format tzFormat = new DecimalFormat("+0.##;-0.##", new DecimalFormatSymbols(locale));
+		//final Format tzFormat = new DecimalFormat("+0.##;-0.##", new DecimalFormatSymbols(locale));
 		
 //			for(int i = 0; i < groupedResultsJson.size(); i++){
 //				groups.add(gson.fromJson(groupedResultsJson.get(i), SpeedtestDetailGroup.class));
@@ -117,13 +114,13 @@ public class DetailMeasurementService {
 				final Object value;
 				switch (keyPath[0].toLowerCase()) {
 				case SPEED_PREFIX:
-					value = getObjectAt(Arrays.copyOfRange(keyPath, 1, keyPath.length), measurement.getMeasurements().get(MeasurementTypeDto.SPEED), SpeedMeasurement.class);
+					value = getObjectAt(Arrays.copyOfRange(keyPath, 1, keyPath.length), measurement.getMeasurements().get(MeasurementTypeDto.SPEED), FullSpeedMeasurement.class);
 					break;
 				case QOS_PREFIX:
-					value = getObjectAt(Arrays.copyOfRange(keyPath, 1, keyPath.length), measurement.getMeasurements().get(MeasurementTypeDto.QOS), QoSMeasurement.class);
+					value = getObjectAt(Arrays.copyOfRange(keyPath, 1, keyPath.length), measurement.getMeasurements().get(MeasurementTypeDto.QOS), FullQoSMeasurement.class);
 					break;
 				default:
-					value = getObjectAt(keyPath, measurement, Measurement.class);
+					value = getObjectAt(keyPath, measurement, FullMeasurementResponse.class);
 				}
 				
 				if (value == null) {
@@ -178,7 +175,7 @@ public class DetailMeasurementService {
 			}
 			//group specific exceptions land here
 			if (groupDefinition.getKey().equals("device_information_group")) {
-				final List<GeoLocation> locations = measurement.getGeoLocationInfo().getGeoLocations();
+				final List<GeoLocationDto> locations = measurement.getGeoLocations();
 				
 				if (locations != null && locations.size() > 0) {
 					final DetailMeasurementGroupItem item = new DetailMeasurementGroupItem();
@@ -244,13 +241,12 @@ public class DetailMeasurementService {
 			} catch (IllegalArgumentException | IllegalAccessException | SecurityException e) {
 				return null;
 			}
-			
 		}
 		
 		return currentObject;
 	}
 	
-	private String getGeoLocation(final int geoAccuracyDetailLimit, final Locale locale, final GeoLocation location) throws JSONException {
+	private String getGeoLocation(final int geoAccuracyDetailLimit, final Locale locale, final GeoLocationDto location) throws JSONException {
         // geo-location
     	
     	final Double latitude = location.getLatitude();

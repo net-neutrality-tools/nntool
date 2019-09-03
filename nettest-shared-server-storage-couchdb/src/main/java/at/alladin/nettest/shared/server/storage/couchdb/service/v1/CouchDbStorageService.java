@@ -25,7 +25,6 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.Setti
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapResultDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.brief.BriefMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
@@ -41,6 +40,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasuremen
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
+import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ComputedNetworkPointInTime;
@@ -83,7 +83,6 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsRespon
 @Service
 public class CouchDbStorageService implements StorageService {
 	
-	@SuppressWarnings("unused")
 	private final Logger logger = LoggerFactory.getLogger(CouchDbStorageService.class);
 
 	@Autowired
@@ -108,7 +107,8 @@ public class CouchDbStorageService implements StorageService {
 	private QoSEvaluationService qosEvaluationService;
 	
 	@Autowired
-	private DetailMeasurementService detailMeasurementService;
+	//private DetailMeasurementService detailMeasurementService;
+	private GroupedMeasurementService groupedMeasurementService;
 	
 	@Autowired
 	private LmapReportModelMapper lmapReportModelMapper;
@@ -373,9 +373,12 @@ public class CouchDbStorageService implements StorageService {
 	public DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid, String measurementUuid, final String settingsUuid, final Locale locale) throws StorageServiceException {
 		final Measurement measurement = obtainMeasurement(measurementAgentUuid, measurementUuid);
 		//TODO: default settings?
-		final Settings settings = settingsRepository.findByUuid(settingsUuid);
-		return detailMeasurementService.groupResult(measurement, settings.getSpeedtestDetailGroups(),
-				Locale.ENGLISH, 10000);//detailMeasurementResponseMapper.map(measurement);
+		final Settings settings = settingsRepository.findByUuid(settingsUuid); // TODO: cache
+		
+		final FullMeasurementResponse fullMeasurementResponse = fullMeasurementResponseMapper.map(measurement);
+		
+		return groupedMeasurementService.groupResult(fullMeasurementResponse, settings.getSpeedtestDetailGroups(),
+				locale, 10000);
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package at.alladin.nettest.shared.server.storage.couchdb.domain.model;
+package at.alladin.nettest.shared.server.service;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,6 @@
 package at.alladin.nettest.shared.server.storage.couchdb.config;
 
 import java.lang.reflect.Type;
-import java.time.LocalDateTime;
 import java.util.Map.Entry;
 
 import org.slf4j.Logger;
@@ -9,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 
 import com.google.gson.Gson;
@@ -19,6 +19,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
+import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
@@ -36,6 +37,9 @@ import at.alladin.nettest.spring.data.couchdb.repository.config.EnableCouchDbRep
 @EnableCouchDbRepositories("at.alladin.nettest.shared.server.storage.couchdb.domain.repository")
 @ComponentScan({
 	"at.alladin.nettest.shared.server.storage.couchdb",
+})
+@Import({
+	GroupedMeasurementService.class
 })
 @Configuration
 public class CouchDbStorageConfiguration extends CouchDbConfiguration {
@@ -125,6 +129,7 @@ public class CouchDbStorageConfiguration extends CouchDbConfiguration {
 						ex.printStackTrace();
 						continue;
 					}
+					
 					Class<? extends SubMeasurement> subMeasurementClass = SubMeasurement.class;
 					switch (type) {
 						case QOS:
@@ -134,13 +139,12 @@ public class CouchDbStorageConfiguration extends CouchDbConfiguration {
 							subMeasurementClass = SpeedMeasurement.class;
 							break;
 					}
+					
 					ret.getMeasurements().put(type, gson.fromJson(entry.getValue(), subMeasurementClass));
 				}
 			}
 
 			return ret;
 		}
-
 	}
-
 }

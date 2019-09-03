@@ -1,4 +1,4 @@
-package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
+package at.alladin.nettest.shared.server.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -15,19 +15,18 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.Measurem
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementGroup;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementGroupItem;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedtestDetailGroup;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedtestDetailGroup.SpeedtestDetailGroupEntry;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedtestDetailGroup.SpeedtestDetailGroupEntry.FormatEnum;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgentInfo;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgentType;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullSpeedMeasurement;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentInfoDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
+import at.alladin.nettest.shared.server.service.SpeedtestDetailGroup.SpeedtestDetailGroupEntry;
+import at.alladin.nettest.shared.server.service.SpeedtestDetailGroup.SpeedtestDetailGroupEntry.FormatEnum;
 
-public class DetailMeasurementServiceTest {
+public class GroupedMeasurementServiceTest {
 
-	private DetailMeasurementService detailMeasurementService;
+	private GroupedMeasurementService detailMeasurementService;
 	
-	private Measurement measurement;
+	private FullMeasurementResponse measurement;
 	
 	private List<SpeedtestDetailGroup> groupStructure;
 	
@@ -37,18 +36,18 @@ public class DetailMeasurementServiceTest {
 	public void init() {
 		locale = Locale.US;
 		
-		detailMeasurementService = new DetailMeasurementService();
+		detailMeasurementService = new GroupedMeasurementService();
 		
-		measurement = new Measurement();
+		measurement = new FullMeasurementResponse();
 		measurement.setTag("tag");
-		final MeasurementAgentInfo info = new MeasurementAgentInfo();
+		final MeasurementAgentInfoDto info = new MeasurementAgentInfoDto();
 		measurement.setAgentInfo(info);
-		info.setType(MeasurementAgentType.MOBILE);
+		info.setType(MeasurementAgentTypeDto.MOBILE);
 		info.setUuid("uuid");
 		info.setLanguage("en");
 		
 		measurement.setMeasurements(new HashMap<>());
-		final SpeedMeasurement speed = new SpeedMeasurement();
+		final FullSpeedMeasurement speed = new FullSpeedMeasurement();
 		measurement.getMeasurements().put(MeasurementTypeDto.SPEED, speed);
 		speed.setBytesDownload(2242434L);
 		speed.setBytesUpload(3455454L);
@@ -91,8 +90,6 @@ public class DetailMeasurementServiceTest {
 		entry.setKey("speed.implausible");
 		entry.setTranslationKey("implausible_translate");
 		entryList.add(entry);
-		
-		
 	}
 	
 	@Test
