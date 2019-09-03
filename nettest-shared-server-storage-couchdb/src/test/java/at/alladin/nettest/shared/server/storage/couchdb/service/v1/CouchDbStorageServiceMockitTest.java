@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequestInfo;
@@ -23,6 +22,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.Embedd
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.ProviderRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.BriefMeasurementResponseMapper;
@@ -31,7 +31,6 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportMode
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.MeasurementAgentMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsResponseMapper;
-import mockit.Deencapsulation;
 import mockit.Delegate;
 import mockit.Expectations;
 import mockit.Injectable;
@@ -87,7 +86,10 @@ public class CouchDbStorageServiceMockitTest {
 	
 	@Mocked @Injectable
 	private LmapTaskMapper lmapTaskMapper;
-	
+
+	@Mocked @Injectable
+	private ProviderRepository providerRepository;
+
 	private LmapReportDto lmapReportDto; 
 	
 	private MeasurementAgent measurementAgent;
