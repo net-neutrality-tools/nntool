@@ -1,10 +1,12 @@
 import { ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { NotFoundComponent } from './404/notfound.component';
-import { AboutComponent } from './about/about.component';
-import { DocuComponent } from './docu/docu.component';
-import { HelpComponent } from './help/help.component';
+import { NotFoundComponent } from './adoc/notfound.component';
+import { AboutComponent } from './adoc/about.component';
+import { DocuComponent } from './adoc/docu.component';
+import { HelpComponent } from './adoc/help.component';
+import { TCComponent } from './adoc/tc.component';
+
 import { HistoryComponent } from './history/history.component';
 import { HistoryViewComponent } from './history/history.view.component';
 import { HistoryDetailViewComponent } from './history/view-detail.component';
@@ -14,7 +16,6 @@ import { OpendataComponent } from './opendata/opendata.component';
 import { OpentestViewComponent } from './result/view.component';
 import { Guard } from './services/guard.service';
 import { StatisticsComponent } from './statistics/statistics.component';
-import { TCComponent } from './tc/tc.component';
 import { NetTestComponent, TestGuard } from './test/test.component';
 import { SettingsComponent } from './user/settings.component';
 import { OpenDataResultTableComponent } from './opendata/open-data-result-table.component';

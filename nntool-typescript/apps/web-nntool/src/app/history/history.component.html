@@ -1,9 +1,16 @@
-<nntool-standard-page titleTranslationKey="HISTORY.HEADER" icon="icon-search">
-  <div class="section-table">
-    <nntool-result-table
-      [settings]="settings"
-      [source]="tableSource"
-      (rowSelect)="showMeasurement($event)"
-    ></nntool-result-table>
-  </div>
-</nntool-standard-page>
+<nntool-section-intro>
+  <nntool-section-header headerTranslationKey="HISTORY.HEADER" icon="icon-search" loadingIndicator="true">
+  </nntool-section-header>
+</nntool-section-intro>
+
+<nntool-section-arguments>
+  <nntool-section-content>
+    <div class="section-table">
+      <nntool-result-table
+        [settings]="settings"
+        [source]="tableSource"
+        (rowSelect)="showMeasurement($event)"
+      ></nntool-result-table>
+    </div>
+  </nntool-section-content>
+</nntool-section-arguments>

@@ -1,10 +1,8 @@
-<section class="section" id="section-intro">
-  <div class="wrapper">
-    <div
-      class="section-content"
-      [id]="key.toLowerCase()"
-      [hidden]="loading"
-      [innerHtml]="'STATIC.' + key.toUpperCase() | translate | insecureSanitizeHtml: key"
-    ></div>
-  </div>
-</section>
+<nntool-section-intro>
+  <div
+    class="section-content"
+    [id]="key.toLowerCase()"
+    [hidden]="loading"
+    [innerHtml]="'STATIC.' + key.toUpperCase() | translate | insecureSanitizeHtml: key"
+  ></div>
+</nntool-section-intro>
