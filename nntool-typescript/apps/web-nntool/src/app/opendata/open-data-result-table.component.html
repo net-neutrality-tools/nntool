@@ -3,10 +3,17 @@
   </nntool-section-header>
 </nntool-section-intro>
 
+<nntool-section-features>
+  <nntool-section-content>
+    <input type="text" #fullTextSearchInput placeholder="Search (TODO: translate)" />
+  </nntool-section-content>
+</nntool-section-features>
+
 <nntool-section-arguments>
   <nntool-section-content>
     <div class="section-table">
       <nntool-result-table
+        #resultTable
         [settings]="settings"
         [source]="tableSource"
         (rowSelect)="showOpenDataMeasurement($event)"

@@ -5,9 +5,13 @@ import { HttpParams, HttpClient } from '@angular/common/http';
 import { ServerDataSource } from 'ng2-smart-table';
 import { getDeepFromObject } from './helpers';
 import { SpringServerSourceConf } from './spring-server-source.conf';
+import { Observable } from 'rxjs';
 
 export class SpringServerDataSource extends ServerDataSource {
   protected conf: SpringServerSourceConf;
+
+  protected q: string;
+  protected requestedQ: string;
 
   // change: get custom config object in here
   constructor(protected http: HttpClient, conf: SpringServerSourceConf | {} = {}) {
@@ -18,6 +22,32 @@ export class SpringServerDataSource extends ServerDataSource {
     if (!this.conf.endPoint) {
       throw new Error('At least endPoint must be specified as a configuration of the server data source.');
     }
+  }
+
+  public setSearchQuery(q: string) {
+    this.q = q;
+  }
+
+  public removeSearchQuery() {
+    this.q = undefined;
+  }
+
+  // change: add search parameter (q=)
+  protected requestElements(): Observable<any> {
+    // reset page to 0 if new query is executed
+    if (this.q !== this.requestedQ) {
+      this.pagingConf['page'] = 0;
+    }
+
+    let httpParams = this.createRequesParams();
+
+    if (this.q) {
+      httpParams = httpParams.set('q', this.q);
+    }
+
+    this.requestedQ = this.q;
+
+    return this.http.get(this.conf.endPoint, { params: httpParams, observe: 'response' });
   }
 
   // change: Spring Pageable does sorting this way: sort=<property>,<direction>

@@ -1,15 +1,17 @@
 import { NGXLogger } from 'ngx-logger';
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SearchApiService } from '../services/search-api.service';
 import { SpringServerDataSource } from '../services/table/spring-server.data-source';
+import { fromEvent } from 'rxjs';
+import { map, filter, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   templateUrl: './open-data-result-table.component.html',
   styleUrls: ['./open-data-result-table.component.less']
 })
-export class OpenDataResultTableComponent {
+export class OpenDataResultTableComponent implements OnInit {
   private loading = false;
 
   settings = {
@@ -53,6 +55,8 @@ export class OpenDataResultTableComponent {
 
   tableSource: SpringServerDataSource;
 
+  @ViewChild('fullTextSearchInput', { static: true }) fullTextSearchInput: ElementRef;
+
   constructor(
     private logger: NGXLogger,
     private router: Router,
@@ -60,6 +64,27 @@ export class OpenDataResultTableComponent {
     private searchApiService: SearchApiService
   ) {
     this.tableSource = this.searchApiService.getServerDataSource();
+  }
+
+  ngOnInit() {
+    fromEvent(this.fullTextSearchInput.nativeElement, 'keyup')
+      .pipe(
+        map((event: any) => {
+          return event.target.value;
+        }),
+        //filter(res => res.length > 2),
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe((q: string) => {
+        //this.logger.debug('q=' + q);
+        if (q && q.length > 2) {
+          this.tableSource.setSearchQuery(q);
+        } else {
+          this.tableSource.removeSearchQuery();
+        }
+        this.tableSource.refresh();
+      });
   }
 
   showOpenDataMeasurement(item: any) {
