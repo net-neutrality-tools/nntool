@@ -196,6 +196,13 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 									key.add((Long) bindable);
 								} 
 							}
+							else if (bindable instanceof Integer) {
+								if (key == null) {
+									key = com.cloudant.client.api.views.Key.complex((Integer) bindable);
+								} else {
+									key.add((Integer) bindable);
+								} 
+							}
 							else {
 								if (key == null) {
 									key = com.cloudant.client.api.views.Key.complex(bindable.toString());

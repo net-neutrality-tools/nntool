@@ -24,14 +24,28 @@ public interface ProviderRepository extends CouchDbRepository<Provider> {
 	 * @return
 	 */
 	@View(
-			designDocument = "Settings", viewName = "provider_by_asn", includeDocs = true, descending = true,
-			startKey = {
-				@Key(value = "asn", highSentinel = true),
-			},
-			endKey = {
-				@Key(value = "asn", nullValue = true),
-			}
-		)
+		designDocument = "Settings", viewName = "provider_by_asn", includeDocs = true, descending = true,
+		startKey = {
+			@Key(value = "asn", highSentinel = true),
+		},
+		endKey = {
+			@Key(value = "asn", nullValue = true),
+		}
+	)
 	List<Provider> findByAsn(@Param("asn") Long asn);
 
+	
+	
+	@View(
+		designDocument = "Settings", viewName = "provider_by_mccmnc", includeDocs = true, descending = true,
+		startKey = {
+			@Key(value = "mcc", highSentinel = false),
+			@Key(value = "mnc", highSentinel = false),
+		},
+		endKey = {
+			@Key(value = "mcc", nullValue = false),
+			@Key(value = "mnc", nullValue = false),
+		}
+	)
+	List<Provider> findBySimMccMnc(@Param("mcc") Integer mcc, @Param("mnc") Integer mnc);
 }
