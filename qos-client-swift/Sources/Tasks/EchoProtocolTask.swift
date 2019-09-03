@@ -3,7 +3,7 @@ import CodableJSON
 
 class EchoProtocolTask: QoSTask {
 
-    public enum ProtocolType: String {
+    public enum ProtocolType: String, Codable {
         case tcp // = "tcp"
         case udp // = "udp"
     }
@@ -45,32 +45,6 @@ class EchoProtocolTask: QoSTask {
         return r
     }
 
-    ///
-    override init?(config: QoSTaskConfiguration) {
-        guard let host = config[CodingKeys4.host.rawValue]?.stringValue else {
-            logger.debug("host nil")
-            return nil
-        }
-
-        guard let payload = config[CodingKeys4.payload.rawValue]?.stringValue else {
-            logger.debug("payload nil")
-            return nil
-        }
-
-        if let port = config[CodingKeys4.port.rawValue]?.uint16Value {
-            self.port = port
-        }
-
-        if let protocolTypeString = config[CodingKeys4.protocolType.rawValue]?.stringValue, let protocolType = ProtocolType(rawValue: protocolTypeString) {
-            self.protocolType = protocolType
-        }
-
-        self.host = host
-        self.payload = payload
-
-        super.init(config: config)
-    }
-
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
 
@@ -81,8 +55,8 @@ class EchoProtocolTask: QoSTask {
             self.port = port
         }
 
-        if let protocolTypeString = try container.decodeIfPresent(String.self, forKey: .protocolType), let protocolType = ProtocolType(rawValue: protocolTypeString) {
-            self.protocolType = protocolType
+        if let pType = try container.decodeIfPresent(ProtocolType.self, forKey: .protocolType) {
+            self.protocolType = pType
         }
 
         try super.init(from: decoder)

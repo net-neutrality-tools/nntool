@@ -36,24 +36,6 @@ class NonTransparentProxyTask: QoSControlConnectionTask {
         return r
     }
 
-    ///
-    override init?(config: QoSTaskConfiguration) {
-        guard let request = config[CodingKeys4.request.rawValue]?.stringValue else {
-            logger.debug("request nil")
-            return nil
-        }
-
-        guard let port = config[CodingKeys4.port.rawValue]?.uint16Value else {
-            logger.debug("port nil")
-            return nil
-        }
-
-        self.request = request
-        self.port = port
-
-        super.init(config: config)
-    }
-
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
 

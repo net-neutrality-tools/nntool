@@ -41,22 +41,6 @@ class HttpProxyTask: QoSTask {
         return r
     }
 
-    ///
-    override init?(config: QoSTaskConfiguration) {
-        guard let urlString = config[CodingKeys4.url.rawValue]?.stringValue, let _ = NSURL(string: urlString) else {
-            logger.debug("url nil or invalid")
-            return nil
-        }
-
-        self.url = urlString
-
-        range = config[CodingKeys4.range.rawValue]?.stringValue
-        downloadTimeout = config[CodingKeys4.downloadTimeout.rawValue]?.uint64Value
-        connectionTimeout = config[CodingKeys4.connectionTimeout.rawValue]?.uint64Value
-
-        super.init(config: config)
-    }
-
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
 

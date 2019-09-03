@@ -36,13 +36,6 @@ class MeasurementKitTask: QoSTask {
         return r
     }
 
-    ///
-    override init?(config: QoSTaskConfiguration) {
-        input = config[CodingKeys4.input.rawValue]?.stringValue
-
-        super.init(config: config)
-    }
-
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
 

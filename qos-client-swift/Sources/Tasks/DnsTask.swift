@@ -49,26 +49,6 @@ class DnsTask: QoSTask {
         return r
     }
 
-    ///
-    override init?(config: QoSTaskConfiguration) {
-        guard let host = config[CodingKeys4.host.rawValue]?.stringValue else {
-            logger.debug("host nil")
-            return nil
-        }
-
-        guard let recordString = config[CodingKeys4.record.rawValue]?.stringValue else {
-            logger.debug("record nil")
-            return nil
-        }
-
-        self.host = host
-        self.record = recordString
-
-        resolver = config[CodingKeys4.resolver.rawValue]?.stringValue
-
-        super.init(config: config)
-    }
-
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
 

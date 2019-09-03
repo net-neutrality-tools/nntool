@@ -80,23 +80,6 @@ class UdpPortTask: QoSBidirectionalIpTask {
         return r
     }
 
-    ///
-    override init?(config: QoSTaskConfiguration) {
-        if let packetCountOut = config[CodingKeys4.packetCountOut.rawValue]?.intValue {
-            self.packetCountOut = packetCountOut
-        }
-
-        if let packetCountIn = config[CodingKeys4.packetCountIn.rawValue]?.intValue {
-            self.packetCountIn = packetCountIn
-        }
-
-        if let delayNs = config[CodingKeys4.delayNs.rawValue]?.uint64Value {
-            self.delayNs = delayNs
-        }
-
-        super.init(config: config)
-    }
-
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
 

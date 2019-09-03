@@ -51,24 +51,6 @@ class TracerouteTask: QoSTask {
         return r
     }
 
-    ///
-    override init?(config: QoSTaskConfiguration) {
-        guard let host = config[CodingKeys4.host.rawValue]?.stringValue else {
-            logger.debug("host nil")
-            return nil
-        }
-
-        guard let maxHops = config[CodingKeys4.maxHops.rawValue]?.uint8Value else {
-            logger.debug("max_hops nil")
-            return nil
-        }
-
-        self.host = host
-        self.maxHops = maxHops
-
-        super.init(config: config)
-    }
-
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
 

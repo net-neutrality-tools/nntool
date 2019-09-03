@@ -29,21 +29,6 @@ class QoSBidirectionalIpTask: QoSControlConnectionTask {
         return .unknown
     }
 
-    ///
-    override init?(config: QoSTaskConfiguration) {
-        logger.debug(config)
-
-        if let portOut = config[CodingKeys3.portOut.rawValue]?.uint16Value {
-            self.portOut = portOut
-        }
-
-        if let portIn = config[CodingKeys3.portIn.rawValue]?.uint16Value {
-            self.portIn = portIn
-        }
-
-        super.init(config: config)
-    }
-
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys3.self)
 
