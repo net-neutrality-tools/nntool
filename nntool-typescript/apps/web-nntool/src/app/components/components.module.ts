@@ -12,10 +12,12 @@ import { CardComponent } from './card/card.component';
 import { SectionInteractiveComponent } from './sections/section-interactive/section-interactive.component';
 import { SectionMapComponent } from './sections/section-map/section-map.component';
 import { SectionFeaturesComponent } from './sections/section-features/section-features.component';
+//import { QoSResultComponent } from '../qos-result/qos-result.component';
 
 const COMPONENTS = [
   ResultTableComponent,
   ResultComponent,
+  //QoSResultComponent,
   SectionHeaderComponent,
   SectionContentComponent,
   SectionIntroComponent,

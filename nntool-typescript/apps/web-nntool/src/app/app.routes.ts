@@ -9,11 +9,9 @@ import { TCComponent } from './adoc/tc.component';
 
 import { HistoryComponent } from './history/history.component';
 import { HistoryViewComponent } from './history/history.view.component';
-import { HistoryDetailViewComponent } from './history/view-detail.component';
 import { HomeComponent } from './home/home.component';
 import { MapComponent } from './map/map.component';
 import { OpendataComponent } from './opendata/opendata.component';
-import { OpentestViewComponent } from './result/view.component';
 import { Guard } from './services/guard.service';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { NetTestComponent, TestGuard } from './test/test.component';
@@ -32,57 +30,9 @@ export const routes: Routes = [
         component: HomeComponent
       },
       {
-        path: 'tc',
-        component: TCComponent
-      },
-      {
-        path: 'statistics',
-        component: StatisticsComponent
-      },
-      {
-        path: 'opendata',
-        component: OpendataComponent
-      },
-      {
-        path: 'map',
-        component: MapComponent
-      },
-      {
-        path: 'open-data-results',
-        children: [
-          {
-            path: '',
-            component: OpenDataResultTableComponent,
-            pathMatch: 'full'
-          },
-          {
-            path: ':openDataUuid',
-            children: [
-              {
-                path: '',
-                component: OpentestViewComponent /*OpenDataResultComponent*/,
-                pathMatch: 'full'
-              }
-              /*{
-                path: 'details',
-                component: OpenDataResultDetailComponent
-              }*/
-            ]
-          }
-        ]
-      },
-      {
         path: 'nettest',
         component: NetTestComponent,
         canDeactivate: [TestGuard]
-      },
-      {
-        path: 'about',
-        component: AboutComponent
-      },
-      {
-        path: 'docu',
-        component: DocuComponent
       },
       {
         path: 'history',
@@ -99,19 +49,59 @@ export const routes: Routes = [
                 path: '',
                 component: HistoryViewComponent,
                 pathMatch: 'full'
-              },
-              {
-                path: 'details',
-                component: HistoryDetailViewComponent
               }
             ]
           }
         ]
       },
       {
+        path: 'open-data-results',
+        children: [
+          {
+            path: '',
+            component: OpenDataResultTableComponent,
+            pathMatch: 'full'
+          }
+          /*{
+            path: ':openDataUuid',
+            children: [
+              {
+                path: '',
+                component: OpenDataResultComponent,
+                pathMatch: 'full'
+              }
+            ]
+          }*/
+        ]
+      },
+      {
+        path: 'map',
+        component: MapComponent
+      },
+      {
+        path: 'statistics',
+        component: StatisticsComponent
+      },
+      {
+        path: 'opendata',
+        component: OpendataComponent
+      },
+      {
+        path: 'tc',
+        component: TCComponent
+      },
+      {
         path: 'help',
         component: HelpComponent
       },
+      /*{
+        path: 'about',
+        component: AboutComponent
+      },*/
+      /*{
+        path: 'docu',
+        component: DocuComponent
+      },*/
       {
         path: 'settings',
         component: SettingsComponent

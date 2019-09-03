@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { MeasurementViewComponent } from '../measurement/view.component';
 import { ConfigService } from '../services/config.service';
 import { RequestsService } from '../services/requests.service';
 import { UserService } from '../services/user.service';
@@ -11,7 +10,7 @@ import { ResultGroupResponse } from './model/result.groups';
 @Component({
   templateUrl: './history.view.component.html'
 })
-export class HistoryViewComponent extends MeasurementViewComponent implements OnInit {
+export class HistoryViewComponent implements OnInit {
   private configService: ConfigService;
   private requests: RequestsService;
   private config: WebsiteSettings;
@@ -26,7 +25,6 @@ export class HistoryViewComponent extends MeasurementViewComponent implements On
     private activatedRoute: ActivatedRoute,
     private userService: UserService
   ) {
-    super();
     this.loading = true;
     this.urlpath = '/history/';
     this.translationKey = 'RESULT.DETAIL';

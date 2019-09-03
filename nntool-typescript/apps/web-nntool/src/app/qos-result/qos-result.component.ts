@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { SlideAnimation } from '../animation/animation';
 import { SlideableItem } from '../animation/slideable-item';
-import { MeasurementViewComponent } from '../measurement/view.component';
 import { UserService } from '../services/user.service';
 import { FullMeasurementResponse, QoSResult, QoSTypeDescription } from './model/full-measurement-response.api';
 
@@ -12,7 +11,7 @@ import { FullMeasurementResponse, QoSResult, QoSTypeDescription } from './model/
   selector: 'qos-result-component',
   animations: [SlideAnimation]
 })
-export class QoSResultComponent extends MeasurementViewComponent implements OnInit {
+export class QoSResultComponent implements OnInit {
   private measurementUuid: string;
   private response: FullMeasurementResponse;
   private qosGroups: QoSResultGroupHolder[];
@@ -23,7 +22,6 @@ export class QoSResultComponent extends MeasurementViewComponent implements OnIn
     private userService: UserService,
     private ngZone: NgZone
   ) {
-    super();
     this.measurementUuid = activatedRoute.snapshot.paramMap.get('uuid');
   }
 

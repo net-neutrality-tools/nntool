@@ -3,14 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
-import { MeasurementViewComponent } from '../measurement/view.component';
 import { UserInfo, UserService } from '../services/user.service';
 
 @Component({
   templateUrl: './history.deletion.component.html',
   selector: 'history-deletion-component'
 })
-export class HistoryDeletionComponent extends MeasurementViewComponent implements OnInit {
+export class HistoryDeletionComponent implements OnInit {
   protected subs: Subscription[] = [];
 
   private measurementUuid: string;
@@ -23,7 +22,6 @@ export class HistoryDeletionComponent extends MeasurementViewComponent implement
     private userService: UserService,
     private router: Router
   ) {
-    super();
     this.translationKey = 'RESULT.DETAIL';
     this.measurementUuid = activatedRoute.snapshot.paramMap.get('uuid');
   }

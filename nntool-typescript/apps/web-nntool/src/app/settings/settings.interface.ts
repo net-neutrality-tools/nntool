@@ -1,6 +1,5 @@
 import { MapSettings } from '../map/map.settings.interface';
 import { OpendataSettings } from '../opendata/opendata.settings.interface';
-import { ResultSettings } from '../result/result.settings.interface';
 import { StatisticsSettings } from '../statistics/statistics.settings.interface';
 import { UserSettings } from '../user/user.settings.interface';
 import { FeatureSettings } from './features.settings.interface';
@@ -49,11 +48,6 @@ export interface WebsiteSettings {
    * Which page to use as start/landing page
    */
   landing_page: string;
-
-  /**
-   * Settings for result detail
-   */
-  result: ResultSettings;
 
   /**
    * Color information

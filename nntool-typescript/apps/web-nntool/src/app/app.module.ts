@@ -24,14 +24,11 @@ import { FooterComponent } from './footer/footer.component';
 import { HistoryComponent } from './history/history.component';
 import { HistoryDeletionComponent } from './history/history.deletion.component';
 import { HistoryViewComponent } from './history/history.view.component';
-import { HistoryDetailViewComponent } from './history/view-detail.component';
 import { HomeComponent } from './home/home.component';
 import { MapComponent } from './map/map.component';
 import { MeasurementClassifiedValueComponent } from './measurement/classified.value.component';
 import { MeasurementFormattedValueComponent } from './measurement/formatted.value.component';
-import { MeasurementGroupedComponent } from './measurement/grouped.component';
 import { MeasurementService } from './measurement/measurement.service';
-import { SpeedGraphComponent } from './measurement/speed.graph.component';
 import { OpendataComponent } from './opendata/opendata.component';
 import { ClassificationFormatPipe } from './pipes/classification.format.pipe';
 import { FixedFormatPipe } from './pipes/fixed.format.pipe';
@@ -45,8 +42,6 @@ import { SpeedFormatPipe } from './pipes/speed.format.pipe';
 import { TimestampLocalDateFormatPipe } from './pipes/timestamp.date.format.pipe';
 import { UTCLocalDateFormatPipe } from './pipes/utc.date.format.pipe';
 import { QoSResultComponent } from './qos-result/qos-result.component';
-import { OpentestDetailViewComponent } from './result/view-detail.component';
-import { OpentestViewComponent } from './result/view.component';
 import { AppService } from './services/app.service';
 import { ColorService } from './services/color.service';
 import { ConfigService } from './services/config.service';
@@ -104,17 +99,12 @@ const MAIN_DECLARATIONS = [
   TCComponent,
   InsecureSanitizeHtml,
   UTCLocalDateFormatPipe,
-  HistoryDetailViewComponent,
   HistoryDeletionComponent,
   HistoryViewComponent,
   QoSResultComponent,
   MeasurementClassifiedValueComponent,
   MeasurementFormattedValueComponent,
   TimestampLocalDateFormatPipe,
-  MeasurementGroupedComponent,
-  OpentestViewComponent,
-  OpentestDetailViewComponent,
-  SpeedGraphComponent,
   SettingsComponent,
   DocuComponent,
   FooterComponent,

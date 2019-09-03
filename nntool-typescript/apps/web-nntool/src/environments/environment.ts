@@ -135,18 +135,6 @@ export const environment = {
       }
     }
   },
-  result: {
-    view: {
-      zoom_initial: 15,
-      zoom_min: 4,
-      zoom_max: 18,
-      default_map: 'google',
-      map_provider: ['google', 'osm']
-    },
-    graph: {
-      step_ms: 10
-    }
-  },
   user: {
     allow_query_uuid: true,
     allow_set_uuid: false,
