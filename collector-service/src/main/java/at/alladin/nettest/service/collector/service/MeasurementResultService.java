@@ -158,7 +158,7 @@ public class MeasurementResultService {
 
 		@SuppressWarnings("unchecked")
 		final IndexRequest indexRequest = new IndexRequest(esp.getIndex())
-				.id(measurementDto.getUuid())
+				.id(measurementDto.getOpenDataUuid())
 				.source(objectMapper.convertValue(measurementDto, Map.class));
 		
 		try {
