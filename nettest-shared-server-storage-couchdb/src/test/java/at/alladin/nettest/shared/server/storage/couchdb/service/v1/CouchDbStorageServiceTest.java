@@ -29,6 +29,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.Embedd
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.ProviderRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.BriefMeasurementResponseMapperImpl;
@@ -61,6 +62,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsRespon
 	LmapReportModelMapperImpl.class,
 	CouchDbStorageService.class,
 	QoSEvaluationService.class,
+	ProviderService.class,
 	BriefMeasurementResponseMapperImpl.class,
 })
 @AutoConfigureJsonTesters
@@ -92,6 +94,9 @@ public class CouchDbStorageServiceTest {
 	
 	@MockBean
 	private GroupedMeasurementService groupedMeasurementService;
+	
+	@MockBean
+	private ProviderRepository providerRepository;
 	
 	@Autowired
 	private StorageService storageService;
