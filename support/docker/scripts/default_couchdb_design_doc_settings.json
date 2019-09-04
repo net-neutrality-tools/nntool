@@ -1,0 +1,12 @@
+{
+  "_id": "_design/Settings",
+  "views": {
+    "provider_by_asn": {
+      "map": "function(doc) { \n    if (doc.doctype == 'Provider') {\n    \tif (doc.asn_mappings.length > 0) {\n    \t\tfor (var i in doc.asn_mappings) {\n    \t\t\tvar mapping = doc.asn_mappings[i];\n    \t\t\tvar len = ! mapping.condition_rdns_suffix ? 0 : mapping.condition_rdns_suffix.length;\n    \t\t\temit([mapping.asn, len], null);\n    \t\t}\n    \t}\n    }\n}\n"
+    },
+    "provider_by_mccmnc": {
+      "map": "function(doc) { \n    if (doc.doctype == 'Provider') {\n    \tif (doc.mcc_mnc_mappings.length > 0) {\n    \t\tfor (var i in doc.mcc_mnc_mappings) {\n    \t\t\tvar mapping = doc.mcc_mnc_mappings[i];\n    \t\t\t\n    \t\t\tvar sim = mapping.sim_mcc_mnc;\n    \t\t\tvar net = mapping.network_mcc_mnc;\n    \t\t\t\n    \t\t\tif (net)\n    \t\t\t\temit([sim.mcc, sim.mnc, net.mcc, net.mnc], null);\n    \t\t\telse\n    \t\t\t\temit([sim.mcc, sim.mnc], null);\n    \t\t}\n    \t}\n    }\n}\n"
+    }
+  },
+  "language": "javascript"
+}

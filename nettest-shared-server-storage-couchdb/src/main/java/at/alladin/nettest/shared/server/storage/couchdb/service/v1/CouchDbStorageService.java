@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.async.CallableProcessingInterceptor;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
@@ -43,6 +44,7 @@ import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServ
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ComputedNetworkPointInTime;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ConnectionInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.EmbeddedNetworkType;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.EmbeddedProvider;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MccMnc;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgent;
@@ -51,6 +53,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NatType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NatTypeInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NetworkMobileInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.NetworkPointInTime;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Provider;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ProviderInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
@@ -124,6 +127,9 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private LmapTaskMapper lmapTaskMapper;
+	
+	@Autowired
+	private ProviderService providerService;
 
 	/*
 	 * (non-Javadoc)
@@ -149,6 +155,7 @@ public class CouchDbStorageService implements StorageService {
 			if (cpit != null) {
 				cpit.setNetworkMobileInfo(computeMobileInfoAndProcessMccMnc(measurement));
 				cpit.setNatTypeInfo(computeNatType(measurement, cpit));
+				cpit.setProviderInfo(computeProviderInfo(measurement, cpit));
 				measurement.getNetworkInfo().setComputedNetworkInfo(cpit);
 			}
 			
@@ -517,16 +524,19 @@ public class CouchDbStorageService implements StorageService {
 		if (measurement.getNetworkInfo().getComputedNetworkInfo() == null) {
 			measurement.getNetworkInfo().setComputedNetworkInfo(new ComputedNetworkPointInTime());
 		}
-		
+        
+		return cpit;
+	}
+	
+	private ProviderInfo computeProviderInfo(final Measurement measurement, final ComputedNetworkPointInTime cpit) {
 		InetAddress clientAddress = null;
 		try {
-			cpit = measurement.getNetworkInfo().getComputedNetworkInfo();
 			clientAddress = InetAddress.getByName(cpit.getClientPublicIp());
 		}
 		catch (final UnknownHostException e) {
 			e.printStackTrace();
 		}
-		
+
 		//reverse DNS:
         String reverseDNS = Helperfunctions.reverseDNSLookup(clientAddress);
         if (reverseDNS != null) {
@@ -551,9 +561,28 @@ public class CouchDbStorageService implements StorageService {
         providerInfo.setCountryCodeAsn(asCountry);
         providerInfo.setPublicIpAsn(asn);
         providerInfo.setPublicIpAsName(asName);
-        cpit.setProviderInfo(providerInfo);
         
-		return cpit;
+        Provider provider = null;
+               
+        //Try mobile network info (mcc/mnc)
+        final NetworkMobileInfo mobileInfo = cpit.getNetworkMobileInfo();
+        if (mobileInfo != null) {
+        	provider = providerService.getByMccMnc(mobileInfo.getSimOperatorMccMnc(), mobileInfo.getNetworkOperatorMccMnc(), measurement.getSubmitTime());
+        }
+        
+        //Try ASN:
+        if (provider == null && asn != null) {
+	        provider = providerService.getByAsn(asn, reverseDNS);
+        }
+    	
+        if (provider != null) {
+        	final EmbeddedProvider embeddedProvider = new EmbeddedProvider();
+	        embeddedProvider.setShortName(provider.getShortName());
+	        embeddedProvider.setName(provider.getName());
+	        providerInfo.setProvider(embeddedProvider);
+        }
+
+        return providerInfo;
 	}
 	
 	private EmbeddedNetworkType getNetworkTypeById(final Integer networkTypeId) {
