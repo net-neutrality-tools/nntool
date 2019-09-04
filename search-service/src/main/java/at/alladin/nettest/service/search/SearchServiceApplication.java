@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Import;
 import at.alladin.nettest.service.search.config.SearchServiceProperties;
 import at.alladin.nettest.shared.server.config.spring.DevelopmentWebCorsConfiguration;
 import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
+import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
 
 /**
  * The controller's main class which allows the controller to be started as stand-alone Java application or inside a servlet container.
@@ -25,7 +26,7 @@ import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
 	"at.alladin.nettest.service.search", 
 	"at.alladin.nettest.shared.server.web.api.v1"
 })
-@Import({ DevelopmentWebCorsConfiguration.class })
+@Import({ DevelopmentWebCorsConfiguration.class, GroupedMeasurementService.class })
 public class SearchServiceApplication extends SpringBootServletInitializer {
 
 	/**

@@ -8,10 +8,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementGroup;
@@ -20,6 +24,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.D
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullSpeedMeasurement;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullSubMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
 import at.alladin.nettest.shared.server.service.SpeedtestDetailGroup.SpeedtestDetailGroupEntry;
@@ -42,6 +47,22 @@ public class GroupedMeasurementService {
 	private static final String SHARE_TEXT_PLACEHOLDER = "{}";
 	
 	private static final String SHARE_TEXT_INTRO_TRANSLATION_KEY = "share_text_intro";
+	
+	@Autowired
+	private ObjectMapper objectMapper;
+	
+	public DetailMeasurementResponse groupResult(final Map<String, Object> measurementAsMap, final List<SpeedtestDetailGroup> groupStructure, final Locale locale, 
+			final int geoAccuracyDetailLimit) {
+		return groupResult(measurementAsMap, groupStructure, locale, geoAccuracyDetailLimit, false);
+	}
+	
+	public DetailMeasurementResponse groupResult(final Map<String, Object> measurementAsMap, final List<SpeedtestDetailGroup> groupStructure, final Locale locale, 
+			final int geoAccuracyDetailLimit, final boolean includeKeys) {
+		
+		final FullMeasurementResponse measurement = objectMapper.convertValue(measurementAsMap, FullMeasurementResponse.class);
+		
+		return groupResult(measurement, groupStructure, locale, geoAccuracyDetailLimit, includeKeys);
+	}
 	
 	/**
 	 * Groups the results according to the groupStructure param
@@ -71,6 +92,11 @@ public class GroupedMeasurementService {
 	 */
 	public DetailMeasurementResponse groupResult(final FullMeasurementResponse measurement, final List<SpeedtestDetailGroup> groupStructure, final Locale locale, 
 			final int geoAccuracyDetailLimit, final boolean includeKeys) {
+		
+		if (measurement == null) {
+			return null;
+		}
+		
 		final Format format = new DecimalFormat("0.00", new DecimalFormatSymbols(locale));
 		//final JsonArray groupedResultsJson = groupJsonResult(gson.toJson(measurement, Measurement.class), groupStructure).getAsJsonArray("groups");
     	
@@ -90,6 +116,8 @@ public class GroupedMeasurementService {
 //				groups.add(gson.fromJson(groupedResultsJson.get(i), SpeedtestDetailGroup.class));
 //			}
 		
+		final Map<MeasurementTypeDto, FullSubMeasurement> subMeasurements = measurement.getMeasurements();
+		
 		for (final SpeedtestDetailGroup groupDefinition : groupStructure) {
 			//create a corresponding responseGroup w/formatted and i18ed values
 			final DetailMeasurementGroup responseGroup = new DetailMeasurementGroup();
@@ -106,7 +134,7 @@ public class GroupedMeasurementService {
 				final String unit = entry.getUnit();
 				
 				final String[] keyPath = entry.getKey().split("\\.");
-				if(keyPath.length == 0){
+				if (keyPath.length == 0) {
 					continue;
 				}
 				
@@ -114,11 +142,15 @@ public class GroupedMeasurementService {
 				final Object value;
 				switch (keyPath[0].toLowerCase()) {
 				case SPEED_PREFIX:
-					value = getObjectAt(Arrays.copyOfRange(keyPath, 1, keyPath.length), measurement.getMeasurements().get(MeasurementTypeDto.SPEED), FullSpeedMeasurement.class);
-					break;
+					if (subMeasurements != null) {
+						value = getObjectAt(Arrays.copyOfRange(keyPath, 1, keyPath.length), subMeasurements.get(MeasurementTypeDto.SPEED), FullSpeedMeasurement.class);
+						break;
+					}
 				case QOS_PREFIX:
-					value = getObjectAt(Arrays.copyOfRange(keyPath, 1, keyPath.length), measurement.getMeasurements().get(MeasurementTypeDto.QOS), FullQoSMeasurement.class);
-					break;
+					if (subMeasurements != null) {
+						value = getObjectAt(Arrays.copyOfRange(keyPath, 1, keyPath.length), subMeasurements.get(MeasurementTypeDto.QOS), FullQoSMeasurement.class);
+						break;
+					}
 				default:
 					value = getObjectAt(keyPath, measurement, FullMeasurementResponse.class);
 				}
@@ -140,7 +172,7 @@ public class GroupedMeasurementService {
 				
 				//do formatting
 				//special cases get their own formatting (not ideal...)
-				if(key.endsWith("network_type")){
+				if(key.endsWith("network_type")) {
 					item.setValue(Helperfunctions.getNetworkTypeName(Integer.parseInt(val)));
 					//TODO: add specific rules for the items below
 				} else {
@@ -174,7 +206,7 @@ public class GroupedMeasurementService {
 				responseGroup.getItems().add(item);
 			}
 			//group specific exceptions land here
-			if (groupDefinition.getKey().equals("device_information_group")) {
+			if ("device_information_group".equals(groupDefinition.getKey())) {
 				final List<GeoLocationDto> locations = measurement.getGeoLocations();
 				
 				if (locations != null && locations.size() > 0) {
@@ -333,8 +365,5 @@ public class GroupedMeasurementService {
 		public String toString() {
 			return "ShareText [text=" + text + ", priority=" + priority + "]";
 		}
-		
-		
 	}
-
 }

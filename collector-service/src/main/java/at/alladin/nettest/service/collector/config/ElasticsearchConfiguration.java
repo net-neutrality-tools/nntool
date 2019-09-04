@@ -1,7 +1,5 @@
 package at.alladin.nettest.service.collector.config;
 
-import java.io.IOException;
-
 import javax.annotation.PostConstruct;
 
 import org.apache.http.HttpHost;
