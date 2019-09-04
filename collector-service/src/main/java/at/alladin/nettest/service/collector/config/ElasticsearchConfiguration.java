@@ -2,6 +2,8 @@ package at.alladin.nettest.service.collector.config;
 
 import java.io.IOException;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
@@ -43,11 +45,17 @@ public class ElasticsearchConfiguration {
 		
 		logger.info("Created Elasticsearch RestHighLevelClient (to host {} on port {})", e.getHost(), e.getPort());
 		
-		// create configured index if not exists
+		return client;
+	}
+	
+	@PostConstruct
+	private void createIndexIfNotExists() {
+		final String index = collectorServiceProperties.getElasticsearch().getIndex();
+		
 		try {
-			final String index = e.getIndex();
-			
-			final boolean indexExists = client.indices().exists(new GetIndexRequest(index), RequestOptions.DEFAULT);
+		
+			// index
+			final boolean indexExists = elasticsearchClient().indices().exists(new GetIndexRequest(index), RequestOptions.DEFAULT);
 			
 			if (indexExists) {
 				logger.debug("{} index already created", index);
@@ -55,14 +63,10 @@ public class ElasticsearchConfiguration {
 				logger.debug("Creating {} index", index);
 	
 				final CreateIndexRequest createIndexRequest = new CreateIndexRequest(index);
-				client.indices().create(createIndexRequest, RequestOptions.DEFAULT);
+				elasticsearchClient().indices().create(createIndexRequest, RequestOptions.DEFAULT);
 			}
-		} catch (IOException ex) {
-			logger.info("Could not create configured Elasticsearch index named {}", e.getIndex());
-			// TODO: abort launch?
-			return null;
+		} catch (Exception ex) {
+			logger.error("Could not create configured Elasticsearch index named {}", index, ex);
 		}
-		
-		return client;
 	}
 }
