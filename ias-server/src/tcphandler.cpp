@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-20
+ *      \date Last update: 2019-08-29
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -895,7 +895,6 @@ void CTcpHandler::sendRoundTripTimeResponse(noPollCtx *ctx, noPollConn *conn)
             {"mis",         rttMissing},
             {"pSz",         rttPacketsize},
             {"std_dev_pop", CTool::to_string_precision(rttStdDevPop, 3)},
-            {"srv",         hostname},
             {"rtts",        jRtts},
         };
 

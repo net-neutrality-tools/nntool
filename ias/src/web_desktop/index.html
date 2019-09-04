@@ -34,6 +34,14 @@
                         <td></td>
                         <td></td>
                     </tr>
+
+                    <tr>
+                        <td>TLS</td>
+                        <td><input type='radio' name='tls' checked >off</td>
+                        <td><input type='radio' name='tls'         >on</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                 </table>
 
                 <br>
@@ -107,7 +115,7 @@
 
         /*!
          *      \author zafaco GmbH <info@zafaco.de>
-         *      \date Last update: 2019-08-09
+         *      \date Last update: 2019-08-28
          *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
          */
 
@@ -141,9 +149,6 @@
             iasParameters.wsTargets                         = [];
             iasParameters.wsTargets.push('peer-ias-de-01');
 
-            iasParameters.wsTargetsRtt                      = [];
-            iasParameters.wsTargetsRtt.push('peer-ias-de-01');
-
             var ipVersion = document.getElementsByName('ipVersion');
             if (ipVersion[1].checked || ipVersion[2].checked)
             {
@@ -161,11 +166,6 @@
                 {
                     iasParameters.wsTargets[index] = iasParameters.wsTargets[index] + targetIpVersion;
                 });
-
-                iasParameters.wsTargetsRtt.forEach(function(element, index)
-                {
-                    iasParameters.wsTargetsRtt[index] = iasParameters.wsTargetsRtt[index] + targetIpVersion;
-                });
             }
 
             iasParameters.wsTLD                         = 'net-neutrality.tools';
@@ -179,6 +179,11 @@
             iasParameters.upload    = {};
             iasParameters.rtt       = {};
 
+            if (document.getElementsByName('tls')[1].checked)
+            {
+                iasParameters.wsTargetPort  = '443';
+                iasParameters.wsWss         = 1;
+            }
 
             //dl/ul parameters if no speed classes are used or singleStream is active
             var singleStream = document.getElementsByName('singleStream')[1].checked;
