@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-30
+ *      \date Last update: 2019-09-04
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -49,7 +49,9 @@ class CCallback
 		Json::object jMeasurementResultsPeer;
 		Json::object jMeasurementResultsRttUdp;
 		Json::array jMeasurementResultsDownload;
+		Json::array jMeasurementResultsDownloadStream;
 		Json::array jMeasurementResultsUpload;
+		Json::array jMeasurementResultsUploadStream;
 	
 	public:
 		int mTestCase;
