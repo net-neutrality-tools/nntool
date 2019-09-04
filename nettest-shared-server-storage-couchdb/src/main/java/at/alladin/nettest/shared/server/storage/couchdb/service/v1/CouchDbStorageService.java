@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -62,6 +63,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.EmbeddedNetworkTypeRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
@@ -107,7 +109,6 @@ public class CouchDbStorageService implements StorageService {
 	private QoSEvaluationService qosEvaluationService;
 	
 	@Autowired
-	//private DetailMeasurementService detailMeasurementService;
 	private GroupedMeasurementService groupedMeasurementService;
 	
 	@Autowired
@@ -168,7 +169,8 @@ public class CouchDbStorageService implements StorageService {
 		calculateTotalMeasurementPayload(measurement);
 		
 		//add speed server (if not already present)
-		if (measurement.getMeasurements().containsKey(MeasurementTypeDto.SPEED)) {
+		final Map<MeasurementTypeDto, SubMeasurement> measurements = measurement.getMeasurements();
+		if (measurements != null && measurements.containsKey(MeasurementTypeDto.SPEED)) {
 			if (lmapReportDto != null && lmapReportDto.getResults() != null && lmapReportDto.getResults().size() > 0) {
 				SpeedMeasurementResult lmapResult = null;
 				for (SubMeasurementResult resultDto : lmapReportDto.getResults().get(0).getResults()) {
@@ -189,9 +191,7 @@ public class CouchDbStorageService implements StorageService {
 						result.getConnectionInfo().setPort(server.getPortTls() != null ? server.getPortTls() : server.getPort());
 					}
 				}
-				
 			}
-			
 		}
 
 		try {

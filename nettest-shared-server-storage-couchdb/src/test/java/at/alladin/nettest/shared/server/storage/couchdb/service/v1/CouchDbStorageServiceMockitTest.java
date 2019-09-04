@@ -117,14 +117,13 @@ public class CouchDbStorageServiceMockitTest {
 	}
 	
 	@Test(expected = StorageServiceException.class)
-	public void saveWithInvalidAgentUuidTest_ThrowsStorageServiceException () {
+	public void saveWithInvalidAgentUuidTest_ThrowsStorageServiceException() {
 		lmapReportDto.setAgentId(null);
 		couchDbStorageService.save(lmapReportDto);
 	}
 	
 	@Test
-	public void saveValidTest_callsSaveAndReturnsUuids () {
-		
+	public void saveValidTest_callsSaveAndReturnsUuids() {
 		new Expectations() {{
 			measurementRepository.save((Measurement) any);
 			times = 1;
@@ -150,8 +149,7 @@ public class CouchDbStorageServiceMockitTest {
 	}
 	
 	@Test
-	public void saveValidTestWithSystemUuid_callsSaveReturnsUuidsAndStoresCorrectSystemUuid () {
-		
+	public void saveValidTestWithSystemUuid_callsSaveReturnsUuidsAndStoresCorrectSystemUuid() {
 		new Expectations() {{
 			measurementRepository.save((Measurement) any);
 			times = 1;
@@ -168,7 +166,6 @@ public class CouchDbStorageServiceMockitTest {
 			
 			lmapReportModelMapper.map((LmapReportDto) any);
 			result = new Measurement();
-			
 		}};
 		
 		final MeasurementResultResponse response = couchDbStorageService.save(lmapReportDto, SYSTEM_UUID);
