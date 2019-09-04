@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-30
+ *      \date Last update: 2019-09-04
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -199,15 +199,10 @@ int main(int argc, char** argv)
 void measurementStart(string measurementParameters)
 {
     //Signal Handler
-
-    signal(SIGINT, signal_handler);
     signal(SIGFPE, signal_handler);
     signal(SIGABRT, signal_handler);
     signal(SIGSEGV, signal_handler);
     signal(SIGCHLD, signal_handler);
-
-	//android api hookup
-	//call with json measurementParameters via ndk
 
 	::TCP_STARTUP	= 3000000;
 	conf.sProvider 	= "nntool";
