@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-30
+ *      \date Last update: 2019-09-04
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -149,12 +149,7 @@
         {
             self.uploadLabel.text = [NSString stringWithFormat:@"%@ Mbit/s", [self.tool formatNumberToCommaSeperatedString:[NSNumber numberWithDouble:([[[[response objectForKey:@"upload_info"] lastObject] objectForKey:@"throughput_avg_bps"] doubleValue] /1000.0 / 1000.0)] withMinDecimalPlaces:2 withMaxDecimalPlace:2]];
         }
-        
-        //copy to clipboard
-        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-        pasteboard.string = self.kpisTextView.text;
     }
-    
 }
 
 
