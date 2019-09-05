@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import at.alladin.nettest.spring.data.couchdb.core.mapping.DocTypeHelper;
+
 /**
  * Contains device-specific information.
  * 
@@ -14,17 +16,47 @@ import com.google.gson.annotations.SerializedName;
  *
  */
 @JsonClassDescription("Contains device-specific information.")
-@JsonIgnoreProperties({ "_id", "_rev" })
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Device {
 	
-	/**
-	 * A ID which serves as primary key.
-	 */
-	@JsonPropertyDescription("A ID which serves as primary key.")
 	@Expose
-	@SerializedName("id")
-	@JsonProperty("id")
-	private Long id;
+	@SerializedName("_id")
+	@JsonProperty("_id")
+	private String id;
+	
+	@Expose
+	@SerializedName("_rev")
+	@JsonProperty("_rev")
+	private String rev;
+	
+	@JsonProperty("docType")
+	@Expose
+	@SerializedName("docType") // TODO: rename to @docType
+	private String docType;
+	
+	public Device() {
+		docType = DocTypeHelper.getDocType(getClass());
+	}
+	
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	public String getRev() {
+		return rev;
+	}
+	
+	public void setRev(String rev) {
+		this.rev = rev;
+	}
+	
+	public String getDocType() {
+		return docType;
+	}
 	
 	/**
 	 * Device code name.
@@ -59,7 +91,7 @@ public class Device {
 	public void setFullname(String fullname) {
 		this.fullname = fullname;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Device [id=" + id + ", codename=" + codename + ", fullname=" + fullname + "]";

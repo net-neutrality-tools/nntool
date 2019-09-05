@@ -73,7 +73,7 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 				
 				logger.debug("Count response: {}", total);
 			} catch (Exception e) {
-				logger.error("Could not get total count, returning empty result"/*, e*/);
+				logger.error("Could not get total count, returning empty result", e);
 				//e.printStackTrace();
 				return returnEmptyResult(accessor, total); // TODO: throw exception
 			}
