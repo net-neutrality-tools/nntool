@@ -1,0 +1,486 @@
+package at.alladin.nettest.service.map.service;
+
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Strings;
+import com.google.gson.internal.bind.util.ISO8601Utils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.NoSuchMessageException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
+import java.util.UUID;
+
+import javax.inject.Inject;
+
+import at.alladin.nettest.service.map.domain.model.MapServiceOptions;
+import at.alladin.nettest.service.map.domain.model.MapServiceSettings;
+import at.alladin.nettest.service.map.util.GeographyHelper;
+import at.alladin.nntool.shared.map.MapCoordinate;
+import at.alladin.nntool.shared.map.MapMarkerRequest;
+import at.alladin.nettest.shared.nntool.Helperfunctions;
+import at.alladin.nettest.shared.server.helper.ClassificationHelper;
+
+@Service
+public class MarkerService {
+
+	private final Logger logger = LoggerFactory.getLogger(MarkerService.class);
+	
+    /**
+     *
+     */
+    private static int MAX_PROVIDER_LENGTH = 22;
+
+    /**
+     *
+     */
+    private static int CLICK_RADIUS = 10;
+
+    @Inject
+    private ClassificationService classificationService;
+
+    @Inject
+    private MapOptionsService mapOptionsService;
+
+    //TODO: @Inject message source
+    private MessageSource messageSource = new MessageSource() {
+		
+		@Override
+		public String getMessage(String code, Object[] args, String defaultMessage, Locale locale) {
+			// TODO Auto-generated method stub
+			return code;
+		}
+		
+		@Override
+		public String getMessage(String code, Object[] args, Locale locale) throws NoSuchMessageException {
+			// TODO Auto-generated method stub
+			return code;
+		}
+		
+		@Override
+		public String getMessage(MessageSourceResolvable resolvable, Locale locale) throws NoSuchMessageException {
+			// TODO Auto-generated method stub
+			return "resolvable";
+		}
+	};
+
+    @Inject
+    private JdbcTemplate jdbcTemplate;
+
+    public String obtainMarker(final MapMarkerRequest request, final Locale locale) {
+
+        final JSONObject answer = new JSONObject();
+
+        try {
+            String clientUuidString = request.getOptions().get("client_uuid");//request.optString("client_uuid");
+
+            boolean useXY = false;
+            boolean useLatLon = false;
+            
+            final MapCoordinate coordinates = request.getCoordinates();
+
+            if (coordinates.getX() != null && coordinates.getY() != null) {
+                useXY = true;
+            } else if (coordinates.getLat() != null && coordinates.getLon() != null) {
+                useLatLon = true;
+            }
+
+            if (coordinates.getZoom() != null && (useLatLon || useXY)) {
+            	double geoX = 0;
+                double geoY = 0;
+                
+            	final int zoom = coordinates.getZoom();
+                if (useXY) {
+                    geoX = coordinates.getX();
+                    geoY = coordinates.getY();
+                } else if (useLatLon) {
+                    geoX = GeographyHelper.lonToMeters(coordinates.getLon());
+                    geoY = GeographyHelper.latToMeters(coordinates.getLat());
+                }
+
+                final int size;
+                if (coordinates.getSize() != null) {
+                    size = coordinates.getSize();
+                } else {
+                	size = 0;
+                }
+
+                if (zoom != 0 && geoX != 0 && geoY != 0) {
+                    double radius = 0;
+                    if (size > 0) {
+                        radius = size * GeographyHelper.getResFromZoom(256, zoom); // TODO use real tile size
+                    } else {
+                        radius = CLICK_RADIUS * GeographyHelper.getResFromZoom(256, zoom);  // TODO use real tile size
+                    }
+                    final double geoXMin = geoX - radius;
+                    final double geoXMax = geoX + radius;
+                    final double geoYMin = geoY - radius;
+                    final double geoYMax = geoY + radius;
+
+                    String prioritizeUUIDString = null;
+                    String highlightUuidString = null;
+                    UUID prioritizeUUID = null;
+
+                    String optionStr = null;
+                    if (request.getOptions() != null && request.getOptions().containsKey("map_options")) {
+                        optionStr = request.getOptions().get("map_options");
+                    } else {//if (optionStr == null || optionStr.length() == 0) { // set default
+                        optionStr = "mobile/download";
+                    }
+
+                    final MapServiceOptions mo = mapOptionsService.getMapOptionsForKey(optionStr); //mso.getMapOptionMap().get(optionStr);
+
+                    final List<MapServiceSettings.SQLFilter> filters = new ArrayList<>(mapOptionsService.getDefaultMapFilters());
+                    filters.add(mapOptionsService.getAccuracyMapFilter());
+
+                    final Iterator<String> keys = request.getMapFilter().keySet().iterator();
+
+                    while (keys.hasNext()) {
+                        final String key = /*(String)*/ keys.next();
+                        if (request.getMapFilter().get(key) != null) {
+                            if (key.equals("highlight")) {
+                                if (highlightUuidString == null) {
+                                    highlightUuidString = request.getMapFilter().get(key);
+                                }
+                            } else if (key.equals("highlight_uuid")) {
+                                highlightUuidString = request.getMapFilter().get(key);
+                            } else if ("prioritize".equals(key)) {
+                                prioritizeUUIDString = request.getMapFilter().get(key);
+                            } else {
+                                final MapServiceSettings.MapFilter f = mapOptionsService.getMapFilterForKey(key);
+                                if (f != null) {
+                                    //filters.add(mapFilter.getFilter(mapFilterObj.getString(key)));
+                                    filters.add(f.getFilter("" + request.getMapFilter().get(key)));
+                                }
+                            }
+                        }
+                    }
+
+                    if (prioritizeUUIDString != null) {
+                        try {
+                            prioritizeUUID = UUID.fromString(prioritizeUUIDString);
+                        } catch (final Exception e) {
+                            prioritizeUUID = null;
+                        }
+                    }
+
+                    final StringBuilder whereSQL = new StringBuilder(mo.getSqlFilter());
+                    for (final MapServiceSettings.SQLFilter sf : filters) {
+                        whereSQL.append(" AND ").append(sf.getWhereClause());
+                    }
+
+                    final String sql = String.format(
+                            "SELECT"
+                                    + (useLatLon
+	                                    ? " t.geo_location_latitude as lat, t.geo_location_longitude as lon"
+	                                    : " ST_X(t.geo_location_geometry) x, ST_Y(t.geo_location_geometry) y"
+                                		)
+                                    + ", (t.start_time)::timestamp as time, t.agent_timezone as timezone, ias.throughput_avg_download_bps as speed_download, ias.throughput_avg_upload_bps as speed_upload"
+                                    + ", ias.rtt_median_ns as ping_median, t.initial_network_type_id as network_type"
+                                    + ", t.mobile_network_signal_strength_2g3g_dbm as signal_strength"
+                                    + ", t.mobile_network_lte_rsrp_dbm as lte_rsrp"
+                                    + ", t.wifi_initial_ssid as wifi_ssid"
+                                    + ", t.mobile_network_operator_name as network_operator"
+                                    + ", t.mobile_sim_operator_name as network_sim_operator"
+                                    + ", t.provider_public_ip_as_name as public_ip_as_name"
+                                    + ", open_data_uuid as open_test_uuid"
+                                    + ", mobile_roaming_type::int as roaming_type"
+                                    //TODO: there is only one provider name left, right?
+//                                    + ", COALESCE(json->'network_info'->'provider'->>'shortname', json->'network_info'->'provider'->>'name') as provider_text"
+//                                    + ", COALESCE(json->'mobile_network_info'->'mobile_provider'->>'shortname', json->'mobile_network_info'->'mobile_provider'->>'name') as mobile_network_name"
+									+ ", COALESCE(t.provider_shortname, t.provider_name) as provider_name"
+									+ ", t.mobile_sim_operator_name as mobile_sim_name"
+                                    + ", t.initial_network_type_id as network_type_id"
+                                    + ", t.network_signal_info as signals"
+//                                    + ", t.uuid as uuid, t.client_uuid as client_uuid"
+									+ ", t.agent_uuid as client_uuid"
+                                    + " FROM measurements t"
+                                    + " LEFT JOIN ias_measurements ias ON t.open_data_uuid = ias.measurement_open_data_uuid"
+                                    + " WHERE"
+                                    //+ ( clientUuid == null ? "" : " t.client_uuid = ?::uuid AND")
+                                    + " %s"
+//                                    + " AND location && ST_SetSRID(ST_MakeBox2D(ST_Point(?,?), ST_Point(?,?)), 900913)"
+                                    + " AND t.geo_location_geometry && ST_SetSRID(ST_MakeBox2D(ST_Point(?,?), ST_Point(?,?)), 900913)"
+                                    + " ORDER BY"
+                                    + (prioritizeUUID == null ? "" : " CASE t.agent_uuid WHEN ?::uuid THEN 1 ELSE 2 END, ")
+                                    + " t.open_data_uuid DESC" + " LIMIT 5", whereSQL);
+
+                    logger.info("SQL: " + sql);
+
+                    //make some things final for the lambda compatibility
+                    final UUID finalPrioritizeUuid = prioritizeUUID;
+                    final String finalClientUuidString = clientUuidString;
+                    final String finalHighlightUuidString = highlightUuidString;
+
+                    final List<JSONObject> resultJsonObjects = jdbcTemplate.query(sql, ps -> {
+                        int i = 1;
+                                /*
+                                if (clientUuid != null) {
+                                    ps.setObject(i++, clientUuid.toString());
+                                }
+                                */
+
+                        for (final MapServiceSettings.SQLFilter sf : filters) {
+                            i = sf.fillParams(i, ps);
+                        }
+
+                        ps.setDouble(i++, geoXMin);
+                        ps.setDouble(i++, geoYMin);
+                        ps.setDouble(i++, geoXMax);
+                        ps.setDouble(i++, geoYMax);
+
+                        if (finalPrioritizeUuid != null) {
+                            ps.setObject(i++, finalPrioritizeUuid.toString());
+                        }
+
+                    }, (ResultSet rs, int rowNum) -> parseResultSet(rs, finalClientUuidString, finalHighlightUuidString, locale));
+
+
+                    final JSONArray resultList = new JSONArray();
+
+                    resultJsonObjects.forEach(resultList::put);
+
+                    answer.put("measurements", resultList);
+                }
+            } else {
+                logger.error("Expected request is missing.");
+            }
+        } catch (final JSONException e) {
+            logger.error("Error parsing JSON Data " + e.toString());
+        }
+
+        return answer.toString();
+    }
+
+    private JSONObject parseResultSet(final ResultSet rs, final String clientUuidString, final String highlightUuidString, final Locale locale) throws SQLException {
+        final Format format = NumberFormat.getInstance();//new SignificantFormat(2, locale); //TODO
+        final JSONObject jsonItem = new JSONObject();
+
+        UUID highlightUuid = null;
+        if (highlightUuidString != null) {
+            try {
+                highlightUuid = UUID.fromString(highlightUuidString);
+            } catch (final Exception e) {
+                highlightUuid = null;
+            }
+        }
+
+        JSONArray jsonItemList = new JSONArray();
+
+
+        final String dbClientUuidString = rs.getString("client_uuid");
+        //final String measurementUuid = rs.getString("uuid");
+        final String measurementUuid = "0" + rs.getString("open_test_uuid");
+        
+        // RMBTClient Info
+
+        if ((clientUuidString != null && clientUuidString.equals(dbClientUuidString)) ||
+                (highlightUuidString != null && highlightUuidString.equals(dbClientUuidString))) {
+            // highlight uses both the new highlight_uuid syntax and the old client_uuid syntax
+            // TODO: The client_uuid should only return your own measurement markers
+            jsonItem.put("highlight", true);
+
+            // put measurement_uuid if measurement belongs to given client_uuid
+            jsonItem.put("measurement_uuid", measurementUuid); // give measurement_uuid for in-app view of own results
+        } else {
+            jsonItem.put("highlight", false);
+        }
+
+        final double res_x = rs.getDouble(1);
+        final double res_y = rs.getDouble(2);
+        final String openTestUUID = rs.getString("open_test_uuid");
+
+        // TODO: remove lat,long in favor of geo_lat,geo_long to make the responses more similar (measurement result response)
+        jsonItem.put("lat", res_x);
+        jsonItem.put("lon", res_y);
+
+        jsonItem.put("geo_lat", res_x); // new with geo_
+        jsonItem.put("geo_long", res_y); // new with geo_
+
+        jsonItem.put("open_test_uuid", "O" + openTestUUID);
+        // marker.put("uid", uid);
+
+        final Date date = rs.getTimestamp("time");
+        final String tzString = rs.getString("timezone");
+        final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, locale);
+        if (!Strings.isNullOrEmpty(tzString)) {
+            dateFormat.setTimeZone(TimeZone.getTimeZone(tzString));
+        }
+        jsonItem.put("time_string", dateFormat.format(date));
+        jsonItem.put("timestamp", date.getTime());
+        jsonItem.put("time", ISO8601Utils.format(date));
+
+        //get the first networkType for classification
+        final String signalString = rs.getString("signals");
+        final JSONArray signalArr;
+        if (signalString != null) {
+        	signalArr = new JSONArray(signalString);
+        } else {
+        	signalArr = new JSONArray();
+        }
+        final Integer networkTypeId = signalArr.length() > 0 ? signalArr.getJSONObject(0).getInt("network_type_id") : rs.getInt("network_type_id");
+
+        final int fieldDown = rs.getInt("speed_download");
+        final String downloadString = String.format("%s %s", format.format(fieldDown / 1000d), messageSource.getMessage("RESULT_DOWNLOAD_UNIT", null, locale));//labels.getString("RESULT_DOWNLOAD_UNIT"));
+        ClassificationHelper.ClassificationItem classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.DOWNLOAD, fieldDown, networkTypeId);
+        jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_DOWNLOAD", null, locale), downloadString, classificationItem));
+
+        final int fieldUp = rs.getInt("speed_upload");
+        final String uploadString = String.format("%s %s", format.format(fieldUp / 1000d),messageSource.getMessage("RESULT_UPLOAD_UNIT", null, locale));
+        classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.UPLOAD, fieldUp, networkTypeId);
+        jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_UPLOAD", null, locale), uploadString, classificationItem));
+
+        final long fieldPing = rs.getLong("ping_median");
+        final int pingValue = (int) Math.round(rs.getDouble("ping_median") / 1000000d);
+        final String pingString = String.format("%s %s", format.format(pingValue),
+                messageSource.getMessage("RESULT_PING_UNIT", null, locale));
+        classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.PING, pingValue, networkTypeId);
+        jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_PING", null, locale), pingString, classificationItem));
+
+        final int networkType = rs.getInt("network_type");
+
+        final String signalField = rs.getString("signal_strength");
+        if (signalField != null && signalField.length() != 0) {
+            final int signalValue = rs.getInt("signal_strength");
+            classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.SIGNAL, signalValue, networkType);
+            jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_SIGNAL", null, locale), signalValue + " " + messageSource.getMessage("RESULT_SIGNAL_UNIT", null, locale), classificationItem));
+        }
+
+        final String lteRsrpField = rs.getString("lte_rsrp");
+        if (lteRsrpField != null && lteRsrpField.length() != 0) {
+            final int lteRsrpValue = rs.getInt("lte_rsrp");
+            classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.SIGNAL, lteRsrpValue, networkType);
+            jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_LTE_RSRP", null, locale), lteRsrpValue + " " + messageSource.getMessage("RESULT_LTE_RSRP_UNIT", null, locale), classificationItem));
+        }
+
+
+        jsonItem.put("measurement", jsonItemList);
+
+        jsonItemList = new JSONArray();
+
+        jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_NETWORK_TYPE", null, locale), Helperfunctions.getNetworkTypeName(networkType)));
+
+        if (networkType == 98 || networkType == 99) { // mobile wifi or browser
+
+            String providerText = null;
+
+            try {
+                providerText = MoreObjects.firstNonNull(rs.getString("provider_name"), rs.getString("public_ip_as_name"));
+            } catch (NullPointerException ex) {
+                // no provider
+            }
+
+            if (!Strings.isNullOrEmpty(providerText)) {
+                if (providerText.length() > (MAX_PROVIDER_LENGTH + 3)) {
+                    providerText = providerText.substring(0, MAX_PROVIDER_LENGTH) + "...";
+                }
+                jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_PROVIDER", null, locale), providerText));
+            }
+
+            if (networkType == 99) { // mobile wifi
+                if (highlightUuid != null && rs.getString("uuid") != null) { // own test
+                    final String ssid = rs.getString("wifi_ssid");
+                    if (ssid != null && ssid.length() != 0) {
+                        jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_WIFI_SSID", null, locale), ssid.toString()));
+                    }
+                }
+            }
+        } else { // mobile
+            final String networkOperator = rs.getString("network_operator");
+            final String mobileNetworkName = rs.getString("provider_name");
+            final String simOperator = rs.getString("network_sim_operator");
+            final String mobileSimName = rs.getString("mobile_sim_name");
+            final int roamingType = rs.getInt("roaming_type");
+            //network
+            if (!Strings.isNullOrEmpty(networkOperator)) {
+                final String mobileNetworkString;
+                if (roamingType != 2) { //not international roaming - display name of home network
+                    if (Strings.isNullOrEmpty(mobileSimName)) {
+                        mobileNetworkString = networkOperator;
+                    } else {
+                        mobileNetworkString = String.format("%s (%s)", mobileSimName, networkOperator);
+                    }
+                } else { //international roaming - display name of network
+                    if (Strings.isNullOrEmpty(mobileSimName)) {
+                        mobileNetworkString = networkOperator;
+                    } else {
+                        mobileNetworkString = String.format("%s (%s)", mobileNetworkName, networkOperator);
+                    }
+                }
+
+                jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_MOBILE_NETWORK", null, locale), mobileNetworkString));
+            } else if (!Strings.isNullOrEmpty(simOperator)) { //home network (sim)
+                final String mobileNetworkString;
+
+                if (Strings.isNullOrEmpty(mobileSimName)) {
+                    mobileNetworkString = simOperator;
+                } else {
+                    mobileNetworkString = String.format("%s (%s)", mobileSimName, simOperator);
+                }
+
+            	/*
+            	if (!Strings.isNullOrEmpty(mobileProviderName)) {
+            		mobileNetworkString = mobileProviderName;
+            	} else {
+            		mobileNetworkString = simOperator;
+            	}
+            	*/
+
+                jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_HOME_NETWORK", null, locale), mobileNetworkString));
+            }
+
+            if (roamingType > 0) {
+                jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_ROAMING", null, locale), messageSource.getMessage(Helperfunctions.getRoamingTypeKey(roamingType), null, locale)));
+            }
+        }
+
+        jsonItem.put("net", jsonItemList);
+        return jsonItem;
+    }
+
+    /**
+     * Adds a new JSONObject to the list, filled w/the provided values
+     *
+     * @param title
+     * @param value
+     * @param classificationItem
+     */
+    private JSONObject generateJsonObject(final String title, final String value, final ClassificationHelper.ClassificationItem classificationItem) {
+        final JSONObject singleItem = new JSONObject();
+        if (title != null) {
+            singleItem.put("title", title);
+        }
+        if (value != null) {
+            singleItem.put("value", value);
+        }
+        if (classificationItem != null) {
+            singleItem.put("classification", classificationItem.getClassificationNumber());
+        }
+        if (classificationItem != null && classificationItem.getClassificationColor() != null) {
+            singleItem.put("classification_color", classificationItem.getClassificationColor());
+        }
+        return singleItem;
+    }
+
+    private JSONObject generateJsonObject(final String title, final String value) {
+        return generateJsonObject(title, value, null);
+    }
+}
