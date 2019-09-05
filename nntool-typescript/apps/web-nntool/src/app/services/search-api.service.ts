@@ -53,6 +53,25 @@ export class SearchApiService {
     });
   }
 
+  public getSingleGroupedOpenDataMeasurement(openDataUuid: string): Observable<any> {
+    return new Observable((observer: any) => {
+      this.requests
+        .getJson<any>(Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid + '/details'), {})
+        .subscribe(
+          (data: any) => {
+            this.logger.debug('grouped opendata measurement: ', data);
+
+            observer.next(data);
+          },
+          (error: HttpErrorResponse) => {
+            this.logger.error('Error retrieving single grouped open-data measurement', error);
+            observer.error();
+          },
+          () => observer.complete()
+        );
+    });
+  }
+
   public exportSingleOpenDataMeasurement(openDataUuid: string, extension: string): Observable<any> {
     // Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid + '.' + extension),
     return new Observable((observer: any) => {});

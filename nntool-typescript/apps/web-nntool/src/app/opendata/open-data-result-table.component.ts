@@ -33,21 +33,33 @@ export class OpenDataResultTableComponent implements OnInit {
         title: 'RTT (ms)',
         filter: false,
         valuePrepareFunction: (cell, row) => {
-          return (row.measurements.SPEED.rtt_info.average_ns / 1000000).toFixed(2);
+          if (row.measurements.SPEED && row.measurements.SPEED.rtt_info && row.measurements.SPEED.rtt_info.average_ns) {
+            return (row.measurements.SPEED.rtt_info.average_ns / 1000000).toFixed(2);
+          } else {
+            return "n/a"
+          }
         }
       },
       'measurements.SPEED.throughput_avg_download_bps': {
         title: 'Download (Mbit/s)',
         filter: false,
         valuePrepareFunction: (cell, row) => {
-          return (row.measurements.SPEED.throughput_avg_download_bps / 1000 / 1000).toFixed(2);
+          if (row.measurements.SPEED && row.measurements.SPEED.throughput_avg_download_bps) {
+            return (row.measurements.SPEED.throughput_avg_download_bps / 1000 / 1000).toFixed(2);
+          } else {
+            return "n/a"
+          }
         }
       },
       'measurements.SPEED.throughput_avg_upload_bps': {
         title: 'Upload (Mbit/s)',
         filter: false,
         valuePrepareFunction: (cell, row) => {
-          return (row.measurements.SPEED.throughput_avg_upload_bps / 1000 / 1000).toFixed(2);
+          if (row.measurements.SPEED && row.measurements.SPEED.throughput_avg_upload_bps) {
+            return (row.measurements.SPEED.throughput_avg_upload_bps / 1000 / 1000).toFixed(2);
+          } else {
+            return "n/a"
+          }
         }
       }
     }

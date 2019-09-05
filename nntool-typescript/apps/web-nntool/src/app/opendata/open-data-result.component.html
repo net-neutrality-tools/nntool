@@ -1,0 +1,43 @@
+<nntool-section-intro>
+  <nntool-section-header headerTranslationKey="RESULT.DETAIL.HEADER" icon="icon-watch" loadingIndicator="true">
+    <div class="section-content no-data">
+      <h2 *ngIf="!loading && (!response || response.groups.length === 0)">{{ 'RESULT_LIST.NO_DATA' | translate }}</h2>
+      <!--h2 *ngIf="translationKey === 'HISTORY' && !uuid">{{ translationKey + '.NO_USER_UUID' | translate }}</h2-->
+    </div>
+  </nntool-section-header>
+</nntool-section-intro>
+
+<nntool-section-arguments *ngIf="response !== undefined">
+  <nntool-section-content>
+    <div *ngFor="let group of response.groups">
+      <div class="column-header">
+        <div class="icon icon-font">{{ group.icon_character }}</div>
+        <h2>{{ group.title }}</h2>
+      </div>
+      <div class="section-table">
+        <!-- stacktable start -->
+        <table id="result" class="no-stack">
+          <colgroup>
+            <col width="50%" />
+            <col width="40%" />
+          </colgroup>
+          <tbody>
+            <tr *ngFor="let item of group.items">
+              <td class="text-left">{{ item.title }}</td>
+              <td class="text-right">{{ item.value }} {{ item.unit }}</td>
+            </tr>
+            <tr *ngIf="loading">
+              <td class="text-left">. . .</td>
+              <td class="text-right">. . .</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- stacktable end -->
+      </div>
+    </div>
+  </nntool-section-content>
+</nntool-section-arguments>
+
+<!--<qos-result-component> </qos-result-component>-->
+
+<!-- TODO: export component-->

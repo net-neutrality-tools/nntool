@@ -71,6 +71,7 @@ import { RequestInfoService } from './services/request-info.service';
 import { OpenDataResultTableComponent } from './opendata/open-data-result-table.component';
 import { SearchApiService } from './services/search-api.service';
 import { ResultApiService } from './services/result-api.service';
+import { OpenDataResultComponent } from './opendata/open-data-result.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -83,6 +84,7 @@ const MAIN_DECLARATIONS = [
   MapComponent,
   StatisticsComponent,
   OpenDataResultTableComponent,
+  OpenDataResultComponent,
   HelpComponent,
   AboutComponent,
   HistoryComponent,

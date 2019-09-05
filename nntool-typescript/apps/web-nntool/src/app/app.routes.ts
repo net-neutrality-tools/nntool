@@ -17,6 +17,7 @@ import { StatisticsComponent } from './statistics/statistics.component';
 import { NetTestComponent, TestGuard } from './test/test.component';
 import { SettingsComponent } from './user/settings.component';
 import { OpenDataResultTableComponent } from './opendata/open-data-result-table.component';
+import { OpenDataResultComponent } from './opendata/open-data-result.component';
 
 export const routes: Routes = [
   {
@@ -61,8 +62,8 @@ export const routes: Routes = [
             path: '',
             component: OpenDataResultTableComponent,
             pathMatch: 'full'
-          }
-          /*{
+          },
+          {
             path: ':openDataUuid',
             children: [
               {
@@ -71,7 +72,7 @@ export const routes: Routes = [
                 pathMatch: 'full'
               }
             ]
-          }*/
+          }
         ]
       },
       {
