@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-03
+ *      \date Last update: 2019-08-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -234,7 +234,6 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
     [measurementParametersDict setObject:self.platform                                                  forKey:@"platform"];
     
     [measurementParametersDict setObject:self.targets                                                   forKey:@"wsTargets"];
-    [measurementParametersDict setObject:self.targetsRtt                                                forKey:@"wsTargetsRtt"];
     
     [measurementParametersDict setObject:self.targetsTld                                                forKey:@"wsTLD"];
     [measurementParametersDict setObject:self.targetsPort                                               forKey:@"wsTargetPort"];

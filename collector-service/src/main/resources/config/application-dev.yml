@@ -24,9 +24,10 @@ spring:
         create-if-not-exists: true
         entities:
           - QoSMeasurementObjective
-          - Settings
           - Translation
           - MeasurementServer
+          - Settings
+          - Provider
           - EmbeddedNetworkType
 
   #datasource:

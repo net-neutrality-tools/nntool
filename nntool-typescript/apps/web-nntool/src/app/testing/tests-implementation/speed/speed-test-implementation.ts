@@ -23,81 +23,17 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
     super(testSchedulerService);
   }
 
-  public start = (config: MeasurementSettings, $state: Subject<SpeedTestState>): void => {
-    if (this.ias !== undefined) {
-      return;
-    }
-
-    this.$state = $state;
-
-    const rttRequests = 10;
-    const rttRequestTimeout = 2000;
-    const rttRequestWait = 500;
-    const rttDuration = rttRequests * (rttRequestTimeout + rttRequestWait) * 1.1;
-    const downloadUploadDuration = 10000;
-
-    const firstDotIndex = config.serverAddress.indexOf('.');
-
-    const extendedConfig = {
-      cmd: 'start',
-      platform: 'web',
-      wsTargets: [config.serverAddress.substr(0, firstDotIndex)],
-      wsTargetsRtt: [config.serverAddress.substr(0, firstDotIndex)],
-      wsTLD: config.serverAddress.substr(firstDotIndex + 1),
-      wsTargetPort: config.serverPort,
-      wsWss: 0,
-      wsAuthToken: 'placeholderToken',
-      wsAuthTimestamp: 'placeholderTimestamp',
-      performRouteToClientLookup: true,
-      routeToClientTargetPort: 8080,
-      rtt: {
-        performMeasurement: true
-      },
-      download: {
-        performMeasurement: config.speedConfig.download !== undefined && config.speedConfig.download !== null,
-        classes: config.speedConfig.download
-        /*"streams": 4,
-                "frameSize": 32768*/
-      },
-      upload: {
-        performMeasurement: config.speedConfig.upload !== undefined && config.speedConfig.upload !== null,
-        classes: config.speedConfig.upload
-        /*"streams": 4,
-                "frameSize": 65535,
-                "framesPerCall": 1*/
-      },
-      wsRttRequests: rttRequests,
-      wsRttRequestTimeout: rttRequestTimeout,
-      wsRttRequestWait: rttRequestWait,
-      wsRttTimeout: rttDuration,
-      wsMeasureTime: downloadUploadDuration
-    };
-
-    if (window.location.protocol === 'https:') {
-      extendedConfig.wsTargetPort = '443';
-      extendedConfig.wsWss = 1;
-    }
-
-    this.zone.runOutsideAngular(() => {
-      this.setupCallback(extendedConfig);
-
-      this.ias = new Ias();
-      this.ias.measurementStart(JSON.stringify(extendedConfig));
-    });
-  };
-
   protected generateInitState = (config: SpeedTestConfig) => {
     const rttRequests = 10;
     const rttRequestTimeout = 2000;
     const rttRequestWait = 500;
-    const rttDuration = rttRequests * (rttRequestTimeout + rttRequestWait) * 1.1;
+    const rttDuration = (rttRequests * (rttRequestTimeout + rttRequestWait)) * 1.1;
     const downloadUploadDuration = 10000;
 
     config = {
       cmd: 'start',
       platform: 'web',
       wsTargets: ['peer-ias-de-01'],
-      wsTargetsRtt: ['peer-ias-de-01'],
       wsTLD: 'net-neutrality.tools',
       wsTargetPort: '80',
       wsWss: 0,
@@ -137,6 +73,69 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
     state.device = null;
     state.technology = 'BROWSER';
     return state;
+  }
+
+  public start = (config: MeasurementSettings, $state: Subject<SpeedTestState>): void => {
+    if (this.ias !== undefined) {
+      return;
+    }
+
+    this.$state = $state;
+
+    const rttRequests = 10;
+    const rttRequestTimeout = 2000;
+    const rttRequestWait = 500;
+    const rttDuration = (rttRequests * (rttRequestTimeout + rttRequestWait)) * 1.1;
+    const downloadUploadDuration = 10000;
+
+    const firstDotIndex = config.serverAddress.indexOf('.');
+
+    const extendedConfig = {
+      cmd: 'start',
+      platform: 'web',
+      wsTargets: [config.serverAddress.substr(0, firstDotIndex)],
+      wsTLD: config.serverAddress.substr(firstDotIndex + 1),
+      wsTargetPort: config.serverPort,
+      wsWss: 0,
+      wsAuthToken: 'placeholderToken',
+      wsAuthTimestamp: 'placeholderTimestamp',
+      performRouteToClientLookup: true,
+      routeToClientTargetPort: 8080,
+
+      rtt: {
+        performMeasurement: true
+      },
+      download: {
+        performMeasurement: config.speedConfig.download !== undefined && config.speedConfig.download !== null,
+        classes: config.speedConfig.download,
+        /*"streams": 4,
+        "frameSize": 32768*/
+      },
+      upload: {
+        performMeasurement: config.speedConfig.upload !== undefined && config.speedConfig.upload !== null,
+        classes: config.speedConfig.upload
+        /*"streams": 4,
+                "frameSize": 65535,
+                "framesPerCall": 1*/
+      },
+      wsRttRequests: rttRequests,
+      wsRttRequestTimeout: rttRequestTimeout,
+      wsRttRequestWait: rttRequestWait,
+      wsRttTimeout: rttDuration,
+      wsMeasureTime: downloadUploadDuration
+    };
+
+    if (window.location.protocol === 'https:') {
+      extendedConfig.wsTargetPort = '443';
+      extendedConfig.wsWss = 1;
+    }
+
+    this.zone.runOutsideAngular(() => {
+      this.setupCallback(extendedConfig);
+
+      this.ias = new Ias();
+      this.ias.measurementStart(JSON.stringify(extendedConfig));
+    });
   };
 
   protected clean = (): void => {

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-20
+ *      \date Last update: 2019-09-04
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -109,7 +109,6 @@ int main(int argc, char** argv)
     }
 
     //Signal Handler
-    signal(SIGINT, signal_handler);
     signal(SIGFPE, signal_handler);
     signal(SIGABRT, signal_handler);
     signal(SIGSEGV, signal_handler);
