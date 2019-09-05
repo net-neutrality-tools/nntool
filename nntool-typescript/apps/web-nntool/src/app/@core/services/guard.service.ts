@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { ConfigService } from './config.service';
-import { WebsiteSettings } from '../@core/models/settings/settings.interface';
-import { FeatureSettings } from '../@core/models/settings/features.settings.interface';
+import { WebsiteSettings } from '../models/settings/settings.interface';
+import { FeatureSettings } from '../models/settings/features.settings.interface';
 
 @Injectable()
 export class Guard implements CanActivate, CanActivateChild {

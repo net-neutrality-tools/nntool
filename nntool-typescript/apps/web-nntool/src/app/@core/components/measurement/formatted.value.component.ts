@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormattedValue } from '../@core/models/measurement.model';
+import { FormattedValue } from '../../models/measurement.model';
 
 @Component({
   selector: 'app-measurement-value-formatted',

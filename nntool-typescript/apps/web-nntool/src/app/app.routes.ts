@@ -1,7 +1,6 @@
 import { ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { Guard } from './services/guard.service';
 import { NetTestComponent, TestGuard } from './test/test.component';
 import { HomeComponent } from './pages/home/home.component';
 import { HistoryComponent } from './pages/history/history.component';
@@ -15,6 +14,7 @@ import { TcComponent } from './pages/adoc/tc.component';
 import { HelpComponent } from './pages/adoc/help.component';
 import { SettingsComponent } from './pages/user/settings.component';
 import { NotFoundComponent } from './pages/adoc/notfound.component';
+import { Guard } from './@core/services/guard.service';
 
 export const routes: Routes = [
   {

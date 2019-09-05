@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
-import { GeoLocation } from '../test/models/api/request-info.api';
 import { WINDOW } from './window.service';
+import { GeoLocation } from '../../test/models/api/request-info.api';
 
 @Injectable()
 export class LocationService {

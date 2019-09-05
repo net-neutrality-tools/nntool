@@ -13,6 +13,9 @@ import { SectionMapComponent } from './sections/section-map/section-map.componen
 import { SectionFeaturesComponent } from './sections/section-features/section-features.component';
 import { QoSResultComponent } from './qos-result/qos-result.component';
 import { SharedModule } from '../../shared/shared.module';
+import { MeasurementClassifiedValueComponent } from './measurement/classified.value.component';
+import { MeasurementFormattedValueComponent } from './measurement/formatted.value.component';
+import { FooterComponent } from './footer/footer.component';
 
 const COMPONENTS = [
   ResultTableComponent,
@@ -26,7 +29,10 @@ const COMPONENTS = [
   SectionInteractiveComponent,
   SectionFeaturesComponent,
   SectionMapComponent,
-  CardComponent
+  CardComponent,
+  MeasurementClassifiedValueComponent,
+  MeasurementFormattedValueComponent,
+  FooterComponent
 ];
 
 @NgModule({

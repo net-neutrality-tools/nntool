@@ -1,7 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfigService } from '../../services/config.service';
-import { WINDOW } from '../../services/window.service';
 import { PortBlockingTestTypeEnum } from '../tests-implementation/port-blocking/enums/port-blocking-test-type';
 import { PortBlockingTestConfig } from '../tests-implementation/port-blocking/port-blocking-test-config';
 import { PortBlockingTestImplementation } from '../tests-implementation/port-blocking/port-blocking-test-implementation';
@@ -9,6 +7,8 @@ import { PortBlockingTestState } from '../tests-implementation/port-blocking/por
 import { BarUIComponent } from '../tests-ui/bar/bar-ui';
 import { BarUIState } from '../tests-ui/bar/bar-ui-state';
 import { BarUIShowableTestTypeEnum } from '../tests-ui/bar/enums/bar-ui-showable-test-type.enum';
+import { ConfigService } from '../../@core/services/config.service';
+import { WINDOW } from '../../@core/services/window.service';
 
 @Component({
   // needs to be mentioned here, but also mentioned in gauge-ui.ts for reference
@@ -16,9 +16,9 @@ import { BarUIShowableTestTypeEnum } from '../tests-ui/bar/enums/bar-ui-showable
   selector: 'app-port-blocking-test-bar'
 })
 export class PortBlockingTestBarComponent extends BarUIComponent<
-  PortBlockingTestImplementation,
-  PortBlockingTestConfig,
-  PortBlockingTestState
+PortBlockingTestImplementation,
+PortBlockingTestConfig,
+PortBlockingTestState
 > {
   // TODO: rethink DI in this use case, testImplementation should not be one instance, if there were more than one test at once
   // TODO: Remove this constructor when DI on generic type figured out

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
-import { WebsiteSettings } from '../@core/models/settings/settings.interface';
+import { WebsiteSettings } from '../models/settings/settings.interface';
 
 export class ColorList {
   private index: number;

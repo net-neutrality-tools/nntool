@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { ConfigService } from '../services/config.service';
-import { RequestInfoService } from '../services/request-info.service';
-import { RequestsService } from '../services/requests.service';
 import { ResponseAPI } from './models/api/response.api';
 import { SpeedMeasurementPeer } from './models/server-selection/speed-measurement-peer';
 import { SpeedMeasurementPeerResponseAPI } from './models/server-selection/speed-measurement-peer-response.api';
+import { RequestsService } from '../@core/services/requests.service';
+import { RequestInfoService } from '../@core/services/request-info.service';
+import { ConfigService } from '../@core/services/config.service';
 
 @Component({
   selector: 'app-test-server-selection',
@@ -20,7 +20,7 @@ export class ServerSelectionComponent implements OnInit {
     private readonly requestService: RequestsService,
     private readonly requestInfoService: RequestInfoService,
     private readonly configService: ConfigService
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     // Request measurement peer

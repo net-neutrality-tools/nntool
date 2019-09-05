@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ResultGroupResponse } from '../../@core/models/result.groups';
 import { QoSMeasurementResult, QoSTypeDescription } from '../../@core/models/lmap/models/lmap-report/lmap-result/extensions/qos-measurement-result.model';
 import { QoSResultGroupHolder } from '../../@core/models/qos-result-group-holder';
-import { UserService } from '../../services/user.service';
+import { UserService } from '../../@core/services/user.service';
 
 @Component({
   templateUrl: './history.view.component.html'

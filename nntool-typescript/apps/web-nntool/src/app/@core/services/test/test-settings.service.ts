@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
-import { MeasurementAgentType } from '../../test/models/api/request-info.api';
 import { ConfigService } from '../config.service';
 import { UserInfo, UserService } from '../user.service';
+import { MeasurementAgentType } from '../../../test/models/api/request-info.api';
 
 export interface AgentSettings {
   uuid?: string;

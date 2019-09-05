@@ -2,9 +2,9 @@ import { NGXLogger } from 'ngx-logger';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { SpringServerDataSource } from '../../services/table/spring-server.data-source';
-import { UserService } from '../../services/user.service';
-import { ResultApiService } from '../../services/result-api.service';
+import { SpringServerDataSource } from '../../@core/services/table/spring-server.data-source';
+import { UserService } from '../../@core/services/user.service';
+import { ResultApiService } from '../../@core/services/result-api.service';
 
 @Component({
   templateUrl: './history.component.html',

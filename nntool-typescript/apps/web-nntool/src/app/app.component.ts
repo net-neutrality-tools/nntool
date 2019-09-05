@@ -8,13 +8,13 @@ import { LangChangeEvent, TranslateService, TranslationChangeEvent } from '@ngx-
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { AppService } from './services/app.service';
-import { ConfigService } from './services/config.service';
-import { Guard } from './services/guard.service';
-import { BrowserStorageService } from './services/storage.service';
-import { UserInfo, UserService } from './services/user.service';
 import { FeatureSettings } from './@core/models/settings/features.settings.interface';
 import { WebsiteSettings } from './@core/models/settings/settings.interface';
+import { Guard } from './@core/services/guard.service';
+import { ConfigService } from './@core/services/config.service';
+import { BrowserStorageService } from './@core/services/storage.service';
+import { AppService } from './@core/services/app.service';
+import { UserService, UserInfo } from './@core/services/user.service';
 
 @Component({
   selector: 'app-root',

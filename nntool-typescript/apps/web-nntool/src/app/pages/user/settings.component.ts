@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { WebsiteSettings } from '../../@core/models/settings/settings.interface';
-import { UserInfo, UserService } from '../../services/user.service';
-import { ConfigService } from '../../services/config.service';
+import { UserInfo, UserService } from '../../@core/services/user.service';
+import { ConfigService } from '../../@core/services/config.service';
 
 @Component({
   templateUrl: './settings.component.html'

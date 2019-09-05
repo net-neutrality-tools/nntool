@@ -1,8 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
-import { ConfigService } from '../../services/config.service';
-import { WINDOW } from '../../services/window.service';
 import { SpeedTestStateEnum } from '../tests-implementation/speed/enums/speed-test-state.enum';
 import { SpeedTestConfig } from '../tests-implementation/speed/speed-test-config';
 import { SpeedTestImplementation } from '../tests-implementation/speed/speed-test-implementation';
@@ -10,6 +8,8 @@ import { SpeedTestState } from '../tests-implementation/speed/speed-test-state';
 import { GaugeUIStateEnum } from '../tests-ui/gauge/enums/gauge-ui-state.enum';
 import { GaugeUIComponent } from '../tests-ui/gauge/gauge-ui';
 import { GaugeUIState } from '../tests-ui/gauge/gauge-ui-state';
+import { ConfigService } from '../../@core/services/config.service';
+import { WINDOW } from '../../@core/services/window.service';
 
 @Component({
   // needs to be mentioned here, but also mentioned in gauge-ui.ts for reference
@@ -17,9 +17,9 @@ import { GaugeUIState } from '../tests-ui/gauge/gauge-ui-state';
   selector: 'app-speed-test-gauge'
 })
 export class SpeedTestGaugeComponent extends GaugeUIComponent<
-  SpeedTestImplementation,
-  SpeedTestConfig,
-  SpeedTestState
+SpeedTestImplementation,
+SpeedTestConfig,
+SpeedTestState
 > {
   // TODO: rethink DI in this use case, testImplementation should not be one instance, if there were more than one test at once
   // TODO: Remove this constructor when DI on generic type figured out

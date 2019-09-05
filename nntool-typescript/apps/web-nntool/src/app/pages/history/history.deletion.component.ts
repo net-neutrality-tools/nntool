@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
-import { UserService, UserInfo } from '../../services/user.service';
+import { UserService, UserInfo } from '../../@core/services/user.service';
 
 @Component({
   templateUrl: './history.deletion.component.html',

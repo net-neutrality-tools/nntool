@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ClassifiedValue } from '../@core/models/measurement.model';
+import { ClassifiedValue } from '../../models/measurement.model';
 
 @Component({
   selector: 'app-measurement-value-classified',

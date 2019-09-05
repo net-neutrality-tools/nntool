@@ -10,8 +10,8 @@ import { Component, Input } from '@angular/core';
           <img src="assets/img/watch-anim.svg" alt="loading content" class="load-animation" />
           <figcaption>{{ 'LOADING' | translate }}</figcaption>
         </figure>
-        <div [class]="'icon ' + icon" *ngIf="!loading"></div>
-      </ng-template>
+      </ng-template> <!-- TODO: else? -->
+      <div [class]="'icon ' + icon" *ngIf="!loading"></div>
       <ng-content></ng-content>
     </header>
   `

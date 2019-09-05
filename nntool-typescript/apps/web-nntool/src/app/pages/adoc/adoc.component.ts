@@ -5,7 +5,7 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { ADocService } from './adoc.service';
-import { ConfigService } from '../../services/config.service';
+import { ConfigService } from '../../@core/services/config.service';
 
 @Component({
   templateUrl: './adoc.component.html'

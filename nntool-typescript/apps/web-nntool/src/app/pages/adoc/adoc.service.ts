@@ -6,7 +6,7 @@ import { Observable, Subscriber } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import { NGXLogger } from 'ngx-logger';
-import { RequestsService } from '../../services/requests.service';
+import { RequestsService } from '../../@core/services/requests.service';
 
 @Injectable()
 export class ADocService {

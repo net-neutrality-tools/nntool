@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
-import { GeoLocation } from '../test/models/api/request-info.api';
 import { LocationService } from './location.service';
 import { TestSettingsService } from './test/test-settings.service';
 import { UserService } from './user.service';
+import { GeoLocation } from '../../test/models/api/request-info.api';
 
 /**
  * Service to prepare the basic request info object, filled w/the correct client data
@@ -16,7 +16,7 @@ export class RequestInfoService {
     private readonly locationService: LocationService,
     private readonly userService: UserService,
     private readonly deviceService: DeviceDetectorService
-  ) {}
+  ) { }
 
   public getRequestInfo(): any {
     const { agentSettings, testSettings } = this.testSettingsService;

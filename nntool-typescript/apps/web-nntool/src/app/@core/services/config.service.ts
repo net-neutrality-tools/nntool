@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { WebsiteSettings } from '../@core/models/settings/settings.interface';
+import { WebsiteSettings } from '../models/settings/settings.interface';
+import { environment } from '../../../environments/environment';
 
 export interface MapSettingsResponse {
   mapfilter: {

@@ -3,8 +3,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 import { forkJoin, Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
-import { ConfigService } from '../../../services/config.service';
-import { WINDOW } from '../../../services/window.service';
 import { Test } from '../../test.component';
 import { TestConfig } from '../../tests-implementation/test-config';
 import { TestImplementation } from '../../tests-implementation/test-implementation';
@@ -13,6 +11,7 @@ import { BaseMeasurementGauge } from './existing-gauge-ui/base.gauge.ui';
 import { MeasurementGauge } from './existing-gauge-ui/gauge.ui';
 import { GaugeUIState } from './gauge-ui-state';
 import { WebsiteSettings } from '../../../@core/models/settings/settings.interface';
+import { ConfigService } from '../../../@core/services/config.service';
 
 @Component({
   templateUrl: './gauge-ui.template.html'

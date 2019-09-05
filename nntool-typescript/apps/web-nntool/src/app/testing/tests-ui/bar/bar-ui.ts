@@ -1,15 +1,15 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfigService } from '../../../services/config.service';
 import { Test } from '../../test.component';
 import { TestConfig } from '../../tests-implementation/test-config';
 import { TestImplementation } from '../../tests-implementation/test-implementation';
 import { TestState } from '../../tests-implementation/test-state';
 import { BarUIState } from './bar-ui-state';
 import { BarUIShowableTestTypeEnum } from './enums/bar-ui-showable-test-type.enum';
+import { ConfigService } from '../../../@core/services/config.service';
 
 class Point {
-  constructor(public x: number, public y: number) {}
+  constructor(public x: number, public y: number) { }
 }
 
 @Component({

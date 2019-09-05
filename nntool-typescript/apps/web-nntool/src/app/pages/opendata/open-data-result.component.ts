@@ -3,8 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ResultGroupResponse } from '../../@core/models/result.groups';
 import { QoSMeasurementResult } from '../../@core/models/lmap/models/lmap-report/lmap-result/extensions/qos-measurement-result.model';
 import { QoSResultGroupHolder } from '../../@core/models/qos-result-group-holder';
-import { SearchApiService } from '../../services/search-api.service';
 import { QoSTypeDescription } from '../../@core/models/full-measurement-response.api';
+import { SearchApiService } from '../../@core/services/search-api.service';
 
 @Component({
   templateUrl: './open-data-result.component.html'

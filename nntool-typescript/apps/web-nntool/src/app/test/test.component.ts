@@ -3,12 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { AppService } from '../services/app.service';
-import { ConfigService } from '../services/config.service';
-import { LocationService } from '../services/location.service';
-import { RequestsService } from '../services/requests.service';
-import { TestService } from '../services/test/test.service';
-import { UserService } from '../services/user.service';
 import { TestComponentStatus } from '../testing/enums/test-component-status.enum';
 import { PortBlockingTestState } from '../testing/tests-implementation/port-blocking/port-blocking-test-state';
 import { SpeedTestState } from '../testing/tests-implementation/speed/speed-test-state';
@@ -27,6 +21,12 @@ import { ConnectionInfo } from '../@core/models/lmap/models/lmap-report/lmap-res
 import { RttInfo } from '../@core/models/lmap/models/lmap-report/lmap-result/extensions/rtt-info.model';
 import { LmapReport } from '../@core/models/lmap/models/lmap-report.model';
 import { LmapResult } from '../@core/models/lmap/models/lmap-report/lmap-result.model';
+import { TestService } from '../@core/services/test/test.service';
+import { ConfigService } from '../@core/services/config.service';
+import { UserService } from '../@core/services/user.service';
+import { RequestsService } from '../@core/services/requests.service';
+import { AppService } from '../@core/services/app.service';
+import { LocationService } from '../@core/services/location.service';
 
 export { TestGuard } from './test.guard';
 

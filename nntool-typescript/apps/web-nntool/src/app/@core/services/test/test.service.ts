@@ -3,26 +3,25 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, mergeMap, tap } from 'rxjs/operators';
 
-import { request } from 'http';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
-import { environment } from '../../../environments/environment';
-import { GeoLocation, MeasurementAgentType } from '../../test/models/api/request-info.api';
-import { RequestAPI } from '../../test/models/api/request.api';
-import { ResponseAPI } from '../../test/models/api/response.api';
-import { MeasurementResultResponseAPI } from '../../test/models/measurements/measurement-result-response.api';
-import { RegistrationRequestAPI } from '../../test/models/registration/registration-request.api';
-import { RegistrationResponseAPI } from '../../test/models/registration/registration-response.api';
-import { SpeedMeasurementPeer } from '../../test/models/server-selection/speed-measurement-peer';
-import { SettingsRequestAPI } from '../../test/models/settings/settings-request.api';
-import { SettingsResponseAPI } from '../../test/models/settings/settings-response.api';
 import { ConfigService } from '../config.service';
 import { LocationService } from '../location.service';
 import { RequestInfoService } from '../request-info.service';
 import { RequestsService } from '../requests.service';
 import { UserInfo, UserService } from '../user.service';
 import { TestSettingsService } from './test-settings.service';
-import { LmapControl } from '../../@core/models/lmap/models/lmap-control.model';
-import { LmapReport } from '../../@core/models/lmap/models/lmap-report.model';
+import { SettingsResponseAPI } from '../../../test/models/settings/settings-response.api';
+import { SpeedMeasurementPeer } from '../../../test/models/server-selection/speed-measurement-peer';
+import { LmapControl } from '../../models/lmap/models/lmap-control.model';
+import { RegistrationResponseAPI } from '../../../test/models/registration/registration-response.api';
+import { ResponseAPI } from '../../../test/models/api/response.api';
+import { LmapReport } from '../../models/lmap/models/lmap-report.model';
+import { MeasurementResultResponseAPI } from '../../../test/models/measurements/measurement-result-response.api';
+import { RegistrationRequestAPI } from '../../../test/models/registration/registration-request.api';
+import { RequestAPI } from '../../../test/models/api/request.api';
+import { SettingsRequestAPI } from '../../../test/models/settings/settings-request.api';
+import { GeoLocation } from '../../../test/models/api/request-info.api';
+import { environment } from '../../../../environments/environment';
 
 @Injectable()
 export class TestService {

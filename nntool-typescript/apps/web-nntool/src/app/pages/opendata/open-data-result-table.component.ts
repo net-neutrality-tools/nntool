@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { fromEvent } from 'rxjs';
 import { map, filter, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { SpringServerDataSource } from '../../services/table/spring-server.data-source';
-import { SearchApiService } from '../../services/search-api.service';
+import { SpringServerDataSource } from '../../@core/services/table/spring-server.data-source';
+import { SearchApiService } from '../../@core/services/search-api.service';
 
 @Component({
   templateUrl: './open-data-result-table.component.html',

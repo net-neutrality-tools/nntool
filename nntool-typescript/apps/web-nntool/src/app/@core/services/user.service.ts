@@ -9,7 +9,7 @@ import { forkJoin, Observable, Observer, throwError } from 'rxjs';
 import { ConfigService } from './config.service';
 import { RequestsService } from './requests.service';
 import { BrowserStorageService } from './storage.service';
-import { WebsiteSettings } from '../@core/models/settings/settings.interface';
+import { WebsiteSettings } from '../models/settings/settings.interface';
 
 export class UserInfo {
   public static fromJson(json: string): UserInfo {

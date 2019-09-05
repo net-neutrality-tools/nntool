@@ -9,7 +9,7 @@ import { ConfigService } from './config.service';
 import { RequestsService } from './requests.service';
 import { SpringServerDataSource } from './table/spring-server.data-source';
 import { SpringServerSourceConf } from './table/spring-server-source.conf';
-import { WebsiteSettings } from '../@core/models/settings/settings.interface';
+import { WebsiteSettings } from '../models/settings/settings.interface';
 
 @Injectable()
 export class ResultApiService {
