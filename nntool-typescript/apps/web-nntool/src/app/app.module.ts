@@ -41,7 +41,6 @@ import { RoundPipe } from './pipes/round.pipe';
 import { SpeedFormatPipe } from './pipes/speed.format.pipe';
 import { TimestampLocalDateFormatPipe } from './pipes/timestamp.date.format.pipe';
 import { UTCLocalDateFormatPipe } from './pipes/utc.date.format.pipe';
-import { QoSResultComponent } from './qos-result/qos-result.component';
 import { AppService } from './services/app.service';
 import { ColorService } from './services/color.service';
 import { ConfigService } from './services/config.service';
@@ -103,7 +102,6 @@ const MAIN_DECLARATIONS = [
   UTCLocalDateFormatPipe,
   HistoryDeletionComponent,
   HistoryViewComponent,
-  QoSResultComponent,
   MeasurementClassifiedValueComponent,
   MeasurementFormattedValueComponent,
   TimestampLocalDateFormatPipe,
@@ -171,4 +169,4 @@ const MAIN_DECLARATIONS = [
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

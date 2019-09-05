@@ -1,0 +1,68 @@
+<nntool-section-technical *ngIf="qosGroups">
+  <div class="column-header">
+    <div class="icon icon-qos"></div>
+    <h2>{{ 'RESULT.DETAIL.QOS.HEADER' | translate }}</h2>
+  </div>
+  <div class="flex--columns">
+    <ng-container *ngFor="let group of qosGroups">
+      <div class="content--column">
+        <header class="column-header clickable" (click)="toggleSlideAnimation(group)">
+          <div class="icon" [ngClass]="group.icon" [title]="group.title"></div>
+          <h3>{{ group.title }}</h3>
+          <p>
+            <span class="qos-test-status" [ngClass]="{
+                'qos-test-status-success': group.successes > 0 && group.failures === 0,
+                'qos-test-status-partial': group.successes > 0 && group.failures > 0,
+                'qos-test-status-failure': group.successes === 0 && group.failures > 0
+              }"></span>
+            {{ group.successes }}/{{ group.failures + group.successes }}
+          </p>
+        </header>
+        <div [@slide]="group.showSlideableItem">
+          <p>{{ group.description }}</p>
+          <table class="no-stack">
+            <colgroup>
+              <col width="10%" />
+              <col width="90%" />
+            </colgroup>
+            <tbody>
+              <ng-container *ngFor="let test of group.tests">
+                <tr class="qos-test-message-toggle clickable" (click)="toggleSlideAnimation(test)">
+                  <td>
+                    <span [title]="test.summary" [class.icon-check]="test.failure_count === 0" [class.icon-close]="test.failure_count > 0"></span>
+                  </td>
+
+                  <td>
+                    <div>
+                      <span [innerHTML]="test.summary"></span>
+                      <div class="qos-test-message" [@slide]="test.showSlideableItem">
+                        <table class="no-stack">
+                          <colgroup>
+                            <col width="10%" />
+                            <col width="90%" />
+                          </colgroup>
+                          <tbody>
+                            <tr *ngFor="let res of test.result_keys | keyvalue">
+                              <td *ngIf="res.value === 'ok'">
+                                <span class="icon icon-check" [title]="test.summary"></span>
+                              </td>
+                              <td *ngIf="res.value !== 'ok'">
+                                <span class="icon icon-close" [title]="test.summary"></span>
+                              </td>
+                              <td>{{ res.key }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <p [innerHTML]="test.description"></p>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</nntool-section-technical>

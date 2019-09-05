@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ResultTableComponent } from './result-table/result-table.component';
-import { ResultComponent } from './result/result.component';
+import { GroupedResultComponent } from './grouped-result/grouped-result.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { SharedModule } from '../features/shared/shared.module';
 import { SectionHeaderComponent } from './sections/section-header/section-header.component';
@@ -12,12 +12,12 @@ import { CardComponent } from './card/card.component';
 import { SectionInteractiveComponent } from './sections/section-interactive/section-interactive.component';
 import { SectionMapComponent } from './sections/section-map/section-map.component';
 import { SectionFeaturesComponent } from './sections/section-features/section-features.component';
-//import { QoSResultComponent } from '../qos-result/qos-result.component';
+import { QoSResultComponent } from './qos-result/qos-result.component';
 
 const COMPONENTS = [
   ResultTableComponent,
-  ResultComponent,
-  //QoSResultComponent,
+  GroupedResultComponent,
+  QoSResultComponent,
   SectionHeaderComponent,
   SectionContentComponent,
   SectionIntroComponent,
@@ -35,4 +35,4 @@ const COMPONENTS = [
   declarations: [...COMPONENTS],
   entryComponents: [...COMPONENTS]
 })
-export class ComponentsModule {}
+export class ComponentsModule { }

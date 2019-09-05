@@ -1,33 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { ConfigService } from '../services/config.service';
-import { RequestsService } from '../services/requests.service';
 import { UserService } from '../services/user.service';
-import { WebsiteSettings } from '../settings/settings.interface';
 import { ResultGroupResponse } from './model/result.groups';
+import { QoSMeasurementResult } from '../lmap/models/lmap-report/lmap-result/extensions/qos-measurement-result.model';
+import { QoSResultGroupHolder } from '../qos-result/model/qos-result-group-holder';
+import { QoSTypeDescription } from '../qos-result/model/full-measurement-response.api';
 
 @Component({
   templateUrl: './history.view.component.html'
 })
 export class HistoryViewComponent implements OnInit {
-  private configService: ConfigService;
-  private requests: RequestsService;
-  private config: WebsiteSettings;
-  private translationKey: string;
-  private urlpath: string;
   private measurementUuid: string;
   private response: ResultGroupResponse;
   private loading: boolean;
 
+  private fullMeasurementResponse: any;
+  private qosMeasurementResult: QoSMeasurementResult;
+  private qosGroups: QoSResultGroupHolder[];
+
   constructor(
-    private translationService: TranslateService,
     private activatedRoute: ActivatedRoute,
     private userService: UserService
   ) {
     this.loading = true;
-    this.urlpath = '/history/';
-    this.translationKey = 'RESULT.DETAIL';
     this.measurementUuid = activatedRoute.snapshot.paramMap.get('uuid');
   }
 
@@ -37,7 +32,32 @@ export class HistoryViewComponent implements OnInit {
       this.loading = false;
       this.response = data.data;
     });
-  }
 
-  // protected resetData(cb?: () => void): void {}
+    this.userService.loadFullMeasurement(this.measurementUuid).subscribe((data: any) => {
+      this.fullMeasurementResponse = data.data;
+      this.qosMeasurementResult = this.fullMeasurementResponse.measurements.QOS;
+
+      const resultMap: Map<string, QoSResultGroupHolder> = new Map();
+      this.qosGroups = new Array();
+      this.qosMeasurementResult.results.forEach(result => {
+        if (!resultMap[result.type]) {
+          const groupHolder = new QoSResultGroupHolder();
+          const desc: QoSTypeDescription = this.qosMeasurementResult.qos_type_to_description_map[result.type];
+          groupHolder.icon = desc.icon;
+          groupHolder.title = desc.name;
+          groupHolder.description = desc.description;
+          resultMap[result.type] = groupHolder;
+          this.qosGroups.push(groupHolder);
+        }
+
+        const group = resultMap[result.type];
+        group.successes += result.success_count;
+        group.failures += result.failure_count;
+
+        // need to manually add hidden here, as the preset value doesn't apply correctly w/the deserialization
+        result.showSlideableItem = false;
+        group.tests.push(result);
+      });
+    });
+  }
 }
