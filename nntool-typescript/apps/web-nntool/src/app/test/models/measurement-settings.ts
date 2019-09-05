@@ -1,4 +1,4 @@
-import { MeasurementTypeParameters } from '../../lmap/models/shared/lmap-option.model';
+import { MeasurementTypeParameters } from '../../@core/models/lmap/models/shared/lmap-option.model';
 
 export class MeasurementSettings {
   public speedConfig: MeasurementTypeParameters;

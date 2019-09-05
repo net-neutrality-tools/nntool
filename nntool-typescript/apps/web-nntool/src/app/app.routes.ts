@@ -1,23 +1,20 @@
 import { ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { NotFoundComponent } from './adoc/notfound.component';
-import { AboutComponent } from './adoc/about.component';
-import { DocuComponent } from './adoc/docu.component';
-import { HelpComponent } from './adoc/help.component';
-import { TCComponent } from './adoc/tc.component';
-
-import { HistoryComponent } from './history/history.component';
-import { HistoryViewComponent } from './history/history.view.component';
-import { HomeComponent } from './home/home.component';
-import { MapComponent } from './map/map.component';
-import { OpendataComponent } from './opendata/opendata.component';
 import { Guard } from './services/guard.service';
-import { StatisticsComponent } from './statistics/statistics.component';
 import { NetTestComponent, TestGuard } from './test/test.component';
-import { SettingsComponent } from './user/settings.component';
-import { OpenDataResultTableComponent } from './opendata/open-data-result-table.component';
-import { OpenDataResultComponent } from './opendata/open-data-result.component';
+import { HomeComponent } from './pages/home/home.component';
+import { HistoryComponent } from './pages/history/history.component';
+import { HistoryViewComponent } from './pages/history/history.view.component';
+import { OpenDataResultTableComponent } from './pages/opendata/open-data-result-table.component';
+import { OpenDataResultComponent } from './pages/opendata/open-data-result.component';
+import { MapComponent } from './pages/map/map.component';
+import { StatisticsComponent } from './pages/statistics/statistics.component';
+import { OpendataComponent } from './pages/opendata/opendata.component';
+import { TcComponent } from './pages/adoc/tc.component';
+import { HelpComponent } from './pages/adoc/help.component';
+import { SettingsComponent } from './pages/user/settings.component';
+import { NotFoundComponent } from './pages/adoc/notfound.component';
 
 export const routes: Routes = [
   {
@@ -89,7 +86,7 @@ export const routes: Routes = [
       },
       {
         path: 'tc',
-        component: TCComponent
+        component: TcComponent
       },
       {
         path: 'help',

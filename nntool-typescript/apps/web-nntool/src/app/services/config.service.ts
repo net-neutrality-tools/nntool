@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-
-import { WebsiteSettings } from '../settings/settings.interface';
-
 import { environment } from '../../environments/environment';
+import { WebsiteSettings } from '../@core/models/settings/settings.interface';
 
 export interface MapSettingsResponse {
   mapfilter: {
@@ -28,7 +26,7 @@ export class ConfigService {
   private config: WebsiteSettings = environment;
   private constants: any = __TEST_CONFIG__;
 
-  constructor() {}
+  constructor() { }
 
   public clearArray(a: any[]): void {
     while (a.length > 0) {

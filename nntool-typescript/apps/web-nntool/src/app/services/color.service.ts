@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { WebsiteSettings } from '../settings/settings.interface';
 import { ConfigService } from './config.service';
+import { WebsiteSettings } from '../@core/models/settings/settings.interface';
 
 export class ColorList {
   private index: number;
@@ -33,7 +33,7 @@ export class ColorService {
 
   private config: WebsiteSettings;
 
-  constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService) { }
 
   public randomGroup(): string {
     const groups: any = this.groups;

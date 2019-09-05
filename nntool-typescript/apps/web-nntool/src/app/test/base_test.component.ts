@@ -3,17 +3,17 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ActivatedRoute, ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import { format as formatUtils } from '../pipes/utils';
+import { format as formatUtils } from '../@core/pipes/utils';
 import { AppService } from '../services/app.service';
 import { ConfigService } from '../services/config.service';
 import { RequestsService } from '../services/requests.service';
 import { TestService } from '../services/test/test.service';
 import { UserInfo, UserService } from '../services/user.service';
-import { WebsiteSettings } from '../settings/settings.interface';
+import { WebsiteSettings } from '../@core/models/settings/settings.interface';
 
 @Injectable()
 export class TestGuard implements CanDeactivate<BaseNetTestComponent> {
-  constructor() {}
+  constructor() { }
 
   public canDeactivate(
     component: BaseNetTestComponent,

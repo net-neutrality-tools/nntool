@@ -6,8 +6,6 @@ import { map, mergeMap, tap } from 'rxjs/operators';
 import { request } from 'http';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { environment } from '../../../environments/environment';
-import { LmapControl } from '../../lmap/models/lmap-control.model';
-import { LmapReport } from '../../lmap/models/lmap-report.model';
 import { GeoLocation, MeasurementAgentType } from '../../test/models/api/request-info.api';
 import { RequestAPI } from '../../test/models/api/request.api';
 import { ResponseAPI } from '../../test/models/api/response.api';
@@ -23,6 +21,8 @@ import { RequestInfoService } from '../request-info.service';
 import { RequestsService } from '../requests.service';
 import { UserInfo, UserService } from '../user.service';
 import { TestSettingsService } from './test-settings.service';
+import { LmapControl } from '../../@core/models/lmap/models/lmap-control.model';
+import { LmapReport } from '../../@core/models/lmap/models/lmap-report.model';
 
 @Injectable()
 export class TestService {
@@ -36,7 +36,7 @@ export class TestService {
     private locationService: LocationService,
     private deviceService: DeviceDetectorService,
     private requestInfoService: RequestInfoService
-  ) {}
+  ) { }
 
   public newMeasurement(
     lmapControl?: LmapControl,

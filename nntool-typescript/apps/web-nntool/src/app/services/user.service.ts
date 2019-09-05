@@ -6,11 +6,10 @@ import { NGXLogger } from 'ngx-logger';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin, Observable, Observer, throwError } from 'rxjs';
 
-import { ResultGroupResponse } from '../history/model/result.groups';
-import { WebsiteSettings } from '../settings/settings.interface';
 import { ConfigService } from './config.service';
 import { RequestsService } from './requests.service';
 import { BrowserStorageService } from './storage.service';
+import { WebsiteSettings } from '../@core/models/settings/settings.interface';
 
 export class UserInfo {
   public static fromJson(json: string): UserInfo {

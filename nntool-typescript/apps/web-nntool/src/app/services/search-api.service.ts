@@ -2,14 +2,12 @@ import { Location } from '@angular/common';
 import { HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
-
 import { Observable } from 'rxjs';
-
-import { WebsiteSettings } from '../settings/settings.interface';
 import { ConfigService } from './config.service';
 import { RequestsService } from './requests.service';
 import { SpringServerDataSource } from './table/spring-server.data-source';
 import { SpringServerSourceConf } from './table/spring-server-source.conf';
+import { WebsiteSettings } from '../@core/models/settings/settings.interface';
 
 @Injectable()
 export class SearchApiService {
@@ -74,7 +72,7 @@ export class SearchApiService {
 
   public exportSingleOpenDataMeasurement(openDataUuid: string, extension: string): Observable<any> {
     // Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid + '.' + extension),
-    return new Observable((observer: any) => {});
+    return new Observable((observer: any) => { });
   }
 
   ////

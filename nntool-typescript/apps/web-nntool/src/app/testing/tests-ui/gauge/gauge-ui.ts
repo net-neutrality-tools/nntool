@@ -5,7 +5,6 @@ import { forkJoin, Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { ConfigService } from '../../../services/config.service';
 import { WINDOW } from '../../../services/window.service';
-import { WebsiteSettings } from '../../../settings/settings.interface';
 import { Test } from '../../test.component';
 import { TestConfig } from '../../tests-implementation/test-config';
 import { TestImplementation } from '../../tests-implementation/test-implementation';
@@ -13,6 +12,7 @@ import { TestState } from '../../tests-implementation/test-state';
 import { BaseMeasurementGauge } from './existing-gauge-ui/base.gauge.ui';
 import { MeasurementGauge } from './existing-gauge-ui/gauge.ui';
 import { GaugeUIState } from './gauge-ui-state';
+import { WebsiteSettings } from '../../../@core/models/settings/settings.interface';
 
 @Component({
   templateUrl: './gauge-ui.template.html'
@@ -21,7 +21,7 @@ export abstract class GaugeUIComponent<
   T extends TestImplementation<TC, TS>,
   TC extends TestConfig,
   TS extends TestState
-> extends Test<GaugeUIState, T, TC, TS> implements AfterViewInit {
+  > extends Test<GaugeUIState, T, TC, TS> implements AfterViewInit {
   protected testGauge: BaseMeasurementGauge;
 
   private active: boolean;

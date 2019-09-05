@@ -3,14 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { LmapControl } from '../lmap/models/lmap-control.model';
-import { LmapTask } from '../lmap/models/lmap-control/lmap-task.model';
-import { LmapReport } from '../lmap/models/lmap-report.model';
-import { LmapResult } from '../lmap/models/lmap-report/lmap-result.model';
-import { QoSMeasurementResult } from '../lmap/models/lmap-report/lmap-result/extensions/qos-measurement-result.model';
-import { RttInfo } from '../lmap/models/lmap-report/lmap-result/extensions/rtt-info.model';
-import { SpeedMeasurementResult } from '../lmap/models/lmap-report/lmap-result/extensions/speed-measurement-result.model';
-import { LmapOption, MeasurementTypeParameters } from '../lmap/models/shared/lmap-option.model';
 import { AppService } from '../services/app.service';
 import { ConfigService } from '../services/config.service';
 import { LocationService } from '../services/location.service';
@@ -26,7 +18,15 @@ import { MeasurementResultNetworkPointInTimeAPI } from './models/measurements/me
 import { TimeBasedResultAPI } from './models/measurements/time-based-result.api';
 import { ServerSelectionComponent } from './test.server_selection';
 import { SpeedMeasurementPeer } from './models/server-selection/speed-measurement-peer';
-import { ConnectionInfo } from '../lmap/models/lmap-report/lmap-result/extensions/connection-info.model';
+import { MeasurementTypeParameters, LmapOption } from '../@core/models/lmap/models/shared/lmap-option.model';
+import { LmapControl } from '../@core/models/lmap/models/lmap-control.model';
+import { LmapTask } from '../@core/models/lmap/models/lmap-control/lmap-task.model';
+import { SpeedMeasurementResult } from '../@core/models/lmap/models/lmap-report/lmap-result/extensions/speed-measurement-result.model';
+import { QoSMeasurementResult } from '../@core/models/lmap/models/lmap-report/lmap-result/extensions/qos-measurement-result.model';
+import { ConnectionInfo } from '../@core/models/lmap/models/lmap-report/lmap-result/extensions/connection-info.model';
+import { RttInfo } from '../@core/models/lmap/models/lmap-report/lmap-result/extensions/rtt-info.model';
+import { LmapReport } from '../@core/models/lmap/models/lmap-report.model';
+import { LmapResult } from '../@core/models/lmap/models/lmap-report/lmap-result.model';
 
 export { TestGuard } from './test.guard';
 
@@ -238,13 +238,13 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
     if (this.testResults.length === 0) {
       return;
     }
-    
+
     const endTimeStamp = new Date().toJSON().slice(0, -1);
     let scheduleName: string;
     if (this.measurementControl.schedules && this.measurementControl.schedules.length > 0) {
       scheduleName = this.measurementControl.schedules[0].name;
     }
-    const lmapReport: LmapReport = new LmapReport();
+    const lmapReport = new LmapReport();
     lmapReport.date = endTimeStamp;
     lmapReport.result = [new LmapResult()];
     lmapReport.result[0].schedule = scheduleName;

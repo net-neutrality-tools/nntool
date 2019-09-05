@@ -13,8 +13,8 @@ import { ConfigService } from './services/config.service';
 import { Guard } from './services/guard.service';
 import { BrowserStorageService } from './services/storage.service';
 import { UserInfo, UserService } from './services/user.service';
-import { FeatureSettings } from './settings/features.settings.interface';
-import { WebsiteSettings } from './settings/settings.interface';
+import { FeatureSettings } from './@core/models/settings/features.settings.interface';
+import { WebsiteSettings } from './@core/models/settings/settings.interface';
 
 @Component({
   selector: 'app-root',

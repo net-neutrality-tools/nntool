@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
-import { FeatureSettings } from '../settings/features.settings.interface';
-import { WebsiteSettings } from '../settings/settings.interface';
 import { ConfigService } from './config.service';
+import { WebsiteSettings } from '../@core/models/settings/settings.interface';
+import { FeatureSettings } from '../@core/models/settings/features.settings.interface';
 
 @Injectable()
 export class Guard implements CanActivate, CanActivateChild {
@@ -36,7 +36,7 @@ export class Guard implements CanActivate, CanActivateChild {
   private _features: FeatureSettings = null;
   private _odMsg = true;
 
-  constructor(private logger: NGXLogger, private configService: ConfigService, private router: Router) {}
+  constructor(private logger: NGXLogger, private configService: ConfigService, private router: Router) { }
 
   public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     const url: string = state.url.split('?')[0];

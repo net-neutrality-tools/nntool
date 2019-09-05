@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { UIModule } from '@nntool-typescript/web';
 
 @NgModule({
-  exports: [TranslateModule]
+  imports: [UIModule],
+  exports: [UIModule, TranslateModule]
 })
-export class SharedModule {}
+export class SharedModule { }
