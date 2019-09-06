@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
@@ -30,6 +29,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.Embedd
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.ProviderRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.BriefMeasurementResponseMapperImpl;
@@ -62,6 +62,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsRespon
 	LmapReportModelMapperImpl.class,
 	CouchDbStorageService.class,
 	QoSEvaluationService.class,
+	ProviderService.class,
 	BriefMeasurementResponseMapperImpl.class,
 })
 @AutoConfigureJsonTesters
@@ -93,6 +94,9 @@ public class CouchDbStorageServiceTest {
 	
 	@MockBean
 	private DetailMeasurementService detailMeasurementService;
+	
+	@MockBean
+	private ProviderRepository providerRepository;
 	
 	@Autowired
 	private StorageService storageService;

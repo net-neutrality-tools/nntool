@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-19
+ *      \date Last update: 2019-08-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -85,12 +85,23 @@ int Download::run()
 		TRC_DEBUG( ("Resolving Hostname for Measurement: "+mServerName).c_str() );
 
 		#if defined(NNTOOL) && defined(__ANDROID__)
+			if( CTool::validateIp(mClient) == 6)
+			{
+				mServer = CTool::getIpFromHostname( mServerName, 6 );
+			}
+			else
+			{
+				mServer = CTool::getIpFromHostname( mServerName, 4 );
+			}
 
-		if( CTool::validateIp(mClient) == 6) {
-			mServer = CTool::getIpFromHostname( mServerName, 6 );
-		} else {
-			mServer = CTool::getIpFromHostname( mServerName, 4 );
-        }
+			if (mServer.compare("1.1.1.1") == 0)
+			{
+				//Error
+				::UNREACHABLE = true;
+				::hasError = true;
+				TRC_ERR("no connection to measurement peer");
+				return -1;
+			}
 		#endif
 
 		#if defined(NNTOOL) && !defined(__ANDROID__)
@@ -98,6 +109,15 @@ int Download::run()
 			memset(&ips, 0, sizeof ips);
 
 			ips = CTool::getIpsFromHostname( mServerName, true );
+
+			if (ips->ai_socktype != 1 && ips->ai_socktype != 2)
+			{
+				//Error
+				::UNREACHABLE = true;
+				::hasError = true;
+				TRC_ERR("no connection to measurement peer");
+				return -1;
+			}
 
 			char host[NI_MAXHOST];
 			
@@ -292,11 +312,7 @@ int Download::run()
 			//Lock Mutex
 			pthread_mutex_lock(&mutex1);
 
-				unsigned long long nDownload0 = mDownload.results.begin()->first;
-
-				//Get Max T0
-				if( measurements.download.totime < nDownload0 )
-					measurements.download.totime = nDownload0;
+				measurements.download.totime = 0;
 
 				//Starting multiple Instances for every Probe
 				for(map<int, unsigned long long>::iterator AI = mDownload.results.begin(); AI!= mDownload.results.end(); ++AI)

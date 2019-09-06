@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import at.alladin.nettest.spring.data.couchdb.core.mapping.DocTypeHelper;
+
 /**
  * Contains additional information about provider's asn/mcc-mnc mappings.
  * 
@@ -17,15 +19,44 @@ import com.google.gson.annotations.SerializedName;
 @JsonClassDescription("Contains additional information about provider's asn/mcc-mnc mappings.")
 public class Provider extends EmbeddedProvider {
 	
-	/**
-	 * A ID which serves as primary key.
-	 */
-	@JsonPropertyDescription("A ID which serves as primary key.")
 	@Expose
-	@SerializedName("id")
-	@JsonProperty("id")
-	private Long id;
-
+	@SerializedName("_id")
+	@JsonProperty("_id")
+	private String id;
+	
+	@Expose
+	@SerializedName("_rev")
+	@JsonProperty("_rev")
+	private String rev;
+	
+	@JsonProperty("docType")
+	@Expose
+	@SerializedName("docType") // TODO: rename to @docType
+	private String docType;
+	
+	public Provider() {
+		docType = DocTypeHelper.getDocType(getClass());
+	}
+	
+	public String getId() {
+		return id;
+	}
+	
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	public String getRev() {
+		return rev;
+	}
+	
+	public void setRev(String rev) {
+		this.rev = rev;
+	}
+	
+	public String getDocType() {
+		return docType;
+	}
 	/**
 	 * Contains a list of all valid/possible ASN mappings for this provider.
 	 */
@@ -43,14 +74,6 @@ public class Provider extends EmbeddedProvider {
     @SerializedName("mcc_mnc_mappings")
     @JsonProperty("mcc_mnc_mappings")
     private List<ProviderMccMncMapping> mccMncMappings;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public List<ProviderAsnMapping> getAsnMappings() {
 		return asnMappings;
