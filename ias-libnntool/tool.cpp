@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-20
+ *      \date Last update: 2019-09-09
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -182,10 +182,10 @@ unsigned long long CTool::calculateResultsAvg( map<int,unsigned long long> dmap 
 
 int CTool::calculateResults(struct measurement_data &sMeasurement)
 {
-	return CTool::calculateResults(sMeasurement, 1, 0);
+	return CTool::calculateResults(sMeasurement, 1, 0, 0);
 }
 
-int CTool::calculateResults(struct measurement_data &sMeasurement, double increment, int ai_offset)
+int CTool::calculateResults(struct measurement_data &sMeasurement, double increment, int ai_offset, unsigned long long duration)
 {
 	double count = 0;
 	
@@ -223,14 +223,29 @@ int CTool::calculateResults(struct measurement_data &sMeasurement, double increm
 
 	if( count != 0 )
 	{	
-		avg = avgDouble = (double)sum / (double)count;
+		if (duration != 0)
+		{
+			avg = avgDouble = (double)sum / ( (double)duration / 1e6);
+		}
+		else
+		{
+			avg = avgDouble = (double)sum / (double)count;
+		}
+		
 
 		sMeasurement.min = min;
 		sMeasurement.avg = avg;
 		sMeasurement.max = max;
 
 		#ifdef NNTOOL
-			sMeasurement.duration_ns = count * 1000 * 1000 * 1000;
+			if (duration != 0)
+			{
+				sMeasurement.duration_ns = duration * 1000;
+			}
+			else
+			{
+				sMeasurement.duration_ns = count * 1000 * 1000 * 1000;
+			}
 
 			sMeasurement.interim_values = medianVector;
 
