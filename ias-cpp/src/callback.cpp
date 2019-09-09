@@ -217,7 +217,7 @@ void CCallback::rttUdpCallback(string cmd)
 		//---------------------------
 		
 		//Calculate Min, Avg, Max
-		CTool::calculateResults( tempMeasurement.ping, 1, 0 );
+		CTool::calculateResults( tempMeasurement.ping, 1, 0, 0 );
 			
 		//---------------------------
 	
@@ -435,7 +435,7 @@ void CCallback::downloadCallback(string cmd)
 	//---------------------------
 
 	//Calculate Min, Avg, Max
-	CTool::calculateResults( tempMeasurement.download, 0.5, 0 );
+	CTool::calculateResults( tempMeasurement.download, 0.5, 0, TIMER_DURATION);
 
 	TRC_INFO( "DOWNLOAD AVG MBPS: " + CTool::to_string_precision(tempMeasurement.download.avg * 1e-6, 3) );
 
@@ -618,7 +618,7 @@ void CCallback::uploadCallback(string cmd)
 	//---------------------------
 
 	//Calculate Min, Avg, Max
-	CTool::calculateResults( tempMeasurement.upload, 0.5, 0 );
+	CTool::calculateResults( tempMeasurement.upload, 0.5, 0, 0 );
 
 	//calculcate progress based on TIMER_DURATION to account for UPLOAD_ADDITIONAL_MEASUREMENT_DURATION required for server response receive
 	tempMeasurement.upload.measurement_phase_progress = (TIMER_DURATION - (TIMER_DURATION % 500000)) / (MEASUREMENT_DURATION * 1e6);
