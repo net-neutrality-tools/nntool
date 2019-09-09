@@ -3,7 +3,6 @@ import { NGXLogger } from 'ngx-logger';
 import { SlideAnimation } from '../../../animation/animation';
 import { QoSResultGroupHolder } from '../../models/qos-result-group-holder';
 import { SlideableItem } from '../../../animation/slideable-item';
-import { Observable } from 'rxjs';
 import { QoSMeasurementResult } from '../../models/lmap/models/lmap-report/lmap-result/extensions/qos-measurement-result.model';
 import { QoSTypeDescription } from '../../models/full-measurement-response.api';
 
@@ -17,7 +16,7 @@ export class QoSResultComponent implements OnChanges {
 
   qosGroups: QoSResultGroupHolder[];
 
-  @Input() qosMeasurementResult: Observable<QoSMeasurementResult>;
+  @Input() qosMeasurementResult: QoSMeasurementResult;
 
   constructor(private logger: NGXLogger) { }
 

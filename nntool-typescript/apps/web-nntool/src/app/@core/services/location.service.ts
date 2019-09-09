@@ -54,13 +54,13 @@ export class LocationService {
   private locationError(error: PositionError): void {
     switch (error.code) {
       case error.PERMISSION_DENIED:
-        this.logger.error('User denied location service');
+        //this.logger.error('User denied location service');
         break;
       case error.POSITION_UNAVAILABLE:
-        this.logger.error('Position is not available');
+        //this.logger.error('Position is not available');
         break;
       case error.TIMEOUT:
-        this.logger.error('Timeout while position request');
+        //this.logger.error('Timeout while position request');
         break;
       default:
         break;

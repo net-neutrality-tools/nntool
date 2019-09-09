@@ -8,6 +8,7 @@ import { RequestsService } from './requests.service';
 import { SpringServerDataSource } from './table/spring-server.data-source';
 import { SpringServerSourceConf } from './table/spring-server-source.conf';
 import { WebsiteSettings } from '../models/settings/settings.interface';
+import { query } from '../../../../../../node_modules/@angular/animations';
 
 @Injectable()
 export class SearchApiService {
@@ -30,6 +31,16 @@ export class SearchApiService {
         mapFunction: (dto: any) => dto //this.groupMapper.dtoToModel(dto)
       })
     );
+  }
+
+  public exportOpenDataMeasurements(q: string, pageSize: number, page: number, extension: string) {
+    let queryString = '?size=' + pageSize + "&page=" + page;
+
+    if (q) {
+      queryString += '&q=' + q;
+    }
+
+    window.location.href = Location.joinWithSlash(this.config.servers.search, 'measurements.' + extension + queryString);
   }
 
   public getSingleOpenDataMeasurement(openDataUuid: string): Observable<any> {
@@ -70,14 +81,13 @@ export class SearchApiService {
     });
   }
 
-  public exportSingleOpenDataMeasurement(openDataUuid: string, extension: string): Observable<any> {
-    // Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid + '.' + extension),
-    return new Observable((observer: any) => { });
+  public exportSingleOpenDataMeasurement(openDataUuid: string, extension: string) {
+    window.location.href = Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid + '.' + extension);
   }
 
   ////
 
-  public getOpenDataMeasurements(): Observable<any> {
+  /*public getOpenDataMeasurements(): Observable<any> {
     return new Observable((observer: any) => {
       this.requests
         .getJson<any>(
@@ -100,5 +110,5 @@ export class SearchApiService {
           }
         );
     });
-  }
+  }*/
 }

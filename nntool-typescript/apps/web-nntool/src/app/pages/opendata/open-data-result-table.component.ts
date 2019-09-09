@@ -3,7 +3,7 @@ import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { fromEvent } from 'rxjs';
-import { map, filter, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { SpringServerDataSource } from '../../@core/services/table/spring-server.data-source';
 import { SearchApiService } from '../../@core/services/search-api.service';
 
@@ -101,5 +101,32 @@ export class OpenDataResultTableComponent implements OnInit {
 
   showOpenDataMeasurement(item: any) {
     this.router.navigate(['/open-data-results', item.open_data_uuid]);
+  }
+
+  public bulkExportAsCsv() {
+    this.searchApiService.exportOpenDataMeasurements(
+      this.tableSource.getSearchQuery(),
+      this.tableSource.getPagingConf['page'],
+      this.tableSource.getPagingConf['perPage'],
+      'csv'
+    );
+  }
+
+  public bulkExportAsJsonZip() {
+    this.searchApiService.exportOpenDataMeasurements(
+      this.tableSource.getSearchQuery(),
+      this.tableSource.getPagingConf['page'],
+      this.tableSource.getPagingConf['perPage'],
+      'json.zip'
+    );
+  }
+
+  public bulkExportAsYamlZip() {
+    this.searchApiService.exportOpenDataMeasurements(
+      this.tableSource.getSearchQuery(),
+      this.tableSource.getPagingConf['page'],
+      this.tableSource.getPagingConf['perPage'],
+      'yaml.zip'
+    );
   }
 }

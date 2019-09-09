@@ -34,12 +34,12 @@ export class ResultTableComponent {
     }
   };
 
-  constructor(protected logger: NGXLogger) {}
+  constructor(protected logger: NGXLogger) { }
 
   public ngOnInit() {
     this.tableSource = this.source;
     this.tableSettings = Object.assign({}, this.defaultSettings, this.settings);
-    this.logger.debug(this.tableSettings);
+    //this.logger.debug(this.tableSettings);
   }
 
   onRowSelected(event: any) {

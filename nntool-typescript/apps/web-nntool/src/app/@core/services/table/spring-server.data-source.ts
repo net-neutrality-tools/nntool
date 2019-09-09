@@ -28,8 +28,20 @@ export class SpringServerDataSource extends ServerDataSource {
     this.q = q;
   }
 
+  public getSearchQuery(): string {
+    return this.q;
+  }
+
   public removeSearchQuery() {
     this.q = undefined;
+  }
+
+  public getPagingConf() {
+    let p = this.pagingConf;
+
+    p['page'] -= 1;
+
+    return p;
   }
 
   // change: add search parameter (q=)
