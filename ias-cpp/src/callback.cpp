@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-09-04
+ *      \date Last update: 2019-09-09
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -264,9 +264,6 @@ void CCallback::rttUdpCallback(string cmd)
 
 		for ( auto &rtt : tempMeasurement.ping.interim_values )
 		{
-	        Json jRtt = Json::object{
-	            {"rtt_ns", rtt * 1000},
-	        };
 			jRtts.push_back(rtt * 1000);
 		}
 			
