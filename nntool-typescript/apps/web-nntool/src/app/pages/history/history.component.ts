@@ -47,6 +47,7 @@ export class HistoryComponent {
       'measurements.SPEED.throughput_avg_download_bps': {
         title: 'Download (Mbit/s)',
         filter: false,
+        sort: false,
         valuePrepareFunction: (cell, row) => {
           if (row.measurements.SPEED && row.measurements.SPEED.throughput_avg_download_bps) {
             return (row.measurements.SPEED.throughput_avg_download_bps / 1000 / 1000).toFixed(2);
@@ -58,6 +59,7 @@ export class HistoryComponent {
       'measurements.SPEED.throughput_avg_upload_bps': {
         title: 'Upload (Mbit/s)',
         filter: false,
+        sort: false,
         valuePrepareFunction: (cell, row) => {
           if (row.measurements.SPEED && row.measurements.SPEED.throughput_avg_upload_bps) {
             return (row.measurements.SPEED.throughput_avg_upload_bps / 1000 / 1000).toFixed(2);
