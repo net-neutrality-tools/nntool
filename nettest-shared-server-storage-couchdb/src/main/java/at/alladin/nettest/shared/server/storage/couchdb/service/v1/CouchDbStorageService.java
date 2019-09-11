@@ -42,6 +42,8 @@ import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ComputedNetworkPointInTime;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ConnectionInfo;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Device;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.DeviceInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.EmbeddedNetworkType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.EmbeddedProvider;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MccMnc;
@@ -61,6 +63,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.DeviceRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.EmbeddedNetworkTypeRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
@@ -93,6 +96,9 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private MeasurementAgentRepository measurementAgentRepository;
+	
+	@Autowired
+	private DeviceRepository deviceRepository; 
 	
 	@Autowired
 	private QoSMeasurementObjectiveRepository qosMeasurementObjectiveRepository;
@@ -166,6 +172,14 @@ public class CouchDbStorageService implements StorageService {
 					}
 				}
 			});
+		}
+		
+		if (measurement.getDeviceInfo() != null) {
+			final DeviceInfo di = measurement.getDeviceInfo();
+			final Device device = deviceRepository.findByCodeName(di.getCodeName());
+			if (device != null) {
+				di.setFullName(device.getFullname());
+			}
 		}
 
 		calculateTotalMeasurementPayload(measurement);

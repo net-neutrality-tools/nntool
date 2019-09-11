@@ -20,7 +20,7 @@ public interface DeviceRepository extends CouchDbRepository<Device> {
 		designDocument = "Settings", viewName = "by_device", includeDocs = true, descending = true
 	)
 	Page<Device> getAllDevices(Pageable page);
-	
+
 	@View(
 	    designDocument = "Settings", viewName = "by_device", includeDocs = true, descending = true,
 	    keys = {
