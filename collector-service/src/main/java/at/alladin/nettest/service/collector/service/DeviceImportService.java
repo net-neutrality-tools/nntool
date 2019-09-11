@@ -54,7 +54,7 @@ public class DeviceImportService {
 	TaskScheduler taskScheduler;
 
 	@Autowired
-	DeviceRepository deviceRepository;
+	DeviceRepository deviceRepository; // TODO: use StorageService or equivalent service instead of using couchdb repository directly.
 
 	Map<String, ScheduledFuture<?>> jobs = new HashMap<>();
 
