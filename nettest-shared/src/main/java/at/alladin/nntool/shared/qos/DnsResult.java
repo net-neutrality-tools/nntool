@@ -34,15 +34,12 @@ public class DnsResult extends AbstractResult {
 	 */
 	public static class DnsEntry {
 		@JsonProperty("dns_result_address")
-
 		private String address;
 		
 		@JsonProperty("dns_result_ttl")
-
 		private Long ttl;
 		
 		@JsonProperty("dns_result_priority")
-
 		private Short priority;
 		
 		public DnsEntry() {

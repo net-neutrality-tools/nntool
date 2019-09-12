@@ -18,8 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.annotations.SerializedName;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.EvaluatedQoSResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.EvaluatedQoSResult.QoSResultOutcome;
@@ -53,11 +53,6 @@ public class QoSEvaluationService {
 
 	@Autowired
 	private FullMeasurementResponseMapper fullMeasurementResponseMapper;
-
-	/*
-	@Autowired
-	private GsonBuilder gsonBuilder;
-	*/
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -150,22 +145,12 @@ public class QoSEvaluationService {
 		//remove testtype and qos uid from res (TODO: do we still need this?)
 		qosResult.setType(null);
 		qosResult.setObjectiveId(null);
-		
-		//final Gson gson = gsonBuilder.create();
-		
-		//fix double gson call
-		//final AbstractResult result = gson.fromJson(gson.toJsonTree(qosResult.getResults()), resultClass);	// == testResult
-		AbstractResult result = null;
-		try {
-			final String json = objectMapper.writeValueAsString(qosResult.getResults());
-			result = objectMapper.readValue(json, resultClass);	// == testResult
-			result.setResultMap(qosResult.getResults()); //and add the map (needed for evaluations (e.g. %EVAL xxxxx%))
-		}
-		catch (final IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		
+
+		//final String json = objectMapper.writeValueAsString(qosResult.getResults());
+		//result = objectMapper.readValue(json, resultClass);	// == testResult
+		AbstractResult result = objectMapper.convertValue(qosResult.getResults(), resultClass);
+		result.setResultMap(qosResult.getResults()); //and add the map (needed for evaluations (e.g. %EVAL xxxxx%))
+
 		//create a parsed abstract result set sorted by priority
 		final Set<AbstractResult> expResultSet = new TreeSet<>(new Comparator<AbstractResult>() {
 			@Override
@@ -178,10 +163,8 @@ public class QoSEvaluationService {
 		
 		if (objective != null && objective.getEvaluations() != null) {
 			for (Map<String, Object> evaluation : objective.getEvaluations()) {
-
-				//final AbstractResult res = gson.fromJson(gson.toJson(evaluation), resultClass);
 				final AbstractResult res = objectMapper.convertValue(evaluation, resultClass);
-				
+
 				if (res.getPriority() != null && res.getPriority() == Integer.MAX_VALUE) {
 					res.setPriority(maxPriority--);
 				}
@@ -289,8 +272,8 @@ public class QoSEvaluationService {
 		}
 		
 		for (Field f : clazz.getDeclaredFields()) {
-			if (f.isAnnotationPresent(SerializedName.class)) {
-				String fieldName = ((SerializedName) f.getAnnotation(SerializedName.class)).value();
+			if (f.isAnnotationPresent(JsonProperty.class)) {
+				String fieldName = f.getAnnotation(JsonProperty.class).value();
 				//check for duplicates:
 				if (!ret.containsKey(fieldName)) {
 					ret.put(fieldName, f);

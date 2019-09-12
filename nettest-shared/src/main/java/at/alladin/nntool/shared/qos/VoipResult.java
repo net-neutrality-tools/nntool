@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  */
 public class VoipResult extends AbstractResult {
-	
+
 	@JsonProperty("voip_objective_in_port")
 	Object inPort;
 	
@@ -97,6 +97,9 @@ public class VoipResult extends AbstractResult {
 
 	@JsonProperty("voip_result_out_long_seq")
 	Object longSequenceOut;
+
+	@JsonProperty("voip_result_status")
+	private String status;
 	
 	/**
 	 * 
@@ -295,6 +298,14 @@ public class VoipResult extends AbstractResult {
 
 	public void setLongSequenceOut(Object longSequenceOut) {
 		this.longSequenceOut = longSequenceOut;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	@Override
