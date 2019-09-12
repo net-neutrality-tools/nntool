@@ -16,8 +16,7 @@
 
 package at.alladin.nntool.shared.qos;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 /**
@@ -27,100 +26,76 @@ import com.google.gson.annotations.SerializedName;
  */
 public class VoipResult extends AbstractResult {
 	
-	@SerializedName("voip_objective_in_port")
-	@Expose
+	@JsonProperty("voip_objective_in_port")
 	Object inPort;
 	
-	@SerializedName("voip_objective_out_port")
-	@Expose
+	@JsonProperty("voip_objective_out_port")
 	Object outPort;
 	
-	@SerializedName("voip_objective_call_duration")
-	@Expose
+	@JsonProperty("voip_objective_call_duration")
 	Object callDuration;
 	
-	@SerializedName("voip_objective_bits_per_sample")
-	@Expose
+	@JsonProperty("voip_objective_bits_per_sample")
 	Object bitsPerSample;
 	
-	@SerializedName("voip_objective_sample_rate")
-	@Expose
+	@JsonProperty("voip_objective_sample_rate")
 	Object sampleRate;
 	
-	@SerializedName("voip_objective_delay")
-	@Expose
+	@JsonProperty("voip_objective_delay")
 	Object delay;
 	
-	@SerializedName("voip_objective_timeout")
-	@Expose
+	@JsonProperty("voip_objective_timeout")
 	Object timeout;
 
-	@SerializedName("voip_objective_payload")
-	@Expose
+	@JsonProperty("voip_objective_payload")
 	Object payload;
 
-	@SerializedName("voip_result_in_max_jitter")
-	@Expose
+	@JsonProperty("voip_result_in_max_jitter")
 	Object maxJitterIn;
 
-	@SerializedName("voip_result_in_mean_jitter")
-	@Expose
+	@JsonProperty("voip_result_in_mean_jitter")
 	Object meanJitterIn;
 
-	@SerializedName("voip_result_in_max_delta")
-	@Expose
+	@JsonProperty("voip_result_in_max_delta")
 	Object maxDeltaIn;
 
-	@SerializedName("voip_result_in_num_packets")
-	@Expose
+	@JsonProperty("voip_result_in_num_packets")
 	Object numPacketsIn;
 
-	@SerializedName("voip_result_in_skew")
-	@Expose
+	@JsonProperty("voip_result_in_skew")
 	Object skewIn;
 
-	@SerializedName("voip_result_out_max_jitter")
-	@Expose
+	@JsonProperty("voip_result_out_max_jitter")
 	Object maxJitterOut;
 
-	@SerializedName("voip_result_out_mean_jitter")
-	@Expose
+	@JsonProperty("voip_result_out_mean_jitter")
 	Object meanJitterOut; // this variable was called "minJitter", but the json key was "..._mean_jitter", which one is correct? assuming "mean" is correct.
 
-	@SerializedName("voip_result_out_max_delta")
-	@Expose
+	@JsonProperty("voip_result_out_max_delta")
 	Object maxDeltaOut;
 
-	@SerializedName("voip_result_out_num_packets")
-	@Expose
+	@JsonProperty("voip_result_out_num_packets")
 	Object numPacketsOut;
 
-	@SerializedName("voip_result_out_skew")
-	@Expose
+	@JsonProperty("voip_result_out_skew")
 	Object skewOut;
 	
-	@SerializedName("voip_result_in_sequence_error")
-	@Expose
+	@JsonProperty("voip_result_in_sequence_error")
 	Object seqErrorsIn;
 	
-	@SerializedName("voip_result_out_sequence_error")
-	@Expose
+	@JsonProperty("voip_result_out_sequence_error")
 	Object seqErrorsOut;
 
-	@SerializedName("voip_result_in_short_seq")
-	@Expose
+	@JsonProperty("voip_result_in_short_seq")
 	Object shortSequenceIn;
 
-	@SerializedName("voip_result_out_short_seq")
-	@Expose
+	@JsonProperty("voip_result_out_short_seq")
 	Object shortSequenceOut;
 
-	@SerializedName("voip_result_in_long_seq")
-	@Expose
+	@JsonProperty("voip_result_in_long_seq")
 	Object longSequenceIn;
 
-	@SerializedName("voip_result_out_long_seq")
-	@Expose
+	@JsonProperty("voip_result_out_long_seq")
 	Object longSequenceOut;
 	
 	/**

@@ -18,8 +18,7 @@ package at.alladin.nntool.shared.qos;
 
 import java.util.HashSet;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * 
@@ -34,16 +33,16 @@ public class DnsResult extends AbstractResult {
 	 *
 	 */
 	public static class DnsEntry {
-		@SerializedName("dns_result_address")
-		@Expose
+		@JsonProperty("dns_result_address")
+
 		private String address;
 		
-		@SerializedName("dns_result_ttl")
-		@Expose
+		@JsonProperty("dns_result_ttl")
+
 		private Long ttl;
 		
-		@SerializedName("dns_result_priority")
-		@Expose
+		@JsonProperty("dns_result_priority")
+
 		private Short priority;
 		
 		public DnsEntry() {
@@ -132,40 +131,31 @@ public class DnsResult extends AbstractResult {
 		}
 	}
 	
-	@SerializedName("dns_objective_host")
-	@Expose
+	@JsonProperty("dns_objective_host")
 	private String host;
 
-	@SerializedName("dns_result_info")
-	@Expose
+	@JsonProperty("dns_result_info")
 	private String info;
 	
-	@SerializedName("dns_result_status")
-	@Expose
+	@JsonProperty("dns_result_status")
 	private String status;
 
-	@SerializedName("dns_objective_resolver")
-	@Expose
+	@JsonProperty("dns_objective_resolver")
 	private String resolver;
 	
-	@SerializedName("dns_objective_dns_record")
-	@Expose
+	@JsonProperty("dns_objective_dns_record")
 	private String record;
 	
-	@SerializedName("dns_objective_timeout")
-	@Expose
+	@JsonProperty("dns_objective_timeout")
 	private Object timeout;
 	
-	@SerializedName("dns_result_entries_found")
-	@Expose
+	@JsonProperty("dns_result_entries_found")
 	private Object entriesFound;
 	
-	@SerializedName("dns_result_duration")
-	@Expose
+	@JsonProperty("dns_result_duration")
 	private Object duration;
 	
-	@SerializedName("dns_result_entries")
-	@Expose
+	@JsonProperty("dns_result_entries")
 	private HashSet<DnsEntry> resultEntries;
 
 	/**
