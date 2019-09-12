@@ -54,7 +54,6 @@
 		E069C29422F84A2900344A67 /* QoSMeasurementResultGroupTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C29322F84A2900344A67 /* QoSMeasurementResultGroupTableViewController.swift */; };
 		E069C29622F84B2200344A67 /* QoSMeasurementResultDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C29522F84B2200344A67 /* QoSMeasurementResultDetailTableViewController.swift */; };
 		E069C29822F84C5200344A67 /* QoSGroupOverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C29722F84C5200344A67 /* QoSGroupOverviewCell.swift */; };
-		E069C29A22F852F900344A67 /* QoSGroupCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E069C29922F852F900344A67 /* QoSGroupCollectionViewCell.xib */; };
 		E069C29C22F8554B00344A67 /* QoSGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C29B22F8554B00344A67 /* QoSGroupCollectionViewCell.swift */; };
 		E08D4BBD22E706F300FA3E3C /* CurrentMeasurementPeerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08D4BBC22E706F300FA3E3C /* CurrentMeasurementPeerTableViewController.swift */; };
 		E0AA400422F96EED0039DC2B /* CollectionViewFlowLayoutConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AA400322F96EEC0039DC2B /* CollectionViewFlowLayoutConfig.swift */; };
@@ -221,7 +220,6 @@
 		E069C29322F84A2900344A67 /* QoSMeasurementResultGroupTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSMeasurementResultGroupTableViewController.swift; sourceTree = "<group>"; };
 		E069C29522F84B2200344A67 /* QoSMeasurementResultDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSMeasurementResultDetailTableViewController.swift; sourceTree = "<group>"; };
 		E069C29722F84C5200344A67 /* QoSGroupOverviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSGroupOverviewCell.swift; sourceTree = "<group>"; };
-		E069C29922F852F900344A67 /* QoSGroupCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QoSGroupCollectionViewCell.xib; sourceTree = "<group>"; };
 		E069C29B22F8554B00344A67 /* QoSGroupCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSGroupCollectionViewCell.swift; sourceTree = "<group>"; };
 		E08D4BBC22E706F300FA3E3C /* CurrentMeasurementPeerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentMeasurementPeerTableViewController.swift; sourceTree = "<group>"; };
 		E0AA400322F96EEC0039DC2B /* CollectionViewFlowLayoutConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewFlowLayoutConfig.swift; sourceTree = "<group>"; };
@@ -499,7 +497,6 @@
 				E0B9A35E224AB835002AB640 /* SpeedMeasurementBasicResultView.xib */,
 				E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */,
 				E0CC269622E8AAB0005DEED0 /* GroupSectionHeaderView.xib */,
-				E069C29922F852F900344A67 /* QoSGroupCollectionViewCell.xib */,
 				E0CC269922E8C4E1005DEED0 /* HistoryListHeaderView.xib */,
 			);
 			path = Resources;
@@ -893,7 +890,6 @@
 			files = (
 				E00F4918225F7DC900EAD0C0 /* ias.mobile.js in Resources */,
 				E044DE0E22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib in Resources */,
-				E069C29A22F852F900344A67 /* QoSGroupCollectionViewCell.xib in Resources */,
 				E026A58E2241271900BACDB5 /* LaunchScreen.storyboard in Resources */,
 				E0B9A33B224A5BCA002AB640 /* ProgressInfoBar.xib in Resources */,
 				E0B9A3392249826E002AB640 /* SpeedMeasurementGaugeView.xib in Resources */,
