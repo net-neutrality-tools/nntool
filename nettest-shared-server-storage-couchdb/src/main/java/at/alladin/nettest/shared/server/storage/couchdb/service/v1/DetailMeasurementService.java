@@ -12,6 +12,8 @@ import java.util.Locale;
 import java.util.PriorityQueue;
 
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
@@ -45,7 +47,10 @@ public class DetailMeasurementService {
 	private static final String SHARE_TEXT_PLACEHOLDER = "{}";
 	
 	private static final String SHARE_TEXT_INTRO_TRANSLATION_KEY = "share_text_intro";
-	
+
+	@Autowired
+	private MessageSource messageSource;
+
 	/**
 	 * Groups the results according to the groupStructure param
 	 * Will move all values that are defined in the groupStructure from their current location into the location defined by the groupStructure
@@ -97,8 +102,8 @@ public class DetailMeasurementService {
 			//create a corresponding responseGroup w/formatted and i18ed values
 			final DetailMeasurementGroup responseGroup = new DetailMeasurementGroup();
 
-			responseGroup.setTitle("key_" + groupDefinition.getKey());
-			responseGroup.setDescription("description_" + groupDefinition.getKey());
+			responseGroup.setTitle(messageSource.getMessage("key_" + groupDefinition.getKey(), null, locale));
+			responseGroup.setDescription(messageSource.getMessage("description_" + groupDefinition.getKey(), null, locale));
 			responseGroup.setIconCharacter(groupDefinition.getIcon());
 			
 			responseGroup.setItems(new ArrayList<>());
@@ -135,7 +140,7 @@ public class DetailMeasurementService {
 				//fill the item accordingly
 				final DetailMeasurementGroupItem item = new DetailMeasurementGroupItem();
 				
-				item.setTitle(entry.getTranslationKey());//getLocalizedMessage(entry.getTranslationKey(), locale));
+				item.setTitle(messageSource.getMessage(entry.getTranslationKey(), null, locale));
 				
 				if (includeKeys) {
 					item.setKey(key);
@@ -183,7 +188,7 @@ public class DetailMeasurementService {
 				if (locations != null && locations.size() > 0) {
 					final DetailMeasurementGroupItem item = new DetailMeasurementGroupItem();
 					
-					item.setTitle("key_location");//getLocalizedMessage("key_location", locale));
+					item.setTitle(messageSource.getMessage("key_location", null, locale));
 					
 					try{
 						item.setValue(getGeoLocation(geoAccuracyDetailLimit, locale, locations.get(0)));

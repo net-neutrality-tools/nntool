@@ -10,6 +10,9 @@ import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.MessageSource;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.util.ReflectionUtils;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementGroup;
@@ -22,6 +25,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgentInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgentType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
+import at.alladin.nettest.shared.server.storage.couchdb.util.ReturnCodeMessageSource;
 
 public class DetailMeasurementServiceTest {
 
@@ -32,12 +36,15 @@ public class DetailMeasurementServiceTest {
 	private List<SpeedtestDetailGroup> groupStructure;
 	
 	private Locale locale;
-	
+
+	private MessageSource messageSource = new ReturnCodeMessageSource();
+
 	@Before
 	public void init() {
 		locale = Locale.US;
 		
 		detailMeasurementService = new DetailMeasurementService();
+		ReflectionTestUtils.setField(detailMeasurementService, "messageSource", messageSource);
 		
 		measurement = new Measurement();
 		measurement.setTag("tag");
