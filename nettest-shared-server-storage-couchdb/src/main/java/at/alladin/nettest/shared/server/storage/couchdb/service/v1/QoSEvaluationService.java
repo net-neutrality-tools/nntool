@@ -118,10 +118,14 @@ public class QoSEvaluationService {
 		final Map<QoSMeasurementTypeDto, QoSTypeDescription> ret = new HashMap<>();
 
 		for (QoSMeasurementTypeDto type : QoSMeasurementTypeDto.values()) {
-			QoSTypeDescription description = new QoSTypeDescription();
-			description.setDescription(type.toString() + TRANSLATION_DESCRIPTION_SUFFIX); //TODO: localizedMessages.get()
-			description.setName(type.toString() + TRANSLATION_NAME_SUFFIX); //TODO: localizedMessages.get()
-			description.setIcon(type.toString() + TRANSLATION_ICON_FONT_SUFFIX); //TODO: localizedMessages.get() ?
+      final String typeString = type.toString();
+
+			final QoSTypeDescription description = new QoSTypeDescription();
+
+			description.setDescription(messageSource.getMessage(typeString + TRANSLATION_DESCRIPTION_SUFFIX, null, locale));
+			description.setName(messageSource.getMessage(typeString + TRANSLATION_NAME_SUFFIX, null, locale));
+			description.setIcon(messageSource.getMessage(typeString + TRANSLATION_ICON_FONT_SUFFIX, null, locale));
+
 			ret.put(type, description);
 		}
 
