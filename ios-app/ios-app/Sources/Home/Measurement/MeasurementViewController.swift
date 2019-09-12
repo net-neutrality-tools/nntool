@@ -48,6 +48,8 @@ class MeasurementViewController: CustomNavigationBarViewController {
 
     var preferredSpeedMeasurementPeer: SpeedMeasurementPeerResponse.SpeedMeasurementPeer?
 
+    private var reachability: NetworkInfoReachability?
+
     private var measurementUuid: String?
     private var openDataUuid: String?
 
@@ -66,7 +68,27 @@ class MeasurementViewController: CustomNavigationBarViewController {
             self.startMeasurement()
         }
 
+        reachability = NetworkInfoReachability(whenReachable: { (type, details) in
+            DispatchQueue.main.async {
+                self.speedMeasurementGaugeView?.networkTypeLabel?.text = type
+                self.speedMeasurementGaugeView?.networkDetailLabel?.text = details
+            }
+        }, whenUnreachable: {
+            DispatchQueue.main.async {
+                self.speedMeasurementGaugeView?.networkTypeLabel?.text = "Unknown"
+                self.speedMeasurementGaugeView?.networkDetailLabel?.text = "No connection"
+            }
+        })
+        reachability?.start()
+
         startMeasurement()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        reachability?.stop()
+        reachability = nil
     }
 
     @IBAction func viewTapped() {
