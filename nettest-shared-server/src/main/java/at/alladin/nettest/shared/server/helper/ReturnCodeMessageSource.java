@@ -1,4 +1,4 @@
-package at.alladin.nettest.shared.server.storage.couchdb.util;
+package at.alladin.nettest.shared.server.helper;
 
 import java.util.Locale;
 

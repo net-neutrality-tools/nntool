@@ -1,5 +1,6 @@
 package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,9 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.EvaluatedQoSResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.EvaluatedQoSResult.QoSResultOutcome;
@@ -53,9 +53,9 @@ public class QoSEvaluationService {
 
 	@Autowired
 	private FullMeasurementResponseMapper fullMeasurementResponseMapper;
-
+	
 	@Autowired
-	private GsonBuilder gsonBuilder;
+	private ObjectMapper objectMapper;
 	
 	@Autowired
 	private MessageSource messageSource;
@@ -118,10 +118,14 @@ public class QoSEvaluationService {
 		final Map<QoSMeasurementTypeDto, QoSTypeDescription> ret = new HashMap<>();
 
 		for (QoSMeasurementTypeDto type : QoSMeasurementTypeDto.values()) {
-			QoSTypeDescription description = new QoSTypeDescription();
-			description.setDescription(type.toString() + TRANSLATION_DESCRIPTION_SUFFIX); //TODO: localizedMessages.get()
-			description.setName(type.toString() + TRANSLATION_NAME_SUFFIX); //TODO: localizedMessages.get()
-			description.setIcon(type.toString() + TRANSLATION_ICON_FONT_SUFFIX); //TODO: localizedMessages.get() ?
+      final String typeString = type.toString();
+
+			final QoSTypeDescription description = new QoSTypeDescription();
+
+			description.setDescription(messageSource.getMessage(typeString + TRANSLATION_DESCRIPTION_SUFFIX, null, locale));
+			description.setName(messageSource.getMessage(typeString + TRANSLATION_NAME_SUFFIX, null, locale));
+			description.setIcon(messageSource.getMessage(typeString + TRANSLATION_ICON_FONT_SUFFIX, null, locale));
+
 			ret.put(type, description);
 		}
 
@@ -141,13 +145,12 @@ public class QoSEvaluationService {
 		//remove testtype and qos uid from res (TODO: do we still need this?)
 		qosResult.setType(null);
 		qosResult.setObjectiveId(null);
-		
-		final Gson gson = gsonBuilder.create();
-		
-		//fix double gson call
-		final AbstractResult result = gson.fromJson(gson.toJsonTree(qosResult.getResults()), resultClass);	// == testResult
+
+		//final String json = objectMapper.writeValueAsString(qosResult.getResults());
+		//result = objectMapper.readValue(json, resultClass);	// == testResult
+		AbstractResult result = objectMapper.convertValue(qosResult.getResults(), resultClass);
 		result.setResultMap(qosResult.getResults()); //and add the map (needed for evaluations (e.g. %EVAL xxxxx%))
-		
+
 		//create a parsed abstract result set sorted by priority
 		final Set<AbstractResult> expResultSet = new TreeSet<>(new Comparator<AbstractResult>() {
 			@Override
@@ -159,10 +162,9 @@ public class QoSEvaluationService {
 		int maxPriority = Integer.MAX_VALUE;
 		
 		if (objective != null && objective.getEvaluations() != null) {
-			for (Map<String, String> evaluation : objective.getEvaluations()) {
-				// TODO: fix double gson call!
-				final AbstractResult res = gson.fromJson(gson.toJson(evaluation), resultClass);
-				
+			for (Map<String, Object> evaluation : objective.getEvaluations()) {
+				final AbstractResult res = objectMapper.convertValue(evaluation, resultClass);
+
 				if (res.getPriority() != null && res.getPriority() == Integer.MAX_VALUE) {
 					res.setPriority(maxPriority--);
 				}
@@ -270,8 +272,8 @@ public class QoSEvaluationService {
 		}
 		
 		for (Field f : clazz.getDeclaredFields()) {
-			if (f.isAnnotationPresent(SerializedName.class)) {
-				String fieldName = ((SerializedName) f.getAnnotation(SerializedName.class)).value();
+			if (f.isAnnotationPresent(JsonProperty.class)) {
+				String fieldName = f.getAnnotation(JsonProperty.class).value();
 				//check for duplicates:
 				if (!ret.containsKey(fieldName)) {
 					ret.put(fieldName, f);

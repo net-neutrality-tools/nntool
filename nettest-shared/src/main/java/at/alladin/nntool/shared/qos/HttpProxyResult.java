@@ -16,8 +16,8 @@
 
 package at.alladin.nntool.shared.qos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 
 /**
@@ -27,32 +27,25 @@ import com.google.gson.annotations.SerializedName;
  */
 public class HttpProxyResult extends AbstractResult {
 
-	@SerializedName("http_objective_url")
-	@Expose
+	@JsonProperty("http_objective_url")
 	private String target;
 
-	@SerializedName("http_objective_range")
-	@Expose
+	@JsonProperty("http_objective_range")
 	private String range;
 
-	@SerializedName("http_result_length")
-	@Expose
+	@JsonProperty("http_result_length")
 	private Long length;
 	
-	@SerializedName("http_result_header")
-	@Expose
+	@JsonProperty("http_result_header")
 	private String header;
 	
-	@SerializedName("http_result_status")
-	@Expose
+	@JsonProperty("http_result_status")
 	private String status;
 	
-	@SerializedName("http_result_hash")
-	@Expose
+	@JsonProperty("http_result_hash")
 	private String hash;
 	
-	@SerializedName("http_result_duration")
-	@Expose
+	@JsonProperty("http_result_duration")
 	private Long duration;
 
 	public HttpProxyResult() {

@@ -76,6 +76,11 @@ public class ProviderService {
 	 * @return
 	 */
 	public Provider getByMccMnc(MccMnc mccMncSim, MccMnc mccMncNetwork, LocalDateTime date) {
+    if (mccMncSim == null) {
+      logger.debug("getByMccMnc -> mccMncSim is null, returning null.");
+      return null;
+    }
+
 		logger.debug("provider lookup for sim mcc-mnc: {} and network mcc-mnc: {}", mccMncSim, mccMncNetwork);
 		
 		final List<Provider> providers = providerRepository.findBySimMccMnc(mccMncSim.getMcc(), mccMncSim.getMnc());

@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-28
+ *      \date Last update: 2019-09-09
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -395,7 +395,7 @@ function connect()
                         wsRttValues.rtts = [];
                         for (var rtt in data.rtts)
                         {
-                            wsRttValues.rtts.push({"rtt_ns": data.rtts[rtt].rtt_ns * 1000});
+                            wsRttValues.rtts.push(data.rtts[rtt].rtt_ns * 1000);
                         }
                     }
                 }

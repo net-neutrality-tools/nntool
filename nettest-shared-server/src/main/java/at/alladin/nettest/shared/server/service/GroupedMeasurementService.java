@@ -13,6 +13,7 @@ import java.util.PriorityQueue;
 
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,6 +51,9 @@ public class GroupedMeasurementService {
 	
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@Autowired
+	private MessageSource messageSource;
 	
 	public DetailMeasurementResponse groupResult(final Map<String, Object> measurementAsMap, final List<SpeedtestDetailGroup> groupStructure, final Locale locale, 
 			final int geoAccuracyDetailLimit) {
@@ -63,7 +67,7 @@ public class GroupedMeasurementService {
 		
 		return groupResult(measurement, groupStructure, locale, geoAccuracyDetailLimit, includeKeys);
 	}
-	
+
 	/**
 	 * Groups the results according to the groupStructure param
 	 * Will move all values that are defined in the groupStructure from their current location into the location defined by the groupStructure
@@ -122,8 +126,8 @@ public class GroupedMeasurementService {
 			//create a corresponding responseGroup w/formatted and i18ed values
 			final DetailMeasurementGroup responseGroup = new DetailMeasurementGroup();
 
-			responseGroup.setTitle("key_" + groupDefinition.getKey());
-			responseGroup.setDescription("description_" + groupDefinition.getKey());
+			responseGroup.setTitle(messageSource.getMessage("key_" + groupDefinition.getKey(), null, locale));
+			responseGroup.setDescription(messageSource.getMessage("description_" + groupDefinition.getKey(), null, locale));
 			responseGroup.setIconCharacter(groupDefinition.getIcon());
 			
 			responseGroup.setItems(new ArrayList<>());
@@ -164,7 +168,7 @@ public class GroupedMeasurementService {
 				//fill the item accordingly
 				final DetailMeasurementGroupItem item = new DetailMeasurementGroupItem();
 				
-				item.setTitle(entry.getTranslationKey());//getLocalizedMessage(entry.getTranslationKey(), locale));
+				item.setTitle(messageSource.getMessage(entry.getTranslationKey(), null, locale));
 				
 				if (includeKeys) {
 					item.setKey(key);
@@ -212,7 +216,7 @@ public class GroupedMeasurementService {
 				if (locations != null && locations.size() > 0) {
 					final DetailMeasurementGroupItem item = new DetailMeasurementGroupItem();
 					
-					item.setTitle("key_location");//getLocalizedMessage("key_location", locale));
+					item.setTitle(messageSource.getMessage("key_location", null, locale));
 					
 					try{
 						item.setValue(getGeoLocation(geoAccuracyDetailLimit, locale, locations.get(0)));

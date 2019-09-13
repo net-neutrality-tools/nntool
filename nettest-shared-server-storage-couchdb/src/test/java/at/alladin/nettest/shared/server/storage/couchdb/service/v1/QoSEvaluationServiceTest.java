@@ -14,11 +14,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.MessageSource;
 
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.EvaluatedQoSResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
+import at.alladin.nettest.shared.server.helper.ReturnCodeMessageSource;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective.QoSTranslationKeys;
@@ -26,7 +27,6 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurem
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapper;
-import at.alladin.nettest.shared.server.storage.couchdb.util.ReturnCodeMessageSource;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
@@ -42,7 +42,7 @@ public class QoSEvaluationServiceTest {
 	private QoSMeasurementObjectiveRepository objectiveRepo;
 
 	@Injectable
-	private GsonBuilder builder;
+	private ObjectMapper objectMapper;
 	
 	@Injectable
 	private MessageSource messageSource = new ReturnCodeMessageSource();
@@ -81,7 +81,7 @@ public class QoSEvaluationServiceTest {
 		
 		objectiveList = new ArrayList<>();
 		
-		builder = new GsonBuilder();
+		objectMapper = new ObjectMapper();
 	}
 	
 	@Test
@@ -97,10 +97,10 @@ public class QoSEvaluationServiceTest {
 		keys.setDescription(DESCRIPTION);
 		keys.setSummary(SUMMARY);
 		objective.setTranslationKeys(keys);
-		final List<Map<String, String>> evaluationList = new ArrayList<>();
+		final List<Map<String, Object>> evaluationList = new ArrayList<>();
 		objective.setEvaluations(evaluationList);
 		
-		Map<String, String> evaluationMap = new HashMap<>();
+		Map<String, Object> evaluationMap = new HashMap<>();
 		evaluationMap.put("operator", "eq");
 		evaluationMap.put("on_failure", "tcp.failure");
 		evaluationMap.put("tcp_result_out", "OK");
@@ -151,10 +151,10 @@ public class QoSEvaluationServiceTest {
 		keys.setDescription(DESCRIPTION);
 		keys.setSummary(SUMMARY);
 		objective.setTranslationKeys(keys);
-		final List<Map<String, String>> evaluationList = new ArrayList<>();
+		final List<Map<String, Object>> evaluationList = new ArrayList<>();
 		objective.setEvaluations(evaluationList);
 		
-		Map<String, String> evaluationMap = new HashMap<>();
+		Map<String, Object> evaluationMap = new HashMap<>();
 		evaluationMap.put("operator", "eq");
 		evaluationMap.put("on_failure", "tcp.failure");
 		evaluationMap.put("tcp_result_out", "NOT_OK");
@@ -205,31 +205,31 @@ public class QoSEvaluationServiceTest {
 		Map<String, Object> resMap = new HashMap<>();
 		res.setResults(resMap);
 		
-		resMap.put("voip_result_out_short_seq", "100");
+		resMap.put("voip_result_out_short_seq", 100);
 		resMap.put("voip_result_in_sequence_error", "OK");
-		resMap.put("voip_objective_delay", "20000000");
-		resMap.put("voip_objective_sample_rate", "8000");
-		resMap.put("voip_result_out_num_packets", "100");
-		resMap.put("voip_result_out_long_seq", "100");
-		resMap.put("voip_objective_bits_per_sample", "8");
-		resMap.put("duration_ns", "2429313000");
-		resMap.put("voip_result_out_max_jitter", "5752866");
-		resMap.put("voip_result_out_mean_jitter", "2655557");
+		resMap.put("voip_objective_delay", 20000000);
+		resMap.put("voip_objective_sample_rate", 8000);
+		resMap.put("voip_result_out_num_packets", 100);
+		resMap.put("voip_result_out_long_seq", 100);
+		resMap.put("voip_objective_bits_per_sample", 8);
+		resMap.put("duration_ns", 2429313000l);
+		resMap.put("voip_result_out_max_jitter", 5752866);
+		resMap.put("voip_result_out_mean_jitter", 2655557);
 		resMap.put("voip_result_status", "OK");
-		resMap.put("voip_result_in_num_packets", "100");
-		resMap.put("voip_result_out_sequence_error", "0");
-		resMap.put("voip_result_in_max_jitter", "3235718");
-		resMap.put("voip_result_in_skew", "-182397000");
-		resMap.put("voip_result_out_max_delta", "39931068");
-		resMap.put("voip_objective_call_duration", "2000000000");
-		resMap.put("voip_result_in_short_seq", "100");
-		resMap.put("start_time_ns", "18772068000");
-		resMap.put("voip_result_in_max_delta", "19748000");
-		resMap.put("voip_objective_payload", "8");
-		resMap.put("voip_objective_out_port", "5060");
-		resMap.put("voip_result_in_mean_jitter", "1733572999");	//the incoming mean jitter is high enough to fail its test
-		resMap.put("voip_result_in_long_seq", "100");
-		resMap.put("voip_result_out_skew", "-202100058");
+		resMap.put("voip_result_in_num_packets", 100);
+		resMap.put("voip_result_out_sequence_error", 0);
+		resMap.put("voip_result_in_max_jitter", 3235718);
+		resMap.put("voip_result_in_skew", -182397000);
+		resMap.put("voip_result_out_max_delta", 39931068);
+		resMap.put("voip_objective_call_duration", 2000000000);
+		resMap.put("voip_result_in_short_seq", 100);
+		resMap.put("start_time_ns", 18772068000l);
+		resMap.put("voip_result_in_max_delta", 19748000);
+		resMap.put("voip_objective_payload", 8);
+		resMap.put("voip_objective_out_port", 5060);
+		resMap.put("voip_result_in_mean_jitter", 1733572999);	//the incoming mean jitter is high enough to fail its test
+		resMap.put("voip_result_in_long_seq", 100);
+		resMap.put("voip_result_out_skew", -202100058);
         
 		System.out.println("res in test method: " + res.toString());
 		
@@ -243,10 +243,10 @@ public class QoSEvaluationServiceTest {
 		keys.setDescription(DESCRIPTION);
 		keys.setSummary(SUMMARY);
 		objective.setTranslationKeys(keys);
-		final List<Map<String, String>> evaluationList = new ArrayList<>();
+		final List<Map<String, Object>> evaluationList = new ArrayList<>();
 		objective.setEvaluations(evaluationList);
 		
-		Map<String, String> evaluationMap = new HashMap<>();
+		Map<String, Object> evaluationMap = new HashMap<>();
 		evaluationMap.put("evaluate", "%EVAL if (nn.coalesce(voip_result_out_mean_jitter, 50000000) < 50000000) result=true; else result=false;%");
 		evaluationMap.put("on_failure", "voip.jitter.outgoing.failure");
 		evaluationMap.put("on_success", "voip.jitter.outgoing.success");
@@ -281,11 +281,12 @@ public class QoSEvaluationServiceTest {
 			fullMeasurementResponseMapper.map((QoSMeasurement) any);
 			result = new FullQoSMeasurement();
 		}};
-		
-		final FullQoSMeasurement fullMeasurement = evaluationService.evaluateQoSMeasurement(qosMeasurement, locale);
+
+    	final FullQoSMeasurement fullMeasurement = evaluationService.evaluateQoSMeasurement(qosMeasurement, locale);
 		final List<EvaluatedQoSResult> evalList = fullMeasurement.getResults();
 		assertEquals("unexpected result size", 1, evalList.size());
 		final EvaluatedQoSResult evalRes = evalList.get(0);
+
 		assertEquals("Unexpected qos type", QoSMeasurementTypeDto.VOIP, evalRes.getType());
 		assertEquals("Unexpected evaluation count", 4, (int) evalRes.getEvaluationCount());
 		assertEquals("Unexpected success count", 3, (int) evalRes.getSuccessCount());

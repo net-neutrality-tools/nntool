@@ -10,6 +10,8 @@ import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.MessageSource;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementGroup;
@@ -19,6 +21,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.Ful
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullSpeedMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
+import at.alladin.nettest.shared.server.helper.ReturnCodeMessageSource;
 import at.alladin.nettest.shared.server.service.SpeedtestDetailGroup.SpeedtestDetailGroupEntry;
 import at.alladin.nettest.shared.server.service.SpeedtestDetailGroup.SpeedtestDetailGroupEntry.FormatEnum;
 
@@ -31,12 +34,15 @@ public class GroupedMeasurementServiceTest {
 	private List<SpeedtestDetailGroup> groupStructure;
 	
 	private Locale locale;
-	
+
+	private MessageSource messageSource = new ReturnCodeMessageSource();
+
 	@Before
 	public void init() {
 		locale = Locale.US;
 		
 		detailMeasurementService = new GroupedMeasurementService();
+		ReflectionTestUtils.setField(detailMeasurementService, "messageSource", messageSource);
 		
 		measurement = new FullMeasurementResponse();
 		measurement.setTag("tag");

@@ -1,31 +1,26 @@
 package at.alladin.nntool.shared.qos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)
  */
 public abstract class MkitResult extends AbstractResult {
 
-    @SerializedName("mkit_result")
-    @Expose
+    @JsonProperty("mkit_result")
     private Object result;
 
-    @SerializedName("test_type")
-    @Expose
+    @JsonProperty("test_type")
     private String testType;
 
-    @SerializedName("mkit_status")
-    @Expose
+    @JsonProperty("mkit_status")
     private String status;
 
-    @SerializedName("mkit_bytes_download")
-    @Expose
+    @JsonProperty("mkit_bytes_download")
     private Long bytesDownload;
 
-    @SerializedName("mkit_bytes_upload")
-    @Expose
+    @JsonProperty("mkit_bytes_upload")
     private Long bytesUpload;
 
     public Object getResult() {

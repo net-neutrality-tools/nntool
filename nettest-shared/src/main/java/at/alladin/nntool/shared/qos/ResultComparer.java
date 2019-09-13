@@ -67,6 +67,7 @@ public class ResultComparer {
 		else if ((result2.getOperator()!=null || result2.getEvaluate()!=null) && result1.getOperator()==null) {
 			for (Field f : fieldNameToFieldMap.values()) {
 				f.setAccessible(true);
+
 				if (!f.isAnnotationPresent(NonComparableField.class) && f.get(result2) != null && !Collection.class.isAssignableFrom(f.getType())) {
 					Object r = TestScriptInterpreter.interpret(String.valueOf(f.get(result2)), fieldNameToFieldMap, result1, false, options);
 					f.set(result2, (r instanceof EvalResult) ? r : String.valueOf(r));	

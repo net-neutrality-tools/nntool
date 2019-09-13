@@ -16,8 +16,7 @@
 
 package at.alladin.nntool.shared.qos;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * 
@@ -40,59 +39,48 @@ public class WebsiteResult extends AbstractResult {
 	/**
 	 * 
 	 */
-	@SerializedName("website_objective_url")
-	@Expose
+	@JsonProperty("website_objective_url")
 	private String url;
 	
 	/**
 	 * 
 	 */
-	@SerializedName("website_objective_clear_cache")
-	@Expose
+	@JsonProperty("website_objective_clear_cache")
 	private Boolean clearCache;
 	
 	/**
 	 * 
 	 */
-	@SerializedName("website_objective_user_agent")
-	@Expose
+	@JsonProperty("website_objective_user_agent")
 	private String userAgent;
 	
 	/**
 	 * 
 	 */
-	@SerializedName("website_objective_timeout")
-	@Expose
+	@JsonProperty("website_objective_timeout")
 	private Long timeout;
 	
 	////
 	
-	@SerializedName("website_result_info")
-	@Expose
+	@JsonProperty("website_result_info")
 	private String info;
 	
-	@SerializedName("website_result_status")
-	@Expose
+	@JsonProperty("website_result_status")
 	private String status;
 	
-	@SerializedName("website_result_duration")
-	@Expose
+	@JsonProperty("website_result_duration")
 	private Long duration;
 	
-	@SerializedName("website_result_rx_bytes")
-	@Expose
+	@JsonProperty("website_result_rx_bytes")
 	private Long rxBytes;
 	
-	@SerializedName("website_result_tx_bytes")
-	@Expose
+	@JsonProperty("website_result_tx_bytes")
 	private Long txBytes;
 	
-	@SerializedName("website_result_first_http_response_time_ns")
-	@Expose
+	@JsonProperty("website_result_first_http_response_time_ns")
 	private Long firstHttpResponseTimeNs;
 	
-	@SerializedName("website_result_request_count")
-	@Expose
+	@JsonProperty("website_result_request_count")
 	private Integer requestCount;
 	
 	/**
