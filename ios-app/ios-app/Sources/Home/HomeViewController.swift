@@ -39,7 +39,7 @@ class HomeViewController: CustomNavigationBarViewController {
     private let locationTracker = LocationTracker()
 
     private var ipInfo: IPConnectivityInfo?
-    private var reachability: Reachability?
+    private var reachability: NetworkInfoReachability?
 
     private var timer: Repeater?
     private var ipTimer: Repeater?
@@ -65,14 +65,8 @@ class HomeViewController: CustomNavigationBarViewController {
         super.viewWillAppear(animated)
 
         deviceInfoView?.reset()
-    }
-
-    ///
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
 
         guard MEASUREMENT_AGENT.isRegistered() else {
-            performSegue(withIdentifier: R.segue.homeViewController.present_modally_terms_and_conditions, sender: self)
             return
         }
 
@@ -111,49 +105,14 @@ class HomeViewController: CustomNavigationBarViewController {
 
         updateIpInfo()
 
-        reachability = try? Reachability()
-        reachability?.whenReachable = { r in
-            self.updateIpInfo()
-
-            var networkTypeString: String?
-            var networkDetailString: String?
-
-            switch r.connection {
-            case .wifi:
-                let (ssid, _) = NetworkInfo.getWifiInfo()
-
-                #if targetEnvironment(simulator)
-                networkTypeString = "Simulator Network"
-                #else
-                networkTypeString = ssid ?? "Unknown"
-                #endif
-
-                networkDetailString = "WiFi"
-            case .cellular:
-                let telephonyNetworkInfo = CTTelephonyNetworkInfo()
-                let carrier = telephonyNetworkInfo.subscriberCellularProvider
-
-                networkTypeString = carrier?.carrierName
-
-                if  let mcc = carrier?.mobileCountryCode,
-                    let mnc = carrier?.mobileNetworkCode,
-                    let currentRadioAccessTechnology = telephonyNetworkInfo.currentRadioAccessTechnology,
-                    let cellularNetworkDisplayName = NetworkInfo.getCellularNetworkTypeDisplayName(currentRadioAccessTechnology) {
-
-                    networkDetailString = "\(cellularNetworkDisplayName), \(mcc)-\(mnc)"
-                }
-            default:
-                break
-            }
-
+        reachability = NetworkInfoReachability(whenReachable: { (type, details) in
             DispatchQueue.main.async {
                 self.speedMeasurementGaugeView?.isStartButtonEnabled = true
 
-                self.speedMeasurementGaugeView?.networkTypeLabel?.text = networkTypeString
-                self.speedMeasurementGaugeView?.networkDetailLabel?.text = networkDetailString
+                self.speedMeasurementGaugeView?.networkTypeLabel?.text = type
+                self.speedMeasurementGaugeView?.networkDetailLabel?.text = details
             }
-        }
-        reachability?.whenUnreachable = { r in
+        }, whenUnreachable: {
             self.updateIpInfo()
 
             DispatchQueue.main.async {
@@ -162,9 +121,8 @@ class HomeViewController: CustomNavigationBarViewController {
                 self.speedMeasurementGaugeView?.networkTypeLabel?.text = "Unknown"
                 self.speedMeasurementGaugeView?.networkDetailLabel?.text = "No connection"
             }
-        }
-
-        try? reachability?.startNotifier()
+        })
+        reachability?.start()
 
         ipTimer = Repeater.every(.seconds(30)) { _ in
             self.updateIpInfo()
@@ -177,6 +135,16 @@ class HomeViewController: CustomNavigationBarViewController {
         }
     }
 
+    ///
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        guard MEASUREMENT_AGENT.isRegistered() else {
+            performSegue(withIdentifier: R.segue.homeViewController.present_modally_terms_and_conditions, sender: self)
+            return
+        }
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
@@ -185,7 +153,7 @@ class HomeViewController: CustomNavigationBarViewController {
         timer?.removeAllObservers(thenStop: true)
         timer = nil
 
-        reachability?.stopNotifier()
+        reachability?.stop()
         reachability = nil
 
         ipTimer?.removeAllObservers(thenStop: true)

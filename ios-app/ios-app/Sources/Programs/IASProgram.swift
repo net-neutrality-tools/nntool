@@ -51,6 +51,8 @@ class IASProgram: NSObject, ProgramProtocol {
 
         speed.speedDelegate = self
 
+        delegate?.iasMeasurement(self, didStartPhase: .initialize)
+
         speed.measurementLoad()
 
         ////
@@ -329,7 +331,7 @@ extension IASProgram: SpeedDelegate {
         logger.debug("measurementDidLoad")
 
         speed.measurementStart()
-        delegate?.iasMeasurement(self, didStartPhase: .initialize)
+        delegate?.iasMeasurement(self, didStartPhase: .rtt)
     }
 
     func measurementCallback(withResponse response: [AnyHashable: Any]!) {
