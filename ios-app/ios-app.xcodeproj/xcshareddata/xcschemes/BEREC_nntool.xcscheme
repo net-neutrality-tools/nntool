@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E026A57D2241271700BACDB5"
-               BuildableName = "ios-app.app"
-               BlueprintName = "ios-app"
+               BuildableName = "BEREC_nntool.app"
+               BlueprintName = "BEREC_nntool"
                ReferencedContainer = "container:ios-app.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -53,8 +53,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E026A57D2241271700BACDB5"
-            BuildableName = "ios-app.app"
-            BlueprintName = "ios-app"
+            BuildableName = "BEREC_nntool.app"
+            BlueprintName = "BEREC_nntool"
             ReferencedContainer = "container:ios-app.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -76,8 +76,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E026A57D2241271700BACDB5"
-            BuildableName = "ios-app.app"
-            BlueprintName = "ios-app"
+            BuildableName = "BEREC_nntool.app"
+            BlueprintName = "BEREC_nntool"
             ReferencedContainer = "container:ios-app.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -102,8 +102,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E026A57D2241271700BACDB5"
-            BuildableName = "ios-app.app"
-            BlueprintName = "ios-app"
+            BuildableName = "BEREC_nntool.app"
+            BlueprintName = "BEREC_nntool"
             ReferencedContainer = "container:ios-app.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

@@ -198,7 +198,7 @@
 		E00F4AFE2266234200EAD0C0 /* IASProgramDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IASProgramDelegate.swift; sourceTree = "<group>"; };
 		E00F4B002266235700EAD0C0 /* QoSProgramDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSProgramDelegate.swift; sourceTree = "<group>"; };
 		E00F4B02226719DE00EAD0C0 /* UIAlertController+ProgressIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+ProgressIndicator.swift"; sourceTree = "<group>"; };
-		E026A57E2241271700BACDB5 /* ios-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E026A57E2241271700BACDB5 /* BEREC_nntool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BEREC_nntool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E026A5812241271700BACDB5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E026A5882241271700BACDB5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E026A58A2241271900BACDB5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -423,7 +423,7 @@
 		E026A57F2241271700BACDB5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E026A57E2241271700BACDB5 /* ios-app.app */,
+				E026A57E2241271700BACDB5 /* BEREC_nntool.app */,
 				E026A5942241271A00BACDB5 /* ios-appTests.xctest */,
 				E026A59F2241271A00BACDB5 /* ios-appUITests.xctest */,
 				E00F48D9225F7D2600EAD0C0 /* Common.framework */,
@@ -752,9 +752,9 @@
 			productReference = E00F48EB225F7D3A00EAD0C0 /* Speed.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		E026A57D2241271700BACDB5 /* ios-app */ = {
+		E026A57D2241271700BACDB5 /* BEREC_nntool */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E026A5A82241271A00BACDB5 /* Build configuration list for PBXNativeTarget "ios-app" */;
+			buildConfigurationList = E026A5A82241271A00BACDB5 /* Build configuration list for PBXNativeTarget "BEREC_nntool" */;
 			buildPhases = (
 				1AB73F8B8DD73C0088EF14CF /* [CP] Check Pods Manifest.lock */,
 				E0C4527322CDF87500FA4B44 /* Run R.swift */,
@@ -773,9 +773,9 @@
 				E00F48DF225F7D2600EAD0C0 /* PBXTargetDependency */,
 				E00F48F1225F7D3B00EAD0C0 /* PBXTargetDependency */,
 			);
-			name = "ios-app";
+			name = BEREC_nntool;
 			productName = "ios-app";
-			productReference = E026A57E2241271700BACDB5 /* ios-app.app */;
+			productReference = E026A57E2241271700BACDB5 /* BEREC_nntool.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E026A5932241271A00BACDB5 /* ios-appTests */ = {
@@ -865,7 +865,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E026A57D2241271700BACDB5 /* ios-app */,
+				E026A57D2241271700BACDB5 /* BEREC_nntool */,
 				E026A5932241271A00BACDB5 /* ios-appTests */,
 				E026A59E2241271A00BACDB5 /* ios-appUITests */,
 				E00F48D8225F7D2600EAD0C0 /* Common */,
@@ -1221,12 +1221,12 @@
 		};
 		E026A5962241271A00BACDB5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = E026A57D2241271700BACDB5 /* ios-app */;
+			target = E026A57D2241271700BACDB5 /* BEREC_nntool */;
 			targetProxy = E026A5952241271A00BACDB5 /* PBXContainerItemProxy */;
 		};
 		E026A5A12241271A00BACDB5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = E026A57D2241271700BACDB5 /* ios-app */;
+			target = E026A57D2241271700BACDB5 /* BEREC_nntool */;
 			targetProxy = E026A5A02241271A00BACDB5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1710,7 +1710,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E026A5A82241271A00BACDB5 /* Build configuration list for PBXNativeTarget "ios-app" */ = {
+		E026A5A82241271A00BACDB5 /* Build configuration list for PBXNativeTarget "BEREC_nntool" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E026A5A92241271A00BACDB5 /* Debug */,
