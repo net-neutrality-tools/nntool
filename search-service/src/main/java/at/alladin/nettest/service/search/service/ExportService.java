@@ -76,7 +76,8 @@ public class ExportService {
 	
 	public void exportMeasurementsBySearchQuery(String queryString, Pageable pageable, String extension, boolean shouldBeZipped, HttpServletResponse response) {
 		if (StringUtils.isEmpty(queryString)) {
-			throw new BadExportRequestException("Search query string is required."); 
+			//throw new BadExportRequestException("Search query string is required.");
+			queryString = "*";
 		}
 		
 		final ExportExtension exportExtension = getExportExtension(extension);
