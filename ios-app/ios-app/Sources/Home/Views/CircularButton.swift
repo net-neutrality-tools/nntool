@@ -21,30 +21,11 @@ import UIKit
 ///
 @IBDesignable class CircularButton: UIButton {
 
-/*    ///
-    @IBInspectable var circular: Bool = true {
-        didSet {
-            layoutSubviews()
-        }
-    }
-
-    ///
-    @IBInspectable var cornerRadius: CGFloat = 0 {
-        didSet {
-            layoutSubviews()
-        }
-    }
-*/
     ///
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        //if circular {
-            //layer.cornerRadius = max(bounds.height, bounds.width) / 2
-            layer.cornerRadius = bounds.height / 2
-        //} else {
-        //    layer.cornerRadius = cornerRadius
-        //}
+        layer.cornerRadius = bounds.height / 2
     }
 
     ///
