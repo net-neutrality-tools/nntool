@@ -1,6 +1,5 @@
 package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,6 +12,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -38,6 +39,7 @@ import at.alladin.nntool.shared.qos.AbstractResult;
 import at.alladin.nntool.shared.qos.ResultComparer;
 import at.alladin.nntool.shared.qos.ResultDesc;
 import at.alladin.nntool.shared.qos.ResultOptions;
+import at.alladin.nntool.shared.qos.testscript.TestScriptInterpreter;
 
 @Service
 public class QoSEvaluationService {
@@ -59,8 +61,20 @@ public class QoSEvaluationService {
 	
 	@Autowired
 	private MessageSource messageSource;
+	
+	private Map<QoSMeasurementTypeDto, Map<String, Field>> qosTypeToFieldMap = new HashMap<>();
 
 	private Map<Long, QoSMeasurementObjective> objectiveIdToMeasurementObjectiveMap;
+
+	@PostConstruct
+	private void init() {
+		for (final QoSMeasurementTypeDto type : QoSMeasurementTypeDto.values()) {
+			final QosMeasurementType qosType = QosMeasurementType.fromQosTypeDto(type);
+			if (qosType != null) {
+				qosTypeToFieldMap.put(type, obtainFields(qosType.getResultClass()));
+			}
+		}
+	}
 
 	private void initMeasurementObjectiveMap() {
 		//if this were a post-construct, all servers would need to request QoSMeasurementObjective in their application.yml (as they all know the storage service)
@@ -83,20 +97,49 @@ public class QoSEvaluationService {
 		
 		final Set<String> resultTranslationKeys = new HashSet<>();
 		
+		final List<EvaluatedQoSResultHolder> resultHolderList = new ArrayList<>();
+		
 		for (QoSResult qosResult : measurement.getResults()) {
 			final QoSMeasurementObjective objective = objectiveIdToMeasurementObjectiveMap.get(qosResult.getObjectiveId());
 			if (objective == null) {
 				continue;
 			}
 			
-			final EvaluatedQoSResult evaluatedQoSResult = compareTestResults(qosResult, objective, resultKeys);
-			evaluatedQoSResult.getResultKeyMap().forEach((key, outcome) -> resultTranslationKeys.add(key));
-			ret.getResults().add(evaluatedQoSResult);
-			
+			final EvaluatedQoSResultHolder evaluatedQoSResultHolder = compareTestResults(qosResult, objective, resultKeys);
+			if (evaluatedQoSResultHolder != null) {
+				final EvaluatedQoSResult evaluatedQoSResult = evaluatedQoSResultHolder.getEvalResult();
+				evaluatedQoSResult.getResultKeyMap().forEach((key, outcome) -> resultTranslationKeys.add(key));
+				resultTranslationKeys.add(evaluatedQoSResult.getSummary());
+				resultTranslationKeys.add(evaluatedQoSResult.getDescription());
+				resultHolderList.add(evaluatedQoSResultHolder);
+			}
 		}
 
 		ret.setKeyToTranslationMap(getKeyToTranslationMapForKeys(resultTranslationKeys, locale));
 		ret.setQosTypeToDescriptionMap(getQosMeasurementDecriptionMap(locale));
+		
+		final ResultOptions options = new ResultOptions(locale);
+		
+		resultHolderList.forEach((resultHolder) -> {
+			final EvaluatedQoSResult result = resultHolder.getEvalResult();
+			final AbstractResult abstractResult = resultHolder.getAbstractResult();
+			
+			result.setSummary(ret.getKeyToTranslationMap().get(result.getSummary()));
+			result.setDescription(ret.getKeyToTranslationMap().get(result.getDescription()));
+			
+			final QoSMeasurementTypeDto typeDto = result.getType();
+			final Object summary = TestScriptInterpreter.interpret(result.getSummary(), qosTypeToFieldMap.get(typeDto), abstractResult, true, options);
+			final Object description = TestScriptInterpreter.interpret(result.getDescription(), qosTypeToFieldMap.get(typeDto), abstractResult, true, options);
+			
+			if (summary != null) {
+				result.setSummary(summary.toString());
+			}
+			if (description != null) {
+				result.setDescription(description.toString());
+			}
+			
+			ret.getResults().add(result);
+		});
 		
 		return ret;
 	}
@@ -132,7 +175,7 @@ public class QoSEvaluationService {
 		return ret;
 	}
 	
-	private EvaluatedQoSResult compareTestResults (final QoSResult qosResult, final QoSMeasurementObjective objective, Map<QoSMeasurementType, TreeSet<ResultDesc>> resultKeys) {
+	private EvaluatedQoSResultHolder compareTestResults (final QoSResult qosResult, final QoSMeasurementObjective objective, Map<QoSMeasurementType, TreeSet<ResultDesc>> resultKeys) {
 		final Class<? extends AbstractResult> resultClass = getResultClass(qosResult.getType());
 		if (resultClass == null) {
 			return null;
@@ -250,7 +293,7 @@ public class QoSEvaluationService {
 			});
 			
 			ret.setEvaluationKeyMap(evaluationKeyMap);
-			return ret;
+			return new EvaluatedQoSResultHolder(ret, result);
 		}
 		
 		return null;
@@ -321,6 +364,24 @@ public class QoSEvaluationService {
 		}
 		
 		return resultKeyType != null ? new ResultHolder(resultKeyType, event) : null;
+	}
+	
+	public static class EvaluatedQoSResultHolder {
+		final EvaluatedQoSResult evalResult;
+		final AbstractResult abstractResult;
+		
+		public EvaluatedQoSResultHolder(final EvaluatedQoSResult evalResult, final AbstractResult abstractResult) {
+			this.evalResult = evalResult;
+			this.abstractResult = abstractResult;
+		}
+
+		public EvaluatedQoSResult getEvalResult() {
+			return evalResult;
+		}
+
+		public AbstractResult getAbstractResult() {
+			return abstractResult;
+		}
 	}
 	
 	public static class ResultHolder {
