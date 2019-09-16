@@ -74,8 +74,9 @@ public class MeasurementAgent {
             }
 
             success()
-        }, onFailure: { _ in
+        }, onFailure: { error in
             // TODO
+            logger.error(error)
             failure()
         })
     }
