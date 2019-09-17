@@ -38,7 +38,7 @@ public class CpuUsageInfo {
     private func deallocatePrev() {
         if let prev = prevCpuInfo {
             let prevSize: size_t = MemoryLayout<integer_t>.stride * Int(numPrevCpuInfo)
-            
+
             // vm_address_t(bitPattern: prev) is the preferred way in newer Swift versions but fails to
             // compile for "Generic iOS Device"
             // (see https://stackoverflow.com/questions/26562731/c-array-memory-deallocation-from-swift ).
