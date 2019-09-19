@@ -16,9 +16,9 @@
 
 package at.alladin.nntool.shared.qos;
 
-import java.util.ArrayList;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
 
 /**
  * 
@@ -47,7 +47,7 @@ public class TracerouteResult extends AbstractResult {
 	private Integer hops;
 	
 	@JsonProperty("traceroute_result_details")
-	private ArrayList<PathElement> resultEntries;
+	private List<PathElement> resultEntries;
 	
 	public final static class PathElement {
 		@JsonProperty("time")
@@ -139,11 +139,11 @@ public class TracerouteResult extends AbstractResult {
 		this.hops = hops;
 	}
 	
-	public ArrayList<PathElement> getResultEntries() {
+	public List<PathElement> getResultEntries() {
 		return resultEntries;
 	}
 
-	public void setResultEntries(ArrayList<PathElement> resultEntries) {
+	public void setResultEntries(List<PathElement> resultEntries) {
 		this.resultEntries = resultEntries;
 	}
 
