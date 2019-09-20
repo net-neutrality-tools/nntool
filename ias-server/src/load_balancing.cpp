@@ -59,13 +59,18 @@ int CLoadBalancing::run()
     TRC_INFO("Start Thread: TCP TLS socket on target Port " + to_string(port) + " with PID " + std::to_string(syscall(SYS_gettid)));
 
     timeval tv;
+    timeval tv_l;
     tv.tv_sec = 60;
     tv.tv_usec = 0;
-
+    tv_l.tv_sec = 1;
+    tv_l.tv_usec = 0;
+    setsockopt(mConnection->mSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv_l, sizeof(timeval));
+    setsockopt(mConnection->mSocket, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv_l, sizeof(timeval));
     while (::RUNNING)
     {
         int nSocket = accept(mConnection->mSocket, (struct sockaddr *)&client, &clientlen);
-        
+        if(nSocket == -1)continue;
+
         setsockopt(nSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval));
         setsockopt(nSocket, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval));
         
@@ -83,7 +88,6 @@ int CLoadBalancing::run()
             std::unique_ptr<CConnection> mAcceptedConnection    = std::make_unique<CConnection>();
             mAcceptedConnection->mSocket                        = nSocket;
 
-            //negotiate tls
             if (mAcceptedConnection->tlsServe() < 0)
             {
                 TRC_ERR("TCP load balancing handler: TLS negotiation failed");
