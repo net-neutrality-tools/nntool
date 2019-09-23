@@ -88,6 +88,7 @@ int CTcpServer::run()
         setsockopt(nSocket, IPPROTO_TCP, TCP_QUICKACK,  (void *)&on, sizeof(on));
         if ((nSocket > 0) && fork() == 0)
         {
+            mConnection->close();
             string ip = CTool::get_ip_str((struct sockaddr *)&client);  
             
             if (ip.find("::ffff:") != string::npos)
