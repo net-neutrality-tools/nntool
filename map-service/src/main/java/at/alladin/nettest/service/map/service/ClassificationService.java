@@ -17,25 +17,17 @@
 
 package at.alladin.nettest.service.map.service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import at.alladin.nettest.service.map.domain.model.MapServiceOptions.SignalGroup;
 import at.alladin.nettest.shared.server.helper.ClassificationHelper.ClassificationItem;
 import at.alladin.nettest.shared.server.helper.ClassificationHelper.ClassificationType;
-import at.alladin.nettest.shared.server.model.ServerSettings;
 import at.alladin.nettest.shared.server.model.ServerSettings.ColorThresholds;
 import at.alladin.nettest.shared.server.model.ServerSettings.SpeedThresholds;
 
@@ -51,9 +43,6 @@ import at.alladin.nettest.shared.server.model.ServerSettings.SpeedThresholds;
 public final class ClassificationService {
 	
 	@Autowired
-	private SqlSettingsService sqlSettingsService;
-	
-	@Autowired
 	private ThresholdsPerTechnologyHelperService thresholdsHelperService;
 	
     //classification thresholds for new classification
@@ -67,23 +56,9 @@ public final class ClassificationService {
      */
     @PostConstruct
     public void init() {
-        final ServerSettings settings = sqlSettingsService.getSettings();
         
         this.thresholdsPerTechnology = thresholdsHelperService.getThresholdsPerTechnology();
         
-    }
-
-    /**
-     * 
-     * @param values
-     * @return
-     */
-    private static List<String> getCaptions(int[] values) {
-        final List<String> result = new ArrayList<>();
-        for (int i = 0; i < values.length; i++) {
-            result.add(String.format(Locale.US, "%.1f", ((double)values[i]) / 1000));
-        }
-        return result;
     }
 
     private static String classifyColor(final ColorThresholds colorThresholds, final long value) {
@@ -158,47 +133,5 @@ public final class ClassificationService {
 			return null;
 		}
 	}
-	/*
-
-	public int[] getClassificationForType(final ClassificationType classificationType, final SignalGroup signalGroup) {
-		switch (classificationType) {
-		case DOWNLOAD:
-			return THRESHOLD_DOWNLOAD;
-		case UPLOAD:
-			return THRESHOLD_UPLOAD;
-		case PING:
-			return THRESHOLD_PING;
-		case SIGNAL:
-			switch (signalGroup) {
-				case WIFI:
-					return THRESHOLD_SIGNAL_WIFI;
-				default:
-					return THRESHOLD_SIGNAL_MOBILE;
-			}
-		default:
-			return null;
-		}
-	}
-
-	public List<String> getClassificationCaptionsForType(final ClassificationType classificationType, final SignalGroup signalGroup) {
-		switch (classificationType) {
-		case DOWNLOAD:
-			return THRESHOLD_DOWNLOAD_CAPTIONS;
-		case UPLOAD:
-			return THRESHOLD_UPLOAD_CAPTIONS;
-		case PING:
-			return THRESHOLD_PING_CAPTIONS;
-		case SIGNAL:
-			switch (signalGroup) {
-				case WIFI:
-					return THRESHOLD_SIGNAL_WIFI_CAPTIONS;
-				default:
-					return THRESHOLD_SIGNAL_MOBILE_CAPTIONS;
-			}
-		default:
-			return null;
-		}
-	}
-	*/
     
 }

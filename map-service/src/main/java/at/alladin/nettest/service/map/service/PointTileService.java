@@ -54,9 +54,6 @@ public class PointTileService {
     private MapOptionsService mapOptionsService;
 
     @Inject
-    private ClassificationService classificationService;
-
-    @Inject
     private ColorMapperService colorMapperService;
 
     @Inject

@@ -43,19 +43,6 @@ public class MapAppearanceInfo {
 	private String summary;
 	
 	@Expose
-	private List<String> classification = new ArrayList<>();
-	
-	@Expose
-	@SerializedName("heatmap_captions")
-	@JsonProperty("heatmap_captions")
-	private List<String> heatmapCaptions = new ArrayList<>();
-	
-	@Expose
-	@SerializedName("heatmap_colors")
-	@JsonProperty("heatmap_colors")
-	private List<String> heatmapColors = new ArrayList<>();
-	
-	@Expose
 	private Map<String, MapThresholdEntries> thresholds = new HashMap<>();
 
 	public String getTitle() {
@@ -96,30 +83,6 @@ public class MapAppearanceInfo {
 
 	public void setSummary(String summary) {
 		this.summary = summary;
-	}
-
-	public List<String> getClassification() {
-		return classification;
-	}
-
-	public void setClassification(List<String> classification) {
-		this.classification = classification;
-	}
-
-	public List<String> getHeatmapCaptions() {
-		return heatmapCaptions;
-	}
-
-	public void setHeatmapCaptions(List<String> heatmapCaptions) {
-		this.heatmapCaptions = heatmapCaptions;
-	}
-
-	public List<String> getHeatmapColors() {
-		return heatmapColors;
-	}
-
-	public void setHeatmapColors(List<String> heatmapColors) {
-		this.heatmapColors = heatmapColors;
 	}
 
 	public Map<String, MapThresholdEntries> getThresholds() {
