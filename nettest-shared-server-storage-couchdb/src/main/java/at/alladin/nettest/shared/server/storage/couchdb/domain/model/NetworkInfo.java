@@ -43,6 +43,18 @@ public class NetworkInfo {
 	@SerializedName("signal_info")
 	@JsonProperty("signal_info")
 	private SignalInfo signalInfo;
+	
+	/**
+	 * Contains true if CGN has been detected, false otherwise.<br> 
+	 * CGN detection is done by checking the traceroute test and the respective results.<br> 
+	 * According to RFC 6598 (<a href='https://tools.ietf.org/html/rfc6598'>https://tools.ietf.org/html/rfc6598</a>)
+	 * the IP address range of CGN is 100.64.0.0/10. 
+	 */
+	@JsonPropertyDescription("Contains true if CGN has been detected, false otherwise.")
+	@Expose
+	@SerializedName("is_cgn_detected")
+	@JsonProperty("is_cgn_detected")
+	private Boolean isCgnDetected = false;
 
 	public List<NetworkPointInTime> getNetworkPointsInTime() {
 		return networkPointsInTime;
@@ -66,5 +78,13 @@ public class NetworkInfo {
 
 	public void setComputedNetworkInfo(ComputedNetworkPointInTime computedNetworkInfo) {
 		this.computedNetworkInfo = computedNetworkInfo;
+	}
+
+	public Boolean getIsCgnDetected() {
+		return isCgnDetected;
+	}
+
+	public void setIsCgnDetected(Boolean isCgnDetected) {
+		this.isCgnDetected = isCgnDetected;
 	}
 }

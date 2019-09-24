@@ -16,7 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.async.CallableProcessingInterceptor;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
@@ -39,6 +40,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasuremen
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
+import at.alladin.nettest.shared.server.helper.IpAddressMatcher;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ComputedNetworkPointInTime;
@@ -57,6 +59,8 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Provider;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ProviderInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.RoamingType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
@@ -74,6 +78,8 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportMode
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.MeasurementAgentMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsResponseMapper;
+import at.alladin.nntool.shared.qos.TracerouteResult;
+import at.alladin.nntool.shared.qos.TracerouteResult.PathElement;
 
 /**
  * 
@@ -130,6 +136,9 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private ProviderService providerService;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	/*
 	 * (non-Javadoc)
@@ -170,6 +179,8 @@ public class CouchDbStorageService implements StorageService {
 		}
 
 		calculateTotalMeasurementPayload(measurement);
+		
+		doAdvancedQosEvaluations(measurement);
 
 		try {
 			measurementRepository.save(measurement);
@@ -536,7 +547,7 @@ public class CouchDbStorageService implements StorageService {
 		catch (final UnknownHostException e) {
 			e.printStackTrace();
 		}
-
+		
 		//reverse DNS:
         String reverseDNS = Helperfunctions.reverseDNSLookup(clientAddress);
         if (reverseDNS != null) {
@@ -601,6 +612,43 @@ public class CouchDbStorageService implements StorageService {
 			return ret;
 		}
 		return null;
+	}
+
+	/**
+	 * does advanced evaluations on QoS results.
+	 * @param measurement
+	 */
+	private void doAdvancedQosEvaluations(final Measurement measurement) {
+		if (measurement.getMeasurements() == null) {
+			return;
+		}
+		
+		QoSMeasurement qosMeasurement = (QoSMeasurement) measurement.getMeasurements().get(MeasurementTypeDto.QOS);
+		if (qosMeasurement == null) {
+			return;
+		}
+		
+		if (measurement.getNetworkInfo() != null) {
+
+			//check for CGN by matching IP addresses from traceroute test (see RFC 6598)
+			IpAddressMatcher matcher = new IpAddressMatcher("100.64.0.0/10");
+			boolean isCgnCheckFinished = false;
+
+			for (QoSResult qos : qosMeasurement.getResults()) {
+				if (!isCgnCheckFinished && QoSMeasurementType.TRACEROUTE.equals(qos.getType())) {
+					TracerouteResult result = objectMapper.convertValue(qos.getResults(), TracerouteResult.class);
+					if (result.getResultEntries() != null) {
+						for (PathElement path : result.getResultEntries()) {
+							if (matcher.matches(path.getHost())) {
+								isCgnCheckFinished = true;
+								measurement.getNetworkInfo().setIsCgnDetected(true);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 	
 }

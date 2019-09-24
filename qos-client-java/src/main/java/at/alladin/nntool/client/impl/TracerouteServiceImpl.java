@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
@@ -131,6 +133,14 @@ public class TracerouteServiceImpl implements TracerouteService {
 				e.printStackTrace();
 				return null;
 			}
+		}
+
+		public Map<String, Object> toMap() {
+			Map<String, Object> result = new HashMap<>();
+			result.put("host", fromIp);
+			result.put("time", time);
+
+			return result;
 		}
 	}
 	
