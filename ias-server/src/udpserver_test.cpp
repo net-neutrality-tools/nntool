@@ -25,6 +25,8 @@ TEST_CASE("CUdpListener") {
         servaddr.sin_family = AF_INET;
         inet_pton(AF_INET, "127.0.0.1", &(servaddr.sin_addr));
         servaddr.sin_port = htons(8095);
+
+        ::RUNNING = false;
         sendto(mConnection->mSocket, msg.c_str(), strlen(msg.c_str()), 0,  (struct sockaddr *) &servaddr, sizeof(servaddr));
         //Should return the amount of sent characters 
         CHECK(err == 0);
@@ -39,7 +41,7 @@ TEST_CASE("CUdpListener") {
 
         CHECK(response == msg);
 
-        ::RUNNING = false;
+        
 
         udpListener->waitForEnd();
 
