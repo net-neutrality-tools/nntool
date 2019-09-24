@@ -61,16 +61,45 @@ class HomeViewController: CustomNavigationBarViewController {
         }
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        deviceInfoView?.reset()
+    ///
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
 
         guard MEASUREMENT_AGENT.isRegistered() else {
+            performSegue(withIdentifier: R.segue.homeViewController.present_modally_terms_and_conditions, sender: self)
             return
         }
 
-        // load measurement peer list
+        loadMeasurementPeers()
+        start()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        stop()
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else {
+            return
+        }
+
+        switch identifier {
+        case R.segue.homeViewController.present_modally_terms_and_conditions.identifier:
+            ((segue.destination as? UINavigationController)?.viewControllers.first as? TermsAndConditionsViewController)?.delegate = self
+        case R.segue.homeViewController.embed_current_measurement_peer.identifier:
+            currentMeasurementPeerTableViewController = segue.destination as? CurrentMeasurementPeerTableViewController
+        case R.segue.homeViewController.show_speed_measurement_view_controller.identifier:
+            if let measurementViewController = segue.destination as? MeasurementViewController {
+                measurementViewController.preferredSpeedMeasurementPeer = currentMeasurementPeerTableViewController?.selectedMeasurementPeer
+            }
+        default: break
+        }
+    }
+
+    /// Load measurement peer list.
+    private func loadMeasurementPeers() {
         if currentMeasurementPeerTableViewController?.measurementPeers == nil {
             MEASUREMENT_AGENT.getSpeedMeasurementPeers(onSuccess: { peers in
                 logger.debug(peers)
@@ -92,6 +121,10 @@ class HomeViewController: CustomNavigationBarViewController {
                 }
             })
         }
+    }
+
+    private func start() {
+        deviceInfoView?.reset()
 
         // TODO: display error message if location permission is not granted
         locationTracker.start(updateLocationCallback: { location in
@@ -135,19 +168,7 @@ class HomeViewController: CustomNavigationBarViewController {
         }
     }
 
-    ///
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        guard MEASUREMENT_AGENT.isRegistered() else {
-            performSegue(withIdentifier: R.segue.homeViewController.present_modally_terms_and_conditions, sender: self)
-            return
-        }
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
+    private func stop() {
         locationTracker.stop()
 
         timer?.removeAllObservers(thenStop: true)
@@ -160,22 +181,6 @@ class HomeViewController: CustomNavigationBarViewController {
         ipTimer = nil
 
         ipInfo = nil
-    }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let identifier = segue.identifier else {
-            return
-        }
-
-        switch identifier {
-        case R.segue.homeViewController.embed_current_measurement_peer.identifier:
-            currentMeasurementPeerTableViewController = segue.destination as? CurrentMeasurementPeerTableViewController
-        case R.segue.homeViewController.show_speed_measurement_view_controller.identifier:
-            if let measurementViewController = segue.destination as? MeasurementViewController {
-                measurementViewController.preferredSpeedMeasurementPeer = currentMeasurementPeerTableViewController?.selectedMeasurementPeer
-            }
-        default: break
-        }
     }
 
     func displayPreMeasurementWarningAlert() {
@@ -261,5 +266,12 @@ class HomeViewController: CustomNavigationBarViewController {
             label?.icon = icon
             label?.textColor = color
         }
+    }
+}
+
+extension HomeViewController: TermsAndConditionsDelegate {
+
+    func didAcceptTermsAndConditions() {
+        start()
     }
 }

@@ -19,11 +19,20 @@ import Foundation
 import UIKit
 import WebKit
 
+protocol TermsAndConditionsDelegate: class {
+
+    func didAcceptTermsAndConditions()
+
+    //func didDeclineTermsAndConditions()
+}
+
 /// This view controller displays the Terms and Conditions.
 class TermsAndConditionsViewController: UIViewController {
 
     @IBOutlet var declineButtonItem: UIBarButtonItem?
     @IBOutlet var agreeButtonItem: UIBarButtonItem?
+
+    var delegate: TermsAndConditionsDelegate?
 
     ///
     override func viewDidLoad() {
@@ -71,6 +80,7 @@ class TermsAndConditionsViewController: UIViewController {
         MEASUREMENT_AGENT.register(success: {
             DispatchQueue.main.async {
                 progressAlert.dismiss(animated: true) {
+                    self.delegate?.didAcceptTermsAndConditions()
                     self.dismiss(animated: true, completion: nil)
                 }
             }
