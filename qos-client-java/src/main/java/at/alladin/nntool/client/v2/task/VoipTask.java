@@ -64,7 +64,7 @@ import at.alladin.nntool.util.net.udp.StreamSender.UdpStreamCallback;
  */
 public class VoipTask extends AbstractQoSTask {
 	
-	private final static Pattern VOIP_RECEIVE_RESPONSE_PATTERN = Pattern.compile("VOIPRESULT (-?[\\d]*) (-?[\\d]*) (-?[\\d]*) (-?[\\d]*) (-?[\\d]*) (-?[\\d]*) (-?[\\d]*) (-?[\\d]*)");
+	private final static Pattern VOIP_RECEIVE_RESPONSE_PATTERN = Pattern.compile("VOIPRESULT (-?[\\d]*) (-?[\\d]*) (-?[\\d]*) (-?[\\d]*) (-?[\\d]*) (-?[\\d]*) (-?[\\d]*) (-?[\\d]*) (-?[\\d]*) (-?[\\d]*)");
 	
 	private final static Pattern VOIP_OK_PATTERN = Pattern.compile("OK ([\\d]*)");
 	
@@ -83,6 +83,8 @@ public class VoipTask extends AbstractQoSTask {
 	private final int bitsPerSample;
 	
 	private final PayloadType payloadType;
+
+	private final long buffer;
 	
 	private final static long DEFAULT_TIMEOUT = 3000000000L; //3s
 	
@@ -95,6 +97,8 @@ public class VoipTask extends AbstractQoSTask {
 	private final static int DEFAULT_BITS_PER_SAMPLE = 8; //8 bits per sample
 	
 	private final static PayloadType DEFAULT_PAYLOAD_TYPE = PayloadType.PCMA;
+
+	private final static long DEFAULT_BUFFER = 100; //100 ms buffer
 	
 	public final static String PARAM_BITS_PER_SAMLE = "bits_per_sample";
 	
@@ -111,8 +115,12 @@ public class VoipTask extends AbstractQoSTask {
 	public final static String PARAM_DELAY = "delay";
 	
 	public final static String PARAM_PAYLOAD = "payload";
+
+	public final static String PARAM_BUFFER = "buffer";
 	
 	public final static String RESULT_PAYLOAD = "voip_objective_payload";
+
+	public final static String RESULT_BUFFER = "voip_objective_buffer";
 	
 	public final static String RESULT_IN_PORT = "voip_objective_in_port";
 	
@@ -131,7 +139,7 @@ public class VoipTask extends AbstractQoSTask {
 	public final static String RESULT_STATUS = "voip_result_status";
 	
 	public final static String RESULT_VOIP_PREFIX = "voip_result";
-	
+
 	public final static String RESULT_INCOMING_PREFIX = "_in_";
 	
 	public final static String RESULT_OUTGOING_PREFIX = "_out_";
@@ -151,6 +159,10 @@ public class VoipTask extends AbstractQoSTask {
 	public final static String RESULT_NUM_PACKETS = "num_packets";
 	
 	public final static String RESULT_SEQUENCE_ERRORS = "sequence_error";
+
+	public final static String RESULT_NUMBER_OF_STALLS = "stalls";
+
+	public final static String RESULT_AVG_STALL_TIME = "avg_stall_time";
 	
 	/**
 	 * 
@@ -181,6 +193,9 @@ public class VoipTask extends AbstractQoSTask {
 		
 		value = (String) taskDesc.getParams().get(PARAM_PAYLOAD);
 		this.payloadType = value != null ? PayloadType.getByCodecValue(Integer.valueOf(value), DEFAULT_PAYLOAD_TYPE) : DEFAULT_PAYLOAD_TYPE;
+
+		value = (String) taskDesc.getParams().get(PARAM_BUFFER);
+		this.buffer = value != null ? Integer.valueOf(value) : DEFAULT_BUFFER;
 	}
 
 	/**
@@ -197,6 +212,7 @@ public class VoipTask extends AbstractQoSTask {
 		result.getResultMap().put(RESULT_OUT_PORT, outgoingPort);
 		result.getResultMap().put(RESULT_SAMPLE_RATE, sampleRate);
 		result.getResultMap().put(RESULT_PAYLOAD, payloadType.getValue());
+		result.getResultMap().put(RESULT_BUFFER, buffer);
 		result.getResultMap().put(RESULT_STATUS, "OK");
 		
 		try {
@@ -245,8 +261,8 @@ public class VoipTask extends AbstractQoSTask {
 								};
 								
 								RtpUtil.runVoipStream(null, true, InetAddress.getByName(getTestServerAddr()), outgoingPort, incomingPort, sampleRate, bitsPerSample, 
-										payloadType, initialSequenceNumber, ssrc.get(), 
-										TimeUnit.MILLISECONDS.convert(callDuration, TimeUnit.NANOSECONDS), 
+										payloadType, initialSequenceNumber, ssrc.get(),
+										TimeUnit.MILLISECONDS.convert(callDuration, TimeUnit.NANOSECONDS),
 										TimeUnit.MILLISECONDS.convert(delay, TimeUnit.NANOSECONDS), 
 										TimeUnit.MILLISECONDS.convert(timeout, TimeUnit.NANOSECONDS), true, receiveCallback);
 							} 
@@ -321,6 +337,8 @@ public class VoipTask extends AbstractQoSTask {
 							result.getResultMap().put(prefix + RESULT_SEQUENCE_ERRORS, Long.parseLong(m.group(6)));
 							result.getResultMap().put(prefix + RESULT_SHORT_SEQUENTIAL, Long.parseLong(m.group(7)));
 							result.getResultMap().put(prefix + RESULT_LONG_SEQUENTIAL, Long.parseLong(m.group(8)));
+							result.getResultMap().put(prefix + RESULT_NUMBER_OF_STALLS, Long.parseLong(m.group(9)));
+							result.getResultMap().put(prefix + RESULT_AVG_STALL_TIME, Long.parseLong(m.group(8)));
 						}
 						resultLatch.countDown();
 					}
@@ -335,7 +353,8 @@ public class VoipTask extends AbstractQoSTask {
 				resultLatch.await(CONTROL_CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS);
 			}
 
-			final RtpQoSResult rtpResults = rtpControlDataList.size() > 0 ? RtpUtil.calculateQoS(rtpControlDataList, initialSequenceNumber, sampleRate) : null;
+			final RtpQoSResult rtpResults = rtpControlDataList.size() > 0 ?
+					RtpUtil.calculateQoS(rtpControlDataList, initialSequenceNumber, sampleRate, buffer) : null;
 			
 			final String prefix = RESULT_VOIP_PREFIX + RESULT_INCOMING_PREFIX;
 			if (rtpResults != null) {
@@ -347,6 +366,8 @@ public class VoipTask extends AbstractQoSTask {
 				result.getResultMap().put(prefix + RESULT_SEQUENCE_ERRORS, rtpResults.getOutOfOrder());
 				result.getResultMap().put(prefix + RESULT_SHORT_SEQUENTIAL, rtpResults.getMinSequential());
 				result.getResultMap().put(prefix + RESULT_LONG_SEQUENTIAL, rtpResults.getMaxSequencial());
+				result.getResultMap().put(prefix + RESULT_AVG_STALL_TIME, rtpResults.getAvgStallTime());
+				result.getResultMap().put(prefix + RESULT_NUMBER_OF_STALLS, rtpResults.getNumberOfStalls());
 			}
 			else {
 				result.getResultMap().put(prefix + RESULT_MAX_JITTER, null);
@@ -357,6 +378,8 @@ public class VoipTask extends AbstractQoSTask {
 				result.getResultMap().put(prefix + RESULT_SEQUENCE_ERRORS, null);
 				result.getResultMap().put(prefix + RESULT_SHORT_SEQUENTIAL, null);
 				result.getResultMap().put(prefix + RESULT_LONG_SEQUENTIAL, null);
+				result.getResultMap().put(prefix + RESULT_AVG_STALL_TIME, null);
+				result.getResultMap().put(prefix + RESULT_NUMBER_OF_STALLS, null);
 			}
 			
 	        return result;			
