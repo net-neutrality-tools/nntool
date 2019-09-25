@@ -20,12 +20,11 @@ export const environment = {
   user_agent: 'abc',
   languages: ['en'],
   servers: {
-    map: '',
-    statistic: '',
-    // control: 'http://localhost:8080/api/v1/'
-    // control: 'http://localhost:18080/api/v1/'
     control: 'https://controller-de-01.net-neutrality.tools/api/v1/',
-    result: 'https://result-de-01.net-neutrality.tools/api/v1/'
+    result: 'https://result-de-01.net-neutrality.tools/api/v1/',
+    search: 'https://search-de-01.net-neutrality.tools/api/v1/',
+    map: 'https://map-de-01.net-neutrality.tools/api/v1/',
+    statistic: 'https://statistic-de-01.net-neutrality.tools/api/v1/'
   },
   keys: {
     google: ''
@@ -94,9 +93,10 @@ export const environment = {
     }
   },
   opendata: {
-    external: [],
-    allow_full_download: false,
-    report_start_date: '2017/03/01'
+    startDate: {
+      year: 2019,
+      month: 9
+    }
   },
   statistics: {
     graphs: {
