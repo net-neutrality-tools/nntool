@@ -34,6 +34,7 @@ PODS:
     - Alamofire (~> 4.8.2)
     - CocoaAsyncSocket (~> 7.6.3)
     - nntool-shared-swift (~> 0.0.1)
+    - WKWebViewWithURLProtocol (~> 0.1.0)
   - R.swift (5.0.3):
     - R.swift.Library (~> 5.0.0)
   - R.swift.Library (5.0.1)
@@ -45,6 +46,7 @@ PODS:
   - SwiftGen (6.1.0)
   - SwiftLint (0.31.0)
   - WebBrowser (0.1.5)
+  - WKWebViewWithURLProtocol (0.1.0)
   - XCGLogger (7.0.0):
     - XCGLogger/Core (= 7.0.0)
   - XCGLogger/Core (7.0.0):
@@ -79,6 +81,7 @@ SPEC REPOS:
     - SwiftGen
     - SwiftLint
     - WebBrowser
+    - WKWebViewWithURLProtocol
     - XCGLogger
 
 EXTERNAL SOURCES:
@@ -102,7 +105,7 @@ SPEC CHECKSUMS:
   nntool-shared-swift: 7955a6c51917bcf2f42316eb259da095c80a7398
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   PocketSocket: 9c6867d66fb4f962af96b9b07f4b45bb561b2c2a
-  QoSKit: d85bee1116e983af2b481d9cb3458ed71244ba41
+  QoSKit: 18909a0262e523ad444556f827e05e4f12019308
   R.swift: f5a87643b91ea569d23d6afb3eee9c743edde239
   R.swift.Library: cfe85d569d9bae6cb262922db130e7c3a7a5fad1
   ReachabilitySwift: 93a5956ef3f076d7e24bc65bfb1c5042e69b7276
@@ -111,6 +114,7 @@ SPEC CHECKSUMS:
   SwiftGen: f872ca75cbd17bf7103c17f13dcfa0d9a15667b0
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
   WebBrowser: 0248873c77f54e2ac504ece7c2bc8eeb710b5a4f
+  WKWebViewWithURLProtocol: f7f2b367c40680105794a068ed2bb2cd5922c27c
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
 PODFILE CHECKSUM: 8609c0e2e6a363536dc2d3142beb759bfd101936

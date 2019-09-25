@@ -64,7 +64,7 @@ class TcpStreamUtil: NSObject {
             } else {
                 logger.error("Could not accept on port \(config.port)")
             }
-            
+
             return (.error, nil)
         }
 

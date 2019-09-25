@@ -13,6 +13,7 @@ PODS:
   - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
   - Repeat (0.5.7)
   - SwiftLint (0.31.0)
+  - WKWebViewWithURLProtocol (0.1.0)
   - XCGLogger (7.0.0):
     - XCGLogger/Core (= 7.0.0)
   - XCGLogger/Core (7.0.0):
@@ -23,6 +24,7 @@ DEPENDENCIES:
   - CocoaAsyncSocket (~> 7.6.3)
   - Nimble (~> 8.0.1)
   - nntool-shared-swift (from `../nntool-shared-swift`)
+  - WKWebViewWithURLProtocol (~> 0.1.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -33,6 +35,7 @@ SPEC REPOS:
     - ObjcExceptionBridging
     - Repeat
     - SwiftLint
+    - WKWebViewWithURLProtocol
     - XCGLogger
 
 EXTERNAL SOURCES:
@@ -48,8 +51,9 @@ SPEC CHECKSUMS:
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   Repeat: 73c5ee602aed8f3c7bf1aa12d4cd0d3dc3edea0a
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
+  WKWebViewWithURLProtocol: f7f2b367c40680105794a068ed2bb2cd5922c27c
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: 8bcb4ba7e2a355ebbf131c0494500eba9f6d8cf4
+PODFILE CHECKSUM: 5679433833f5121bb57b7ebc9a4b2752045544f2
 
 COCOAPODS: 1.7.1
