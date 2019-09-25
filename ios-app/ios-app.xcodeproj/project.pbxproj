@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		028BCD1C5DB207312A53426F /* Pods_All_Speed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAC9DAE7413ECAE8092FFC80 /* Pods_All_Speed.framework */; };
+		4E39AF08D64A16ACF982E352 /* Pods_All_BEREC_nntool.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4042E14D8B38AC9EAFAC182E /* Pods_All_BEREC_nntool.framework */; };
 		B0A836C925FAEE0ED120983A /* Pods_All_Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3142E3D228324ABA957A394 /* Pods_All_Common.framework */; };
 		E00F48D1225F764400EAD0C0 /* IASProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48D0225F764400EAD0C0 /* IASProgram.swift */; };
 		E00F48D3225F77C400EAD0C0 /* QoSProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48D2225F77C400EAD0C0 /* QoSProgram.swift */; };
@@ -102,7 +103,6 @@
 		E0CC269D22E8CEE6005DEED0 /* HistoryItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC269C22E8CEE6005DEED0 /* HistoryItemCell.swift */; };
 		E0E9BB10226F57DA00146699 /* SpeedMeasurementPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E9BB0F226F57DA00146699 /* SpeedMeasurementPhase.swift */; };
 		E0EA84E72282C1B000EB73BF /* SpeedHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84E62282C1B000EB73BF /* SpeedHelper.swift */; };
-		E860F5CA7C59FD468EEE2892 /* Pods_All_ios_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91316B94C5B307833124DBA0 /* Pods_All_ios_app.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -162,9 +162,11 @@
 
 /* Begin PBXFileReference section */
 		0B10DBD62832A59CDD7B8F28 /* Pods-All-Common.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-Common.debug.xcconfig"; path = "Target Support Files/Pods-All-Common/Pods-All-Common.debug.xcconfig"; sourceTree = "<group>"; };
+		0D4DE6E69AB115557FA300EC /* Pods-All-BEREC_nntool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-BEREC_nntool.debug.xcconfig"; path = "Target Support Files/Pods-All-BEREC_nntool/Pods-All-BEREC_nntool.debug.xcconfig"; sourceTree = "<group>"; };
 		280829905CC742297F3CD799 /* Pods-All-Speed.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-Speed.release.xcconfig"; path = "Target Support Files/Pods-All-Speed/Pods-All-Speed.release.xcconfig"; sourceTree = "<group>"; };
 		2DE5D0E278879E07611256DA /* Pods-All-Common.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-Common.release.xcconfig"; path = "Target Support Files/Pods-All-Common/Pods-All-Common.release.xcconfig"; sourceTree = "<group>"; };
-		91316B94C5B307833124DBA0 /* Pods_All_ios_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_ios_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4042E14D8B38AC9EAFAC182E /* Pods_All_BEREC_nntool.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_BEREC_nntool.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B48CA4EDA77BB7D79D81D60 /* Pods-All-BEREC_nntool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-BEREC_nntool.release.xcconfig"; path = "Target Support Files/Pods-All-BEREC_nntool/Pods-All-BEREC_nntool.release.xcconfig"; sourceTree = "<group>"; };
 		9A7B01F143D9A74599DAC596 /* Pods-All-ios-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-ios-app.debug.xcconfig"; path = "Target Support Files/Pods-All-ios-app/Pods-All-ios-app.debug.xcconfig"; sourceTree = "<group>"; };
 		AFAED326C34595EF58CC0F9C /* Pods-All-Speed.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-Speed.debug.xcconfig"; path = "Target Support Files/Pods-All-Speed/Pods-All-Speed.debug.xcconfig"; sourceTree = "<group>"; };
 		B3142E3D228324ABA957A394 /* Pods_All_Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -299,7 +301,7 @@
 			files = (
 				E00F48E0225F7D2600EAD0C0 /* Common.framework in Frameworks */,
 				E00F48F2225F7D3B00EAD0C0 /* Speed.framework in Frameworks */,
-				E860F5CA7C59FD468EEE2892 /* Pods_All_ios_app.framework in Frameworks */,
+				4E39AF08D64A16ACF982E352 /* Pods_All_BEREC_nntool.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,6 +331,8 @@
 				2DE5D0E278879E07611256DA /* Pods-All-Common.release.xcconfig */,
 				AFAED326C34595EF58CC0F9C /* Pods-All-Speed.debug.xcconfig */,
 				280829905CC742297F3CD799 /* Pods-All-Speed.release.xcconfig */,
+				0D4DE6E69AB115557FA300EC /* Pods-All-BEREC_nntool.debug.xcconfig */,
+				7B48CA4EDA77BB7D79D81D60 /* Pods-All-BEREC_nntool.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -338,9 +342,9 @@
 			children = (
 				E00F4ADD225F801400EAD0C0 /* dev */,
 				E00F4AE0225F801400EAD0C0 /* dist */,
-				91316B94C5B307833124DBA0 /* Pods_All_ios_app.framework */,
 				B3142E3D228324ABA957A394 /* Pods_All_Common.framework */,
 				FAC9DAE7413ECAE8092FFC80 /* Pods_All_Speed.framework */,
+				4042E14D8B38AC9EAFAC182E /* Pods_All_BEREC_nntool.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -940,7 +944,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-All-ios-app-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-All-BEREC_nntool-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -981,7 +985,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-All-ios-app/Pods-All-ios-app-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-All-BEREC_nntool/Pods-All-BEREC_nntool-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8D781F2C2D4E4D6921F0F90D /* [CP] Check Pods Manifest.lock */ = {
@@ -1560,7 +1564,7 @@
 		};
 		E026A5A92241271A00BACDB5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9A7B01F143D9A74599DAC596 /* Pods-All-ios-app.debug.xcconfig */;
+			baseConfigurationReference = 0D4DE6E69AB115557FA300EC /* Pods-All-BEREC_nntool.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ios-app/Configuration/ios-app.entitlements";
@@ -1582,7 +1586,7 @@
 		};
 		E026A5AA2241271A00BACDB5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D329819C8E115D34CA521957 /* Pods-All-ios-app.release.xcconfig */;
+			baseConfigurationReference = 7B48CA4EDA77BB7D79D81D60 /* Pods-All-BEREC_nntool.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "ios-app/Configuration/ios-app.entitlements";

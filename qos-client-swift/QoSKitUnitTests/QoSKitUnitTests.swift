@@ -140,6 +140,26 @@ class QoSKitUnitTests: XCTestCase {
     func pr(_ t: Any) {
         print(t)
     }
+
+    func testWebsite() {
+        //WebsiteTaskUrlProtocol.start()
+        let websiteRenderingTask = WebsiteRenderingTask(config: [
+            "qos_test_uid": "1",
+            "qostest": "WEBSITE",
+            "concurrency_group": 200,
+            "url": "https://alladin.at"
+        ])!
+
+        let result = websiteRenderingTask.runTask()
+
+        /*let op = OperationQueue()
+        op.addOperations([websiteRenderingTask], waitUntilFinished: true)
+        
+        pr(websiteRenderingTask.result)*/
+        pr(result)
+
+        //WebsiteTaskUrlProtocol.stop()
+    }
 }
 
 struct AnyKey: CodingKey {
