@@ -7,3 +7,35 @@
     <p [innerHTML]="'OPENDATA.DESCRIPTION' | translate"></p>
   </nntool-section-content>
 </nntool-section-arguments>
+
+<nntool-section-features>
+  <nntool-section-content>
+    <fieldset>
+      <legend>{{ 'OPENDATA.HEADER' | translate }}</legend>
+      <header class="column-header" aria-hidden="true">
+        <div class="icon icon-opendata"></div>
+        <h2>{{ 'OPENDATA.HEADER' | translate }}</h2>
+      </header>
+      <div class="section-columns">
+        <div class="column">
+          <label for="opendata-monthly">{{ 'OPENDATA.LABEL' | translate }}</label>
+          <select id="opendata-monthly" name="opendata-monthly" [(ngModel)]="selectedDate">
+            <option selected disabled value="null">{{ 'OPENDATA.SELECT' | translate }}</option>
+            <option *ngFor="let date of dates" [ngValue]="date">{{ date | date: 'yyyy/MM' }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="section-columns">
+        <div class="column">
+          <button class="button" (click)="downloadOpendata('csv')">Download as CSV</button>
+        </div>
+        <div class="column">
+          <button class="button" (click)="downloadOpendata('json.zip')">Download as JSON</button>
+        </div>
+        <div class="column">
+          <button class="button" (click)="downloadOpendata('yaml.zip')">Download as YAML</button>
+        </div>
+      </div>
+    </fieldset>
+  </nntool-section-content>
+</nntool-section-features>

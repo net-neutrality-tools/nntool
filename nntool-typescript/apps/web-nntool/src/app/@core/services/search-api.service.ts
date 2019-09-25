@@ -33,14 +33,24 @@ export class SearchApiService {
     );
   }
 
+  public exportOpenDataMeasurementsByDate(date: Date, extension: string) {
+    window.open(
+      Location.joinWithSlash(
+        this.config.servers.search,
+        'measurements/' + date.getFullYear() + '/' + (date.getMonth() + 1) + '.' + extension
+      )
+    );
+  }
+
   public exportOpenDataMeasurements(q: string, pageSize: number, page: number, extension: string) {
-    let queryString = '?size=' + pageSize + "&page=" + page;
+    let queryString = '?size=' + pageSize + '&page=' + page;
 
     if (q) {
       queryString += '&q=' + q;
     }
 
-    window.location.href = Location.joinWithSlash(this.config.servers.search, 'measurements.' + extension + queryString);
+    window.open(Location.joinWithSlash(this.config.servers.search, 'measurements.' + extension + queryString));
+    //window.location.href = Location.joinWithSlash(this.config.servers.search, 'measurements.' + extension + queryString);
   }
 
   public getSingleOpenDataMeasurement(openDataUuid: string): Observable<any> {
@@ -65,7 +75,10 @@ export class SearchApiService {
   public getSingleGroupedOpenDataMeasurement(openDataUuid: string): Observable<any> {
     return new Observable((observer: any) => {
       this.requests
-        .getJson<any>(Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid + '/details'), {})
+        .getJson<any>(
+          Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid + '/details'),
+          {}
+        )
         .subscribe(
           (data: any) => {
             this.logger.debug('grouped opendata measurement: ', data);
@@ -82,7 +95,8 @@ export class SearchApiService {
   }
 
   public exportSingleOpenDataMeasurement(openDataUuid: string, extension: string) {
-    window.location.href = Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid + '.' + extension);
+    window.open(Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid + '.' + extension));
+    //window.location.href = Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid + '.' + extension);
   }
 
   ////
