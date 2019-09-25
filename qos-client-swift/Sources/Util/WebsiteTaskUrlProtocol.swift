@@ -1,6 +1,7 @@
 // inspired by https://github.com/appscape/open-rmbt-ios/blob/master/Sources/RMBTQosWebTestURLProtocol.m
 
 import Foundation
+import WKWebViewWithURLProtocol
 
 ///
 class WebsiteTaskResultEntry: CustomStringConvertible {
@@ -50,6 +51,19 @@ class WebsiteTaskUrlProtocol: URLProtocol, NSURLConnectionDelegate, NSURLConnect
         assert(results == nil)
 
         results = [String: WebsiteTaskResultEntry]()
+
+        let registerBlock = {
+            URLProtocol.wk_registerScheme("http")
+            URLProtocol.wk_registerScheme("https")
+        }
+
+        if Thread.isMainThread {
+            registerBlock()
+        } else {
+            DispatchQueue.main.sync {
+                registerBlock()
+            }
+        }
 
         URLProtocol.registerClass(WebsiteTaskUrlProtocol.self)
     }

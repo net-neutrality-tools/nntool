@@ -1,6 +1,7 @@
 package at.alladin.nettest.shared.berec.collector.api.v1.dto.shared;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
@@ -14,6 +15,7 @@ import com.google.gson.annotations.SerializedName;
  */
 @io.swagger.annotations.ApiModel(description = "Contains information about the connection(s) used for the speed measurement.")
 @JsonClassDescription("Contains information about the connection(s) used for the speed measurement.")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ConnectionInfoDto {
 
 	/**
