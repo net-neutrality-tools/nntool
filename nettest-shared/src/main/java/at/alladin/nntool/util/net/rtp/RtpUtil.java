@@ -48,7 +48,9 @@ public class RtpUtil {
 	public static <T extends Closeable> T runVoipStream(T socket, final boolean closeOnFinish, InetAddress targetHost, int targetPort, int sampleRate,
 			int bps, RealtimeTransportProtocol.PayloadType payloadType, long sequenceNumber, int ssrc,
 			long callDuration, final long delay, final long timeout, final boolean useNio, final UdpStreamCallback receiveCallback) throws InterruptedException, TimeoutException, IOException {
-		return RtpUtil.runVoipStream(socket, closeOnFinish, targetHost, targetPort, null, sampleRate, bps, payloadType, sequenceNumber, ssrc, callDuration, delay, timeout, useNio, receiveCallback);
+		return RtpUtil.runVoipStream(socket, closeOnFinish, targetHost, targetPort,
+				null, sampleRate, bps, payloadType, sequenceNumber, ssrc,
+				callDuration, delay, timeout, useNio, receiveCallback);
 	}
 
 
@@ -82,7 +84,9 @@ public class RtpUtil {
 		final int payloadTimestamp = (int) (sampleRate / (1000 / delay));
 		final RtpPacket initialRtpPacket = new RtpPacket(payloadType, 0, new long[] {}, (int) sequenceNumber, 0, ssrc);
 		final int numPackets = (int) (callDuration / delay);
-		final UdpStreamSenderSettings<T> settings = new UdpStreamSenderSettings<>(socket, closeOnFinish, targetHost, targetPort, numPackets, delay, timeout, TimeUnit.MILLISECONDS, false, 0);
+		final UdpStreamSenderSettings<T> settings =
+				new UdpStreamSenderSettings<>(socket, closeOnFinish, targetHost, targetPort,
+						numPackets, delay, timeout, TimeUnit.MILLISECONDS, false, 0);
 		settings.setIncomingPort(incomingPort);
 
 		if (receiveCallback == null) {
@@ -162,7 +166,8 @@ public class RtpUtil {
 	 *
 	 * @param rtpControlDataMap
 	 */
-	public static RtpQoSResult calculateQoS(Map<Integer, RtpControlData> rtpControlDataMap, long initialSequenceNumber, int sampleRate) {
+	public static RtpQoSResult calculateQoS(Map<Integer, RtpControlData> rtpControlDataMap,
+											long initialSequenceNumber, int sampleRate, long buffer) {
 		TreeSet<Integer> sequenceNumberSet = new TreeSet<>(rtpControlDataMap.keySet());
 
 		Map<Integer, Float> jitterMap = new HashMap<>();
@@ -173,6 +178,8 @@ public class RtpUtil {
 		long skew = 0;
 		long maxDelta = 0;
 		long tsDiff = 0;
+		int stalls = 0;
+		long stallTime = 0;
 
 		int prevSeqNr = -1;
 		for (int x : sequenceNumberSet) {
@@ -180,6 +187,10 @@ public class RtpUtil {
 			RtpControlData j = rtpControlDataMap.get(x);
 			if (prevSeqNr >= 0) {
 				tsDiff = j.receivedNs - i.receivedNs;
+				if (buffer < tsDiff) {
+					stalls++;
+					stallTime += tsDiff-buffer;
+				}
 				final float prevJitter = jitterMap.get(prevSeqNr);
 				final long delta = Math.abs(calculateDelta(i, j, sampleRate));
 				final float jitter = prevJitter + ((float)delta - prevJitter) / 16f;
@@ -226,7 +237,9 @@ public class RtpUtil {
 			minSequential = maxSequential;
 		}
 
-		return new RtpQoSResult(maxJitter, meanJitter / jitterMap.size(), skew, maxDelta, packetsOutOfOrder, minSequential, maxSequential, jitterMap);
+		return new RtpQoSResult(maxJitter, meanJitter / jitterMap.size(), skew, maxDelta,
+				packetsOutOfOrder, minSequential, maxSequential,
+				stalls, (TimeUnit.MILLISECONDS.convert(stallTime, TimeUnit.NANOSECONDS) / stalls), jitterMap);
 	}
 
 	private static long calculateDelta(RtpControlData i, RtpControlData j, int sampleRate) {
@@ -277,8 +290,13 @@ public class RtpUtil {
 		final int outOfOrder;
 		final int minSequential;
 		final int maxSequencial;
+		final int numberOfStalls;
+		final long avgStallTime;
 
-		public RtpQoSResult(long maxJitter, long meanJitter, long skew, long maxDelta, int outOfOrder, int minSequential, int maxSequential, Map<Integer, Float> jitterMap) {
+		public RtpQoSResult(long maxJitter, long meanJitter, long skew, long maxDelta,
+							int outOfOrder, int minSequential, int maxSequential,
+							int numberOfStalls, long avgStallTime,
+							Map<Integer, Float> jitterMap) {
 			this.jitterMap = jitterMap;
 			this.maxJitter = maxJitter;
 			this.meanJitter = meanJitter;
@@ -288,6 +306,8 @@ public class RtpUtil {
 			this.receivedPackets = jitterMap.size();
 			this.minSequential = minSequential > receivedPackets ? receivedPackets : minSequential;
 			this.maxSequencial = maxSequential > receivedPackets ? receivedPackets : maxSequential;
+			this.numberOfStalls = numberOfStalls;
+			this.avgStallTime = avgStallTime;
 		}
 
 		public Map<Integer, Float> getJitterMap() {
@@ -324,6 +344,14 @@ public class RtpUtil {
 
 		public int getMaxSequencial() {
 			return maxSequencial;
+		}
+
+		public int getNumberOfStalls() {
+			return numberOfStalls;
+		}
+
+		public long getAvgStallTime() {
+			return avgStallTime;
 		}
 
 		@Override

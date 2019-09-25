@@ -19,11 +19,20 @@ import Foundation
 import UIKit
 import WebKit
 
+protocol TermsAndConditionsDelegate: class {
+
+    func didAcceptTermsAndConditions()
+
+    //func didDeclineTermsAndConditions()
+}
+
 /// This view controller displays the Terms and Conditions.
 class TermsAndConditionsViewController: UIViewController {
 
     @IBOutlet var declineButtonItem: UIBarButtonItem?
     @IBOutlet var agreeButtonItem: UIBarButtonItem?
+
+    var delegate: TermsAndConditionsDelegate?
 
     ///
     override func viewDidLoad() {
@@ -44,15 +53,17 @@ class TermsAndConditionsViewController: UIViewController {
 
     /// Show a popup with an error message and options to retry or close the App.
     func showErrorPopup() {
-        let alert = UIAlertController(title: "Registration error", message: "Agent could not be registered, TODO: message", preferredStyle: .alert)
+        let alert = UIAlertController(
+            title: R.string.localizable.tosErrorRegistrationTitle(),
+            message: R.string.localizable.tosErrorRegistrationMessage(),
+            preferredStyle: .alert
+        )
 
-        // TODO: nslocalizedstring
-
-        alert.addAction(UIAlertAction(title: "Retry", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: R.string.localizable.tosErrorRegistrationRetry(), style: .default, handler: { _ in
             self.agree()
         }))
 
-        alert.addAction(UIAlertAction(title: "Close App", style: .destructive, handler: { _ in
+        alert.addAction(UIAlertAction(title: R.string.localizable.tosErrorRegistrationClose(), style: .destructive, handler: { _ in
             self.decline()
         }))
 
@@ -63,12 +74,13 @@ class TermsAndConditionsViewController: UIViewController {
     /// If successful, dismiss this screen to go to the start page.
     /// If there was an error, e.g. control service could not be reached, display an alert view asking the user to retry or close the App.
     @IBAction func agree() {
-        let progressAlert = UIAlertController.createLoadingAlert(title: "Registering agent")
+        let progressAlert = UIAlertController.createLoadingAlert(title: R.string.localizable.tosPopupRegistering())
         self.present(progressAlert, animated: true, completion: nil)
 
         MEASUREMENT_AGENT.register(success: {
             DispatchQueue.main.async {
                 progressAlert.dismiss(animated: true) {
+                    self.delegate?.didAcceptTermsAndConditions()
                     self.dismiss(animated: true, completion: nil)
                 }
             }

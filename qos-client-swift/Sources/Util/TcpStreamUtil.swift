@@ -59,6 +59,12 @@ class TcpStreamUtil: NSObject {
                 try evaluateControlFunc()
             }
         } catch {
+            if config.outgoing {
+                logger.error("Could not connect to host \(config.host) on port \(config.port)")
+            } else {
+                logger.error("Could not accept on port \(config.port)")
+            }
+
             return (.error, nil)
         }
 

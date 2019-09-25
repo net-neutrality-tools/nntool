@@ -1,16 +1,12 @@
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 // libs
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { CoreModule, PlatformLanguageToken, PlatformWindowToken } from '@nntool-typescript/core';
 import { throwIfAlreadyLoaded } from '@nntool-typescript/utils';
-import {
-  CoreModule,
-  PlatformLanguageToken,
-  PlatformWindowToken
-} from '@nntool-typescript/core';
 
 // bring in custom web services here...
 

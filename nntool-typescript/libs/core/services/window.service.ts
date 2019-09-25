@@ -1,16 +1,13 @@
-// angular
-import { Injectable, Inject, ViewContainerRef } from '@angular/core';
+import { Inject, Injectable, ViewContainerRef } from '@angular/core';
 
 // app
-import { isObject, isNativeScript } from '@nntool-typescript/utils';
+import { isObject } from '@nntool-typescript/utils';
 import { XPlatWindow } from '../models';
 import { PlatformWindowToken } from './tokens';
 
 @Injectable()
 export class WindowService {
-  constructor(
-    @Inject(PlatformWindowToken) private _platformWindow: XPlatWindow
-  ) {}
+  constructor(@Inject(PlatformWindowToken) private _platformWindow: XPlatWindow) {}
 
   public get navigator() {
     return this._platformWindow.navigator;
@@ -40,15 +37,9 @@ export class WindowService {
     });
   }
 
-  public confirm(
-    msg: any,
-    action?: Function /* used for fancyalerts on mobile*/
-  ): Promise<any> {
+  public confirm(msg: any, action?: () => void /* used for fancyalerts on mobile*/): Promise<any> {
     return new Promise((resolve, reject) => {
-      const result: any = (<any>this._platformWindow).confirm(
-        msg,
-        isNativeScript() ? action : undefined
-      );
+      const result: any = (this._platformWindow as any).confirm(msg, undefined);
       if (isObject(result) && result.then) {
         result.then(resolve, reject);
       } else if (result) {
@@ -59,10 +50,7 @@ export class WindowService {
     });
   }
 
-  public setTimeout(
-    handler: (...args: any[]) => void,
-    timeout?: number
-  ): number {
+  public setTimeout(handler: (...args: any[]) => void, timeout?: number): number {
     return this._platformWindow.setTimeout(handler, timeout);
   }
 
@@ -70,11 +58,7 @@ export class WindowService {
     return this._platformWindow.clearTimeout(timeoutId);
   }
 
-  public setInterval(
-    handler: (...args: any[]) => void,
-    ms?: number,
-    ...args: any[]
-  ): number {
+  public setInterval(handler: (...args: any[]) => void, ms?: number, ...args: any[]): number {
     return this._platformWindow.setInterval(handler, ms, args);
   }
 

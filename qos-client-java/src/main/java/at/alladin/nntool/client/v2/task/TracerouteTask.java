@@ -17,7 +17,9 @@
 package at.alladin.nntool.client.v2.task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -119,14 +121,11 @@ public class TracerouteTask extends AbstractQoSTask {
 	  		}
 	  		finally {
 	  			if (pingDetailList != null) {
-		  			JSONArray resultArray = new JSONArray();
+		  			List<Map<String, Object>> resultArray = new ArrayList<>();
 		  			for (final HopDetail p : pingDetailList) {
-		  				JSONObject json = p.toJson();
-		  				if (json != null) {
-		  					resultArray.put(json);
-		  				}
+		  				resultArray.add(p.toMap());
 		  			}
-		  			
+
 		  			testResult.getResultMap().put(RESULT_DETAILS, resultArray);
 	  			}
 	  		}

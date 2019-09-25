@@ -1,66 +1,65 @@
-import {GeoLocation} from '../api/request-info.api';
-import {PointInTimeValueAPI} from './point-in-time-value.api';
+import { GeoLocation } from '../api/request-info.api';
+import { PointInTimeValueAPI } from './point-in-time-value.api';
 
 export class MeasurementResultNetworkPointInTimeAPI {
-    /**
-     * Time and date the signal information was captured (UTC).
-     */
-    time: string;
+  /**
+   * Time and date the signal information was captured (UTC).
+   */
+  public time: string;
 
-    /**
-     * Relative time in nanoseconds (to test begin).
-     */
-    relative_time_ns: number;
+  /**
+   * Relative time in nanoseconds (to test begin).
+   */
+  public relative_time_ns: number;
 
-    /**
-     * Network type id as it gets returned by the Android API.
-     */
-    network_type_id: number;
+  /**
+   * Network type id as it gets returned by the Android API.
+   */
+  public network_type_id: number;
 
-// _ ProviderInfo
+  // _ ProviderInfo
 
-// _ NetworkWifiInfo
+  // _ NetworkWifiInfo
 
-    /**
-     * SSID of the network.
-     */
-    ssid: string;
+  /**
+   * SSID of the network.
+   */
+  public ssid: string;
 
-    /**
-     * BSSID of the network.
-     */
-    bssid: string;
+  /**
+   * BSSID of the network.
+   */
+  public bssid: string;
 
-// _ NetworkMobileInfo
+  // _ NetworkMobileInfo
 
-    /**
-     * The network operator country code (e.g. "AT"), if available.
-     */
-    network_country: string;
+  /**
+   * The network operator country code (e.g. "AT"), if available.
+   */
+  public network_country: string;
 
-    /**
-     * The MCC/MNC of the network operator, if available.
-     */
-    network_operator_mcc_mnc: string;
+  /**
+   * The MCC/MNC of the network operator, if available.
+   */
+  public network_operator_mcc_mnc: string;
 
-    /**
-     * The network operator name, if available.
-     */
-    network_operator_name: string;
+  /**
+   * The network operator name, if available.
+   */
+  public network_operator_name: string;
 
-    /**
-     * The SIM operator country code (e.g. "AT"), if available.
-     */
-    sim_country: string;
+  /**
+   * The SIM operator country code (e.g. "AT"), if available.
+   */
+  public sim_country: string;
 
-    /**
-     * The MCC/MNC of the SIM operator, if available.
-     */
-    sim_operator_mcc_mnc: string;
+  /**
+   * The MCC/MNC of the SIM operator, if available.
+   */
+  public sim_operator_mcc_mnc: string;
 
-    /**
-     * SIM operator name, if available.
-     */
-    sim_operator_name: string;
+  /**
+   * SIM operator name, if available.
+   */
+  public sim_operator_name: string;
 }
-

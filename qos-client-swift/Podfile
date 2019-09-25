@@ -9,9 +9,10 @@ inhibit_all_warnings!
 
 abstract_target 'All' do
   pod 'nntool-shared-swift', :path => '../nntool-shared-swift'
-  
+
   pod 'CocoaAsyncSocket', '~> 7.6.3'
   pod 'Alamofire', '~> 4.8.2'
+  pod 'WKWebViewWithURLProtocol', '~> 0.1.0'
 
   target 'QoSKit_iOS' do
 

@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -16,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
@@ -32,12 +33,16 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.disassoc
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse.SpeedMeasurementPeer;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
+import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
+import at.alladin.nettest.shared.server.helper.IpAddressMatcher;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ComputedNetworkPointInTime;
@@ -58,12 +63,15 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Provider;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ProviderInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.RoamingType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.DeviceRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.EmbeddedNetworkTypeRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
@@ -76,6 +84,8 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportMode
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.MeasurementAgentMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsResponseMapper;
+import at.alladin.nntool.shared.qos.TracerouteResult;
+import at.alladin.nntool.shared.qos.TracerouteResult.PathElement;
 
 /**
  * 
@@ -85,7 +95,6 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsRespon
 @Service
 public class CouchDbStorageService implements StorageService {
 	
-	@SuppressWarnings("unused")
 	private final Logger logger = LoggerFactory.getLogger(CouchDbStorageService.class);
 
 	@Autowired
@@ -113,7 +122,7 @@ public class CouchDbStorageService implements StorageService {
 	private QoSEvaluationService qosEvaluationService;
 	
 	@Autowired
-	private DetailMeasurementService detailMeasurementService;
+	private GroupedMeasurementService groupedMeasurementService;
 	
 	@Autowired
 	private LmapReportModelMapper lmapReportModelMapper;
@@ -135,6 +144,9 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private ProviderService providerService;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	/*
 	 * (non-Javadoc)
@@ -183,6 +195,34 @@ public class CouchDbStorageService implements StorageService {
 		}
 
 		calculateTotalMeasurementPayload(measurement);
+		
+		//add speed server (if not already present)
+		final Map<MeasurementTypeDto, SubMeasurement> measurements = measurement.getMeasurements();
+		if (measurements != null && measurements.containsKey(MeasurementTypeDto.SPEED)) {
+			if (lmapReportDto != null && lmapReportDto.getResults() != null && lmapReportDto.getResults().size() > 0) {
+				SpeedMeasurementResult lmapResult = null;
+				for (SubMeasurementResult resultDto : lmapReportDto.getResults().get(0).getResults()) {
+					if (resultDto instanceof SpeedMeasurementResult) {
+						lmapResult = (SpeedMeasurementResult) resultDto;
+						break;
+					}
+				}
+				
+				if (lmapResult != null && lmapResult.getConnectionInfo() != null && lmapResult.getConnectionInfo().getIdentifier() != null) {
+					final SpeedMeasurement result = (SpeedMeasurement) measurement.getMeasurements().get(MeasurementTypeDto.SPEED);
+					if (result.getConnectionInfo() == null) {
+						result.setConnectionInfo(new ConnectionInfo());
+					}
+					final MeasurementServer server = measurementPeerRepository.findByPublicIdentifier(lmapResult.getConnectionInfo().getIdentifier());
+					if (server != null) {
+						result.getConnectionInfo().setIpAddress(server.getAddressIpv4());
+						result.getConnectionInfo().setPort(server.getPortTls() != null ? server.getPortTls() : server.getPort());
+					}
+				}
+			}
+		}
+		
+    doAdvancedQosEvaluations(measurement);
 
 		try {
 			measurementRepository.save(measurement);
@@ -363,9 +403,12 @@ public class CouchDbStorageService implements StorageService {
 	public DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid, String measurementUuid, final String settingsUuid, final Locale locale) throws StorageServiceException {
 		final Measurement measurement = obtainMeasurement(measurementAgentUuid, measurementUuid);
 		//TODO: default settings?
-		final Settings settings = settingsRepository.findByUuid(settingsUuid);
-		return detailMeasurementService.groupResult(measurement, settings.getSpeedtestDetailGroups(),
-				Locale.ENGLISH, 10000);//detailMeasurementResponseMapper.map(measurement);
+		final Settings settings = settingsRepository.findByUuid(settingsUuid); // TODO: cache
+		
+		final FullMeasurementResponse fullMeasurementResponse = fullMeasurementResponseMapper.map(measurement);
+		
+		return groupedMeasurementService.groupResult(fullMeasurementResponse, settings.getSpeedtestDetailGroups(),
+				locale, 10000);
 	}
 	
 	@Override
@@ -549,7 +592,7 @@ public class CouchDbStorageService implements StorageService {
 		catch (final UnknownHostException e) {
 			e.printStackTrace();
 		}
-
+		
 		//reverse DNS:
         String reverseDNS = Helperfunctions.reverseDNSLookup(clientAddress);
         if (reverseDNS != null) {
@@ -614,5 +657,42 @@ public class CouchDbStorageService implements StorageService {
 			return ret;
 		}
 		return null;
+	}
+
+	/**
+	 * does advanced evaluations on QoS results.
+	 * @param measurement
+	 */
+	private void doAdvancedQosEvaluations(final Measurement measurement) {
+		if (measurement.getMeasurements() == null) {
+			return;
+		}
+		
+		QoSMeasurement qosMeasurement = (QoSMeasurement) measurement.getMeasurements().get(MeasurementTypeDto.QOS);
+		if (qosMeasurement == null) {
+			return;
+		}
+		
+		if (measurement.getNetworkInfo() != null) {
+
+			//check for CGN by matching IP addresses from traceroute test (see RFC 6598)
+			IpAddressMatcher matcher = new IpAddressMatcher("100.64.0.0/10");
+			boolean isCgnCheckFinished = false;
+
+			for (QoSResult qos : qosMeasurement.getResults()) {
+				if (!isCgnCheckFinished && QoSMeasurementType.TRACEROUTE.equals(qos.getType())) {
+					TracerouteResult result = objectMapper.convertValue(qos.getResults(), TracerouteResult.class);
+					if (result.getResultEntries() != null) {
+						for (PathElement path : result.getResultEntries()) {
+							if (matcher.matches(path.getHost())) {
+								isCgnCheckFinished = true;
+								measurement.getNetworkInfo().setIsCgnDetected(true);
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }

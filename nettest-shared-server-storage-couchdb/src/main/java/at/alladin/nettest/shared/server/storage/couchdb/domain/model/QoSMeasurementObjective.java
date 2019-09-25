@@ -124,7 +124,7 @@ public class QoSMeasurementObjective {
 	@Expose
 	@SerializedName("evaluations")
 	@JsonProperty("evaluations")
-	private List<Map<String, String>> evaluations;
+	private List<Map<String, Object>> evaluations;
 	
 	public String getId() {
 		return id;
@@ -206,11 +206,11 @@ public class QoSMeasurementObjective {
 		this.parameters = parameters;
 	}
 
-	public List<Map<String, String>> getEvaluations() {
+	public List<Map<String, Object>> getEvaluations() {
 		return evaluations;
 	}
 
-	public void setEvaluations(List<Map<String, String>> evaluations) {
+	public void setEvaluations(List<Map<String, Object>> evaluations) {
 		this.evaluations = evaluations;
 	}
 

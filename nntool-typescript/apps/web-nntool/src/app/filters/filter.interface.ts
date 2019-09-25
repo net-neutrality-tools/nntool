@@ -1,6 +1,6 @@
 export interface Filter {
-    type: string;
+  type: string;
 
-    // Translatable string or direct output
-    name: string;
+  // Translatable string or direct output
+  name: string;
 }

@@ -1,5 +1,7 @@
 package at.alladin.nettest.service.search.web.api.v1;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,12 +21,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import at.alladin.nettest.service.search.service.SearchService;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiPagination;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeneralMeasurementTypeDto;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
 import at.alladin.nettest.shared.server.helper.swagger.ApiPageable;
+import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
+import at.alladin.nettest.shared.server.service.SpeedtestDetailGroup;
 import io.swagger.annotations.ApiParam;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -43,6 +51,12 @@ public class MeasurementSearchResource {
 	
 	@Autowired
 	private SearchService searchService;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
+	
+	@Autowired
+	private GroupedMeasurementService groupedMeasurementService;
 	
 	/**
 	 * Retrieve a paginated and searched list of open-data measurements.
@@ -89,5 +103,131 @@ public class MeasurementSearchResource {
 		// TODO: remove measurement types not included in includedMeasurementTypes!
 		
 		return ResponseHelper.ok(searchService.findOneByOpenDataUuid(openDataUuid));
+	}
+	
+	/**
+	 * Get details of an open-data measurement.
+	 * Returns the measurement details, either in grouped or plain form.
+	 *
+	 * @param agentUuid
+	 * @param uuid
+	 * @return
+	 */
+	@io.swagger.annotations.ApiOperation(value = "Get details of an open-data measurement.", notes = "Returns the measurement details, either in grouped or plain form.")
+	@io.swagger.annotations.ApiResponses({
+		@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ApiResponse.class),
+		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
+	})
+	@GetMapping(value = "/{openDataUuid:[^\\\\.]+}/details", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<ApiResponse<DetailMeasurementResponse>> getMeasurementDetails(@ApiParam(value = "The open-data UUID", required = true) @PathVariable String openDataUuid, Locale locale) {
+		
+		// TODO: hardcoded until we have settings in Elasticsearch
+		final String groupSettings = "[\n" + 
+		"    {\n" + 
+		"      \"key\": \"group_overview\",\n" + 
+		"      \"icon\": \"r\",\n" + 
+		"      \"values\": [\n" + 
+		"        {\n" + 
+		"          \"key\": \"speed.rttInfo.averageNs\",\n" + 
+		"          \"format\": \"DIV_1E6\",\n" + 
+		"          \"unit\": \"ms\",\n" + 
+		"          \"translation_key\": \"translate_ping\",\n" + 
+		"          \"share_text\": \"share_ping {}\",\n" + 
+		"          \"share_priority\": 3\n" + 
+		"        },\n" + 
+		"        {\n" + 
+		"          \"key\": \"speed.throughputAvgDownloadBps\",\n" + 
+		"          \"unit\": \"Mbps\",\n" + 
+		"          \"format\": \"DIV_1E6\",\n" + 
+		"          \"translation_key\": \"translate_down\",\n" + 
+		"          \"share_text\": \"share_download {}\",\n" + 
+		"          \"share_priority\": 1\n" + 
+		"        },\n" + 
+		"        {\n" + 
+		"          \"key\": \"speed.throughputAvgUploadBps\",\n" + 
+		"          \"unit\": \"Mbps\",\n" + 
+		"          \"format\": \"DIV_1E6\",\n" + 
+		"          \"translation_key\": \"translate_up\",\n" + 
+		"          \"share_text\": \"share_upload {}\",\n" + 
+		"          \"share_priority\": 2\n" + 
+		"        },\n" + 
+		"        {\n" + 
+		"          \"key\": \"openDataUuid\",\n" + 
+		"          \"translation_key\": \"uuid\"\n" + 
+		"        },\n" + 
+		"        {\n" + 
+		"          \"key\": \"systemUuid\",\n" + 
+		"          \"translation_key\": \"measurement_system_uuid\",\n" + 
+		"          \"share_text\": \"share_system {}\",\n" + 
+		"          \"share_priority\": 5\n" + 
+		"        }\n" + 
+		"      ]\n" + 
+		"    },\n" + 
+		"    {\n" + 
+		"      \"key\": \"group_device\",\n" + 
+		"      \"icon\": \"b\",\n" + 
+		"      \"values\": [\n" + 
+		"        {\n" + 
+		"          \"key\": \"deviceInfo.osInfo.name\",\n" + 
+		"          \"translation_key\": \"translate_osName\"\n" + 
+		"        },\n" + 
+		"        {\n" + 
+		"          \"key\": \"deviceInfo.osInfo.version\",\n" + 
+		"          \"translation_key\": \"translate_version\"\n" + 
+		"        },\n" + 
+		"        {\n" + 
+		"          \"key\": \"deviceInfo.codeName\",\n" + 
+		"          \"translation_key\": \"translate_codename\"\n" + 
+		"        },\n" + 
+		"        {\n" + 
+		"          \"key\": \"deviceInfo.model\",\n" + 
+		"          \"translation_key\": \"translate_model\"\n" + 
+		"        },\n" + 
+		"        {\n" + 
+		"          \"key\": \"agentInfo.timezone\",\n" + 
+		"          \"translation_key\": \"translate_timezone\"\n" + 
+		"        },\n" + 
+		"        {\n" + 
+		"          \"key\": \"geoLocationInfo.distanceMovedMetres\",\n" + 
+		"          \"translation_key\": \"translate_distMetres\",\n" + 
+		"          \"unit\": \"m\"\n" + 
+		"        }\n" + 
+		"      ]\n" + 
+		"    },\n" + 
+		"    {\n" + 
+		"      \"key\": \"group_speed_connectivity\",\n" + 
+		"      \"icon\": \"ú\",\n" + 
+		"      \"values\": [\n" + 
+		"        {\n" + 
+		"          \"key\": \"speed.connectionInfo.address\",\n" + 
+		"          \"translation_key\": \"address\",\n" + 
+		"          \"share_text\": \"share_address {}\"\n" + 
+		"        },\n" + 
+		"        {\n" + 
+		"          \"key\": \"speed.connectionInfo.port\",\n" + 
+		"          \"translation_key\": \"port\"\n" + 
+		"        },\n" + 
+		"        {\n" + 
+		"          \"key\": \"speed.connectionInfo.encrypted\",\n" + 
+		"          \"translation_key\": \"encryption\"\n" + 
+		"        }\n" + 
+		"      ]\n" + 
+		"    }\n" + 
+		"  ]";
+		
+		List<SpeedtestDetailGroup> groupStructure = null;
+		
+		try {
+			groupStructure = objectMapper.readValue(groupSettings, new TypeReference<List<SpeedtestDetailGroup>>() {});
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+		
+		final Map<String, Object> measurementAsMap = searchService.findOneByOpenDataUuid(openDataUuid);
+		if (measurementAsMap == null) {
+			throw new RuntimeException("Measurement with openDataUuid " + openDataUuid + " not found");
+		}
+		
+		return ResponseHelper.ok(groupedMeasurementService.groupResult(measurementAsMap, groupStructure, locale, 10000)); // TODO: config
 	}
 }

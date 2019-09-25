@@ -1,3 +1,3 @@
 export enum PortBlockingTestTypeEnum {
-    UDP = 'UDP'
+  UDP = 'UDP'
 }

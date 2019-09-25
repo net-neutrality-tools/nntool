@@ -45,8 +45,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.OperatingSyst
  * @author alladin-IT GmbH (bp@alladin.at)
  *
  */
-@Configuration
-@Profile("dev")
+//@Configuration
+//@Profile("dev")
 public class DevelopmentDataConfiguration {
 
 	private static final Logger logger = LoggerFactory.getLogger(DevelopmentDataConfiguration.class);

@@ -43,10 +43,17 @@ public struct InterfaceTraffic {
             return
         }
 
-        tx += other.tx
-        rx += other.rx
+        if UInt64(tx) + UInt64(other.tx) > UInt64(UInt32.max) {
+            tx = UInt32(UInt64(tx) + UInt64(other.tx) - UInt64(UInt32.max))
+        } else {
+            tx += other.tx
+        }
 
-        // TODO: overflow of UInt32 could happen (use UInt64 internally)
+        if UInt64(rx) + UInt64(other.rx) > UInt64(UInt32.max) {
+            rx = UInt32(UInt64(rx) + UInt64(other.rx) - UInt64(UInt32.max))
+        } else {
+            rx += other.rx
+        }
     }
 
     public func differenceTo(_ previous: InterfaceTraffic) -> InterfaceTraffic {
@@ -143,10 +150,17 @@ public class InterfaceTrafficInfo {
             return nil
         }
 
-        return InterfaceTraffic(
-            tx: currentValues.wwan.tx + currentValues.wifi.tx,
-            rx: currentValues.wwan.rx + currentValues.wifi.rx
+        var i = InterfaceTraffic(
+            tx: currentValues.wwan.tx,
+            rx: currentValues.wwan.rx
         )
+
+        i.append(InterfaceTraffic(
+            tx: currentValues.wifi.tx,
+            rx: currentValues.wifi.rx
+        ))
+
+        return i
     }
 
     public class func getNetworkInterfaceTrafficDifferenceByCategory(_ lastValues: InterfaceCategoryTraffic) -> InterfaceCategoryTraffic? {

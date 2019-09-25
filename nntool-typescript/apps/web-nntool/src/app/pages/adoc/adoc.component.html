@@ -1,0 +1,8 @@
+<nntool-section-intro>
+  <div
+    class="section-content"
+    [id]="key.toLowerCase()"
+    [hidden]="loading"
+    [innerHtml]="'STATIC.' + key.toUpperCase() | translate | insecureSanitizeHtml: key"
+  ></div>
+</nntool-section-intro>

@@ -1,10 +1,8 @@
-import {MeasurementTypeParameters} from '../../lmap/models/shared/lmap-option.model';
+import { MeasurementTypeParameters } from '../../@core/models/lmap/models/shared/lmap-option.model';
 
 export class MeasurementSettings {
-
-    speedConfig: MeasurementTypeParameters;
-    serverPort: string;
-    serverAddress: string;
-    collectorAddress: string;
+  public speedConfig: MeasurementTypeParameters;
+  public serverPort: string;
+  public serverAddress: string;
+  public collectorAddress: string;
 }
-

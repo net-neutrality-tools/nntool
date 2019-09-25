@@ -16,8 +16,7 @@
 
 package at.alladin.nntool.shared.qos;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 
@@ -43,32 +42,25 @@ import com.google.gson.annotations.SerializedName;
  */
 public class TcpResult extends AbstractResult {
 
-	@SerializedName("tcp_result_in")
-	@Expose
+	@JsonProperty("tcp_result_in")
 	private String inResult;
 
-	@SerializedName("tcp_objective_in_port")
-	@Expose
+	@JsonProperty("tcp_objective_in_port")
 	private Integer inPort;
 
-	@SerializedName("tcp_result_in_response")
-	@Expose
+	@JsonProperty("tcp_result_in_response")
 	private String inResponse;
 	
-	@SerializedName("tcp_result_out")
-	@Expose
+	@JsonProperty("tcp_result_out")
 	private String outResult;
 	
-	@SerializedName("tcp_objective_out_port")
-	@Expose
+	@JsonProperty("tcp_objective_out_port")
 	private Integer outPort;
 
-	@SerializedName("tcp_result_out_response")
-	@Expose
+	@JsonProperty("tcp_result_out_response")
 	private String outResponse;
 
-	@SerializedName("tcp_objective_timeout")
-	@Expose
+	@JsonProperty("tcp_objective_timeout")
 	private Long timeout;
 
 	/**

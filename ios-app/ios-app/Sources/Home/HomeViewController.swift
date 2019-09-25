@@ -39,7 +39,7 @@ class HomeViewController: CustomNavigationBarViewController {
     private let locationTracker = LocationTracker()
 
     private var ipInfo: IPConnectivityInfo?
-    private var reachability: Reachability?
+    private var reachability: NetworkInfoReachability?
 
     private var timer: Repeater?
     private var ipTimer: Repeater?
@@ -61,12 +61,6 @@ class HomeViewController: CustomNavigationBarViewController {
         }
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        deviceInfoView?.reset()
-    }
-
     ///
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -76,7 +70,36 @@ class HomeViewController: CustomNavigationBarViewController {
             return
         }
 
-        // load measurement peer list
+        loadMeasurementPeers()
+        start()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        stop()
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else {
+            return
+        }
+
+        switch identifier {
+        case R.segue.homeViewController.present_modally_terms_and_conditions.identifier:
+            ((segue.destination as? UINavigationController)?.viewControllers.first as? TermsAndConditionsViewController)?.delegate = self
+        case R.segue.homeViewController.embed_current_measurement_peer.identifier:
+            currentMeasurementPeerTableViewController = segue.destination as? CurrentMeasurementPeerTableViewController
+        case R.segue.homeViewController.show_speed_measurement_view_controller.identifier:
+            if let measurementViewController = segue.destination as? MeasurementViewController {
+                measurementViewController.preferredSpeedMeasurementPeer = currentMeasurementPeerTableViewController?.selectedMeasurementPeer
+            }
+        default: break
+        }
+    }
+
+    /// Load measurement peer list.
+    private func loadMeasurementPeers() {
         if currentMeasurementPeerTableViewController?.measurementPeers == nil {
             MEASUREMENT_AGENT.getSpeedMeasurementPeers(onSuccess: { peers in
                 logger.debug(peers)
@@ -98,6 +121,10 @@ class HomeViewController: CustomNavigationBarViewController {
                 }
             })
         }
+    }
+
+    private func start() {
+        deviceInfoView?.reset()
 
         // TODO: display error message if location permission is not granted
         locationTracker.start(updateLocationCallback: { location in
@@ -111,49 +138,14 @@ class HomeViewController: CustomNavigationBarViewController {
 
         updateIpInfo()
 
-        reachability = try? Reachability()
-        reachability?.whenReachable = { r in
-            self.updateIpInfo()
-
-            var networkTypeString: String?
-            var networkDetailString: String?
-
-            switch r.connection {
-            case .wifi:
-                let (ssid, _) = NetworkInfo.getWifiInfo()
-
-                #if targetEnvironment(simulator)
-                networkTypeString = "Simulator Network"
-                #else
-                networkTypeString = ssid ?? "Unknown"
-                #endif
-
-                networkDetailString = "WiFi"
-            case .cellular:
-                let telephonyNetworkInfo = CTTelephonyNetworkInfo()
-                let carrier = telephonyNetworkInfo.subscriberCellularProvider
-
-                networkTypeString = carrier?.carrierName
-
-                if  let mcc = carrier?.mobileCountryCode,
-                    let mnc = carrier?.mobileNetworkCode,
-                    let currentRadioAccessTechnology = telephonyNetworkInfo.currentRadioAccessTechnology,
-                    let cellularNetworkDisplayName = NetworkInfo.getCellularNetworkTypeDisplayName(currentRadioAccessTechnology) {
-
-                    networkDetailString = "\(cellularNetworkDisplayName), \(mcc)-\(mnc)"
-                }
-            default:
-                break
-            }
-
+        reachability = NetworkInfoReachability(whenReachable: { (type, details) in
             DispatchQueue.main.async {
                 self.speedMeasurementGaugeView?.isStartButtonEnabled = true
 
-                self.speedMeasurementGaugeView?.networkTypeLabel?.text = networkTypeString
-                self.speedMeasurementGaugeView?.networkDetailLabel?.text = networkDetailString
+                self.speedMeasurementGaugeView?.networkTypeLabel?.text = type
+                self.speedMeasurementGaugeView?.networkDetailLabel?.text = details
             }
-        }
-        reachability?.whenUnreachable = { r in
+        }, whenUnreachable: {
             self.updateIpInfo()
 
             DispatchQueue.main.async {
@@ -162,9 +154,8 @@ class HomeViewController: CustomNavigationBarViewController {
                 self.speedMeasurementGaugeView?.networkTypeLabel?.text = "Unknown"
                 self.speedMeasurementGaugeView?.networkDetailLabel?.text = "No connection"
             }
-        }
-
-        try? reachability?.startNotifier()
+        })
+        reachability?.start()
 
         ipTimer = Repeater.every(.seconds(30)) { _ in
             self.updateIpInfo()
@@ -177,37 +168,19 @@ class HomeViewController: CustomNavigationBarViewController {
         }
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
+    private func stop() {
         locationTracker.stop()
 
         timer?.removeAllObservers(thenStop: true)
         timer = nil
 
-        reachability?.stopNotifier()
+        reachability?.stop()
         reachability = nil
 
         ipTimer?.removeAllObservers(thenStop: true)
         ipTimer = nil
 
         ipInfo = nil
-    }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let identifier = segue.identifier else {
-            return
-        }
-
-        switch identifier {
-        case R.segue.homeViewController.embed_current_measurement_peer.identifier:
-            currentMeasurementPeerTableViewController = segue.destination as? CurrentMeasurementPeerTableViewController
-        case R.segue.homeViewController.show_speed_measurement_view_controller.identifier:
-            if let measurementViewController = segue.destination as? MeasurementViewController {
-                measurementViewController.preferredSpeedMeasurementPeer = currentMeasurementPeerTableViewController?.selectedMeasurementPeer
-            }
-        default: break
-        }
     }
 
     func displayPreMeasurementWarningAlert() {
@@ -293,5 +266,12 @@ class HomeViewController: CustomNavigationBarViewController {
             label?.icon = icon
             label?.textColor = color
         }
+    }
+}
+
+extension HomeViewController: TermsAndConditionsDelegate {
+
+    func didAcceptTermsAndConditions() {
+        start()
     }
 }

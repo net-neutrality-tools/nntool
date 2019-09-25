@@ -16,8 +16,7 @@
 
 package at.alladin.nntool.shared.qos;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import at.alladin.nntool.shared.qos.util.SipTaskHelper;
 
@@ -26,60 +25,46 @@ import at.alladin.nntool.shared.qos.util.SipTaskHelper;
  */
 public class SipResult extends AbstractResult {
 
-	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_PORT)
-	@Expose
+	@JsonProperty(SipTaskHelper.PARAM_OBJECTIVE_PORT)
 	private Integer port;
 
-	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_TIMEOUT)
-	@Expose
+	@JsonProperty(SipTaskHelper.PARAM_OBJECTIVE_TIMEOUT)
 	private Long timeout;
 
-	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_COUNT)
-	@Expose
+	@JsonProperty(SipTaskHelper.PARAM_OBJECTIVE_COUNT)
 	private Long count;
 
-	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_CALL_DURATION)
-	@Expose
+	@JsonProperty(SipTaskHelper.PARAM_OBJECTIVE_CALL_DURATION)
 	private Long callDuration;
 
-	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_TO)
-	@Expose
+	@JsonProperty(SipTaskHelper.PARAM_OBJECTIVE_TO)
 	private String objectiveTo;
 	
-	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_FROM)
-	@Expose
+	@JsonProperty(SipTaskHelper.PARAM_OBJECTIVE_FROM)
 	private String objectivefrom;
 
-	@SerializedName(SipTaskHelper.PARAM_OBJECTIVE_VIA)
-	@Expose
+	@JsonProperty(SipTaskHelper.PARAM_OBJECTIVE_VIA)
 	private String objectiveVia;
 	
-	@SerializedName(SipTaskHelper.PARAM_RESULT_TO)
-	@Expose
+	@JsonProperty(SipTaskHelper.PARAM_RESULT_TO)
 	private String resultTo;
 	
-	@SerializedName(SipTaskHelper.PARAM_RESULT_FROM)
-	@Expose
+	@JsonProperty(SipTaskHelper.PARAM_RESULT_FROM)
 	private String resultFrom;
 
-	@SerializedName(SipTaskHelper.PARAM_RESULT_VIA)
-	@Expose
+	@JsonProperty(SipTaskHelper.PARAM_RESULT_VIA)
 	private String resultVia;
 
-	@SerializedName(SipTaskHelper.PARAM_RESULT)
-	@Expose
+	@JsonProperty(SipTaskHelper.PARAM_RESULT)
 	private String result;
 	
-	@SerializedName(SipTaskHelper.PARAM_RESULT_CCSR)
-	@Expose	
+	@JsonProperty(SipTaskHelper.PARAM_RESULT_CCSR)	
 	private Double callCompletionSuccessRate;
 
-	@SerializedName(SipTaskHelper.PARAM_RESULT_CSSR)
-	@Expose	
+	@JsonProperty(SipTaskHelper.PARAM_RESULT_CSSR)	
 	private Double callSetupSuccessRate;
 
-	@SerializedName(SipTaskHelper.PARAM_RESULT_DCR)
-	@Expose	
+	@JsonProperty(SipTaskHelper.PARAM_RESULT_DCR)	
 	private Double callDroppedCallRate;
 
 	/**

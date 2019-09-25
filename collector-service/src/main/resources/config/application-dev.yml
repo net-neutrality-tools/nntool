@@ -24,6 +24,8 @@ spring:
         create-if-not-exists: true
         entities:
           - QoSMeasurementObjective
+          - Translation
+          - MeasurementServer
           - Settings
           - Device
           - Provider
