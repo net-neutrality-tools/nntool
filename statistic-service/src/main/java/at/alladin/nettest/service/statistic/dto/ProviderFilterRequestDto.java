@@ -13,7 +13,7 @@ import com.google.gson.annotations.SerializedName;
  * @author lb
  *
  */
-public class MeasurementFilterRequestDto {
+public class ProviderFilterRequestDto {
 	
 	@JsonPropertyDescription("Contains the selected filters as a key/value map.")
 	@Expose

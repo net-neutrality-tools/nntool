@@ -15,7 +15,7 @@ import at.alladin.nettest.service.statistic.dto.filter.BasicFilterDto;
  * @author lb
  *
  */
-public class MeasurementFilterResponseDto {
+public class ProviderFilterResponseDto {
 
 	@JsonPropertyDescription("Contains the a list with pre-configured filter elements including default values.")
 	@Expose
