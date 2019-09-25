@@ -21,6 +21,10 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: spring_boot_version
 
     testImplementation group: 'junit', name: 'junit', version: junit_version
+    
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-csv
+	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-csv', version: jackson_version
+    
     //testImplementation group: 'org.mockito', name: 'mockito-core'
     //testImplementation group: 'org.hamcrest', name: 'hamcrest-library'
     //testImplementation group: 'com.jayway.jsonpath', name: 'json-path'

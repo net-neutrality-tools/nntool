@@ -19,6 +19,7 @@ import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServ
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgent;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgentType;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.DeviceRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.EmbeddedNetworkTypeRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
@@ -90,6 +91,9 @@ public class CouchDbStorageServiceMockitTest {
 
 	@Mocked @Injectable
 	private ProviderRepository providerRepository;
+	
+	@Mocked @Injectable
+	private DeviceRepository deviceRepository;
 
 	private LmapReportDto lmapReportDto; 
 	
