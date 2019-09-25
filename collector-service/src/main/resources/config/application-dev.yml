@@ -27,7 +27,9 @@ spring:
           - Translation
           - MeasurementServer
           - Settings
+          - Device
           - Provider
+          - Translation
           - EmbeddedNetworkType
 
   #datasource:

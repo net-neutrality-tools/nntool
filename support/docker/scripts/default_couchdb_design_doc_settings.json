@@ -6,6 +6,10 @@
     },
     "provider_by_mccmnc": {
       "map": "function(doc) { \n    if (doc.doctype == 'Provider') {\n    \tif (doc.mcc_mnc_mappings.length > 0) {\n    \t\tfor (var i in doc.mcc_mnc_mappings) {\n    \t\t\tvar mapping = doc.mcc_mnc_mappings[i];\n    \t\t\t\n    \t\t\tvar sim = mapping.sim_mcc_mnc;\n    \t\t\tvar net = mapping.network_mcc_mnc;\n    \t\t\t\n    \t\t\tif (net)\n    \t\t\t\temit([sim.mcc, sim.mnc, net.mcc, net.mnc], null);\n    \t\t\telse\n    \t\t\t\temit([sim.mcc, sim.mnc], null);\n    \t\t}\n    \t}\n    }\n}\n"
+    },
+    "by_device": {
+      "map": "function (doc) {\n  if (doc.docType === \"Device\") {\n     emit(doc._id, 1); \n  }\n}",
+      "reduce": "_count"
     }
   },
   "language": "javascript"
