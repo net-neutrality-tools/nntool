@@ -14,6 +14,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.R
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
+import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgent;
@@ -64,7 +65,7 @@ public class CouchDbStorageServiceMockitTest {
 	private EmbeddedNetworkTypeRepository embeddedNetworkTypeRepository;
 	
 	@Mocked @Injectable
-	private DetailMeasurementService detailMeasurementService;
+	private GroupedMeasurementService groupedMeasurementService;
 	
 	@Mocked @Injectable
 	private QoSEvaluationService qosEvaluationService;
@@ -120,14 +121,13 @@ public class CouchDbStorageServiceMockitTest {
 	}
 	
 	@Test(expected = StorageServiceException.class)
-	public void saveWithInvalidAgentUuidTest_ThrowsStorageServiceException () {
+	public void saveWithInvalidAgentUuidTest_ThrowsStorageServiceException() {
 		lmapReportDto.setAgentId(null);
 		couchDbStorageService.save(lmapReportDto);
 	}
 	
 	@Test
-	public void saveValidTest_callsSaveAndReturnsUuids () {
-		
+	public void saveValidTest_callsSaveAndReturnsUuids() {
 		new Expectations() {{
 			measurementRepository.save((Measurement) any);
 			times = 1;
@@ -153,8 +153,7 @@ public class CouchDbStorageServiceMockitTest {
 	}
 	
 	@Test
-	public void saveValidTestWithSystemUuid_callsSaveReturnsUuidsAndStoresCorrectSystemUuid () {
-		
+	public void saveValidTestWithSystemUuid_callsSaveReturnsUuidsAndStoresCorrectSystemUuid() {
 		new Expectations() {{
 			measurementRepository.save((Measurement) any);
 			times = 1;
@@ -171,7 +170,6 @@ public class CouchDbStorageServiceMockitTest {
 			
 			lmapReportModelMapper.map((LmapReportDto) any);
 			result = new Measurement();
-			
 		}};
 		
 		final MeasurementResultResponse response = couchDbStorageService.save(lmapReportDto, SYSTEM_UUID);

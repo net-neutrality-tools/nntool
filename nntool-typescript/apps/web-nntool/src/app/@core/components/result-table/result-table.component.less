@@ -1,0 +1,85 @@
+// COLOR DEFINITION // TODO: use from main less files
+@pitch-black: rgb(41, 40, 41);
+@white: rgb(255, 255, 255);
+@red: rgb(146, 31, 86);
+@yellow: rgb(255, 200, 0);
+@green: rgb(13, 171, 0);
+@light-grey: rgb(241, 241, 241);
+
+:host /deep/ ng2-smart-table {
+  font-size: 1.6rem;
+  width: 100%;
+}
+
+:host /deep/ ng2-smart-table table tr th {
+  border-bottom: solid 1px @red;
+}
+
+:host /deep/ ng2-smart-table table tr td {
+  font-size: 1.6rem;
+  padding: 0;
+}
+
+:host /deep/ ng2-smart-table-title {
+  color: @pitch-black;
+}
+
+:host /deep/ ng2-smart-table-title a {
+  color: @red;
+}
+
+:host /deep/ ng2-smart-table tr > th {
+  font-weight: 700;
+  font-family: 'museo-sans', sans-serif;
+  font-feature-settings: 'onum' 1;
+  vertical-align: top;
+  padding: 0;
+}
+
+:host /deep/ ng2-smart-table tr > td {
+  border-bottom: solid 1px #d0d0d0;
+  vertical-align: top;
+  position: relative;
+  padding: 0;
+  cursor: pointer;
+}
+
+:host /deep/ ng2-smart-table tr > td:nth-child(3),
+:host /deep/ ng2-smart-table tr > td:nth-child(4),
+:host /deep/ ng2-smart-table tr > td:nth-child(5) {
+  text-align: right;
+}
+
+:host /deep/ ng2-smart-table table tr:nth-child(even) td {
+  background-color: @light-grey;
+}
+
+// ----
+
+:host /deep/ ng2-smart-table nav {
+  //background-color: @red;
+  margin: 0 auto;
+  margin-top: 1em;
+}
+
+//
+
+// :host /deep/ a.ng2-smart-page-link.page-link {
+// }
+// /* selected paging number */
+// :host /deep/ span.ng2-smart-page-link.page-link {
+// }
+// :host /deep/ span.ng2-smart-page-item.page-item.disabled {
+// }
+// /* previous paging button */
+// :host /deep/ a.ng2-smart-page-link.page-link.page-link-prev {
+// }
+// /* previous paging button disabled */
+// :host /deep/ span.ng2-smart-page-link.page-link.page-link-prev.disabled {
+// }
+// /* next paging button */
+// :host /deep/ a.ng2-smart-page-link.page-link.page-link-next {
+// }
+// /* next paging button */
+// :host /deep/ span.ng2-smart-page-link.page-link.page-link-next.disabled {
+// }

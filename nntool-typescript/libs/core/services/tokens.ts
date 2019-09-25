@@ -6,9 +6,5 @@ import { IXPlatWindow } from '../models';
  * Always suffix with 'Token' for clarity and consistency
  */
 
-export const PlatformLanguageToken = new InjectionToken<string>(
-  'PlatformLanguageToken'
-);
-export const PlatformWindowToken = new InjectionToken<IXPlatWindow>(
-  'PlatformWindowToken'
-);
+export const PlatformLanguageToken = new InjectionToken<string>('PlatformLanguageToken');
+export const PlatformWindowToken = new InjectionToken<IXPlatWindow>('PlatformWindowToken');

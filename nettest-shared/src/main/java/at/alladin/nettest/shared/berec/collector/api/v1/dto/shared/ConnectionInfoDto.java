@@ -27,6 +27,16 @@ public class ConnectionInfoDto {
 	@SerializedName("address")
 	@JsonProperty(required = true, value = "address")
 	private String address;
+	
+	/**
+	 * The identifier of the measurement server.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "The identifier of the measurement server.")
+	@JsonPropertyDescription("The identifier of the measurement server.")
+	@Expose
+	@SerializedName("identifier")
+	@JsonProperty(required = true, value = "identifier")
+	private String identifier;
 
 	/**
 	 * The ip address of the measurement server (can be either v4 or v6).
@@ -344,4 +354,29 @@ public class ConnectionInfoDto {
 	public void setIpAddress(String ipAddress) {
 		this.ipAddress = ipAddress;
 	}
+
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
+
+	@Override
+	public String toString() {
+		return "ConnectionInfoDto [address=" + address + ", identifier=" + identifier + ", ipAddress=" + ipAddress
+				+ ", port=" + port + ", encrypted=" + encrypted + ", encryptionInfo=" + encryptionInfo
+				+ ", agentInterfaceTotalTraffic=" + agentInterfaceTotalTraffic
+				+ ", agentInterfaceDownloadMeasurementTraffic=" + agentInterfaceDownloadMeasurementTraffic
+				+ ", agentInterfaceUploadMeasurementTraffic=" + agentInterfaceUploadMeasurementTraffic
+				+ ", requestedNumStreamsDownload=" + requestedNumStreamsDownload + ", requestedNumStreamsUpload="
+				+ requestedNumStreamsUpload + ", actualNumStreamsDownload=" + actualNumStreamsDownload
+				+ ", actualNumStreamsUpload=" + actualNumStreamsUpload + ", tcpOptSackRequested=" + tcpOptSackRequested
+				+ ", tcpOptWscaleRequested=" + tcpOptWscaleRequested + ", serverMss=" + serverMss + ", serverMtu="
+				+ serverMtu + ", webSocketInfoDownload=" + webSocketInfoDownload + ", webSocketInfoUpload="
+				+ webSocketInfoUpload + "]";
+	}
+	
+	
 }

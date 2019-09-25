@@ -1,10 +1,9 @@
 export class SpeedMeasurementPeer {
-    
-    identifier: string;
+  public identifier: string;
 
-    name: string;
+  public name: string;
 
-    description: string;
+  public description: string;
 
-    default: boolean;
+  public default: boolean;
 }

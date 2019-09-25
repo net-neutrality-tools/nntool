@@ -25,6 +25,7 @@ spring:
         entities:
           - QoSMeasurementObjective
           - Translation
+          - MeasurementServer
           - Settings
           - Provider
           - EmbeddedNetworkType

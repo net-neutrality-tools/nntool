@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.service.collector.config.CollectorServiceProperties;
 import at.alladin.nettest.service.collector.service.MeasurementResultService;
+import at.alladin.nettest.service.collector.service.ResultPreProcessService;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
@@ -52,6 +53,9 @@ public class MeasurementResultResourceIntegrationTest {
 	@MockBean
 	private CollectorServiceProperties collectorServiceProperties;
 	
+	@MockBean
+	private ResultPreProcessService resultPreProcessService;
+	
 	@Before
 	public void setup() {
 		final MeasurementResultService measurementResultService = new MeasurementResultService();
@@ -60,6 +64,7 @@ public class MeasurementResultResourceIntegrationTest {
 		
 		final MeasurementResultResource controller = new MeasurementResultResource();
 		ReflectionTestUtils.setField(controller, "measurementResultService", measurementResultService);
+		ReflectionTestUtils.setField(controller, "resultPreProcessService", resultPreProcessService);
 		
 		this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 	}

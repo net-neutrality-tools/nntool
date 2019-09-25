@@ -11,6 +11,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
+import at.alladin.nettest.shared.server.service.SpeedtestDetailGroup;
 import at.alladin.nettest.spring.data.couchdb.core.mapping.DocTypeHelper;
 import at.alladin.nettest.spring.data.couchdb.core.mapping.Document;
 

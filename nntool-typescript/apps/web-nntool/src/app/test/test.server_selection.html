@@ -1,8 +1,7 @@
 <div *ngIf="speedServerList" class="wrapper">
-    <h3>Select measurement peer:</h3>
+  <h3>Select measurement peer:</h3>
 
-    <select [(ngModel)]="currentSpeedServer">
-        <option *ngFor="let server of speedServerList" [ngValue]="server">{{server.name}}</option>
-    </select>
-
+  <select [(ngModel)]="currentSpeedServer">
+    <option *ngFor="let server of speedServerList" [ngValue]="server">{{server.name}}</option>
+  </select>
 </div>
