@@ -218,6 +218,7 @@ public class ExportService {
 	
 	private void addExtension(StringBuilder builder, String extension, boolean addTimestamp, boolean shouldBeZipped) {
 		if (addTimestamp) {
+			builder.append("__");
 			builder.append(getCurrentUtcTimestampString());
 		}
 		
