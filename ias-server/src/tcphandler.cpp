@@ -638,8 +638,8 @@ void CTcpHandler::websocket_message_handler(noPollCtx *ctx, noPollConn *conn, no
     
     if (!uploadRunning) 
     {
-        TRC_DEBUG("WebSocket handler: Message received: ");
-        TRC_DEBUG((const char*)nopoll_msg_get_payload(msg));
+        TRC_DEBUG("WebSocket handler: Message received");
+        //TRC_DEBUG((const char*)nopoll_msg_get_payload(msg));
         
         return;
     }

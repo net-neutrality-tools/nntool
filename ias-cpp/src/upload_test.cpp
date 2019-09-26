@@ -78,7 +78,7 @@ TEST_CASE("Upload test")
         CHECK(result[0]["num_streams_start"] == "4");
 
         CHECK(result[result.size() - 1]["num_streams_end"] == "4");
-        
+
         CHECK(result.size() == (pXml->readLong("testing", "UL_DURATION", 10) + UPLOAD_ADDITIONAL_MEASUREMENT_DURATION) * 2);
 
         CHECK(stol(result[result.size() - 1]["duration_ns"].string_value()) / 1000000000
@@ -87,7 +87,7 @@ TEST_CASE("Upload test")
         CHECK((stol(result[result.size() - 1]["duration_ns_total"].string_value())
                   - stol(result[result.size() - 1]["duration_ns"].string_value()))
                 / 1000000000
-            == (::TCP_STARTUP / 1000000)+UPLOAD_ADDITIONAL_MEASUREMENT_DURATION);
+            == (::TCP_STARTUP / 1000000) + UPLOAD_ADDITIONAL_MEASUREMENT_DURATION);
 
         ::RUNNING = false;
     }
