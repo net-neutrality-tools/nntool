@@ -15,23 +15,7 @@ TEST_CASE("TCP Server")
         delete (tcpListener);
         CHECK(err == 0);
     }
-    SECTION("TCP Server listens on configured ports")
-    {
-        ::RUNNING = true;
-        CTcpServer* tcpListener = new CTcpServer(8080, 8081, false);
-        int err = tcpListener->createThread();
 
-        // Binding the same ports should fail
-        std::unique_ptr<CConnection> mConnection = std::make_unique<CConnection>();
-        int port = 8080;
-        err = mConnection->tcpSocketServer(port);
-
-        CHECK(err == -1);
-
-        ::RUNNING = false;
-        tcpListener->waitForEnd();
-        delete (tcpListener);
-    }
 
     SECTION("TCP Server accpets valid WebSocket request for download testcase and sends data")
     {
@@ -41,7 +25,7 @@ TEST_CASE("TCP Server")
         int err = tcpListener->createThread();
         // Should be 0 for successful thread creation
         CHECK(err == 0);
-        usleep(100000);
+        usleep(1000000);
 
         std::unique_ptr<CConnection> mConnection = std::make_unique<CConnection>();
         int port = 8082;
@@ -152,7 +136,7 @@ TEST_CASE("TCP Server")
         // Request download test over HTTP
         string request = "";
         request += "GET /data.img HTTP/1.1\r\n";
-        request += "Host: my_hostname:8082\r\n";
+        request += "Host: my_hostname:8092\r\n";
         request += "Cookie: tk=" + token + "; " + "ts=" + to_string(time) + "\r\n";
         request += "Origin: http://localhost\r\n\r\n";
         err = mConnection->send(request.c_str(), strlen(request.c_str()), 0);
@@ -217,14 +201,14 @@ TEST_CASE("TCP Server")
     {
         ::RUNNING = true;
         ::DEBUG_NOPOLL = false;
-        CTcpServer* tcpListener = new CTcpServer(8082, 8084, false);
+        CTcpServer* tcpListener = new CTcpServer(8095, 8084, false);
         int err = tcpListener->createThread();
         // Should be 0 for successful thread creation
         CHECK(err == 0);
         usleep(100000);
 
         std::unique_ptr<CConnection> mConnection = std::make_unique<CConnection>();
-        int port = 8082;
+        int port = 8095;
         string server = "localhost";
         string intf = "::1";
 
@@ -241,7 +225,7 @@ TEST_CASE("TCP Server")
 
         string request = "";
         request += "GET / HTTP/1.1\r\n";
-        request += "Host: my_hostname:8082\r\n";
+        request += "Host: my_hostname:8095\r\n";
         request += "Origin: http://localhost\r\n";
         request += "Connection: Upgrade\r\n";
         request += "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\n";
