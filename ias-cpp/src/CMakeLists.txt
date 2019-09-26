@@ -101,6 +101,9 @@ IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
         ias_client_test
         iasclient_test.cpp
         timer_test.cpp
+        download_test.cpp
+        upload_test.cpp
+        
     )
 
     if (DEFINED ANDROID_ABI)
