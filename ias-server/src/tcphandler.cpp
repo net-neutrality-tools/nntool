@@ -633,7 +633,8 @@ void CTcpHandler::tcp_timeout_handler(noPollCtx *ctx, noPollConn *conn) {
 
   TRC_DEBUG("TCP handler: stopped");
 
-  nopoll_conn_close(conn);
+  //nopoll_conn_close(conn);
+  nopoll_loop_stop(ctx);
 
   if (showShutdown)
     TRC_DEBUG("Socket: Connection Shutdown for Client IP: " + sClientIp);
