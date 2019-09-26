@@ -9,11 +9,7 @@
 
 
 
-bool DEBUG;
-bool OVERLOADED;
-struct conf_data conf;
-
-TEST_CASE("Download test")
+TEST_CASE("Ping test")
 {
     ::OVERLOADED = false;
     ::DEBUG =false;
@@ -35,12 +31,12 @@ TEST_CASE("Download test")
     std::unique_ptr<CConfigManager> pConfig;
     std::unique_ptr<CConfigManager> pXml;
     std::unique_ptr<CConfigManager> pService;
-    SECTION("Performs successfull download measurement against ias-server")
+    SECTION("Performs successfull RTT measurement against ias-server")
     {
         syncing_threads.clear();
         conf.sProvider="testing";
-        conf.sTestName="download";
-        conf.nTestCase=3;
+        conf.sTestName = "rtt_udp";
+        conf.nTestCase=2;
         Json::object jMeasurementParameters;
         jMeasurementParameters["wsTargets"]=Json::array {"localhost"};
         jMeasurementParameters["wsTLD"]="";
@@ -53,30 +49,34 @@ TEST_CASE("Download test")
         string authentication_secret = ::CONFIG["authentication"]["secret"].string_value();
         std::string token = sha1(to_string(time) + authentication_secret);
 
+        pXml->writeString("testing", "PING_DESTINATION", "127.0.0.1");
         pXml->writeString("testing", "DNS_HOSTNAME", "localhost");
-        pXml->writeLong("testing","DL_PORT",80);
-        pXml->writeLong("testing","DL_DURATION",10);
+        pXml->writeString("testing", "PING_QUERY", "5");
         pConfig->writeString("security","authToken",token);
 	    pConfig->writeString("security","authTimestamp",to_string(time));
-
-        pXml->writeLong(conf.sProvider,"DL_STREAMS", 4);
-
         pCallback = std::make_unique<CCallback>(jMeasurementParameters);
 	
-        pCallback->mTestCase=3;
+        pCallback->mTestCase=2;
         std::unique_ptr<CMeasurement> pMeasurement = std::make_unique<CMeasurement>(
-            pConfig.get(), pXml.get(), pService.get(), "testing", 3, pCallback.get());
+            pConfig.get(), pXml.get(), pService.get(), "testing", 2, pCallback.get());
 
         //Number of parallel streams is set
-        CHECK(conf.instances == pXml->readLong(conf.sProvider,"DL_STREAMS",4));
+        //CHECK(conf.instances == pXml->readLong(conf.sProvider,"DL_STREAMS",4));
         
         pMeasurement->startMeasurement();
-        Json::array result = pCallback->jMeasurementResultsDownload;
-        CHECK(result[0]["num_streams_start"]=="4");
-        CHECK(result[result.size()-1]["num_streams_end"]=="4");
-        CHECK(result.size()==pXml->readLong("testing","DL_DURATION",10)*2);
-        CHECK(stol(result[result.size()-1]["duration_ns"].string_value())/1000000000 == pXml->readLong("testing","DL_DURATION",10));
-        CHECK((stol(result[result.size()-1]["duration_ns_total"].string_value())-stol(result[result.size()-1]["duration_ns"].string_value()))/1000000000 == (::TCP_STARTUP/1000000));
+        Json::object result = pCallback->jMeasurementResultsRttUdp;
+        TRC_DEBUG(Json(result).dump());
+        int median = stoi(result["median_ns"].string_value());
+        Json::array rtts = result["rtts"].array_items();
+
+        CHECK(pXml->readLong("testing", "PING_QUERY", 0)==rtts.size());
+        
+        CHECK(stoi(result["num_received"].string_value()) == pXml->readLong("testing", "PING_QUERY", -1));
+        
+        CHECK(stoi(result["num_received"].string_value()) == stoi(result["num_sent"].string_value()));
+        
+        CHECK(std::find(rtts.begin(), rtts.end(), median) != rtts.end());
+
         ::RUNNING = false;
 
     }

@@ -14,7 +14,7 @@
 TEST_CASE("Upload test")
 {
     ::OVERLOADED = false;
-    ::DEBUG = true;
+    ::DEBUG = false;
     ::RUNNING = true;
     ::PLATFORM = "desktop";
     ::CLIENT_OS = "linux";

@@ -103,6 +103,7 @@ IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
         timer_test.cpp
         download_test.cpp
         upload_test.cpp
+        ping_test.cpp
         
     )
 
