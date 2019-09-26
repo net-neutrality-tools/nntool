@@ -37,7 +37,7 @@ const MAIN_DECLARATIONS = [AppComponent];
     LoggerModule.forRoot({
       level: NgxLoggerLevel.DEBUG,
       serverLogLevel: NgxLoggerLevel.OFF,
-      enableSourceMaps: true
+      enableSourceMaps: !environment.production
     }),
     BrowserModule,
     BrowserAnimationsModule,
