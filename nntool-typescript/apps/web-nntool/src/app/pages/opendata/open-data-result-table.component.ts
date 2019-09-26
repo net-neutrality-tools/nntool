@@ -12,9 +12,9 @@ import { SearchApiService } from '../../@core/services/search-api.service';
   styleUrls: ['./open-data-result-table.component.less']
 })
 export class OpenDataResultTableComponent implements OnInit {
-  private loading = false;
+  public loading = false;
 
-  settings = {
+  public settings = {
     columns: {
       start_time: {
         title: 'Time',
@@ -36,7 +36,7 @@ export class OpenDataResultTableComponent implements OnInit {
           if (row.measurements.SPEED && row.measurements.SPEED.rtt_info && row.measurements.SPEED.rtt_info.average_ns) {
             return (row.measurements.SPEED.rtt_info.average_ns / 1000000).toFixed(2);
           } else {
-            return "n/a"
+            return 'n/a';
           }
         }
       },
@@ -47,7 +47,7 @@ export class OpenDataResultTableComponent implements OnInit {
           if (row.measurements.SPEED && row.measurements.SPEED.throughput_avg_download_bps) {
             return (row.measurements.SPEED.throughput_avg_download_bps / 1000 / 1000).toFixed(2);
           } else {
-            return "n/a"
+            return 'n/a';
           }
         }
       },
@@ -58,16 +58,16 @@ export class OpenDataResultTableComponent implements OnInit {
           if (row.measurements.SPEED && row.measurements.SPEED.throughput_avg_upload_bps) {
             return (row.measurements.SPEED.throughput_avg_upload_bps / 1000 / 1000).toFixed(2);
           } else {
-            return "n/a"
+            return 'n/a';
           }
         }
       }
     }
   };
 
-  tableSource: SpringServerDataSource;
+  public tableSource: SpringServerDataSource;
 
-  @ViewChild('fullTextSearchInput', { static: true }) fullTextSearchInput: ElementRef;
+  @ViewChild('fullTextSearchInput', { static: true }) private fullTextSearchInput: ElementRef;
 
   constructor(
     private logger: NGXLogger,
@@ -78,7 +78,7 @@ export class OpenDataResultTableComponent implements OnInit {
     this.tableSource = this.searchApiService.getServerDataSource();
   }
 
-  ngOnInit() {
+  public ngOnInit() {
     fromEvent(this.fullTextSearchInput.nativeElement, 'keyup')
       .pipe(
         map((event: any) => {
@@ -99,7 +99,7 @@ export class OpenDataResultTableComponent implements OnInit {
       });
   }
 
-  showOpenDataMeasurement(item: any) {
+  public showOpenDataMeasurement(item: any) {
     this.router.navigate(['/open-data-results', item.open_data_uuid]);
   }
 

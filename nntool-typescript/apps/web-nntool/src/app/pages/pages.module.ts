@@ -17,7 +17,8 @@ import { AboutComponent } from './adoc/about.component';
 import { NotFoundComponent } from './adoc/notfound.component';
 import { HistoryDeletionComponent } from './history/history.deletion.component';
 import { PipesModule } from '../@core/pipes/pipes.module';
-
+import { ADocComponent } from './adoc/adoc.component';
+import { DocuComponent } from './adoc/docu.component';
 
 const COMPONENTS = [
   HomeComponent,
@@ -30,6 +31,8 @@ const COMPONENTS = [
   MapComponent,
   StatisticsComponent,
   SettingsComponent,
+  ADocComponent,
+  DocuComponent,
   TcComponent,
   HelpComponent,
   AboutComponent,
@@ -42,4 +45,4 @@ const COMPONENTS = [
   declarations: [...COMPONENTS],
   entryComponents: [...COMPONENTS]
 })
-export class PagesModule { }
+export class PagesModule {}

@@ -10,11 +10,11 @@ import { NGXLogger } from 'ngx-logger';
 })
 export class OpenDataResultComponent implements OnInit {
   private openDataUuid: string;
-  private response: ResultGroupResponse;
-  private loading: boolean;
+  public response: ResultGroupResponse;
+  public loading: boolean;
 
   private fullMeasurementResponse: any;
-  private qosMeasurementResult: QoSMeasurementResult;
+  public qosMeasurementResult: QoSMeasurementResult;
 
   constructor(
     private logger: NGXLogger,

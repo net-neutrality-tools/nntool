@@ -12,7 +12,7 @@ import { UserService, UserInfo } from '../../@core/services/user.service';
 export class HistoryDeletionComponent implements OnInit {
   protected subs: Subscription[] = [];
 
-  private measurementUuid: string;
+  public measurementUuid: string;
   private translationKey: string;
 
   constructor(
