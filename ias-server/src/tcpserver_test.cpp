@@ -32,13 +32,6 @@ TEST_CASE("TCP Server")
 
         CHECK(err == -1);
 
-        // Binding the same ports should fail
-        std::unique_ptr<CConnection> mConnectionTrace = std::make_unique<CConnection>();
-        int portTrace = 8090;
-        err = mConnectionTrace->tcpSocketServer(portTrace);
-
-        CHECK(err == -1);
-
         ::RUNNING = false;
         tcpListener->waitForEnd();
         tcpListenerTrace->waitForEnd();
@@ -122,7 +115,7 @@ TEST_CASE("TCP Server")
             // TRC_DEBUG(to_string(nBytes));
         }
         CHECK(nTimeouts == 0);
-        
+
         // Force ws server to teardown the connection beacause of an invalid frame
         request = "Force Stop";
         mConnection->send(request.c_str(), strlen(request.c_str()), 0);
