@@ -21,10 +21,6 @@ TEST_CASE("TCP Server")
         CTcpServer* tcpListener = new CTcpServer(8080, 8081, false);
         int err = tcpListener->createThread();
 
-        CTcpServer* tcpListenerTrace = new CTcpServer(8090, 8090, false);
-        err = tcpListenerTrace->createThread();
-        usleep(10000);
-
         // Binding the same ports should fail
         std::unique_ptr<CConnection> mConnection = std::make_unique<CConnection>();
         int port = 8080;
@@ -34,9 +30,7 @@ TEST_CASE("TCP Server")
 
         ::RUNNING = false;
         tcpListener->waitForEnd();
-        tcpListenerTrace->waitForEnd();
         delete (tcpListener);
-        delete (tcpListenerTrace);
     }
 
     SECTION("TCP Server accpets valid WebSocket request for download testcase and sends data")
