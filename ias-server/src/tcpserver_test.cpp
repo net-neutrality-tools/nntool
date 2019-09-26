@@ -280,7 +280,7 @@ TEST_CASE("TCP Server")
         // Should return a valid (>0) file descriptor
         CHECK(err != -1);
 
-        usleep(1000);
+        usleep(100000);
         string request = "";
         request += "POST / HTTP/1.1\r\n";
         request += "Origin: localhost\r\n";
@@ -342,7 +342,7 @@ TEST_CASE("TCP Server")
         // Should return the amount of sent characters
         CHECK(err == strlen(request.c_str()));
 
-        usleep(10000);
+        usleep(100000);
 
         // Read HTTP response
         std::unique_ptr<char[]> rbufferOwner = std::make_unique<char[]>(MAXBUFFER);
