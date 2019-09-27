@@ -1,4 +1,4 @@
-FROM debian:9
+FROM debian:10
 
 RUN apt update && apt upgrade -y
 RUN apt install -y build-essential make cmake automake g++ libtool liblog4cpp5-dev libssl-dev
