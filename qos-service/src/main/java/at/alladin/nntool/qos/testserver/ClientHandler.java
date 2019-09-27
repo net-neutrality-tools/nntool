@@ -769,7 +769,7 @@ public class ClientHandler implements Runnable {
     	 * 	6 = starting sequence number (see rfc3550, rtp header: sequence number)
     	 *  7 = payload type
     	 */
-		final Pattern p = Pattern.compile(QoSServiceProtocol.CMD_VOIP_TEST + " ([\\d]*) ([\\w]*) ([\\d]*) ([\\d]*) ([\\d]*) ([\\d]*) ([\\d]*) ([\\d]*)");
+		final Pattern p = Pattern.compile(QoSServiceProtocol.CMD_VOIP_TEST + " ([\\d]*) ([\\w]*) ([\\d]*) ([\\d]*) ([\\d]*) ([\\d]*) ([\\d]*) ([\\d]*) ([\\d]*)");
 		final Matcher m = p.matcher(command);
 		m.find();
 
@@ -791,13 +791,14 @@ public class ClientHandler implements Runnable {
     	final int callDuration = Integer.parseInt(m.group(6));
     	final long sequenceNumber = Integer.parseInt(m.group(7));
     	final int payloadTypeValue = Integer.parseInt(m.group(8));
+		final long buffer = Long.parseLong(m.group(9));
     	final int ssrc = TestServer.getInstance().randomizer.next();
 
 		TestServerConsole.log("Starting VOIP TEST (sample rate: " + sampleRate + ", bps: " + bps + ", delay: " + delay 
 				+ ", call duration: " + callDuration + ", ssrc: " + ssrc + ", seq number: " + sequenceNumber 
 				+ ") on outgoing port :" + portOut + "/incoming port: " + portIn + " for " + socket.getInetAddress().toString(), 1, TestServerServiceEnum.UDP_SERVICE);
 		
-		final VoipTestCandidate voipData = new VoipTestCandidate(sequenceNumber, sampleRate);
+		final VoipTestCandidate voipData = new VoipTestCandidate(sequenceNumber, sampleRate, buffer);
 		
 		clientVoipDataMap.put(ssrc, voipData);
 				
@@ -922,7 +923,7 @@ public class ClientHandler implements Runnable {
 		if (voipTc != null) {
 			try {
 				RtpQoSResult result = RtpUtil.calculateQoS(voipTc.getRtpControlDataList(), 
-						voipTc.getInitialSequenceNumber(), voipTc.getSampleRate());
+						voipTc.getInitialSequenceNumber(), voipTc.getSampleRate(), voipTc.getBuffer());
 
 				final String voipResult = QoSServiceProtocol.RESPONSE_VOIP_RESULT + " " + result.getMaxJitter() + " " 
 						+ result.getMeanJitter() + " " + result.getMaxDelta() + " " + result.getSkew() + " "

@@ -18,6 +18,12 @@ module QoSKitTraceroute [system] [extern_c] {
 
 module MeasurementKit {
     header "../../../Sources/MeasurementKit/MeasurementKit.h"
+
+    export *
+}
+    
+module WKWebViewUrlProtocolSupport [system] [extern_c] {
+    header "NSURLProtocol+WKWebViewSupport.h"
     
     export *
 }

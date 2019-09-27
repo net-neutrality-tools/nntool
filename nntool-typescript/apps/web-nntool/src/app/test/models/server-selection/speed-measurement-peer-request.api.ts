@@ -1,6 +1,3 @@
-import {BasicRequestAPI} from '../basic-request.api';
+import { BasicRequestAPI } from '../basic-request.api';
 
-export class SpeedMeasurementPeerRequestAPI extends BasicRequestAPI {
-    
-}
-
+export class SpeedMeasurementPeerRequestAPI extends BasicRequestAPI {}

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		028BCD1C5DB207312A53426F /* Pods_All_Speed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAC9DAE7413ECAE8092FFC80 /* Pods_All_Speed.framework */; };
+		4E39AF08D64A16ACF982E352 /* Pods_All_BEREC_nntool.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4042E14D8B38AC9EAFAC182E /* Pods_All_BEREC_nntool.framework */; };
 		B0A836C925FAEE0ED120983A /* Pods_All_Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3142E3D228324ABA957A394 /* Pods_All_Common.framework */; };
 		E00F48D1225F764400EAD0C0 /* IASProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48D0225F764400EAD0C0 /* IASProgram.swift */; };
 		E00F48D3225F77C400EAD0C0 /* QoSProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48D2225F77C400EAD0C0 /* QoSProgram.swift */; };
@@ -49,11 +50,12 @@
 		E044DE0222D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */; };
 		E044DE0E22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */; };
 		E044DE1022D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */; };
+		E059879B232A3DE9004771C2 /* NetworkInfoReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = E059879A232A3DE9004771C2 /* NetworkInfoReachability.swift */; };
+		E059879E232BFA49004771C2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E059879C232BFA48004771C2 /* Localizable.strings */; };
 		E069C28F22F8143600344A67 /* PaginatedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C28E22F8143600344A67 /* PaginatedTableView.swift */; };
 		E069C29422F84A2900344A67 /* QoSMeasurementResultGroupTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C29322F84A2900344A67 /* QoSMeasurementResultGroupTableViewController.swift */; };
 		E069C29622F84B2200344A67 /* QoSMeasurementResultDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C29522F84B2200344A67 /* QoSMeasurementResultDetailTableViewController.swift */; };
 		E069C29822F84C5200344A67 /* QoSGroupOverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C29722F84C5200344A67 /* QoSGroupOverviewCell.swift */; };
-		E069C29A22F852F900344A67 /* QoSGroupCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E069C29922F852F900344A67 /* QoSGroupCollectionViewCell.xib */; };
 		E069C29C22F8554B00344A67 /* QoSGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C29B22F8554B00344A67 /* QoSGroupCollectionViewCell.swift */; };
 		E08D4BBD22E706F300FA3E3C /* CurrentMeasurementPeerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08D4BBC22E706F300FA3E3C /* CurrentMeasurementPeerTableViewController.swift */; };
 		E0AA400422F96EED0039DC2B /* CollectionViewFlowLayoutConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AA400322F96EEC0039DC2B /* CollectionViewFlowLayoutConfig.swift */; };
@@ -101,7 +103,6 @@
 		E0CC269D22E8CEE6005DEED0 /* HistoryItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC269C22E8CEE6005DEED0 /* HistoryItemCell.swift */; };
 		E0E9BB10226F57DA00146699 /* SpeedMeasurementPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E9BB0F226F57DA00146699 /* SpeedMeasurementPhase.swift */; };
 		E0EA84E72282C1B000EB73BF /* SpeedHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84E62282C1B000EB73BF /* SpeedHelper.swift */; };
-		E860F5CA7C59FD468EEE2892 /* Pods_All_ios_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91316B94C5B307833124DBA0 /* Pods_All_ios_app.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -161,9 +162,11 @@
 
 /* Begin PBXFileReference section */
 		0B10DBD62832A59CDD7B8F28 /* Pods-All-Common.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-Common.debug.xcconfig"; path = "Target Support Files/Pods-All-Common/Pods-All-Common.debug.xcconfig"; sourceTree = "<group>"; };
+		0D4DE6E69AB115557FA300EC /* Pods-All-BEREC_nntool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-BEREC_nntool.debug.xcconfig"; path = "Target Support Files/Pods-All-BEREC_nntool/Pods-All-BEREC_nntool.debug.xcconfig"; sourceTree = "<group>"; };
 		280829905CC742297F3CD799 /* Pods-All-Speed.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-Speed.release.xcconfig"; path = "Target Support Files/Pods-All-Speed/Pods-All-Speed.release.xcconfig"; sourceTree = "<group>"; };
 		2DE5D0E278879E07611256DA /* Pods-All-Common.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-Common.release.xcconfig"; path = "Target Support Files/Pods-All-Common/Pods-All-Common.release.xcconfig"; sourceTree = "<group>"; };
-		91316B94C5B307833124DBA0 /* Pods_All_ios_app.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_ios_app.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4042E14D8B38AC9EAFAC182E /* Pods_All_BEREC_nntool.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_BEREC_nntool.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B48CA4EDA77BB7D79D81D60 /* Pods-All-BEREC_nntool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-BEREC_nntool.release.xcconfig"; path = "Target Support Files/Pods-All-BEREC_nntool/Pods-All-BEREC_nntool.release.xcconfig"; sourceTree = "<group>"; };
 		9A7B01F143D9A74599DAC596 /* Pods-All-ios-app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-ios-app.debug.xcconfig"; path = "Target Support Files/Pods-All-ios-app/Pods-All-ios-app.debug.xcconfig"; sourceTree = "<group>"; };
 		AFAED326C34595EF58CC0F9C /* Pods-All-Speed.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-Speed.debug.xcconfig"; path = "Target Support Files/Pods-All-Speed/Pods-All-Speed.debug.xcconfig"; sourceTree = "<group>"; };
 		B3142E3D228324ABA957A394 /* Pods_All_Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -197,7 +200,7 @@
 		E00F4AFE2266234200EAD0C0 /* IASProgramDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IASProgramDelegate.swift; sourceTree = "<group>"; };
 		E00F4B002266235700EAD0C0 /* QoSProgramDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSProgramDelegate.swift; sourceTree = "<group>"; };
 		E00F4B02226719DE00EAD0C0 /* UIAlertController+ProgressIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+ProgressIndicator.swift"; sourceTree = "<group>"; };
-		E026A57E2241271700BACDB5 /* ios-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E026A57E2241271700BACDB5 /* BEREC_nntool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BEREC_nntool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E026A5812241271700BACDB5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E026A5882241271700BACDB5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E026A58A2241271900BACDB5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -215,11 +218,13 @@
 		E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementPeerSelectionTableViewController.swift; sourceTree = "<group>"; };
 		E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeScreenDeviceInfoView.xib; sourceTree = "<group>"; };
 		E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Format.swift"; sourceTree = "<group>"; };
+		E059879A232A3DE9004771C2 /* NetworkInfoReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoReachability.swift; sourceTree = "<group>"; };
+		E059879D232BFA48004771C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E059879F232BFA64004771C2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E069C28E22F8143600344A67 /* PaginatedTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginatedTableView.swift; sourceTree = "<group>"; };
 		E069C29322F84A2900344A67 /* QoSMeasurementResultGroupTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSMeasurementResultGroupTableViewController.swift; sourceTree = "<group>"; };
 		E069C29522F84B2200344A67 /* QoSMeasurementResultDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSMeasurementResultDetailTableViewController.swift; sourceTree = "<group>"; };
 		E069C29722F84C5200344A67 /* QoSGroupOverviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSGroupOverviewCell.swift; sourceTree = "<group>"; };
-		E069C29922F852F900344A67 /* QoSGroupCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QoSGroupCollectionViewCell.xib; sourceTree = "<group>"; };
 		E069C29B22F8554B00344A67 /* QoSGroupCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSGroupCollectionViewCell.swift; sourceTree = "<group>"; };
 		E08D4BBC22E706F300FA3E3C /* CurrentMeasurementPeerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentMeasurementPeerTableViewController.swift; sourceTree = "<group>"; };
 		E0AA400322F96EEC0039DC2B /* CollectionViewFlowLayoutConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewFlowLayoutConfig.swift; sourceTree = "<group>"; };
@@ -296,7 +301,7 @@
 			files = (
 				E00F48E0225F7D2600EAD0C0 /* Common.framework in Frameworks */,
 				E00F48F2225F7D3B00EAD0C0 /* Speed.framework in Frameworks */,
-				E860F5CA7C59FD468EEE2892 /* Pods_All_ios_app.framework in Frameworks */,
+				4E39AF08D64A16ACF982E352 /* Pods_All_BEREC_nntool.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,6 +331,8 @@
 				2DE5D0E278879E07611256DA /* Pods-All-Common.release.xcconfig */,
 				AFAED326C34595EF58CC0F9C /* Pods-All-Speed.debug.xcconfig */,
 				280829905CC742297F3CD799 /* Pods-All-Speed.release.xcconfig */,
+				0D4DE6E69AB115557FA300EC /* Pods-All-BEREC_nntool.debug.xcconfig */,
+				7B48CA4EDA77BB7D79D81D60 /* Pods-All-BEREC_nntool.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -335,9 +342,9 @@
 			children = (
 				E00F4ADD225F801400EAD0C0 /* dev */,
 				E00F4AE0225F801400EAD0C0 /* dist */,
-				91316B94C5B307833124DBA0 /* Pods_All_ios_app.framework */,
 				B3142E3D228324ABA957A394 /* Pods_All_Common.framework */,
 				FAC9DAE7413ECAE8092FFC80 /* Pods_All_Speed.framework */,
+				4042E14D8B38AC9EAFAC182E /* Pods_All_BEREC_nntool.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -420,7 +427,7 @@
 		E026A57F2241271700BACDB5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E026A57E2241271700BACDB5 /* ios-app.app */,
+				E026A57E2241271700BACDB5 /* BEREC_nntool.app */,
 				E026A5942241271A00BACDB5 /* ios-appTests.xctest */,
 				E026A59F2241271A00BACDB5 /* ios-appUITests.xctest */,
 				E00F48D9225F7D2600EAD0C0 /* Common.framework */,
@@ -497,8 +504,8 @@
 				E0B9A35E224AB835002AB640 /* SpeedMeasurementBasicResultView.xib */,
 				E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */,
 				E0CC269622E8AAB0005DEED0 /* GroupSectionHeaderView.xib */,
-				E069C29922F852F900344A67 /* QoSGroupCollectionViewCell.xib */,
 				E0CC269922E8C4E1005DEED0 /* HistoryListHeaderView.xib */,
+				E059879C232BFA48004771C2 /* Localizable.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -639,6 +646,7 @@
 				E029274422D60B01001FCAEC /* AttributedStringHelper.swift */,
 				E069C28E22F8143600344A67 /* PaginatedTableView.swift */,
 				E0AA400322F96EEC0039DC2B /* CollectionViewFlowLayoutConfig.swift */,
+				E059879A232A3DE9004771C2 /* NetworkInfoReachability.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -748,9 +756,9 @@
 			productReference = E00F48EB225F7D3A00EAD0C0 /* Speed.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		E026A57D2241271700BACDB5 /* ios-app */ = {
+		E026A57D2241271700BACDB5 /* BEREC_nntool */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E026A5A82241271A00BACDB5 /* Build configuration list for PBXNativeTarget "ios-app" */;
+			buildConfigurationList = E026A5A82241271A00BACDB5 /* Build configuration list for PBXNativeTarget "BEREC_nntool" */;
 			buildPhases = (
 				1AB73F8B8DD73C0088EF14CF /* [CP] Check Pods Manifest.lock */,
 				E0C4527322CDF87500FA4B44 /* Run R.swift */,
@@ -769,9 +777,9 @@
 				E00F48DF225F7D2600EAD0C0 /* PBXTargetDependency */,
 				E00F48F1225F7D3B00EAD0C0 /* PBXTargetDependency */,
 			);
-			name = "ios-app";
+			name = BEREC_nntool;
 			productName = "ios-app";
-			productReference = E026A57E2241271700BACDB5 /* ios-app.app */;
+			productReference = E026A57E2241271700BACDB5 /* BEREC_nntool.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E026A5932241271A00BACDB5 /* ios-appTests */ = {
@@ -854,13 +862,14 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
 			);
 			mainGroup = E026A5752241271700BACDB5;
 			productRefGroup = E026A57F2241271700BACDB5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E026A57D2241271700BACDB5 /* ios-app */,
+				E026A57D2241271700BACDB5 /* BEREC_nntool */,
 				E026A5932241271A00BACDB5 /* ios-appTests */,
 				E026A59E2241271A00BACDB5 /* ios-appUITests */,
 				E00F48D8225F7D2600EAD0C0 /* Common */,
@@ -889,8 +898,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E00F4918225F7DC900EAD0C0 /* ias.mobile.js in Resources */,
+				E059879E232BFA49004771C2 /* Localizable.strings in Resources */,
 				E044DE0E22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib in Resources */,
-				E069C29A22F852F900344A67 /* QoSGroupCollectionViewCell.xib in Resources */,
 				E026A58E2241271900BACDB5 /* LaunchScreen.storyboard in Resources */,
 				E0B9A33B224A5BCA002AB640 /* ProgressInfoBar.xib in Resources */,
 				E0B9A3392249826E002AB640 /* SpeedMeasurementGaugeView.xib in Resources */,
@@ -935,7 +944,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-All-ios-app-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-All-BEREC_nntool-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -976,7 +985,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-All-ios-app/Pods-All-ios-app-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-All-BEREC_nntool/Pods-All-BEREC_nntool-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8D781F2C2D4E4D6921F0F90D /* [CP] Check Pods Manifest.lock */ = {
@@ -1176,6 +1185,7 @@
 				E0CC268A22E7743A005DEED0 /* GroupSectionHeaderView.swift in Sources */,
 				E0AF3DF122413BF200FDBFD1 /* SettingsTableViewController.swift in Sources */,
 				E029274522D60B01001FCAEC /* AttributedStringHelper.swift in Sources */,
+				E059879B232A3DE9004771C2 /* NetworkInfoReachability.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1215,12 +1225,12 @@
 		};
 		E026A5962241271A00BACDB5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = E026A57D2241271700BACDB5 /* ios-app */;
+			target = E026A57D2241271700BACDB5 /* BEREC_nntool */;
 			targetProxy = E026A5952241271A00BACDB5 /* PBXContainerItemProxy */;
 		};
 		E026A5A12241271A00BACDB5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = E026A57D2241271700BACDB5 /* ios-app */;
+			target = E026A57D2241271700BACDB5 /* BEREC_nntool */;
 			targetProxy = E026A5A02241271A00BACDB5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1240,6 +1250,15 @@
 				E026A58D2241271900BACDB5 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		E059879C232BFA48004771C2 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E059879D232BFA48004771C2 /* Base */,
+				E059879F232BFA64004771C2 /* de */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1427,6 +1446,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1489,6 +1509,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1543,10 +1564,10 @@
 		};
 		E026A5A92241271A00BACDB5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9A7B01F143D9A74599DAC596 /* Pods-All-ios-app.debug.xcconfig */;
+			baseConfigurationReference = 0D4DE6E69AB115557FA300EC /* Pods-All-BEREC_nntool.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "ios-app/ios-app.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "ios-app/Configuration/ios-app.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
@@ -1623,10 +1644,10 @@
 		};
 		E026A5AA2241271A00BACDB5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D329819C8E115D34CA521957 /* Pods-All-ios-app.release.xcconfig */;
+			baseConfigurationReference = 7B48CA4EDA77BB7D79D81D60 /* Pods-All-BEREC_nntool.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "ios-app/ios-app.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "ios-app/Configuration/ios-app.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
@@ -1809,7 +1830,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E026A5A82241271A00BACDB5 /* Build configuration list for PBXNativeTarget "ios-app" */ = {
+		E026A5A82241271A00BACDB5 /* Build configuration list for PBXNativeTarget "BEREC_nntool" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E026A5A92241271A00BACDB5 /* Debug */,

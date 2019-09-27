@@ -25,7 +25,8 @@
         "Alamofire": ["~> 4.8.2"],
         "BlueSocket": ["~> 1.0.46"],
         "CocoaAsyncSocket": ["~> 7.6.3"],
-        "nntool-shared-swift": ["~> 0.0.1"]
+        "nntool-shared-swift": ["~> 0.0.1"],
+        "WKWebViewWithURLProtocol": ["~> 0.1.0"]
     },
     "libraries": [
         "resolv"

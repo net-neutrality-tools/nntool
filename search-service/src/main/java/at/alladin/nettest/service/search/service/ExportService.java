@@ -76,7 +76,8 @@ public class ExportService {
 	
 	public void exportMeasurementsBySearchQuery(String queryString, Pageable pageable, String extension, boolean shouldBeZipped, HttpServletResponse response) {
 		if (StringUtils.isEmpty(queryString)) {
-			throw new BadExportRequestException("Search query string is required."); 
+			//throw new BadExportRequestException("Search query string is required.");
+			queryString = "*";
 		}
 		
 		final ExportExtension exportExtension = getExportExtension(extension);
@@ -217,6 +218,7 @@ public class ExportService {
 	
 	private void addExtension(StringBuilder builder, String extension, boolean addTimestamp, boolean shouldBeZipped) {
 		if (addTimestamp) {
+			builder.append("__");
 			builder.append(getCurrentUtcTimestampString());
 		}
 		

@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
@@ -7,13 +7,7 @@ import { RouterModule } from '@angular/router';
 import { UISharedModule } from '@nntool-typescript/features';
 import { UI_COMPONENTS } from './components';
 
-const MODULES = [
-  CommonModule,
-  RouterModule,
-  FormsModule,
-  ReactiveFormsModule,
-  UISharedModule
-];
+const MODULES = [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, UISharedModule];
 
 @NgModule({
   imports: [...MODULES],

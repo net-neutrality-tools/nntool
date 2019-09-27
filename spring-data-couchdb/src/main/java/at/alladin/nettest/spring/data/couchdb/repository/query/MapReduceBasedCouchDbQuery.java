@@ -1,5 +1,7 @@
 package at.alladin.nettest.spring.data.couchdb.repository.query;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,10 +28,6 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 
 	private static final Logger logger = LoggerFactory.getLogger(MapReduceBasedCouchDbQuery.class);
 	
-	private ComplexKey keys;
-	private ComplexKey startKey;
-	private ComplexKey endKey;
-	
 	public MapReduceBasedCouchDbQuery(CouchDbQueryMethod method, CouchDbOperations operations) {
 		super(method, operations);
 	}
@@ -50,16 +48,6 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 		final Pageable pageable = accessor.getPageable();
 		
 		final Database impl = (Database) operations.getCouchDbDatabase().getImpl();
-		
-		// Determine keys, startKey and endKey
-		keys = parseKeyArray(view.keys(), accessor);
-		logger.debug("keys: {}", keys != null ? keys.toJson() : null);
-		
-		startKey = parseKeyArray(view.startKey(), accessor);
-		logger.debug("startKey: {}", startKey != null ? startKey.toJson() : null);
-		
-		endKey = parseKeyArray(view.endKey(), accessor);
-		logger.debug("endKey: {}", endKey != null ? endKey.toJson() : null);
 
 		// Execute count query if it's a paginated query.
 		long total = 0;
@@ -73,7 +61,7 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 				
 				logger.debug("Count response: {}", total);
 			} catch (Exception e) {
-				logger.error("Could not get total count, returning empty result"/*, e*/);
+				logger.error("Could not get total count, returning empty result", e);
 				//e.printStackTrace();
 				return returnEmptyResult(accessor, total); // TODO: throw exception
 			}
@@ -122,8 +110,8 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 		return null;
 	}
 	
-	private ViewRequest<ComplexKey, ?> buildViewRequest(Database impl, View view, Pageable pageable, Class<?> entityType, ParametersParameterAccessor accessor) {
-		final UnpaginatedRequestBuilder<ComplexKey, ?> builder = getBasicRequestBuilder(impl, view, entityType, accessor);
+	private ViewRequest<?, ?> buildViewRequest(Database impl, View view, Pageable pageable, Class<?> entityType, ParametersParameterAccessor accessor) {
+		final UnpaginatedRequestBuilder<?, ?> builder = getBasicRequestBuilder(impl, view, entityType, accessor);
 
 		builder.reduce(view.reduce());
 		builder.includeDocs(view.includeDocs());
@@ -144,8 +132,8 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 		return builder.build();
 	}
 	
-	private ViewRequest<ComplexKey, ?> buildCountViewRequest(Database impl, View view, ParametersParameterAccessor accessor) {
-		final UnpaginatedRequestBuilder<ComplexKey, ?> builder = getBasicRequestBuilder(impl, view, Long.class, accessor);
+	private ViewRequest<?, ?> buildCountViewRequest(Database impl, View view, ParametersParameterAccessor accessor) {
+		final UnpaginatedRequestBuilder<?, ?> builder = getBasicRequestBuilder(impl, view, Long.class, accessor);
 
 		builder.reduce(true);
 		builder.includeDocs(false);
@@ -153,28 +141,190 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 		return builder.build();
 	}
 	
-	private UnpaginatedRequestBuilder<ComplexKey, ?> getBasicRequestBuilder(Database impl, View view, Class<?> entityType, ParametersParameterAccessor accessor) {
-		final UnpaginatedRequestBuilder<ComplexKey, ?> builder = createRequestBuilder(impl, view, entityType);
+	private UnpaginatedRequestBuilder<?, ?> getBasicRequestBuilder(Database impl, View view, Class<?> entityType, ParametersParameterAccessor accessor) {
+		final com.cloudant.client.api.views.Key.Type<?> keyType = determineKeyType(view, accessor);
+		
+		if (keyType == null) {
+			throw new IllegalArgumentException(
+				"keyType could not be inferred automatically (keys: " + Arrays.asList(view.keys()) + ", startKey: " + Arrays.asList(view.startKey()) + ", endKey: " + Arrays.asList(view.endKey()) + ")."
+			);
+		}
+		
+		final UnpaginatedRequestBuilder<?, ?> builder = createRequestBuilder(impl, view, keyType, entityType);
 
 		builder.descending(view.descending());
 		builder.group(view.group());
 		
-		if (keys != null) {
-			builder.keys(keys);
-		}
-		
-		if (startKey != null) {
-			builder.startKey(startKey);
-		}
-		
-		if (endKey != null) {
-			builder.endKey(endKey);
-		}
+		setKeys(builder, keyType, view, accessor);
 
 		return builder;
 	}
+		
+	private void setKeys(UnpaginatedRequestBuilder<?, ?> builder, com.cloudant.client.api.views.Key.Type<?> keyType, View view, ParametersParameterAccessor accessor) {
+		if (keyType == com.cloudant.client.api.views.Key.Type.COMPLEX) {
+			final UnpaginatedRequestBuilder<ComplexKey, ?> complexKeyBuilder = (UnpaginatedRequestBuilder<ComplexKey, ?>) builder;
+			
+			final ComplexKey keys = parseComplexKeyArray(view.keys(), accessor);
+			final ComplexKey startKey = parseComplexKeyArray(view.startKey(), accessor);
+			final ComplexKey endKey = parseComplexKeyArray(view.endKey(), accessor);
+			
+			if (keys != null) {
+				complexKeyBuilder.keys(keys);
+			}
+			
+			if (startKey != null) {
+				complexKeyBuilder.startKey(startKey);
+			}
+			
+			if (endKey != null) {
+				complexKeyBuilder.endKey(endKey);
+			}
+		} else {
+			final Object keys = (view.keys().length > 0) ? parseKey(view.keys()[0], accessor) : null;
+			final Object startKey = (view.startKey().length > 0) ? parseKey(view.startKey()[0], accessor) : null;
+			final Object endKey = (view.endKey().length > 0) ? parseKey(view.endKey()[0], accessor) : null;
+			
+			if (keyType == com.cloudant.client.api.views.Key.Type.STRING) {
+				final UnpaginatedRequestBuilder<String, ?> stringKeyBuilder = (UnpaginatedRequestBuilder<String, ?>) builder;
+				
+				if (keys != null) {
+					stringKeyBuilder.keys((String)keys);
+				}
+				
+				if (startKey != null) {
+					stringKeyBuilder.startKey((String)startKey);
+				}
+				
+				if (endKey != null) {
+					stringKeyBuilder.endKey((String)endKey);
+				}
+			} else if (keyType == com.cloudant.client.api.views.Key.Type.NUMBER) {
+				final UnpaginatedRequestBuilder<Number, ?> numberKeyBuilder = (UnpaginatedRequestBuilder<Number, ?>) builder;
+				
+				if (keys != null) {
+					numberKeyBuilder.keys((Number)keys);
+				}
+				
+				if (startKey != null) {
+					numberKeyBuilder.startKey((Number)startKey);
+				}
+				
+				if (endKey != null) {
+					numberKeyBuilder.endKey((Number)endKey);
+				}
+				
+			} else if (keyType == com.cloudant.client.api.views.Key.Type.BOOLEAN) {
+				final UnpaginatedRequestBuilder<Boolean, ?> booleanKeyBuilder = (UnpaginatedRequestBuilder<Boolean, ?>) builder;
+				
+				if (keys != null) {
+					booleanKeyBuilder.keys((Boolean)keys);
+				}
+				
+				if (startKey != null) {
+					booleanKeyBuilder.startKey((Boolean)startKey);
+				}
+				
+				if (endKey != null) {
+					booleanKeyBuilder.endKey((Boolean)endKey);
+				}
+			}
+		}
+	}
 	
-	private ComplexKey parseKeyArray(Key[] keys, ParametersParameterAccessor accessor) {
+	private com.cloudant.client.api.views.Key.Type<?> determineKeyType(View view, ParametersParameterAccessor accessor) {
+		final Key[] keys = view.keys();
+		final Key[] startKey = view.startKey();
+		final Key[] endKey = view.endKey();
+		
+		// Use complex key if there are no keys.
+		if (keys.length == 0 && startKey.length == 0 && endKey.length == 0) {
+			return com.cloudant.client.api.views.Key.Type.COMPLEX;
+		}
+		
+		// Use complex key if there is at least one key with more than one keys.
+		if (keys.length > 1 || startKey.length > 1 || endKey.length > 1) {
+			return com.cloudant.client.api.views.Key.Type.COMPLEX;
+		}
+		
+		final Parameters<?, ?> parameters = accessor.getParameters();
+		
+		// Otherwise, determine the type.
+		List<Key> keyList = new ArrayList<>();
+		if (view.keys().length > 0) {
+			keyList.add(view.keys()[0]);
+		}
+		if (view.startKey().length > 0) {
+			keyList.add(view.startKey()[0]);
+		}
+		if (view.endKey().length > 0) {
+			keyList.add(view.endKey()[0]);
+		}
+		
+		for (Key k : keyList) {
+			if (StringUtils.hasLength(k.value())) {
+				if (k.nullValue() || k.highSentinel()) {
+					return com.cloudant.client.api.views.Key.Type.COMPLEX;
+				}
+				
+				for (int i = 0; i < parameters.getBindableParameters().getNumberOfParameters(); i++) {
+					final Parameter p = parameters.getBindableParameter(i);
+				
+					final String placeholder = p.getName().orElse(p.getPlaceholder());
+					
+					if (k.value().equals(placeholder)) {
+						final Object bindable = accessor.getBindableValue(p.getIndex());
+						
+						if (bindable == null) {
+							return null;
+						}
+						
+						if (bindable instanceof Number) {
+							return com.cloudant.client.api.views.Key.Type.NUMBER;
+						}
+						else if (bindable instanceof Boolean) {
+							return com.cloudant.client.api.views.Key.Type.BOOLEAN;
+						}
+						else /*if (bindable instanceof String)*/ {
+							return com.cloudant.client.api.views.Key.Type.STRING;
+						}
+					}
+				}
+			}
+		}
+		
+		// Return complex type if no type was found
+		return com.cloudant.client.api.views.Key.Type.COMPLEX;
+	}
+	
+	private Object parseKey(Key key, ParametersParameterAccessor accessor) {
+		final Parameters<?, ?> parameters = accessor.getParameters();
+		
+		if (StringUtils.hasLength(key.value())) {
+			for (int i = 0; i < parameters.getBindableParameters().getNumberOfParameters(); i++) {
+				final Parameter p = parameters.getBindableParameter(i);
+			
+				final String placeholder = p.getName().orElse(p.getPlaceholder());
+				
+				if (key.value().equals(placeholder)) {
+					final Object bindable = accessor.getBindableValue(p.getIndex());
+					
+					if (bindable == null) {
+						return null;
+					}
+					
+					if (bindable instanceof String || bindable instanceof Number || bindable instanceof Boolean) {
+						return bindable;
+					} else {
+						return bindable.toString();
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	private ComplexKey parseComplexKeyArray(Key[] keys, ParametersParameterAccessor accessor) {
 		ComplexKey key = null;
 		
 		if (keys.length > 0) {
@@ -189,18 +339,18 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 						
 						if (k.value().equals(placeholder)) {
 							final Object bindable = accessor.getBindableValue(p.getIndex());
-							if (bindable instanceof Long) {
+							if (bindable instanceof Number) {
 								if (key == null) {
-									key = com.cloudant.client.api.views.Key.complex((Long) bindable);
+									key = com.cloudant.client.api.views.Key.complex((Number) bindable);
 								} else {
-									key.add((Long) bindable);
+									key.add((Number) bindable);
 								} 
 							}
-							else if (bindable instanceof Integer) {
+							else if (bindable instanceof Boolean) {
 								if (key == null) {
-									key = com.cloudant.client.api.views.Key.complex((Integer) bindable);
+									key = com.cloudant.client.api.views.Key.complex((Boolean) bindable);
 								} else {
-									key.add((Integer) bindable);
+									key.add((Boolean) bindable);
 								} 
 							}
 							else {
@@ -220,7 +370,7 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 					if (key == null) {
 						key = com.cloudant.client.api.views.Key.complex((String)null);
 					} else {
-						key.add((String)null);
+						key.add((String) null);
 					}
 				}
 				
@@ -233,18 +383,15 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 		return key;
 	}
 	
-	private UnpaginatedRequestBuilder<ComplexKey, ?> createRequestBuilder(Database impl, View view, Class<?> entityType) {
+	private UnpaginatedRequestBuilder<?, ?> createRequestBuilder(Database impl, View view, com.cloudant.client.api.views.Key.Type<?> keyType, Class<?> entityType) {
 		String designDocument = view.designDocument();
 		if (StringUtils.isEmpty(designDocument)) {
 			// try to derive design document name from entity if not set in View annotation
 			designDocument = entityType.getSimpleName();
 		}
 		
-		// TODO: allow to set keyType in View annotation.
-		//Key.Type<?> keyType = view.keys().length > 1 ? Key.Type.COMPLEX : Key.Type.STRING;
-		
 		return impl
 				.getViewRequestBuilder(designDocument, view.viewName())
-				.newRequest(com.cloudant.client.api.views.Key.Type.COMPLEX, entityType);
+				.newRequest(keyType, entityType);
 	}
 }

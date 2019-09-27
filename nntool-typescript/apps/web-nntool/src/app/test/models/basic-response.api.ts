@@ -1,4 +1,1 @@
-export abstract class BasicResponseAPI {
-
-}
-
+export abstract class BasicResponseAPI {}

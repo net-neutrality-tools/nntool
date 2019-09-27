@@ -1,7 +1,7 @@
-import {Filter} from './filter.interface';
-import {SelectOption} from '../filters/select_option.interface';
+import { SelectOption } from '../filters/select_option.interface';
+import { Filter } from './filter.interface';
 
 export interface Select extends Filter {
-    type: 'select';
-    options: SelectOption[];
+  type: 'select';
+  options: SelectOption[];
 }
