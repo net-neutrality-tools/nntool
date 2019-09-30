@@ -3,7 +3,7 @@
 ### Prerequisites ###
 XCode >= 10
 cocoapods
-NativeScript >= 5.0.0
+NativeScript = 5.x
 macOS (any Version)
 
 ### Build ###
