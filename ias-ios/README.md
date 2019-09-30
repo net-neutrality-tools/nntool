@@ -15,5 +15,11 @@ With fullfilled prerequisites perform the following steps:
 
 ---------------
 
-## Execution ##
+### Demo Parameters ###
+
+Modify *Demo/SpeedViewController.m* according to Code-Documentation to edit measurement parameters before *Build*
+
+---------------
+
+### Demo Execution ###
 Launch the App *ias_ios* in ios-simulator or on an ios-device and select *Start*. Perform another measurement by selecting *Load* followed by *Start*.
