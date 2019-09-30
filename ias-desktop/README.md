@@ -18,7 +18,13 @@ There are two build options available:
 
 ---------------
 
-## Execution ##
+### Demo Parameters ###
+
+Modify *src/web_desktop/index.html* according to Code-Documentation to edit measurement parameters before *Build*
+
+---------------
+
+### Demo Execution ###
 There are three execution options available:
 1. Run *npm run electron:{mac|linux|win}* with fullfilled prerequisites without building. The debug UI will be shown.
 2. After building, run the build executable. The default UI will be shown.
