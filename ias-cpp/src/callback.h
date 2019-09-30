@@ -45,6 +45,9 @@ class CCallback
 		void uploadCallback(string cmd);
 		Json::object getMeasurementResults(struct measurement tempMeasurement, struct measurement_data data, string cmd);
 
+		
+	
+	public:
 		Json::object jMeasurementResultsTime;
 		Json::object jMeasurementResultsPeer;
 		Json::object jMeasurementResultsRttUdp;
@@ -52,8 +55,6 @@ class CCallback
 		Json::array jMeasurementResultsDownloadStream;
 		Json::array jMeasurementResultsUpload;
 		Json::array jMeasurementResultsUploadStream;
-	
-	public:
 		int mTestCase;
 
 		Ping *pingThread;

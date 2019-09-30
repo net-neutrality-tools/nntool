@@ -95,6 +95,8 @@ IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
         iasserver_test.cpp
         tcphandler_test.cpp
         udpserver_test.cpp
+        load_monitoring_test.cpp
+        tcpserver_test.cpp
     )
 
     target_link_libraries(

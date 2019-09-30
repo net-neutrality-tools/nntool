@@ -608,7 +608,7 @@ void CCallback::uploadCallback(string cmd)
 			tempMeasurement.upload.results[i]	+= (*AI).second;
 			tempMeasurement.upload.datasize 	+= (*AI).second;
 			
-			//TRC_DEBUG( ("All Results ["+CTool::toString( (*AI).first )+"]: "+CTool::toString( (*AI).second ) ).c_str() );
+			TRC_DEBUG( ("All Results ["+CTool::toString( (*AI).first )+"]: "+CTool::toString( (*AI).second ) ).c_str() );
 		}
 	}
 
