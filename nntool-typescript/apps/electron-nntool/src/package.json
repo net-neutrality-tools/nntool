@@ -15,7 +15,7 @@
     "appId": "com.company.nntool",
     "productName": "Nntool",
     "copyright": "Copyright © 2018-2019 nntool-typescript",
-    "asar": false,
+    "asar": true,
     "npmRebuild": false,
     "directories": {
       "buildResources": "icons",
