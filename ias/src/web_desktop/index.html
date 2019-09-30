@@ -144,6 +144,8 @@
         {
             outputPrepare();
 
+            /*-------------------------set parameters for demo implementation start------------------------*/
+
             iasParameters.platform                          = 'web';
 
             iasParameters.wsTargets                         = [];
@@ -390,6 +392,8 @@
                     iasParameters.upload.performMeasurement = cliOptions.upload.performMeasurement;
                 }
             }
+
+            /*-------------------------set parameters for demo implementation end------------------------*/
 
             if (iasParameters.platform === 'web')
             {
