@@ -1,10 +1,10 @@
 ## Building ##
 
 ### Prerequisites ###
-Node.js >= 10
-npm >= 6
-uglify-es >= 3
-Linux or macOS (any Version, required for uglify)
+* Node.js >= 10
+* npm >= 6
+* uglify-es >= 3
+* Linux or macOS (any Version, required for uglify)
 
 ### Build ###
 1. Build *ias*, see instructions in *ias/README.md*

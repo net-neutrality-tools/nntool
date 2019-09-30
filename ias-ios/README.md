@@ -1,10 +1,10 @@
 ## Building ##
 
 ### Prerequisites ###
-XCode >= 10
-cocoapods
-NativeScript = 5.x
-macOS (any Version)
+* XCode >= 10
+* cocoapods
+* NativeScript = 5.x
+* macOS (any Version)
 
 ### Build ###
 With fullfilled prerequisites perform the following steps:
