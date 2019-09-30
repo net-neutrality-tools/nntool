@@ -10,6 +10,7 @@ Linux or macOS (any Version, required for uglify)
 1. Build *ias*, see instructions in *ias/README.md*
 2. In dir *ias-desktop*, run *npm i* to install dependencies
 3. Put Public keys of TLS-certificates which should be connected to in *certificates/*
+3.1 If TLS-certificate check should be deactivated, modify function verifyCertificate() in main.js according to the Code-Documentation
 
 There are two build options available:
 1. For uglifying, run *npm run build* on Linux or macOS with fullfilled prerequisites. The output in *build/* will be usable in other electron projects.
