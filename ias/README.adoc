@@ -21,7 +21,7 @@ If you don't want to watch for changes run `npm run test -- -single-run` instead
 
 === UDP Port Blocking
 
-For the UDP port blocking module, a specified set of ports is tested against a defined test-service. The UDP ports 123, 500, 4500 and 5060 are activated on the publicly available measurement peer. The measurement agent configuration features the stated ports as well as UDP port 7000 to show reachable as well as unreachable ports.
+For the UDP port blocking module, a specified set of ports is tested against a defined test-service. The UDP ports 123, 500, 4500 and 5060 are activated on the publicly available measurement peer. The demo configuration features the stated ports as well as UDP port 7000 to show reachable as well as unreachable ports. For successful test execution, the expected IP v4 and/or v6 addresses of the defined test-service must be stated within the configuration (see *Demo Parameters*).
 
 === Demo Parameters
 
