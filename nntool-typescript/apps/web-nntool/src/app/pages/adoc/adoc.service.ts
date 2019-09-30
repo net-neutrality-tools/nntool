@@ -33,7 +33,7 @@ export class ADocService {
     return new Observable((subscriber: Subscriber<string>) => {
       this.translate.getTranslation(lang).subscribe(
         (data: any) => {
-          this.logger.debug(data);
+          //this.logger.debug(data);
           if (
             !data ||
             !data.STATIC ||
