@@ -13,6 +13,7 @@ include 'collector-service'
 include 'result-service'
 include 'search-service'
 
+include 'loadbalancing-service'
 include 'statistic-service'
 
 include 'qos-service'
