@@ -1,7 +1,7 @@
 // inspired by https://github.com/appscape/open-rmbt-ios/blob/master/Sources/RMBTQoSWebTest.m
 
 import Foundation
-import UIKit
+import WebKit
 import nntool_shared_swift
 
 ///
@@ -11,7 +11,7 @@ class WebsiteTaskRunner: NSObject {
     private var status: QoSTaskStatus = .unknown
 
     ///
-    private var webView: UIWebView?
+    private var webView: WKWebView?
 
     ///
     private var startedAt: UInt64 = 0
@@ -39,17 +39,24 @@ class WebsiteTaskRunner: NSObject {
 
     ///
     func run(urlObj: URL, timeout: UInt64) -> (WebsiteTaskResultEntry?, UInt64?, QoSTaskStatus) {
+        logger.debug("before sync")
         DispatchQueue.main.sync {
-            self.webView = UIWebView()
-            self.webView?.delegate = self
+            // clear cache
+            WKWebsiteDataStore.default().removeData(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(),
+                                                    modifiedSince: Date(timeIntervalSince1970: 0),
+                                                    completionHandler: {})
+
+            self.webView = WKWebView()
+            self.webView?.navigationDelegate = self
 
             let request = NSMutableURLRequest(url: urlObj)
             self.tagRequest(request: request)
 
-            self.webView?.loadRequest(request as URLRequest)
+            self.webView?.load(request as URLRequest)
 
             logger.debug("AFTER LOAD REQUEST")
         }
+        logger.debug("after sync")
 
         let semaphoneTimeout = DispatchTime.now() + DispatchTimeInterval.nanoseconds(Int(truncatingIfNeeded: timeout))
 
@@ -75,13 +82,12 @@ class WebsiteTaskRunner: NSObject {
 
 // MARK: UIWebViewDelegate methods
 
-extension WebsiteTaskRunner: UIWebViewDelegate {
+extension WebsiteTaskRunner: WKNavigationDelegate {
 
-    ///
-    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebView.NavigationType) -> Bool {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         assert(status == .unknown)
 
-        if let r = request as? NSMutableURLRequest {
+        if let r = navigationAction.request as? NSMutableURLRequest {
             tagRequest(request: r)
         }
 
@@ -89,21 +95,23 @@ extension WebsiteTaskRunner: UIWebViewDelegate {
             startedAt = TimeHelper.currentTimeNs()
         }
 
-        return true
+        decisionHandler(.allow)
     }
 
-    ///
-    func webViewDidStartLoad(_ webView: UIWebView) {
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
         requestCount += 1
     }
 
-    ///
-    func webViewDidFinishLoad(_ webView: UIWebView) {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         maybeDone()
     }
 
-    ///
-    func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        status = .error
+        maybeDone()
+    }
+
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         status = .error
         maybeDone()
     }

@@ -1,17 +1,19 @@
 <div class="nettest-gauge-alladin" [hidden]="!active">
-    <div id="nettest-canvas-container">
-        <canvas id="nettest-gauge">
-        </canvas>
-        <canvas id="nettest-gauge-2">
-        </canvas>
-    </div>
-    <!--
+  <div id="nettest-canvas-container">
+    <canvas id="nettest-gauge"> </canvas>
+    <canvas id="nettest-gauge-2"> </canvas>
+  </div>
+  <!--
     default: class="btn__nettest-state"
     in progress: class="btn__nettest-state inprogress"
     complete: class="btn__nettest-state complete"
     -->
-    <button
-            class="btn__nettest-state" [ngClass]="{'inprogress': manualStartShouldBeDisabled}" id="nettest-state"
-            (click)="requestStart()"
-    >h</button>
+  <button
+    class="btn__nettest-state"
+    [ngClass]="{'inprogress': manualStartShouldBeDisabled}"
+    id="nettest-state"
+    (click)="requestStart()"
+  >
+    h
+  </button>
 </div>

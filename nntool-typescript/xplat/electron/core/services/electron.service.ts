@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LogService, WindowService } from '@nntool-typescript/core';
+import { WindowService } from '@nntool-typescript/core';
 import { isElectron } from '@nntool-typescript/utils';
 import * as childProcess from 'child_process';
 import { ipcRenderer } from 'electron';
@@ -9,12 +9,12 @@ export class ElectronService {
   private _ipc: typeof ipcRenderer;
   private _childProcess: typeof childProcess;
 
-  constructor(private _log: LogService, private _win: WindowService) {
+  constructor(private _win: WindowService) {
     // Conditional imports
     if (isElectron()) {
       this._ipc = this._win.require('electron').ipcRenderer;
       this._childProcess = this._win.require('child_process');
-      this._log.debug('ElectronService ready.');
+      //this._log.debug('ElectronService ready.');
     }
   }
 

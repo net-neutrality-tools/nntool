@@ -1,76 +1,73 @@
-import {GeoLocation} from '../api/request-info.api';
-import {PointInTimeValueAPI} from './point-in-time-value.api';
-import {MeasurementResultNetworkPointInTimeAPI} from './measurement-result-network-point-in-time.api';
-import {SignalAPI} from './signal.api';
-import {CellLocationAPI} from './cell-location.api';
+import { GeoLocation } from '../api/request-info.api';
+import { CellLocationAPI } from './cell-location.api';
+import { MeasurementResultNetworkPointInTimeAPI } from './measurement-result-network-point-in-time.api';
+import { PointInTimeValueAPI } from './point-in-time-value.api';
+import { SignalAPI } from './signal.api';
 
 export class TimeBasedResultAPI {
+  /**
+   * Start date and time for this measurement. Date and time is always stored as UTC.
+   */
+  public start_time: string; // TODO: change back to Date
 
-    /**
-     * Start date and time for this measurement. Date and time is always stored as UTC.
-     */
-    start_time: string; // TODO: change back to Date
+  /**
+   * End date and time for this measurement. Date and time is always stored as UTC.
+   */
+  public end_time: string; // TODO: change back to Date
 
-    /**
-     * End date and time for this measurement. Date and time is always stored as UTC.
-     */
-    end_time: string; // TODO: change back to Date
+  /**
+   * Overall duration of this measurement.
+   */
+  public duration_ns: number;
 
-    /**
-     * Overall duration of this measurement.
-     */
-    duration_ns: number;
+  // GeoLocationInfo
 
-// GeoLocationInfo
+  /**
+   * List of all captured geographic locations.
+   */
+  public geo_locations: GeoLocation[];
 
-    /**
-     * List of all captured geographic locations.
-     */
-    geo_locations: GeoLocation[];
+  // AgentInfo
 
-// AgentInfo
+  // -> everything already submitted by ApiRequestInfo
 
-    // -> everything already submitted by ApiRequestInfo
+  // DeviceInfo
 
-// DeviceInfo
+  // -> everything already submitted by ApiRequestInfo
 
-    // -> everything already submitted by ApiRequestInfo
+  // _ OperatingSystemInfo
 
-// _ OperatingSystemInfo
+  /**
+   * CPU usage during the test, if available.
+   */
+  public cpu_usage: Array<PointInTimeValueAPI<number>>;
 
-    /**
-     * CPU usage during the test, if available.
-     */
-    cpu_usage: PointInTimeValueAPI<number>[];
+  /**
+   * Memory usage during the test, if available.
+   */
+  public mem_usage: Array<PointInTimeValueAPI<number>>;
 
-    /**
-     * Memory usage during the test, if available.
-     */
-    mem_usage: PointInTimeValueAPI<number>[];
+  // NetworkInfo
 
-// NetworkInfo
+  // _ EmbeddedNetworkType
 
-// _ EmbeddedNetworkType
+  /**
+   * Contains all relevant network information of a single point in time.
+   * @see NetworkPointInTime
+   */
+  public network_points_in_time: MeasurementResultNetworkPointInTimeAPI[];
 
-    /**
-     * Contains all relevant network information of a single point in time.
-     * @see NetworkPointInTime
-     */
-    network_points_in_time: MeasurementResultNetworkPointInTimeAPI[];
+  // _ CellLocationInfo
 
-// _ CellLocationInfo
+  /**
+   * List of captured cell information.
+   */
+  public cell_locations: CellLocationAPI[];
 
-    /**
-     * List of captured cell information.
-     */
-    cell_locations: CellLocationAPI[];
+  // _ SignalInfo
 
-// _ SignalInfo
-
-    /**
-     * List of captured signal information.
-     */
-    signals: SignalAPI[];
-
+  /**
+   * List of captured signal information.
+   */
+  public signals: SignalAPI[];
 }
-

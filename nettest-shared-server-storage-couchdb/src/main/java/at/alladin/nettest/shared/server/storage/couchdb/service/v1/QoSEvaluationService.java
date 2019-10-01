@@ -13,13 +13,14 @@ import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.EvaluatedQoSResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.EvaluatedQoSResult.QoSResultOutcome;
@@ -38,6 +39,7 @@ import at.alladin.nntool.shared.qos.AbstractResult;
 import at.alladin.nntool.shared.qos.ResultComparer;
 import at.alladin.nntool.shared.qos.ResultDesc;
 import at.alladin.nntool.shared.qos.ResultOptions;
+import at.alladin.nntool.shared.qos.testscript.TestScriptInterpreter;
 
 @Service
 public class QoSEvaluationService {
@@ -53,14 +55,26 @@ public class QoSEvaluationService {
 
 	@Autowired
 	private FullMeasurementResponseMapper fullMeasurementResponseMapper;
-
+	
 	@Autowired
-	private GsonBuilder gsonBuilder;
+	private ObjectMapper objectMapper;
 	
 	@Autowired
 	private MessageSource messageSource;
+	
+	private Map<QoSMeasurementTypeDto, Map<String, Field>> qosTypeToFieldMap = new HashMap<>();
 
 	private Map<Long, QoSMeasurementObjective> objectiveIdToMeasurementObjectiveMap;
+
+	@PostConstruct
+	private void init() {
+		for (final QoSMeasurementTypeDto type : QoSMeasurementTypeDto.values()) {
+			final QosMeasurementType qosType = QosMeasurementType.fromQosTypeDto(type);
+			if (qosType != null) {
+				qosTypeToFieldMap.put(type, obtainFields(qosType.getResultClass()));
+			}
+		}
+	}
 
 	private void initMeasurementObjectiveMap() {
 		//if this were a post-construct, all servers would need to request QoSMeasurementObjective in their application.yml (as they all know the storage service)
@@ -83,20 +97,49 @@ public class QoSEvaluationService {
 		
 		final Set<String> resultTranslationKeys = new HashSet<>();
 		
+		final List<EvaluatedQoSResultHolder> resultHolderList = new ArrayList<>();
+		
 		for (QoSResult qosResult : measurement.getResults()) {
 			final QoSMeasurementObjective objective = objectiveIdToMeasurementObjectiveMap.get(qosResult.getObjectiveId());
 			if (objective == null) {
 				continue;
 			}
 			
-			final EvaluatedQoSResult evaluatedQoSResult = compareTestResults(qosResult, objective, resultKeys);
-			evaluatedQoSResult.getResultKeyMap().forEach((key, outcome) -> resultTranslationKeys.add(key));
-			ret.getResults().add(evaluatedQoSResult);
-			
+			final EvaluatedQoSResultHolder evaluatedQoSResultHolder = compareTestResults(qosResult, objective, resultKeys);
+			if (evaluatedQoSResultHolder != null) {
+				final EvaluatedQoSResult evaluatedQoSResult = evaluatedQoSResultHolder.getEvalResult();
+				evaluatedQoSResult.getResultKeyMap().forEach((key, outcome) -> resultTranslationKeys.add(key));
+				resultTranslationKeys.add(evaluatedQoSResult.getSummary());
+				resultTranslationKeys.add(evaluatedQoSResult.getDescription());
+				resultHolderList.add(evaluatedQoSResultHolder);
+			}
 		}
 
 		ret.setKeyToTranslationMap(getKeyToTranslationMapForKeys(resultTranslationKeys, locale));
 		ret.setQosTypeToDescriptionMap(getQosMeasurementDecriptionMap(locale));
+		
+		final ResultOptions options = new ResultOptions(locale);
+		
+		resultHolderList.forEach((resultHolder) -> {
+			final EvaluatedQoSResult result = resultHolder.getEvalResult();
+			final AbstractResult abstractResult = resultHolder.getAbstractResult();
+			
+			result.setSummary(ret.getKeyToTranslationMap().get(result.getSummary()));
+			result.setDescription(ret.getKeyToTranslationMap().get(result.getDescription()));
+			
+			final QoSMeasurementTypeDto typeDto = result.getType();
+			final Object summary = TestScriptInterpreter.interpret(result.getSummary(), qosTypeToFieldMap.get(typeDto), abstractResult, true, options);
+			final Object description = TestScriptInterpreter.interpret(result.getDescription(), qosTypeToFieldMap.get(typeDto), abstractResult, true, options);
+			
+			if (summary != null) {
+				result.setSummary(summary.toString());
+			}
+			if (description != null) {
+				result.setDescription(description.toString());
+			}
+			
+			ret.getResults().add(result);
+		});
 		
 		return ret;
 	}
@@ -118,17 +161,21 @@ public class QoSEvaluationService {
 		final Map<QoSMeasurementTypeDto, QoSTypeDescription> ret = new HashMap<>();
 
 		for (QoSMeasurementTypeDto type : QoSMeasurementTypeDto.values()) {
-			QoSTypeDescription description = new QoSTypeDescription();
-			description.setDescription(type.toString() + TRANSLATION_DESCRIPTION_SUFFIX); //TODO: localizedMessages.get()
-			description.setName(type.toString() + TRANSLATION_NAME_SUFFIX); //TODO: localizedMessages.get()
-			description.setIcon(type.toString() + TRANSLATION_ICON_FONT_SUFFIX); //TODO: localizedMessages.get() ?
+      final String typeString = type.toString();
+
+			final QoSTypeDescription description = new QoSTypeDescription();
+
+			description.setDescription(messageSource.getMessage(typeString + TRANSLATION_DESCRIPTION_SUFFIX, null, locale));
+			description.setName(messageSource.getMessage(typeString + TRANSLATION_NAME_SUFFIX, null, locale));
+			description.setIcon(messageSource.getMessage(typeString + TRANSLATION_ICON_FONT_SUFFIX, null, locale));
+
 			ret.put(type, description);
 		}
 
 		return ret;
 	}
 	
-	private EvaluatedQoSResult compareTestResults (final QoSResult qosResult, final QoSMeasurementObjective objective, Map<QoSMeasurementType, TreeSet<ResultDesc>> resultKeys) {
+	private EvaluatedQoSResultHolder compareTestResults (final QoSResult qosResult, final QoSMeasurementObjective objective, Map<QoSMeasurementType, TreeSet<ResultDesc>> resultKeys) {
 		final Class<? extends AbstractResult> resultClass = getResultClass(qosResult.getType());
 		if (resultClass == null) {
 			return null;
@@ -141,13 +188,12 @@ public class QoSEvaluationService {
 		//remove testtype and qos uid from res (TODO: do we still need this?)
 		qosResult.setType(null);
 		qosResult.setObjectiveId(null);
-		
-		final Gson gson = gsonBuilder.create();
-		
-		//fix double gson call
-		final AbstractResult result = gson.fromJson(gson.toJsonTree(qosResult.getResults()), resultClass);	// == testResult
+
+		//final String json = objectMapper.writeValueAsString(qosResult.getResults());
+		//result = objectMapper.readValue(json, resultClass);	// == testResult
+		AbstractResult result = objectMapper.convertValue(qosResult.getResults(), resultClass);
 		result.setResultMap(qosResult.getResults()); //and add the map (needed for evaluations (e.g. %EVAL xxxxx%))
-		
+
 		//create a parsed abstract result set sorted by priority
 		final Set<AbstractResult> expResultSet = new TreeSet<>(new Comparator<AbstractResult>() {
 			@Override
@@ -159,10 +205,9 @@ public class QoSEvaluationService {
 		int maxPriority = Integer.MAX_VALUE;
 		
 		if (objective != null && objective.getEvaluations() != null) {
-			for (Map<String, String> evaluation : objective.getEvaluations()) {
-				// TODO: fix double gson call!
-				final AbstractResult res = gson.fromJson(gson.toJson(evaluation), resultClass);
-				
+			for (Map<String, Object> evaluation : objective.getEvaluations()) {
+				final AbstractResult res = objectMapper.convertValue(evaluation, resultClass);
+
 				if (res.getPriority() != null && res.getPriority() == Integer.MAX_VALUE) {
 					res.setPriority(maxPriority--);
 				}
@@ -248,7 +293,7 @@ public class QoSEvaluationService {
 			});
 			
 			ret.setEvaluationKeyMap(evaluationKeyMap);
-			return ret;
+			return new EvaluatedQoSResultHolder(ret, result);
 		}
 		
 		return null;
@@ -270,8 +315,8 @@ public class QoSEvaluationService {
 		}
 		
 		for (Field f : clazz.getDeclaredFields()) {
-			if (f.isAnnotationPresent(SerializedName.class)) {
-				String fieldName = ((SerializedName) f.getAnnotation(SerializedName.class)).value();
+			if (f.isAnnotationPresent(JsonProperty.class)) {
+				String fieldName = f.getAnnotation(JsonProperty.class).value();
 				//check for duplicates:
 				if (!ret.containsKey(fieldName)) {
 					ret.put(fieldName, f);
@@ -319,6 +364,24 @@ public class QoSEvaluationService {
 		}
 		
 		return resultKeyType != null ? new ResultHolder(resultKeyType, event) : null;
+	}
+	
+	public static class EvaluatedQoSResultHolder {
+		final EvaluatedQoSResult evalResult;
+		final AbstractResult abstractResult;
+		
+		public EvaluatedQoSResultHolder(final EvaluatedQoSResult evalResult, final AbstractResult abstractResult) {
+			this.evalResult = evalResult;
+			this.abstractResult = abstractResult;
+		}
+
+		public EvaluatedQoSResult getEvalResult() {
+			return evalResult;
+		}
+
+		public AbstractResult getAbstractResult() {
+			return abstractResult;
+		}
 	}
 	
 	public static class ResultHolder {

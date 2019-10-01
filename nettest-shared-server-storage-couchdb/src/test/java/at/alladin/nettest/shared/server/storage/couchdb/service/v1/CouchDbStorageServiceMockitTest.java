@@ -12,7 +12,6 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequestInfo;
@@ -25,17 +24,20 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.Measurem
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.disassociate.DisassociateResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
+import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgent;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgentInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementAgentType;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.DeviceRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.MeasurementServer;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.EmbeddedNetworkTypeRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.ProviderRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.BriefMeasurementResponseMapper;
@@ -44,7 +46,6 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportMode
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.MeasurementAgentMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsResponseMapper;
-import mockit.Deencapsulation;
 import mockit.Delegate;
 import mockit.Expectations;
 import mockit.Injectable;
@@ -54,11 +55,11 @@ import mockit.Tested;
 public class CouchDbStorageServiceMockitTest {
 	
 	private final static String MEASUREMENT_UUID = "98ffd8da-d571-4a3b-b87c-ec783f883b07";
-	
+
 	private final static String MEASUREMENT_AGENT_UUID = "8e31f4ea-f92b-49d0-9486-55d4044037b3";
 	
 	private final static String SETTINGS_UUID = "4a9b9ccb-3d33-4d7a-94cc-67eef1a4e23b";
-	
+
 	private final static String SYSTEM_UUID = "d51260f5-cbdb-4d62-b32f-825d4238df47";
 	
 	private @Tested(fullyInitialized = true) CouchDbStorageService couchDbStorageService;
@@ -82,7 +83,7 @@ public class CouchDbStorageServiceMockitTest {
 	private EmbeddedNetworkTypeRepository embeddedNetworkTypeRepository;
 	
 	@Mocked @Injectable
-	private DetailMeasurementService detailMeasurementService;
+	private GroupedMeasurementService groupedMeasurementService;
 	
 	@Mocked @Injectable
 	private QoSEvaluationService qosEvaluationService;
@@ -104,8 +105,14 @@ public class CouchDbStorageServiceMockitTest {
 	
 	@Mocked @Injectable
 	private LmapTaskMapper lmapTaskMapper;
-	
-	private LmapReportDto lmapReportDto; 
+
+	@Mocked @Injectable
+	private ProviderRepository providerRepository;
+
+	@Mocked @Injectable
+	private DeviceRepository deviceRepository;
+
+	private LmapReportDto lmapReportDto;
 	
 	private MeasurementAgent measurementAgent;
 	
@@ -114,7 +121,7 @@ public class CouchDbStorageServiceMockitTest {
 	private String measurementUuid;
 	
 	private String openDataUuid;
-	
+
 	private String userAgentUuid;
 	
 	@Before
@@ -141,18 +148,17 @@ public class CouchDbStorageServiceMockitTest {
 		agentInfo.setUuid(MEASUREMENT_AGENT_UUID);
 		agentInfo.setType(MeasurementAgentType.MOBILE);
 		measurement.setAgentInfo(agentInfo);
-		
+
 	}
 	
 	@Test(expected = StorageServiceException.class)
-	public void saveWithInvalidAgentUuidTest_ThrowsStorageServiceException () {
+	public void saveWithInvalidAgentUuidTest_ThrowsStorageServiceException() {
 		lmapReportDto.setAgentId(null);
 		couchDbStorageService.save(lmapReportDto);
 	}
 	
 	@Test
-	public void saveValidTest_callsSaveAndReturnsUuids () {
-		
+	public void saveValidTest_callsSaveAndReturnsUuids() {
 		new Expectations() {{
 			measurementRepository.save((Measurement) any);
 			times = 1;
@@ -178,8 +184,7 @@ public class CouchDbStorageServiceMockitTest {
 	}
 	
 	@Test
-	public void saveValidTestWithSystemUuid_callsSaveReturnsUuidsAndStoresCorrectSystemUuid () {
-		
+	public void saveValidTestWithSystemUuid_callsSaveReturnsUuidsAndStoresCorrectSystemUuid() {
 		new Expectations() {{
 			measurementRepository.save((Measurement) any);
 			times = 1;
@@ -196,7 +201,6 @@ public class CouchDbStorageServiceMockitTest {
 			
 			lmapReportModelMapper.map((LmapReportDto) any);
 			result = new Measurement();
-			
 		}};
 		
 		final MeasurementResultResponse response = couchDbStorageService.save(lmapReportDto, SYSTEM_UUID);
@@ -289,30 +293,30 @@ public class CouchDbStorageServiceMockitTest {
 		final RegistrationResponse response = couchDbStorageService.registerMeasurementAgent(apiRequest);
 		assertEquals("Invalid useragent uuid set", userAgentUuid, response.getAgentUuid());
 	}
-	
+
 	@Test
 	public void getTaskDtoForSpeedTask_shouldProvideValidValuesForMapper() {
-		
+
 		final Settings settings = new Settings();
 		settings.setMeasurements(new HashMap<>());
 		settings.getMeasurements().put(MeasurementTypeDto.SPEED, settings.new SpeedMeasurementSettings());
 		settings.setId(SETTINGS_UUID);
-		
+
 		final LmapCapabilityTaskDto capability = new LmapCapabilityTaskDto();
 		capability.setSelectedMeasurementPeerIdentifier("peer_id");
-		
+
 		final MeasurementServer server = new MeasurementServer();
 		server.setName("peer");
 		server.setPublicIdentifier("peer_id");
-		
+
 		new Expectations() {{
-			
+
 			settingsRepository.findByUuid(SETTINGS_UUID);
 			result = settings;
-			
+
 			measurementServerRepository.findByPublicIdentifier("peer_id");
 			result = server;
-			
+
 			lmapTaskMapper.map((Settings) any, (MeasurementServer) any, anyString);
 			result = new Delegate() {
 				public LmapTaskDto delegate(Settings settings, MeasurementServer server, String type) {
@@ -324,54 +328,54 @@ public class CouchDbStorageServiceMockitTest {
 				}
 			};
 		}};
-	
+
 		assertNotNull("Invalid object returned", couchDbStorageService.getTaskDto(MeasurementTypeDto.SPEED, capability, SETTINGS_UUID));
 	}
-	
+
 	@Test(expected = StorageServiceException.class)
 	public void disassociateMeasurementCallWithInvalidUuid_throwsStorageServiceException() {
-		
+
 		new Expectations() {{
 			measurementRepository.findByUuid(MEASUREMENT_UUID);
 			result = new RuntimeException();
 		}};
-		
+
 		couchDbStorageService.disassociateMeasurement(MEASUREMENT_AGENT_UUID, MEASUREMENT_UUID);
 	}
-	
+
 	@Test(expected = StorageServiceException.class)
 	public void disassociateMeasurementCallWhichIsAlreadyDisassociated_throwsStorageServiceException() {
-		
+
 		measurement.getAgentInfo().setUuid(null);
-		
+
 		new Expectations() {{
 			measurementRepository.findByUuid(MEASUREMENT_UUID);
 			result = measurement;
 		}};
-		
+
 		couchDbStorageService.disassociateMeasurement(MEASUREMENT_AGENT_UUID, MEASUREMENT_UUID);
 	}
-	
+
 	@Test(expected = StorageServiceException.class)
 	public void disassociateMeasurementCallWhichIsNotFromTheProvidedUserAgent_throwsStorageServiceException() {
-		
+
 		measurement.getAgentInfo().setUuid("invalid uuid");
-		
+
 		new Expectations() {{
 			measurementRepository.findByUuid(MEASUREMENT_UUID);
 			result = measurement;
 		}};
-		
+
 		couchDbStorageService.disassociateMeasurement(MEASUREMENT_AGENT_UUID, MEASUREMENT_UUID);
 	}
-	
+
 	@Test
 	public void disassociateMeasurementCall_correctedMeasurementIsForwardedToRepo() {
-		
+
 		new Expectations() {{
 			measurementRepository.findByUuid(MEASUREMENT_UUID);
 			result = measurement;
-			
+
 			measurementRepository.save((Measurement) any);
 			result = new Delegate() {
 				public Measurement delegate(Measurement measurement) {
@@ -380,11 +384,11 @@ public class CouchDbStorageServiceMockitTest {
 				}
 			};
 		}};
-		
+
 		final DisassociateResponse response = couchDbStorageService.disassociateMeasurement(MEASUREMENT_AGENT_UUID, MEASUREMENT_UUID);
 		assertNotNull("Null response returned from disassociation", response);
 	}
-	
+
 	@Test
 	public void disassociatedAllMeasurements_correctlyDissassociatesAllMeasurementsOfTheAgent() {
 		final Measurement secondMeasurement = new Measurement();
@@ -394,15 +398,15 @@ public class CouchDbStorageServiceMockitTest {
 		agentInfo.setUuid(MEASUREMENT_AGENT_UUID);
 		agentInfo.setType(MeasurementAgentType.MOBILE);
 		secondMeasurement.setAgentInfo(agentInfo);
-		
+
 		final List<Measurement> measurementList = new ArrayList<>();
 		measurementList.add(measurement);
 		measurementList.add(secondMeasurement);
-		
+
 		new Expectations() {{
 			measurementRepository.findByAgentInfoUuid(MEASUREMENT_AGENT_UUID);
 			result = measurementList;
-			
+
 			measurementRepository.saveAll((List<Measurement>) any);
 			result = new Delegate() {
 				public Iterable<Measurement> delegate(List<Measurement> measurementList) {
@@ -413,7 +417,7 @@ public class CouchDbStorageServiceMockitTest {
 				}
 			};
 		}};
-		
+
 		couchDbStorageService.disassociateAllMeasurements(MEASUREMENT_AGENT_UUID);
 	}
 

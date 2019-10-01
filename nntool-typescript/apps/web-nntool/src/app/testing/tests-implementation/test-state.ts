@@ -1,5 +1,5 @@
-import {BasicTestState} from '../enums/basic-test-state.enum';
+import { BasicTestState } from '../enums/basic-test-state.enum';
 
 export abstract class TestState {
-    basicState: BasicTestState;
+  public basicState: BasicTestState;
 }

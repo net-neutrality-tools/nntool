@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-20
+ *      \date Last update: 2019-09-09
  *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -24,7 +24,6 @@
 var webSocket;
 
 var wsTarget;
-var wsTargetRtt;
 var wsTargetPort;
 var wsWss;
 var wsProtocol;
@@ -253,11 +252,6 @@ function connect()
 
     var target = wsWssString + wsTarget + ':' + wsTargetPort;    
 
-    if (wsTestCase === 'rtt')
-    {
-        target = wsWssString + wsTargetRtt + ':' + wsTargetPort;
-    }
-
     try
     {
         var wsProtocols = [wsProtocol, 'overload', wsAuthToken, wsAuthTimestamp];
@@ -401,7 +395,7 @@ function connect()
                         wsRttValues.rtts = [];
                         for (var rtt in data.rtts)
                         {
-                            wsRttValues.rtts.push({"rtt_ns": data.rtts[rtt].rtt_ns * 1000});
+                            wsRttValues.rtts.push(data.rtts[rtt].rtt_ns * 1000);
                         }
                     }
                 }
@@ -613,7 +607,6 @@ function sendToWebSocket(cmd, msg)
 function setWsParameters(data)
 {
     wsTarget        = data.wsTarget;
-    wsTargetRtt     = data.wsTargetRtt;
     wsTargetPort    = data.wsTargetPort;
     wsWss           = data.wsWss;
     wsProtocol      = data.wsProtocol;

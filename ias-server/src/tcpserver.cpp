@@ -70,8 +70,13 @@ int CTcpServer::run()
     TRC_INFO("Start Thread: TCP " + sTlsEnabled + "socket on target Port " + to_string(mTargetPort) + " with PID " + std::to_string(syscall(SYS_gettid)));
 
     timeval tv;
+    timeval tv_l;
     tv.tv_sec = 60;
     tv.tv_usec = 0;
+    tv_l.tv_sec = 1;
+    tv_l.tv_usec = 0;
+    setsockopt(mConnection->mSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv_l, sizeof(timeval));
+    setsockopt(mConnection->mSocket, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv_l, sizeof(timeval));
 
 	while (::RUNNING)
     {
@@ -81,9 +86,9 @@ int CTcpServer::run()
         setsockopt(nSocket, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval));
         
         setsockopt(nSocket, IPPROTO_TCP, TCP_QUICKACK,  (void *)&on, sizeof(on));
-
-        if (fork() == 0)
+        if ((nSocket > 0) && fork() == 0)
         {
+            mConnection->close();
             string ip = CTool::get_ip_str((struct sockaddr *)&client);  
             
             if (ip.find("::ffff:") != string::npos)

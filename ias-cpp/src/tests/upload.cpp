@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-19
+ *      \date Last update: 2019-08-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -85,9 +85,22 @@ int Upload::run()
 
 		#if defined(NNTOOL) && defined(__ANDROID__)
 			if( CTool::validateIp(mClient) == 6)
+			{
 				mServer = CTool::getIpFromHostname( mServerName, 6 );
+			}
 			else
+			{
 				mServer = CTool::getIpFromHostname( mServerName, 4 );
+			}
+
+			if (mServer.compare("1.1.1.1") == 0)
+			{
+				//Error
+				::UNREACHABLE = true;
+				::hasError = true;
+				TRC_ERR("no connection to measurement peer");
+				return -1;
+			}
 		#endif
 
 		#if defined(NNTOOL) && !defined(__ANDROID__)
@@ -95,6 +108,15 @@ int Upload::run()
 			memset(&ips, 0, sizeof ips);
 
 			ips = CTool::getIpsFromHostname( mServerName, true );
+
+			if (ips->ai_socktype != 1 && ips->ai_socktype != 2)
+			{
+				//Error
+				::UNREACHABLE = true;
+				::hasError = true;
+				TRC_ERR("no connection to measurement peer");
+				return -1;
+			}
 
 			char host[NI_MAXHOST];
 			
@@ -330,7 +352,7 @@ int Upload::run()
 				unsigned long long nUploadt0 = mUpload.results.begin()->first;
 				
 				//Get Max T0
-				if( measurements.upload.totime < nUploadt0 )
+				if( measurements.upload.totime > nUploadt0 )
 					measurements.upload.totime = nUploadt0;
 				
 				//Starting multiple Instances for every Probe

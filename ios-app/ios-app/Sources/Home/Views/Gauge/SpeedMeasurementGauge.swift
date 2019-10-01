@@ -27,12 +27,12 @@ import UIKit
         .upload
     ]
 
-    let speedUnits = [ // TODO: make translatable
-        "0Mbps",
-        "1Mbps",
-        "10Mbps",
-        "100Mbps",
-        "1Gbps"
+    let speedUnits = [
+        "0M\(R.string.localizable.generalUnitsBps())",
+        "1M\(R.string.localizable.generalUnitsBps())",
+        "10M\(R.string.localizable.generalUnitsBps())",
+        "100M\(R.string.localizable.generalUnitsBps())",
+        "1G\(R.string.localizable.generalUnitsBps())"
     ]
 
     ///

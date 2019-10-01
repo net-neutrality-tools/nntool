@@ -1,5 +1,5 @@
 export enum BasicTestState {
-    INITIALIZED = 'INITIALIZED',
-    RUNNING = 'RUNNING',
-    ENDED = 'ENDED'
+  INITIALIZED = 'INITIALIZED',
+  RUNNING = 'RUNNING',
+  ENDED = 'ENDED'
 }

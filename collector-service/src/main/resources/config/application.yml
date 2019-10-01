@@ -22,3 +22,17 @@ server:
 
 collector:
   system-uuid: f0b6d3f1-40c8-4835-82df-747b28caa326
+  
+# ===================================================================
+# External services specific properties
+# =================================================================== 
+external-services:
+  device-imports:
+    - name: google-device-import
+      url: http://storage.googleapis.com/play_public/supported_devices.csv
+      cron: "0 50 2 * * *"
+      enabled: false
+    - name: ios-device-import
+      url: url.missing
+      cron: "0 50 1 * * *"
+      enabled: false

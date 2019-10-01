@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
 import at.alladin.nettest.service.collector.config.CollectorServiceProperties;
+import at.alladin.nettest.service.collector.config.ExternalServicesProperties;
 import at.alladin.nettest.shared.server.config.spring.DevelopmentWebCorsConfiguration;
 import at.alladin.nettest.shared.server.config.spring.MessageSourceConfiguration;
 import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
@@ -26,7 +27,8 @@ import at.alladin.nettest.shared.server.storage.couchdb.config.EnableCouchDbStor
 	DataSourceAutoConfiguration.class // will be included based on property spring.datasource.url
 })
 @EnableConfigurationProperties({
-	CollectorServiceProperties.class
+	CollectorServiceProperties.class,
+	ExternalServicesProperties.class,
 })
 @ComponentScan({
 	"at.alladin.nettest.service.collector", 

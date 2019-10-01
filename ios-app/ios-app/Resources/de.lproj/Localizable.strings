@@ -1,0 +1,27 @@
+///////////////////////////
+// General
+///////////////////////////
+
+"general.units.bps" = "bit/s";
+
+///////////////////////////
+// Terms of service
+///////////////////////////
+
+"tos.popup.registering" = "Agent registrieren";
+
+"tos.error.registration.title" = "Registrierungsfehler";
+"tos.error.registration.message" = "Agent konnte nicht registriert werden. TODO";
+"tos.error.registration.retry" = "Erneut versuchen";
+"tos.error.registration.close" = "App schließen";
+
+///////////////////////////
+// Measurement
+///////////////////////////
+
+"measurement.speed.phase.init" = "Init";
+"measurement.speed.phase.rtt" = "RTT";
+"measurement.speed.phase.download" = "Download";
+"measurement.speed.phase.upload" = "Upload";
+
+"measurement.gauge.start" = "GO";

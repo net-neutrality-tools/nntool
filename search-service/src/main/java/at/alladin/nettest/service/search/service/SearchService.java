@@ -70,11 +70,26 @@ public class SearchService {
 		final QueryBuilder queryBuilder;
 		
 		if (StringUtils.hasLength(queryString)) {
+			String customQueryString = new String(queryString);
+			
 			// TODO: restrict queryStringQuery
 			
 			/*queryBuilder = QueryBuilders.boolQuery()
-				.must(QueryBuilders.queryStringQuery(queryString));*/
-			queryBuilder = QueryBuilders.queryStringQuery(queryString)/*.allowLeadingWildcard(false)*/;
+				.must(QueryBuilders.queryStringQuery(customQueryString));*/
+			//queryBuilder = QueryBuilders.queryStringQuery(customQueryString)/*.allowLeadingWildcard(false)*/;
+			
+			// TODO ...
+			if (!customQueryString.contains(":")) {
+				if (!customQueryString.startsWith("*")) {
+					customQueryString = "*" + customQueryString;
+				}
+				
+				if (!customQueryString.endsWith("*")) {
+					customQueryString = customQueryString + "*";
+				}
+			}
+			
+			queryBuilder = QueryBuilders.queryStringQuery(customQueryString).analyzeWildcard(true);
 		} else {
 			queryBuilder = QueryBuilders.matchAllQuery();
 		}

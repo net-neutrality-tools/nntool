@@ -51,6 +51,8 @@ class IASProgram: NSObject, ProgramProtocol {
 
         speed.speedDelegate = self
 
+        delegate?.iasMeasurement(self, didStartPhase: .initialize)
+
         speed.measurementLoad()
 
         ////
@@ -60,12 +62,10 @@ class IASProgram: NSObject, ProgramProtocol {
         if let addr = serverAddress, let port = serverPort {
             speed.targetsTld = ""
             speed.targets = [addr]
-            speed.targetsRtt = [addr]
             speed.targetsPort = port
         } else {
             speed.targetsTld = "net-neutrality.tools"
             speed.targets = ["peer-ias-de-01-ipv4"]
-            speed.targetsRtt = ["peer-ias-de-01-ipv4"]
             speed.targetsPort = "80"
         }
 
@@ -331,7 +331,7 @@ extension IASProgram: SpeedDelegate {
         logger.debug("measurementDidLoad")
 
         speed.measurementStart()
-        delegate?.iasMeasurement(self, didStartPhase: .initialize)
+        delegate?.iasMeasurement(self, didStartPhase: .rtt)
     }
 
     func measurementCallback(withResponse response: [AnyHashable: Any]!) {

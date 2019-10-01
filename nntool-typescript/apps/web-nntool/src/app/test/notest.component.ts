@@ -1,26 +1,22 @@
-import {Component, Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot} from '@angular/router';
-import {Observable} from 'rxjs';
-
+import { Component, Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class TestGuard implements CanDeactivate<NetTestComponent> {
+  constructor() {}
 
-    constructor() {}
-
-    canDeactivate(
-        component: NetTestComponent,
-        currentRoute: ActivatedRouteSnapshot,
-        currentState: RouterStateSnapshot,
-        nextState: RouterStateSnapshot
-    ): Observable<boolean>|Promise<boolean>|boolean {
-        return true;
-    }
+  public canDeactivate(
+    component: NetTestComponent,
+    currentRoute: ActivatedRouteSnapshot,
+    currentState: RouterStateSnapshot,
+    nextState: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    return true;
+  }
 }
-
 
 @Component({
-    template: ''
+  template: ''
 })
-export class NetTestComponent {
-}
+export class NetTestComponent {}

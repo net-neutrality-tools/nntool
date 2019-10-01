@@ -1,16 +1,13 @@
-import {GeoLocation} from '../api/request-info.api';
+import { GeoLocation } from '../api/request-info.api';
 
 export class PointInTimeValueAPI<T> {
+  /**
+   * The relative time in nanoseconds to the test start.
+   */
+  public relative_time_ns: number;
 
-    /**
-     * The relative time in nanoseconds to the test start.
-     */
-    relative_time_ns: number;
-
-    /**
-     * The value recorded at this point in time.
-     */
-    value: T;
-
+  /**
+   * The value recorded at this point in time.
+   */
+  public value: T;
 }
-

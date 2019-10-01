@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-20
+ *      \date Last update: 2019-08-29
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -434,6 +434,7 @@ int CTcpHandler::websocket_reject_handler(noPollCtx *ctx, noPollConn *conn, noPo
         int responseSize = strlen(response);
 
         nopoll_conn_default_send(conn, response, responseSize);
+        nopoll_loop_stop(ctx);
     }
 
     return 0;
@@ -637,8 +638,8 @@ void CTcpHandler::websocket_message_handler(noPollCtx *ctx, noPollConn *conn, no
     
     if (!uploadRunning) 
     {
-        TRC_DEBUG("WebSocket handler: Message received: ");
-        TRC_DEBUG((const char*)nopoll_msg_get_payload(msg));
+        TRC_DEBUG("WebSocket handler: Message received");
+        //TRC_DEBUG((const char*)nopoll_msg_get_payload(msg));
         
         return;
     }
@@ -673,8 +674,9 @@ void CTcpHandler::tcp_timeout_handler(noPollCtx *ctx, noPollConn *conn)
     
     TRC_DEBUG("TCP handler: stopped");
     
-    nopoll_conn_close(conn);
-    
+    //nopoll_conn_close(conn);
+    nopoll_loop_stop(ctx);
+
     if (showShutdown) TRC_DEBUG("Socket: Connection Shutdown for Client IP: " + sClientIp);
 }
 
@@ -895,7 +897,6 @@ void CTcpHandler::sendRoundTripTimeResponse(noPollCtx *ctx, noPollConn *conn)
             {"mis",         rttMissing},
             {"pSz",         rttPacketsize},
             {"std_dev_pop", CTool::to_string_precision(rttStdDevPop, 3)},
-            {"srv",         hostname},
             {"rtts",        jRtts},
         };
 

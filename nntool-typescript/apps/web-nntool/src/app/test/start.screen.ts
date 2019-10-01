@@ -1,13 +1,12 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-    selector: 'app-screen-start',
-    templateUrl: './start.screen.html'
+  selector: 'app-screen-start',
+  templateUrl: './start.screen.html'
 })
 export class StartScreenComponent {
-    @Input()
-    _screenNr: number;
-    @Output()
-    _screenNrChange = new EventEmitter<number>();
-
+  @Input()
+  public _screenNr: number;
+  @Output()
+  public _screenNrChange = new EventEmitter<number>();
 }

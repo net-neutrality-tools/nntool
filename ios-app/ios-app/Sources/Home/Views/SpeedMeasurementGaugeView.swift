@@ -70,7 +70,7 @@ import UIKit
     func reset() {
         startButton?.titleLabel?.font = startButtonSystemFont
 
-        startButton?.setTitle("GO", for: .normal)
+        startButton?.setTitle(R.string.localizable.measurementGaugeStart(), for: .normal)
         startButton?.backgroundColor = BEREC_RED
 
         speedMeasurementGauge?.reset()

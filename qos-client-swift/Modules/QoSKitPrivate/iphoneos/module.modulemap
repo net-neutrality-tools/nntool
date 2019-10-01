@@ -5,3 +5,8 @@ module QoSKitDNS [system] [extern_c] {
     
     export *
 }
+
+module WKWebViewUrlProtocolSupport [system] [extern_c] {
+    header "NSURLProtocol+WKWebViewSupport.h"
+    export *
+}

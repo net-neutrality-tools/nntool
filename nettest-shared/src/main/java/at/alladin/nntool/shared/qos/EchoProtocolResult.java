@@ -16,36 +16,29 @@
 
 package at.alladin.nntool.shared.qos;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author fk 
  */
 public class EchoProtocolResult extends AbstractResult {
 
-	@SerializedName("echo_protocol_objective_host")
-	@Expose
+	@JsonProperty("echo_protocol_objective_host")
 	private Object host;
 
-	@SerializedName("echo_protocol_objective_port")
-	@Expose
+	@JsonProperty("echo_protocol_objective_port")
 	private Object port;
 
-	@SerializedName("echo_protocol_objective_protocol")
-	@Expose
+	@JsonProperty("echo_protocol_objective_protocol")
 	private Object protocol;
 
-	@SerializedName("echo_protocol_objective_payload")
-	@Expose
+	@JsonProperty("echo_protocol_objective_payload")
 	private Object payload;
 
-	@SerializedName("echo_protocol_status")
-	@Expose
+	@JsonProperty("echo_protocol_status")
 	private Object status;
 
-	@SerializedName("echo_protocol_result")
-	@Expose
+	@JsonProperty("echo_protocol_result")
 	private Object result;
 
 	public Object getHost() {

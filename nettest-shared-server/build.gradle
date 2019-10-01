@@ -38,5 +38,7 @@ dependencies {
 	
 	////
 
-	testImplementation group: 'junit', name: 'junit', version: junit_version
+	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: spring_boot_version
+    testImplementation group: 'junit', name: 'junit', version: junit_version
+    testImplementation group: 'org.jmockit', name: 'jmockit', version: jmockit_version
 }

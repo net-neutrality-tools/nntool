@@ -15,7 +15,7 @@ export abstract class BaseComponent implements OnDestroy {
     }
     return this._destroy$;
   }
-  ngOnDestroy() {
+  public ngOnDestroy() {
     if (this._destroy$) {
       this._destroy$.next(true);
       this._destroy$.complete();

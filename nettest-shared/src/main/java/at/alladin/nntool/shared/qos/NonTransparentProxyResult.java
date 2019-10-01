@@ -16,8 +16,7 @@
 
 package at.alladin.nntool.shared.qos;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 /**
@@ -27,24 +26,19 @@ import com.google.gson.annotations.SerializedName;
  */
 public class NonTransparentProxyResult extends AbstractResult {
 	
-	@SerializedName("nontransproxy_objective_request")
-	@Expose
+	@JsonProperty("nontransproxy_objective_request")
 	private String request;
 
-	@SerializedName("nontransproxy_objective_timeout")
-	@Expose
+	@JsonProperty("nontransproxy_objective_timeout")
 	private Long timeout;
 
-	@SerializedName("nontransproxy_result")
-	@Expose
+	@JsonProperty("nontransproxy_result")
 	private String result;
 
-	@SerializedName("nontransproxy_result_response")
-	@Expose
+	@JsonProperty("nontransproxy_result_response")
 	private String response;
 
-	@SerializedName("nontransproxy_objective_port")
-	@Expose
+	@JsonProperty("nontransproxy_objective_port")
 	private Integer port;
 
 	public NonTransparentProxyResult() {

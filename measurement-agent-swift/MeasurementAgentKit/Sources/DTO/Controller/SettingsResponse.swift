@@ -24,7 +24,8 @@ class SettingsResponse: Codable {
     var urls: Urls
 
     /// Map of QoS measurement types to translated type information.
-    var qosTypeInfo: [QoSMeasurementType: TranslatedQoSTypeInfo]?
+    // TODO: Codable enum with string type doesn't allow deserialization.
+    var qosTypeInfo: [/*QoSMeasurementType*/String: TranslatedQoSTypeInfo]?
 
     /// Class for all kind of versions that the server reveals.
     var versions: VersionResponse?

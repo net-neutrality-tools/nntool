@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-20
+ *      \date Last update: 2019-09-04
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -37,25 +37,31 @@ class CCallback
     friend void startTestCase(int nTestCase);
     friend void measurementStart(std::string measurementParameters);
 	private:
+		Json jMeasurementParameters;
+
 		void callbackToPlatform(string cmd, string msg, int error_code, string error_description);
 		void rttUdpCallback(string cmd);
 		void downloadCallback(string cmd);
 		void uploadCallback(string cmd);
 		Json::object getMeasurementResults(struct measurement tempMeasurement, struct measurement_data data, string cmd);
 
-		Json::object jMeasurementResultsTime;
-		Json::object jMeasurementResultsRttUdp;
-		Json::array jMeasurementResultsDownload;
-		Json::array jMeasurementResultsUpload;
+		
 	
 	public:
+		Json::object jMeasurementResultsTime;
+		Json::object jMeasurementResultsPeer;
+		Json::object jMeasurementResultsRttUdp;
+		Json::array jMeasurementResultsDownload;
+		Json::array jMeasurementResultsDownloadStream;
+		Json::array jMeasurementResultsUpload;
+		Json::array jMeasurementResultsUploadStream;
 		int mTestCase;
 
 		Ping *pingThread;
 		vector<Download*> vDownloadThreads;
 		vector<Upload*> vUploadThreads;		
 
-		CCallback();
+		CCallback(Json measurementParameters);
 		
 		virtual ~CCallback();
 		

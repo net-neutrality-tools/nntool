@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-07-01
+ *      \date Last update: 2019-09-09
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -26,8 +26,9 @@ extern MeasurementPhase currentTestPhase;
 
 //! \brief
 //!	Standard Destructor
-CCallback::CCallback()
+CCallback::CCallback(Json measurementParameters)
 {
+	jMeasurementParameters = measurementParameters;
 }
 
 //! \brief
@@ -47,6 +48,13 @@ void CCallback::callback(string cmd, string msg, int error_code, string error_de
 	#endif
 
     TRC_DEBUG("Callback Received: cmd: " + cmd + ", msg: " + msg);
+
+    if (!jMeasurementResultsPeer.size())
+	{
+        jMeasurementResultsPeer["url"] = jMeasurementParameters["wsTargets"].array_items()[0].string_value() + "." + jMeasurementParameters["wsTLD"].string_value();
+        jMeasurementResultsPeer["port"] = jMeasurementParameters["wsTargetPort"].string_value();
+        jMeasurementResultsPeer["tls"] = jMeasurementParameters["wsWss"].string_value();
+    }
 
     if (cmd.compare("report") == 0 || cmd.compare("finish") == 0)
     {
@@ -128,14 +136,29 @@ void CCallback::callbackToPlatform(string cmd, string msg, int error_code, strin
         jMeasurementResults["download_info"] = Json(jMeasurementResultsDownload);
     }
 
+	if (jMeasurementResultsDownloadStream.size() > 0)
+	{
+        jMeasurementResults["download_raw_data"] = Json(jMeasurementResultsDownloadStream);
+    }
+
 	if (jMeasurementResultsUpload.size())
     {
         jMeasurementResults["upload_info"] = Json(jMeasurementResultsUpload);
     }
 
+	if (jMeasurementResultsUploadStream.size())
+    {
+        jMeasurementResults["upload_raw_data"] = Json(jMeasurementResultsUploadStream);
+    }
+
     if (jMeasurementResultsTime.size())
 	{
         jMeasurementResults["time_info"] = Json(jMeasurementResultsTime);
+    }
+
+    if (jMeasurementResultsPeer.size())
+	{
+        jMeasurementResults["peer_info"] = Json(jMeasurementResultsPeer);
     }
 
     #ifdef __ANDROID__
@@ -194,7 +217,7 @@ void CCallback::rttUdpCallback(string cmd)
 		//---------------------------
 		
 		//Calculate Min, Avg, Max
-		CTool::calculateResults( tempMeasurement.ping, 1, 0 );
+		CTool::calculateResults( tempMeasurement.ping, 1, 0, 0 );
 			
 		//---------------------------
 	
@@ -241,9 +264,6 @@ void CCallback::rttUdpCallback(string cmd)
 
 		for ( auto &rtt : tempMeasurement.ping.interim_values )
 		{
-	        Json jRtt = Json::object{
-	            {"rtt_ns", rtt * 1000},
-	        };
 			jRtts.push_back(rtt * 1000);
 		}
 			
@@ -265,7 +285,6 @@ void CCallback::rttUdpCallback(string cmd)
 	jMeasurementResults["num_missing"] = to_string(tempMeasurement.ping.missing);
 	jMeasurementResults["packet_size"] = to_string(tempMeasurement.ping.packetsize);
 	jMeasurementResults["standard_deviation_ns"] = to_string(tempMeasurement.ping.standard_deviation_ns);
-	jMeasurementResults["peer"] = tempMeasurement.ping.servername;
 	jMeasurementResults["rtts"] = jRtts;
 	jMeasurementResults["progress"] = tempMeasurement.ping.measurement_phase_progress;
 
@@ -274,10 +293,14 @@ void CCallback::rttUdpCallback(string cmd)
 
 void CCallback::downloadCallback(string cmd)
 {
+	Json::array jMeasurementResultsStreams;
+
 	struct measurement tempMeasurement;
 	tempMeasurement.download.datasize_total = 0;
 	tempMeasurement.streams = 0;
 	tempMeasurement.download.totime = 0;
+
+	int streamId = 0;
 
 	for(vector<Download*>::iterator itThread = vDownloadThreads.begin(); itThread != vDownloadThreads.end(); ++itThread)
 	{
@@ -286,6 +309,13 @@ void CCallback::downloadCallback(string cmd)
 
 			struct measurement_data mDownload = (*itThread)->mDownload;
 
+			Json::object jMeasurementResultsStream;
+			jMeasurementResultsStream["stream_id"] = streamId;
+			jMeasurementResultsStream["bytes"] = 0;
+			jMeasurementResultsStream["bytes_including_slow_start"] = 0;
+			jMeasurementResultsStream["relative_time_ns"] = 0;
+			jMeasurementResultsStream["relative_time_ns_total"] = 0;
+
 			(*itThread)->measurementTimeDuration = CTool::get_timestamp() - (*itThread)->measurementTimeStart;
 
 			if (cmd.compare("finish") == 0)
@@ -293,24 +323,23 @@ void CCallback::downloadCallback(string cmd)
 				(*itThread)->measurementTimeEnd = CTool::get_timestamp();
 				jMeasurementResultsTime["download_end"] = to_string((*itThread)->measurementTimeEnd * 1000);
 			}
+
+			unsigned long long datasize = 0;
 	
-			unsigned long long nDownload0 = mDownload.results.begin()->first;
-			
-			//Get Max T0
-			if( tempMeasurement.download.totime < nDownload0 )
-				tempMeasurement.download.totime = nDownload0;
-			
 			//Starting multiple Instances for every Probe
 			for(map<int, unsigned long long>::iterator AI = mDownload.results.begin(); AI!= mDownload.results.end(); ++AI)
 			{
 				//write to Global Object
 				tempMeasurement.download.results[(*AI).first] 	+= (*AI).second;
-				tempMeasurement.download.datasize  		+= (*AI).second;
-				
+				tempMeasurement.download.datasize  				+= (*AI).second;
+				datasize 										+= (*AI).second;
 				//TRC_DEBUG( ("Results ["+CTool::toString( (*AI).first )+"]: "+CTool::toString( (*AI).second ) ).c_str() );
 			}
 
 			tempMeasurement.download.datasize_total += mDownload.datasize_total;
+
+			jMeasurementResultsStream["bytes"] = to_string(datasize / 8);
+			jMeasurementResultsStream["bytes_including_slow_start"] = to_string(mDownload.datasize_total / 8);
 			
 			//Must be a valid value and non zero
 			if( (*itThread)->nHttpResponseDuration != 0 )
@@ -365,6 +394,9 @@ void CCallback::downloadCallback(string cmd)
 			if( (*itThread)->mResponse > 0 )
 				tempMeasurement.streams++;
 
+			jMeasurementResultsStreams.push_back(jMeasurementResultsStream);
+			streamId++;
+
 		//Unlock Mutex
 		pthread_mutex_unlock(&mutex1);
 	}
@@ -400,7 +432,7 @@ void CCallback::downloadCallback(string cmd)
 	//---------------------------
 
 	//Calculate Min, Avg, Max
-	CTool::calculateResults( tempMeasurement.download, 0.5, 0 );
+	CTool::calculateResults( tempMeasurement.download, 0.5, 0, TIMER_DURATION);
 
 	TRC_INFO( "DOWNLOAD AVG MBPS: " + CTool::to_string_precision(tempMeasurement.download.avg * 1e-6, 3) );
 
@@ -409,47 +441,82 @@ void CCallback::downloadCallback(string cmd)
 
 	Json::object jMeasurementResults = getMeasurementResults(tempMeasurement, tempMeasurement.download, cmd);
 
+	string error = "";
+	auto y = Json::parse(Json(jMeasurementResultsStreams).dump(), error);
+	if (error.compare("") == 0)
+	{
+		for (auto &m : y.array_items())
+		{
+			Json::object n = m.object_items();
+			n["relative_time_ns"] = jMeasurementResults["duration_ns"];
+			n["relative_time_ns_total"] = jMeasurementResults["duration_ns_total"];
+			jMeasurementResultsDownloadStream.push_back(n);
+		}
+	}
+
 	jMeasurementResultsDownload.push_back(jMeasurementResults);
 }
 
 void CCallback::uploadCallback(string cmd)
 {
+	Json::array jMeasurementResultsStreams;
+
 	struct measurement tempMeasurement;
 	tempMeasurement.upload.datasize_total = 0;
 	tempMeasurement.streams = 0;
-	tempMeasurement.upload.totime = 0;
+	tempMeasurement.upload.totime = 1e7;
+
+	int streamId = 0;
 
 	for(vector<Upload*>::iterator itThread = vUploadThreads.begin(); itThread != vUploadThreads.end(); ++itThread)
 	{
-		struct measurement_data mUpload = (*itThread)->mUpload;
-
-		(*itThread)->measurementTimeDuration = CTool::get_timestamp() - (*itThread)->measurementTimeStart;
-
-		if (cmd.compare("finish") == 0)
-		{
-			(*itThread)->measurementTimeEnd = CTool::get_timestamp();
-			jMeasurementResultsTime["upload_end"] = to_string((*itThread)->measurementTimeEnd * 1000);
-		}
-		
 		//Lock Mutex
 		pthread_mutex_lock(&mutex1);
+
+			struct measurement_data mUpload = (*itThread)->mUpload;
+
+			Json::object jMeasurementResultsStream;
+			jMeasurementResultsStream["stream_id"] = streamId;
+			jMeasurementResultsStream["bytes"] = 0;
+			jMeasurementResultsStream["bytes_including_slow_start"] = 0;
+			jMeasurementResultsStream["relative_time_ns"] = 0;
+			jMeasurementResultsStream["relative_time_ns_total"] = 0;
+
+			(*itThread)->measurementTimeDuration = CTool::get_timestamp() - (*itThread)->measurementTimeStart;
+
+			if (cmd.compare("finish") == 0)
+			{
+				(*itThread)->measurementTimeEnd = CTool::get_timestamp();
+				jMeasurementResultsTime["upload_end"] = to_string((*itThread)->measurementTimeEnd * 1000);
+			}
 		
 			unsigned long long nUploadt0 = mUpload.results.begin()->first;
 			
 			//Get Max T0
-			if( tempMeasurement.upload.totime < nUploadt0 )
+			if( tempMeasurement.upload.totime > nUploadt0 )
 				tempMeasurement.upload.totime = nUploadt0;
 			
+			unsigned long long datasize = 0;
+
 			//Starting multiple Instances for every Probe
+			unsigned int i = 0;
 			for (map<int, unsigned long long>::iterator AI = mUpload.results.begin(); AI!= mUpload.results.end(); ++AI)
 			{
 				//write to Global Object
 				tempMeasurement.upload.results[(*AI).first] 	+= (*AI).second;
-							
+
+				if (i < (MEASUREMENT_DURATION-UPLOAD_ADDITIONAL_MEASUREMENT_DURATION)*2)
+				{
+					datasize 									+= (*AI).second;
+				}
+				i++;
 				//TRC_DEBUG( ("Results ["+CTool::toString( (*itThread)->pid )+"]["+CTool::toString( (*AI).first )+"]: "+CTool::toString( (*AI).second ) ).c_str() );
 			}
 
 			tempMeasurement.upload.datasize_total += mUpload.datasize_total;
+
+			jMeasurementResultsStream["bytes"] = to_string(datasize / 8);
+			jMeasurementResultsStream["bytes_including_slow_start"] = to_string(mUpload.datasize_total / 8);
 			
 			//Must be a valid value and non zero
 			if( (*itThread)->nHttpResponseDuration != 0 )
@@ -503,6 +570,9 @@ void CCallback::uploadCallback(string cmd)
 			
 			if( (*itThread)->mResponse > 0 )
 				tempMeasurement.streams++;
+
+			jMeasurementResultsStreams.push_back(jMeasurementResultsStream);
+			streamId++;
 			
 		//Unlock Mutex
 		pthread_mutex_unlock(&mutex1);
@@ -538,14 +608,14 @@ void CCallback::uploadCallback(string cmd)
 			tempMeasurement.upload.results[i]	+= (*AI).second;
 			tempMeasurement.upload.datasize 	+= (*AI).second;
 			
-			//TRC_DEBUG( ("All Results ["+CTool::toString( (*AI).first )+"]: "+CTool::toString( (*AI).second ) ).c_str() );
+			TRC_DEBUG( ("All Results ["+CTool::toString( (*AI).first )+"]: "+CTool::toString( (*AI).second ) ).c_str() );
 		}
 	}
 
 	//---------------------------
 
 	//Calculate Min, Avg, Max
-	CTool::calculateResults( tempMeasurement.upload, 0.5, 0 );
+	CTool::calculateResults( tempMeasurement.upload, 0.5, 0, 0 );
 
 	//calculcate progress based on TIMER_DURATION to account for UPLOAD_ADDITIONAL_MEASUREMENT_DURATION required for server response receive
 	tempMeasurement.upload.measurement_phase_progress = (TIMER_DURATION - (TIMER_DURATION % 500000)) / (MEASUREMENT_DURATION * 1e6);
@@ -554,6 +624,18 @@ void CCallback::uploadCallback(string cmd)
 
 	Json::object jMeasurementResults = getMeasurementResults(tempMeasurement, tempMeasurement.upload, cmd);
 
+	string error = "";
+	auto y = Json::parse(Json(jMeasurementResultsStreams).dump(), error);
+	if (error.compare("") == 0)
+	{
+		for (auto &m : y.array_items())
+		{
+			Json::object n = m.object_items();
+			n["relative_time_ns"] = jMeasurementResults["duration_ns"];
+			n["relative_time_ns_total"] = jMeasurementResults["duration_ns_total"];
+			jMeasurementResultsUploadStream.push_back(n);
+		}
+	}
 	jMeasurementResultsUpload.push_back(jMeasurementResults);
 }
 

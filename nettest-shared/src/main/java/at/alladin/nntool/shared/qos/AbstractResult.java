@@ -21,8 +21,7 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import at.alladin.nntool.shared.qos.annotations.NonComparableField;
 import at.alladin.nntool.shared.qos.testscript.TestScriptInterpreter;
@@ -59,43 +58,35 @@ public abstract class AbstractResult {
 	@NonComparableField
 	protected Map<String, Object> resultMap = new HashMap<String, Object>();
 	
-	@SerializedName("operator")
-	@Expose
+	@JsonProperty("operator")
 	@NonComparableField
 	protected String operator;
 	
-	@SerializedName("on_failure")
-	@Expose
+	@JsonProperty("on_failure")
 	@NonComparableField
 	protected String onFailure;
 	
-	@SerializedName("on_success")
-	@Expose
+	@JsonProperty("on_success")
 	@NonComparableField
 	protected String onSuccess;
 	
-	@SerializedName("evaluate")
-	@Expose
+	@JsonProperty("evaluate")
 	protected Object evaluate;
 	
-	@SerializedName("end_time_ns")
-	@Expose
+	@JsonProperty("end_time_ns")
 	protected Long endTimeNs;
 	
-	@SerializedName("start_time_ns")
-	@Expose
+	@JsonProperty("start_time_ns")
 	protected Long startTimeNs;
 	
-	@SerializedName("duration_ns")
-	@Expose
+	@JsonProperty("duration_ns")
 	protected Long testDuration;
 	
 	///////////////////////////////////////
 	//	Advanced implementations:
 	///////////////////////////////////////
 	
-	@SerializedName("success_condition")
-	@Expose
+	@JsonProperty("success_condition")
 	@NonComparableField
 	protected String successCondition = "true";
 	
@@ -106,16 +97,14 @@ public abstract class AbstractResult {
 	 * <li>{@link AbstractResult#RESULT_TYPE_INFO}: Will not count as a success or failure. The status of the result will be "info"</li>
 	 * </ul>
 	 */
-	@SerializedName("failure_type")
-	@Expose
+	@JsonProperty("failure_type")
 	@NonComparableField
 	protected String failureType = RESULT_TYPE_DEFAULT;
 
 	/**
 	 * @see AbstractResult#failureType
 	 */
-	@SerializedName("success_type")
-	@Expose
+	@JsonProperty("success_type")
 	@NonComparableField
 	protected String successType = RESULT_TYPE_DEFAULT;
 	
@@ -126,8 +115,7 @@ public abstract class AbstractResult {
 	 * <li>{@link AbstractResult#BEHAVIOUR_ABORT}: Will cause the evaluation to abort. All following expected results will be ignored.</li>
 	 * </ul>
 	 */
-	@SerializedName("on_failure_behaviour")
-	@Expose
+	@JsonProperty("on_failure_behaviour")
 	@NonComparableField
 	protected String onFailureBehaivour = BEHAVIOUR_NOTHING;
 
@@ -135,8 +123,7 @@ public abstract class AbstractResult {
 	 * the behaviour of the evaluation if the test succeeds
 	 * @see AbstractResult#onFailureBehaivour
 	 */
-	@SerializedName("on_success_behaviour")
-	@Expose
+	@JsonProperty("on_success_behaviour")
 	@NonComparableField
 	protected String onSuccessBehaivour = BEHAVIOUR_NOTHING;
 	
@@ -146,8 +133,7 @@ public abstract class AbstractResult {
 	 * <br>
 	 * default: {@link Integer#MAX_VALUE} 
 	 */
-	@SerializedName("priority")
-	@Expose
+	@JsonProperty("priority")
 	@NonComparableField
 	protected Integer priority = Integer.MAX_VALUE;
 	

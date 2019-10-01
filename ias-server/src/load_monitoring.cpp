@@ -64,11 +64,13 @@ int CLoadMonitoring::run()
         return -1;
     }
 
+    CLoadBalancing *loadBalancing;
+
     if (::CONFIG["load"]["balancer"]["enabled"].bool_value())
     {
         balancer = true;
 
-        CLoadBalancing *loadBalancing = new CLoadBalancing(&jLoad);
+        loadBalancing = new CLoadBalancing(&jLoad);
 
         if (loadBalancing->createThread() != 0)
         {
@@ -188,6 +190,12 @@ int CLoadMonitoring::run()
         
         usleep(1000000);
     }
+    //Stop webservice
+    if (::CONFIG["load"]["balancer"]["enabled"].bool_value())
+    {
+        loadBalancing->waitForEnd();
+    }
+    delete(loadBalancing);
 
     TRC_DEBUG("End Thread: Load Monitoring with PID " + std::to_string(syscall(SYS_gettid)));
 

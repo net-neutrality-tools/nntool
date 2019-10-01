@@ -17,8 +17,7 @@
 
 package at.alladin.nntool.shared.qos;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * 
@@ -39,48 +38,37 @@ import com.google.gson.annotations.SerializedName;
  */
 public class UdpResult extends AbstractResult {
 	
-	@SerializedName("udp_objective_delay")
-	@Expose
+	@JsonProperty("udp_objective_delay")
 	private Object delay;
 
-	@SerializedName("udp_objective_out_port")
-	@Expose
+	@JsonProperty("udp_objective_out_port")
 	private Object outPort;
 	
-	@SerializedName("udp_result_out_num_packets")
-	@Expose
+	@JsonProperty("udp_result_out_num_packets")
 	private Object resultOutNumPackets;
 	
-	@SerializedName("udp_result_out_response_num_packets")
-	@Expose
+	@JsonProperty("udp_result_out_response_num_packets")
 	private Object resultOutNumPacketsResponse;
 	
-	@SerializedName("udp_objective_out_num_packets")
-	@Expose
+	@JsonProperty("udp_objective_out_num_packets")
 	private Object outNumPackets;
 	
-	@SerializedName("udp_objective_in_port")
-	@Expose
+	@JsonProperty("udp_objective_in_port")
 	private Object inPort;
 	
-	@SerializedName("udp_result_in_num_packets")
-	@Expose
+	@JsonProperty("udp_result_in_num_packets")
 	private Object resultInNumPackets;
 	
-	@SerializedName("udp_objective_in_num_packets")
-	@Expose
+	@JsonProperty("udp_objective_in_num_packets")
 	private Object inNumPackets;
 	
-	@SerializedName("udp_result_in_response_num_packets")
-	@Expose
+	@JsonProperty("udp_result_in_response_num_packets")
 	private Object resultInNumPacketsResponse;
 	
-	@SerializedName("udp_result_in_packet_loss_rate")
-	@Expose
+	@JsonProperty("udp_result_in_packet_loss_rate")
 	private Object incomingPlr;
 
-	@SerializedName("udp_result_out_packet_loss_rate")
-	@Expose
+	@JsonProperty("udp_result_out_packet_loss_rate")
 	private Object outgoingPlr;
 
 	/**

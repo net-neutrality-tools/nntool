@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-03-20
+ *      \date Last update: 2019-08-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -66,7 +66,6 @@ FOUNDATION_EXPORT const unsigned char SpeedVersionString[];
 @property (nonatomic, strong) NSString *platform;                       /**< Platform Identifier */
 
 @property (nonatomic, strong) NSArray *targets;                         /**< DL/UL: Measurement target servers */
-@property (nonatomic, strong) NSArray *targetsRtt;                      /**< RTT: Measurement target servers */
 @property (nonatomic, strong) NSString *targetsTld;                     /**< TLD of measurement target servers */
 @property (nonatomic, strong) NSString *targetsPort;                    /**< Port of measurement target servers */
 @property (nonatomic) NSInteger wss;                                    /**< WebSocket Secure */

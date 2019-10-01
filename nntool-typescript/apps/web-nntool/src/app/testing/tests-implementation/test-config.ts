@@ -1,3 +1,1 @@
-export abstract class TestConfig {
-
-}
+export abstract class TestConfig {}

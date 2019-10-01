@@ -1,0 +1,27 @@
+///////////////////////////
+// General
+///////////////////////////
+
+"general.units.bps" = "bps";
+
+///////////////////////////
+// Terms of service
+///////////////////////////
+
+"tos.popup.registering" = "Registering agent";
+
+"tos.error.registration.title" = "Registration error";
+"tos.error.registration.message" = "Agent could not be registered, TODO: message";
+"tos.error.registration.retry" = "Retry";
+"tos.error.registration.close" = "Close App";
+
+///////////////////////////
+// Measurement
+///////////////////////////
+
+"measurement.speed.phase.init" = "Init";
+"measurement.speed.phase.rtt" = "RTT";
+"measurement.speed.phase.download" = "Download";
+"measurement.speed.phase.upload" = "Upload";
+    
+"measurement.gauge.start" = "GO";
