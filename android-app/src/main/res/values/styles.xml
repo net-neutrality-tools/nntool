@@ -261,4 +261,18 @@
         <item name="android:textSize">35dp</item>
     </style>
 
+    <!-- Map Fragment -->
+    <style name="Nettest.Map.InfoWindow" parent="Theme.AppCompat.Light.Dialog">
+
+    </style>
+
+    <style name="Nettest.Map.InfoWindow.Title" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="Nettest.Map.InfoWindow.Content" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>

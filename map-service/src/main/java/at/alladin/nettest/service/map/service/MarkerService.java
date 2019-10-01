@@ -6,7 +6,6 @@ import com.google.gson.internal.bind.util.ISO8601Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -25,7 +24,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -34,10 +32,14 @@ import javax.inject.Inject;
 import at.alladin.nettest.service.map.domain.model.MapServiceOptions;
 import at.alladin.nettest.service.map.domain.model.MapServiceSettings;
 import at.alladin.nettest.service.map.util.GeographyHelper;
-import at.alladin.nntool.shared.map.MapCoordinate;
-import at.alladin.nntool.shared.map.MapMarkerRequest;
+import at.alladin.nettest.shared.helper.GsonBasicHelper;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
 import at.alladin.nettest.shared.server.helper.ClassificationHelper;
+import at.alladin.nntool.shared.map.MapCoordinate;
+import at.alladin.nntool.shared.map.MapMarkerRequest;
+import at.alladin.nntool.shared.map.MapMarkerResponse;
+import at.alladin.nntool.shared.map.MapMarkerResponse.MapMarker;
+import at.alladin.nntool.shared.map.MapMarkerResponse.MeasurementItem;
 
 @Service
 public class MarkerService {
@@ -85,12 +87,16 @@ public class MarkerService {
     @Inject
     private JdbcTemplate jdbcTemplate;
 
-    public String obtainMarker(final MapMarkerRequest request, final Locale locale) {
+    public MapMarkerResponse obtainMarker(final MapMarkerRequest request, final Locale locale) {
 
-        final JSONObject answer = new JSONObject();
+        final MapMarkerResponse answer = new MapMarkerResponse();
 
         try {
-            String clientUuidString = request.getOptions().get("client_uuid");//request.optString("client_uuid");
+        	
+        	String clientUuidString = null;
+        	if (request.getOptions() != null && request.getOptions().containsKey("client_uuid")) {
+        		clientUuidString = request.getOptions().get("client_uuid");
+        	}
 
             boolean useXY = false;
             boolean useLatLon = false;
@@ -151,27 +157,29 @@ public class MarkerService {
                     final List<MapServiceSettings.SQLFilter> filters = new ArrayList<>(mapOptionsService.getDefaultMapFilters());
                     filters.add(mapOptionsService.getAccuracyMapFilter());
 
-                    final Iterator<String> keys = request.getMapFilter().keySet().iterator();
-
-                    while (keys.hasNext()) {
-                        final String key = /*(String)*/ keys.next();
-                        if (request.getMapFilter().get(key) != null) {
-                            if (key.equals("highlight")) {
-                                if (highlightUuidString == null) {
-                                    highlightUuidString = request.getMapFilter().get(key);
-                                }
-                            } else if (key.equals("highlight_uuid")) {
-                                highlightUuidString = request.getMapFilter().get(key);
-                            } else if ("prioritize".equals(key)) {
-                                prioritizeUUIDString = request.getMapFilter().get(key);
-                            } else {
-                                final MapServiceSettings.MapFilter f = mapOptionsService.getMapFilterForKey(key);
-                                if (f != null) {
-                                    //filters.add(mapFilter.getFilter(mapFilterObj.getString(key)));
-                                    filters.add(f.getFilter("" + request.getMapFilter().get(key)));
-                                }
-                            }
-                        }
+                    if (request.getMapFilter() != null) {
+	                    final Iterator<String> keys = request.getMapFilter().keySet().iterator();
+	
+	                    while (keys.hasNext()) {
+	                        final String key = /*(String)*/ keys.next();
+	                        if (request.getMapFilter().get(key) != null) {
+	                            if (key.equals("highlight")) {
+	                                if (highlightUuidString == null) {
+	                                    highlightUuidString = request.getMapFilter().get(key);
+	                                }
+	                            } else if (key.equals("highlight_uuid")) {
+	                                highlightUuidString = request.getMapFilter().get(key);
+	                            } else if ("prioritize".equals(key)) {
+	                                prioritizeUUIDString = request.getMapFilter().get(key);
+	                            } else {
+	                                final MapServiceSettings.MapFilter f = mapOptionsService.getMapFilterForKey(key);
+	                                if (f != null) {
+	                                    //filters.add(mapFilter.getFilter(mapFilterObj.getString(key)));
+	                                    filters.add(f.getFilter("" + request.getMapFilter().get(key)));
+	                                }
+	                            }
+	                        }
+	                    }
                     }
 
                     if (prioritizeUUIDString != null) {
@@ -230,7 +238,7 @@ public class MarkerService {
                     final String finalClientUuidString = clientUuidString;
                     final String finalHighlightUuidString = highlightUuidString;
 
-                    final List<JSONObject> resultJsonObjects = jdbcTemplate.query(sql, ps -> {
+                    final List<MapMarker> resultObjects = jdbcTemplate.query(sql, ps -> {
                         int i = 1;
                                 /*
                                 if (clientUuid != null) {
@@ -254,11 +262,8 @@ public class MarkerService {
                     }, (ResultSet rs, int rowNum) -> parseResultSet(rs, finalClientUuidString, finalHighlightUuidString, locale));
 
 
-                    final JSONArray resultList = new JSONArray();
 
-                    resultJsonObjects.forEach(resultList::put);
-
-                    answer.put("measurements", resultList);
+                    answer.setMapMarkers(resultObjects);
                 }
             } else {
                 logger.error("Expected request is missing.");
@@ -267,12 +272,13 @@ public class MarkerService {
             logger.error("Error parsing JSON Data " + e.toString());
         }
 
-        return answer.toString();
+        System.out.println("ANSWER:\n" + GsonBasicHelper.getDateTimeGsonBuilder().create().toJson(answer));
+        return answer;
     }
 
-    private JSONObject parseResultSet(final ResultSet rs, final String clientUuidString, final String highlightUuidString, final Locale locale) throws SQLException {
+    private MapMarker parseResultSet(final ResultSet rs, final String clientUuidString, final String highlightUuidString, final Locale locale) throws SQLException {
         final Format format = NumberFormat.getInstance();//new SignificantFormat(2, locale); //TODO
-        final JSONObject jsonItem = new JSONObject();
+        final MapMarker jsonItem = new MapMarker();
 
         UUID highlightUuid = null;
         if (highlightUuidString != null) {
@@ -282,9 +288,6 @@ public class MarkerService {
                 highlightUuid = null;
             }
         }
-
-        JSONArray jsonItemList = new JSONArray();
-
 
         final String dbClientUuidString = rs.getString("client_uuid");
         //final String measurementUuid = rs.getString("uuid");
@@ -296,12 +299,12 @@ public class MarkerService {
                 (highlightUuidString != null && highlightUuidString.equals(dbClientUuidString))) {
             // highlight uses both the new highlight_uuid syntax and the old client_uuid syntax
             // TODO: The client_uuid should only return your own measurement markers
-            jsonItem.put("highlight", true);
+            jsonItem.setHighlight(true);
 
             // put measurement_uuid if measurement belongs to given client_uuid
-            jsonItem.put("measurement_uuid", measurementUuid); // give measurement_uuid for in-app view of own results
+            jsonItem.setOpenTestUuid(measurementUuid); // give measurement_uuid for in-app view of own results
         } else {
-            jsonItem.put("highlight", false);
+            jsonItem.setHighlight(false);
         }
 
         final double res_x = rs.getDouble(1);
@@ -309,13 +312,10 @@ public class MarkerService {
         final String openTestUUID = rs.getString("open_test_uuid");
 
         // TODO: remove lat,long in favor of geo_lat,geo_long to make the responses more similar (measurement result response)
-        jsonItem.put("lat", res_x);
-        jsonItem.put("lon", res_y);
+        jsonItem.setLatitude(res_x); // new with geo_
+        jsonItem.setLongitude(res_y); // new with geo_
 
-        jsonItem.put("geo_lat", res_x); // new with geo_
-        jsonItem.put("geo_long", res_y); // new with geo_
-
-        jsonItem.put("open_test_uuid", "O" + openTestUUID);
+        jsonItem.setOpenTestUuid("O" + openTestUUID);
         // marker.put("uid", uid);
 
         final Date date = rs.getTimestamp("time");
@@ -324,9 +324,9 @@ public class MarkerService {
         if (!Strings.isNullOrEmpty(tzString)) {
             dateFormat.setTimeZone(TimeZone.getTimeZone(tzString));
         }
-        jsonItem.put("time_string", dateFormat.format(date));
-        jsonItem.put("timestamp", date.getTime());
-        jsonItem.put("time", ISO8601Utils.format(date));
+        jsonItem.setTimeString(dateFormat.format(date));
+        jsonItem.setTimestamp(date.getTime());
+        jsonItem.setTime(ISO8601Utils.format(date));
 
         //get the first networkType for classification
         final String signalString = rs.getString("signals");
@@ -338,22 +338,24 @@ public class MarkerService {
         }
         final Integer networkTypeId = signalArr.length() > 0 ? signalArr.getJSONObject(0).getInt("network_type_id") : rs.getInt("network_type_id");
 
+        final List<MeasurementItem> measurementResultList = new ArrayList<>();
+        
         final int fieldDown = rs.getInt("speed_download");
         final String downloadString = String.format("%s %s", format.format(fieldDown / 1000d), messageSource.getMessage("RESULT_DOWNLOAD_UNIT", null, locale));//labels.getString("RESULT_DOWNLOAD_UNIT"));
         ClassificationHelper.ClassificationItem classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.DOWNLOAD, fieldDown, networkTypeId);
-        jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_DOWNLOAD", null, locale), downloadString, classificationItem));
+        measurementResultList.add(generateMeasurementItem(messageSource.getMessage("RESULT_DOWNLOAD", null, locale), downloadString, classificationItem));
 
         final int fieldUp = rs.getInt("speed_upload");
         final String uploadString = String.format("%s %s", format.format(fieldUp / 1000d),messageSource.getMessage("RESULT_UPLOAD_UNIT", null, locale));
         classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.UPLOAD, fieldUp, networkTypeId);
-        jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_UPLOAD", null, locale), uploadString, classificationItem));
+        measurementResultList.add(generateMeasurementItem(messageSource.getMessage("RESULT_UPLOAD", null, locale), uploadString, classificationItem));
 
         final long fieldPing = rs.getLong("ping_median");
         final int pingValue = (int) Math.round(rs.getDouble("ping_median") / 1000000d);
         final String pingString = String.format("%s %s", format.format(pingValue),
                 messageSource.getMessage("RESULT_PING_UNIT", null, locale));
         classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.PING, pingValue, networkTypeId);
-        jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_PING", null, locale), pingString, classificationItem));
+        measurementResultList.add(generateMeasurementItem(messageSource.getMessage("RESULT_PING", null, locale), pingString, classificationItem));
 
         final int networkType = rs.getInt("network_type");
 
@@ -361,22 +363,22 @@ public class MarkerService {
         if (signalField != null && signalField.length() != 0) {
             final int signalValue = rs.getInt("signal_strength");
             classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.SIGNAL, signalValue, networkType);
-            jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_SIGNAL", null, locale), signalValue + " " + messageSource.getMessage("RESULT_SIGNAL_UNIT", null, locale), classificationItem));
+            measurementResultList.add(generateMeasurementItem(messageSource.getMessage("RESULT_SIGNAL", null, locale), signalValue + " " + messageSource.getMessage("RESULT_SIGNAL_UNIT", null, locale), classificationItem));
         }
 
         final String lteRsrpField = rs.getString("lte_rsrp");
         if (lteRsrpField != null && lteRsrpField.length() != 0) {
             final int lteRsrpValue = rs.getInt("lte_rsrp");
             classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.SIGNAL, lteRsrpValue, networkType);
-            jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_LTE_RSRP", null, locale), lteRsrpValue + " " + messageSource.getMessage("RESULT_LTE_RSRP_UNIT", null, locale), classificationItem));
+            measurementResultList.add(generateMeasurementItem(messageSource.getMessage("RESULT_LTE_RSRP", null, locale), lteRsrpValue + " " + messageSource.getMessage("RESULT_LTE_RSRP_UNIT", null, locale), classificationItem));
         }
 
 
-        jsonItem.put("measurement", jsonItemList);
+        jsonItem.setMeasurementResults(measurementResultList);
 
-        jsonItemList = new JSONArray();
+        final List<MeasurementItem> networkResult = new ArrayList<>();
 
-        jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_NETWORK_TYPE", null, locale), Helperfunctions.getNetworkTypeName(networkType)));
+        networkResult.add(generateMeasurementItem(messageSource.getMessage("RESULT_NETWORK_TYPE", null, locale), Helperfunctions.getNetworkTypeName(networkType)));
 
         if (networkType == 98 || networkType == 99) { // mobile wifi or browser
 
@@ -392,14 +394,14 @@ public class MarkerService {
                 if (providerText.length() > (MAX_PROVIDER_LENGTH + 3)) {
                     providerText = providerText.substring(0, MAX_PROVIDER_LENGTH) + "...";
                 }
-                jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_PROVIDER", null, locale), providerText));
+                networkResult.add(generateMeasurementItem(messageSource.getMessage("RESULT_PROVIDER", null, locale), providerText));
             }
 
             if (networkType == 99) { // mobile wifi
                 if (highlightUuid != null && rs.getString("uuid") != null) { // own test
                     final String ssid = rs.getString("wifi_ssid");
                     if (ssid != null && ssid.length() != 0) {
-                        jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_WIFI_SSID", null, locale), ssid.toString()));
+                    	networkResult.add(generateMeasurementItem(messageSource.getMessage("RESULT_WIFI_SSID", null, locale), ssid.toString()));
                     }
                 }
             }
@@ -426,7 +428,7 @@ public class MarkerService {
                     }
                 }
 
-                jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_MOBILE_NETWORK", null, locale), mobileNetworkString));
+                networkResult.add(generateMeasurementItem(messageSource.getMessage("RESULT_MOBILE_NETWORK", null, locale), mobileNetworkString));
             } else if (!Strings.isNullOrEmpty(simOperator)) { //home network (sim)
                 final String mobileNetworkString;
 
@@ -444,15 +446,15 @@ public class MarkerService {
             	}
             	*/
 
-                jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_HOME_NETWORK", null, locale), mobileNetworkString));
+                networkResult.add(generateMeasurementItem(messageSource.getMessage("RESULT_HOME_NETWORK", null, locale), mobileNetworkString));
             }
 
             if (roamingType > 0) {
-                jsonItemList.put(generateJsonObject(messageSource.getMessage("RESULT_ROAMING", null, locale), messageSource.getMessage(Helperfunctions.getRoamingTypeKey(roamingType), null, locale)));
+            	networkResult.add(generateMeasurementItem(messageSource.getMessage("RESULT_ROAMING", null, locale), messageSource.getMessage(Helperfunctions.getRoamingTypeKey(roamingType), null, locale)));
             }
         }
 
-        jsonItem.put("net", jsonItemList);
+        jsonItem.setNetworkResult(networkResult);
         return jsonItem;
     }
 
@@ -463,24 +465,24 @@ public class MarkerService {
      * @param value
      * @param classificationItem
      */
-    private JSONObject generateJsonObject(final String title, final String value, final ClassificationHelper.ClassificationItem classificationItem) {
-        final JSONObject singleItem = new JSONObject();
+    private MeasurementItem generateMeasurementItem(final String title, final String value, final ClassificationHelper.ClassificationItem classificationItem) {
+        final MeasurementItem singleItem = new MeasurementItem();
         if (title != null) {
-            singleItem.put("title", title);
+            singleItem.setTitle(title);
         }
         if (value != null) {
-            singleItem.put("value", value);
+            singleItem.setValue(value);
         }
         if (classificationItem != null) {
-            singleItem.put("classification", classificationItem.getClassificationNumber());
+            singleItem.setClassification(classificationItem.getClassificationNumber());
         }
         if (classificationItem != null && classificationItem.getClassificationColor() != null) {
-            singleItem.put("classification_color", classificationItem.getClassificationColor());
+            singleItem.setClassificationColor(classificationItem.getClassificationColor());
         }
         return singleItem;
     }
 
-    private JSONObject generateJsonObject(final String title, final String value) {
-        return generateJsonObject(title, value, null);
+    private MeasurementItem generateMeasurementItem(final String title, final String value) {
+        return generateMeasurementItem(title, value, null);
     }
 }

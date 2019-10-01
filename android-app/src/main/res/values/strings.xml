@@ -137,5 +137,7 @@
     <string name="preference_enable_download_title">Download</string>
     <string name="preference_enable_upload_title">Upload</string>
 
+    <!-- Map specific strings -->
+    <string name="map_marker_popup_title">Measurement (%1$s)</string>
 
 </resources>
