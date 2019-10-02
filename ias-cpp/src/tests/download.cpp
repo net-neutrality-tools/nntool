@@ -411,7 +411,8 @@ int Download::run()
 		#endif
 
     } catch (std::exception & ex) {
-        TRC_ERR("Exception in download: " + ex.what());
+        TRC_ERR("Exception in download");
+        TRC_ERR(ex.what());
         ::hasError = true;
         ::RUNNING = false;
         ::recentException = ex;

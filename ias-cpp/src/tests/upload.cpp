@@ -451,7 +451,8 @@ int Upload::run()
 		#endif
 	
     } catch (std::exception & ex) {
-        TRC_ERR("Exception in upload: " + ex.what());
+        TRC_ERR("Exception in upload: ");
+        TRC_ERR(ex.what());
         ::hasError = true;
         ::RUNNING = false;
         ::recentException = ex;
