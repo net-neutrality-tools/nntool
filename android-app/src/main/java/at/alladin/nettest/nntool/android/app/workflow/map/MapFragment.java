@@ -109,11 +109,12 @@ public class MapFragment extends SupportMapFragment {
                         final Marker googleMarker = map.addMarker(
                                 new MarkerOptions()
                                 .position(new LatLng(marker.getLatitude(), marker.getLongitude()))
-                                .title(getString(R.string.map_marker_popup_title, marker.getOpenTestUuid()))
+                                .title(getString(R.string.map_marker_popup_title))
                                 .snippet(parseMapMarkerIntoString(marker))
                         );
                         googleMarker.showInfoWindow();
 
+                        map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(marker.getLatitude(), marker.getLongitude())));
                     }
                 });
 

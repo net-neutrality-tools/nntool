@@ -13,6 +13,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Locale;
 
+import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 
 /**
@@ -26,16 +27,23 @@ public class MapOverlayTileProvider extends UrlTileProvider {
 
     private final MapOverlayType type;
 
+    private final Integer maxZoomForPointMap;
+
     private String mapServiceUrl;
 
     public MapOverlayTileProvider (final MapOverlayType type, final Context context) {
         super (tilesize, tilesize);
         mapServiceUrl = PreferencesUtil.getMapServiceUrl(context);
+        mapServiceUrl = "10.9.8.39";
+        maxZoomForPointMap = type == MapOverlayType.HEATMAP ? null : context.getResources().getInteger(R.integer.default_map_max_zoom_for_point_map);
         this.type = type;
     }
 
     @Override
     public URL getTileUrl(int x, int y, int zoom) {
+        if (maxZoomForPointMap != null && zoom < maxZoomForPointMap) {
+            return null;
+        }
         try {
             final URI uri = new URI("http", null, mapServiceUrl, 8084, String.format("/api/v0/tiles/%s/", type.pathSuffix), String.format(Locale.US, "%spath=%d/%d/%d&point_diameter=%d&size=%d",
                     "", zoom, x, y, 12, tilesize), null);

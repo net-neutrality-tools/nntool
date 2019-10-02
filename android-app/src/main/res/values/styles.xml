@@ -268,7 +268,7 @@
 
     <style name="Nettest.Map.InfoWindow.Title" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="Nettest.Map.InfoWindow.Content" parent="TextAppearance.AppCompat.Medium">

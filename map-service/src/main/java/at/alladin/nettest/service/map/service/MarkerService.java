@@ -272,7 +272,6 @@ public class MarkerService {
             logger.error("Error parsing JSON Data " + e.toString());
         }
 
-        System.out.println("ANSWER:\n" + GsonBasicHelper.getDateTimeGsonBuilder().create().toJson(answer));
         return answer;
     }
 
@@ -341,16 +340,15 @@ public class MarkerService {
         final List<MeasurementItem> measurementResultList = new ArrayList<>();
         
         final int fieldDown = rs.getInt("speed_download");
-        final String downloadString = String.format("%s %s", format.format(fieldDown / 1000d), messageSource.getMessage("RESULT_DOWNLOAD_UNIT", null, locale));//labels.getString("RESULT_DOWNLOAD_UNIT"));
+        final String downloadString = String.format("%s %s", format.format(fieldDown / 1000000d), messageSource.getMessage("RESULT_DOWNLOAD_UNIT", null, locale));//labels.getString("RESULT_DOWNLOAD_UNIT"));
         ClassificationHelper.ClassificationItem classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.DOWNLOAD, fieldDown, networkTypeId);
         measurementResultList.add(generateMeasurementItem(messageSource.getMessage("RESULT_DOWNLOAD", null, locale), downloadString, classificationItem));
 
         final int fieldUp = rs.getInt("speed_upload");
-        final String uploadString = String.format("%s %s", format.format(fieldUp / 1000d),messageSource.getMessage("RESULT_UPLOAD_UNIT", null, locale));
+        final String uploadString = String.format("%s %s", format.format(fieldUp / 1000000d),messageSource.getMessage("RESULT_UPLOAD_UNIT", null, locale));
         classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.UPLOAD, fieldUp, networkTypeId);
         measurementResultList.add(generateMeasurementItem(messageSource.getMessage("RESULT_UPLOAD", null, locale), uploadString, classificationItem));
 
-        final long fieldPing = rs.getLong("ping_median");
         final int pingValue = (int) Math.round(rs.getDouble("ping_median") / 1000000d);
         final String pingString = String.format("%s %s", format.format(pingValue),
                 messageSource.getMessage("RESULT_PING_UNIT", null, locale));
