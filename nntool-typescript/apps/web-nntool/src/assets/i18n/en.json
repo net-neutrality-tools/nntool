@@ -93,7 +93,7 @@
     }
   },
   "STATISTICS": {
-    "HEADER": "nntool.eu Website<br />Measurement Statistics",
+    "HEADER": "Statistics",
     "DESCRIPTION": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.",
     "GRAPH": {
       "NO_DATA": "Currently no data",
