@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-09-04
+ *      \date Last update: 2019-09-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -182,7 +182,8 @@
     DDLogInfo(@"Measurement started");
     self.statusLabel.text = @"Measurement started";
     
-    //set measurement parameters
+    /*-------------------------set parameters for demo implementation start------------------------*/
+
     self.speed.platform                           = @"mobile";
     
     self.speed.targets                            = [NSArray arrayWithObjects:@"peer-ias-de-01", nil];
@@ -338,6 +339,8 @@
         [class setObject:[NSNumber numberWithInt:20] forKey:@"framesPerCall"];
         [self.speed.uploadClasses addObject:class];
     }
+
+    /*-------------------------set parameters for demo implementation end------------------------*/
     
     [self.speed measurementStart];
 }

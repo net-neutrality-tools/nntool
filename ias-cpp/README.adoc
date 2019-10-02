@@ -53,7 +53,10 @@ lcov --list coverage.info
 
 The HTML code coverage report will be generated into directory `ias-cpp/build/coverage_report`.
 
-=== Execution
+=== Demo Parameters
+
+Modify *src/iasclient.cpp* according to Code-Documentation to edit measurement parameters before *Build*
+
+==== Demo Execution
 
 Run `build/ias-client`.
-

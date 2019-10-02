@@ -115,7 +115,7 @@
 
         /*!
          *      \author zafaco GmbH <info@zafaco.de>
-         *      \date Last update: 2019-08-28
+         *      \date Last update: 2019-09-30
          *      \note Copyright (c) 2018 - 2019 zafaco GmbH. All rights reserved.
          */
 
@@ -143,6 +143,8 @@
         function iasStart(testCase)
         {
             outputPrepare();
+
+            /*-------------------------set parameters for demo implementation start------------------------*/
 
             iasParameters.platform                          = 'web';
 
@@ -391,6 +393,8 @@
                 }
             }
 
+            /*-------------------------set parameters for demo implementation end------------------------*/
+
             if (iasParameters.platform === 'web')
             {
                 delete ias;
@@ -428,6 +432,8 @@
                 outputPrepare();
                 document.getElementById('stopButton').disabled = true;
 
+                /*-------------------------set parameters for demo implementation start------------------------*/
+
                 portBlockingParameters.platform     = 'web';
                 portBlockingParameters.target       = 'peer-ias-de-01.net-neutrality.tools';
                 portBlockingParameters.targetIpv4   = '82.199.148.52';
@@ -437,6 +443,8 @@
                 portBlockingParameters.password     = 'berec';
                 portBlockingParameters.ports        = [123, 500, 4500, 5060, 7000];
                 portBlockingParameters.timeout      = 5000;
+
+                /*-------------------------set parameters for demo implementation end------------------------*/
 
                 delete portBlocking;
                 portBlocking = null;

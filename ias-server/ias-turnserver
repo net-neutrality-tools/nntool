@@ -10,9 +10,12 @@
 ### END INIT INFO
 
 ### BEGIN CONFIGURATION
+# Credentials and realmname must match the configured values in the ias-module
 credentials=berec:berec
 realmname=berec
+# Ports to be binded on, seperated by a space
 ports=(123 500 4500 5060)
+# IP v4 and v6 addresses to be binded on, seperated by a space. If no addresses are stated, all available IP v4 and v6 addresses will be used
 ips=()
 ### END CONFIGURATION
 
