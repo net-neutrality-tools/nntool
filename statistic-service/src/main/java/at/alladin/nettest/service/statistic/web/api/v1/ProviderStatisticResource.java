@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import at.alladin.nettest.service.statistic.dto.ProviderFilterResponseDto;
-import at.alladin.nettest.service.statistic.dto.ProviderStatisticDto;
-import at.alladin.nettest.service.statistic.dto.ProviderStatisticsRequestParams;
 import at.alladin.nettest.service.statistic.service.FilterService;
 import at.alladin.nettest.service.statistic.service.ProviderStatisticsService;
+import at.alladin.nettest.service.statistic.web.api.v1.dto.ProviderFilterResponseDto;
+import at.alladin.nettest.service.statistic.web.api.v1.dto.ProviderStatisticDto;
+import at.alladin.nettest.service.statistic.web.api.v1.dto.ProviderStatisticsRequestParams;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiPagination;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;

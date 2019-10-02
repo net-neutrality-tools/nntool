@@ -1,4 +1,4 @@
-package at.alladin.nettest.service.statistic.dto;
+package at.alladin.nettest.service.statistic.web.api.v1.dto;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package at.alladin.nettest.service.statistic.dto;
+package at.alladin.nettest.service.statistic.web.api.v1.dto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nettest.service.statistic.dto.filter.BasicFilterDto;
+import at.alladin.nettest.service.statistic.web.api.v1.dto.filter.BasicFilterDto;
 
 /**
  * 

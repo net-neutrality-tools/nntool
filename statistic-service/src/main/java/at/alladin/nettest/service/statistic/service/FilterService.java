@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import at.alladin.nettest.service.statistic.dto.ProviderStatisticsRequestParams;
-import at.alladin.nettest.service.statistic.dto.ProviderStatisticsRequestParams.MeasurementType;
-import at.alladin.nettest.service.statistic.dto.filter.BasicFilterDto;
-import at.alladin.nettest.service.statistic.dto.filter.ConnectionTypeFilterDto;
-import at.alladin.nettest.service.statistic.dto.filter.FilterEntry;
-import at.alladin.nettest.service.statistic.dto.filter.TimePeriodFilterDto;
+import at.alladin.nettest.service.statistic.web.api.v1.dto.ProviderStatisticsRequestParams;
+import at.alladin.nettest.service.statistic.web.api.v1.dto.ProviderStatisticsRequestParams.MeasurementType;
+import at.alladin.nettest.service.statistic.web.api.v1.dto.filter.BasicFilterDto;
+import at.alladin.nettest.service.statistic.web.api.v1.dto.filter.ConnectionTypeFilterDto;
+import at.alladin.nettest.service.statistic.web.api.v1.dto.filter.FilterEntry;
+import at.alladin.nettest.service.statistic.web.api.v1.dto.filter.TimePeriodFilterDto;
 
 /**
  * 
