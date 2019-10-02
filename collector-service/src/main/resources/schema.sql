@@ -147,6 +147,7 @@ create table measurements
 	agent_type varchar,
 	geo_location_latitude double precision,
 	geo_location_longitude double precision,
+	geo_location_geometry geometry,
 	mobile_network_frequency integer,
 	tag varchar,
 	wifi_initial_bssid varchar,

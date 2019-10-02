@@ -545,10 +545,10 @@ public class CouchDbStorageService implements StorageService {
 
 	private NatTypeInfo computeNatType(final Measurement measurement, final ComputedNetworkPointInTime cpit) {
 		final NatType natType = cpit != null ?
-				NatType.getNatType(cpit.getClientPrivateIp(), cpit.getClientPublicIp()) : NatType.NOT_AVAILABLE;
+				NatType.getNatType(cpit.getAgentPrivateIp(), cpit.getAgentPublicIp()) : NatType.NOT_AVAILABLE;
 
 		final NatTypeInfo nat = new NatTypeInfo();
-		nat.setIpVersion(Helperfunctions.getIpVersion(cpit.getClientPrivateIp()));
+		nat.setIpVersion(Helperfunctions.getIpVersion(cpit.getAgentPrivateIp()));
 		nat.setNatType(natType);
 		nat.setIsBehindNat(natType != null
 				&& !natType.equals(NatType.NOT_AVAILABLE)
@@ -563,7 +563,7 @@ public class CouchDbStorageService implements StorageService {
 			if (npitList != null && npitList.size() > 0) {
 				final NetworkPointInTime npit = npitList.get(0);
 				if (npit != null) {
-					if (npit.getClientPrivateIp() != null && npit.getClientPublicIp() != null) {
+					if (npit.getAgentPrivateIp() != null && npit.getAgentPublicIp() != null) {
 						cpit = lmapReportModelMapper.map(npit);
 					}
 					if (npit.getNetworkType() != null) {
@@ -587,7 +587,7 @@ public class CouchDbStorageService implements StorageService {
 	private ProviderInfo computeProviderInfo(final Measurement measurement, final ComputedNetworkPointInTime cpit) {
 		InetAddress clientAddress = null;
 		try {
-			clientAddress = InetAddress.getByName(cpit.getClientPublicIp());
+			clientAddress = InetAddress.getByName(cpit.getAgentPublicIp());
 		}
 		catch (final UnknownHostException e) {
 			e.printStackTrace();

@@ -30,12 +30,12 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.Ful
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullSpeedMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullSubMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ComputedNetworkPointInTimeInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.DeviceInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.FullRttInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.NetworkInfoDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.NetworkPointInTimeInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.OperatingSystemInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.SignalDto;
 import at.alladin.nettest.shared.server.config.ElasticSearchProperties;
@@ -57,16 +57,17 @@ public class MeasurementResultService {
 		+ "provider_public_ip_asn, provider_public_ip_rdns, provider_public_ip_as_name, provider_country_asn, provider_name, provider_shortname, agent_app_version_name, agent_app_version_code, agent_language, agent_app_git_rev, "
 		+ "agent_timezone, network_signal_info, mobile_network_operator_mcc, mobile_network_operator_mnc, mobile_network_country_code, mobile_network_operator_name, mobile_sim_operator_mcc, mobile_sim_operator_mnc, mobile_sim_operator_name, "
 		+ "mobile_sim_country_code, mobile_is_roaming, mobile_roaming_type, initial_network_type_id, geo_location_accuracy, mobile_network_signal_strength_2g3g_dbm, mobile_network_lte_rsrp_dbm, mobile_network_lte_rsrq_db, "
-		+ "mobile_network_lte_rssnr_db, wifi_network_link_speed_bps, wifi_network_rssi_dbm, network_group_name, network_client_public_ip_country_code, agent_type, geo_location_latitude, geo_location_longitude, mobile_network_frequency,"
-		+ "tag, wifi_initial_bssid, wifi_initial_ssid"
+		+ "mobile_network_lte_rssnr_db, wifi_network_link_speed_bps, wifi_network_rssi_dbm, network_group_name, network_client_public_ip_country_code, agent_type, geo_location_latitude, geo_location_longitude, geo_location_geometry, "
+		+ "mobile_network_frequency, tag, wifi_initial_bssid, wifi_initial_ssid"
 		+ ") VALUES ("
 		+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
 		+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
 		+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
 		+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
 		+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-		+ "?, ?, ?, ?"
+		+ "ST_Transform(ST_SetSRID(ST_MakePoint(?, ?), 4326), 900913), ?, ?, ?, ?"
 		+ ")";
+
 	
 	private static final String INSERT_IAS_MEASUREMENT_SQL = "INSERT INTO ias_measurements ("
 		+ "measurement_open_data_uuid, relative_start_time_ns, relative_end_time_ns, start_time, end_time, duration_ns, status, reason, version_protocol, version_library, implausible, throughput_avg_download_bps, throughput_avg_upload_bps, "
@@ -153,7 +154,7 @@ public class MeasurementResultService {
 		return resultResponse;
 	}
 	
-	private void storeMeasurementInElasticsearch(FullMeasurementResponse measurementDto) throws Exception {
+	public void storeMeasurementInElasticsearch(FullMeasurementResponse measurementDto) throws Exception {
 		final ElasticSearchProperties esp = collectorServiceProperties.getElasticsearch();
 
 		@SuppressWarnings("unchecked")
@@ -170,10 +171,11 @@ public class MeasurementResultService {
 		}
 	}
 	
-	private void storeMeasurementInPostgresql(FullMeasurementResponse measurementDto) {
+	public void storeMeasurementInPostgresql(FullMeasurementResponse measurementDto) {
 		final DeviceInfoDto deviceInfo = measurementDto.getDeviceInfo();
 		final OperatingSystemInfoDto osInfo = deviceInfo.getOsInfo();
 		final NetworkInfoDto networkInfo = measurementDto.getNetworkInfo();
+		final ComputedNetworkPointInTimeInfoDto computedNetworkInfo = measurementDto.getComputedNetworkInfo();
 		final MeasurementAgentInfoDto agentInfo = measurementDto.getAgentInfo();
 		
 		jdbcTemplate.update(INSERT_MEASUREMENT_SQL, new PreparedStatementSetter() {
@@ -209,31 +211,28 @@ public class MeasurementResultService {
 				ps.setObject(37, null); // ?
 				
 				psWrapper.setString(48, () -> { return agentInfo.getType().name(); });
-				psWrapper.setString(52, measurementDto::getTag);
+				psWrapper.setString(54, measurementDto::getTag);
 				
-				final List<NetworkPointInTimeInfoDto> networkPointInTimeList = networkInfo.getNetworkPointInTimeInfo();
-				if (networkPointInTimeList != null && networkPointInTimeList.size() > 0) {
-					final NetworkPointInTimeInfoDto networkPointInTimeInfo = networkPointInTimeList.get(0);
+				if (computedNetworkInfo != null) {
+					psWrapper.setObject(15, computedNetworkInfo::getAgentPublicIp);
+					psWrapper.setLong(16, computedNetworkInfo::getPublicIpAsn);
+					psWrapper.setString(17, computedNetworkInfo::getPublicIpRdns);
+					psWrapper.setString(18, computedNetworkInfo::getPublicIpAsName);
+					psWrapper.setString(19, computedNetworkInfo::getCountryCodeAsn);
+					psWrapper.setString(20, computedNetworkInfo::getProviderName);
+					psWrapper.setString(21, computedNetworkInfo::getProviderShortName);
+					psWrapper.setInt(28, () -> { return Integer.parseInt(computedNetworkInfo.getNetworkOperatorMccMnc().split("-")[0]); });
+					psWrapper.setInt(29, () -> { return Integer.parseInt(computedNetworkInfo.getNetworkOperatorMccMnc().split("-")[1]); });
+					psWrapper.setString(30, computedNetworkInfo::getNetworkCountry);
+					psWrapper.setString(31, computedNetworkInfo::getNetworkOperatorName);
+					psWrapper.setInt(32, () -> { return Integer.parseInt(computedNetworkInfo.getSimOperatorMccMnc().split("-")[0]); });
+					psWrapper.setInt(33, () -> { return Integer.parseInt(computedNetworkInfo.getSimOperatorMccMnc().split("-")[1]); });
+					psWrapper.setString(34, computedNetworkInfo::getSimOperatorName);
+					psWrapper.setString(35, computedNetworkInfo::getSimCountry);
 					
-					psWrapper.setString(15, networkPointInTimeInfo::getAgentPublicIp);
-					psWrapper.setLong(16, networkPointInTimeInfo::getPublicIpAsn);
-					psWrapper.setString(17, networkPointInTimeInfo::getPublicIpRdns);
-					psWrapper.setString(18, networkPointInTimeInfo::getPublicIpAsName);
-					psWrapper.setString(19, networkPointInTimeInfo::getCountryCodeAsn);
-					psWrapper.setString(20, networkPointInTimeInfo::getProviderName);
-					psWrapper.setString(21, networkPointInTimeInfo::getProviderShortName);
-					psWrapper.setInt(28, () -> { return Integer.parseInt(networkPointInTimeInfo.getNetworkOperatorMccMnc().split("-")[0]); });
-					psWrapper.setInt(29, () -> { return Integer.parseInt(networkPointInTimeInfo.getNetworkOperatorMccMnc().split("-")[1]); });
-					psWrapper.setString(30, networkPointInTimeInfo::getNetworkCountry);
-					psWrapper.setString(31, networkPointInTimeInfo::getNetworkOperatorName);
-					psWrapper.setInt(32, () -> { return Integer.parseInt(networkPointInTimeInfo.getSimOperatorMccMnc().split("-")[0]); });
-					psWrapper.setInt(33, () -> { return Integer.parseInt(networkPointInTimeInfo.getSimOperatorMccMnc().split("-")[1]); });
-					psWrapper.setString(34, networkPointInTimeInfo::getSimOperatorName);
-					psWrapper.setString(35, networkPointInTimeInfo::getSimCountry);
-					
-					psWrapper.setInt(38, networkPointInTimeInfo::getNetworkTypeId);
-					psWrapper.setString(46, networkPointInTimeInfo::getNetworkTypeGroupName);
-					psWrapper.setString(47, networkPointInTimeInfo::getAgentPublicIpCountryCode);
+					psWrapper.setInt(38, computedNetworkInfo::getNetworkTypeId);
+					psWrapper.setString(46, computedNetworkInfo::getNetworkTypeGroupName);
+					psWrapper.setString(47, computedNetworkInfo::getAgentPublicIpCountryCode);
 				} else {
 					ps.setObject(15, null);
 					ps.setObject(16, null);
@@ -255,6 +254,7 @@ public class MeasurementResultService {
 					ps.setObject(47, null);
 				}
 				
+				// TODO: COMPUTED SIGNALS
 				final List<SignalDto> signalList = networkInfo.getSignals();
 				if (signalList != null && signalList.size() > 0) {
 					final SignalDto signalInfo = signalList.get(0);
@@ -267,9 +267,9 @@ public class MeasurementResultService {
 					psWrapper.setInt(43, signalInfo::getLteRssnrDb);
 					psWrapper.setInt(44, signalInfo::getWifiLinkSpeedBps);
 					psWrapper.setInt(45, signalInfo::getWifiRssiDbm);
-					psWrapper.setObject(51, () -> { return signalInfo.getCellInfo().getFrequency(); });
-					psWrapper.setString(53, signalInfo::getWifiBssid);
-					psWrapper.setString(54, signalInfo::getWifiSsid);
+					psWrapper.setObject(53, () -> { return signalInfo.getCellInfo().getFrequency(); });
+					psWrapper.setString(55, signalInfo::getWifiBssid);
+					psWrapper.setString(56, signalInfo::getWifiSsid);
 				} else {
 					ps.setObject(27, null);
 					ps.setObject(40, null);
@@ -278,9 +278,9 @@ public class MeasurementResultService {
 					ps.setObject(43, null);
 					ps.setObject(44, null);
 					ps.setObject(45, null);
-					ps.setObject(51, null);
 					ps.setObject(53, null);
-					ps.setObject(54, null);
+					ps.setObject(55, null);
+					ps.setObject(56, null);
 				}
 				
 				final List<GeoLocationDto> geoLocationList = measurementDto.getGeoLocations();
@@ -289,11 +289,16 @@ public class MeasurementResultService {
 					
 					psWrapper.setDouble(39, geoLocation::getAccuracy);
 					psWrapper.setDouble(49, geoLocation::getLatitude);
-					psWrapper.setDouble(50, geoLocation::getLongitude); 
+					psWrapper.setDouble(50, geoLocation::getLongitude);
+					psWrapper.setDouble(51, geoLocation::getLongitude);
+					psWrapper.setDouble(52, geoLocation::getLatitude);
+
 				} else {
 					ps.setObject(39, null);
 					ps.setObject(49, null);
 					ps.setObject(50, null);
+					ps.setObject(51, null);
+					ps.setObject(52, null);
 				}
 			}
 		});
@@ -328,18 +333,24 @@ public class MeasurementResultService {
 					psWrapper.setLong(23, iasMeasurement::getRelativeStartTimeUploadNs);
 					psWrapper.setLong(24, iasMeasurement::getDurationRttNs);
 					ps.setObject(25, null /*iasMeasurement.getConnectionInfo()*/);
-					psWrapper.setLong(26, rttInfo::getMedianNs);
-					psWrapper.setDouble(27, rttInfo::getMedianLog);
 					ps.setObject(28, null /*iasMeasurement.getDownloadRawData()*/); // TODO: upload
 					ps.setObject(29, null /*iasMeasurement.getRttInfo()*/);
 					ps.setObject(30, null);
 					ps.setObject(31, null);
+					
+					if (rttInfo != null) {
+						psWrapper.setLong(26, rttInfo::getMedianNs);
+						psWrapper.setDouble(27, rttInfo::getMedianLog);
+					} else {
+						ps.setObject(26, null);
+						ps.setObject(27, null);
+					}
 				}
 			});
 		}
 		
 		FullSubMeasurement qosSubMeasurement = subMeasurements.get(MeasurementTypeDto.QOS);
-		if (iasSubMeasurement != null && iasSubMeasurement instanceof FullSpeedMeasurement) {
+		if (qosSubMeasurement != null && qosSubMeasurement instanceof FullSpeedMeasurement) {
 			FullQoSMeasurement qosMeasurement = (FullQoSMeasurement) qosSubMeasurement;
 			
 			jdbcTemplate.update(INSERT_QOS_MEASUREMENT_SQL, new PreparedStatementSetter() {
