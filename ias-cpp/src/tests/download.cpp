@@ -279,11 +279,9 @@ int Download::run()
 			//Send signal, we are ready
 			syncing_threads[pid] = 1;
 
-			//Got an error
-			if(mResponse == -1 || mResponse == 0)
-			{
-				TRC_ERR("Received an Error: Download RECV == " + std::to_string(mResponse));
-                ::hasError = true;
+			if (mResponse == -1 || mResponse == 0) {
+				//Got an error
+				TRC_ERR("Received an Error: Download RECV == " + std::to_string(mResponse) + " error num: " + std::to_string(errno));
 				//break to the end of the loop
 				break;
 			}
@@ -413,6 +411,8 @@ int Download::run()
 		#endif
 
     } catch (std::exception & ex) {
+        TRC_ERR("Exception in download");
+        TRC_ERR(ex.what());
         ::hasError = true;
         ::RUNNING = false;
         ::recentException = ex;

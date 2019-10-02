@@ -4,6 +4,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -17,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
@@ -41,8 +45,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasuremen
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
-import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
 import at.alladin.nettest.shared.server.helper.IpAddressMatcher;
+import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ComputedNetworkPointInTime;
@@ -65,13 +69,16 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurem
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QosAdvancedEvaluation;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QosBlockedPorts;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QosBlockedPorts.QosBlockedPortType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.RoamingType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.DeviceRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.DeviceRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.EmbeddedNetworkTypeRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
@@ -84,8 +91,10 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportMode
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.MeasurementAgentMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsResponseMapper;
+import at.alladin.nntool.shared.qos.TcpResult;
 import at.alladin.nntool.shared.qos.TracerouteResult;
 import at.alladin.nntool.shared.qos.TracerouteResult.PathElement;
+import at.alladin.nntool.shared.qos.UdpResult;
 
 /**
  * 
@@ -680,6 +689,12 @@ public class CouchDbStorageService implements StorageService {
 			boolean isCgnCheckFinished = false;
 
 			for (QoSResult qos : qosMeasurement.getResults()) {
+				QosAdvancedEvaluation qosEval = measurement.getQosAdvancedEvaluation();
+				if (qosEval == null) {
+					measurement.setQosAdvancedEvaluation(new QosAdvancedEvaluation());
+					qosEval = measurement.getQosAdvancedEvaluation();
+				}
+				
 				if (!isCgnCheckFinished && QoSMeasurementType.TRACEROUTE.equals(qos.getType())) {
 					TracerouteResult result = objectMapper.convertValue(qos.getResults(), TracerouteResult.class);
 					if (result.getResultEntries() != null) {
@@ -690,6 +705,87 @@ public class CouchDbStorageService implements StorageService {
 								break;
 							}
 						}
+					}
+				}
+				else if(QoSMeasurementType.TCP.equals(qos.getType())) {
+					Map<QosBlockedPortType, QosBlockedPorts> map = qosEval.getBlockedPorts();
+					if (map == null) {
+						qosEval.setBlockedPorts(new HashMap<>());
+						map = qosEval.getBlockedPorts();
+					}
+					
+					final QosBlockedPorts blocked = new QosBlockedPorts();
+					map.put(QosBlockedPortType.TCP, blocked);
+					
+					final TcpResult result = objectMapper.convertValue(qos.getResults(), TcpResult.class);
+
+					final List<Integer> portInList = new ArrayList<>();
+					final List<Integer> portOutList = new ArrayList<>();
+					if (result.getInPort() != null) {
+						if(!"OK".equals(result.getInResult())) {
+							portInList.add(result.getInPort());
+						}
+					}
+					
+					if (result.getOutPort() != null) {
+						if (!"OK".equals(result.getOutResult())) {
+							portOutList.add(result.getOutPort());
+						}
+					}
+					
+					blocked.setInCount(portInList.size());
+					blocked.setOutCount(portOutList.size());
+					
+					if (!portInList.isEmpty()) {
+						blocked.setInPorts(portInList);
+					}
+					if (!portOutList.isEmpty()) {
+						blocked.setOutPorts(portOutList);
+					}
+				}
+
+			
+				else if(QoSMeasurementType.UDP.equals(qos.getType())) {
+					Map<QosBlockedPortType, QosBlockedPorts> map = qosEval.getBlockedPorts();
+					if (map == null) {
+						qosEval.setBlockedPorts(new HashMap<>());
+						map = qosEval.getBlockedPorts();
+					}
+
+					final QosBlockedPorts blocked = new QosBlockedPorts();				
+					map.put(QosBlockedPortType.UDP, blocked);
+
+					final UdpResult result = objectMapper.convertValue(qos.getResults(), UdpResult.class);
+					
+					final List<Integer> portInList = new ArrayList<>();
+					final List<Integer> portOutList = new ArrayList<>();
+					if (result.getOutPort() != null && result.getResultOutNumPacketsResponse() != null) {
+						try { 
+							int packets = Integer.valueOf(result.getResultOutNumPacketsResponse().toString());
+							if (packets == 0) {
+								portOutList.add(Integer.valueOf(result.getOutPort().toString()));
+							}
+						}
+						catch (final Exception e) { }
+					}
+					if (result.getInPort() != null) {
+						try { 
+							int packets = Integer.valueOf(result.getResultInNumPacketsResponse().toString());
+							if (packets == 0) {
+								portInList.add(Integer.valueOf(result.getInPort().toString()));
+							}
+						}
+						catch (final Exception e) { }						
+					}
+					
+					blocked.setInCount(portInList.size());
+					blocked.setOutCount(portOutList.size());
+					
+					if (!portInList.isEmpty()) {
+						blocked.setInPorts(portInList);
+					}
+					if (!portOutList.isEmpty()) {
+						blocked.setOutPorts(portOutList);
 					}
 				}
 			}

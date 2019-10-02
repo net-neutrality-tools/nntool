@@ -127,19 +127,8 @@ void CTrace::logDebug(const string &sMessage)
 
 void CTrace::logToPlatform(const string &category, const string &sMessage)
 {
-//	string platform = ::PLATFORM;
-//	string clientos = ::CLIENT_OS;
 	if (CTrace::logFunction != nullptr) {
 		CTrace::logFunction(category, sMessage);
-	}
-//	if (platform.compare("desktop") == 0 && clientos.compare("linux") == 0)
-	{
-//		cout << "[" << CTool::get_timestamp_string() << "] " << category << ": " << sMessage << endl;
-	}
-//	if (platform.compare("mobile") == 0 && clientos.compare("android") == 0)
-	{
-		//android logging hookup
-		//log category and sMessage via ndk
 	}
 }
 

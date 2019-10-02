@@ -397,6 +397,9 @@ function handleArgv(argv)
 
 function verifyCertificate(request)
 {
+    //Uncomment the following line if TLS-certificate check should be deactivated
+    //return 0;
+
     var certificateFound = false;
     var dir = path.join(__dirname, '/certificates/.');
 
