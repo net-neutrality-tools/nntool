@@ -166,6 +166,15 @@ public class Measurement {
 	@JsonProperty("network_info")
 	private NetworkInfo networkInfo;
 
+	/**
+	 * @see QosAdvancedEvaluation
+	 */
+	@JsonPropertyDescription("Contains advanced QoS related information.")
+	@Expose
+	@SerializedName("qos_advanced_evaluation")
+	@JsonProperty("qos_advanced_evaluation")
+	private QosAdvancedEvaluation qosAdvancedEvaluation;
+	
 	public String getUuid() {
 		return uuid;
 	}
@@ -252,6 +261,14 @@ public class Measurement {
 
 	public void setNetworkInfo(NetworkInfo networkInfo) {
 		this.networkInfo = networkInfo;
+	}
+
+	public QosAdvancedEvaluation getQosAdvancedEvaluation() {
+		return qosAdvancedEvaluation;
+	}
+
+	public void setQosAdvancedEvaluation(QosAdvancedEvaluation qosAdvancedEvaluation) {
+		this.qosAdvancedEvaluation = qosAdvancedEvaluation;
 	}
 
 	@Override
