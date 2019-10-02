@@ -14,7 +14,7 @@ package com.zafaco.DemoApplicationBerec.fragments;
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-01-03
+ *      \date Last update: 2019-10-02
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -108,13 +108,16 @@ public class SpeedFragment extends Fragment implements FocusedFragment
         radioIP.setOnCheckedChangeListener(handleCheckMeasurementSettings);
         radioStream.setOnCheckedChangeListener(handleCheckMeasurementSettings);
 
-        //this contains the config
+        /*-------------------------set parameters for demo implementation start------------------------*/
+
         speedTaskDesc = new SpeedTaskDesc();
         speedTaskDesc.setSpeedServerAddrV4("peer-ias-de-01.net-neutrality.tools");
         speedTaskDesc.setSpeedServerPort(80);
         speedTaskDesc.setDownloadStreams(4);
         speedTaskDesc.setRttCount(11);
         speedTaskDesc.setUploadStreams(4);
+
+        /*-------------------------set parameters for demo implementation end------------------------*/
 
         return mView;
     }
