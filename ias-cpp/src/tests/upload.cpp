@@ -282,12 +282,10 @@ int Upload::run()
 			
 			//Send signal, we are ready
 			syncing_threads[pid] = 1;
-			
-			//Got an error
-			if(mResponse == -1 || mResponse == 0)
-			{
-				TRC_ERR("Received an Error: Upload RECV == " + std::to_string(mResponse));
-				::hasError = true;
+
+			if (mResponse == -1 || mResponse == 0) {
+				//Got an error
+				TRC_ERR("Received an Error: Upload RECV == " + std::to_string(errno) + " error num: " + std::to_string(errno));
 				//break to the end of the loop
 				break;
 			}
@@ -453,6 +451,7 @@ int Upload::run()
 		#endif
 	
     } catch (std::exception & ex) {
+        TRC_ERR("Exception in upload: " + ex.what());
         ::hasError = true;
         ::RUNNING = false;
         ::recentException = ex;

@@ -601,9 +601,11 @@ void AndroidConnector::startMeasurement() {
 
         json11::Json::array jTargets;
         if (speedTaskDesc.useIpv6) {
+            TRC_INFO("Measuring with ipv6");
             jTargets.push_back(speedTaskDesc.measurementServerUrlV6);
             measurementServerIp = CTool::getIpFromHostname( speedTaskDesc.measurementServerUrlV6, 6 );
         } else {
+            TRC_INFO("Measuring with ipv4");
             jTargets.push_back(speedTaskDesc.measurementServerUrlV4);
             measurementServerIp = CTool::getIpFromHostname( speedTaskDesc.measurementServerUrlV4, 4 );
         }
