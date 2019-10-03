@@ -17,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
@@ -39,10 +41,11 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasuremen
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse.SpeedMeasurementPeer;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
+import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.MeasurementServerDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
-import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
 import at.alladin.nettest.shared.server.helper.IpAddressMatcher;
+import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.ComputedNetworkPointInTime;
@@ -70,8 +73,8 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.DeviceRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.DeviceRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.EmbeddedNetworkTypeRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementAgentRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementPeerRepository;
@@ -375,8 +378,8 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	@Override
-	public Page<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid(final String measurementAgentUuid, 
-			final Pageable pageable) {
+	public Page<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid(String measurementAgentUuid,
+			Pageable pageable) throws StorageServiceException {
 		return measurementRepository
 			.findByAgentInfoUuidOrderByMeasurementTimeStartTimeDesc(measurementAgentUuid, pageable)
 			.map(briefMeasurementResponseMapper::map);
@@ -466,7 +469,12 @@ public class CouchDbStorageService implements StorageService {
 		return measurement;
 	}
 	
+	public List<MeasurementServerDto> getAllActiveSpeedMeasurementServers() throws StorageServiceException {
+		return null; //measurementPeerRepository.getAvailableSpeedMeasurementPeers();	
+	}
+	
 	public SpeedMeasurementPeerResponse getSpeedMeasurementPeers(ApiRequest<SpeedMeasurementPeerRequest> speedMeasurementPeerRequest) throws StorageServiceException {
+		
 		final List<MeasurementServer> peers = measurementPeerRepository.getAvailableSpeedMeasurementPeers();
 		
 		final SpeedMeasurementPeerResponse response = new SpeedMeasurementPeerResponse();
@@ -694,5 +702,24 @@ public class CouchDbStorageService implements StorageService {
 				}
 			}
 		}
+	}
+
+	@Override
+	public MeasurementServerDto getSpeedMeasurementServerByPublicIdentifier(String identifier) {
+		// TODO Auto-generated method stub
+		final MeasurementServer server = measurementPeerRepository.findByPublicIdentifier(identifier);
+		if (server != null) {
+			final MeasurementServerDto dto = new MeasurementServerDto();
+			dto.setIdentifier(identifier);
+			dto.setName(server.getName());
+			if (server.getLoadApi() != null) {
+				dto.setLoadApiSecretKey(server.getLoadApi().getSecretKey());
+				dto.setLoadApiUrl(server.getLoadApi().getUrl());
+			}
+			
+			return dto;
+		}
+		
+		return null;
 	}
 }

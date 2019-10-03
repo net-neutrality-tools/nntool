@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import at.alladin.nettest.service.loadbalancer.config.LoadbalancerServiceProperties;
 import at.alladin.nettest.shared.server.config.spring.DevelopmentWebCorsConfiguration;
@@ -25,7 +26,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.config.EnableCouchDbStor
 	LoadbalancerServiceProperties.class
 })
 @ComponentScan({
-	"at.alladin.nettest.service.result", 
+	"at.alladin.nettest.service.loadbalancer", 
 	"at.alladin.nettest.shared.server.web.api.v1",
 })
 @Import({
@@ -33,6 +34,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.config.EnableCouchDbStor
 	MessageSourceConfiguration.class
 })
 @EnableCouchDbStorage
+@EnableScheduling
 public class LoadbalancerServiceApplication extends SpringBootServletInitializer {
 
 	/**
