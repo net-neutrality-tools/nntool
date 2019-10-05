@@ -1,5 +1,6 @@
 import Foundation
 import CodableJSON
+import nntool_shared_swift
 
 class EchoProtocolTask: QoSTask {
 
@@ -26,6 +27,8 @@ class EchoProtocolTask: QoSTask {
 
     private var resultResponse: String?
     private var rttNs: UInt64?
+    
+    private var udpPacketSentTimestamp: UInt64?
 
     override var statusKey: String {
         return "echo_protocol_status"
@@ -34,8 +37,8 @@ class EchoProtocolTask: QoSTask {
     override var result: QoSTaskResult {
         var r = super.result
 
-        r["echo_protocol_objective_server_addr"] = JSON(host)
-        r["echo_protocol_objective_server_port"] = JSON(port)
+        r["echo_protocol_objective_host"] = JSON(host)
+        r["echo_protocol_objective_port"] = JSON(port)
         r["echo_protocol_objective_protocol"] = JSON(protocolType.rawValue)
         r["echo_protocol_objective_payload"] = JSON(payload)
 
@@ -77,23 +80,50 @@ class EchoProtocolTask: QoSTask {
             let tcpStreamUtil = TcpStreamUtil(config: tcpStreamUtilConfig)
             (status, resultResponse) = tcpStreamUtil.runStream()
         case .udp:
-            let udpStreamUtilConfig = UdpStreamUtilConfiguration(
+            let voipUdpStreamUtilConfig = VoipUdpStreamUtilConfiguration(
                 host: host,
-                port: port,
-                outgoing: true,
+                portOut: port,
+                portIn: nil,
+                writeOnly: false,
                 timeoutNs: timeoutNs,
                 delayNs: delayNs,
                 packetCount: packetCount,
-                uuid: nil,
-                payload: payload
+                uuid: nil
             )
 
-            let udpStreamUtil = UdpStreamUtil(config: udpStreamUtilConfig)
-            let (streamUtilStatus, result) = udpStreamUtil.runStream()
+            let udpStreamUtil = VoipUdpStreamUtil(config: voipUdpStreamUtilConfig)
+            udpStreamUtil.delegate = self
 
-            status = streamUtilStatus
-            resultResponse = result?.receivedPayload
-            rttNs = result?.rttsNs?.values.first
+            status = udpStreamUtil.runStream()
         }
+    }
+}
+
+extension EchoProtocolTask: VoipUdpStreamUtilDelegate {
+
+    func udpStreamUtil(_ udpStreamUtil: VoipUdpStreamUtil, didBindToLocalPort port: UInt16) {
+        // do nothing
+    }
+
+    func udpStreamUtil(_ udpStreamUtil: VoipUdpStreamUtil, willSendPacketWithNumer packetNum: Int) -> (Data, Int)? {
+        taskLogger.debug("ON SEND (packet: \(packetNum))")
+
+        guard let data = payload.data(using: .utf8) else {
+            return nil
+        }
+
+        udpPacketSentTimestamp = TimeHelper.currentTimeNs()
+
+        return (data, 0)
+    }
+
+    func udpStreamUtil(_ udpStreamUtil: VoipUdpStreamUtil, didReceivePacket data: Data, atTimestamp timestamp: UInt64) -> Bool {
+        resultResponse = String(data: data, encoding: .utf8)
+
+        if let sentTs = udpPacketSentTimestamp {
+            rttNs = timestamp - sentTs
+        }
+
+        return true
     }
 }
