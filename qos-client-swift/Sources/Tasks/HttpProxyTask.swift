@@ -53,7 +53,7 @@ class HttpProxyTask: QoSTask {
         try super.init(from: decoder)
     }
 
-    override func main() {
+    override func taskMain() {
         guard let url = URL(string: url) else {
             status = .error
             return

@@ -106,15 +106,15 @@ class QoSTask: Operation, Codable {
 
 // MARK: - Operation
 
-    override func start() {
-        // if isCancelled -> log
+    func taskMain() {
+        fatalError("taskMain must be overriden in subclasses of QoSTask!")
+    }
 
-        // assert isFinished
-
+    override func main() {
         let startTimeNs = TimeHelper.currentTimeNs()
         self.startTimeNs = startTimeNs
 
-        super.start()
+        taskMain()
 
         durationNs = TimeHelper.currentTimeNs() - startTimeNs
 

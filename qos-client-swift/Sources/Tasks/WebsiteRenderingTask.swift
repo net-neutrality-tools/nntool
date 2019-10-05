@@ -45,7 +45,7 @@ class WebsiteRenderingTask: QoSTask {
     }
 
     ///
-    override public func main() {
+    override public func taskMain() {
         guard let url = URL(string: url) else {
             status = .error
             return

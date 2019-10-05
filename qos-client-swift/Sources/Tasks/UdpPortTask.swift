@@ -119,7 +119,7 @@ class UdpPortTask: QoSBidirectionalIpTask {
         try super.init(from: decoder)
     }
 
-    override public func main() {
+    override public func taskMain() {
         guard
             let port = direction == .outgoing ? portOut : portIn,
             let packetCount = direction == .outgoing ? packetCountOut : packetCountIn

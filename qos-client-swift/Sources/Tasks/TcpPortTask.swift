@@ -40,7 +40,7 @@ class TcpPortTask: QoSBidirectionalIpTask {
     }
 
     ///
-    override public func main() {
+    override public func taskMain() {
         guard let tcpStreamUtilConfig = currentTcpStreamUtilConfiguration() else {
             logger.error("tcpStreamUtilConfig could not be generated")
             self.status = .error

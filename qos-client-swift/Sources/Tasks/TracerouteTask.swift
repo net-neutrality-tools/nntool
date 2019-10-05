@@ -63,7 +63,7 @@ class TracerouteTask: QoSTask {
         try super.init(from: decoder)
     }
 
-    override func main() {
+    override func taskMain() {
         let startedAt = TimeHelper.currentTimeNs()
 
         var addr = sockaddr_in()

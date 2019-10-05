@@ -90,7 +90,7 @@ class SipTask: QoSControlConnectionTask {
         try super.init(from: decoder)
     }
 
-    override func main() {
+    override func taskMain() {
         for _ in 0..<count {
             let testStatus = executeSipTest()
             if testStatus != .ok {
@@ -107,13 +107,7 @@ class SipTask: QoSControlConnectionTask {
     private func executeSipTest() -> QoSTaskStatus {
         let cmd = String(format: "SIPTEST %lu +ID%d", port, uid)
 
-        do {
-            let response = try self.executeCommand(cmd: cmd, waitForAnswer: true)
-
-            guard let r = response, r.starts(with: "OK") else {
-                return .error
-            }
-        } catch {
+        guard executeCommandAndAwaitOk(cmd: cmd) else {
             return .error
         }
 

@@ -46,17 +46,10 @@ class NonTransparentProxyTask: QoSControlConnectionTask {
     }
 
     ///
-    override public func main() {
+    override public func taskMain() {
         let cmd = String(format: "NTPTEST %lu +ID%d", port, uid)
 
-        do {
-            let response = try self.executeCommand(cmd: cmd, waitForAnswer: true)
-
-            guard let r = response, r.starts(with: "OK") else {
-                status = .error
-                return
-            }
-        } catch {
+        guard executeCommandAndAwaitOk(cmd: cmd) else {
             status = .error
             return
         }
@@ -74,6 +67,8 @@ class NonTransparentProxyTask: QoSControlConnectionTask {
         semaphore = DispatchSemaphore(value: 0)
         let semaphoreResult = semaphore?.wait(timeout: .now() + .nanoseconds(Int(timeoutNs)))
 
+        socket.disconnect()
+
         if status == .unknown {
             if semaphoreResult == .timedOut {
                 status = .timeout
@@ -85,10 +80,7 @@ class NonTransparentProxyTask: QoSControlConnectionTask {
                 }
             }
         }
-
-        socket.disconnect()
     }
-
 }
 
 extension NonTransparentProxyTask: GCDAsyncSocketDelegate {

@@ -63,7 +63,7 @@ class EchoProtocolTask: QoSTask {
     }
 
     ///
-    override public func main() {
+    override public func taskMain() {
         switch protocolType {
         case .tcp:
             let tcpStreamUtilConfig = TcpStreamUtilConfiguration(

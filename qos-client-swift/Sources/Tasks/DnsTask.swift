@@ -61,7 +61,7 @@ class DnsTask: QoSTask {
         try super.init(from: decoder)
     }
 
-    override func main() {
+    override func taskMain() {
         guard let dnsRecord = DnsTask.recordDict[record] else {
             status = .error
             return

@@ -101,7 +101,8 @@ class MeasurementKitTask: QoSTask {
         }
     }
 
-    override func main() {
+    // TODO: handle timeout!
+    override func taskMain() {
         guard let t = type else {
             taskLogger.debug("type nil")
             status = .error
