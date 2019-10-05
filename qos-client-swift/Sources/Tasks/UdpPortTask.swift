@@ -32,8 +32,6 @@ class UdpPortTask: QoSBidirectionalIpTask {
     override var result: QoSTaskResult {
         var r = super.result
 
-        // TODO: set objective values?
-
         let packetCount = direction == .outgoing ? packetCountOut : packetCountIn
         var plr: Double?
 
@@ -46,6 +44,7 @@ class UdpPortTask: QoSBidirectionalIpTask {
         if let rtts = rttsNs, rtts.count > 0 {
             rttAvgNs = rtts.reduce(0) { $0 + $1.value } / UInt64(rtts.count)
         }
+        let rttsJson = rttsNs?.mapValues { JSON($0) }
 
         r["udp_objective_delay"] = JSON(delayNs)
 
@@ -58,7 +57,7 @@ class UdpPortTask: QoSBidirectionalIpTask {
             r["udp_result_out_response_num_packets"] = JSON(receivedSequences.count)
             r["udp_result_out_packet_loss_rate"] = JSON(plr)
 
-            r["udp_result_out_rtts_ns"] = JSON(rttsNs?.mapValues { JSON($0) })
+            r["udp_result_out_rtts_ns"] = JSON(rttsJson)
             r["udp_result_out_rtt_avg_ns"] = JSON(rttAvgNs)
 
         case .incoming:
@@ -69,8 +68,7 @@ class UdpPortTask: QoSBidirectionalIpTask {
             r["udp_result_in_response_num_packets"] = JSON(packetsReceivedServer)
             r["udp_result_in_packet_loss_rate"] = JSON(plr)
 
-            // TODO
-            r["udp_result_in_rtts_ns"] = JSON(rttsNs?.mapValues { JSON($0) })
+            r["udp_result_in_rtts_ns"] = JSON(rttsJson)
             r["udp_result_in_rtt_avg_ns"] = JSON(rttAvgNs)
 
         default:
@@ -80,40 +78,25 @@ class UdpPortTask: QoSBidirectionalIpTask {
         return r
     }
 
-    ///
-    override init?(config: QoSTaskConfiguration) {
-        if let packetCountOut = config[CodingKeys4.packetCountOut.rawValue]?.intValue {
-            self.packetCountOut = packetCountOut
-        } else if let packetCountOutString = config[CodingKeys4.packetCountOut.rawValue]?.stringValue {
-            self.packetCountOut = Int(packetCountOutString)
-        }
-
-        if let packetCountIn = config[CodingKeys4.packetCountIn.rawValue]?.intValue {
-            self.packetCountIn = packetCountIn
-        } else if let packetCountInString = config[CodingKeys4.packetCountIn.rawValue]?.stringValue {
-            self.packetCountIn = Int(packetCountInString)
-        }
-
-        if let delayNs = config[CodingKeys4.delayNs.rawValue]?.uint64Value {
-            self.delayNs = delayNs
-        }
-
-        super.init(config: config)
-    }
-
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
 
-        if let packetCountOutString = try container.decodeIfPresent(String.self, forKey: .packetCountOut) {
-            packetCountOut = Int(packetCountOutString)
+        packetCountOut = try container.decodeIfPresent(Int.self, forKey: .packetCountOut)
+        if packetCountOut == nil {
+            if let packetCountOutString = try container.decodeIfPresent(String.self, forKey: .packetCountOut) {
+                packetCountOut = Int(packetCountOutString)
+            }
         }
 
-        if let packetCountInString = try container.decodeIfPresent(String.self, forKey: .packetCountIn) {
-            packetCountIn = Int(packetCountInString)
+        packetCountIn = try container.decodeIfPresent(Int.self, forKey: .packetCountIn)
+        if packetCountIn == nil {
+            if let packetCountInString = try container.decodeIfPresent(String.self, forKey: .packetCountIn) {
+                packetCountIn = Int(packetCountInString)
+            }
         }
 
-        if let delayNsString = try container.decodeIfPresent(String.self, forKey: .delayNs), let delayNs = UInt64(delayNsString) {
-            self.delayNs = delayNs
+        if let serverDelayNs = try container.decodeIfPresent(UInt64.self, forKey: .delayNs) {
+            self.delayNs = serverDelayNs
         }
 
         try super.init(from: decoder)
@@ -128,8 +111,6 @@ class UdpPortTask: QoSBidirectionalIpTask {
                 self.status = .error
                 return
         }
-
-        // TODO: check if all needed parameters are there and fail otherwise
 
         ///
         let udpStreamUtilConfig = UdpStreamUtilConfiguration(
@@ -213,9 +194,10 @@ class UdpPortTask: QoSBidirectionalIpTask {
                 if direction == .incoming && components.count > 3 {
                     // we got rtts from qos-service as JSON
                     if let jsonData = components[3].data(using: .utf8) {
-                        if let jsonDict = ((try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: UInt64]) as [String: UInt64]??) {
+                        rttsNs = try? JSONDecoder().decode([String: UInt64].self, from: jsonData)
+                        /*if let jsonDict = ((try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: UInt64]) as [String: UInt64]??) {
                             rttsNs = jsonDict
-                        }
+                        }*/
                     }
                 }
             }

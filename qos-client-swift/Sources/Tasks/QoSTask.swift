@@ -100,8 +100,6 @@ class QoSTask: Operation, Codable {
         case concurrencyGroup = "concurrency_group"
         case type = "qostest"
         case timeout = "timeout"
-
-        // TODO: result
     }
 
 // MARK: - Operation

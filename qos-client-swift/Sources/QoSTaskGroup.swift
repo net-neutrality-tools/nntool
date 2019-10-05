@@ -16,11 +16,13 @@ public class QoSTaskGroup {
         "dns": DnsTask.self,
         "udp": UdpPortTask.self,
         "tcp": TcpPortTask.self,
-        "echo_protocol": EchoProtocolTask.self,
         "http_proxy": HttpProxyTask.self,
         "traceroute": TracerouteTask.self,
         "website": WebsiteRenderingTask.self,
         "non_transparent_proxy": NonTransparentProxyTask.self,
+        "echo_protocol": EchoProtocolTask.self,
+        "voip": VoipTask.self,
+        "sip": SipTask.self,
         // MeasurementKit
         "mkit_web_connectivity": MeasurementKitTask.self,
         "mkit_dash": MeasurementKitTask.self

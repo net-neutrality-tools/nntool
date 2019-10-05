@@ -84,7 +84,8 @@ class UdpStreamUtil: NSObject {
         }
 
         stopReceivingSemaphore = DispatchSemaphore(value: 0)
-        let timeoutDispatchTime: DispatchTime = .now() + .nanoseconds(Int(config.timeoutNs))
+        let timeoutInterval = DispatchTimeInterval.nanoseconds(Int(config.timeoutNs))
+        let timeoutDispatchTime = DispatchTime.now() + timeoutInterval
 
         do {
             try socket.beginReceiving()
@@ -107,9 +108,17 @@ class UdpStreamUtil: NSObject {
                 let data = dataForOutgoingPacket(flag: UdpPacketFlag.awaitResponse, sequenceNum: UInt8(i), outgoing: true)
                 socket.send(data, withTimeout: config.timeoutS, tag: Tag.outgoing.rawValue)
 
-                logger.debug("did send data (\(i))")
+                //logger.debug("did send data (\(i))")
 
-                if let semaphoreResult = delayElapsedSemaphore?.wait(timeout: .now() + .nanoseconds(Int(config.timeoutNs))) {
+                guard let r = delayElapsedSemaphore?.wait(timeout: .now() + timeoutInterval), r != .timedOut else {
+                    logger.error("timeout waiting for send delay")
+                    status = .timeout
+                    break
+                }
+
+                logger.debug("after wait")
+
+                /*if let semaphoreResult = delayElapsedSemaphore?.wait(timeout: .now() + timeoutInterval) {
                     logger.debug("after wait")
 
                     if semaphoreResult == .timedOut {
@@ -117,7 +126,7 @@ class UdpStreamUtil: NSObject {
                         status = .timeout
                         break
                     }
-                }
+                }*/
             }
         }
 
@@ -153,6 +162,8 @@ class UdpStreamUtil: NSObject {
             data.append(d)
             return data
         }
+
+        //config.onSend?()
 
         data.append(flag.rawValue)
         data.append(sequenceNum)
@@ -215,7 +226,7 @@ extension UdpStreamUtil: GCDAsyncUdpSocketDelegate {
             _ = self.stopReceivingSemaphore?.signal()
         }
 
-        if let _ = config.payload {
+        if config.payload != nil {
             if config.outgoing {
                 receivedPayload = String(data: data, encoding: .utf8)
                 signalBlock()
