@@ -15,7 +15,8 @@
     "asar": "2.0.1",
     "electron": "5.0.9",
     "electron-builder": "21.2.0",
-    "electron-packager": "14.0.4"
+    "electron-packager": "14.0.4",
+    "electron-rebuild": "^1.8.6"
   },
   "build": {
     "asar": true,

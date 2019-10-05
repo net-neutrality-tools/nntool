@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-09-04
+ *      \date Last update: 2019-09-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -149,6 +149,8 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
 	}
 
+	/*-------------------------set parameters for demo implementation start------------------------*/
+
 	Json::object jRttParameters;
 	Json::object jDownloadParameters;
 	Json::object jUploadParameters;
@@ -181,6 +183,8 @@ int main(int argc, char** argv)
 	jMeasurementParameters["wsTargetsRtt"] = Json(jTargets);
 
 	Json jMeasurementParametersJson = jMeasurementParameters;
+
+	/*-------------------------set parameters for demo implementation end------------------------*/
 
     #ifdef NNTOOL_CLIENT
     //register callback
