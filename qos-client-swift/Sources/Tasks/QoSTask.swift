@@ -20,7 +20,7 @@ class QoSTask: Operation, Codable {
     var concurrencyGroup: UInt
     var type: String?
 
-    var timeoutNs: UInt64 = 10 * NSEC_PER_SEC // default: 10sec
+    var timeoutNs: UInt64 = 3 * NSEC_PER_SEC // default: 3sec
     var timeoutS: UInt64 {
         return timeoutNs / NSEC_PER_SEC
     }

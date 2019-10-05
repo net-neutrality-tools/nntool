@@ -86,7 +86,7 @@ class VoipTask: QoSControlConnectionTask {
         r["voip_result_out_mean_jitter"] = JSON(remoteResultMeanJitter)
         r["voip_result_out_max_delta"] = JSON(remoteResultMaxDelta)
         r["voip_result_out_skew"] = JSON(remoteResultSkew)
-        r["voip_result_out_num_packets"] = JSON(remoteResultNumPackets)
+        r["voip_result_out_num_packets"] = JSON(remoteResultNumPackets ?? 0)
         r["voip_result_out_sequence_error"] = JSON(remoteResultSequenceErrors)
         r["voip_result_out_short_seq"] = JSON(remoteResultShortSequential)
         r["voip_result_out_long_seq"] = JSON(remoteResultLongSequential)
@@ -200,18 +200,17 @@ class VoipTask: QoSControlConnectionTask {
             ), payload: Data()
         )
 
-        let voipUdpStreamUtilConfig = VoipUdpStreamUtilConfiguration(
+        let udpStreamUtilConfig = UdpStreamUtilConfiguration(
             host: controlConnectionParams.host,
             portOut: portOut,
             portIn: portIn,
-            writeOnly: false,
+            respondOnly: false,
             timeoutNs: timeoutNs,
             delayNs: delayNs,
-            packetCount: Int(callDurationNs / delayNs),
-            uuid: extractUuidFromToken()
+            packetCount: Int(callDurationNs / delayNs)
         )
 
-        let udpStreamUtil = VoipUdpStreamUtil(config: voipUdpStreamUtilConfig)
+        let udpStreamUtil = UdpStreamUtil(config: udpStreamUtilConfig)
         udpStreamUtil.delegate = self
 
         let streamUtilStatus = udpStreamUtil.runStream()
@@ -388,14 +387,14 @@ class VoipTask: QoSControlConnectionTask {
     }
 }
 
-extension VoipTask: VoipUdpStreamUtilDelegate {
+extension VoipTask: UdpStreamUtilDelegate {
 
-    func udpStreamUtil(_ udpStreamUtil: VoipUdpStreamUtil, didBindToLocalPort port: UInt16) {
+    func udpStreamUtil(_ udpStreamUtil: UdpStreamUtil, didBindToLocalPort port: UInt16) {
         taskLogger.debug("ON BIND (local port: \(port))")
         resultPortIn = port
     }
 
-    func udpStreamUtil(_ udpStreamUtil: VoipUdpStreamUtil, willSendPacketWithNumer packetNum: Int) -> (Data, Int)? {
+    func udpStreamUtil(_ udpStreamUtil: UdpStreamUtil, willSendPacketWithNumer packetNum: Int) -> (Data, UdpStreamUtil.Tag)? {
         taskLogger.debug("ON SEND (packet: \(packetNum))")
 
         if packetNum > 0 {
@@ -417,10 +416,10 @@ extension VoipTask: VoipUdpStreamUtilDelegate {
 
         initialRtpPacket.payload = payloadData
 
-        return (initialRtpPacket.rawValue, 0)
+        return (initialRtpPacket.rawValue, .outgoing)
     }
 
-    func udpStreamUtil(_ udpStreamUtil: VoipUdpStreamUtil, didReceivePacket data: Data, atTimestamp timestamp: UInt64) -> Bool {
+    func udpStreamUtil(_ udpStreamUtil: UdpStreamUtil, didReceiveData data: Data, fromAddress address: Data, atTimestamp timestamp: UInt64) -> Bool {
         taskLogger.debug("ON RECEIVE \(timestamp) -> \(data.count) bytes")
 
         guard let receivedPacket = RTPPacket(rawValue: data) else {

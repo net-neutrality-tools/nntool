@@ -27,7 +27,7 @@ class EchoProtocolTask: QoSTask {
 
     private var resultResponse: String?
     private var rttNs: UInt64?
-    
+
     private var udpPacketSentTimestamp: UInt64?
 
     override var statusKey: String {
@@ -80,18 +80,17 @@ class EchoProtocolTask: QoSTask {
             let tcpStreamUtil = TcpStreamUtil(config: tcpStreamUtilConfig)
             (status, resultResponse) = tcpStreamUtil.runStream()
         case .udp:
-            let voipUdpStreamUtilConfig = VoipUdpStreamUtilConfiguration(
+            let udpStreamUtilConfig = UdpStreamUtilConfiguration(
                 host: host,
                 portOut: port,
                 portIn: nil,
-                writeOnly: false,
+                respondOnly: false,
                 timeoutNs: timeoutNs,
                 delayNs: delayNs,
-                packetCount: packetCount,
-                uuid: nil
+                packetCount: packetCount
             )
 
-            let udpStreamUtil = VoipUdpStreamUtil(config: voipUdpStreamUtilConfig)
+            let udpStreamUtil = UdpStreamUtil(config: udpStreamUtilConfig)
             udpStreamUtil.delegate = self
 
             status = udpStreamUtil.runStream()
@@ -99,13 +98,13 @@ class EchoProtocolTask: QoSTask {
     }
 }
 
-extension EchoProtocolTask: VoipUdpStreamUtilDelegate {
+extension EchoProtocolTask: UdpStreamUtilDelegate {
 
-    func udpStreamUtil(_ udpStreamUtil: VoipUdpStreamUtil, didBindToLocalPort port: UInt16) {
+    func udpStreamUtil(_ udpStreamUtil: UdpStreamUtil, didBindToLocalPort port: UInt16) {
         // do nothing
     }
 
-    func udpStreamUtil(_ udpStreamUtil: VoipUdpStreamUtil, willSendPacketWithNumer packetNum: Int) -> (Data, Int)? {
+    func udpStreamUtil(_ udpStreamUtil: UdpStreamUtil, willSendPacketWithNumer packetNum: Int) -> (Data, UdpStreamUtil.Tag)? {
         taskLogger.debug("ON SEND (packet: \(packetNum))")
 
         guard let data = payload.data(using: .utf8) else {
@@ -114,10 +113,10 @@ extension EchoProtocolTask: VoipUdpStreamUtilDelegate {
 
         udpPacketSentTimestamp = TimeHelper.currentTimeNs()
 
-        return (data, 0)
+        return (data, .noDelay)
     }
 
-    func udpStreamUtil(_ udpStreamUtil: VoipUdpStreamUtil, didReceivePacket data: Data, atTimestamp timestamp: UInt64) -> Bool {
+    func udpStreamUtil(_ udpStreamUtil: UdpStreamUtil, didReceiveData data: Data, fromAddress address: Data, atTimestamp timestamp: UInt64) -> Bool {
         resultResponse = String(data: data, encoding: .utf8)
 
         if let sentTs = udpPacketSentTimestamp {

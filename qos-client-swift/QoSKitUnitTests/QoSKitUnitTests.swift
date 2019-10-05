@@ -16,149 +16,161 @@
 
 import XCTest
 @testable import QoSKit
+import CodableJSON
 
 ///
 class QoSKitUnitTests: XCTestCase {
 
-    func testRunner() {
-
-        let objectives = """
-        {
-          "TCP" : [ {
-            "concurrency_group" : "200",
-            "qos_test_uid" : "200",
-            "out_port" : "5542",
-            "qostest" : "tcp"
-          }, {
-            "concurrency_group" : "200",
-            "qos_test_uid" : "201",
-            "out_port" : "5545",
-            "qostest" : "tcp"
-          } ],
-          "UDP" : [ {
-            "concurrency_group" : "201",
-            "out_num_packets" : "1",
-            "qos_test_uid" : "250",
-            "out_port" : "5004",
-            "qostest" : "udp"
-          }, {
-            "concurrency_group" : "201",
-            "out_num_packets" : "1",
-            "qos_test_uid" : "251",
-            "out_port" : "5005",
-            "qostest" : "udp"
-          } ],
-          "ECHO_PROTOCOL" : [ {
-            "concurrency_group" : "301",
-            "qos_test_uid" : "301",
-            "qostest" : "echo_protocol",
-            "echo_protocol_objective_protocol" : "udp",
-            "echo_protocol_objective_payload" : "UPD payload",
-            "server_addr" : "10.9.8.39",
-            "server_port" : "7"
-          }, {
-            "concurrency_group" : "302",
-            "qos_test_uid" : "302",
-            "qostest" : "echo_protocol",
-            "echo_protocol_objective_protocol" : "tcp",
-            "echo_protocol_objective_payload" : "TCP payload",
-            "server_addr" : "10.9.8.39",
-            "server_port" : "7"
-          } ]
-        }
-        """
-
-        /*let objectives = """
-        {
-          "TCP" : [ {
-            "concurrency_group" : 200,
-            "qos_test_uid" : "200",
-            "out_port" : "5542",
-            "qostest" : "tcp"
-          }, {
-            "concurrency_group" : 200,
-            "qos_test_uid" : "201",
-            "out_port" : "5545",
-            "qostest" : "tcp"
-          } ],
-          "UDP" : [ {
-            "concurrency_group" : 201,
-            "out_num_packets" : "1",
-            "qos_test_uid" : "250",
-            "out_port" : "5004",
-            "qostest" : "udp"
-          }, {
-            "concurrency_group" : 201,
-            "out_num_packets" : "1",
-            "qos_test_uid" : "251",
-            "out_port" : "5005",
-            "qostest" : "udp"
-          } ],
-          "ECHO_PROTOCOL" : [ {
-            "concurrency_group" : 301,
-            "qos_test_uid" : "301",
-            "qostest" : "echo_protocol",
-            "echo_protocol_objective_protocol" : "udp",
-            "echo_protocol_objective_payload" : "UPD payload",
-            "server_addr" : "10.9.8.39",
-            "server_port" : "7"
-          }, {
-            "concurrency_group" : 302,
-            "qos_test_uid" : "302",
-            "qostest" : "echo_protocol",
-            "echo_protocol_objective_protocol" : "tcp",
-            "echo_protocol_objective_payload" : "TCP payload",
-            "server_addr" : "10.9.8.39",
-            "server_port" : "7"
-          } ]
-        }
-        """*/
-
-        let data = objectives.data(using: .utf8)!
-
-        let d = JSONDecoder()
-
-        d.keyDecodingStrategy = .custom { keys in
-            print(keys)
-            self.pr(keys)
-
-            let lastComponent = keys.last!.stringValue.split(separator: ".").last!
-            print(lastComponent)
-            self.pr(lastComponent)
-
-            return AnyKey(stringValue: String(lastComponent))!
-        }
-
-        do {
-            let res = try d.decode([String: [[String: String]]].self, from: data)
-            print(res)
-        } catch {
-            print(error)
-        }
-    }
-
-    func pr(_ t: Any) {
-        print(t)
-    }
-
     func testWebsite() {
-        //WebsiteTaskUrlProtocol.start()
-        let websiteRenderingTask = WebsiteRenderingTask(config: [
+        let t = WebsiteRenderingTask.create(config: [
             "qos_test_uid": "1",
             "qostest": "WEBSITE",
             "concurrency_group": 200,
             "url": "https://alladin.at"
         ])!
 
-        let result = websiteRenderingTask.runTask()
+        runTaskAndLogResult(t)
+    }
 
-        /*let op = OperationQueue()
-        op.addOperations([websiteRenderingTask], waitUntilFinished: true)
-        
-        pr(websiteRenderingTask.result)*/
-        pr(result)
+    func testTraceroute() {
+        let t = TracerouteTask.create(config: [
+            "qos_test_uid": "1",
+            "concurrency_group": 200,
+            "qostest": "TRACEROUTE",
+            "host": JSON("alladin.at"),
+            "max_hops": JSON(20)
+        ])
 
-        //WebsiteTaskUrlProtocol.stop()
+        runTaskAndLogResult(t)
+    }
+
+    func testMeasurementKitWebConnectivity() {
+        let t = MeasurementKitTask.create(config: [
+            "qos_test_uid": JSON("1"),
+            "concurrency_group": JSON(200),
+            "qostest": JSON("MKIT_WEB_CONNECTIVITY"),
+            "input": JSON("[\"https://alladin.at\"]")
+        ])
+
+        runTaskAndLogResult(t)
+    }
+
+    func testMeasurementKitDash() {
+        let t = MeasurementKitTask.create(config: [
+            "qos_test_uid": JSON("2"),
+            "concurrency_group": JSON(201),
+            "qostest": JSON("MKIT_DASH")
+        ])
+
+        runTaskAndLogResult(t)
+    }
+
+    func testSip() {
+        let t = SipTask.create(config: [
+            "qos_test_uid": "1",
+            "concurrency_group": 200,
+            "qostest": "SIP",
+
+            "server_addr": "localhost",
+            "server_port": 5233,
+
+            "port": 5060,
+            "count": 3,
+            "call_duration": JSON(5 * NSEC_PER_SEC),
+            "to": "abc",
+            "from": "def",
+            "via": "ghi"
+        ])
+
+        t?.controlConnection = mockedControlConnection()
+
+        runTaskAndLogResult(t)
+    }
+
+    func testVoip() {
+        let t = VoipTask.create(config: [
+            "qos_test_uid": "1",
+            "concurrency_group": 200,
+            "qostest": "VOIP",
+
+            "server_addr": "localhost",
+            "server_port": 5233,
+
+            "out_port": 5060
+            //"in_port": 50601
+        ])
+
+        t?.controlConnection = mockedControlConnection()
+
+        runTaskAndLogResult(t)
+    }
+
+    func testUdpOut() {
+        let t = UdpPortTask.create(config: [
+            "qos_test_uid": "1",
+            "concurrency_group": 200,
+            "qostest": "UDP",
+
+            "server_addr": "localhost",
+            "server_port": 5233,
+
+            "out_port": 10245,
+            "out_num_packets": 10
+        ])
+
+        t?.controlConnection = mockedControlConnection()
+
+        runTaskAndLogResult(t)
+    }
+
+    func testUdpIn() {
+        let t = UdpPortTask.create(config: [
+            "qos_test_uid": "1",
+            "concurrency_group": 200,
+            "qostest": "UDP",
+
+            "server_addr": "localhost",
+            "server_port": 5233,
+
+            "in_port": 50000,
+            "in_num_packets": 10
+        ])
+
+        t?.controlConnection = mockedControlConnection()
+
+        runTaskAndLogResult(t)
+    }
+
+    func testEchoProtocol() {
+        let t = EchoProtocolTask.create(config: [
+            "concurrency_group": 301,
+            "qos_test_uid": "301",
+            "qostest": "echo_protocol",
+            "protocol": "udp",
+            "payload": "__payload__",
+            "host": "localhost",
+            "port": "7"
+        ])
+
+        runTaskAndLogResult(t)
+    }
+
+    private func mockedControlConnection() -> ControlConnection {
+        return ControlConnection(host: "localhost", port: 5233, timeoutS: 15, token: "\(UUID().uuidString.lowercased())_\(UInt(Date().timeIntervalSince1970))_abc")
+    }
+
+    private func runTaskAndLogResult(_ task: QoSTask?) {
+        if let result = task?.runTask() {
+            do {
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = .prettyPrinted
+
+                let d = try encoder.encode(result)
+                logger.debug(String(data: d, encoding: .utf8))
+            } catch {
+                logger.debug("err")
+            }
+        }
     }
 }
 

@@ -31,7 +31,6 @@
 		E05D32E721F61ED8005E77F1 /* TcpStreamUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D32E621F61ED8005E77F1 /* TcpStreamUtil.swift */; };
 		E05D32F421F63CAA005E77F1 /* ControlConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D32F321F63CAA005E77F1 /* ControlConnection.swift */; };
 		E05D32FA21F7741F005E77F1 /* QoSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D32F921F7741F005E77F1 /* QoSLog.swift */; };
-		E05D331821F9FE2A005E77F1 /* UdpStreamUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D331721F9FE2A005E77F1 /* UdpStreamUtil.swift */; };
 		E05D331A21FA0255005E77F1 /* TaskType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D331921FA0255005E77F1 /* TaskType.swift */; };
 		E06951002110A6EB00CFA14B /* QoSKit.podspec.json in Resources */ = {isa = PBXBuildFile; fileRef = E06950FF2110A6EB00CFA14B /* QoSKit.podspec.json */; };
 		E08FC3552212DDC50018E747 /* SocketProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08FC3542212DDC50018E747 /* SocketProtocols.swift */; };
@@ -51,7 +50,7 @@
 		E0EA84D922804CE200EB73BF /* QoSTaskExecutorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84CE22804CE200EB73BF /* QoSTaskExecutorDelegate.swift */; };
 		E0EA84DC22804D0100EB73BF /* ControlConnectionParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84DA22804D0100EB73BF /* ControlConnectionParameters.swift */; };
 		E0EA84DD22804D0100EB73BF /* RequireControlConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84DB22804D0100EB73BF /* RequireControlConnection.swift */; };
-		E0EB4D322343D2120068BE34 /* VoipUdpStreamUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EB4D312343D2120068BE34 /* VoipUdpStreamUtil.swift */; };
+		E0EB4D322343D2120068BE34 /* UdpStreamUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EB4D312343D2120068BE34 /* UdpStreamUtil.swift */; };
 		E0EB4D352343D4040068BE34 /* RTPPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EB4D342343D4040068BE34 /* RTPPacket.swift */; };
 		E0EB4D382343E13C0068BE34 /* RTPPacketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EB4D372343E13C0068BE34 /* RTPPacketTests.swift */; };
 		E0EB4D3B2343E7B70068BE34 /* ByteUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EB4D392343E3660068BE34 /* ByteUtil.swift */; };
@@ -106,7 +105,6 @@
 		E05D32E621F61ED8005E77F1 /* TcpStreamUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TcpStreamUtil.swift; sourceTree = "<group>"; };
 		E05D32F321F63CAA005E77F1 /* ControlConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlConnection.swift; sourceTree = "<group>"; };
 		E05D32F921F7741F005E77F1 /* QoSLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSLog.swift; sourceTree = "<group>"; };
-		E05D331721F9FE2A005E77F1 /* UdpStreamUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UdpStreamUtil.swift; sourceTree = "<group>"; };
 		E05D331921FA0255005E77F1 /* TaskType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskType.swift; sourceTree = "<group>"; };
 		E06950F121109FCC00CFA14B /* QoSKit_iOS_Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = QoSKit_iOS_Shared.xcconfig; sourceTree = "<group>"; };
 		E06950F221109FCC00CFA14B /* QoSKit_iOS_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = QoSKit_iOS_Debug.xcconfig; sourceTree = "<group>"; };
@@ -135,7 +133,7 @@
 		E0EA84CE22804CE200EB73BF /* QoSTaskExecutorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSTaskExecutorDelegate.swift; sourceTree = "<group>"; };
 		E0EA84DA22804D0100EB73BF /* ControlConnectionParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlConnectionParameters.swift; sourceTree = "<group>"; };
 		E0EA84DB22804D0100EB73BF /* RequireControlConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequireControlConnection.swift; sourceTree = "<group>"; };
-		E0EB4D312343D2120068BE34 /* VoipUdpStreamUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoipUdpStreamUtil.swift; sourceTree = "<group>"; };
+		E0EB4D312343D2120068BE34 /* UdpStreamUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdpStreamUtil.swift; sourceTree = "<group>"; };
 		E0EB4D342343D4040068BE34 /* RTPPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTPPacket.swift; sourceTree = "<group>"; };
 		E0EB4D372343E13C0068BE34 /* RTPPacketTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTPPacketTests.swift; sourceTree = "<group>"; };
 		E0EB4D392343E3660068BE34 /* ByteUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteUtil.swift; sourceTree = "<group>"; };
@@ -393,8 +391,7 @@
 			isa = PBXGroup;
 			children = (
 				E05D32E621F61ED8005E77F1 /* TcpStreamUtil.swift */,
-				E05D331721F9FE2A005E77F1 /* UdpStreamUtil.swift */,
-				E0EB4D312343D2120068BE34 /* VoipUdpStreamUtil.swift */,
+				E0EB4D312343D2120068BE34 /* UdpStreamUtil.swift */,
 				E08FC3542212DDC50018E747 /* SocketProtocols.swift */,
 				E044DDF422D3A15000BB70CE /* WebsiteTaskUrlProtocol.swift */,
 				E044DDF622D3A19200BB70CE /* WebsiteTaskRunner.swift */,
@@ -647,7 +644,6 @@
 				E05D32F421F63CAA005E77F1 /* ControlConnection.swift in Sources */,
 				E0EA84CF22804CE200EB73BF /* QoSTaskExecutor.swift in Sources */,
 				E05D32FA21F7741F005E77F1 /* QoSLog.swift in Sources */,
-				E05D331821F9FE2A005E77F1 /* UdpStreamUtil.swift in Sources */,
 				E044DDF322D39FEE00BB70CE /* WebsiteRenderingTask.swift in Sources */,
 				E0B950CE231EF85D0069F20A /* SipTask.swift in Sources */,
 				E031300A2326CEF500B6FE19 /* VoipTask.swift in Sources */,
@@ -656,7 +652,7 @@
 				E05487EA231C461500B47184 /* MeasurementKitEvent.swift in Sources */,
 				E0EB4D352343D4040068BE34 /* RTPPacket.swift in Sources */,
 				E0EA84D222804CE200EB73BF /* QoSTaskGroup.swift in Sources */,
-				E0EB4D322343D2120068BE34 /* VoipUdpStreamUtil.swift in Sources */,
+				E0EB4D322343D2120068BE34 /* UdpStreamUtil.swift in Sources */,
 				E05D32E721F61ED8005E77F1 /* TcpStreamUtil.swift in Sources */,
 				E08FC3552212DDC50018E747 /* SocketProtocols.swift in Sources */,
 				E0C4527822CE0B5700FA4B44 /* QoSLogger.swift in Sources */,

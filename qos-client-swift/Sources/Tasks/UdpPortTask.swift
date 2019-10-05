@@ -1,7 +1,15 @@
 import Foundation
 import CodableJSON
+import nntool_shared_swift
 
 class UdpPortTask: QoSBidirectionalIpTask {
+
+    ///
+    enum UdpPacketFlag: UInt8 {
+        case oneDirection = 1
+        case response = 2
+        case awaitResponse = 3
+    }
 
     var packetCountOut: Int?
     var packetCountIn: Int?
@@ -16,10 +24,12 @@ class UdpPortTask: QoSBidirectionalIpTask {
         case delayNs = "delay"
     }
 
+    private var packetCount: Int!
+
     private var receivedSequences = Set<UInt8>()
     private var packetsReceivedServer: Int?
 
-    private var rttsNs: [String: UInt64]?
+    private var rttsNs: [String: UInt64]? // why string key?
 
     override var statusKey: String? {
         return "udp_result_status" // TODO: not yet implemented on server
@@ -42,7 +52,7 @@ class UdpPortTask: QoSBidirectionalIpTask {
 
         var rttAvgNs: UInt64?
         if let rtts = rttsNs, rtts.count > 0 {
-            rttAvgNs = rtts.reduce(0) { $0 + $1.value } / UInt64(rtts.count)
+            rttAvgNs = rtts.compactMap { $0.value }.reduce(0, +) / UInt64(rtts.count)
         }
         let rttsJson = rttsNs?.mapValues { JSON($0) }
 
@@ -112,20 +122,11 @@ class UdpPortTask: QoSBidirectionalIpTask {
                 return
         }
 
-        ///
-        let udpStreamUtilConfig = UdpStreamUtilConfiguration(
-            host: controlConnectionParams.host,
-            port: port,
-            outgoing: direction == .outgoing,
-            timeoutNs: timeoutNs,
-            delayNs: delayNs,
-            packetCount: packetCount,
-            uuid: extractUuidFromToken(),
-            payload: nil
-        )
+        self.packetCount = packetCount
 
-        let udpStreamUtil = UdpStreamUtil(config: udpStreamUtilConfig)
-        ///
+        if direction == .outgoing {
+            rttsNs = [String: UInt64]()
+        }
 
         // control connection request
         let cmd = String(format: "UDPTEST %@ %lu %lu +ID%d", direction.rawValue, port, packetCount, uid)
@@ -151,17 +152,27 @@ class UdpPortTask: QoSBidirectionalIpTask {
         }
 
         ///
-        let (streamUtilStatus, result) = udpStreamUtil.runStream()
-        ///
 
-        status = QoSTaskStatus(rawValue: streamUtilStatus.rawValue) ?? .error
+        let udpStreamUtilConfig = UdpStreamUtilConfiguration(
+            host: controlConnectionParams.host,
+            portOut: portOut,
+            portIn: portIn,
+            respondOnly: direction == .incoming,
+            timeoutNs: timeoutNs,
+            delayNs: delayNs,
+            packetCount: packetCount
+        )
 
-        if let r = result {
-            receivedSequences = r.receivedSequences
-            rttsNs = r.rttsNs
+        let udpStreamUtil = UdpStreamUtil(config: udpStreamUtilConfig)
+        udpStreamUtil.delegate = self
+
+        let udpStreamUtilStatus = udpStreamUtil.runStream()
+        if udpStreamUtilStatus != .ok {
+            status = udpStreamUtilStatus
+            return
         }
 
-        ////////
+        ///
 
         let resultCmd = String(format: "GET UDPRESULT %@ %lu +ID%d", direction.rawValue, port, uid)
         var resultCmdResponse: String?
@@ -195,9 +206,6 @@ class UdpPortTask: QoSBidirectionalIpTask {
                     // we got rtts from qos-service as JSON
                     if let jsonData = components[3].data(using: .utf8) {
                         rttsNs = try? JSONDecoder().decode([String: UInt64].self, from: jsonData)
-                        /*if let jsonDict = ((try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: UInt64]) as [String: UInt64]??) {
-                            rttsNs = jsonDict
-                        }*/
                     }
                 }
             }
@@ -206,5 +214,97 @@ class UdpPortTask: QoSBidirectionalIpTask {
         if status == .unknown {
             status = .ok
         }
+    }
+
+    ///
+    private func packetDataByReplacingFlag(_ flag: UdpPacketFlag, data: Data) -> Data {
+        var d = Data()
+
+        d.append(flag.rawValue)
+        d.append(data[1..<data.count])
+
+        return d
+    }
+}
+
+extension UdpPortTask: UdpStreamUtilDelegate {
+
+    func udpStreamUtil(_ udpStreamUtil: UdpStreamUtil, didBindToLocalPort port: UInt16) {
+        // do nothing
+    }
+
+    func udpStreamUtil(_ udpStreamUtil: UdpStreamUtil, willSendPacketWithNumer packetNum: Int) -> (Data, UdpStreamUtil.Tag)? {
+        var data = Data()
+
+        data.append(UdpPacketFlag.awaitResponse.rawValue)
+        data.append(UInt8(truncatingIfNeeded: packetNum))
+
+        if let uuidData = extractUuidFromToken().data(using: .utf8) { /* .ascii ? */
+            data.append(uuidData)
+        }
+
+        let currentTimeNs = TimeHelper.currentTimeNs()
+        var currentTimeNsBigEndian = currentTimeNs.bigEndian
+        data.append(UnsafeBufferPointer(start: &currentTimeNsBigEndian, count: 1))
+
+        return (data, .outgoing)
+    }
+
+    func udpStreamUtil(_ udpStreamUtil: UdpStreamUtil, didReceiveData data: Data, fromAddress address: Data, atTimestamp timestamp: UInt64) -> Bool {
+
+        guard data.count >= 46 /*1+1+36+8*/ else {
+            status = .error // UDP packet too short
+            return true
+        }
+
+        let flag = ByteUtil.convertData(data[0..<1], to: UInt8.self)
+
+        guard let flagEnum = UdpPacketFlag(rawValue: flag) else {
+            taskLogger.debug("received unknown packet flag \(flag)")
+            status = .error // unknown packet flag -> return
+            return true
+        }
+        taskLogger.debug("received flag: \(flagEnum)")
+
+        let sequenceNum = ByteUtil.convertData(data[1..<2], to: UInt8.self)
+        taskLogger.debug("received sequenceNum: \(sequenceNum)")
+
+        /*let uuidData = data[2..<38]
+        let uuid = String(data: uuidData, encoding: .utf8)
+        taskLogger.debug("uuid: \(uuid)")*/
+
+        if direction == .outgoing {
+            //let sentTimeNs = ByteUtil.convertData(data[38..<46], to: UInt64.self) // Fails with "Fatal error: load from misaligned raw pointer"
+            let sentTimeNs = data[38..<46].withUnsafeBytes { UInt64(bigEndian: $0.pointee) }
+            rttsNs?["\(sequenceNum)"] = timestamp - sentTimeNs
+        }
+
+        if receivedSequences.contains(sequenceNum) {
+            taskLogger.warning("received duplicate")
+            status = .error
+            return true
+        } else {
+            receivedSequences.insert(sequenceNum)
+
+            if direction == .outgoing {
+                assert(flagEnum == UdpPacketFlag.response)
+
+                if receivedSequences.count == packetCount {
+                     return true
+                }
+            } else {
+                assert(flagEnum == UdpPacketFlag.awaitResponse)
+
+                udpStreamUtil.sendResponse(packetDataByReplacingFlag(.response, data: data), toAddress: address, tag: .incomingResponse)
+
+                if receivedSequences.count == packetCount {
+                    // add delay to allow the last confirmation packet to reach the server
+                    usleep(UInt32(delayNs / NSEC_PER_USEC))
+                    return true
+                }
+            }
+        }
+
+        return false
     }
 }
