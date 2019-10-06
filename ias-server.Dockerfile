@@ -27,11 +27,19 @@ RUN cd ias-server && \
 
 RUN mkdir -p /var/log/ias-server
 RUN mkdir -p /etc/ias-server
+RUN mkdir -p /var/opt/ias-server/certs
+
 RUN cp ias-server/trace.ini /etc/ias-server/.
 RUN cp ias-server/config.json /etc/ias-server/.
+
+# TODO: generate and configure server certificates
 
 EXPOSE 80
 EXPOSE 8080
 EXPOSE 443
+
+EXPOSE 80/udp
+EXPOSE 8080/udp
+EXPOSE 443/udp
 
 CMD ["./ias-server/docker_build/ias-server"]
