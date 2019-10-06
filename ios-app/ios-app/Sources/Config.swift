@@ -64,6 +64,11 @@ let MEASUREMENT_AGENT =
 
 ////
 
+// GoogleMaps API key is required. The app will crash on the map view if no key is provided.
+let GOOGLE_MAPS_API_KEY = ""
+
+////
+
 let BEREC_WHITE      = UIColor.white
 let BEREC_LIGHT_GRAY = UIColor(rgb: 0xEFEFEF)
 let BEREC_GRAY       = UIColor(rgb: 0xD0D0D0)
