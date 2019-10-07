@@ -768,6 +768,7 @@ public class ClientHandler implements Runnable {
     	 * 	5 = call duration (test duration) in ms 
     	 * 	6 = starting sequence number (see rfc3550, rtp header: sequence number)
     	 *  7 = payload type
+    	 *  8 = buffer in ns
     	 */
 		final Pattern p = Pattern.compile(QoSServiceProtocol.CMD_VOIP_TEST + " ([\\d]*) ([\\w]*) ([\\d]*) ([\\d]*) ([\\d]*) ([\\d]*) ([\\d]*) ([\\d]*) ([\\d]*)");
 		final Matcher m = p.matcher(command);
