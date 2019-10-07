@@ -308,7 +308,7 @@ public class ClientHandler implements Runnable {
     
     /**
      * 
-     * @param token
+     * @param command
      * @throws IOException 
      */
     protected void sendRandomUdpPort(final String command) throws IOException {
@@ -773,7 +773,7 @@ public class ClientHandler implements Runnable {
 		final Matcher m = p.matcher(command);
 		m.find();
 
-		if (m.groupCount()!=8) {
+		if (m.groupCount()!=9) {
 			throw new IOException("voip test command syntax error: " + command);
 		}
 
@@ -928,7 +928,8 @@ public class ClientHandler implements Runnable {
 				final String voipResult = QoSServiceProtocol.RESPONSE_VOIP_RESULT + " " + result.getMaxJitter() + " " 
 						+ result.getMeanJitter() + " " + result.getMaxDelta() + " " + result.getSkew() + " "
 						+ result.getReceivedPackets() + " " + result.getOutOfOrder() + " " 
-						+ result.getMinSequential() + " " + result.getMaxSequencial();
+						+ result.getMinSequential() + " " + result.getMaxSequencial() + " "
+						+ result.getNumberOfStalls() + " " + result.getAvgStallTime();
 
 				TestServerConsole.log("Sending VOIP results for SSRC " + ssrc + ": " + voipResult, 2, TestServerServiceEnum.UDP_SERVICE);
 				sendCommand(voipResult, command);				
