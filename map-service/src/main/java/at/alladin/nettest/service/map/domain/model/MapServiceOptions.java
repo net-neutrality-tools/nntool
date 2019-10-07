@@ -20,9 +20,6 @@ public class MapServiceOptions {
     private String sqlValueColumn;
 
     @Expose
-    private String sqlValueColumnLog;
-
-    @Expose
     private String sqlFilter;
 
     @Expose
@@ -43,14 +40,6 @@ public class MapServiceOptions {
 
     public void setSqlValueColumn(String sqlValueColumn) {
         this.sqlValueColumn = sqlValueColumn;
-    }
-
-    public String getSqlValueColumnLog() {
-        return sqlValueColumnLog;
-    }
-
-    public void setSqlValueColumnLog(String sqlValueColumnLog) {
-        this.sqlValueColumnLog = sqlValueColumnLog;
     }
 
     public String getSqlFilter() {
@@ -113,7 +102,7 @@ public class MapServiceOptions {
     @Override
 	public String toString() {
 		return "MapServiceOptions [groupKey=" + groupKey + ", typeKey=" + typeKey + ", sqlValueColumn=" + sqlValueColumn
-				+ ", sqlValueColumnLog=" + sqlValueColumnLog + ", sqlFilter=" + sqlFilter + ", colorsSorted="
+				+ ", sqlFilter=" + sqlFilter + ", colorsSorted="
 				+ ", classificationType=" + classificationType + ", overlayType=" + overlayType
 				+ ", reverseScale=" + reverseScale + ", signalGroup=" + signalGroup + "]";
 	}

@@ -105,7 +105,6 @@ public class ColorMapperService {
      */
     protected int valueToDiscreteColor(final double value, final MapServiceOptions.SignalGroup signalGroup,
                                        final ClassificationHelper.ClassificationType classificationType) {
-    	
         final ColorThresholds colorThresholds = thresholdsHelperService.getByClassificationType(thresholdsPerClassificationType, classificationType);
         
     	if (colorThresholds == null) {

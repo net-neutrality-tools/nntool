@@ -37,9 +37,6 @@ public class MapOptionsService {
     @Inject
     private MapServiceSettingsConfig mapServiceConfig;
     
-    @Inject
-    private ClassificationService classificationService;
-    
     @Inject 
     private MapCacheConfig cacheconfig;
 

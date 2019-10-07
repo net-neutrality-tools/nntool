@@ -21,128 +21,89 @@ map-cache:
   
 map-settings:
   maxZoomLevel: 21
-  # the default thresholds for the signals
-  mobileSignalThresholds:
-    - -123.5
-    - -108.5
-    - -93.5
-    - -78.5
-    - -63.5
-  mobileSignalThresholdCaptions:
-    - ""
-    - "-108"
-    - "-94"
-    - "-78"
-    - ""
-  wifiSignalThresholds:
-    - -98.5
-    - -83.5
-    - -68.5
-    - -53.5
-    - -38.5
-  wifiSignalThresholdCaptions:
-    - "-99"
-    - ""
-    - "-69"
-    - ""
-    - "-39"
   #TODO: make this mess easier to look at (divide by UP/DOWN/... and MOBILE/WIFI/...)
   mapServiceOptions:
     - groupKey: "mobile"
       typeKey: "download"
       sqlValueColumn: "ias.throughput_avg_download_bps"
-      sqlValueColumnLog: "ias.throughput_avg_download_log"
       sqlFilter: "ias.throughput_avg_download_bps IS NOT NULL AND (t.initial_network_type_id)::int not in (0, 97, 98, 99)"
       overlayType: "heatmap"
       reverseScale: false
     - groupKey: "mobile"
       typeKey: "upload"
       sqlValueColumn: "ias.throughput_avg_upload_bps"
-      sqlValueColumnLog: "ias.throughput_avg_upload_log"
       sqlFilter: "ias.throughput_avg_upload_bps IS NOT NULL AND (t.initial_network_type_id)::int not in (0, 97, 98, 99)"
       overlayType: "heatmap"
       reverseScale: false 
     - groupKey: "mobile"
       typeKey: "ping"
       sqlValueColumn: "ias.rtt_median_ns"
-      sqlValueColumnLog: "ias.rtt_median_log"
       sqlFilter: "ias.rtt_median_ns IS NOT NULL AND (t.initial_network_type_id)::int not in (0, 97, 98, 99)"
       overlayType: "heatmap"
       reverseScale: true 
     - groupKey: "mobile"
       typeKey: "signal"
       sqlValueColumn: "t.network_signal_info"
-      sqlValueColumnLog: "t.network_signal_info"
       sqlFilter: "t.network_signal_info IS NOT NULL AND (t.initial_network_type)::int not in (0, 97, 98, 99)"
       overlayType: "heatmap"
       reverseScale: false
     - groupKey: "wifi"
       typeKey: "download"
       sqlValueColumn: "ias.throughput_avg_download_bps"
-      sqlValueColumnLog: "ias.throughput_avg_download_log"
       sqlFilter: "ias.throughput_avg_download_bps IS NOT NULL AND (t.intial_network_type_id)::int = 99"
       overlayType: "heatmap"
       reverseScale: false
     - groupKey: "wifi"
       typeKey: "upload"
       sqlValueColumn: "ias.throughput_avg_upload_bps"
-      sqlValueColumnLog: "ias.throughput_avg_upload_log"
       sqlFilter: "ias.throughput_avg_upload_bps IS NOT NULL AND (t.initial_network_type_id)::int = 99"
       overlayType: "heatmap"
       reverseScale: false
     - groupKey: "wifi"
       typeKey: "ping"
       sqlValueColumn: "ias.rtt_median_ns"
-      sqlValueColumnLog: "ias.rtt_median_log"
       sqlFilter: "ias.rtt_median_ns IS NOT NULL AND (t.initial_network_type_id)::int = 99"
       overlayType: "heatmap"
       reverseScale: true
     - groupKey: "wifi"
       typeKey: "signal"
       sqlValueColumn: "t.network_signal_info"
-      sqlValueColumnLog: "t.network_signal_info"
       sqlFilter: "t.network_signal_info IS NOT NULL AND (t.initial_network_type)::int = 99"
       overlayType: "heatmap"
       reverseScale: false
     - groupKey: "browser"
       typeKey: "download"
       sqlValueColumn: "ias.throughput_avg_download_bps"
-      sqlValueColumnLog: "ias.throughput_avg_download_log"
       sqlFilter: "ias.throughput_avg_download_bps IS NOT NULL AND (t.initial_network_type_id)::int = 98"
       overlayType: "shapes"
       reverseScale: false
     - groupKey: "browser"
       typeKey: "upload"
       sqlValueColumn: "ias.throughput_avg_upload_bps"
-      sqlValueColumnLog: "ias.throughput_avg_upload_log"
       sqlFilter: "ias.throughput_avg_upload_bps IS NOT NULL AND (t.initial_network_type_id)::int = 98"
       overlayType: "shapes"
       reverseScale: false
     - groupKey: "browser"
       typeKey: "ping"
       sqlValueColumn: "ias.rtt_median_ns"
-      sqlValueColumnLog: "ias.rtt_median_log"
       sqlFilter: "ias.rtt_median_ns IS NOT NULL AND (t.initial_network_type_id)::int = 98"
       overlayType: "shapes"
       reverseScale: true
     - groupKey: "all"
       typeKey: "download"
       sqlValueColumn: "ias.throughput_avg_download_bps"
-      sqlValueColumnLog: "ias.throughput_avg_download_log"
       sqlFilter: "ias.throughput_avg_download_bps IS NOT NULL"
       overlayType: "shapes"
       reverseScale: false
     - groupKey: "all"
       typeKey: "upload"
       sqlValueColumn: "ias.throughput_avg_download_bps"
-      sqlValueColumnLog: "ias.throughput_avg_download_log"
       sqlFilter: "ias.throughput_avg_download_bps IS NOT NULL"
       overlayType: "shapes"
       reverseScale: false
     - groupKey: "all"
       typeKey: "ping"
       sqlValueColumn: "ias.rtt_median_ns"
-      sqlValueColumnLog: "ias.rtt_median_log"
       sqlFilter: "ias.rtt_median_ns IS NOT NULL"
       overlayType: "shapes"
       reverseScale: true 
