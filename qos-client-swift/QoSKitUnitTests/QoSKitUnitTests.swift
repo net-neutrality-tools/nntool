@@ -66,7 +66,7 @@ class QoSKitUnitTests: XCTestCase {
     }
 
     func testSip() {
-        let t = SipTask.create(config: [
+        let config: QoSTaskConfiguration = [
             "qos_test_uid": "1",
             "concurrency_group": 200,
             "qostest": "SIP",
@@ -80,15 +80,17 @@ class QoSKitUnitTests: XCTestCase {
             "to": "abc",
             "from": "def",
             "via": "ghi"
-        ])
+        ]
 
-        t?.controlConnection = mockedControlConnection()
+        let t = SipTask.create(config: config)
+
+        t?.controlConnection = mockedControlConnection(config)
 
         runTaskAndLogResult(t)
     }
 
     func testVoip() {
-        let t = VoipTask.create(config: [
+        let config: QoSTaskConfiguration = [
             "qos_test_uid": "1",
             "concurrency_group": 200,
             "qostest": "VOIP",
@@ -96,17 +98,19 @@ class QoSKitUnitTests: XCTestCase {
             "server_addr": "localhost",
             "server_port": 5233,
 
-            "out_port": 5060
-            //"in_port": 50601
-        ])
+            "out_port": 5060,
+            "in_port": 50601
+        ]
 
-        t?.controlConnection = mockedControlConnection()
+        let t = VoipTask.create(config: config)
+
+        t?.controlConnection = mockedControlConnection(config)
 
         runTaskAndLogResult(t)
     }
 
     func testUdpOut() {
-        let t = UdpPortTask.create(config: [
+        let config: QoSTaskConfiguration = [
             "qos_test_uid": "1",
             "concurrency_group": 200,
             "qostest": "UDP",
@@ -116,15 +120,17 @@ class QoSKitUnitTests: XCTestCase {
 
             "out_port": 10245,
             "out_num_packets": 10
-        ])
+        ]
 
-        t?.controlConnection = mockedControlConnection()
+        let t = UdpPortTask.create(config: config)
+
+        t?.controlConnection = mockedControlConnection(config)
 
         runTaskAndLogResult(t)
     }
 
     func testUdpIn() {
-        let t = UdpPortTask.create(config: [
+        let config: QoSTaskConfiguration = [
             "qos_test_uid": "1",
             "concurrency_group": 200,
             "qostest": "UDP",
@@ -134,9 +140,11 @@ class QoSKitUnitTests: XCTestCase {
 
             "in_port": 50000,
             "in_num_packets": 10
-        ])
+        ]
 
-        t?.controlConnection = mockedControlConnection()
+        let t = UdpPortTask.create(config: config)
+
+        t?.controlConnection = mockedControlConnection(config)
 
         runTaskAndLogResult(t)
     }
@@ -155,8 +163,13 @@ class QoSKitUnitTests: XCTestCase {
         runTaskAndLogResult(t)
     }
 
-    private func mockedControlConnection() -> ControlConnection {
-        return ControlConnection(host: "localhost", port: 5233, timeoutS: 15, token: "\(UUID().uuidString.lowercased())_\(UInt(Date().timeIntervalSince1970))_abc")
+    private func mockedControlConnection(_ config: QoSTaskConfiguration) -> ControlConnection {
+        return ControlConnection(
+            host: config["server_addr"]?.stringValue ?? "localhost",
+            port: config["server_port"]?.uint16Value ?? 5233,
+            timeoutS: 15,
+            token: "\(UUID().uuidString.lowercased())_\(UInt(Date().timeIntervalSince1970))_abc"
+        )
     }
 
     private func runTaskAndLogResult(_ task: QoSTask?) {
