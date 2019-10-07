@@ -75,7 +75,7 @@ public class MapReduceBasedCouchDbQuery extends AbstractCouchDbRepositoryQuery {
 		try {
 			viewResponse = viewRequest.getResponse();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error getting view response!!!", e);
 			return returnEmptyResult(accessor, total); // TODO: throw exception
 		}
 		
