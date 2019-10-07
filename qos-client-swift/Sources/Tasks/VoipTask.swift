@@ -16,7 +16,7 @@ class VoipTask: QoSControlConnectionTask {
     private var portIn: UInt16?
     private var delayNs: UInt64 = 20 * NSEC_PER_MSEC // 20ms
     private var payloadType: UInt8 = 8 // PCMA(8, 8000, 1, CodecType.AUDIO)
-    private var buffer: UInt64 = 100/* * NSEC_PER_MSEC*/ // 100ms buffer
+    private var bufferNs: UInt64 = 100 * NSEC_PER_MSEC // 100ms buffer
 
     private var initialSequenceNumber = UInt16(arc4random_uniform(10000) + 1)
 
@@ -59,7 +59,7 @@ class VoipTask: QoSControlConnectionTask {
         case portIn = "in_port"
         case delayNs = "delay"
         case payloadType = "payload"
-        case buffer
+        case bufferNs = "buffer"
     }
 
     override var statusKey: String? {
@@ -80,7 +80,7 @@ class VoipTask: QoSControlConnectionTask {
         r["voip_objective_in_port"] = JSON(portIn ?? resultPortIn) // TODO: this should be a result and not an objective
         r["voip_objective_delay"] = JSON(delayNs)
         r["voip_objective_payload"] = JSON(payloadType)
-        r["voip_objective_buffer"] = JSON(buffer)
+        r["voip_objective_buffer"] = JSON(bufferNs)
 
         r["voip_result_out_max_jitter"] = JSON(remoteResultMaxJitter)
         r["voip_result_out_mean_jitter"] = JSON(remoteResultMeanJitter)
@@ -133,8 +133,8 @@ class VoipTask: QoSControlConnectionTask {
             payloadType = serverPayloadType
         }
 
-        if let serverBuffer = try container.decodeIfPresent(UInt64.self, forKey: .buffer) {
-            buffer = serverBuffer
+        if let serverBufferNs = try container.decodeIfPresent(UInt64.self, forKey: .bufferNs) {
+            bufferNs = serverBufferNs
         }
 
         try super.init(from: decoder)
@@ -149,7 +149,7 @@ class VoipTask: QoSControlConnectionTask {
         let cmd = String(format: "VOIPTEST %d %d %d %d %lu %lu %d %d %lu",
                          portOut, portIn ?? 0, sampleRate, bitsPerSample,
                          delayNs / NSEC_PER_MSEC, callDurationNs / NSEC_PER_MSEC, initialSequenceNumber,
-                         payloadType, buffer)
+                         payloadType, bufferNs)
 
         var ssrc: UInt32
 
@@ -182,7 +182,7 @@ class VoipTask: QoSControlConnectionTask {
         payloadSize  = Int(sampleRateDouble / (1000 / delayMs) * (Double(bitsPerSample) / 8))
         rtpTimestamp = UInt32(sampleRateDouble / (1000 / delayMs))
 
-        taskLogger.debug("payloadSize: \(payloadSize), rtpTimestamp: \(rtpTimestamp)")
+        //taskLogger.debug("payloadSize: \(payloadSize), rtpTimestamp: \(rtpTimestamp)")
 
         initialRtpPacket = RTPPacket(
             header: RTPHeader(
@@ -246,7 +246,7 @@ class VoipTask: QoSControlConnectionTask {
 
             let voipResultParts = r.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: " ").map { Int($0) }
 
-            guard voipResultParts.count > 8/*10*/ else {
+            guard voipResultParts.count > 10 else {
                 return .error
             }
 
@@ -259,9 +259,8 @@ class VoipTask: QoSControlConnectionTask {
             remoteResultShortSequential = voipResultParts[7]
             remoteResultLongSequential  = voipResultParts[8]
 
-            // TODO
-            //remoteResultStalls          = voipResultParts[9]
-            //remoteResultAvgStallTime    = voipResultParts[10]
+            remoteResultStalls          = voipResultParts[9]
+            remoteResultAvgStallTime    = voipResultParts[10]
         } catch {
             return .error
         }
@@ -283,7 +282,7 @@ class VoipTask: QoSControlConnectionTask {
         var maxJitter: Int64 = 0
 
         var stalls = 0
-        var stallTimeNs: Int64 = 0 // TODO: is this value in ns?
+        var stallTimeNs: Int64 = 0
 
         var previousSequenceNumber: UInt16?
         for seqNum in sequenceNumbers {
@@ -293,9 +292,9 @@ class VoipTask: QoSControlConnectionTask {
                 guard let prev = receivedRtpPackets[prevSeqNum] else { break }
 
                 let tsDiff = Int64(cur.receivedNs) - Int64(prev.receivedNs) // Can be negative if previous packet arrives delayed
-                if buffer < tsDiff { // TODO: What about stalls if previous packet arrives late (tsDiff < 0)?
+                if bufferNs < tsDiff {
                     stalls += 1
-                    stallTimeNs += tsDiff - Int64(buffer) // TODO: Is buffer ns or ms? Is stallTime ns or ms?
+                    stallTimeNs += tsDiff - Int64(bufferNs)
                 }
 
                 let rtpTsDiff = Double(cur.rtpPacket.header.timestamp - prev.rtpPacket.header.timestamp)
@@ -383,7 +382,7 @@ class VoipTask: QoSControlConnectionTask {
         localResultLongSequential = maxSequential
 
         localResultStalls       = stalls
-        localResultAvgStallTime = stallTimeNs / Int64(stalls)
+        localResultAvgStallTime = stalls == 0 ? 0 : stallTimeNs / Int64(stalls)
     }
 }
 
