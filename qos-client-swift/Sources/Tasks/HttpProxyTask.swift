@@ -28,6 +28,9 @@ class HttpProxyTask: QoSTask {
     override var result: QoSTaskResult {
         var r = super.result
 
+        r["http_objective_url"] = JSON(url)
+        r["http_objective_range"] = JSON(range)
+
         r["http_result_status"] = JSON(resultStatusCode)
         r["http_result_duration"] = JSON(resultDuration)
         r["http_result_length"] = JSON(resultLength)
@@ -36,22 +39,6 @@ class HttpProxyTask: QoSTask {
         r["http_result_hash"] = JSON(resultHash)
 
         return r
-    }
-
-    ///
-    override init?(config: QoSTaskConfiguration) {
-        guard let urlString = config[CodingKeys4.url.rawValue]?.stringValue, let _ = NSURL(string: urlString) else {
-            logger.debug("url nil or invalid")
-            return nil
-        }
-
-        self.url = urlString
-
-        range = config[CodingKeys4.range.rawValue]?.stringValue
-        downloadTimeout = config[CodingKeys4.downloadTimeout.rawValue]?.uint64Value
-        connectionTimeout = config[CodingKeys4.connectionTimeout.rawValue]?.uint64Value
-
-        super.init(config: config)
     }
 
     required init(from decoder: Decoder) throws {
@@ -66,7 +53,7 @@ class HttpProxyTask: QoSTask {
         try super.init(from: decoder)
     }
 
-    override func main() {
+    override func taskMain() {
         guard let url = URL(string: url) else {
             status = .error
             return
@@ -144,7 +131,7 @@ class HttpProxyTask: QoSTask {
             status = .timeout
         }
 
-        logger.debug("finished HTTP Proxy Task \(uid)")
+        taskLogger.debug("finished HTTP Proxy Task")
     }
 }
 

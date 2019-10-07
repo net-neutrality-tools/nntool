@@ -36,18 +36,6 @@ class WebsiteRenderingTask: QoSTask {
         return r
     }
 
-    ///
-    override init?(config: QoSTaskConfiguration) {
-        guard let url = config[CodingKeys4.url.rawValue]?.stringValue else {
-            logger.debug("url nil")
-            return nil
-        }
-
-        self.url = url
-
-        super.init(config: config)
-    }
-
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
 
@@ -57,7 +45,7 @@ class WebsiteRenderingTask: QoSTask {
     }
 
     ///
-    override public func main() {
+    override public func taskMain() {
         guard let url = URL(string: url) else {
             status = .error
             return

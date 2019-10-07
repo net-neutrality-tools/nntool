@@ -6,30 +6,6 @@ class QoSControlConnectionTask: QoSTask {
 
     var controlConnection: ControlConnection?
 
-    ///
-    override init?(config: QoSTaskConfiguration) {
-        logger.debug(config)
-
-        guard let host = config[CodingKeys2.host.rawValue]?.stringValue, !host.isEmpty else {
-            logger.debug("host nil")
-            return nil
-        }
-
-        guard let portStr = config[CodingKeys2.port.rawValue]?.stringValue, let port = UInt16(portStr), port > 0 else {
-            logger.debug("port nil")
-            return nil
-        }
-
-        /*guard let port = config[CodingKeys2.port.rawValue]?.uint16Value, port > 0 else {
-            logger.debug("port nil")
-            return nil
-        }*/
-
-        controlConnectionParams = ControlConnectionParameters(host: host, port: port)
-
-        super.init(config: config)
-    }
-
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys2.self)
 
@@ -56,6 +32,16 @@ class QoSControlConnectionTask: QoSTask {
 // MARK: - RequireControlConnection
 
 extension QoSControlConnectionTask: RequireControlConnection {
+
+    func executeCommandAndAwaitOk(cmd: String, timeoutNs: UInt64 = 5 * NSEC_PER_SEC) -> Bool {
+        do {
+            let response = try executeCommand(cmd: cmd, waitForAnswer: true)
+
+            return response?.starts(with: "OK") ?? false
+        } catch {
+            return false
+        }
+    }
 
     func executeCommand(cmd: String, waitForAnswer: Bool = false, timeoutNs: UInt64 = 5 * NSEC_PER_SEC) throws -> String? {
         guard let cc = controlConnection else {

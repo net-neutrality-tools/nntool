@@ -239,7 +239,7 @@ public class RtpUtil {
 
 		return new RtpQoSResult(maxJitter, meanJitter / jitterMap.size(), skew, maxDelta,
 				packetsOutOfOrder, minSequential, maxSequential,
-				stalls, (TimeUnit.MILLISECONDS.convert(stallTime, TimeUnit.NANOSECONDS) / stalls), jitterMap);
+				stalls, stalls == 0 ? 0 : (TimeUnit.MILLISECONDS.convert(stallTime, TimeUnit.NANOSECONDS) / stalls), jitterMap);
 	}
 
 	private static long calculateDelta(RtpControlData i, RtpControlData j, int sampleRate) {
