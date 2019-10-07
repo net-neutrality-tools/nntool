@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -48,6 +49,8 @@ public class MapFragment extends SupportMapFragment {
     private LatLng startingLocation;
 
     private RequestMapMarkerTask currentRequestMapMarkerTask;
+
+    private Marker currentMarker;
 
     public static MapFragment newInstance() {
         final MapFragment fragment = new MapFragment();
@@ -112,14 +115,20 @@ public class MapFragment extends SupportMapFragment {
                 currentRequestMapMarkerTask = new RequestMapMarkerTask(coordinate, getContext(), result -> {
                     if (result != null && result.getMapMarkers() != null && result.getMapMarkers().size() > 0) {
                         Log.d(TAG, result.toString());
+                        if (currentMarker != null) {
+                            currentMarker.remove();
+                        }
                         final MapMarkerResponse.MapMarker marker = result.getMapMarkers().get(0);
-                        final Marker googleMarker = map.addMarker(
+                        currentMarker = map.addMarker(
                                 new MarkerOptions()
                                 .position(new LatLng(marker.getLatitude(), marker.getLongitude()))
                                 .title(getString(R.string.map_marker_popup_title))
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+
                                 .snippet(parseMapMarkerIntoString(marker))
                         );
-                        googleMarker.showInfoWindow();
+
+                        currentMarker.showInfoWindow();
 
                         map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(marker.getLatitude(), marker.getLongitude())));
                     }
