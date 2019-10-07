@@ -1,4 +1,4 @@
-package at.alladin.nettest.service.map.domain.model.info.option;
+package at.alladin.nntool.shared.map.info.option;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;

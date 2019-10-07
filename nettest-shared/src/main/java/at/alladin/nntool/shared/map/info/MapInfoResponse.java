@@ -1,19 +1,21 @@
-package at.alladin.nettest.service.map.domain.model.info;
-
-import java.util.List;
+package at.alladin.nntool.shared.map.info;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nettest.service.map.domain.model.MapTypes;
+import java.util.List;
 
-public class MapInfo {
+public class MapInfoResponse {
 	
 	@Expose
+	@JsonProperty("map_filters")
+	@SerializedName("map_filters")
 	private MapFilters mapFilters;
 	
 	@Expose
-	@JsonProperty("mapTypes")
+	@JsonProperty("map_types")
+	@SerializedName("map_types")
 	private List<TechnologyTypes> mapTechnologyTypeList;
 
 	public MapFilters getMapFilters() {

@@ -1,13 +1,11 @@
-package at.alladin.nettest.service.map.domain.model.info;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+package at.alladin.nntool.shared.map.info;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MapAppearanceInfo {
 	

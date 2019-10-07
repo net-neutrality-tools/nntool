@@ -2,7 +2,6 @@ package at.alladin.nettest.service.map.service;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
-import com.google.gson.internal.bind.util.ISO8601Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,10 +13,10 @@ import org.springframework.context.NoSuchMessageException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.Format;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,14 +31,13 @@ import javax.inject.Inject;
 import at.alladin.nettest.service.map.domain.model.MapServiceOptions;
 import at.alladin.nettest.service.map.domain.model.MapServiceSettings;
 import at.alladin.nettest.service.map.util.GeographyHelper;
-import at.alladin.nettest.shared.helper.GsonBasicHelper;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
 import at.alladin.nettest.shared.server.helper.ClassificationHelper;
 import at.alladin.nntool.shared.map.MapCoordinate;
 import at.alladin.nntool.shared.map.MapMarkerRequest;
 import at.alladin.nntool.shared.map.MapMarkerResponse;
 import at.alladin.nntool.shared.map.MapMarkerResponse.MapMarker;
-import at.alladin.nntool.shared.map.MapMarkerResponse.MeasurementItem;
+import at.alladin.nntool.shared.map.MapMarkerResponse.MarkerItem;
 
 @Service
 public class MarkerService {
@@ -209,8 +207,8 @@ public class MarkerService {
                                     + ", t.mobile_network_operator_name as network_operator"
                                     + ", t.mobile_sim_operator_name as network_sim_operator"
                                     + ", t.provider_public_ip_as_name as public_ip_as_name"
-                                    + ", open_data_uuid as open_test_uuid"
-                                    + ", mobile_roaming_type::int as roaming_type"
+                                    + ", t.open_data_uuid as open_test_uuid"
+                                    + ", t.mobile_roaming_type::int as roaming_type"
                                     //TODO: there is only one provider name left, right?
 //                                    + ", COALESCE(json->'network_info'->'provider'->>'shortname', json->'network_info'->'provider'->>'name') as provider_text"
 //                                    + ", COALESCE(json->'mobile_network_info'->'mobile_provider'->>'shortname', json->'mobile_network_info'->'mobile_provider'->>'name') as mobile_network_name"
@@ -220,6 +218,8 @@ public class MarkerService {
                                     + ", t.network_signal_info as signals"
 //                                    + ", t.uuid as uuid, t.client_uuid as client_uuid"
 									+ ", t.agent_uuid as client_uuid"
+									+ ", t.os_name as os_name"
+									+ ", t.agent_type as agent_type"
                                     + " FROM measurements t"
                                     + " LEFT JOIN ias_measurements ias ON t.open_data_uuid = ias.measurement_open_data_uuid"
                                     + " WHERE"
@@ -230,8 +230,6 @@ public class MarkerService {
                                     + " ORDER BY"
                                     + (prioritizeUUID == null ? "" : " CASE t.agent_uuid WHEN ?::uuid THEN 1 ELSE 2 END, ")
                                     + " t.open_data_uuid DESC" + " LIMIT 5", whereSQL);
-
-                    logger.info("SQL: " + sql);
 
                     //make some things final for the lambda compatibility
                     final UUID finalPrioritizeUuid = prioritizeUUID;
@@ -261,7 +259,7 @@ public class MarkerService {
 
                     }, (ResultSet rs, int rowNum) -> parseResultSet(rs, finalClientUuidString, finalHighlightUuidString, locale));
 
-
+                    logger.info("Fetching marker info. #Results: " + (resultObjects == null ? 0 : resultObjects.size()));
 
                     answer.setMapMarkers(resultObjects);
                 }
@@ -276,8 +274,12 @@ public class MarkerService {
     }
 
     private MapMarker parseResultSet(final ResultSet rs, final String clientUuidString, final String highlightUuidString, final Locale locale) throws SQLException {
-        final Format format = NumberFormat.getInstance();//new SignificantFormat(2, locale); //TODO
-        final MapMarker jsonItem = new MapMarker();
+        final NumberFormat format = NumberFormat.getInstance(locale);
+        format.setRoundingMode(RoundingMode.HALF_UP);
+        
+        final MapMarker ret = new MapMarker();
+        final List<MarkerItem> markerResultList = new ArrayList<>();
+        ret.setResultItems(markerResultList);
 
         UUID highlightUuid = null;
         if (highlightUuidString != null) {
@@ -298,23 +300,22 @@ public class MarkerService {
                 (highlightUuidString != null && highlightUuidString.equals(dbClientUuidString))) {
             // highlight uses both the new highlight_uuid syntax and the old client_uuid syntax
             // TODO: The client_uuid should only return your own measurement markers
-            jsonItem.setHighlight(true);
+        	ret.setHighlight(true);
 
             // put measurement_uuid if measurement belongs to given client_uuid
-            jsonItem.setOpenTestUuid(measurementUuid); // give measurement_uuid for in-app view of own results
+        	ret.setOpenTestUuid(measurementUuid); // give measurement_uuid for in-app view of own results
         } else {
-            jsonItem.setHighlight(false);
+        	ret.setHighlight(false);
         }
 
         final double res_x = rs.getDouble(1);
         final double res_y = rs.getDouble(2);
         final String openTestUUID = rs.getString("open_test_uuid");
 
-        // TODO: remove lat,long in favor of geo_lat,geo_long to make the responses more similar (measurement result response)
-        jsonItem.setLatitude(res_x); // new with geo_
-        jsonItem.setLongitude(res_y); // new with geo_
+        ret.setLatitude(res_x);
+        ret.setLongitude(res_y);
 
-        jsonItem.setOpenTestUuid("O" + openTestUUID);
+        ret.setOpenTestUuid("O" + openTestUUID);
         // marker.put("uid", uid);
 
         final Date date = rs.getTimestamp("time");
@@ -323,9 +324,11 @@ public class MarkerService {
         if (!Strings.isNullOrEmpty(tzString)) {
             dateFormat.setTimeZone(TimeZone.getTimeZone(tzString));
         }
-        jsonItem.setTimeString(dateFormat.format(date));
-        jsonItem.setTimestamp(date.getTime());
-        jsonItem.setTime(ISO8601Utils.format(date));
+        markerResultList.add(generateMeasurementItem("MARKER_TIME", dateFormat.format(date)));
+        ret.setTimestamp(date.getTime());
+        
+    	markerResultList.add(generateMeasurementItem("MARKER_AGENT", "AGENT_" + rs.getString("agent_type")));
+        markerResultList.add(generateMeasurementItem("MARKER_OS", rs.getString("os_name")));
 
         //get the first networkType for classification
         final String signalString = rs.getString("signals");
@@ -337,23 +340,29 @@ public class MarkerService {
         }
         final Integer networkTypeId = signalArr.length() > 0 ? signalArr.getJSONObject(0).getInt("network_type_id") : rs.getInt("network_type_id");
 
-        final List<MeasurementItem> measurementResultList = new ArrayList<>();
+        final List<MarkerItem> measurementResultList = new ArrayList<>();
         
         final int fieldDown = rs.getInt("speed_download");
-        final String downloadString = String.format("%s %s", format.format(fieldDown / 1000000d), messageSource.getMessage("RESULT_DOWNLOAD_UNIT", null, locale));//labels.getString("RESULT_DOWNLOAD_UNIT"));
+        final String downloadString = String.format("%s %s", format.format(fieldDown / 1000000d), messageSource.getMessage("MARKER_DOWNLOAD_UNIT", null, locale));
         ClassificationHelper.ClassificationItem classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.DOWNLOAD, fieldDown, networkTypeId);
-        measurementResultList.add(generateMeasurementItem(messageSource.getMessage("RESULT_DOWNLOAD", null, locale), downloadString, classificationItem));
+        MarkerItem markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_DOWNLOAD", null, locale), downloadString, classificationItem);
+        measurementResultList.add(markerItem);
+        markerResultList.add(0, markerItem);
 
         final int fieldUp = rs.getInt("speed_upload");
-        final String uploadString = String.format("%s %s", format.format(fieldUp / 1000000d),messageSource.getMessage("RESULT_UPLOAD_UNIT", null, locale));
+        final String uploadString = String.format("%s %s", format.format(fieldUp / 1000000d),messageSource.getMessage("MARKER_UPLOAD_UNIT", null, locale));
         classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.UPLOAD, fieldUp, networkTypeId);
-        measurementResultList.add(generateMeasurementItem(messageSource.getMessage("RESULT_UPLOAD", null, locale), uploadString, classificationItem));
+        markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_UPLOAD", null, locale), uploadString, classificationItem);
+        measurementResultList.add(markerItem);
+        markerResultList.add(1, markerItem);
 
         final int pingValue = (int) Math.round(rs.getDouble("ping_median") / 1000000d);
         final String pingString = String.format("%s %s", format.format(pingValue),
-                messageSource.getMessage("RESULT_PING_UNIT", null, locale));
+                messageSource.getMessage("MARKER_PING_UNIT", null, locale));
         classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.PING, pingValue, networkTypeId);
-        measurementResultList.add(generateMeasurementItem(messageSource.getMessage("RESULT_PING", null, locale), pingString, classificationItem));
+        markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_PING", null, locale), pingString, classificationItem);
+        measurementResultList.add(markerItem);
+        markerResultList.add(2, markerItem);
 
         final int networkType = rs.getInt("network_type");
 
@@ -361,22 +370,28 @@ public class MarkerService {
         if (signalField != null && signalField.length() != 0) {
             final int signalValue = rs.getInt("signal_strength");
             classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.SIGNAL, signalValue, networkType);
-            measurementResultList.add(generateMeasurementItem(messageSource.getMessage("RESULT_SIGNAL", null, locale), signalValue + " " + messageSource.getMessage("RESULT_SIGNAL_UNIT", null, locale), classificationItem));
+            markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_SIGNAL", null, locale), signalValue + " " + messageSource.getMessage("MARKER_SIGNAL_UNIT", null, locale), classificationItem);
+            measurementResultList.add(markerItem);
+            markerResultList.add(markerItem);
         }
 
         final String lteRsrpField = rs.getString("lte_rsrp");
         if (lteRsrpField != null && lteRsrpField.length() != 0) {
             final int lteRsrpValue = rs.getInt("lte_rsrp");
             classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.SIGNAL, lteRsrpValue, networkType);
-            measurementResultList.add(generateMeasurementItem(messageSource.getMessage("RESULT_LTE_RSRP", null, locale), lteRsrpValue + " " + messageSource.getMessage("RESULT_LTE_RSRP_UNIT", null, locale), classificationItem));
+            markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_LTE_RSRP", null, locale), lteRsrpValue + " " + messageSource.getMessage("MARKER_LTE_RSRP_UNIT", null, locale), classificationItem);
+            measurementResultList.add(markerItem);
+            markerResultList.add(markerItem);
         }
 
 
-        jsonItem.setMeasurementResults(measurementResultList);
+        ret.setMeasurementResults(measurementResultList);
 
-        final List<MeasurementItem> networkResult = new ArrayList<>();
+        final List<MarkerItem> networkResult = new ArrayList<>();
 
-        networkResult.add(generateMeasurementItem(messageSource.getMessage("RESULT_NETWORK_TYPE", null, locale), Helperfunctions.getNetworkTypeName(networkType)));
+        markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_NETWORK_TYPE", null, locale), Helperfunctions.getNetworkTypeName(networkType));
+        networkResult.add(markerItem);
+        markerResultList.add(0, markerItem);
 
         if (networkType == 98 || networkType == 99) { // mobile wifi or browser
 
@@ -392,14 +407,16 @@ public class MarkerService {
                 if (providerText.length() > (MAX_PROVIDER_LENGTH + 3)) {
                     providerText = providerText.substring(0, MAX_PROVIDER_LENGTH) + "...";
                 }
-                networkResult.add(generateMeasurementItem(messageSource.getMessage("RESULT_PROVIDER", null, locale), providerText));
+                markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_PROVIDER", null, locale), providerText);
+                networkResult.add(markerItem);
+                markerResultList.add(0, markerItem);
             }
 
             if (networkType == 99) { // mobile wifi
                 if (highlightUuid != null && rs.getString("uuid") != null) { // own test
                     final String ssid = rs.getString("wifi_ssid");
                     if (ssid != null && ssid.length() != 0) {
-                    	networkResult.add(generateMeasurementItem(messageSource.getMessage("RESULT_WIFI_SSID", null, locale), ssid.toString()));
+                    	networkResult.add(generateMeasurementItem(messageSource.getMessage("MARKER_WIFI_SSID", null, locale), ssid.toString()));
                     }
                 }
             }
@@ -426,7 +443,7 @@ public class MarkerService {
                     }
                 }
 
-                networkResult.add(generateMeasurementItem(messageSource.getMessage("RESULT_MOBILE_NETWORK", null, locale), mobileNetworkString));
+                networkResult.add(generateMeasurementItem(messageSource.getMessage("MARKER_MOBILE_NETWORK", null, locale), mobileNetworkString));
             } else if (!Strings.isNullOrEmpty(simOperator)) { //home network (sim)
                 final String mobileNetworkString;
 
@@ -444,16 +461,18 @@ public class MarkerService {
             	}
             	*/
 
-                networkResult.add(generateMeasurementItem(messageSource.getMessage("RESULT_HOME_NETWORK", null, locale), mobileNetworkString));
+                markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_HOME_NETWORK", null, locale), mobileNetworkString);
+                networkResult.add(markerItem);
+                markerResultList.add(markerItem);
             }
 
             if (roamingType > 0) {
-            	networkResult.add(generateMeasurementItem(messageSource.getMessage("RESULT_ROAMING", null, locale), messageSource.getMessage(Helperfunctions.getRoamingTypeKey(roamingType), null, locale)));
+            	networkResult.add(generateMeasurementItem(messageSource.getMessage("MARKER_ROAMING", null, locale), messageSource.getMessage(Helperfunctions.getRoamingTypeKey(roamingType), null, locale)));
             }
         }
 
-        jsonItem.setNetworkResult(networkResult);
-        return jsonItem;
+        ret.setNetworkResult(networkResult);
+        return ret;
     }
 
     /**
@@ -463,8 +482,8 @@ public class MarkerService {
      * @param value
      * @param classificationItem
      */
-    private MeasurementItem generateMeasurementItem(final String title, final String value, final ClassificationHelper.ClassificationItem classificationItem) {
-        final MeasurementItem singleItem = new MeasurementItem();
+    private MarkerItem generateMeasurementItem(final String title, final String value, final ClassificationHelper.ClassificationItem classificationItem) {
+        final MarkerItem singleItem = new MarkerItem();
         if (title != null) {
             singleItem.setTitle(title);
         }
@@ -480,7 +499,7 @@ public class MarkerService {
         return singleItem;
     }
 
-    private MeasurementItem generateMeasurementItem(final String title, final String value) {
+    private MarkerItem generateMeasurementItem(final String title, final String value) {
         return generateMeasurementItem(title, value, null);
     }
 }

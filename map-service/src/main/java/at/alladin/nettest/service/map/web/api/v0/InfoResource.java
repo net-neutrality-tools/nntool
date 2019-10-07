@@ -17,10 +17,6 @@
 
 package at.alladin.nettest.service.map.web.api.v0;
 
-import java.util.Locale;
-
-import javax.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -30,12 +26,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import java.util.Locale;
 
-import at.alladin.nettest.service.map.domain.model.info.MapInfo;
+import javax.inject.Inject;
+
 import at.alladin.nettest.service.map.service.InfoService;
+import at.alladin.nntool.shared.map.info.MapInfoResponse;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -56,29 +52,10 @@ public class InfoResource{
 	@CrossOrigin
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> obtainMapInfo (@ApiIgnore Locale locale) {
-    	final MapInfo ret = new MapInfo();
+    	final MapInfoResponse ret = new MapInfoResponse();
     	ret.setMapFilters(infoService.getMapFilter(locale));
     	ret.setMapTechnologyTypeList(infoService.getMapTypes(locale).getTechnolgyTypeList());
-    	return ResponseEntity.ok(new MapInfoWrapper(ret));
+    	return ResponseEntity.ok(ret);
     }
-    
-    /**
-     * Quite necessary wrapper class to provide same naming scheme as in previous versions
-     * @author fk
-     *
-     */
-    private class MapInfoWrapper {
-    	@Expose
-    	@SerializedName("mapfilter")
-    	@JsonProperty("mapfilter")
-    	private final MapInfo wrappedInfo;
-    	
-    	private MapInfoWrapper(final MapInfo info) {
-    		this.wrappedInfo = info;
-    	}
-
-		public MapInfo getWrappedInfo() {
-			return wrappedInfo;
-		}
-    }
+	
 }

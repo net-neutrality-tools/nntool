@@ -1,11 +1,13 @@
 package at.alladin.nntool.shared.map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MapMarkerResponse {
 
 	@Expose
@@ -30,6 +32,15 @@ public class MapMarkerResponse {
 
 	public static class MapMarker {
 
+		/**
+		 * Contains a translated list of results to be displayed as is from the clients
+		 * (Only some have the classifications set)
+		 */
+		@Expose
+		@SerializedName("result_items")
+		@JsonProperty("result_items")
+		private List<MarkerItem> resultItems;
+
 		@Expose
 		private Boolean highlight;
 
@@ -49,25 +60,19 @@ public class MapMarkerResponse {
 		private Double longitude;
 
 		@Expose
-		private String time;
-
-		@Expose
-		@SerializedName("time_string")
-		@JsonProperty("time_string")
-		private String timeString;
-
-		@Expose
+		@SerializedName("time_stamp")
+		@JsonProperty("time_stamp")
 		private Long timestamp;
 
 		@Expose
 		@SerializedName("net")
 		@JsonProperty("net")
-		private List<MeasurementItem> networkResult;
+		private List<MarkerItem> networkResult;
 
 		@Expose
 		@SerializedName("measurement")
 		@JsonProperty("measurement")
-		private List<MeasurementItem> measurementResults;
+		private List<MarkerItem> measurementResults;
 
 		public Boolean getHighlight() {
 			return highlight;
@@ -101,22 +106,6 @@ public class MapMarkerResponse {
 			this.longitude = longitude;
 		}
 
-		public String getTime() {
-			return time;
-		}
-
-		public void setTime(String time) {
-			this.time = time;
-		}
-
-		public String getTimeString() {
-			return timeString;
-		}
-
-		public void setTimeString(String timeString) {
-			this.timeString = timeString;
-		}
-
 		public Long getTimestamp() {
 			return timestamp;
 		}
@@ -125,39 +114,32 @@ public class MapMarkerResponse {
 			this.timestamp = timestamp;
 		}
 
-		public List<MeasurementItem> getMeasurementResults() {
-			return measurementResults;
-		}
-
-		public void setMeasurementResults(List<MeasurementItem> measurementResults) {
-			this.measurementResults = measurementResults;
-		}
-
-		public List<MeasurementItem> getNetworkResult() {
+		public List<MarkerItem> getNetworkResult() {
 			return networkResult;
 		}
 
-		public void setNetworkResult(List<MeasurementItem> networkResult) {
+		public void setNetworkResult(List<MarkerItem> networkResult) {
 			this.networkResult = networkResult;
 		}
 
-		@Override
-		public String toString() {
-			return "MapMarker{" +
-					"highlight=" + highlight +
-					", openTestUuid='" + openTestUuid + '\'' +
-					", latitude=" + latitude +
-					", longitude=" + longitude +
-					", time='" + time + '\'' +
-					", timeString='" + timeString + '\'' +
-					", timestamp=" + timestamp +
-					", networkResult=" + networkResult +
-					", measurementResults=" + measurementResults +
-					'}';
+		public List<MarkerItem> getMeasurementResults() {
+			return measurementResults;
+		}
+
+		public void setMeasurementResults(List<MarkerItem> measurementResults) {
+			this.measurementResults = measurementResults;
+		}
+
+		public List<MarkerItem> getResultItems() {
+			return resultItems;
+		}
+
+		public void setResultItems(List<MarkerItem> resultItems) {
+			this.resultItems = resultItems;
 		}
 	}
 
-	public static class MeasurementItem {
+	public static class MarkerItem {
 
 		@Expose
 		private String title;

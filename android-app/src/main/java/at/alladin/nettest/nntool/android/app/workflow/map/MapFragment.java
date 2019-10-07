@@ -17,10 +17,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 
+import java.util.Iterator;
+
+import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.async.RequestMapInfoTask;
 import at.alladin.nettest.nntool.android.app.async.RequestMapMarkerTask;
+import at.alladin.nettest.nntool.android.app.dialog.AbstractFullScreenDialogFragment;
 import at.alladin.nntool.shared.map.MapCoordinate;
 import at.alladin.nntool.shared.map.MapMarkerResponse;
+import at.alladin.nntool.shared.map.info.MapInfoResponse;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -81,6 +87,7 @@ public class MapFragment extends SupportMapFragment {
             map = googleMap;
             map.setTrafficEnabled(false);
             map.setIndoorEnabled(false);
+            map.getUiSettings().setMapToolbarEnabled(false);
 
             map.setInfoWindowAdapter(new MapInfoWindowAdapter(getActivity().getLayoutInflater()));
 
@@ -123,6 +130,12 @@ public class MapFragment extends SupportMapFragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).updateActionBar(getString(R.string.title_map));
+        //setHasOptionsMenu(true);
+    }
 
     //@Override
     public Integer getTitleStringId() {
@@ -136,24 +149,29 @@ public class MapFragment extends SupportMapFragment {
 
     private String parseMapMarkerIntoString (final MapMarkerResponse.MapMarker marker) {
         final StringBuilder builder = new StringBuilder();
-        for (MapMarkerResponse.MeasurementItem item : marker.getNetworkResult()) {
-            addMeasurementItemToStringBuilder(item, builder);
-        }
-
-        for (MapMarkerResponse.MeasurementItem item : marker.getMeasurementResults()) {
-            addMeasurementItemToStringBuilder(item, builder);
+        final Iterator<MapMarkerResponse.MarkerItem> it = marker.getResultItems().iterator();
+        while (it.hasNext()) {
+            addMarkerItemToStringBuilder(it.next(), builder);
+            if (it.hasNext()) {
+                builder.append("\n");
+            }
         }
 
         return builder.toString();
     }
 
-    private void addMeasurementItemToStringBuilder (final MapMarkerResponse.MeasurementItem item, final StringBuilder builder) {
-        if (item.getTitle() != null) {
-            builder.append(item.getTitle()).append(": ");
+    private void addItemToStringBuilder (final String title, final String value, final StringBuilder builder) {
+        if (title != null) {
+            builder.append(title).append(": ");
         }
-        if (item.getValue() != null) {
-            builder.append(item.getValue());
+        if (value != null) {
+            builder.append(value);
         }
-        builder.append("\n");
+    }
+
+    private void addMarkerItemToStringBuilder(final MapMarkerResponse.MarkerItem item, final StringBuilder builder) {
+        if (item != null) {
+            addItemToStringBuilder(item.getTitle(), item.getValue(), builder);
+        }
     }
 }

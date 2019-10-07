@@ -19,26 +19,23 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import at.alladin.nettest.service.map.domain.model.info.MapAppearanceInfo;
-import at.alladin.nettest.service.map.domain.model.info.MapFilters;
 import at.alladin.nettest.service.map.domain.model.MapServiceOptions;
-import at.alladin.nettest.service.map.domain.model.info.MapThresholdEntries;
 import at.alladin.nettest.service.map.domain.model.MapTypes;
 import at.alladin.nettest.service.map.domain.model.Provider;
-import at.alladin.nettest.service.map.domain.model.info.TechnologyFilter;
-import at.alladin.nettest.service.map.domain.model.info.TechnologyTypes;
-import at.alladin.nettest.service.map.domain.model.info.option.AbstractOption;
-import at.alladin.nettest.service.map.domain.model.info.option.DeviceOption;
-import at.alladin.nettest.service.map.domain.model.info.option.OperatorOption;
-import at.alladin.nettest.service.map.domain.model.info.option.ProviderOption;
-import at.alladin.nettest.service.map.domain.model.info.option.StatisticalOption;
-import at.alladin.nettest.service.map.domain.model.info.option.TechnologyOption;
-import at.alladin.nettest.service.map.domain.model.info.option.TimePeriodOption;
-//import at.alladin.nettest.shared.model.Device;
-//import at.alladin.nettest.shared.model.Provider;
 import at.alladin.nettest.shared.server.helper.ClassificationHelper;
 import at.alladin.nettest.shared.server.model.ServerSettings.ColorThresholds;
 import at.alladin.nettest.shared.server.model.ServerSettings.SpeedThresholds;
+import at.alladin.nntool.shared.map.info.MapAppearanceInfo;
+import at.alladin.nntool.shared.map.info.MapFilters;
+import at.alladin.nntool.shared.map.info.MapThresholdEntries;
+import at.alladin.nntool.shared.map.info.TechnologyFilter;
+import at.alladin.nntool.shared.map.info.TechnologyTypes;
+import at.alladin.nntool.shared.map.info.option.AbstractOption;
+import at.alladin.nntool.shared.map.info.option.OperatorOption;
+import at.alladin.nntool.shared.map.info.option.ProviderOption;
+import at.alladin.nntool.shared.map.info.option.StatisticalOption;
+import at.alladin.nntool.shared.map.info.option.TechnologyOption;
+import at.alladin.nntool.shared.map.info.option.TimePeriodOption;
 
 @Service
 public class InfoService {

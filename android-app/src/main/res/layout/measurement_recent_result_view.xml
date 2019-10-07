@@ -18,6 +18,8 @@
         android:paddingEnd="40dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
+        android:textSize="12sp"
+        android:minHeight="55dp"
         />
 
 </LinearLayout>

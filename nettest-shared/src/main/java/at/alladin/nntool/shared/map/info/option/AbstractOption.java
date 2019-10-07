@@ -1,11 +1,25 @@
-package at.alladin.nettest.service.map.domain.model.info.option;
+package at.alladin.nntool.shared.map.info.option;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@JsonTypeInfo(
+		use = JsonTypeInfo.Id.NAME,
+		property = "deserialize_type"	//TODO: rename all deserialize_type to _deserialize_type
+)
+@JsonSubTypes({
+		@JsonSubTypes.Type(value = DeviceOption.class, name = "device_option"),
+		@JsonSubTypes.Type(value = OperatorOption.class, name = "operator_option"),
+		@JsonSubTypes.Type(value = ProviderOption.class, name = "provider_option"),
+		@JsonSubTypes.Type(value = StatisticalOption.class, name = "statistical_option"),
+		@JsonSubTypes.Type(value = TechnologyOption.class, name = "technology_option"),
+		@JsonSubTypes.Type(value = TimePeriodOption.class, name = "time_period_option")
+})
 public abstract class AbstractOption {
 
 	@Expose

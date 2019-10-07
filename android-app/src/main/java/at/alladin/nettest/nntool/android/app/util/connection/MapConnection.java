@@ -7,6 +7,7 @@ import java.util.Map;
 import at.alladin.nntool.shared.map.MapCoordinate;
 import at.alladin.nntool.shared.map.MapMarkerRequest;
 import at.alladin.nntool.shared.map.MapMarkerResponse;
+import at.alladin.nntool.shared.map.info.MapInfoResponse;
 
 /**
  * @author Felix Kendlbacher (fk@alladin.at)
@@ -28,6 +29,16 @@ public class MapConnection extends AbstractConnection<MapService> {
 
         try {
             return getControllerService().getMeasurementsRequest(request).execute().body();
+        } catch (final Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public MapInfoResponse requestMapInfo() {
+        try {
+            return getControllerService().getMapInfoResponse().execute().body();
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
