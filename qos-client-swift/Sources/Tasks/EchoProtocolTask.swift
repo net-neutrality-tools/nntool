@@ -1,19 +1,21 @@
 import Foundation
 import CodableJSON
+import nntool_shared_swift
 
 class EchoProtocolTask: QoSTask {
 
-    public enum ProtocolType: String {
-        case tcp = "tcp"
-        case udp = "udp"
+    public enum ProtocolType: String, Codable {
+        case tcp // = "tcp"
+        case udp // = "udp"
     }
 
-    var host: String
-    var port: UInt16 = 7
-    var protocolType: ProtocolType = .udp
-    var payload: String
+    private var host: String
+    private var port: UInt16 = 7
+    private var protocolType: ProtocolType = .udp
+    private var payload: String
 
-    // packetCount?
+    private let packetCount = 1 // TODO: config (echo protocol test currently only works with one packet)
+    private let delayNs = 1 * NSEC_PER_SEC
 
     ///
     enum CodingKeys4: String, CodingKey {
@@ -24,6 +26,9 @@ class EchoProtocolTask: QoSTask {
     }
 
     private var resultResponse: String?
+    private var rttNs: UInt64?
+
+    private var udpPacketSentTimestamp: UInt64?
 
     override var statusKey: String {
         return "echo_protocol_status"
@@ -32,35 +37,15 @@ class EchoProtocolTask: QoSTask {
     override var result: QoSTaskResult {
         var r = super.result
 
+        r["echo_protocol_objective_host"] = JSON(host)
+        r["echo_protocol_objective_port"] = JSON(port)
+        r["echo_protocol_objective_protocol"] = JSON(protocolType.rawValue)
+        r["echo_protocol_objective_payload"] = JSON(payload)
+
         r["echo_protocol_result"] = JSON(resultResponse)
+        r["echo_protocol_result_rtt_ns"] = JSON(rttNs)
 
         return r
-    }
-
-    ///
-    override init?(config: QoSTaskConfiguration) {
-        guard let host = config[CodingKeys4.host.rawValue]?.stringValue else {
-            logger.debug("host nil")
-            return nil
-        }
-
-        guard let payload = config[CodingKeys4.payload.rawValue]?.stringValue else {
-            logger.debug("payload nil")
-            return nil
-        }
-
-        if let port = config[CodingKeys4.port.rawValue]?.uint16Value {
-            self.port = port
-        }
-
-        if let protocolTypeString = config[CodingKeys4.protocolType.rawValue]?.stringValue, let protocolType = ProtocolType(rawValue: protocolTypeString) {
-            self.protocolType = protocolType
-        }
-
-        self.host = host
-        self.payload = payload
-
-        super.init(config: config)
     }
 
     required init(from decoder: Decoder) throws {
@@ -73,15 +58,15 @@ class EchoProtocolTask: QoSTask {
             self.port = port
         }
 
-        if let protocolTypeString = try container.decodeIfPresent(String.self, forKey: .protocolType), let protocolType = ProtocolType(rawValue: protocolTypeString) {
-            self.protocolType = protocolType
+        if let pType = try container.decodeIfPresent(ProtocolType.self, forKey: .protocolType) {
+            self.protocolType = pType
         }
 
         try super.init(from: decoder)
     }
 
     ///
-    override public func main() {
+    override public func taskMain() {
         switch protocolType {
         case .tcp:
             let tcpStreamUtilConfig = TcpStreamUtilConfiguration(
@@ -93,27 +78,51 @@ class EchoProtocolTask: QoSTask {
             )
 
             let tcpStreamUtil = TcpStreamUtil(config: tcpStreamUtilConfig)
-            let (tcpUtilstatus, resultResponse) = tcpStreamUtil.runStream()
-
-            self.status = QoSTaskStatus(rawValue: tcpUtilstatus.rawValue) ?? .error
-            self.resultResponse = resultResponse
+            (status, resultResponse) = tcpStreamUtil.runStream()
         case .udp:
             let udpStreamUtilConfig = UdpStreamUtilConfiguration(
                 host: host,
-                port: port,
-                outgoing: true,
+                portOut: port,
+                portIn: nil,
+                respondOnly: false,
                 timeoutNs: timeoutNs,
-                delayNs: 1 * NSEC_PER_SEC, // TODO: config
-                packetCount: 1/*packetCount*/, // TODO: config (echo protocol test currently only works with one packet)
-                uuid: nil,
-                payload: payload
+                delayNs: delayNs,
+                packetCount: packetCount
             )
 
             let udpStreamUtil = UdpStreamUtil(config: udpStreamUtilConfig)
-            let (streamUtilStatus, result) = udpStreamUtil.runStream()
+            udpStreamUtil.delegate = self
 
-            status = QoSTaskStatus(rawValue: streamUtilStatus.rawValue) ?? .error
-            resultResponse = result?.receivedPayload
+            status = udpStreamUtil.runStream()
         }
+    }
+}
+
+extension EchoProtocolTask: UdpStreamUtilDelegate {
+
+    func udpStreamUtil(_ udpStreamUtil: UdpStreamUtil, didBindToLocalPort port: UInt16) {
+        // do nothing
+    }
+
+    func udpStreamUtil(_ udpStreamUtil: UdpStreamUtil, willSendPacketWithNumer packetNum: Int) -> (Data, UdpStreamUtil.Tag)? {
+        taskLogger.debug("ON SEND (packet: \(packetNum))")
+
+        guard let data = payload.data(using: .utf8) else {
+            return nil
+        }
+
+        udpPacketSentTimestamp = TimeHelper.currentTimeNs()
+
+        return (data, .noDelay)
+    }
+
+    func udpStreamUtil(_ udpStreamUtil: UdpStreamUtil, didReceiveData data: Data, fromAddress address: Data, atTimestamp timestamp: UInt64) -> Bool {
+        resultResponse = String(data: data, encoding: .utf8)
+
+        if let sentTs = udpPacketSentTimestamp {
+            rttNs = timestamp - sentTs
+        }
+
+        return true
     }
 }

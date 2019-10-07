@@ -20,13 +20,15 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nntool.qos.testserver.ServerPreferences.TestServerServiceEnum;
-import at.alladin.nntool.qos.testserver.servers.AbstractUdpServer;
 import at.alladin.nntool.qos.testserver.TestServer;
+import at.alladin.nntool.qos.testserver.servers.AbstractUdpServer;
 import at.alladin.nntool.qos.testserver.util.TestServerConsole;
 import at.alladin.nntool.util.net.rtp.RealtimeTransportProtocol.RtpVersion;
 import at.alladin.nntool.util.net.rtp.RtpUtil;
@@ -114,7 +116,7 @@ public class UdpMultiClientServer extends AbstractUdpServer<DatagramSocket> impl
 					//Non RTP packet:
 					final int packetNumber = data[1];
 					
-					String timeStamp = null;
+					Long timeStamp = null;
 					
 					try {
 						char[] uuid = new char[36];
@@ -124,13 +126,17 @@ public class UdpMultiClientServer extends AbstractUdpServer<DatagramSocket> impl
 						}
 						clientUuid = String.valueOf(uuid);
 						
-						char[] ts = new char[dp.getLength() - 38];
+						// timestamp
+						ByteBuffer byteBuffer = ByteBuffer.allocateDirect(dp.getLength() - 38);
+					    byteBuffer.order(ByteOrder.BIG_ENDIAN);
+						
 						for (int i = 38; i < dp.getLength(); i++) {
-							ts[i - 38] = (char) data[i];
+							byteBuffer.put(data[i]);
 						}
 						
-						timeStamp = String.valueOf(ts);
-	
+						byteBuffer.flip();
+					    timeStamp = byteBuffer.getLong();
+						
 					}
 					catch (Exception e) {
 						TestServerConsole.error(getName(), e, 1, TestServerServiceEnum.UDP_SERVICE);
