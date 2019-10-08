@@ -470,7 +470,23 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	public List<MeasurementServerDto> getAllActiveSpeedMeasurementServers() throws StorageServiceException {
-		return null; //measurementPeerRepository.getAvailableSpeedMeasurementPeers();	
+		final List<MeasurementServer> peers = measurementPeerRepository.getAvailableSpeedMeasurementPeers();
+		
+		return peers
+				.stream()
+				.map(p -> {
+					if (p.getLoadApi() != null) {
+						final MeasurementServerDto dto = new MeasurementServerDto();
+						dto.setIdentifier(p.getPublicIdentifier());
+						dto.setLoadApiSecretKey(p.getLoadApi().getSecretKey());
+						dto.setLoadApiUrl(p.getLoadApi().getUrl());
+						dto.setName(p.getName());
+						return dto;
+					}
+					
+					return null;
+				})
+				.collect(Collectors.toList());
 	}
 	
 	public SpeedMeasurementPeerResponse getSpeedMeasurementPeers(ApiRequest<SpeedMeasurementPeerRequest> speedMeasurementPeerRequest) throws StorageServiceException {
