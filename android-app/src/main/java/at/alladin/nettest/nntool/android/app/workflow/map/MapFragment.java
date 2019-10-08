@@ -25,6 +25,7 @@ import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.RequestMapInfoTask;
 import at.alladin.nettest.nntool.android.app.async.RequestMapMarkerTask;
 import at.alladin.nettest.nntool.android.app.dialog.AbstractFullScreenDialogFragment;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementGroupItem;
 import at.alladin.nntool.shared.map.MapCoordinate;
 import at.alladin.nntool.shared.map.MapMarkerResponse;
 import at.alladin.nntool.shared.map.info.MapInfoResponse;
@@ -158,7 +159,7 @@ public class MapFragment extends SupportMapFragment {
 
     private String parseMapMarkerIntoString (final MapMarkerResponse.MapMarker marker) {
         final StringBuilder builder = new StringBuilder();
-        final Iterator<MapMarkerResponse.MarkerItem> it = marker.getResultItems().iterator();
+        final Iterator<DetailMeasurementGroupItem> it = marker.getResultItems().iterator();
         while (it.hasNext()) {
             addMarkerItemToStringBuilder(it.next(), builder);
             if (it.hasNext()) {
@@ -169,18 +170,20 @@ public class MapFragment extends SupportMapFragment {
         return builder.toString();
     }
 
-    private void addItemToStringBuilder (final String title, final String value, final StringBuilder builder) {
-        if (title != null) {
-            builder.append(title).append(": ");
-        }
-        if (value != null) {
-            builder.append(value);
-        }
-    }
-
-    private void addMarkerItemToStringBuilder(final MapMarkerResponse.MarkerItem item, final StringBuilder builder) {
+    private void addMarkerItemToStringBuilder(final DetailMeasurementGroupItem item, final StringBuilder builder) {
         if (item != null) {
-            addItemToStringBuilder(item.getTitle(), item.getValue(), builder);
+            String val = item.getTitle();
+            if (val != null) {
+                builder.append(val).append(": ");
+            }
+            val = item.getValue();
+            if (val != null) {
+                builder.append(val);
+            }
+            val = item.getUnit();
+            if (val != null) {
+                builder.append(" ").append(val);
+            }
         }
     }
 }

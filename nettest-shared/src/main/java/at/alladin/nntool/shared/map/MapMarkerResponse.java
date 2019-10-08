@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementGroupItem;
+
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -39,7 +41,7 @@ public class MapMarkerResponse {
 		@Expose
 		@SerializedName("result_items")
 		@JsonProperty("result_items")
-		private List<MarkerItem> resultItems;
+		private List<DetailMeasurementGroupItem> resultItems;
 
 		@Expose
 		private Boolean highlight;
@@ -67,12 +69,12 @@ public class MapMarkerResponse {
 		@Expose
 		@SerializedName("net")
 		@JsonProperty("net")
-		private List<MarkerItem> networkResult;
+		private List<DetailMeasurementGroupItem> networkResult;
 
 		@Expose
 		@SerializedName("measurement")
 		@JsonProperty("measurement")
-		private List<MarkerItem> measurementResults;
+		private List<DetailMeasurementGroupItem> measurementResults;
 
 		public Boolean getHighlight() {
 			return highlight;
@@ -114,88 +116,29 @@ public class MapMarkerResponse {
 			this.timestamp = timestamp;
 		}
 
-		public List<MarkerItem> getNetworkResult() {
+		public List<DetailMeasurementGroupItem> getNetworkResult() {
 			return networkResult;
 		}
 
-		public void setNetworkResult(List<MarkerItem> networkResult) {
+		public void setNetworkResult(List<DetailMeasurementGroupItem> networkResult) {
 			this.networkResult = networkResult;
 		}
 
-		public List<MarkerItem> getMeasurementResults() {
+		public List<DetailMeasurementGroupItem> getMeasurementResults() {
 			return measurementResults;
 		}
 
-		public void setMeasurementResults(List<MarkerItem> measurementResults) {
+		public void setMeasurementResults(List<DetailMeasurementGroupItem> measurementResults) {
 			this.measurementResults = measurementResults;
 		}
 
-		public List<MarkerItem> getResultItems() {
+		public List<DetailMeasurementGroupItem> getResultItems() {
 			return resultItems;
 		}
 
-		public void setResultItems(List<MarkerItem> resultItems) {
+		public void setResultItems(List<DetailMeasurementGroupItem> resultItems) {
 			this.resultItems = resultItems;
 		}
 	}
 
-	public static class MarkerItem {
-
-		@Expose
-		private String title;
-
-		@Expose
-		private String value;
-
-		@Expose
-		private Integer classification;
-
-		@Expose
-		@SerializedName("classification_color")
-		@JsonProperty("classification_color")
-		private String classificationColor;
-
-		public String getTitle() {
-			return title;
-		}
-
-		public void setTitle(String title) {
-			this.title = title;
-		}
-
-		public String getValue() {
-			return value;
-		}
-
-		public void setValue(String value) {
-			this.value = value;
-		}
-
-		public Integer getClassification() {
-			return classification;
-		}
-
-		public void setClassification(Integer classification) {
-			this.classification = classification;
-		}
-
-		public String getClassificationColor() {
-			return classificationColor;
-		}
-
-		public void setClassificationColor(String classificationColor) {
-			this.classificationColor = classificationColor;
-		}
-
-		@Override
-		public String toString() {
-			return "MeasurementResult{" +
-					"title='" + title + '\'' +
-					", value='" + value + '\'' +
-					", classification=" + classification +
-					", classificationColor='" + classificationColor + '\'' +
-					'}';
-		}
-	}
-    
 }

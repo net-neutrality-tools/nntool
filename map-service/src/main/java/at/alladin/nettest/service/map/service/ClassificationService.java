@@ -47,9 +47,6 @@ public final class ClassificationService {
 	
     //classification thresholds for new classification
 	private SpeedThresholds thresholdsPerTechnology;
-    private final Set<Integer> NETWORK_IDS_WIFI = new HashSet<>(Arrays.asList(99));
-    private final Set<Integer> NETWORK_IDS_RSRP = new HashSet<>(Arrays.asList(13));
-    private final Set<Integer> NETWORK_IDS_MOBILE = new HashSet<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 105));
 	
     /**
      * TODO obtain info elsewhere
@@ -68,70 +65,14 @@ public final class ClassificationService {
     
     public ClassificationItem classifyColor(final ClassificationType type, final long value, final Integer networkType) {
     	final ClassificationItem ret = new ClassificationItem();
-    	switch (type) {
-    	case DOWNLOAD:
-    		if(thresholdsPerTechnology != null && networkType != null && thresholdsPerTechnology.getDownload() != null) {
-    			ret.setClassificationColor(classifyColor(thresholdsPerTechnology.getDownload(), value));
+    	if (thresholdsPerTechnology != null) {
+    		final ColorThresholds thresholds = thresholdsHelperService.getByClassificationType(thresholdsPerTechnology, type);
+    		if (thresholds != null) {
+    			ret.setClassificationColor(classifyColor(thresholds, value));
     		}
-    		break;
-    	case UPLOAD:
-       		if(thresholdsPerTechnology != null && networkType != null && thresholdsPerTechnology.getUpload() != null) {
-    			ret.setClassificationColor(classifyColor(thresholdsPerTechnology.getUpload(), value));
-    		}
-    		break;
-    	case PING:
-    		if(thresholdsPerTechnology != null && networkType != null && thresholdsPerTechnology.getPing() != null) {
-    			ret.setClassificationColor(classifyColor(thresholdsPerTechnology.getPing(), value));
-    		}
-    		break;
-    	case SIGNAL:
-    		if(thresholdsPerTechnology != null && networkType != null && thresholdsPerTechnology.getSignal() != null) {
-    			ret.setClassificationColor(classifyColor(thresholdsPerTechnology.getSignal(), value));
-    		}
-//    	case SIGNAL_MOBILE:
-//    		ret.setClassificationNumber(classify(THRESHOLD_SIGNAL_MOBILE, value));
-//    		if(thresholdsPerTechnology != null) {
-//    			ret.setClassificationColor(classifyColor(thresholdsPerTechnology.getSignalMobile(), value));
-//    		}
-//    		break;
-//    	case SIGNAL_RSRP:
-//    		ret.setClassificationNumber(classify(THRESHOLD_SIGNAL_RSRP, value));
-//    		if(thresholdsPerTechnology != null) {
-//    			ret.setClassificationColor(classifyColor(thresholdsPerTechnology.getSignalRsrp(), value));
-//    		}
-//    		break;
-//    	case SIGNAL_WIFI:
-//    		ret.setClassificationNumber(classify(THRESHOLD_SIGNAL_WIFI, value));
-//    		if(thresholdsPerTechnology != null) {
-//    			ret.setClassificationColor(classifyColor(thresholdsPerTechnology.getSignalWifi(), value));
-//    		}
-//			break;
-    	default:
-        	//the old default return was 1
-        	ret.setClassificationNumber(1);
-        	//TODO: default color?
     	}
     	
     	return ret;
     }
-
-	public SpeedThresholds getThresholdsPerTechnology() {
-		return thresholdsPerTechnology;
-	}
-	
-	public ColorThresholds getThresholdsByClassificationType (final ClassificationType type) {
-		switch (type) {
-		case DOWNLOAD:
-			return thresholdsPerTechnology.getDownload();
-		case UPLOAD:
-			return thresholdsPerTechnology.getUpload();
-		case PING:
-			return thresholdsPerTechnology.getPing();
-		case SIGNAL:
-			return thresholdsPerTechnology.getSignal();
-		default:
-			return null;
-		}
-	}
     
 }

@@ -31,13 +31,13 @@ import javax.inject.Inject;
 import at.alladin.nettest.service.map.domain.model.MapServiceOptions;
 import at.alladin.nettest.service.map.domain.model.MapServiceSettings;
 import at.alladin.nettest.service.map.util.GeographyHelper;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementGroupItem;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
 import at.alladin.nettest.shared.server.helper.ClassificationHelper;
 import at.alladin.nntool.shared.map.MapCoordinate;
 import at.alladin.nntool.shared.map.MapMarkerRequest;
 import at.alladin.nntool.shared.map.MapMarkerResponse;
 import at.alladin.nntool.shared.map.MapMarkerResponse.MapMarker;
-import at.alladin.nntool.shared.map.MapMarkerResponse.MarkerItem;
 
 @Service
 public class MarkerService {
@@ -278,7 +278,7 @@ public class MarkerService {
         format.setRoundingMode(RoundingMode.HALF_UP);
         
         final MapMarker ret = new MapMarker();
-        final List<MarkerItem> markerResultList = new ArrayList<>();
+        final List<DetailMeasurementGroupItem> markerResultList = new ArrayList<>();
         ret.setResultItems(markerResultList);
 
         UUID highlightUuid = null;
@@ -340,12 +340,12 @@ public class MarkerService {
         }
         final Integer networkTypeId = signalArr.length() > 0 ? signalArr.getJSONObject(0).getInt("network_type_id") : rs.getInt("network_type_id");
 
-        final List<MarkerItem> measurementResultList = new ArrayList<>();
+        final List<DetailMeasurementGroupItem> measurementResultList = new ArrayList<>();
         
         final int fieldDown = rs.getInt("speed_download");
         final String downloadString = String.format("%s %s", format.format(fieldDown / 1000000d), messageSource.getMessage("MARKER_DOWNLOAD_UNIT", null, locale));
         ClassificationHelper.ClassificationItem classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.DOWNLOAD, fieldDown, networkTypeId);
-        MarkerItem markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_DOWNLOAD", null, locale), downloadString, classificationItem);
+        DetailMeasurementGroupItem markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_DOWNLOAD", null, locale), downloadString, classificationItem);
         measurementResultList.add(markerItem);
         markerResultList.add(0, markerItem);
 
@@ -387,7 +387,7 @@ public class MarkerService {
 
         ret.setMeasurementResults(measurementResultList);
 
-        final List<MarkerItem> networkResult = new ArrayList<>();
+        final List<DetailMeasurementGroupItem> networkResult = new ArrayList<>();
 
         markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_NETWORK_TYPE", null, locale), Helperfunctions.getNetworkTypeName(networkType));
         networkResult.add(markerItem);
@@ -482,8 +482,8 @@ public class MarkerService {
      * @param value
      * @param classificationItem
      */
-    private MarkerItem generateMeasurementItem(final String title, final String value, final ClassificationHelper.ClassificationItem classificationItem) {
-        final MarkerItem singleItem = new MarkerItem();
+    private DetailMeasurementGroupItem generateMeasurementItem(final String title, final String value, final ClassificationHelper.ClassificationItem classificationItem) {
+        final DetailMeasurementGroupItem singleItem = new DetailMeasurementGroupItem();
         if (title != null) {
             singleItem.setTitle(title);
         }
@@ -499,7 +499,7 @@ public class MarkerService {
         return singleItem;
     }
 
-    private MarkerItem generateMeasurementItem(final String title, final String value) {
+    private DetailMeasurementGroupItem generateMeasurementItem(final String title, final String value) {
         return generateMeasurementItem(title, value, null);
     }
 }
