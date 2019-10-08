@@ -433,7 +433,7 @@ int CConnection::tlsServe()
                 keyFile = certDir + dirName + "/" + dirName + ".key";
                                  
                 //Set cert
-			    if (SSL_CTX_use_certificate_file(ctx, certFile.c_str(), SSL_FILETYPE_PEM) <= 0)
+			    if (SSL_CTX_use_certificate_chain_file(ctx, certFile.c_str()) <= 0)
 			    {
 			        TRC_ERR("TLS Error while setting certificate file: ");
 			        tlsPrintError();
