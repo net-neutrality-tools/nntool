@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import at.alladin.nettest.service.map.domain.repository.SqlSettingsRepository;
 import at.alladin.nettest.service.map.service.ClassificationService;
 import at.alladin.nettest.service.map.service.ColorMapperService;
 import at.alladin.nettest.service.map.service.HeatmapTileService;
@@ -13,7 +14,6 @@ import at.alladin.nettest.service.map.service.InfoService;
 import at.alladin.nettest.service.map.service.MapOptionsService;
 import at.alladin.nettest.service.map.service.MarkerService;
 import at.alladin.nettest.service.map.service.PointTileService;
-import at.alladin.nettest.service.map.service.SqlSettingsService;
 import at.alladin.nettest.service.map.service.ThresholdsPerTechnologyHelperService;
 
 /**
@@ -24,7 +24,6 @@ import at.alladin.nettest.service.map.service.ThresholdsPerTechnologyHelperServi
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class MapServiceApplicationTests {
-
 	
 	@MockBean
 	private ClassificationService classificationService;
@@ -48,7 +47,7 @@ public class MapServiceApplicationTests {
 	private PointTileService pointTileService;
 	
 	@MockBean
-	private SqlSettingsService sqlSettingsService;
+	private SqlSettingsRepository sqlSettingsRepository;
 	
 	@MockBean
 	private ThresholdsPerTechnologyHelperService thresholdsHelperService;

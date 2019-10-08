@@ -23,6 +23,7 @@ import at.alladin.nettest.service.map.config.MapServiceSettingsConfig;
 import at.alladin.nettest.service.map.domain.model.MapServiceOptions;
 import at.alladin.nettest.service.map.domain.model.MapServiceSettings;
 import at.alladin.nettest.service.map.domain.model.MapServiceOptions.SignalGroup;
+import at.alladin.nettest.service.map.domain.repository.SqlSettingsRepository;
 import at.alladin.nettest.shared.server.helper.ClassificationHelper.ClassificationType;
 import at.alladin.nettest.shared.server.model.ServerSettings;
 
@@ -32,7 +33,7 @@ public class MapOptionsService {
 	private final Logger logger = LoggerFactory.getLogger(MapOptionsService.class);
 
     @Inject
-    private SqlSettingsService sqlSettingsService;
+    private SqlSettingsRepository sqlSettingsRepository;
     
     @Inject
     private MapServiceSettingsConfig mapServiceConfig;
@@ -277,7 +278,7 @@ public class MapOptionsService {
     }
     
     private void generateMapFilterSettings () {
-    	final ServerSettings settings = sqlSettingsService.getSettings();
+    	final ServerSettings settings = sqlSettingsRepository.getSettings();
     	final Map<String, MapServiceOptions> mapOptionList = new LinkedHashMap<String, MapServiceOptions>();
     	mapServiceConfig.getMapServiceOptions().forEach(opt -> {
     		try {

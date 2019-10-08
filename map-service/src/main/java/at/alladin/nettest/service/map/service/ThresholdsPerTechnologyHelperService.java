@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import at.alladin.nettest.service.map.domain.model.MapServiceOptions;
+import at.alladin.nettest.service.map.domain.repository.SqlSettingsRepository;
 import at.alladin.nettest.shared.server.helper.ClassificationHelper;
 import at.alladin.nettest.shared.server.helper.ClassificationHelper.ClassificationType;
 import at.alladin.nettest.shared.server.model.ServerSettings.ColorThresholds;
@@ -26,7 +27,7 @@ import at.alladin.nettest.shared.server.model.ServerSettings.SpeedThresholds;
 public class ThresholdsPerTechnologyHelperService {
 	
 	@Inject
-	private SqlSettingsService sqlSettingsService;
+	private SqlSettingsRepository sqlSettingsRepository;
 
 	private SpeedThresholds speedThresholds = null;
 	
@@ -132,7 +133,7 @@ public class ThresholdsPerTechnologyHelperService {
 	 */
 	@PostConstruct
 	private void initThresholdsPerTechnologyHelper() {
-		speedThresholds = sqlSettingsService.getSettings().getSpeedThresholds();
+		speedThresholds = sqlSettingsRepository.getSettings().getSpeedThresholds();
         
         //provide skewed values
         if (speedThresholds != null) {
