@@ -17,10 +17,6 @@
 
 package at.alladin.nettest.service.map.service;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +36,7 @@ import at.alladin.nettest.shared.server.model.ServerSettings.SpeedThresholds;
  *
  */
 @Service
-public final class ClassificationService {
+public class ClassificationService {
 	
 	@Autowired
 	private ThresholdsPerTechnologyHelperService thresholdsHelperService;
