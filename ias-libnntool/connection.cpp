@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-20
+ *      \date Last update: 2019-09-30
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -433,7 +433,7 @@ int CConnection::tlsServe()
                 keyFile = certDir + dirName + "/" + dirName + ".key";
                                  
                 //Set cert
-			    if (SSL_CTX_use_certificate_file(ctx, certFile.c_str(), SSL_FILETYPE_PEM) <= 0)
+			    if (SSL_CTX_use_certificate_chain_file(ctx, certFile.c_str()) <= 0)
 			    {
 			        TRC_ERR("TLS Error while setting certificate file: ");
 			        tlsPrintError();
@@ -559,7 +559,10 @@ static int tlsVerifyCertificateCallback(int ok, X509_STORE_CTX *store_ctx)
 void CConnection::tlsSetup(bool client)
 {
 	SSL_library_init();
+
+	//change the following line to explicitly state ciphers and digests 
     OpenSSL_add_all_algorithms();
+
 	SSL_load_error_strings();
 	ERR_load_crypto_strings();
 

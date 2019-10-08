@@ -111,12 +111,12 @@ public extension JSON {
         return UInt(intVal)
     }
     
-    var uint64Value: UInt64? {
+    var uint8Value: UInt8? {
         guard let intVal = intValue else {
             return nil
         }
         
-        return UInt64(intVal)
+        return UInt8(intVal)
     }
     
     var uint16Value: UInt16? {
@@ -125,5 +125,13 @@ public extension JSON {
         }
         
         return UInt16(intVal)
+    }
+    
+    var uint64Value: UInt64? {
+        guard let intVal = intValue else {
+            return nil
+        }
+        
+        return UInt64(intVal)
     }
 }

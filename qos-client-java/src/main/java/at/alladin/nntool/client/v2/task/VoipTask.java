@@ -98,7 +98,7 @@ public class VoipTask extends AbstractQoSTask {
 	
 	private final static PayloadType DEFAULT_PAYLOAD_TYPE = PayloadType.PCMA;
 
-	private final static long DEFAULT_BUFFER = 100; //100 ms buffer
+	private final static long DEFAULT_BUFFER = 100 * 1000 * 1000; //100 ms buffer
 	
 	public final static String PARAM_BITS_PER_SAMLE = "bits_per_sample";
 	
@@ -294,20 +294,21 @@ public class VoipTask extends AbstractQoSTask {
 			};
 			
 	    	/*
-	    	 * syntax: VOIPTEST 0 1 2 3 4 5 6 7 
+	    	 * syntax: VOIPTEST 0 1 2 3 4 5 6 7 8
 	    	 * 	0 = outgoing port (server port)
 	    	 * 	1 = incoming port (client port) 
 	    	 *  2 = sample rate (in Hz)
 	    	 * 	3 = bits per sample
-	    	 * 	4 = packet delay in ms 
-	    	 * 	5 = call duration (test duration) in ms 
+	    	 * 	4 = packet delay in ms
+	    	 * 	5 = call duration (test duration) in ms
 	    	 * 	6 = starting sequence number (see rfc3550, rtp header: sequence number)
 	    	 *  7 = payload type
+	    	 * 	8 = buffer (ns)
 	    	 */			
 			sendCommand("VOIPTEST " + outgoingPort + " " + incomingPort + " " + sampleRate + " " + bitsPerSample + " " 
 					+ TimeUnit.MILLISECONDS.convert(delay, TimeUnit.NANOSECONDS) + " " 
 					+ TimeUnit.MILLISECONDS.convert(callDuration, TimeUnit.NANOSECONDS) + " " 
-					+ initialSequenceNumber + " " + payloadType.getValue(), callback);
+					+ initialSequenceNumber + " " + payloadType.getValue() + " " + buffer, callback);
 			
 			//wait for countdownlatch or timeout:
 			latch.await(timeout, TimeUnit.NANOSECONDS);
@@ -338,7 +339,7 @@ public class VoipTask extends AbstractQoSTask {
 							result.getResultMap().put(prefix + RESULT_SHORT_SEQUENTIAL, Long.parseLong(m.group(7)));
 							result.getResultMap().put(prefix + RESULT_LONG_SEQUENTIAL, Long.parseLong(m.group(8)));
 							result.getResultMap().put(prefix + RESULT_NUMBER_OF_STALLS, Long.parseLong(m.group(9)));
-							result.getResultMap().put(prefix + RESULT_AVG_STALL_TIME, Long.parseLong(m.group(8)));
+							result.getResultMap().put(prefix + RESULT_AVG_STALL_TIME, Long.parseLong(m.group(10)));
 						}
 						resultLatch.countDown();
 					}

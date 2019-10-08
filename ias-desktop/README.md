@@ -1,15 +1,16 @@
 ## Building ##
 
 ### Prerequisites ###
-Node.js >= 10
-npm >= 6
-uglify-es >= 3
-Linux or macOS (any Version, required for uglify)
+* Node.js >= 10
+* npm >= 6
+* uglify-es >= 3
+* Linux or macOS (any Version, required for uglify)
 
 ### Build ###
 1. Build *ias*, see instructions in *ias/README.md*
 2. In dir *ias-desktop*, run *npm i* to install dependencies
 3. Put Public keys of TLS-certificates which should be connected to in *certificates/*
+3.1 If TLS-certificate check should be deactivated, modify function verifyCertificate() in main.js according to the Code-Documentation
 
 There are two build options available:
 1. For uglifying, run *npm run build* on Linux or macOS with fullfilled prerequisites. The output in *build/* will be usable in other electron projects.
@@ -17,7 +18,13 @@ There are two build options available:
 
 ---------------
 
-## Execution ##
+### Demo Parameters ###
+
+Modify *src/web_desktop/index.html* according to Code-Documentation to edit measurement parameters before *Build*
+
+---------------
+
+### Demo Execution ###
 There are three execution options available:
 1. Run *npm run electron:{mac|linux|win}* with fullfilled prerequisites without building. The debug UI will be shown.
 2. After building, run the build executable. The default UI will be shown.

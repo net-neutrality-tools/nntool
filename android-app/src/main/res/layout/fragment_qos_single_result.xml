@@ -1,51 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Nettest.Result.QoS.Details.Section"
-        android:text="@string/result_qos_single_description"
-        />
-
-    <TextView
-        android:id="@+id/qos_result_single_summary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Nettest.Result.QoS.Details.Description"
-        />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Nettest.Result.QoS.Details.Section"
-        android:text="@string/result_qos_single_result"
-        />
-
-    <!-- Linear layout to be filled w/qos_single_result_item.xml -->
     <LinearLayout
-        android:id="@+id/qos_result_single_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Nettest.Result.QoS.Details.Section"
+            android:text="@string/result_qos_single_description"
+            />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Nettest.Result.QoS.Details.Section"
-        android:text="@string/result_qos_single_details"
-        />
+        <TextView
+            android:id="@+id/qos_result_single_summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Nettest.Result.QoS.Details.Description"
+            />
 
-    <TextView
-        android:id="@+id/qos_result_single_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Nettest.Result.QoS.Details.Description"
-        />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Nettest.Result.QoS.Details.Section"
+            android:text="@string/result_qos_single_result"
+            />
 
-</LinearLayout>
+        <!-- Linear layout to be filled w/qos_single_result_item.xml -->
+        <LinearLayout
+            android:id="@+id/qos_result_single_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Nettest.Result.QoS.Details.Section"
+            android:text="@string/result_qos_single_details"
+            />
+
+        <TextView
+            android:id="@+id/qos_result_single_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Nettest.Result.QoS.Details.Description"
+            />
+    </LinearLayout>
+</ScrollView>
