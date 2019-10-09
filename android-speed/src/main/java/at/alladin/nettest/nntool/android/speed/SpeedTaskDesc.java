@@ -11,7 +11,7 @@ public class SpeedTaskDesc implements Serializable {
 
     private String speedServerAddrV6;
 
-    private int speedServerPort = 80;
+    private int speedServerPort = 443;
 
     private int rttCount = 10;
 
@@ -25,7 +25,7 @@ public class SpeedTaskDesc implements Serializable {
 
     private boolean performRtt = true;
 
-    private boolean useEncryption = false;
+    private boolean useEncryption = true;
 
     private boolean useIpV6 = false;
 
