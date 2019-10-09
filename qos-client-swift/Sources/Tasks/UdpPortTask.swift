@@ -91,21 +91,21 @@ class UdpPortTask: QoSBidirectionalIpTask {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
 
-        packetCountOut = try container.decodeIfPresent(Int.self, forKey: .packetCountOut)
+        packetCountOut = try? container.decodeIfPresent(Int.self, forKey: .packetCountOut)
         if packetCountOut == nil {
-            if let packetCountOutString = try container.decodeIfPresent(String.self, forKey: .packetCountOut) {
+            if let packetCountOutString = try? container.decodeIfPresent(String.self, forKey: .packetCountOut) {
                 packetCountOut = Int(packetCountOutString)
             }
         }
 
-        packetCountIn = try container.decodeIfPresent(Int.self, forKey: .packetCountIn)
+        packetCountIn = try? container.decodeIfPresent(Int.self, forKey: .packetCountIn)
         if packetCountIn == nil {
-            if let packetCountInString = try container.decodeIfPresent(String.self, forKey: .packetCountIn) {
+            if let packetCountInString = try? container.decodeIfPresent(String.self, forKey: .packetCountIn) {
                 packetCountIn = Int(packetCountInString)
             }
         }
 
-        if let serverDelayNs = try container.decodeIfPresent(UInt64.self, forKey: .delayNs) {
+        if let serverDelayNs = try? container.decodeIfPresent(UInt64.self, forKey: .delayNs) {
             self.delayNs = serverDelayNs
         }
 

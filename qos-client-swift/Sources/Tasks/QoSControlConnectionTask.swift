@@ -2,6 +2,10 @@ import Foundation
 
 class QoSControlConnectionTask: QoSTask {
 
+    enum ParseError: Error {
+        case parseError(String)
+    }
+    
     let controlConnectionParams: ControlConnectionParameters
 
     var controlConnection: ControlConnection?
@@ -10,7 +14,17 @@ class QoSControlConnectionTask: QoSTask {
         let container = try decoder.container(keyedBy: CodingKeys2.self)
 
         let host = try container.decode(String.self, forKey: .host)
-        let port = try container.decode(UInt16.self, forKey: .port)
+        
+        var optionalPort = try? container.decodeIfPresent(UInt16.self, forKey: .port)
+        if optionalPort == nil {
+            if let portString = try? container.decodeIfPresent(String.self, forKey: .port) {
+                optionalPort = UInt16(portString)
+            }
+        }
+        
+        guard let port = optionalPort else {
+            throw ParseError.parseError("\"server_port\" could not be unmarshalled.")
+        }
 
         controlConnectionParams = ControlConnectionParameters(host: host, port: port)
 
