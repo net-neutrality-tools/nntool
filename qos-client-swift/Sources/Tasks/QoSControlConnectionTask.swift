@@ -47,7 +47,7 @@ class QoSControlConnectionTask: QoSTask {
 
 extension QoSControlConnectionTask: RequireControlConnection {
 
-    func executeCommandAndAwaitOk(cmd: String, timeoutNs: UInt64 = 5 * NSEC_PER_SEC) -> Bool {
+    func executeCommandAndAwaitOk(cmd: String) -> Bool {
         do {
             let response = try executeCommand(cmd: cmd, waitForAnswer: true)
 
@@ -57,7 +57,7 @@ extension QoSControlConnectionTask: RequireControlConnection {
         }
     }
 
-    func executeCommand(cmd: String, waitForAnswer: Bool = false, timeoutNs: UInt64 = 5 * NSEC_PER_SEC) throws -> String? {
+    func executeCommand(cmd: String, waitForAnswer: Bool = false) throws -> String? {
         guard let cc = controlConnection else {
             //throw TODO: error
             return nil
@@ -78,11 +78,7 @@ extension QoSControlConnectionTask: RequireControlConnection {
             semaphore.signal()
         })
 
-        let semaphoreResult = semaphore.wait(timeout: .now() + .nanoseconds(Int(timeoutNs)))
-        if semaphoreResult == .timedOut {
-            //throw TODO: timeout
-            return nil
-        }
+        _ = semaphore.wait(timeout: DispatchTime.distantFuture)
 
         if let err = error {
             throw err

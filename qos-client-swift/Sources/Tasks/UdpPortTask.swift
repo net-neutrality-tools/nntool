@@ -138,8 +138,7 @@ class UdpPortTask: QoSBidirectionalIpTask {
 
             if waitForAnswer {
                 guard let r = response, r.starts(with: "OK") else {
-                    taskLogger.warning("controlconnection response is not ok: ")
-                    taskLogger.warning(response)
+                    taskLogger.warning("controlconnection response is not ok: '\(String(describing: response))'")
                     self.status = .error
                     return
                 }

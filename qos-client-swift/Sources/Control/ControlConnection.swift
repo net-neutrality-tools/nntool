@@ -219,6 +219,8 @@ extension ControlConnection: GCDAsyncSocketDelegate {
 
     ///
     public func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
+        logger.debug("socketDidDisconnect, error: \(err)")
+
         state = .disconnected
 
         if currentErrorCallback != nil {

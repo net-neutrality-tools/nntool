@@ -12,5 +12,5 @@ protocol RequireControlConnection: QoSTask {
     }
 
     ///
-    func executeCommand(cmd: String, waitForAnswer: Bool, timeoutNs: UInt64) throws -> String?
+    func executeCommand(cmd: String, waitForAnswer: Bool) throws -> String?
 }
