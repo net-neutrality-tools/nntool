@@ -265,11 +265,11 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
         isRunning = false
 
         DispatchQueue.main.async {
-            self.showNavigationItems()
             self.progressInfoBar?.reset()
             self.speedMeasurementGaugeView?.reset()
 
             self.showViewMeasurementResultButton()
+            self.showNavigationItems()
         }
     }
 
@@ -294,7 +294,7 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
         }
     }
 
-    func measurementRunner(_ runner: MeasurementRunner, willStartProgramWithName name: String, implementation: /*AnyProgram<Any>*/ProgramProtocol) {
+    func measurementRunner(_ runner: MeasurementRunner, willStartProgramWithName name: String, implementation: ProgramProtocol) {
         logger.debug("!^! willStart program \(name)")
 
         (implementation as? IASProgram)?.delegate = self
@@ -302,13 +302,19 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
 
         if implementation is QoSProgram {
             DispatchQueue.main.async {
-                self.speedMeasurementGaugeView?.isHidden = true
+                self.qosView?.alpha = 0
                 self.qosView?.isHidden = false
+                UIView.transition(with: self.qosView!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    self.qosView?.alpha = 1
+                    self.speedMeasurementGaugeView?.alpha = 0
+                }, completion: { _ in
+                    self.speedMeasurementGaugeView?.isHidden = true
+                })
             }
         }
     }
 
-    func measurementRunner(_ runner: MeasurementRunner, didFinishProgramWithName name: String, implementation: /*AnyProgram<Any>*/ProgramProtocol) {
+    func measurementRunner(_ runner: MeasurementRunner, didFinishProgramWithName name: String, implementation: ProgramProtocol) {
         logger.debug("!^! didFinish program \(name)")
 
         (implementation as? IASProgram)?.delegate = nil
@@ -322,9 +328,13 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
 
         if implementation is QoSProgram {
             // view would switch too fast, user would not recognize the finished qos measurement
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+                self.speedMeasurementGaugeView?.alpha = 0
                 self.speedMeasurementGaugeView?.isHidden = false
-                self.qosView?.isHidden = true
+                UIView.transition(with: self.qosView!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    self.qosView?.alpha = 0
+                    self.speedMeasurementGaugeView?.alpha = 1
+                }, completion: { self.qosView?.isHidden = $0 })
             }
         }
     }

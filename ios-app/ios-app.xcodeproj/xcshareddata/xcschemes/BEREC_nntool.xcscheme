@@ -27,6 +27,15 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "E026A57D2241271700BACDB5"
+            BuildableName = "BEREC_nntool.app"
+            BlueprintName = "BEREC_nntool"
+            ReferencedContainer = "container:ios-app.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -49,17 +58,6 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E026A57D2241271700BACDB5"
-            BuildableName = "BEREC_nntool.app"
-            BlueprintName = "BEREC_nntool"
-            ReferencedContainer = "container:ios-app.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -87,9 +85,12 @@
             value = "disable"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "DYLD_INSERT_LIBRARIES"
+            value = "/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/lib/darwin/libclang_rt.asan_iossim_dynamic.dylib"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

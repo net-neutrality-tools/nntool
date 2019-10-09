@@ -1,0 +1,12 @@
+# Linux Echo Service Documentation
+
+## Setup
+
+Xinetd is an implementation of the echo service protocol and available on all major linux distributions.
+To install xinetd on a Debian-based operating system run `apt install xinetd`.
+
+The configuration of xinetd is very simple. The configuration directory `/etc/xinetd.d/` contains several files for the
+different services of xinetd. For the linux echo service, only the `echo` file is relevant (there is no need to change 
+the `echo-udp` file because the UDP configuration also exists inside `echo`). To enable the echo service, change `disable`
+from `yes` to `no` and restart xinetd (e.g. by executing `systemctl restart xinetd`).
+
