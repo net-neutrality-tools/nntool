@@ -17,6 +17,17 @@ spring:
         entities:
           - Measurement
           - MeasurementAgent
+      - name: settings
+        create-if-not-exists: true
+        entities:
+          - QoSMeasurementObjective
+          - Translation
+          - MeasurementServer
+          - Settings
+          - Device
+          - Provider
+          - Translation
+          - EmbeddedNetworkType
 
 server:
   port: 8081
