@@ -206,6 +206,10 @@ void AndroidConnector::callback(json11::Json::object& message) const {
         return;
     }
 
+    jmethodID initId = env->GetMethodID(speedMeasurementResultClazz, "<init>", "()V");
+
+    jobject speedMeasurementResult = env->NewObject(speedMeasurementResultClazz, initId);
+
     env->CallVoidMethod(baseMeasurementState, setMeasurementPhaseByStringValueID, env->NewStringUTF(getStringForMeasurementPhase(currentTestPhase).c_str()));
 
     //parse the json for now
@@ -239,6 +243,9 @@ void AndroidConnector::callback(json11::Json::object& message) const {
             env->SetFloatField(baseMeasurementState, fieldProgress, 0.0f);
         }
     }
+
+    const jstring javaMsg = env->NewStringUTF(json11::Json(message).dump().c_str());
+    env->CallVoidMethod(jniCaller, callbackID, javaMsg, speedMeasurementResult);
 
     env->CallVoidMethod(jniCaller, callbackID, env->NewStringUTF(""));
 

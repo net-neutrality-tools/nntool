@@ -11,35 +11,34 @@ public class QoSTaskGroup {
 
     private(set) public var key: String
     var localizedDescription: String
-    var initializer: QoSTaskInitializer
+
+    private static let qosTypeDict = [
+        "dns": DnsTask.self,
+        "udp": UdpPortTask.self,
+        "tcp": TcpPortTask.self,
+        "http_proxy": HttpProxyTask.self,
+        "traceroute": TracerouteTask.self,
+        "website": WebsiteRenderingTask.self,
+        "non_transparent_proxy": NonTransparentProxyTask.self,
+        "echo_protocol": EchoProtocolTask.self,
+        "voip": VoipTask.self,
+        "sip": SipTask.self,
+        // MeasurementKit
+        "mkit_web_connectivity": MeasurementKitTask.self,
+        "mkit_dash": MeasurementKitTask.self
+    ]
 
     class func groupForKey(_ key: String, localizedDescription desc: String) -> QoSTaskGroup? {
-        var initializer: QoSTaskInitializer
-
-        switch key.lowercased() {
-        case "dns": initializer = { DnsTask(config: $0) }
-        case "udp": initializer = { UdpPortTask(config: $0) }
-        case "tcp": initializer = { TcpPortTask(config: $0) }
-        case "echo_protocol": initializer = { EchoProtocolTask(config: $0) }
-        case "http_proxy": initializer = { HttpProxyTask(config: $0) }
-        //case "traceroute": initializer = { return TracerouteTask(config: $0) }
-        case "website": initializer = { WebsiteRenderingTask(config: $0) }
-        case "non_transparent_proxy": initializer = { NonTransparentProxyTask(config: $0) }
-        default:
-            return nil
-        }
-
-        return QoSTaskGroup(key: key, localizedDescription: desc, initializer: initializer)
+        return QoSTaskGroup(key: key, localizedDescription: desc)
     }
 
-    init(key: String, localizedDescription desc: String, initializer: @escaping QoSTaskInitializer) {
+    init(key: String, localizedDescription desc: String) {
         self.key = key
         self.localizedDescription = desc
-        self.initializer = initializer
     }
 
     func taskWithConfiguration(config: QoSTaskConfiguration) -> QoSTask? {
-        let task = initializer(config)
+        let task = QoSTaskGroup.qosTypeDict[key.lowercased()]?.create(config: config)
         task?.group = self
 
         return task

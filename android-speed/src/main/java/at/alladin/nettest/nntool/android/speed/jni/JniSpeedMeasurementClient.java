@@ -26,6 +26,10 @@ public class JniSpeedMeasurementClient {
 
     private final SpeedTaskDesc speedTaskDesc;
 
+    private List<MeasurementStringListener> stringListeners = new ArrayList<>();
+
+    private List<MeasurementListener> listeners = new ArrayList<>();
+
     private List<MeasurementFinishedStringListener> finishedStringListeners = new ArrayList<>();
 
     private List<MeasurementFinishedListener> finishedListeners = new ArrayList<>();
@@ -51,6 +55,11 @@ public class JniSpeedMeasurementClient {
             previousMeasurementPhase = speedMeasurementState.getMeasurementPhase();
         }
         Log.d(TAG, message);
+        for(MeasurementStringListener l : stringListeners)
+        {
+            if(!message.isEmpty())
+                l.onMeasurement(message);
+        }
     }
 
     @Keep
@@ -80,6 +89,14 @@ public class JniSpeedMeasurementClient {
     private native void shareMeasurementState(final SpeedTaskDesc speedTaskDesc, final SpeedMeasurementState speedMeasurementState, final SpeedMeasurementState.PingPhaseState pingMeasurementState,
                                               final SpeedMeasurementState.SpeedPhaseState downloadMeasurementState, final SpeedMeasurementState.SpeedPhaseState uploadMeasurementState);
 
+    public void addMeasurementListener(final MeasurementStringListener listener) {
+        stringListeners.add(listener);
+    }
+
+    public void addMeasurementListener(final MeasurementListener listener) {
+        listeners.add(listener);
+    }
+
     public void addMeasurementFinishedListener(final MeasurementFinishedStringListener listener) {
         finishedStringListeners.add(listener);
     }
@@ -102,6 +119,14 @@ public class JniSpeedMeasurementClient {
 
     public void removeMeasurementPhaseListener (final MeasurementPhaseListener listener) {
         measurementPhaseListeners.remove(listener);
+    }
+
+    public interface MeasurementStringListener {
+        void onMeasurement (final String result);
+    }
+
+    public interface MeasurementListener {
+        void onMeasurement (final JniSpeedMeasurementResult result, final SpeedTaskDesc taskDesc);
     }
 
     public interface MeasurementFinishedStringListener {

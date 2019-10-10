@@ -905,7 +905,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "berec demo";
 				SWIFT_OBJC_BRIDGING_HEADER = "Demo/Demo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -930,7 +930,7 @@
 				PROVISIONING_PROFILE = "bf5153b8-cd46-47bb-b1e6-077515e6db5b";
 				PROVISIONING_PROFILE_SPECIFIER = "berec demo";
 				SWIFT_OBJC_BRIDGING_HEADER = "Demo/Demo-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

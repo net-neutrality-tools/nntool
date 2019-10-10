@@ -21,19 +21,20 @@ pod 'FMDB', '>= 2.7.2'
 pod 'CocoaLumberjack', '>= 3.4.2'
 pod 'PocketSocket', :path => '../PocketSocket'
 
+target 'Speed'
+
 pod 'nntool-shared-swift', :path => '../nntool-shared-swift'
 pod 'QoSKit', :path => '../qos-client-swift'
 
-target 'Speed'
 target 'Demo'
 
-
 post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    if ['QoSKit'].include? "#{target}"
-      target.build_configurations.each do |config|
-        config.build_settings['ENABLE_BITCODE'] = 'NO'
-      end
+    # Disable bitcode for QoSKit because Measurement-Kit doesn't work with bitcode.
+    installer.pods_project.targets.each do |target|
+        if target == 'QoSKit'
+            target.build_configurations.each do |config|
+                config.build_settings['ENABLE_BITCODE'] = 'NO'
+            end
+        end
     end
-  end
 end

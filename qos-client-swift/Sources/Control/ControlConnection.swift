@@ -183,28 +183,28 @@ extension ControlConnection: GCDAsyncSocketDelegate {
     public func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
         logger.debug("!!!!!!!!! \(String(describing: String(data: data, encoding: .utf8)))")
 
-        if let t = Tag(rawValue: tag) {
-            switch t {
-            case .greeting:
-                readLine(tag: .accept)
-            case .accept:
-                state = .authenticating
-                writeLine(line: "TOKEN \(token)", tag: .token, readAnswer: true)
-            case .token:
-                readLine(tag: .acceptAfterToken)
-            case .acceptAfterToken:
-                state = .authenticated
-                writeCurrentCommand()
-            case .command:
-                let line = String(data: data, encoding: .utf8)
-                finishCurrentCommand(response: line, error: nil)
-            case .quit:
-                break
-            }
-        } else {
-            assert(false) // should never happen
-
+        guard let t = Tag(rawValue: tag) else {
+            logger.debug("Did read packet with unknown tag -> disconnecting")
             disconnect()
+            return
+        }
+
+        switch t {
+        case .greeting:
+            readLine(tag: .accept)
+        case .accept:
+            state = .authenticating
+            writeLine(line: "TOKEN \(token)", tag: .token, readAnswer: true)
+        case .token:
+            readLine(tag: .acceptAfterToken)
+        case .acceptAfterToken:
+            state = .authenticated
+            writeCurrentCommand()
+        case .command:
+            let line = String(data: data, encoding: .utf8)
+            finishCurrentCommand(response: line, error: nil)
+        case .quit:
+            break
         }
     }
 
@@ -219,6 +219,8 @@ extension ControlConnection: GCDAsyncSocketDelegate {
 
     ///
     public func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
+        logger.debug("socketDidDisconnect, error: \(err)")
+
         state = .disconnected
 
         if currentErrorCallback != nil {

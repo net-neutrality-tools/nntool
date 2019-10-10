@@ -69,7 +69,10 @@ int CLoadBalancing::run()
     while (::RUNNING)
     {
         int nSocket = accept(mConnection->mSocket, (struct sockaddr *)&client, &clientlen);
-        if(nSocket == -1)continue;
+        if (nSocket == -1)
+        {
+            continue;
+        }
 
         setsockopt(nSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval));
         setsockopt(nSocket, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval));
@@ -108,12 +111,20 @@ int CLoadBalancing::run()
 
             request = string(rbuffer);
 
-            std::size_t pos = request.find("\r\n\r\n");
-            request = request.substr(pos);
-
             Json jRequest = Json::object{};
             string error = "";
-            jRequest = Json::parse(request, error);
+
+            try 
+            {
+                std::size_t pos = request.find("\r\n\r\n");
+                request = request.substr(pos);
+
+                jRequest = Json::parse(request, error);
+            }
+            catch(exception e)
+            {
+                error = "1";
+            }
 
             //parse parameters
             if (error.compare("") != 0)
@@ -169,7 +180,7 @@ int CLoadBalancing::run()
             }
 
             exit(0);
-       }
+        }
 
        close(nSocket);
     }

@@ -8,13 +8,13 @@ import nntool_shared_swift
 ///
 struct UdpStreamUtilConfiguration {
 
-    var host: String
-    var port: UInt16
-    var outgoing: Bool
+    var host: String?
+    var portOut: UInt16?
+    var portIn: UInt16?
+    var respondOnly: Bool // respondOny == true if portOut and host are not set?
     var timeoutNs: UInt64
     var delayNs: UInt64
     var packetCount: Int
-    var uuid: String?
     var payload: String?
 
     var timeoutS: Double {
@@ -22,43 +22,38 @@ struct UdpStreamUtilConfiguration {
     }
 }
 
-///
-struct UdpStreamUtilResult {
-    var receivedSequences = Set<UInt8>()
-    var rttsNs: [String: UInt64]?
-    var receivedPayload: String?
+protocol UdpStreamUtilDelegate: class {
+    func udpStreamUtil(_ udpStreamUtil: UdpStreamUtil, didBindToLocalPort port: UInt16)
+    func udpStreamUtil(_ udpStreamUtil: UdpStreamUtil, willSendPacketWithNumer packetNum: Int) -> (Data, UdpStreamUtil.Tag)?
+    func udpStreamUtil(_ udpStreamUtil: UdpStreamUtil, didReceiveData data: Data, fromAddress address: Data, atTimestamp timestamp: UInt64) -> Bool
 }
 
 ///
 class UdpStreamUtil: NSObject {
 
-    ///
-    private enum Tag: Int {
+    enum Tag: Int {
         case outgoing
+        case noDelay
         case incomingResponse
-    }
-
-    ///
-    public enum UdpPacketFlag: UInt8 {
-        case oneDirection = 1
-        case response = 2
-        case awaitResponse = 3
     }
 
     ///
     private let config: UdpStreamUtilConfiguration
 
+    ///
+    weak var delegate: UdpStreamUtilDelegate?
+
+    ///
     private var status: QoSTaskStatus = .unknown
+
+    private var socket: GCDAsyncUdpSocket?
 
     private var stopReceivingSemaphore: DispatchSemaphore?
     private var delayElapsedSemaphore: DispatchSemaphore?
 
+    private var sentPackets = 0
+    private var receivedPackets = 0
     private var lastPacketSentAtNs: UInt64?
-
-    private var receivedSequences = Set<UInt8>()
-    private var rttsNs: [String: UInt64]?
-
-    private var receivedPayload: String?
 
     ///
     init(config: UdpStreamUtilConfiguration) {
@@ -66,226 +61,150 @@ class UdpStreamUtil: NSObject {
     }
 
     ///
-    public func runStream() -> (QoSTaskStatus, UdpStreamUtilResult?) {
+    public func runStream() -> QoSTaskStatus {
         let delegateQueue = DispatchQueue(label: "at.alladin.nettest.qos.udpstream.delegate")
-        let socket = GCDAsyncUdpSocket(delegate: self, delegateQueue: delegateQueue)
+        socket = GCDAsyncUdpSocket(delegate: self, delegateQueue: delegateQueue)
 
         do {
-            if config.outgoing {
-                rttsNs = [String: UInt64]()
-                try socket.connect(toHost: config.host, onPort: config.port)
-            } else {
-                try socket.bind(toPort: config.port)
+            if let portIn = config.portIn {
+                logger.debug("socket.bind(\(portIn))")
+                try socket?.bind(toPort: portIn)
+            }
+
+            if let host = config.host, let portOut = config.portOut, !config.respondOnly {
+                // Connect the socket even when binding because then we don't have to provide the host and port when sending
+                try socket?.connect(toHost: host, onPort: portOut)
+                logger.debug("CONNECTED")
             }
         } catch {
             logger.warning("could not connect/bind")
             logger.warning(error)
-            return (.error, nil)
+
+            socket?.close()
+            return .error
         }
 
         stopReceivingSemaphore = DispatchSemaphore(value: 0)
-        let timeoutDispatchTime: DispatchTime = .now() + .nanoseconds(Int(config.timeoutNs))
+        let timeoutInterval = DispatchTimeInterval.nanoseconds(Int(config.timeoutNs))
+        let timeoutDispatchTime = DispatchTime.now() + timeoutInterval
 
         do {
-            try socket.beginReceiving()
+            logger.debug("beginReceiving")
+            try socket?.beginReceiving()
         } catch {
             logger.warning("beginReceiving error")
             logger.warning(error)
-            socket.close() // TODO: necessary?
-            return (.error, nil)
+
+            socket?.close()
+            return .error
         }
 
         var status: QoSTaskStatus = .unknown
 
-        // send packets if outgoing
-        if config.outgoing {
+        // send packets if !responseOnly
+        if !config.respondOnly {
             delayElapsedSemaphore = DispatchSemaphore(value: 0)
 
+            logger.debug("Going to send \(config.packetCount) UDP packets")
+
             for i in 0..<config.packetCount {
+                guard let (data, tag) = delegate?.udpStreamUtil(self, willSendPacketWithNumer: i) else {
+                    logger.debug("got no data to send -> continue")
+                    continue
+                }
+
                 lastPacketSentAtNs = TimeHelper.currentTimeNs()
 
-                let data = dataForOutgoingPacket(flag: UdpPacketFlag.awaitResponse, sequenceNum: UInt8(i), outgoing: true)
-                socket.send(data, withTimeout: config.timeoutS, tag: Tag.outgoing.rawValue)
+                socket?.send(data, withTimeout: config.timeoutS, tag: tag.rawValue)
 
-                logger.debug("did send data (\(i))")
-
-                if let semaphoreResult = delayElapsedSemaphore?.wait(timeout: .now() + .nanoseconds(Int(config.timeoutNs))) {
-                    logger.debug("after wait")
-
-                    if semaphoreResult == .timedOut {
-                        logger.error("timeout waiting for send delay")
-                        status = .timeout
-                        break
-                    }
+                guard let r = delayElapsedSemaphore?.wait(timeout: .now() + timeoutInterval), r != .timedOut else {
+                    logger.error("timeout waiting for send delay")
+                    status = .timeout
+                    break
                 }
+
+                logger.debug("after wait (send loop)")
             }
         }
 
+        logger.debug("BEFORE stopReceivingSemaphore?.wait")
         if let semaphoreResult = stopReceivingSemaphore?.wait(timeout: timeoutDispatchTime) {
             if semaphoreResult == .timedOut {
+                logger.warning("stopReceivingSemaphore timeout")
+
                 if status == .unknown {
                     status = .timeout
                 }
-                logger.warning("stopReceivingSemaphore timeout")
             }
         }
+        logger.debug("AFTER stopReceivingSemaphore?.wait")
 
-        socket.closeAfterSending()
+        socket?.closeAfterSending()
 
         if status == .unknown {
             status = .ok
         }
 
-        let result = UdpStreamUtilResult(
-            receivedSequences: receivedSequences,
-            rttsNs: rttsNs,
-            receivedPayload: receivedPayload
-        )
-
-        return (status, result)
+        return status
     }
 
-    ///
-    private func dataForOutgoingPacket(flag: UdpPacketFlag, sequenceNum: UInt8, outgoing: Bool) -> Data {
-        var data = Data()
-
-        if let customPayload = config.payload, let d = customPayload.data(using: .utf8) {
-            data.append(d)
-            return data
-        }
-
-        data.append(flag.rawValue)
-        data.append(sequenceNum)
-
-        if let uuidData = config.uuid?.data(using: .utf8) { /* .ascii ? */
-            data.append(uuidData)
-        }
-
-        let currentTimeNs = TimeHelper.currentTimeNs()
-        //logger.debug("currentTimeNs: \(currentTimeNs)")
-        var currentTimeNsBigEndian = currentTimeNs.bigEndian
-        data.append(UnsafeBufferPointer(start: &currentTimeNsBigEndian, count: 1))
-
-        return data
+    private func signalDelayElapsed() {
+        _ = self.delayElapsedSemaphore?.signal()
     }
 
-    ///
-    private func packetDataByReplacingFlag(_ flag: UdpPacketFlag, data: Data) -> Data {
-        var d = Data()
-
-        d.append(flag.rawValue)
-        d.append(data[data.startIndex.advanced(by: 1)..<data.endIndex])
-
-        return d
+    func sendResponse(_ data: Data, toAddress address: Data, tag: Tag) {
+        socket?.send(data, toAddress: address, withTimeout: config.timeoutS, tag: tag.rawValue)
     }
 }
 
 ///
 extension UdpStreamUtil: GCDAsyncUdpSocketDelegate {
 
+    func udpSocket(_ sock: GCDAsyncUdpSocket, didConnectToAddress address: Data) {
+        logger.debug("didConnectToAddress \(address), \(sock.localPort())")
+        delegate?.udpStreamUtil(self, didBindToLocalPort: sock.localPort())
+    }
+
     ///
     func udpSocket(_ sock: GCDAsyncUdpSocket, didSendDataWithTag tag: Int) {
-        if let tagEnum = Tag(rawValue: tag), tagEnum == .outgoing {
+        logger.debug("didSendDataWithTag")
+
+        sentPackets += 1
+
+        guard let tagEnum = Tag(rawValue: tag) else {
+            return
+        }
+
+        switch tagEnum {
+        case .noDelay:
+            signalDelayElapsed()
+        case .outgoing:
             var delay: UInt64 = 0
 
             if let l = lastPacketSentAtNs {
                 let elapsed = TimeHelper.currentTimeNs() - l
-                //logger.debug("elapsed: \(elapsed)")
                 delay = elapsed > config.delayNs ? 0 : config.delayNs - elapsed
             }
 
-            let signalBlock = {
-                //logger.debug("signal delayElaspsedSemaphore")
-                _ = self.delayElapsedSemaphore?.signal()
-            }
-
             if delay > 0 {
-                sock.delegateQueue()?.asyncAfter(deadline: .now() + .nanoseconds(Int(delay)), execute: signalBlock)
+                sock.delegateQueue()?.asyncAfter(deadline: .now() + .nanoseconds(Int(delay)), execute: signalDelayElapsed)
             } else {
-                signalBlock()
+                signalDelayElapsed()
             }
+        default:
+            break
         }
     }
 
     ///
     func udpSocket(_ sock: GCDAsyncUdpSocket, didReceive data: Data, fromAddress address: Data, withFilterContext filterContext: Any?) {
+
         let currentTimeNs = TimeHelper.currentTimeNs()
+        receivedPackets += 1
 
-        let signalBlock = {
+        let shouldStopReceiving = delegate?.udpStreamUtil(self, didReceiveData: data, fromAddress: address, atTimestamp: currentTimeNs) ?? false
+        if shouldStopReceiving || receivedPackets == config.packetCount {
             _ = self.stopReceivingSemaphore?.signal()
-        }
-
-        if let _ = config.payload {
-            if config.outgoing {
-                receivedPayload = String(data: data, encoding: .utf8)
-                signalBlock()
-            }
-
-            return
-        }
-
-        if data.endIndex < 1+1+36+8 { // packet data out of bounds
-            status = .error
-            signalBlock()
-            return
-        }
-
-        var flag: UInt8 = 0
-        data.copyBytes(to: &flag, count: 1)
-
-        guard let flagEnum = UdpPacketFlag(rawValue: flag) else {
-            // unknown packet flag -> return
-            logger.debug("received unknown packet flag \(flag)")
-            return
-        }
-        logger.debug("received flag: \(flagEnum)")
-
-        var index = 1
-
-        var sequenceNum: UInt8 = 0
-        data.copyBytes(to: &sequenceNum, from: data.startIndex.advanced(by: index)..<data.startIndex.advanced(by: index + 2))
-
-        logger.debug("received sequenceNum: \(sequenceNum)")
-
-        index += 1
-
-        //let uuidData = data[data.startIndex.advanced(by: index)..<data.startIndex.advanced(by: index + 36)]
-        //let uuid = String(data: uuidData, encoding: .utf8)
-
-        //logger.debug("uuid: \(uuid)")
-
-        if config.outgoing {
-            index += 36
-
-            let sentTimeNsData = data[data.startIndex.advanced(by: index)..<data.startIndex.advanced(by: index + 8)]
-            let sentTimeNs: UInt64 = sentTimeNsData.withUnsafeBytes { UInt64(bigEndian: $0.pointee) } // TODO: if etc.
-
-            rttsNs?["\(sequenceNum)"] = currentTimeNs - sentTimeNs
-        }
-
-        if receivedSequences.contains(sequenceNum) {
-            logger.warning("received duplicate")
-            status = .error
-            signalBlock()
-        } else {
-            receivedSequences.insert(sequenceNum)
-
-            if config.outgoing {
-                assert(flagEnum == UdpPacketFlag.response)
-
-                if receivedSequences.count == config.packetCount {
-                    signalBlock()
-                }
-            } else {
-                assert(flagEnum == UdpPacketFlag.awaitResponse)
-
-                sock.send(packetDataByReplacingFlag(.response, data: data), toAddress: address, withTimeout: config.timeoutS, tag: Tag.incomingResponse.rawValue)
-
-                if receivedSequences.count == config.packetCount {
-                    // add delay to allow the last confirmation packet to reach the server
-                    sock.delegateQueue()?.asyncAfter(deadline: .now() + .nanoseconds(Int(config.delayNs)), execute: signalBlock)
-                }
-            }
         }
     }
 }
