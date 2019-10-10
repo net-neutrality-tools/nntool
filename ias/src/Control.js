@@ -137,6 +137,8 @@ function WSControl()
     var fetchCounterTime            = 500;
     var fetchCounterLimitReached    = false;
 
+    var classCheckSend              = false;
+
 
 
 
@@ -535,7 +537,7 @@ function WSControl()
                     console.log('wsWorker ' + data.wsID + ' command: \'' + data.cmd + '\' message: \'' + data.msg);
                 }
 
-                if (data.msg === 'counter' && wsMeasurementTime === 0)
+                if (data.msg === 'counter' && wsMeasurementTime === 0 && !classCheckSend)
                 {
                     wsWorkersCounterData[data.wsID].push(data.wsData);
                     wsWorkersCounterFrames[data.wsID].push(data.wsFrames);
@@ -555,12 +557,12 @@ function WSControl()
                     }
 
                     //on upload, make sure that at least one != 0 report was received per stream to account for jitter
-                    if (allCountersFetched && wsTestCase === 'upload' && !fetchCounterLimitReached)
+                    if (allCountersFetched && wsTestCase === 'upload' && !fetchCounterLimitReached && !classCheckSend)
                     {
                         for (var wsID = 0; wsID < wsWorkersStatus.length; wsID++)
                         {
-                            var validReportReceived = false;
                             var reportsReceived = 0;
+                            var reportsReceivedValid = 0;
 
                             for (var i = 0; i < wsWorkersCounterData.length; i++)
                             {
@@ -569,20 +571,20 @@ function WSControl()
                                     reportsReceived++;
                                     if (wsWorkersCounterData[wsID][i] !== 0)
                                     {
-                                        validReportReceived = true;
+                                        reportsReceivedValid++;
                                     }
                                 }
                             }
 
-                            if (reportsReceived >= 3)
+                            if (reportsReceivedValid >= 3)
                             {
-                                //if one stream received at least 3 reports, break
-                                console.log(reportsReceived + " upload reports received on #" + wsID);
+                                //if one stream received at least 3 valid reports, break
+                                console.log(reportsReceived + " != 0 upload reports received on #" + wsID);
                                 fetchCounterLimitReached = true;
                                 break;
                             }
 
-                            if (!validReportReceived)
+                            if (reportsReceivedValid < 1)
                             {
                                 setTimeout(fetchCounter, 500, wsID);
 
@@ -596,7 +598,7 @@ function WSControl()
                         }
                     }
 
-                    if (allCountersFetched || fetchCounterLimitReached)
+                    if ((allCountersFetched || fetchCounterLimitReached) && !classCheckSend)
                     {
                         classCheckValues.dataTotal = 0;
                         classCheckValues.durationTotal = 0;
@@ -607,8 +609,8 @@ function WSControl()
 
                         for (var wsID = 0; wsID < wsWorkersStatus.length; wsID++)
                         {
-                            classCheckValues.dataTotal += wsWorkersCounterData[wsID][wsWorkersCounterData[wsID].length-1] - wsWorkersCounterData[wsID][wsWorkersCounterData[wsID].length-2];
-                            classCheckValues.framesTotal += wsWorkersCounterFrames[wsID][wsWorkersCounterFrames[wsID].length-1] - wsWorkersCounterFrames[wsID][wsWorkersCounterFrames[wsID].length-2];
+                            classCheckValues.dataTotal += wsWorkersCounterData[wsID][wsWorkersCounterData[wsID].length-1];
+                            classCheckValues.framesTotal += wsWorkersCounterFrames[wsID][wsWorkersCounterFrames[wsID].length-1];
                             classCheckValues.durationTotal += wsWorkersCounterTimes[wsID][wsWorkersCounterTimes[wsID].length-1] - wsWorkersCounterTimes[wsID][wsWorkersCounterTimes[wsID].length-2];
                         }
 
@@ -616,7 +618,7 @@ function WSControl()
                         {
                             classCheckValues.durationTotal = Math.round(classCheckValues.durationTotal / wsWorkersCounterTimes.length);
                         }
-                        if (wsTestCase === 'upload')
+                        else
                         {
                             classCheckValues.durationTotal = 500;
                         }
@@ -631,9 +633,11 @@ function WSControl()
                             classCheckValues.rateAvg = 0;
                         }
 
-                        //console.log(JSON.stringify(classCheckValues));
+                        console.log(JSON.stringify(classCheckValues));
 
-                        reportToMeasurement('classCheck', '');
+
+                        classCheckSend = true;
+                        reportToMeasurement('classCheck');
                     }
                 }
 
@@ -1292,15 +1296,18 @@ function WSControl()
 
     function getKPIsClassCheck(report)
     {
-        report.throughput_avg_bps                       = classCheckValues.rateAvg;
-        report.bytes_including_slow_start               = classCheckValues.dataTotal;
-        report.duration_ns_total                        = classCheckValues.durationTotal;
-        report.num_streams_start                        = classCheckValues.streamsStart;
-        report.frame_size                               = classCheckValues.frameSize;
-        report.frame_count_including_slow_start         = classCheckValues.framesTotal;
-        report.overhead_including_slow_start            = classCheckValues.overheadTotal;
-        report.overhead_per_frame                       = classCheckValues.overheadPerFrame;
-        report.classCheck                               = classCheckValues.classCheck;
+        var key = (wsTestCase === 'download') ? 'downloadKPIs' : 'uploadKPIs';
+
+        report[key] = {};
+        report[key].throughput_avg_bps                       = classCheckValues.rateAvg;
+        report[key].bytes_including_slow_start               = classCheckValues.dataTotal;
+        report[key].duration_ns_total                        = classCheckValues.durationTotal;
+        report[key].num_streams_start                        = classCheckValues.streamsStart;
+        report[key].frame_size                               = classCheckValues.frameSize;
+        report[key].frame_count_including_slow_start         = classCheckValues.framesTotal;
+        report[key].overhead_including_slow_start            = classCheckValues.overheadTotal;
+        report[key].overhead_per_frame                       = classCheckValues.overheadPerFrame;
+        report[key].classCheck                               = classCheckValues.classCheck;
 
         return report;
     }

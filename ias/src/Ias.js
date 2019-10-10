@@ -324,6 +324,11 @@ function Ias()
             return;
         }
 
+        if (classIndexCurrent !== -1 && ((data.test_case === 'download' && typeof data.downloadKPIs !== 'undefined' && typeof data.downloadKPIs.throughput_avg_bps !== 'undefined') || (data.test_case === 'upload' && typeof data.uploadKPIs !== 'undefined' && typeof data.uploadKPIs.throughput_avg_bps !== 'undefined')))
+        {
+            data.throughput_avg_bps = (data.test_case === 'download') ? data.downloadKPIs.throughput_avg_bps : data.uploadKPIs.throughput_avg_bps;
+        }
+        
         if ((data.test_case === 'download' || data.test_case === 'upload') && typeof data.throughput_avg_bps !== 'undefined' && classIndexCurrent !== -1)
         {
             //check, if current class matches the class bounds
@@ -344,6 +349,16 @@ function Ias()
                 classMatched = true;
                 data.out_of_bounds = false;
             }
+
+            if (typeof data.downloadKPIs !== 'undefined')
+            {
+                data.downloadKPIs.out_of_bounds = data.out_of_bounds;
+            }
+            else
+            {
+                data.uploadKPIs.out_of_bounds = data.out_of_bounds;
+            }
+            
 
             classChangePerforming = false;
             if (data.out_of_bounds  && !classMatched && data.cmd === 'classCheck')
@@ -400,7 +415,6 @@ function Ias()
                         if (newClassSelected)
                         {
                             classIndexCurrent = i;
-                            //classIndexUsed.push(classIndexCurrent);
                             classChangePerforming = true;
                             return false;
                         }
@@ -449,6 +463,7 @@ function Ias()
         delete cleanedData.cmd;
         delete cleanedData.msg;
         delete cleanedData.test_case;
+        delete cleanedData.throughput_avg_bps;
 
         var relative_time_ns_measurement_start = (jsTool.getTimestamp() * 1000 * 1000 ) - timestampKPIs.measurement_start;
 

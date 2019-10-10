@@ -148,20 +148,22 @@ onmessage = function (event)
         {
             if (wsTestCase === 'upload')
             {
-                for (var key in ulReportDict)
+                if (Object.keys(ulReportDict).length > 0)
                 {
-                    wsData      += ulReportDict[key].bRcv;
-                    wsFrames    += ulReportDict[key].hRcv;
+                    wsData = ulReportDict[Object.keys(ulReportDict).length-1].bRcv;
+                    wsFrames = ulReportDict[Object.keys(ulReportDict).length-1].hRcv;
+                }
+                else
+                {
+                    wsData = 0;
+                    wsFrames = 0;
                 }
             }
             reportToControl('info', 'counter');
 
-            if (wsTestCase === 'upload')
-            {
-                wsData          = 0;
-                wsFrames        = 0;
-            }
-            
+            wsData = 0;
+            wsFrames = 0;
+
             break;
         }
 
