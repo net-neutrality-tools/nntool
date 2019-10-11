@@ -1,7 +1,7 @@
 ## Building ##
 
 ### Prerequisites ###
-* XCode >= 10
+* XCode >= 11
 * cocoapods
 * NativeScript = 5.x
 * macOS (any Version)
@@ -10,8 +10,9 @@
 With fullfilled prerequisites perform the following steps:
 1. Build *ias*, see instructions in *ias/README.md*
 2. Build *ias-mobile*, see instructions in *ias-mobile/README.md*
-3. In dir *ias-ios*, run *pod install* to install required cocoapods dependencies
-4. Open *ias_ios.xcworkspace* in XCode and build target *Demo*
+3. In directory *qos-client-swift* run *pod install* to install MeasurementKit 
+4. In directory *ias-ios*, run *pod install* to install required cocoapods dependencies
+5. Open *ias_ios.xcworkspace* in XCode and build target *Demo*
 
 ---------------
 
