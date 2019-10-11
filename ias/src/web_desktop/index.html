@@ -599,8 +599,12 @@
 
         function load()
         {
-             location.reload();
-             iasSendToControl('load');
+            location.reload();
+
+            if (typeof require !== "undefined")
+            {
+                iasSendToControl('load');
+            }
         }
 
         function orderKeys(obj)
