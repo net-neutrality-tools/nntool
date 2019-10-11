@@ -335,19 +335,20 @@ function Ias()
             if (wsMeasurementParameters[data.test_case].classes[classIndexCurrent].bounds.lower * 1000 * 1000 > data.throughput_avg_bps || wsMeasurementParameters[data.test_case].classes[classIndexCurrent].bounds.upper * 1000 * 1000 < data.throughput_avg_bps)
             {
                 data.out_of_bounds = true;
-                if (!classMatched)
+                if (data.cmd === 'classCheck')
                 {
-                    console.log('Current class is out of bounds');
+                    console.log('ClassCheck: Current class is out of bounds');
+                    classMatched = false;
                 }
             }
             else
             {
-                if (!classMatched)
-                {
-                    console.log('Current class is in bounds');
-                }
-                classMatched = true;
                 data.out_of_bounds = false;
+                if (data.cmd === 'classCheck')
+                {
+                    console.log('ClassCheck: Current class is in bounds');
+                    classMatched = true;
+                }
             }
 
             if (typeof data.downloadKPIs !== 'undefined')
@@ -381,17 +382,17 @@ function Ias()
                                 if (wsMeasurementParameters[data.test_case].classes[classIndexLowestBound].bounds.lower * 1000 * 1000 > data.throughput_avg_bps)
                                 {
                                     i = classIndexLowestBound;
-                                    console.log("Lowest bound of configured classes was exceeded");
+                                    console.log("ClassCheck: Lowest bound of configured classes was exceeded");
                                 }
                                 if (wsMeasurementParameters[data.test_case].classes[classIndexHighestBound].bounds.upper * 1000 * 1000 < data.throughput_avg_bps)
                                 {
                                     i = classIndexHighestBound;
-                                    console.log("Highest bound of configured classes was exceeded");
+                                    console.log("ClassCheck: ighest bound of configured classes was exceeded");
                                 }
 
                                 if (i === classIndexCurrent || classIndexUsed.includes(i))
                                 {
-                                    console.log('Class #' + i + ' was already used');
+                                    console.log('ClassCheck: Class #' + i + ' was already used');
                                 }
                                 else
                                 {
@@ -402,7 +403,7 @@ function Ias()
                             {
                                 if (index === classIndexCurrent || classIndexUsed.includes(index))
                                 {
-                                    console.log('Class #' + index + ' was already used');
+                                    console.log('ClassCheck: Class #' + index + ' was already used');
                                 }
                                 else
                                 {
@@ -424,20 +425,20 @@ function Ias()
 
                     if (!newClassSelected)
                     {
-                        console.log('Class can not be changed, resuming measurement');
+                        console.log('ClassCheck: Class can not be changed, resuming measurement');
                         classMatched = true;
                     }
                 }
                 else
                 {
-                    console.log('Class can not be changed: class change limit reached');
+                    console.log('ClassCheck: Class can not be changed: class change limit reached');
                     classMatched = true;
                 }
             }
 
             if (classChangePerforming && data.cmd === 'classCheck')
             {
-                console.log('Changing Class');
+                console.log('ClassCheck: Changing Class');
                 wsControl.measurementStop(JSON.stringify(wsMeasurementParameters));
                 setTimeout(wsControlReset, 200);
                 setTimeout(startGcTimer, 500);

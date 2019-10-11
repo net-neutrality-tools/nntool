@@ -52,9 +52,6 @@ function WSControl()
     var wsOverheadPerFrame;
     var wsWorkers;
     var wsWorkersStatus;
-    var wsWorkersCounterData;
-    var wsWorkersCounterFrames;
-    var wsWorkersCounterTimes;
     var wsWorkerTime;
     var wsInterval;
     var wsMeasurementRunningTime;
@@ -133,12 +130,14 @@ function WSControl()
 
     var wsWorkerPath                = 'WebWorker.js';
 
-    var fetchCounterTimeout;
-    var fetchCounterTime            = 500;
-    var fetchCounterLimitReached    = false;
-
-    var classCheckSend              = false;
-
+    var classCheckFetchTimeout;
+    var classCheckReportTimeout;
+    var classCheckReportTime        = 501;
+    var classCheckStartTime;
+    var classCheckLimitReached      = false;
+    var classCheckUlReportDict      = {};
+    var classCheckData;
+    var classCheckFrames;
 
 
 
@@ -401,15 +400,13 @@ function WSControl()
 
         wsWorkers               = new Array(wsParallelStreams);
         wsWorkersStatus         = new Array(wsParallelStreams);
-        wsWorkersCounterData    = new Array(wsParallelStreams);
-        wsWorkersCounterFrames  = new Array(wsParallelStreams);
-        wsWorkersCounterTimes   = new Array(wsParallelStreams);
+        classCheckData          = new Array(wsParallelStreams);
+        classCheckFrames        = new Array(wsParallelStreams);
 
         for (var wsID = 0; wsID < wsWorkers.length; wsID++)
         {
-            wsWorkersCounterData[wsID] = new Array();
-            wsWorkersCounterFrames[wsID]  = new Array();
-            wsWorkersCounterTimes[wsID]  = new Array();
+            classCheckData[wsID]     = new Array();
+            classCheckFrames[wsID]   = new Array();
         }
 
         for (var wsID = 0; wsID < wsWorkers.length; wsID++)
@@ -424,9 +421,10 @@ function WSControl()
 
             if (wsTestCase === 'upload')
             {
-                ulReportDict[wsID]    = {};
-                ulStartupData[wsID]   = 0;
-                ulStartupFrames[wsID] = 0;
+                ulReportDict[wsID]            = {};
+                ulStartupData[wsID]           = 0;
+                ulStartupFrames[wsID]         = 0;
+                classCheckUlReportDict[wsID]  = {};
             }
 
             var workerData = prepareWorkerData('connect', wsID);
@@ -488,7 +486,7 @@ function WSControl()
         clearInterval(wsTimeoutTimer);
         clearInterval(wsInterval);
         clearTimeout(wsStartupTimeout);
-        clearTimeout(fetchCounterTimeout);
+        clearTimeout(classCheckReportTimeout);
 
         console.log(wsTestCase + ': stopping measurement');
 
@@ -537,108 +535,24 @@ function WSControl()
                     console.log('wsWorker ' + data.wsID + ' command: \'' + data.cmd + '\' message: \'' + data.msg);
                 }
 
-                if (data.msg === 'counter' && wsMeasurementTime === 0 && !classCheckSend)
+                if (data.msg === 'counter' && wsMeasurementTime === 0)
                 {
-                    wsWorkersCounterData[data.wsID].push(data.wsData);
-                    wsWorkersCounterFrames[data.wsID].push(data.wsFrames);
-                    wsWorkersCounterTimes[data.wsID].push(performance.now());
+                    classCheckData[data.wsID].push(data.wsData);
+                    classCheckFrames[data.wsID].push(data.wsFrames);
 
-                    var allCountersFetched = true;
-                    var streamsOpen = 0;
+                    var ulStreamReportDict = classCheckUlReportDict[data.wsID];
 
-                    for (var wsID = 0; wsID < wsWorkersStatus.length; wsID++)
+                    for (var key in data.ulReportDict)
                     {
-                        if (typeof wsWorkersCounterTimes[wsID][wsWorkersCounterTimes[wsID].length-1] === 'undefined' || typeof wsWorkersCounterTimes[wsID][wsWorkersCounterTimes[wsID].length-2] === 'undefined')
+                        var ulValueDict = {};
+                        ulValueDict.bRcv = Number(data.ulReportDict[key].bRcv);
+                        ulValueDict.hRcv = Number(data.ulReportDict[key].hRcv);
+                        if (typeof ulStreamReportDict !== 'undefined')
                         {
-                            allCountersFetched = false;
-                        }
-
-                        if (wsWorkersStatus[wsID] === wsStateOpen) streamsOpen++;
-                    }
-
-                    //on upload, make sure that at least one != 0 report was received per stream to account for jitter
-                    if (allCountersFetched && wsTestCase === 'upload' && !fetchCounterLimitReached && !classCheckSend)
-                    {
-                        for (var wsID = 0; wsID < wsWorkersStatus.length; wsID++)
-                        {
-                            var reportsReceived = 0;
-                            var reportsReceivedValid = 0;
-
-                            for (var i = 0; i < wsWorkersCounterData.length; i++)
-                            {
-                                if (typeof wsWorkersCounterData[wsID][i] !== 'undefined')
-                                {
-                                    reportsReceived++;
-                                    if (wsWorkersCounterData[wsID][i] !== 0)
-                                    {
-                                        reportsReceivedValid++;
-                                    }
-                                }
-                            }
-
-                            if (reportsReceivedValid >= 3)
-                            {
-                                //if one stream received at least 3 valid reports, break
-                                console.log(reportsReceived + " != 0 upload reports received on #" + wsID);
-                                fetchCounterLimitReached = true;
-                                break;
-                            }
-
-                            if (reportsReceivedValid < 1)
-                            {
-                                setTimeout(fetchCounter, 500, wsID);
-
-                                console.log("Missing upload report on #" + wsID + ", requesting again in 500ms");
-                                allCountersFetched = false;
-                            }
-                            else
-                            {
-                                console.log("At least one != 0 upload report received on #" + wsID);
-                            }
+                            ulStreamReportDict[data.ulReportDict[key].time] = ulValueDict;
                         }
                     }
-
-                    if ((allCountersFetched || fetchCounterLimitReached) && !classCheckSend)
-                    {
-                        classCheckValues.dataTotal = 0;
-                        classCheckValues.durationTotal = 0;
-                        classCheckValues.streamsStart = streamsOpen;
-                        classCheckValues.frameSize = wsFrameSize;
-                        classCheckValues.framesTotal = 0;
-                        classCheckValues.overheadPerFrame = wsOverheadPerFrame;
-
-                        for (var wsID = 0; wsID < wsWorkersStatus.length; wsID++)
-                        {
-                            classCheckValues.dataTotal += wsWorkersCounterData[wsID][wsWorkersCounterData[wsID].length-1];
-                            classCheckValues.framesTotal += wsWorkersCounterFrames[wsID][wsWorkersCounterFrames[wsID].length-1];
-                            classCheckValues.durationTotal += wsWorkersCounterTimes[wsID][wsWorkersCounterTimes[wsID].length-1] - wsWorkersCounterTimes[wsID][wsWorkersCounterTimes[wsID].length-2];
-                        }
-
-                        if (wsTestCase === 'download')
-                        {
-                            classCheckValues.durationTotal = Math.round(classCheckValues.durationTotal / wsWorkersCounterTimes.length);
-                        }
-                        else
-                        {
-                            classCheckValues.durationTotal = 500;
-                        }
-
-                        classCheckValues.overheadTotal = classCheckValues.framesTotal * wsOverheadPerFrame;
-                        classCheckValues.rateAvg = Math.round((((classCheckValues.dataTotal * 8) + (classCheckValues.overheadTotal * 8)) / (Math.round(classCheckValues.durationTotal) / 1000)));
-                        classCheckValues.durationTotal = Math.round(classCheckValues.durationTotal * 1000 * 1000);
-                        classCheckValues.dataTotal = classCheckValues.dataTotal + classCheckValues.overheadTotal;
-
-                        if (isNaN(classCheckValues.rateAvg) || classCheckValues.rateAvg === null)
-                        {
-                            classCheckValues.rateAvg = 0;
-                        }
-
-                        console.log(JSON.stringify(classCheckValues));
-
-
-                        classCheckSend = true;
-                        reportToMeasurement('classCheck');
-                    }
+                    classCheckUlReportDict[data.wsID] = ulStreamReportDict;
                 }
 
                 break;
@@ -687,19 +601,22 @@ function WSControl()
 
                     if (wsTestCase === 'download')
                     {
-                        wsStartupStartTime = performance.now()+500;
-                        wsStartupTimeout = setTimeout(measurementStart, wsStartupTime+500);
+                        wsStartupStartTime  = performance.now()+500;
+                        classCheckStartTime = performance.now();
+                        wsStartupTimeout    = setTimeout(measurementStart, wsStartupTime+500);
                     }
 
                     if (wsTestCase === 'upload')
                     {
-                        wsStartupStartTime = performance.now();
-                        wsStartupTimeout = setTimeout(measurementStart, wsStartupTime);
+                        wsStartupStartTime  = performance.now();
+                        classCheckStartTime = performance.now();
+                        wsStartupTimeout    = setTimeout(measurementStart, wsStartupTime);
                     }
 
                     if (wsTestCase === 'download' || wsTestCase === 'upload')
                     {
-                        fetchCounterTimeout = setTimeout(fetchCounter, fetchCounterTime);
+                        classCheckFetchTimeout  = setTimeout(classCheckFetch, 1000);
+                        classCheckReportTimeout = setTimeout(classCheckReport, classCheckReportTime + 500);
                     }
                 }
                 break;
@@ -823,6 +740,8 @@ function WSControl()
     function measurementError(errorDescription, errorCode, systemAvailability, serviceAvailability)
     {
         clearInterval(wsTimeoutTimer);
+        clearTimeout(classCheckFetchTimeout);
+        clearTimeout(classCheckReportTimeout);
 
         if ((errorCode === 2 || errorCode === 4) && wsTestCase === 'rtt')
         {
@@ -858,29 +777,134 @@ function WSControl()
         measurementError('webSocket timeout error', 2, 1, 0);
     }
 
-    function fetchCounter(id)
+    function classCheckFetch()
     {
-        clearTimeout(fetchCounterTimeout);
-        
-        if (wsWorkersCounterData[0].length === 0)
+        classCheckValues.streamsStart = 0;
+
+        for (var wsID = 0; wsID < wsWorkers.length; wsID++)
         {
-            fetchCounterTimeout = setTimeout(fetchCounter, fetchCounterTime);
+            var workerData = prepareWorkerData('fetchCounter', wsID);
+            sendToWorker(wsID, workerData);
+
+            if (wsWorkersStatus[wsID] === wsStateOpen)
+            {
+                classCheckValues.streamsStart++;
+            }
         }
+    }
 
-        if (typeof id !== 'undefined')
+    function classCheckReport()
+    {
+        if (wsMeasurementTime === 0)
         {
-            var workerData = prepareWorkerData('fetchCounter', id);
+            var currentTime = performance.now();
 
-            sendToWorker(id, workerData);
+            //on upload, make sure that at least one report was received per stream to account for jitter
+            if (wsTestCase === 'upload')
+            {
+                var reportMissing = false;
+                for (var wsID = 0; wsID < wsWorkersStatus.length; wsID++)
+                {
+                    var reportsReceived = 0;
+
+                    for (var i = 0; i < classCheckData.length; i++)
+                    {
+                        if (typeof classCheckData[wsID][i] !== 'undefined')
+                        {
+                            reportsReceived++;
+                        }
+                    }
+    
+                    if (reportsReceived < 1)
+                    {
+                        console.log("Missing upload report on #" + wsID + "");
+                        reportMissing = true;
+                    }
+                    else
+                    {
+                        console.log("At least one upload report received on #" + wsID);
+                        if (reportMissing && reportsReceived >= 3)
+                        {
+                            //if one stream received at least 3 valid reports, continue
+                            console.log(reportsReceived + " upload reports received on #" + wsID);
+                            reportMissing = false;
+                        }
+                    }
+                }
+
+                if (reportMissing)
+                {
+                    console.log("At least one stream has no upload reports, skipping calculation");
+                    classCheckFetchTimeout  = setTimeout(classCheckFetch, 500);
+                    classCheckReportTimeout = setTimeout(classCheckReport, classCheckReportTime);
+                    return;
+                }
+            }
+
+            classCheckValues.dataTotal = 0;
+            classCheckValues.durationTotal = 0;
+            classCheckValues.frameSize = wsFrameSize;
+            classCheckValues.framesTotal = 0;
+            classCheckValues.overheadPerFrame = wsOverheadPerFrame;
+
+            var keyCount = 0;
+
+            for (var wsID = 0; wsID < wsWorkersStatus.length; wsID++)
+            {
+                classCheckValues.dataTotal     += classCheckData[wsID][classCheckData[wsID].length-1];
+                classCheckValues.framesTotal   += classCheckFrames[wsID][classCheckFrames[wsID].length-1];
+
+                if (classCheckValues.dataTotal === 0 || isNaN(classCheckValues.dataTotal))
+                {
+                    console.log("No data available, skipping calculation");
+                    classCheckFetchTimeout  = setTimeout(classCheckFetch, 500);
+                    classCheckReportTimeout = setTimeout(classCheckReport, classCheckReportTime);
+                    return;
+                }
+
+                if (wsTestCase === 'upload')
+                {
+                    var keyCountStream = Object.keys(classCheckUlReportDict[wsID]).length;
+                    keyCount = (keyCountStream > keyCount) ? keyCountStream : keyCount;
+                }
+            }
+
+            if (wsTestCase === 'download')
+            {
+                classCheckValues.durationTotal = currentTime - classCheckStartTime;
+            }
+            else
+            {
+                classCheckValues.durationTotal = keyCount * ulSampleRate;
+            }
+
+            classCheckValues.overheadTotal = classCheckValues.framesTotal * wsOverheadPerFrame;
+            classCheckValues.rateAvg = Math.round((((classCheckValues.dataTotal * 8) + (classCheckValues.overheadTotal * 8)) / (Math.round(classCheckValues.durationTotal) / 1000)));
+            classCheckValues.durationTotal = Math.round(classCheckValues.durationTotal) * 1e6;
+            classCheckValues.dataTotal = classCheckValues.dataTotal + classCheckValues.overheadTotal;
+
+            if (isNaN(classCheckValues.rateAvg) || classCheckValues.rateAvg === null)
+            {
+                classCheckValues.rateAvg = 0;
+            }
+
+            reportToMeasurement('classCheck');
+
+            if ((currentTime - classCheckStartTime) + classCheckReportTime < wsStartupTime)
+            {
+                classCheckFetchTimeout  = setTimeout(classCheckFetch, 500);
+                classCheckReportTimeout = setTimeout(classCheckReport, classCheckReportTime);
+            }
+            else
+            {
+                clearTimeout(classCheckFetchTimeout);
+                clearTimeout(classCheckReportTimeout);
+            }
         }
         else
         {
-            for (var wsID = 0; wsID < wsWorkers.length; wsID++)
-            {
-                var workerData = prepareWorkerData('fetchCounter', wsID);
-
-                sendToWorker(wsID, workerData);
-            }
+            clearTimeout(classCheckFetchTimeout);
+            clearTimeout(classCheckReportTimeout);
         }
     }
 
@@ -892,6 +916,8 @@ function WSControl()
     function measurementStart()
     {
         wsStartTime = performance.now();
+        clearTimeout(classCheckFetchTimeout);
+        clearTimeout(classCheckReportTimeout);
 
         if (wsTestCase !== 'rtt')
         {
@@ -1092,9 +1118,9 @@ function WSControl()
         }
         else if (logReports)
         {
-            console.log(finishString + 'Time:                   ' + Math.round(wsMeasurementTime * 1000 * 1000) + ' ns');
+            console.log(finishString + 'Time:                   ' + Math.round(wsMeasurementTime) * 1e6 + ' ns');
             console.log(finishString + 'Data:                   ' + (wsData + wsOverhead) + ' bytes');
-            console.log(finishString + 'TCP Throughput:         ' + (wsSpeedAvgBitS / 1000 / 1000).toFixed(2) + ' MBit/s');
+            console.log(finishString + 'TCP Throughput:         ' + (wsSpeedAvgBitS / 1e6).toFixed(2) + ' MBit/s');
         }
 
         //set KPIs
@@ -1103,8 +1129,8 @@ function WSControl()
             wsDownloadValues.rateAvg       = Math.round(wsSpeedAvgBitS);
             wsDownloadValues.data          = wsData + wsOverhead;
             wsDownloadValues.dataTotal     = wsDataTotal + wsOverheadTotal;
-            wsDownloadValues.duration      = Math.round(wsMeasurementTime) * 1000 * 1000;
-            wsDownloadValues.durationTotal = Math.round(wsMeasurementTimeTotal) * 1000 * 1000;
+            wsDownloadValues.duration      = Math.round(wsMeasurementTime) * 1e6;
+            wsDownloadValues.durationTotal = Math.round(wsMeasurementTimeTotal) * 1e6;
             wsDownloadValues.streamsStart  = wsStreamsStart;
             wsDownloadValues.streamsEnd    = wsStreamsEnd;
             wsDownloadValues.frameSize     = wsFrameSize;
@@ -1119,8 +1145,8 @@ function WSControl()
             wsUploadValues.rateAvg         = Math.round(wsSpeedAvgBitS);
             wsUploadValues.data            = wsData + wsOverhead;
             wsUploadValues.dataTotal       = wsDataTotal + wsOverheadTotal;
-            wsUploadValues.duration        = Math.round(wsMeasurementTime) * 1000 * 1000;
-            wsUploadValues.durationTotal   = Math.round(wsMeasurementTimeTotal) * 1000 * 1000;
+            wsUploadValues.duration        = Math.round(wsMeasurementTime) * 1e6;
+            wsUploadValues.durationTotal   = Math.round(wsMeasurementTimeTotal) * 1e6;
             wsUploadValues.streamsStart    = wsStreamsStart;
             wsUploadValues.streamsEnd      = wsStreamsEnd;
             wsUploadValues.frameSize       = wsFrameSize;
@@ -1301,7 +1327,7 @@ function WSControl()
         report[key] = {};
         report[key].throughput_avg_bps                       = classCheckValues.rateAvg;
         report[key].bytes_including_slow_start               = classCheckValues.dataTotal;
-        report[key].duration_ns_total                        = classCheckValues.durationTotal;
+        report[key].duration_ns_total                        = Math.round(classCheckValues.durationTotal);
         report[key].num_streams_start                        = classCheckValues.streamsStart;
         report[key].frame_size                               = classCheckValues.frameSize;
         report[key].frame_count_including_slow_start         = classCheckValues.framesTotal;
@@ -1388,6 +1414,8 @@ function WSControl()
     function resetValues()
     {
         clearInterval(wsInterval);
+        clearTimeout(classCheckFetchTimeout);
+        clearTimeout(classCheckReportTimeout);
 
         wsTestCase                  = '';
         wsData                      = 0;
