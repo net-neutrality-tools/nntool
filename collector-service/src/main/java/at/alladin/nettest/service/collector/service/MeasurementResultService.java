@@ -19,6 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.service.collector.config.CollectorServiceProperties;
@@ -292,7 +293,6 @@ public class MeasurementResultService {
 					psWrapper.setDouble(50, geoLocation::getLongitude);
 					psWrapper.setDouble(51, geoLocation::getLongitude);
 					psWrapper.setDouble(52, geoLocation::getLatitude);
-
 				} else {
 					ps.setObject(39, null);
 					ps.setObject(49, null);
@@ -306,10 +306,12 @@ public class MeasurementResultService {
 		Map<MeasurementTypeDto, FullSubMeasurement> subMeasurements = measurementDto.getMeasurements();
 		
 		FullSubMeasurement iasSubMeasurement = subMeasurements.get(MeasurementTypeDto.SPEED);
-		if (iasSubMeasurement != null && iasSubMeasurement instanceof FullSpeedMeasurement) {
+		if (iasSubMeasurement instanceof FullSpeedMeasurement) {
 			FullSpeedMeasurement iasMeasurement = (FullSpeedMeasurement) iasSubMeasurement;
 			
 			final FullRttInfoDto rttInfo = iasMeasurement.getRttInfo();
+			Long l = iasMeasurement.getThroughputAvgDownloadBps();
+			l = iasMeasurement.getThroughputAvgUploadBps();
 			
 			jdbcTemplate.update(INSERT_IAS_MEASUREMENT_SQL, new PreparedStatementSetter() {
 
@@ -350,7 +352,7 @@ public class MeasurementResultService {
 		}
 		
 		FullSubMeasurement qosSubMeasurement = subMeasurements.get(MeasurementTypeDto.QOS);
-		if (qosSubMeasurement != null && qosSubMeasurement instanceof FullSpeedMeasurement) {
+		if (qosSubMeasurement != null && qosSubMeasurement instanceof FullQoSMeasurement) {
 			FullQoSMeasurement qosMeasurement = (FullQoSMeasurement) qosSubMeasurement;
 			
 			jdbcTemplate.update(INSERT_QOS_MEASUREMENT_SQL, new PreparedStatementSetter() {

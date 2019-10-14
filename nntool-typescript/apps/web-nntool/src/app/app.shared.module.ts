@@ -5,6 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -53,7 +54,8 @@ const MAIN_DECLARATIONS = [AppComponent];
     CoreModule,
     PagesModule,
     SharedModule,
-    Ng2SmartTableModule
+    Ng2SmartTableModule,
+    LeafletModule.forRoot()
   ],
   declarations: [
     ...MAIN_DECLARATIONS,

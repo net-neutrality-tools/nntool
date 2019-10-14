@@ -254,6 +254,8 @@ comment on column measurements.geo_location_latitude is 'Geographic location lat
 
 comment on column measurements.geo_location_longitude is 'Geographic location longitude.';
 
+comment on column measurements.geo_location_geometry is 'Geographic location geometry, in 900913 projection for easy use.';
+
 comment on column measurements.mobile_network_frequency is 'Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN)';
 
 comment on column measurements.tag is 'Contains a tag provided by the agent.';

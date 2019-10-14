@@ -76,8 +76,8 @@ export const environment = {
     view: {
       default_map: 'google',
       map_provider: ['google', 'googleSatellite', 'googleTerrain', 'googleHybrid', 'osm'],
-      position: [48.209, 16.37],
-      zoom_initial: 12,
+      position: [46.879966, 12.726909],
+      zoom_initial: 5,
       zoom_min: 1,
       zoom_max: 20,
       hybrid: {

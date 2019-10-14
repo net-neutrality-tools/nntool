@@ -83,7 +83,11 @@
       "LAYER": {
         "HYBRID": "Automatic",
         "HEATMAP": "Heatmap",
-        "POINTS": "Points"
+        "POINTS": "Points",
+        "CANVAS_GRAYSCALE": "Grayscale view",
+        "CANVAS": "Canvas view",
+        "AERIAL": "Aerial view",
+        "ROAD": "Road view"
       },
       "MAP_OPTIONS": "Access",
       "STATISTICAL_METHOD": "Measure",

@@ -127,7 +127,7 @@ public class PreparedStatementWrapper {
 				return;
 			}
 		} catch (Exception ex) {
-			
+
 		}
 		
 		preparedStatement.setObject(parameterIndex, null);

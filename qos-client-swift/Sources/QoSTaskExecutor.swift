@@ -119,7 +119,7 @@ public class QoSTaskExecutor {
 
                 var conn = result[params]
                 if conn == nil {
-                    conn = ControlConnection(host: params.host, port: params.port, timeoutS: 10, token: token ?? "")
+                    conn = ControlConnection(host: params.host, port: params.port, timeoutS: 5, token: token ?? "")
                     result[params] = conn
                 }
 
@@ -161,7 +161,7 @@ public class QoSTaskExecutor {
                 logger.debug("Group \(group.uid):")
                 for task in group.operations {
                     if let t = task as? QoSTask {
-                        logger.debug("  - \(t.type) \(t.uid)") // TODO: refactor description method
+                        logger.debug("  - \(String(describing: t.type)) \(t.uid)") // TODO: refactor description method
                     }
                 }
             }

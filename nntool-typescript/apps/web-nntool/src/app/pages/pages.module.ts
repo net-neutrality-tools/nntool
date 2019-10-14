@@ -19,6 +19,7 @@ import { HistoryDeletionComponent } from './history/history.deletion.component';
 import { PipesModule } from '../@core/pipes/pipes.module';
 import { ADocComponent } from './adoc/adoc.component';
 import { DocuComponent } from './adoc/docu.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 const COMPONENTS = [
   HomeComponent,
@@ -40,7 +41,7 @@ const COMPONENTS = [
 ];
 
 @NgModule({
-  imports: [SharedModule, CoreModule, ComponentsModule, PipesModule],
+  imports: [SharedModule, CoreModule, ComponentsModule, PipesModule, LeafletModule],
   exports: [...COMPONENTS],
   declarations: [...COMPONENTS],
   entryComponents: [...COMPONENTS]

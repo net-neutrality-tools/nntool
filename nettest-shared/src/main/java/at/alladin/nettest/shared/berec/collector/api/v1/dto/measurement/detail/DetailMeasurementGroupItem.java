@@ -55,6 +55,24 @@ public class DetailMeasurementGroupItem {
 	@SerializedName("unit")
 	@JsonProperty("unit")
 	private String unit;
+	
+	/**
+	 * The classification number of the item.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "The classification number of the item.")
+	@JsonPropertyDescription("The classification number of the item.")
+	@Expose
+	private Integer classification;
+
+	/**
+	 * The classification color to be associated with the item.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "The classification color to be associated with the item.")
+	@JsonPropertyDescription("The classification color to be associated with the item.")
+	@Expose
+	@SerializedName("classification_color")
+	@JsonProperty("classification_color")
+	private String classificationColor;
 
 	public String getKey() {
 		return key;
@@ -88,10 +106,26 @@ public class DetailMeasurementGroupItem {
 		this.unit = unit;
 	}
 
+	public Integer getClassification() {
+		return classification;
+	}
+
+	public void setClassification(Integer classification) {
+		this.classification = classification;
+	}
+
+	public String getClassificationColor() {
+		return classificationColor;
+	}
+
+	public void setClassificationColor(String classificationColor) {
+		this.classificationColor = classificationColor;
+	}
+
 	@Override
 	public String toString() {
 		return "DetailMeasurementGroupItem [key=" + key + ", title=" + title + ", value=" + value + ", unit=" + unit
-				+ "]";
+				+ ", classification=" + classification + ", classificationColor=" + classificationColor + "]";
 	}
 	
 }
