@@ -194,9 +194,10 @@ public class MarkerService {
                     }
 
                     final String sql = String.format(
-                            "SELECT"
+                            "SELECT "
                                     + (useLatLon
-	                                    ? " t.geo_location_latitude as lat, t.geo_location_longitude as lon"
+	                                    ? " ST_Y(ST_TRANSFORM(geo_location_geometry, 4674)) as lat "
+	                                    		+ ", ST_X(ST_TRANSFORM(t.geo_location_geometry, 4674)) as lon"
 	                                    : " ST_X(t.geo_location_geometry) x, ST_Y(t.geo_location_geometry) y"
                                 		)
                                     + ", (t.start_time)::timestamp as time, t.agent_timezone as timezone, ias.throughput_avg_download_bps as speed_download, ias.throughput_avg_upload_bps as speed_upload"

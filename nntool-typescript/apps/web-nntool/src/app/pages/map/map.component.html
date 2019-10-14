@@ -4,15 +4,12 @@
 </nntool-section-intro>
 
 <nntool-section-map class="section">
-  <div id="leaflet-canvas" class="leaflet-container" style="height: 600px" 
+  <div id="leaflet-canvas" class="leaflet-container" style="height: 800px" 
   leaflet
   [leafletOptions]="options"
   (leafletMapReady)="onMapReady($event)"
   >
     <div [leafletLayer]="baseCanvasLayer"></div>
-    <div [leafletLayer]="baseAerialLayer"></div>
-    <div [leafletLayer]="baseCanvasGrayLayer"></div>
-    <div [leafletLayer]="baseRoadLayer"></div>
     <div [leafletLayer]="heatmapOverlay"></div>
     <div *ngIf="isPointmapShown()" [leafletLayer]="pointmapOverlay"></div>
 
