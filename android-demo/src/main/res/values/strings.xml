@@ -26,6 +26,8 @@
     <string name="name_msetting_ipv6">ipv6</string>
     <string name="name_msetting_ssoff">off</string>
     <string name="name_msetting_sson">on</string>
+    <string name="name_msetting_tlsoff">off</string>
+    <string name="name_msetting_tlson">on</string>
 
     <string name="name_msetting_all">All</string>
     <string name="name_msetting_rtt">RTT</string>

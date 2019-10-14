@@ -1,9 +1,10 @@
 PODS:
   - Alamofire (4.8.2)
+  - BlueSocket (1.0.50)
   - CocoaAsyncSocket (7.6.3)
-  - CocoaLumberjack (3.5.2):
-    - CocoaLumberjack/Core (= 3.5.2)
-  - CocoaLumberjack/Core (3.5.2)
+  - CocoaLumberjack (3.6.0):
+    - CocoaLumberjack/Core (= 3.6.0)
+  - CocoaLumberjack/Core (3.6.0)
   - CodableJSON (1.1.4)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
@@ -27,10 +28,13 @@ PODS:
     - PocketSocket/Client
   - QoSKit (0.0.1):
     - Alamofire (~> 4.8.2)
+    - BlueSocket (~> 1.0.46)
     - CocoaAsyncSocket (~> 7.6.3)
     - nntool-shared-swift (~> 0.0.1)
-  - Repeat (0.5.7)
+    - WKWebViewWithURLProtocol (~> 0.1.0)
+  - Repeat (0.5.8)
   - SwiftLint (0.31.0)
+  - WKWebViewWithURLProtocol (0.1.0)
   - XCGLogger (7.0.0):
     - XCGLogger/Core (= 7.0.0)
   - XCGLogger/Core (7.0.0):
@@ -44,8 +48,9 @@ DEPENDENCIES:
   - QoSKit (from `../qos-client-swift`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - Alamofire
+    - BlueSocket
     - CocoaAsyncSocket
     - CocoaLumberjack
     - CodableJSON
@@ -53,6 +58,7 @@ SPEC REPOS:
     - ObjcExceptionBridging
     - Repeat
     - SwiftLint
+    - WKWebViewWithURLProtocol
     - XCGLogger
 
 EXTERNAL SOURCES:
@@ -65,18 +71,20 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
+  BlueSocket: bdcd73947c651d5abdda3212ecc847eb0c522877
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
-  CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
+  CocoaLumberjack: 78b0c238666f4f58db069738ec176f4519557516
   CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   nntool-shared-swift: 7955a6c51917bcf2f42316eb259da095c80a7398
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   PocketSocket: 9c6867d66fb4f962af96b9b07f4b45bb561b2c2a
-  QoSKit: d85bee1116e983af2b481d9cb3458ed71244ba41
-  Repeat: 73c5ee602aed8f3c7bf1aa12d4cd0d3dc3edea0a
+  QoSKit: 021076d4adf95aacdaf35ba80418e47c7e7df5ad
+  Repeat: 8e65710d09da68f06ed79e865b091ffdcc8d0279
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
+  WKWebViewWithURLProtocol: f7f2b367c40680105794a068ed2bb2cd5922c27c
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: 6f53dcca099f580d26d49d9900cb8b2bf46341be
+PODFILE CHECKSUM: 0a82d8a31a7d1876e2b8804af36e05dcdada3f36
 
-COCOAPODS: 1.7.4
+COCOAPODS: 1.8.3

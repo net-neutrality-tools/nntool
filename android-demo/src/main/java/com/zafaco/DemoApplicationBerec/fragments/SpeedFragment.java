@@ -14,7 +14,7 @@ package com.zafaco.DemoApplicationBerec.fragments;
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-10-02
+ *      \date Last update: 2019-01-03
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -24,17 +24,25 @@ import com.zafaco.moduleCommon.Tool;
 import com.zafaco.DemoApplicationBerec.R;
 import com.zafaco.DemoApplicationBerec.WSTool;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 
@@ -93,31 +101,27 @@ public class SpeedFragment extends Fragment implements FocusedFragment
         buttonDownload   = mView.findViewById(R.id.buttonDownload);
         buttonUpload     = mView.findViewById(R.id.buttonUpload);
 
-        RadioGroup radioDownload    = mView.findViewById(R.id.radioGroupDL);
-        RadioGroup radioUpload      = mView.findViewById(R.id.radioGroupUL);
         RadioGroup radioIP          = mView.findViewById(R.id.radioGroupIP);
         RadioGroup radioStream      = mView.findViewById(R.id.radioGroupST);
+        RadioGroup radioTLS      = mView.findViewById(R.id.radioGroupTLS);
 
         buttonStart.setOnClickListener(handleClickMeasurementStart);
         buttonRtt.setOnClickListener(handleClickMeasurementStart);
         buttonDownload.setOnClickListener(handleClickMeasurementStart);
         buttonUpload.setOnClickListener(handleClickMeasurementStart);
 
-        radioDownload.setOnCheckedChangeListener(handleCheckMeasurementSettings);
-        radioUpload.setOnCheckedChangeListener(handleCheckMeasurementSettings);
         radioIP.setOnCheckedChangeListener(handleCheckMeasurementSettings);
         radioStream.setOnCheckedChangeListener(handleCheckMeasurementSettings);
+        radioTLS.setOnCheckedChangeListener(handleCheckMeasurementSettings);
 
-        /*-------------------------set parameters for demo implementation start------------------------*/
-
+        //this contains the config
         speedTaskDesc = new SpeedTaskDesc();
         speedTaskDesc.setSpeedServerAddrV4("peer-ias-de-01.net-neutrality.tools");
-        speedTaskDesc.setSpeedServerPort(80);
+        speedTaskDesc.setSpeedServerPort(443);
         speedTaskDesc.setDownloadStreams(4);
         speedTaskDesc.setRttCount(11);
         speedTaskDesc.setUploadStreams(4);
-
-        /*-------------------------set parameters for demo implementation end------------------------*/
+        speedTaskDesc.setUseEncryption(true);
 
         return mView;
     }
@@ -214,6 +218,8 @@ public class SpeedFragment extends Fragment implements FocusedFragment
                 //currentMeasurementState contains the intermediate results (if display is desired)
                 currentMeasurementState = jniSpeedMeasurementClient.getSpeedMeasurementState();
 
+                jniSpeedMeasurementClient.addMeasurementListener(measurementStringListener);
+
                 jniSpeedMeasurementClient.addMeasurementFinishedListener(measurementFinishedStringListener);
 
                 AsyncTask.execute(new Runnable() {
@@ -247,52 +253,151 @@ public class SpeedFragment extends Fragment implements FocusedFragment
 
             switch (checkedId)
             {
-                //Download "low" Profile
-                case R.id.radioButtonDLLow:         wsTool.setDownloadProfileLow();         break;
-                //Download "middle" Profile
-                case R.id.radioButtonDLMiddle:      wsTool.setDownloadProfileMiddle();      break;
-                //Download "high" Profile
-                case R.id.radioButtonDLHigh:        wsTool.setDownloadProfileHigh();        break;
-                //Download "very high" Profile
-                case R.id.radioButtonDLVeryHigh:    wsTool.setDownloadProfileVeryHigh();    break;
-                //Upload "low" Profile
-                case R.id.radioButtonULLow:         wsTool.setUploadProfileLow();           break;
-                //Upload "middle" Profile
-                case R.id.radioButtonULMiddle:      wsTool.setUploadProfileMiddle();        break;
-                //Upload "high" Profile
-                case R.id.radioButtonULHigh:        wsTool.setUploadProfileHigh();          break;
-                //Upload "very high" Profile
-                case R.id.radioButtonULVeryHigh:    wsTool.setUploadProfileVeryHigh();      break;
                 //IP Version auto
-                case R.id.radioButtonIPAuto:        wsTool.setIPAuto();                     break;
+                case R.id.radioButtonIPAuto:
+                    wsTool.setIPAuto();
+                    break;
                 //IP Version 4 only
-                case R.id.radioButtonIPV4:          wsTool.setIPV4();                       break;
+                case R.id.radioButtonIPV4:
+                    wsTool.setIPV4();
+                    break;
                 //IP Version 6 only
-                case R.id.radioButtonIPV6:          wsTool.setIPV6();                       break;
+                case R.id.radioButtonIPV6:
+                    wsTool.setIPV6();
+                    break;
                 //Single Stream off
-                case R.id.radioButtonSSOff:         wsTool.setSingleStreamOff();            break;
+                case R.id.radioButtonSSOff:
+                    wsTool.setSingleStreamOff();
+                    speedTaskDesc.setDownloadStreams(4);
+                    speedTaskDesc.setUploadStreams(4);
+                    break;
                 //Single Stream on
-                case R.id.radioButtonSSOn:          wsTool.setSingleStreamOn();             break;
+                case R.id.radioButtonSSOn:
+                    wsTool.setSingleStreamOn();
+                    speedTaskDesc.setDownloadStreams(1);
+                    speedTaskDesc.setUploadStreams(1);
+                    break; //Single Stream off
+                case R.id.radioButtonTLSOff:
+                    wsTool.setUseEncryption(false);
+                    speedTaskDesc.setUseEncryption(false);
+                    speedTaskDesc.setSpeedServerPort(80);
+                    break;
+                //Single Stream on
+                case R.id.radioButtonTLSOn:
+                    wsTool.setUseEncryption(true);
+                    speedTaskDesc.setUseEncryption(true);
+                    speedTaskDesc.setSpeedServerPort(443);
+                    break;
             }
         }
     } ;
 
+    private final JniSpeedMeasurementClient.MeasurementStringListener measurementStringListener = new JniSpeedMeasurementClient.MeasurementStringListener() {
+        @Override
+        public void onMeasurement(String result)
+        {
+            try
+            {
+                JSONObject jsonReport = new JSONObject(result);
+
+                updateUi(jsonReport.toString(2), (TextView) mView.findViewById(R.id.results));
+
+                switch(jsonReport.getString("cmd"))
+                {
+                    //------------------------------------------------------------------------------
+                    case "info":
+                    case "finish":
+                        //Show TestCase
+                        updateUi(jsonReport.getString("test_case")+": "+jsonReport.getString("msg"), (TextView) mView.findViewById(R.id.status));
+                        break;
+                    //------------------------------------------------------------------------------
+                    case "error":
+                        break;
+                    //------------------------------------------------------------------------------
+                    case "report":
+
+                        switch(jsonReport.getString("test_case"))
+                        {
+                            case "rtt_udp":
+                                JSONArray jRTTArray = new JSONArray(jsonReport.getString("rtt_udp_info"));
+                                JSONObject jRTT = jRTTArray.getJSONObject(jRTTArray.length()-1);
+
+                                updateUi(jRTT.getDouble("average_ns")/1000/1000+" ms", (TextView) mView.findViewById(R.id.rtt));
+                                break;
+                            case "download":
+                                JSONArray jDownloadArray = new JSONArray(jsonReport.getString("download_info"));
+                                JSONObject jDownload = jDownloadArray.getJSONObject(jDownloadArray.length()-1);
+
+                                updateUi(jDownload.getDouble("throughput_avg_bps")/1000/1000+" Mbit/s", (TextView) mView.findViewById(R.id.download));
+                                break;
+                            case "upload":
+                                JSONArray jUploadArray = new JSONArray(jsonReport.getString("upload_info"));
+                                JSONObject jUpload = jUploadArray.getJSONObject(jUploadArray.length()-1);
+
+                                updateUi(jUpload.getDouble("throughput_avg_bps")/1000/1000+" Mbit/s", (TextView) mView.findViewById(R.id.upload));
+                                break;
+                        }
+
+                        updateUi(jsonReport.toString(2), (TextView) mView.findViewById(R.id.results));
+
+                        break;
+                    //------------------------------------------------------------------------------
+                    case "completed":
+
+                       //Write to Database
+                       //Database mtdatabase = new Database(ctx, "mtmeasurement","measurement");
+                       //mtdatabase.createDB(mCommon.getJSONMTWSMeasurement());
+                       //mtdatabase.insert(mCommon.getJSONMTWSMeasurement());
+
+                        break;
+                    //------------------------------------------------------------------------------
+                    default:
+                        break;
+                }
+            }
+            catch (JSONException ex)
+            {
+                mTool.printTrace(ex);
+            }
+        }
+    };
+
     private final JniSpeedMeasurementClient.MeasurementFinishedStringListener measurementFinishedStringListener = new JniSpeedMeasurementClient.MeasurementFinishedStringListener() {
         @Override
-        public void onMeasurementFinished(String result) {
+        public void onMeasurementFinished(String result)
+        {
+            try
+            {
+                final JSONObject jsonObject = new JSONObject(result);
+                updateButtonUi(R.string.name_msetting_all,buttonStart);
+                updateUi(jsonObject.toString(2), (TextView) mView.findViewById(R.id.results));
 
-            updateButtonUi(R.string.name_msetting_all,buttonStart);
-            updateUi(result, (TextView) mView.findViewById(R.id.results));
+                getActivity().runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        try
+                        {
+                            final android.content.ClipboardManager clipboardManager = (ClipboardManager) ctx.getSystemService(Context.CLIPBOARD_SERVICE);
+                            ClipData clipData = ClipData.newPlainText("Source Text", jsonObject.toString(2));
+                            clipboardManager.setPrimaryClip(clipData);
+                        }
+                        catch (JSONException ex)
+                        {
+                            mTool.printTrace(ex);
+                        }
 
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    buttonRtt.setEnabled(true);
-                    buttonDownload.setEnabled(true);
-                    buttonUpload.setEnabled(true);
-                }
-            });
-
+                        buttonRtt.setEnabled(true);
+                        buttonDownload.setEnabled(true);
+                        buttonUpload.setEnabled(true);
+                    }
+                });
+            }
+            catch (JSONException ex)
+            {
+                mTool.printTrace(ex);
+            }
         }
     };
 
