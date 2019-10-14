@@ -18,7 +18,7 @@ export class MapComponent {
   private currentZoom: number;
 
   @Input()
-  private options;
+  private options = {};
 
   private baseAerialKey: string = "MAP.SELECT.LAYER.AERIAL";
   private baseRoadKey: string = "MAP.SELECT.LAYER.ROAD";
@@ -47,8 +47,6 @@ export class MapComponent {
     private zone: NgZone,
     private translateService: TranslateService
     ) {
-      this.currentZoom = this.options.zoom;
-
       const mapUrl: string = configService.getServerMap();
       const bingMapKey: string = configService.getBingKey();
       this.heatmapOverlay = L.tileLayer(mapUrl + 'tiles/heatmap?path={z}/{x}/{y}&point_diameter=12&size=256');
@@ -84,6 +82,8 @@ export class MapComponent {
         center: new L.LatLng(mapSettings.position[0], mapSettings.position[1]),
         zoomControl: false
       }
+
+      this.currentZoom = mapSettings.zoom_initial;
 
     }
 
