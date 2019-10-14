@@ -1596,6 +1596,7 @@
 				CODE_SIGN_ENTITLEMENTS = "ios-app/Configuration/ios-app.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "ios-app/Configuration/Info.plist";
 				OTHER_LDFLAGS = (
@@ -1672,6 +1673,7 @@
 				CODE_SIGN_ENTITLEMENTS = "ios-app/Configuration/ios-app.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "ios-app/Configuration/Info.plist";
 				OTHER_LDFLAGS = (
