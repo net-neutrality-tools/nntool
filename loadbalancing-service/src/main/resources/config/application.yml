@@ -20,5 +20,6 @@ server:
 # Result service specific properties
 # ===================================================================
 
-result:
-  settings-uuid: "4e7567ef-175b-44f4-8436-8fd6d22dab48"
+loadbalancer:
+  enabled: false
+  default: 10000

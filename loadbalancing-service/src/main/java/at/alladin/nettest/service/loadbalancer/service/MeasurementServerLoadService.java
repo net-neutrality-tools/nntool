@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ForkJoinPool;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,10 +69,19 @@ public class MeasurementServerLoadService {
 		public MeasurementServerDto getPeer() {
 			return peer;
 		}
-
+		
 		@Override
 		public LoadApiResponse call() throws Exception {
-			final RestTemplate restTemplate = new RestTemplate();		
+			// disable cert validation:
+			/*
+			HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+	            public boolean verify(String hostname, SSLSession session) {
+	                return true;
+	            }
+	        });
+	        */
+			
+			final RestTemplate restTemplate = new RestTemplate();
 			
 			final List<MediaType> acceptableMediaTypes = new ArrayList<>();
 			acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
@@ -77,9 +90,12 @@ public class MeasurementServerLoadService {
 			final HttpHeaders headers = new HttpHeaders();
 			headers.setAccept(acceptableMediaTypes);
 			
+//			final List<Charset> charsets = new ArrayList<>();
+//			headers.setAcceptCharset(charsets);
+			
 			final LoadApiRequest requestBody = new LoadApiRequest();
 			requestBody.setSecret(peer.getLoadApiSecretKey());
-						
+			
 			final HttpEntity<?> httpEntity = new HttpEntity<>(requestBody, headers);
 			
 			ResponseEntity<LoadApiResponse> response = restTemplate.exchange(peer.getLoadApiUrl(), 

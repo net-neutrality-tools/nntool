@@ -84,4 +84,10 @@ public class MeasurementServerDto {
 	public void setLoadApiSecretKey(String loadApiSecretKey) {
 		this.loadApiSecretKey = loadApiSecretKey;
 	}
+
+	@Override
+	public String toString() {
+		return "MeasurementServerDto [identifier=" + identifier + ", name=" + name + ", loadApiUrl=" + loadApiUrl
+				+ ", loadApiSecretKey=" + loadApiSecretKey + "]";
+	}
 }

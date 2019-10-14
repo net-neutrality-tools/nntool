@@ -3,21 +3,34 @@ package at.alladin.nettest.service.loadbalancer.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * The result service YAML configuration object.
+ * The load balancing service YAML configuration object.
  * 
  * @author alladin-IT GmbH (lb@alladin.at)
  *
  */
-@ConfigurationProperties(prefix = "result", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "loadbalancer", ignoreUnknownFields = true)
 public class LoadbalancerServiceProperties {
+
+	private final static long DEFAULT_DELAY = 10000; //10s
+
+	private Boolean enabled = false;
+
+	private Long delay = DEFAULT_DELAY;
 	
-	private String settingsUuid;
-
-	public String getSettingsUuid() {
-		return settingsUuid;
+	public Boolean getEnabled() {
+		return enabled;
 	}
 
-	public void setSettingsUuid(String settingsUuid) {
-		this.settingsUuid = settingsUuid;
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
 	}
+
+	public Long getDelay() {
+		return delay;
+	}
+
+	public void setDelay(Long delay) {
+		this.delay = delay;
+	}
+
 }

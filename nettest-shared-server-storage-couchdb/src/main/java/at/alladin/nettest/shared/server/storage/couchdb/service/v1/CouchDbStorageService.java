@@ -475,16 +475,14 @@ public class CouchDbStorageService implements StorageService {
 		return peers
 				.stream()
 				.map(p -> {
+					final MeasurementServerDto dto = new MeasurementServerDto();
+					dto.setIdentifier(p.getPublicIdentifier());
 					if (p.getLoadApi() != null) {
-						final MeasurementServerDto dto = new MeasurementServerDto();
-						dto.setIdentifier(p.getPublicIdentifier());
 						dto.setLoadApiSecretKey(p.getLoadApi().getSecretKey());
 						dto.setLoadApiUrl(p.getLoadApi().getUrl());
-						dto.setName(p.getName());
-						return dto;
 					}
-					
-					return null;
+					dto.setName(p.getName());
+					return dto;
 				})
 				.collect(Collectors.toList());
 	}

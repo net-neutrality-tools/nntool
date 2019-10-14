@@ -19,7 +19,7 @@ public class LoadApiReport {
 	Long lastSuccessfulAttempt;
 
 	@JsonProperty("fails_since_last_attempt")
-	Integer failesSinceLastAttempt;
+	Integer failesSinceLastAttempt = 0;
 
 	public LoadApiResponse getLastResponse() {
 		return lastResponse;

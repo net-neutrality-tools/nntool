@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 
+import at.alladin.nettest.service.loadbalancer.config.LoadbalancerServiceProperties;
 import at.alladin.nettest.service.loadbalancer.dto.LoadApiReport;
 import at.alladin.nettest.service.loadbalancer.dto.LoadApiResponse;
 import at.alladin.nettest.service.loadbalancer.service.MeasurementServerLoadService.LoadCallable;
@@ -27,8 +28,6 @@ import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 @Service
 public class MeasurementServerLoadMonitorService {
 	
-	private final static int DEFAULT_DELAY = 10000; //10s
-	
 	private final Logger logger = LoggerFactory.getLogger(MeasurementServerLoadMonitorService.class);
 
 	@Autowired
@@ -36,7 +35,10 @@ public class MeasurementServerLoadMonitorService {
 
 	@Autowired
 	StorageService storageService;
-
+	
+	@Autowired
+	LoadbalancerServiceProperties properties;
+	
 	Map<String, ScheduledFuture<?>> jobs = new HashMap<>();
 	
 	Map<String, LoadApiReport> reports = new HashMap<>(); 
@@ -47,8 +49,14 @@ public class MeasurementServerLoadMonitorService {
 		logger.debug("Peers: {}", peers);
 		if (peers != null) {
 			for (MeasurementServerDto peer : peers) {
-				logger.debug("Initializing load monitor for : {}, ID: {}", peer.getName(), peer.getIdentifier());
-				final ScheduledFuture<?> task = taskScheduler.scheduleWithFixedDelay(new LoadRunnable(peer), DEFAULT_DELAY);
+				if (peer.getLoadApiUrl() == null || peer.getLoadApiSecretKey() == null) {
+					continue;
+				}
+				
+				logger.debug("Initializing load monitor for : {}, ID: {}, with delay: {}ms", 
+						peer.getName(), peer.getIdentifier(), properties.getDelay());
+				final ScheduledFuture<?> task = taskScheduler.scheduleWithFixedDelay(
+						new LoadRunnable(peer), properties.getDelay());
 				jobs.put(peer.getIdentifier(), task);
 				
 				final LoadApiReport report = new LoadApiReport();
