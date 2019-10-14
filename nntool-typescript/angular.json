@@ -20,8 +20,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["testing/tsconfig.libs.json", "testing/tsconfig.libs.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "testing/tsconfig.libs.json",
+              "testing/tsconfig.libs.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -43,8 +48,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["testing/tsconfig.xplat.json", "testing/tsconfig.xplat.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "testing/tsconfig.xplat.json",
+              "testing/tsconfig.xplat.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -75,8 +85,15 @@
             "main": "apps/web-nntool/src/main.ts",
             "polyfills": "apps/web-nntool/src/polyfills.ts",
             "tsConfig": "apps/web-nntool/tsconfig.app.json",
-            "assets": ["apps/web-nntool/src/favicon.ico", "apps/web-nntool/src/assets"],
-            "styles": ["apps/web-nntool/src/assets/css/normalize.css", "apps/web-nntool/src/less/client.less"],
+            "assets": [
+              "apps/web-nntool/src/favicon.ico",
+              "apps/web-nntool/src/assets"
+            ],
+            "styles": [
+              "apps/web-nntool/src/assets/css/normalize.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "apps/web-nntool/src/less/client.less"
+            ],
             "scripts": [
               {
                 "input": "../ias/build/uglified/web/ias.web.js",
@@ -156,8 +173,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/web-nntool/tsconfig.app.json", "apps/web-nntool/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "apps/web-nntool/tsconfig.app.json",
+              "apps/web-nntool/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -167,8 +189,15 @@
             "tsConfig": "apps/web-nntool/tsconfig.spec.json",
             "karmaConfig": "apps/web-nntool/karma.conf.js",
             "polyfills": "apps/web-nntool/src/polyfills.ts",
-            "assets": ["apps/web-nntool/src/favicon.ico", "apps/web-nntool/src/assets"],
-            "styles": ["apps/web-nntool/src/assets/css/normalize.css", "apps/web-nntool/src/less/client.less"],
+            "assets": [
+              "apps/web-nntool/src/favicon.ico",
+              "apps/web-nntool/src/assets"
+            ],
+            "styles": [
+              "apps/web-nntool/src/assets/css/normalize.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "apps/web-nntool/src/less/client.less"
+            ],
             "scripts": [
               {
                 "input": "../ias/build/uglified/web/ias.web.js",
@@ -212,7 +241,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/web-nntool-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -236,8 +267,15 @@
             "main": "apps/web-portal/src/main.ts",
             "polyfills": "apps/web-portal/src/polyfills.ts",
             "tsConfig": "apps/web-portal/tsconfig.app.json",
-            "assets": ["apps/web-portal/src/favicon.ico", "apps/web-portal/src/assets"],
-            "styles": ["xplat/web/scss/_index.scss", "apps/web-portal/src/styles.scss"],
+            "assets": [
+              "apps/web-portal/src/favicon.ico",
+              "apps/web-portal/src/assets"
+            ],
+            "styles": [
+              "xplat/web/scss/_index.scss",
+              "node_modules/leaflet/dist/leaflet.css",
+              "apps/web-portal/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -295,8 +333,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/web-portal/tsconfig.app.json", "apps/web-portal/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "apps/web-portal/tsconfig.app.json",
+              "apps/web-portal/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -336,7 +379,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/web-portal-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -373,11 +418,17 @@
               {
                 "glob": "**/*",
                 "input": "apps/electron-nntool/src/",
-                "ignore": ["**/*.ts"],
+                "ignore": [
+                  "**/*.ts"
+                ],
                 "output": ""
               }
             ],
-            "styles": ["apps/web-nntool/src/assets/css/normalize.css", "apps/web-nntool/src/less/client.less"],
+            "styles": [
+              "apps/web-nntool/src/assets/css/normalize.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "apps/web-nntool/src/less/client.less"
+            ],
             "scripts": [
               {
                 "input": "../ias/build/uglified/desktop/ias.desktop.js",

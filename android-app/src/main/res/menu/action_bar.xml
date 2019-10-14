@@ -2,6 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/action_bar_map_filter_action"
+        android:title="Filter map"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_map"
+        android:visible="false"
+        />
+
+    <item android:id="@+id/action_bar_map_option_action"
+        android:title="Map options"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_statistics"
+        android:visible="false"
+        />
+
     <item android:id="@+id/action_bar_share_results_action"
         android:title="@string/result_share_intent_title"
         app:showAsAction="always"

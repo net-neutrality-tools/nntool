@@ -1,0 +1,36 @@
+spring:
+  profiles:
+    active: dev
+  
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: false
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    platform: postgres
+    url: jdbc:postgresql://localhost:15432/nntool
+    username: nntool
+    password: nntool
+
+#  datasource:
+#    type: com.zaxxer.hikari.HikariDataSource
+#    url: jdbc:h2:mem:mapservice;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+#    username: sa
+#    password:
+
+#  h2:
+#    console:
+#      enabled: true
+#      path: /console/
+
+
+server:
+  port: 8084
+  
+logging:
+  level:
+    ROOT: INFO
+    at.alladin.nettest: DEBUG

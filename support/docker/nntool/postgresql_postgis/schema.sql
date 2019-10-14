@@ -147,6 +147,7 @@ create table measurements
 	agent_type varchar,
 	geo_location_latitude double precision,
 	geo_location_longitude double precision,
+    geo_location_geometry geometry,
 	mobile_network_frequency integer,
 	tag varchar,
 	wifi_initial_bssid varchar,
@@ -252,6 +253,8 @@ comment on column measurements.agent_type is 'The type of agent (e.g. MOBILE, BR
 comment on column measurements.geo_location_latitude is 'Geographic location latitude.';
 
 comment on column measurements.geo_location_longitude is 'Geographic location longitude.';
+
+comment on column measurements.geo_location_geometry is 'Geographic location geometry, in 900913 projection for easy use.';
 
 comment on column measurements.mobile_network_frequency is 'Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN)';
 
