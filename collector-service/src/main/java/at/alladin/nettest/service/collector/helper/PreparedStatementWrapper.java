@@ -96,6 +96,7 @@ public class PreparedStatementWrapper {
 			final Integer s = func.get();
 			if (s != null) {
 				preparedStatement.setInt(parameterIndex, s);
+				return;
 			}
 		} catch (Exception ex) {
 			
@@ -109,6 +110,7 @@ public class PreparedStatementWrapper {
 			final Long s = func.get();
 			if (s != null) {
 				preparedStatement.setLong(parameterIndex, s);
+				return;
 			}
 		} catch (Exception ex) {
 			
@@ -122,9 +124,10 @@ public class PreparedStatementWrapper {
 			final Double s = func.get();
 			if (s != null) {
 				preparedStatement.setDouble(parameterIndex, s);
+				return;
 			}
 		} catch (Exception ex) {
-			
+
 		}
 		
 		preparedStatement.setObject(parameterIndex, null);
@@ -135,6 +138,7 @@ public class PreparedStatementWrapper {
 			final Boolean s = func.get();
 			if (s != null) {
 				preparedStatement.setBoolean(parameterIndex, s);
+				return;
 			}
 		} catch (Exception ex) {
 			

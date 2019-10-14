@@ -19,6 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.service.collector.config.CollectorServiceProperties;
@@ -57,15 +58,15 @@ public class MeasurementResultService {
 		+ "provider_public_ip_asn, provider_public_ip_rdns, provider_public_ip_as_name, provider_country_asn, provider_name, provider_shortname, agent_app_version_name, agent_app_version_code, agent_language, agent_app_git_rev, "
 		+ "agent_timezone, network_signal_info, mobile_network_operator_mcc, mobile_network_operator_mnc, mobile_network_country_code, mobile_network_operator_name, mobile_sim_operator_mcc, mobile_sim_operator_mnc, mobile_sim_operator_name, "
 		+ "mobile_sim_country_code, mobile_is_roaming, mobile_roaming_type, initial_network_type_id, geo_location_accuracy, mobile_network_signal_strength_2g3g_dbm, mobile_network_lte_rsrp_dbm, mobile_network_lte_rsrq_db, "
-		+ "mobile_network_lte_rssnr_db, wifi_network_link_speed_bps, wifi_network_rssi_dbm, network_group_name, network_client_public_ip_country_code, agent_type, geo_location_latitude, geo_location_longitude, mobile_network_frequency,"
-		+ "tag, wifi_initial_bssid, wifi_initial_ssid"
+		+ "mobile_network_lte_rssnr_db, wifi_network_link_speed_bps, wifi_network_rssi_dbm, network_group_name, network_client_public_ip_country_code, agent_type, geo_location_latitude, geo_location_longitude, geo_location_geometry, "
+		+ "mobile_network_frequency, tag, wifi_initial_bssid, wifi_initial_ssid"
 		+ ") VALUES ("
 		+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
 		+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
 		+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
 		+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
 		+ "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-		+ "?, ?, ?, ?"
+		+ "ST_Transform(ST_SetSRID(ST_MakePoint(?, ?), 4326), 900913), ?, ?, ?, ?"
 		+ ")";
 	
 	private static final String INSERT_IAS_MEASUREMENT_SQL = "INSERT INTO ias_measurements ("
@@ -209,7 +210,7 @@ public class MeasurementResultService {
 				ps.setObject(37, null); // ?
 				
 				psWrapper.setString(48, () -> { return agentInfo.getType().name(); });
-				psWrapper.setString(52, measurementDto::getTag);
+				psWrapper.setString(54, measurementDto::getTag);
 				
 				final List<NetworkPointInTimeInfoDto> networkPointInTimeList = networkInfo.getNetworkPointInTimeInfo();
 				if (networkPointInTimeList != null && networkPointInTimeList.size() > 0) {
@@ -267,9 +268,9 @@ public class MeasurementResultService {
 					psWrapper.setInt(43, signalInfo::getLteRssnrDb);
 					psWrapper.setInt(44, signalInfo::getWifiLinkSpeedBps);
 					psWrapper.setInt(45, signalInfo::getWifiRssiDbm);
-					psWrapper.setObject(51, () -> { return signalInfo.getCellInfo().getFrequency(); });
-					psWrapper.setString(53, signalInfo::getWifiBssid);
-					psWrapper.setString(54, signalInfo::getWifiSsid);
+					psWrapper.setObject(53, () -> { return signalInfo.getCellInfo().getFrequency(); });
+					psWrapper.setString(55, signalInfo::getWifiBssid);
+					psWrapper.setString(56, signalInfo::getWifiSsid);
 				} else {
 					ps.setObject(27, null);
 					ps.setObject(40, null);
@@ -278,9 +279,9 @@ public class MeasurementResultService {
 					ps.setObject(43, null);
 					ps.setObject(44, null);
 					ps.setObject(45, null);
-					ps.setObject(51, null);
 					ps.setObject(53, null);
-					ps.setObject(54, null);
+					ps.setObject(55, null);
+					ps.setObject(56, null);
 				}
 				
 				final List<GeoLocationDto> geoLocationList = measurementDto.getGeoLocations();
@@ -290,10 +291,14 @@ public class MeasurementResultService {
 					psWrapper.setDouble(39, geoLocation::getAccuracy);
 					psWrapper.setDouble(49, geoLocation::getLatitude);
 					psWrapper.setDouble(50, geoLocation::getLongitude); 
+					psWrapper.setDouble(51, geoLocation::getLongitude);
+					psWrapper.setDouble(52, geoLocation::getLatitude);
 				} else {
 					ps.setObject(39, null);
 					ps.setObject(49, null);
 					ps.setObject(50, null);
+					ps.setObject(51, null);
+					ps.setObject(52, null);
 				}
 			}
 		});
@@ -301,10 +306,12 @@ public class MeasurementResultService {
 		Map<MeasurementTypeDto, FullSubMeasurement> subMeasurements = measurementDto.getMeasurements();
 		
 		FullSubMeasurement iasSubMeasurement = subMeasurements.get(MeasurementTypeDto.SPEED);
-		if (iasSubMeasurement != null && iasSubMeasurement instanceof FullSpeedMeasurement) {
+		if (iasSubMeasurement instanceof FullSpeedMeasurement) {
 			FullSpeedMeasurement iasMeasurement = (FullSpeedMeasurement) iasSubMeasurement;
 			
 			final FullRttInfoDto rttInfo = iasMeasurement.getRttInfo();
+			Long l = iasMeasurement.getThroughputAvgDownloadBps();
+			l = iasMeasurement.getThroughputAvgUploadBps();
 			
 			jdbcTemplate.update(INSERT_IAS_MEASUREMENT_SQL, new PreparedStatementSetter() {
 
@@ -334,12 +341,13 @@ public class MeasurementResultService {
 					ps.setObject(29, null /*iasMeasurement.getRttInfo()*/);
 					ps.setObject(30, null);
 					ps.setObject(31, null);
+					
 				}
 			});
 		}
 		
 		FullSubMeasurement qosSubMeasurement = subMeasurements.get(MeasurementTypeDto.QOS);
-		if (iasSubMeasurement != null && iasSubMeasurement instanceof FullSpeedMeasurement) {
+		if (qosSubMeasurement instanceof FullQoSMeasurement) {
 			FullQoSMeasurement qosMeasurement = (FullQoSMeasurement) qosSubMeasurement;
 			
 			jdbcTemplate.update(INSERT_QOS_MEASUREMENT_SQL, new PreparedStatementSetter() {

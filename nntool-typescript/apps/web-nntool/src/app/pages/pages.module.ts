@@ -17,6 +17,7 @@ import { AboutComponent } from './adoc/about.component';
 import { NotFoundComponent } from './adoc/notfound.component';
 import { HistoryDeletionComponent } from './history/history.deletion.component';
 import { PipesModule } from '../@core/pipes/pipes.module';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 
 const COMPONENTS = [
@@ -37,7 +38,7 @@ const COMPONENTS = [
 ];
 
 @NgModule({
-  imports: [SharedModule, CoreModule, ComponentsModule, PipesModule],
+  imports: [SharedModule, CoreModule, ComponentsModule, PipesModule, LeafletModule],
   exports: [...COMPONENTS],
   declarations: [...COMPONENTS],
   entryComponents: [...COMPONENTS]

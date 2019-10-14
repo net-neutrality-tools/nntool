@@ -10,6 +10,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NvD3Module } from 'ng2-nvd3';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 import { DeviceDetectorModule } from 'ngx-device-detector';
 import { AppComponent } from './app.component';
@@ -60,7 +61,8 @@ const MAIN_DECLARATIONS = [
     PagesModule,
     SharedModule,
     Ng2SmartTableModule,
-    NvD3Module
+    NvD3Module,
+    LeafletModule.forRoot()
   ],
   declarations: [
     ...MAIN_DECLARATIONS,
