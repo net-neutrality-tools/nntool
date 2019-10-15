@@ -8,6 +8,7 @@ import { TestImplementation } from '../test-implementation';
 import { SpeedTestStateEnum } from './enums/speed-test-state.enum';
 import { SpeedTestConfig } from './speed-test-config';
 import { SpeedTestState } from './speed-test-state';
+import { UserService } from '../../../@core/services/user.service';
 
 declare var Ias: any;
 
@@ -18,7 +19,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
   private $state: Subject<SpeedTestState>;
   private ias: any = undefined;
 
-  constructor(private logger: NGXLogger, testSchedulerService: TestSchedulerService, private zone: NgZone) {
+  constructor(private logger: NGXLogger, testSchedulerService: TestSchedulerService, private zone: NgZone, private userService: UserService) {
     // TODO: Add missing services
     super(testSchedulerService);
   }
@@ -40,9 +41,9 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
       wsAuthToken: 'placeholderToken',
       wsAuthTimestamp: 'placeholderTimestamp',
       performRouteToClientLookup: false,
-      performRttMeasurement: true,
-      performDownloadMeasurement: true,
-      performUploadMeasurement: true,
+      performRttMeasurement: this.userService.user.executePingMeasurement,
+      performDownloadMeasurement: this.userService.user.executeDownloadMeasurement,
+      performUploadMeasurement: this.userService.user.executeUploadMeasurement,
       wsParallelStreamsDownload: 4,
       wsFrameSizeDownload: 32768,
       downloadThroughputLowerBoundMbps: 0.95,
@@ -103,16 +104,16 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
       routeToClientTargetPort: 8080,
 
       rtt: {
-        performMeasurement: true
+        performMeasurement: this.userService.user.executePingMeasurement
       },
       download: {
-        performMeasurement: config.speedConfig.download !== undefined && config.speedConfig.download !== null,
+        performMeasurement: this.userService.user.executeDownloadMeasurement && config.speedConfig.download !== undefined && config.speedConfig.download !== null,
         classes: config.speedConfig.download,
         /*"streams": 4,
         "frameSize": 32768*/
       },
       upload: {
-        performMeasurement: config.speedConfig.upload !== undefined && config.speedConfig.upload !== null,
+        performMeasurement: this.userService.user.executeUploadMeasurement && config.speedConfig.upload !== undefined && config.speedConfig.upload !== null,
         classes: config.speedConfig.upload
         /*"streams": 4,
                 "frameSize": 65535,
@@ -154,6 +155,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
       if (!this.$state) {
         return;
       }
+
       const currentState = JSON.parse(data);
       state.device = currentState.device_info.browser_info.name.split(' ')[0];
       switch (currentState.test_case) {
@@ -207,9 +209,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
             state.upBit = currentUpload.throughput_avg_bps;
             state.progress = currentUpload.duration_ns / (1000 * 1000) / config.wsMeasureTime;
           }
-          if (currentState.cmd === 'completed') {
-            // only store the full result on completion
-            state.completeTestResult = currentState;
+          if (currentState.cmd === 'finish') {
             state.speedTestState = SpeedTestStateEnum.UP_OK;
             currentUpload = currentState.upload_info[currentState.upload_info.length - 1];
             state.upMBit = currentUpload.throughput_avg_bps / (1000 * 1000);
@@ -221,11 +221,18 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
             state.progress = 0;
 
             this.logger.debug('Mes uuids', data);
-            state.basicState = BasicTestState.ENDED;
             // this.testInProgress = false;
-            this.ias = undefined;
           }
           break;
+      }
+      if (currentState.cmd === 'completed') {
+        // only store the full result on completion
+        state.completeTestResult = currentState;
+        state.speedTestState = SpeedTestStateEnum.COMPLETE;
+        state.basicState = BasicTestState.ENDED;
+        state.progress = 0;
+
+        this.ias = undefined;
       }
       this.$state.next(state);
       // this.testGauge.onStateChange(state);

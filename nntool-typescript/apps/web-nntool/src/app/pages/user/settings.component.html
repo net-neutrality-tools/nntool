@@ -5,7 +5,49 @@
 <nntool-section-features>
   <nntool-section-content>
     <div class="section-columns">
-      <form name="user_settings" class="baseline">
+      <form *ngIf="shown.measurement_selection && (shown.measurement_selection_speed || shown.measurement_selection_speed)" class="baseline settings-form">
+        <fieldset>
+          <p>
+            {{ 'SETTINGS.MEASUREMENT_SELECTION.HEADER' | translate }}
+          </p>
+          <p *ngIf="shown.measurement_selection_speed">
+            <label class="checkbox-label" for="user_execute_ping">
+              <input
+                type="checkbox"
+                id="user_execute_ping"
+                name="user_execute_ping"
+                [(ngModel)]="executePingMeasurement"
+                (ngModelChange)="save()"
+              />
+              {{ 'SETTINGS.MEASUREMENT_SELECTION.PING_MEASUREMENT' | translate }}
+            </label>
+
+            <label class="checkbox-label" for="user_execute_download">
+                <input
+                  type="checkbox"
+                  id="user_execute_download"
+                  name="user_execute_download"
+                  [(ngModel)]="executeDownloadMeasurement"
+                  (ngModelChange)="save()"
+                />
+                {{ 'SETTINGS.MEASUREMENT_SELECTION.DOWNLOAD_MEASUREMENT' | translate }}
+              </label>
+
+              <label class="checkbox-label" for="user_execute_upload">
+                  <input
+                    type="checkbox"
+                    id="user_execute_upload"
+                    name="user_execute_upload"
+                    [(ngModel)]="executeUploadMeasurement"
+                    (ngModelChange)="save()"
+                  />
+                  {{ 'SETTINGS.MEASUREMENT_SELECTION.UPLOAD_MEASUREMENT' | translate }}
+                </label>
+          </p>
+        </fieldset>
+      </form>
+
+      <form name="user_settings" class="baseline settings-form">
         <fieldset>
           <p *ngIf="shown.client_uuid">{{ 'SETTINGS.CLIENT_UUID' | translate }}: {{ clientUuid ? clientUuid : '-' }}</p>
           <p *ngIf="shown.anonymous_mode">
@@ -48,7 +90,7 @@
         </fieldset>
       </form>
 
-      <form name="user_delete_data" class="baseline" *ngIf="shown.delete_user">
+      <form name="user_delete_data" class="baseline settings-form" *ngIf="shown.delete_user">
         <fieldset>
           <legend>{{ 'SETTINGS.DELETE_TEXT' | translate }}</legend>
           <p *ngIf="!shown.no_anonymize_before_delete_user">

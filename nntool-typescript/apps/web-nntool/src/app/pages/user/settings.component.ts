@@ -44,6 +44,33 @@ export class SettingsComponent implements OnInit {
     this.save();
   }
 
+  get executePingMeasurement(): boolean {
+    return this.user.executePingMeasurement;
+  }
+
+  set executePingMeasurement(value: boolean) {
+    this.user.executePingMeasurement = value;
+    this.save();
+  }
+
+  get executeDownloadMeasurement(): boolean {
+    return this.user.executeDownloadMeasurement;
+  }
+
+  set executeDownloadMeasurement(value: boolean) {
+    this.user.executeDownloadMeasurement = value;
+    this.save();
+  }
+
+  get executeUploadMeasurement(): boolean {
+    return this.user.executeUploadMeasurement;
+  }
+
+  set executeUploadMeasurement(value: boolean) {
+    this.user.executeUploadMeasurement = value;
+    this.save();
+  }
+
   get disassociateBeforeDelete(): boolean {
     return this.user.disassociateBeforeDelete;
   }

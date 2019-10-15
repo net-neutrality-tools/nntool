@@ -36,6 +36,15 @@ export class UserInfo {
     if (typeof obj.acceptTC !== 'undefined') {
       userInfo.acceptTC = obj.acceptTC;
     }
+    if (typeof obj.executeDownloadMeasurement !== 'undefined') {
+      userInfo.executeDownloadMeasurement = obj.executeDownloadMeasurement;
+    }
+    if (typeof obj.executePingMeasurement !== 'undefined') {
+      userInfo.executePingMeasurement = obj.executePingMeasurement;
+    }
+    if (typeof obj.executeUploadMeasurement !== 'undefined') {
+      userInfo.executeUploadMeasurement = obj.executeUploadMeasurement;
+    }
     return userInfo;
   }
   /**
@@ -73,6 +82,12 @@ export class UserInfo {
    */
   public acceptTC = false;
 
+  public executePingMeasurement = true;
+
+  public executeDownloadMeasurement = true;
+
+  public executeUploadMeasurement = true;
+
   public apply(other: UserInfo): void {
     this.disassociated = other.disassociated;
     this.invisible = other.invisible;
@@ -81,6 +96,9 @@ export class UserInfo {
     this.uuid = other.uuid;
     this.measurementUUIDs = other.measurementUUIDs;
     this.acceptTC = other.acceptTC;
+    this.executeDownloadMeasurement = other.executeDownloadMeasurement;
+    this.executePingMeasurement = other.executePingMeasurement;
+    this.executeUploadMeasurement = other.executeUploadMeasurement;
   }
 
   public toJson(): string {
@@ -91,7 +109,10 @@ export class UserInfo {
       disassociateBeforeDelete: this.disassociateBeforeDelete,
       uuid: this.uuid,
       measurementUUIDs: this.measurementUUIDs,
-      acceptTC: this.acceptTC
+      acceptTC: this.acceptTC,
+      executeDownloadMeasurement: this.executeDownloadMeasurement,
+      executePingMeasurement: this.executePingMeasurement,
+      executeUploadMeasurement: this.executeUploadMeasurement
     };
 
     return JSON.stringify(obj);
