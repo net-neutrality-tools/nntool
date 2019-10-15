@@ -316,7 +316,7 @@
     "GAUGE": {
       "GO": "GO",
       "INIT": "Init",
-      "PING": "RTT",
+      "PING": "Ping",
       "DOWN": "Download",
       "UP": "Upload",
       "QOS": "QoS",
