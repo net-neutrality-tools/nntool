@@ -34,7 +34,7 @@ function Ias()
 {
     this.wsMeasurement;
 
-    var iasVersion                      = '1.0.0';
+    var iasVersion                      = '1.0.1';
     var platform;
     var cookieId                        = true;
 
