@@ -340,34 +340,10 @@ export class UserService {
       return throwError('No valid user given');
     }
 
-    return new Observable((observer: Observer<any>) => {
-      this.loadMeasurements(user).subscribe(
-        () => {
-          const obs: Array<Observable<any>> = [];
-
-          for (const mesID of user.measurementUUIDs) {
-            obs.push(this.disassociate(user.uuid, mesID, true));
-          }
-          forkJoin(obs).subscribe(
-            () => {
-              observer.next(null);
-            },
-            (err: string | HttpErrorResponse) => {
-              // if (err instanceof Error) {
-              this.logger.error('Disassociate failed', err);
-              observer.error('Disassociate failed');
-            },
-            () => {
-              observer.complete();
-            }
-          );
-        },
-        (error: any) => {
-          this.logger.error('Failed to load measurements', error);
-          observer.error(error);
-        }
-      );
-    });
+    return this.requests.deleteJson<any>(Location.joinWithSlash(
+      this.config.servers.result,
+      'measurement-agents/' + user.uuid + '/measurements'
+    ));
   }
 
   private getKeyDefault(key: string, defaultValue: boolean): boolean {

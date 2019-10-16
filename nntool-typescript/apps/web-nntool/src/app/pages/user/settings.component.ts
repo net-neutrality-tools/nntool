@@ -113,6 +113,7 @@ export class SettingsComponent implements OnInit {
   public clear(): void {
     this.logger.info('Deleting user');
     if (this.user.disassociateBeforeDelete) {
+      this.logger.info('Disassociating measurements before deletion');
       this.userService.disassociateAll(this.user).subscribe(
         () => {
           this.logger.info('Disassociate for user ' + this.user.uuid + ' complete');
