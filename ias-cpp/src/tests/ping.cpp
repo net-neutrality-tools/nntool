@@ -38,7 +38,12 @@ Ping::Ping( CConfigManager *pXml, CConfigManager *pService, string sProvider )
 {		
 	mServerName	= pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
 	mServer 	= pXml->readString(sProvider,"PING_DESTINATION","1.1.1.1");
-    mClient = "0.0.0.0";
+
+	#ifdef __ANDROID__
+		mClient = pXml->readString(sProvider, "CLIENT_IP", "0.0.0.0");
+	#else
+		mClient = "0.0.0.0";
+	#endif
 
 	mPingQuery 	= pXml->readLong(sProvider,"PING_QUERY",30);
 	mPingQuery++;

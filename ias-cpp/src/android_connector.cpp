@@ -143,6 +143,8 @@ void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
     if (serverUrl != nullptr) {
         const char * clientIp = env->GetStringUTFChars(serverUrl, NULL);
         this->speedTaskDesc.clientIp = std::string(clientIp);
+    } else {
+        this->speedTaskDesc.clientIp = "0.0.0.0";
     }
 
 }

@@ -38,7 +38,12 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 {
 	mServerName = pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
 	mServer 	= pXml->readString(sProvider,"IP","1.1.1.1");
-    mClient = "0.0.0.0";
+
+	#ifdef __ANDROID__
+		mClient = pXml->readString(sProvider, "CLIENT_IP", "0.0.0.0");
+	#else
+		mClient = "0.0.0.0";
+    #endif
 
 	mPort   	= pXml->readLong(sProvider,"DL_PORT",80);
 	mTls		= pXml->readLong(sProvider,"TLS",0);
