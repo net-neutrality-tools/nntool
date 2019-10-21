@@ -449,11 +449,6 @@ public class CouchDbStorageService implements StorageService {
 			final List<Measurement> measurementList = measurementRepository.findByAgentInfoUuid(agentUuid);
 			measurementList.forEach(m -> disassociateMeasurement(m));
 			measurementRepository.saveAll(measurementList);
-
-			final MeasurementAgent agent = measurementAgentRepository.findByUuid(agentUuid);
-			if (agent != null) {
-				measurementAgentRepository.delete(agent);
-			}
 		} catch (Exception ex) {
 			throw new StorageServiceException(ex);
 		}
