@@ -31,6 +31,10 @@
     </LinearLayout>
 
     <RadioButton
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:clickable="false"
+        android:checked="false"
         android:id="@+id/radio_server_selected"
         android:layout_gravity="center"
         android:text=""

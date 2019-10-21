@@ -1,6 +1,7 @@
 package at.alladin.nettest.shared.berec.collector.api.v1.dto;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Base class for all response objects.
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonClassDescription;
  */
 @io.swagger.annotations.ApiModel(description = "Base class for all response objects.")
 @JsonClassDescription("Base class for all response objects.")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BasicResponse {
 
 }

@@ -328,7 +328,37 @@
                         }
                     ]
                 }
-            ]
+            ],
+            "speed_thresholds": {
+                "ping": {
+                    "color_map": {
+                        "10000": "4ba600",
+                        "20000": "b3a400"
+                    },
+                    "default_color": "e00000"
+                },
+                "signal": {
+                    "color_map": {
+                        "10000": "e00000",
+                        "20000": "b3a400"
+                    },
+                    "default_color": "4ba600"
+                },
+                "upload": {
+                    "color_map": {
+                        "10000000": "e00000",
+                        "20000000": "b3a400"
+                    },
+                    "default_color": "4ba600"
+                },
+                "download": {
+                    "color_map": {
+                        "25000000": "e00000",
+                        "50000000": "b3a400"
+                    },
+                    "default_color": "4ba600"
+                }
+            }
         },
         {
             "docType": "MeasurementServer",

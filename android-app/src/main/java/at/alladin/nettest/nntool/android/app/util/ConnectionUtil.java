@@ -5,6 +5,7 @@ import android.content.Context;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.util.connection.CollectorConnection;
 import at.alladin.nettest.nntool.android.app.util.connection.ControllerConnection;
+import at.alladin.nettest.nntool.android.app.util.connection.MapConnection;
 import at.alladin.nettest.nntool.android.app.util.connection.ResultConnection;
 
 /**
@@ -31,6 +32,22 @@ public class ConnectionUtil {
         }
 
         return new ResultConnection(resultServiceUrl);
+    }
+
+    public static MapConnection createMapConnection (final Context context) {
+        final boolean overrideSettings = context.getResources().getBoolean(R.bool.default_result_service_settings_override);
+        final String mapServiceUrl = PreferencesUtil.getMapServiceUrl(context);
+
+        if (overrideSettings || mapServiceUrl == null) {
+            final String host = context.getResources().getString(R.string.default_map_service_host);
+            final String pathPrefix = context.getResources().getString(R.string.default_map_service_path_prefix);
+            final Integer port = context.getResources().getInteger(R.integer.default_map_service_port);
+            final boolean isEncypted = context.getResources().getBoolean(R.bool.default_map_service_connection_is_encrypted);
+
+            return new MapConnection(isEncypted, host, port, pathPrefix);
+        }
+
+        return new MapConnection(mapServiceUrl);
     }
 
 

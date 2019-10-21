@@ -19,6 +19,16 @@ export interface MapSettingsResponse {
   };
 }
 
+export interface MapViewSettings {
+  position: number[],
+    zoom_initial: number,
+    zoom_min: number,
+    zoom_max: number,
+    hybrid: {
+      zoom_level: number
+    }
+}
+
 declare var __TEST_CONFIG__: any;
 
 @Injectable()
@@ -64,5 +74,13 @@ export class ConfigService {
 
   public getServerMap(): string {
     return this.config.servers.map;
+  }
+
+  public getBingKey(): string {
+    return this.config.keys ? this.config.keys.google : '';
+  }
+
+  public getMapViewSettings(): MapViewSettings {
+    return this.config.map ? this.config.map.view : null;
   }
 }
