@@ -141,5 +141,10 @@ export const environment = {
       delete_user: true,
       client_uuid: true
     }
+  },
+  socialMediaSettings: {
+    history: {
+      medias: ["FACEBOOK", "TWITTER", "MAIL"]
+    }
   }
 };
