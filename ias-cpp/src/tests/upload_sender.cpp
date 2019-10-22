@@ -68,7 +68,6 @@ int CUploadSender::run()
 		if(mResponse == -1 || mResponse == 0)
 		{
 			TRC_ERR("Received an Error: Upload SEND == " + std::to_string(mResponse));
-			::hasError = true;
 			//break to the end of the loop
 			break;
 		}

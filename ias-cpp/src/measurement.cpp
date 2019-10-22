@@ -190,6 +190,8 @@ int CMeasurement::startMeasurement()
 			break;
 		}
 	}
+
+	mTimer->waitForEnd();
 	
 	return 0;
 }
