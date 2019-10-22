@@ -131,8 +131,9 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
       extendedConfig.wsWss = 1;
     }
 
-    this.zone.runOutsideAngular(() => {
-      this.setupCallback(extendedConfig);
+    this.setupCallback(extendedConfig);
+
+    this.zone.runOutsideAngular(() => {  
 
       this.ias = new Ias();
       this.ias.measurementStart(JSON.stringify(extendedConfig));
@@ -190,11 +191,11 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
             state.downBit = currentDownload.throughput_avg_bps;
             state.downMBit = state.downBit / (1000 * 1000);
             state.progress = 1;
-            this.$state.next(state);
+            this.zone.run( () => this.$state.next(state));
             // this.testGauge.onStateChange(state);
             state.speedTestState = SpeedTestStateEnum.UP_PRE;
             state.progress = 0;
-            this.$state.next(state);
+            this.zone.run( () => this.$state.next(state));
             // this.testGauge.onStateChange(state);
             state.speedTestState = SpeedTestStateEnum.UP_PRE_OK;
             state.progress = 0;
@@ -215,7 +216,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
             state.upMBit = currentUpload.throughput_avg_bps / (1000 * 1000);
             state.upBit = currentUpload.throughput_avg_bps;
             state.progress = 1;
-            this.$state.next(state);
+            this.zone.run(() => this.$state.next(state));
             // this.testGauge.onStateChange(state);
             state.speedTestState = SpeedTestStateEnum.COMPLETE;
             state.progress = 0;
@@ -234,10 +235,12 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
 
         this.ias = undefined;
       }
-      this.$state.next(state);
+      this.zone.run( () => this.$state.next(state));
       // this.testGauge.onStateChange(state);
     };
     // this.testGauge.onStateChange(state);
-    this.$state.next(state);
+    this.zone.run( () =>
+      this.$state.next(state)
+    );
   };
 }
