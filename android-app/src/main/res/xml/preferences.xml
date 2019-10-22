@@ -56,4 +56,11 @@
             </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>
+    <PreferenceCategory>
+        <Preference
+            android:key="settings_disassociate_user"
+            android:title="@string/preference_disassociate_user"
+            android:summary="@string/preference_disassociate_user_summary"
+            />
+    </PreferenceCategory>
 </PreferenceScreen>

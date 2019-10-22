@@ -1,18 +1,27 @@
 package at.alladin.nettest.nntool.android.app.workflow.settings;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.preference.SwitchPreferenceCompat;
+import android.util.Log;
 
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.async.DisassociateAgentTask;
+import at.alladin.nettest.nntool.android.app.dialog.BlockingProgressDialog;
+import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
 import at.alladin.nettest.nntool.android.app.util.FunctionalityHelper;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
+import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
+import at.alladin.nettest.nntool.android.app.workflow.main.WorkflowTitleParameter;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 
@@ -23,8 +32,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private final static String TAG = SettingsFragment.class.getSimpleName();
 
+    private final static String ROOT_PREFERENCE_SCREEN_KEY = "root_preference_screen";
     private final static String SINGLE_TEST_SELECTION_SCREEN_KEY = "single_test_selection_screen";
+
     private final static String QOS_TEST_SELECTION_CATEGORY_KEY = "selection_qos";
+    private final static String DISASSOCIATE_USER_KEY = "settings_disassociate_user";
 
     private static Map<QoSMeasurementTypeDto, SettingsResponse.TranslatedQoSTypeInfo> qosTranslationInfo = null;
     private String rootKey;
@@ -90,6 +102,36 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     }
                     qosCategory.addPreference(createQoSSwitchPreference(qosCategory.getContext(), value, translationInfo));
                 }
+            }
+        } else if (ROOT_PREFERENCE_SCREEN_KEY.equals(s) || s == null) {
+            final Preference disassociatePreference = findPreference(DISASSOCIATE_USER_KEY);
+            if (disassociatePreference != null) {
+                disassociatePreference.setOnPreferenceClickListener(preference -> {
+                    Log.d(TAG, "opening deletion dialog");
+                    AlertDialogUtil.showCancelDialog(getContext(), R.string.preference_disassociate_user_warning_title, R.string.preference_disassociate_user_warning_content,
+                            (dialog, which) -> {
+                                if (which == DialogInterface.BUTTON_POSITIVE) {
+                                    Log.d(TAG, "Starting deletion of user");
+                                    DisassociateAgentTask task = new DisassociateAgentTask(getContext(), result -> {
+                                        PreferencesUtil.setAgentUuid(getContext(), null);
+                                        PreferencesUtil.setTermsAndConditionsAccepted(getContext(), null);
+                                        final WorkflowTitleParameter param = new WorkflowTitleParameter();
+                                        param.setShowTermsAndConditionsOnLoad(true);
+                                        ((MainActivity) getActivity()).navigateTo(WorkflowTarget.TITLE, param);
+                                    });
+                                    final BlockingProgressDialog progressDialog = new BlockingProgressDialog.Builder(getContext()).setCancelable(false).setMessage(R.string.preference_disassociate_user_progress_dialog).build();
+                                    progressDialog.show();
+                                    task.execute();
+                                    try {
+                                        task.get();
+                                    } catch (ExecutionException | InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    progressDialog.dismiss();
+                                }
+                            }, null);
+                    return true;
+                });
             }
         }
     }
