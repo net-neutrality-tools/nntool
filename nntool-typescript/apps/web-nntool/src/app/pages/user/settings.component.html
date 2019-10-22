@@ -5,13 +5,13 @@
 <nntool-section-features>
   <nntool-section-content>
     <div class="section-columns">
-      <form *ngIf="shown.measurement_selection && (shown.measurement_selection_speed || shown.measurement_selection_speed)" class="baseline settings-form">
+      <form *ngIf="shown.measurement_selection && (shown.measurement_selection_speed || shown.measurement_selection_qos)" class="baseline settings-form">
         <fieldset>
           <p>
             {{ 'SETTINGS.MEASUREMENT_SELECTION.HEADER' | translate }}
           </p>
-          <p *ngIf="shown.measurement_selection_speed">
-            <label class="checkbox-label" for="user_execute_ping">
+          <p >
+            <label *ngIf="shown.measurement_selection_speed" class="checkbox-label" for="user_execute_ping">
               <input
                 type="checkbox"
                 id="user_execute_ping"
@@ -22,7 +22,7 @@
               {{ 'SETTINGS.MEASUREMENT_SELECTION.PING_MEASUREMENT' | translate }}
             </label>
 
-            <label class="checkbox-label" for="user_execute_download">
+            <label *ngIf="shown.measurement_selection_speed" class="checkbox-label" for="user_execute_download">
                 <input
                   type="checkbox"
                   id="user_execute_download"
@@ -33,7 +33,7 @@
                 {{ 'SETTINGS.MEASUREMENT_SELECTION.DOWNLOAD_MEASUREMENT' | translate }}
               </label>
 
-              <label class="checkbox-label" for="user_execute_upload">
+              <label *ngIf="shown.measurement_selection_speed" class="checkbox-label" for="user_execute_upload">
                   <input
                     type="checkbox"
                     id="user_execute_upload"
@@ -43,6 +43,16 @@
                   />
                   {{ 'SETTINGS.MEASUREMENT_SELECTION.UPLOAD_MEASUREMENT' | translate }}
                 </label>
+              <label *ngIf="shown.measurement_selection_qos" class="checkbox-label" for="user_execute_qos">
+                <input 
+                type="checkbox"
+                id="user_execute_qos"
+                name="user_execute_qos"
+                [(ngModel)]="executeQosMeasurement"
+                (ngModelChange)="save()"
+              />
+              {{ 'SETTINGS.MEASUREMENT_SELECTION.QOS_MEASUREMENT' | translate }}
+              </label>
           </p>
         </fieldset>
       </form>

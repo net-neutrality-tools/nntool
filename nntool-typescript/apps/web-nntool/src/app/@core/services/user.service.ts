@@ -45,6 +45,10 @@ export class UserInfo {
     if (typeof obj.executeUploadMeasurement !== 'undefined') {
       userInfo.executeUploadMeasurement = obj.executeUploadMeasurement;
     }
+    if (typeof obj.executeQosMeasurement !== 'undefined') {
+      userInfo.executeQosMeasurement = obj.executeQosMeasurement;
+    }
+
     return userInfo;
   }
   /**
@@ -88,6 +92,8 @@ export class UserInfo {
 
   public executeUploadMeasurement = true;
 
+  public executeQosMeasurement = true;
+
   public apply(other: UserInfo): void {
     this.disassociated = other.disassociated;
     this.invisible = other.invisible;
@@ -99,6 +105,7 @@ export class UserInfo {
     this.executeDownloadMeasurement = other.executeDownloadMeasurement;
     this.executePingMeasurement = other.executePingMeasurement;
     this.executeUploadMeasurement = other.executeUploadMeasurement;
+    this.executeQosMeasurement = other.executeQosMeasurement;
   }
 
   public toJson(): string {
@@ -112,7 +119,8 @@ export class UserInfo {
       acceptTC: this.acceptTC,
       executeDownloadMeasurement: this.executeDownloadMeasurement,
       executePingMeasurement: this.executePingMeasurement,
-      executeUploadMeasurement: this.executeUploadMeasurement
+      executeUploadMeasurement: this.executeUploadMeasurement,
+      executeQosMeasurement: this.executeQosMeasurement
     };
 
     return JSON.stringify(obj);

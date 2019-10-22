@@ -71,6 +71,15 @@ export class SettingsComponent implements OnInit {
     this.save();
   }
 
+  get executeQosMeasurement(): boolean {
+    return this.user.executeQosMeasurement;
+  }
+
+  set executeQosMeasurement(value: boolean) {
+    this.user.executeQosMeasurement = value;
+    this.save();
+  }
+
   get disassociateBeforeDelete(): boolean {
     return this.user.disassociateBeforeDelete;
   }
