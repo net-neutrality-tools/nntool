@@ -35,4 +35,8 @@ export class HistoryViewComponent implements OnInit {
       this.qosMeasurementResult = this.fullMeasurementResponse.measurements.QOS;
     });
   }
+
+  public getUrl() {
+    return window.location.href;
+  }
 }
