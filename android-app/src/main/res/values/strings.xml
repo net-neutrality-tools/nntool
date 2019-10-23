@@ -127,7 +127,11 @@
     <string name="preference_enable_qos_summary">Enable Quality of Service testing</string>
     <string name="preference_single_test_selection_title">Test selection</string>
     <string name="preference_single_test_selection_summary">Enable/Disable specific tests</string>
+    <string name="preference_ipv4_only_title">IPv4 only</string>
+    <string name="preference_ipv4_only_summary">Force IPv4 if available</string>
+
     <string name="preference_category_test_selection">Test selection</string>
+    <string name="preference_category_other_settings">Other settings</string>
 
     <!-- Preference test selection specific strings -->
 

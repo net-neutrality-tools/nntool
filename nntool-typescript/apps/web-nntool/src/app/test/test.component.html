@@ -15,6 +15,7 @@
       (statusChange)="handleTestSeriesStatusChange($event)"
     >
       <app-speed-test-gauge
+        *ngIf="user.executePingMeasurement || user.executeDownloadMeasurement || user.executeUploadMeasurement"
         #startableTest
         [config]="speedConfig"
         (finished)="speedTestFinished($event)"
@@ -23,6 +24,7 @@
       >
       </app-speed-test-gauge>
       <app-port-blocking-test-bar
+        *ngIf="user.executeQosMeasurement"
         #startableTest
         [config]="qosConfig"
         (finished)="portBlockingTestFinished($event)"
@@ -31,6 +33,10 @@
       >
       </app-port-blocking-test-bar>
     </app-test-series>
+    <div class="warning-area" *ngIf="!user.executePingMeasurement && !user.executeDownloadMeasurement && !user.executeUploadMeasurement && !user.executeQosMeasurement">  
+    <h2 class="warning-title">{{'NETTEST.ERROR.NO_MEASUREMENT_SELECTED_TITLE' | translate }}</h2>
+    <p class="warning-solution" style="cursor: pointer" routerLink="/settings">{{'NETTEST.ERROR.NO_MEASUREMENT_SELECTED_MESSAGE' | translate }}</p>
+    </div>
     <div class="screen-tc" id="nettest-tc" *ngIf="user && !user.acceptTC">
       <h2 class="text-center">{{ 'NETTEST.INTRO.HEADER' | translate }}</h2>
       <span [innerHTML]="'NETTEST.INTRO.MESSAGE' | translate | insecureSanitizeHtml"></span>

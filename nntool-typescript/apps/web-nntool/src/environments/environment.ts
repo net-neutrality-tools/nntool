@@ -147,7 +147,10 @@ export const environment = {
       anonymous_mode: true,
       no_anonymize_before_delete_user: false,
       delete_user: true,
-      client_uuid: true
+      client_uuid: true,
+      measurement_selection: true,
+      measurement_selection_speed: true,
+      measurement_selection_qos: true
     }
   },
   socialMediaSettings: {

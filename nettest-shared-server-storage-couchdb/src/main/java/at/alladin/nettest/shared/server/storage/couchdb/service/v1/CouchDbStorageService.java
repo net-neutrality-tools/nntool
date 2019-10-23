@@ -577,6 +577,9 @@ public class CouchDbStorageService implements StorageService {
 					}
 					if (npit.getNetworkType() != null) {
 						final EmbeddedNetworkType dbNetworkType = getNetworkTypeById(npit.getNetworkType().getNetworkTypeId());
+						if (cpit == null) {
+							cpit = new ComputedNetworkPointInTime();
+						}
 						if (dbNetworkType != null) {
 							cpit.setNetworkType(dbNetworkType);
 						}
