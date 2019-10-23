@@ -195,9 +195,13 @@ public class MeasurementService extends Service implements ServiceConnection {
             Log.d(TAG, "Using IPv6...");
             speedTaskDesc.setUseIpV6(true);
             speedTaskDesc.setClientIp(clientIpv6);
+            options.remove(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE);
+            options.remove(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PUBLIC);
         } else {
             Log.d(TAG, "Using IPv4...");
             speedTaskDesc.setClientIp(clientIpv4);
+            options.remove(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE);
+            options.remove(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC);
         }
 
         //fetch user settings to adapt provided taskDesc
