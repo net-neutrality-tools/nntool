@@ -36,6 +36,19 @@ export class UserInfo {
     if (typeof obj.acceptTC !== 'undefined') {
       userInfo.acceptTC = obj.acceptTC;
     }
+    if (typeof obj.executeDownloadMeasurement !== 'undefined') {
+      userInfo.executeDownloadMeasurement = obj.executeDownloadMeasurement;
+    }
+    if (typeof obj.executePingMeasurement !== 'undefined') {
+      userInfo.executePingMeasurement = obj.executePingMeasurement;
+    }
+    if (typeof obj.executeUploadMeasurement !== 'undefined') {
+      userInfo.executeUploadMeasurement = obj.executeUploadMeasurement;
+    }
+    if (typeof obj.executeQosMeasurement !== 'undefined') {
+      userInfo.executeQosMeasurement = obj.executeQosMeasurement;
+    }
+
     return userInfo;
   }
   /**
@@ -73,6 +86,14 @@ export class UserInfo {
    */
   public acceptTC = false;
 
+  public executePingMeasurement = true;
+
+  public executeDownloadMeasurement = true;
+
+  public executeUploadMeasurement = true;
+
+  public executeQosMeasurement = true;
+
   public apply(other: UserInfo): void {
     this.disassociated = other.disassociated;
     this.invisible = other.invisible;
@@ -81,6 +102,10 @@ export class UserInfo {
     this.uuid = other.uuid;
     this.measurementUUIDs = other.measurementUUIDs;
     this.acceptTC = other.acceptTC;
+    this.executeDownloadMeasurement = other.executeDownloadMeasurement;
+    this.executePingMeasurement = other.executePingMeasurement;
+    this.executeUploadMeasurement = other.executeUploadMeasurement;
+    this.executeQosMeasurement = other.executeQosMeasurement;
   }
 
   public toJson(): string {
@@ -91,7 +116,11 @@ export class UserInfo {
       disassociateBeforeDelete: this.disassociateBeforeDelete,
       uuid: this.uuid,
       measurementUUIDs: this.measurementUUIDs,
-      acceptTC: this.acceptTC
+      acceptTC: this.acceptTC,
+      executeDownloadMeasurement: this.executeDownloadMeasurement,
+      executePingMeasurement: this.executePingMeasurement,
+      executeUploadMeasurement: this.executeUploadMeasurement,
+      executeQosMeasurement: this.executeQosMeasurement
     };
 
     return JSON.stringify(obj);
@@ -319,34 +348,10 @@ export class UserService {
       return throwError('No valid user given');
     }
 
-    return new Observable((observer: Observer<any>) => {
-      this.loadMeasurements(user).subscribe(
-        () => {
-          const obs: Array<Observable<any>> = [];
-
-          for (const mesID of user.measurementUUIDs) {
-            obs.push(this.disassociate(user.uuid, mesID, true));
-          }
-          forkJoin(obs).subscribe(
-            () => {
-              observer.next(null);
-            },
-            (err: string | HttpErrorResponse) => {
-              // if (err instanceof Error) {
-              this.logger.error('Disassociate failed', err);
-              observer.error('Disassociate failed');
-            },
-            () => {
-              observer.complete();
-            }
-          );
-        },
-        (error: any) => {
-          this.logger.error('Failed to load measurements', error);
-          observer.error(error);
-        }
-      );
-    });
+    return this.requests.deleteJson<any>(Location.joinWithSlash(
+      this.config.servers.result,
+      'measurement-agents/' + user.uuid + '/measurements'
+    ));
   }
 
   private getKeyDefault(key: string, defaultValue: boolean): boolean {

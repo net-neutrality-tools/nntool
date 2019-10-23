@@ -35,6 +35,8 @@ public class PreferencesUtil {
 
     private final static String SETTINGS_QOS_TYPE_INFORMATION_MAP= "settings_qos_type_information_map";
 
+    private final static String SETTINGS_IPV4_ONLY = "setting_ipv4_only";
+
     private final static String SETTINGS_URLS_RESULT_SERVICE_BASE_URL = "settings_urls_result_service_base_url";
     private final static String SETTINGS_URLS_STATISTICS_SERVICE_BASE_URL = "settings_urls_statistics_service_base_url";
     private final static String SETTINGS_URLS_MAP_SERVICE_BASE_URL = "settings_urls_map_service_base_url";
@@ -178,4 +180,7 @@ public class PreferencesUtil {
         getDefaultPreferences(context).edit().putBoolean(SETTING_QOS_TYPE_PREFERENCE_PREFIX + type.name(), isEnabled).commit();
     }
 
+    public static boolean isForceIpv4(final Context context) {
+        return getDefaultPreferences(context).getBoolean(SETTINGS_IPV4_ONLY, false);
+    }
 }
