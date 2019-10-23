@@ -119,7 +119,10 @@ public class TitleFragment extends ActionBarFragment {
             if (response != null) {
                 measurementServerSelectionView.updateServerList(response);
             } else {
-                ((MainActivity) getContext()).setSelectedMeasurementPeerIdentifier(null);
+                final MainActivity activity = ((MainActivity) getContext());
+                if (activity != null) {
+                    activity.setSelectedMeasurementPeerIdentifier(null);
+                }
                 Log.e(TAG, "Failed to fetch measurement peers");
             }
         });
@@ -149,7 +152,7 @@ public class TitleFragment extends ActionBarFragment {
                             try {
                                 final RequestAgentIpTask requestAgentIpTask = new RequestAgentIpTask(getContext(), null);
                                 requestAgentIpTask.execute();
-                                ipResponse = requestAgentIpTask.get(5, TimeUnit.SECONDS);
+                                ipResponse = requestAgentIpTask.get(30, TimeUnit.SECONDS);
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                                 Log.e(TAG, "Failed to obtain client ip addresses, proceeding w/ipv4");
