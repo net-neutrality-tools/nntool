@@ -309,7 +309,9 @@
   "NETTEST": {
     "ERROR": {
       "TITLE": "Error",
-      "MESSAGE": "An error occurred during the measurement."
+      "MESSAGE": "An error occurred during the measurement.",
+      "NO_MEASUREMENT_SELECTED_TITLE": "No measurement has been selected!",
+      "NO_MEASUREMENT_SELECTED_MESSAGE": "Please select at least one measurement from the settings page!"
     },
     "VIEW_RESULT": "View your measurement report",
     "INTRO": {
@@ -320,7 +322,7 @@
     "GAUGE": {
       "GO": "GO",
       "INIT": "Init",
-      "PING": "RTT",
+      "PING": "Ping",
       "DOWN": "Download",
       "UP": "Upload",
       "QOS": "QoS",
@@ -344,6 +346,13 @@
     "SAVE": "Save",
     "DISASSOCIATE_BEFORE_DELETE": "Anonymize all measurements before user reset.",
     "DELETE_TEXT": "Delete data",
-    "DELETE": "Reset user"
+    "DELETE": "Reset user",
+    "MEASUREMENT_SELECTION": {
+      "HEADER": "Select enabled measurements:",
+      "PING_MEASUREMENT": "Ping",
+      "DOWNLOAD_MEASUREMENT": "Download",
+      "UPLOAD_MEASUREMENT": "Upload",
+      "QOS_MEASUREMENT": "Quality of Service"
+    }
   }
 }
