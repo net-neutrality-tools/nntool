@@ -45,9 +45,7 @@ public class GroupedMeasurementService {
 	
 	private static final String QOS_PREFIX = "qos";
 	
-	private static final String SHARE_TEXT_PLACEHOLDER = "{}";
-	
-	private static final String SHARE_TEXT_INTRO_TRANSLATION_KEY = "share_text_intro";
+	private static final String SHARE_TEXT_INTRO_TRANSLATION_KEY = "RESULT_SHARE_INTRO";
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -174,19 +172,12 @@ public class GroupedMeasurementService {
 					item.setKey(key);
 				}
 				
-				//do formatting
-				//special cases get their own formatting (not ideal...)
-				if(key.endsWith("network_type")) {
-					item.setValue(Helperfunctions.getNetworkTypeName(Integer.parseInt(val)));
-					//TODO: add specific rules for the items below
-				} else {
-					//default formatting
-					if(formatEnum != null){
-						val = formatResultValueString(val, formatEnum, format);
-					}
-					if(unit != null) {
-						item.setUnit(messageSource.getMessage(unit, null, locale));
-					}
+				//default formatting
+				if(formatEnum != null){
+					val = formatResultValueString(val, formatEnum, format);
+				}
+				if(unit != null) {
+					item.setUnit(messageSource.getMessage(unit, null, locale));
 				}
 				
 				if(item.getValue() == null){
@@ -195,13 +186,9 @@ public class GroupedMeasurementService {
 				//provide the values for the share text
 				if (entry.getShareText() != null) {
 					final ShareText share = new ShareText();
-					////getLocalizedMessage(entry.getTranslationKey(), locale));
-					if (entry.getShareText().contains(SHARE_TEXT_PLACEHOLDER)) { 
-						share.setText(entry.getShareText().replace(SHARE_TEXT_PLACEHOLDER, item.getValue() + 
-							(item.getUnit() != null ? " " + item.getUnit() : "") + "\n"));
-					} else {
-						share.setText(entry.getShareText() + "\n");
-					}
+					share.setText(messageSource.getMessage(entry.getShareText(), 
+							new Object[] {item.getValue() + (item.getUnit() != null ? " " + item.getUnit() : "")},
+							locale));
 					share.setPriority(entry.getSharePriority() != null ? entry.getSharePriority() : Integer.MAX_VALUE);
 					shareTextQueue.add(share);
 				}
@@ -235,10 +222,11 @@ public class GroupedMeasurementService {
 		if (!shareTextQueue.isEmpty()) {
 			final StringBuilder builder = new StringBuilder();
 			//getLocalizedMessage(entry.getTranslationKey(), locale));
-			builder.append(SHARE_TEXT_INTRO_TRANSLATION_KEY).append("\n");
+			builder.append(messageSource.getMessage(SHARE_TEXT_INTRO_TRANSLATION_KEY, null, locale)).append("\n");
 			
 			for (ShareText s : shareTextQueue) {
-				builder.append(s.getText());
+				builder.append(s.getText())
+					.append("\n");
 			}
 			
 			ret.setShareMeasurementText(builder.toString());
@@ -256,6 +244,7 @@ public class GroupedMeasurementService {
 				return null;
 			}
 			try {
+				//potential TODO: use LambdaMetafactory
 				Field field = null;
 				while (currentClass != Object.class) {
 					try {
