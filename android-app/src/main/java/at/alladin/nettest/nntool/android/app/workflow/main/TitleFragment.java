@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,9 +37,11 @@ import at.alladin.nettest.nntool.android.app.view.Ipv4v6View;
 import at.alladin.nettest.nntool.android.app.view.MeasurementServerSelectionView;
 import at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView;
 import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
+import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
+import at.alladin.nettest.nntool.android.app.workflow.tc.TermsAndConditionsFragment;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ip.IpResponse;
 
 /**
@@ -62,13 +65,34 @@ public class TitleFragment extends ActionBarFragment {
 
     private MeasurementServerSelectionView measurementServerSelectionView;
 
+    private WorkflowTitleParameter workflowTitleParameter;
+
+    public static TitleFragment newInstance () {
+        return newInstance(null);
+    }
+
     /**
      *
      * @return
      */
-    public static TitleFragment newInstance() {
+    public static TitleFragment newInstance (final WorkflowParameter workflowParameter) {
         final TitleFragment fragment = new TitleFragment();
+        if (workflowParameter instanceof WorkflowTitleParameter) {
+            fragment.setWorkflowTitleParameter((WorkflowTitleParameter) workflowParameter);
+        }
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+
+        if (workflowTitleParameter != null && workflowTitleParameter.isShowTermsAndConditionsOnLoad()) {
+            final TermsAndConditionsFragment f = TermsAndConditionsFragment.newInstance();
+            final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            f.show(ft, TermsAndConditionsFragment.TERMS_FRAGMENT_TAG);
+        }
+
+        super.onCreate(savedInstanceState);
     }
 
     @Nullable
@@ -307,5 +331,13 @@ public class TitleFragment extends ActionBarFragment {
     @Override
     public Integer getHelpSectionStringId() {
         return null;
+    }
+
+    public WorkflowTitleParameter getWorkflowTitleParameter() {
+        return workflowTitleParameter;
+    }
+
+    public void setWorkflowTitleParameter(WorkflowTitleParameter workflowTitleParameter) {
+        this.workflowTitleParameter = workflowTitleParameter;
     }
 }

@@ -53,8 +53,12 @@ public class PreferencesUtil {
         return getDefaultPreferences(context).getInt(SETTING_TC_VERSION_ACCEPTED, -1) >= version;
     }
 
-    public static void setTermsAndConditionsAccepted(final Context context, final int version) {
-        getDefaultPreferences(context).edit().putInt(SETTING_TC_VERSION_ACCEPTED, version).commit();
+    public static void setTermsAndConditionsAccepted(final Context context, final Integer version) {
+        if (version != null) {
+            getDefaultPreferences(context).edit().putInt(SETTING_TC_VERSION_ACCEPTED, version).commit();
+        } else {
+            getDefaultPreferences(context).edit().remove(SETTING_TC_VERSION_ACCEPTED).commit();
+        }
     }
 
     public static void setAgentUuid(final Context context, final String uuid) {

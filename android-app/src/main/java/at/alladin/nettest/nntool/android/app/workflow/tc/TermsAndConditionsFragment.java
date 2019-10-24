@@ -15,6 +15,9 @@ import at.alladin.nettest.nntool.android.app.dialog.AbstractFullScreenDialogFrag
  */
 public class TermsAndConditionsFragment extends AbstractFullScreenDialogFragment {
 
+    //the name to be used when the TermsAndConditionFragment is added via fragmentTransaction
+    public final static String TERMS_FRAGMENT_TAG = "TC_FRAGMENT";
+
     public final static int TERMS_AND_CONDITIONS_VERSION = 1;
 
     /**
