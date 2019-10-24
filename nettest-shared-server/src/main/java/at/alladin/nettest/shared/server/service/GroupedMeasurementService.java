@@ -185,7 +185,7 @@ public class GroupedMeasurementService {
 						val = formatResultValueString(val, formatEnum, format);
 					}
 					if(unit != null) {
-						item.setUnit(unit);
+						item.setUnit(messageSource.getMessage(unit, null, locale));
 					}
 				}
 				
@@ -271,10 +271,20 @@ public class GroupedMeasurementService {
 				}
 				field.setAccessible(true);
 				
+				//TODO: potentially create graphs of lists?
 				currentObject = field.get(currentObject);
-				currentClass = field.getType();
+				if (currentObject instanceof List) {
+					final List<?> tmpList = (List<?>) currentObject;
+					if (!tmpList.isEmpty()) {
+						currentObject = tmpList.get(0);
+					}
+				}
+				if (currentObject != null) {
+					currentClass = currentObject.getClass();
+				}
 
-			} catch (IllegalArgumentException | IllegalAccessException | SecurityException e) {
+			} catch (Exception e) {
+				e.printStackTrace();
 				return null;
 			}
 		}

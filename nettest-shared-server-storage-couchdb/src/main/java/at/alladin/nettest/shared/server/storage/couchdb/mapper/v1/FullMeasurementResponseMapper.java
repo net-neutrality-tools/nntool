@@ -17,7 +17,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurem
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
 
-@Mapper(componentModel = "spring", uses = { DateTimeMapper.class, ConnectionInfoMapper.class })
+@Mapper(componentModel = "spring", uses = { DateTimeMapper.class, ConnectionInfoMapper.class, NetworkInfoDtoMapper.class })
 public interface FullMeasurementResponseMapper {
 
 	@Mappings({
@@ -26,6 +26,7 @@ public interface FullMeasurementResponseMapper {
 		@Mapping(source="measurementTime.endTime", target="endTime"),
 		@Mapping(source="geoLocationInfo.geoLocations", target="geoLocations"),
 		@Mapping(expression="java(parseSubMeasurementMap(measurement.getMeasurements()))", target="measurements"),
+		//@Mapping(source="networkInfo", target="networkInfo")
 	})
 	FullMeasurementResponse map(Measurement measurement);
 	
