@@ -191,6 +191,12 @@ int main(int argc, char** argv)
     CTrace::setLogFunction([] (std::string const & cat, std::string const  &s) { std::cout << "[" + CTool::get_timestamp_string() + "] " + cat + ": " + s + "\n"; });
     #endif
 
+    //Signal Handler
+    signal(SIGFPE, signal_handler);
+    signal(SIGABRT, signal_handler);
+    signal(SIGSEGV, signal_handler);
+    signal(SIGCHLD, signal_handler);
+
 	measurementStart(jMeasurementParametersJson.dump());
 }
 
@@ -202,12 +208,6 @@ int main(int argc, char** argv)
  */
 void measurementStart(string measurementParameters)
 {
-    //Signal Handler
-    signal(SIGFPE, signal_handler);
-    signal(SIGABRT, signal_handler);
-    signal(SIGSEGV, signal_handler);
-    signal(SIGCHLD, signal_handler);
-
 	::TCP_STARTUP	= 3000000;
 	conf.sProvider 	= "nntool";
 
