@@ -100,18 +100,19 @@ int CLoadBalancing::run()
 
             TRC_INFO("Socket: TCP TLS connection received from Client IP " + ip + " on target Port " + to_string(port));
 
-            std::unique_ptr<char[]> rbufferOwner = std::make_unique<char[]>(MAXBUFFER);
+            std::unique_ptr<char[]> rbufferOwner = std::make_unique<char[]>(5000);
             char *rbuffer = rbufferOwner.get();
 
             string request;
 
-            bzero(rbuffer, MAXBUFFER);
+            bzero(rbuffer, 5000);
 
-            mAcceptedConnection->receive(rbuffer, MAXBUFFER, 0);
+            mAcceptedConnection->receive(rbuffer, 5000, 0);
 
             request = string(rbuffer);
 
             Json jRequest = Json::object{};
+
             string error = "";
 
             try 

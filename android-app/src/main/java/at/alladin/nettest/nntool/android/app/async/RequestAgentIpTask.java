@@ -40,7 +40,7 @@ public class RequestAgentIpTask extends AsyncTask<Void, Void, Map<IpResponse.IpV
         Log.d(TAG, "Requesting measurement agent ip");
         for (IpResponse.IpVersion ipVersion : IpResponse.IpVersion.values()) {
             //fetch local address via socket
-            InetAddress ip = getLocalInetAddress(controllerConnection, ipVersion);
+            final InetAddress ip = getLocalInetAddress(controllerConnection, ipVersion);
 
             IpResponse response = null;
             try {
