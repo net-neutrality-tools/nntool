@@ -108,7 +108,7 @@ export class MapComponent {
     }, this);
 
     map.on("click", (event: L.LeafletMouseEvent) => {
-      if (this.isPointmapShown) {
+      if (this.isPointmapShown()) {
         this.mapService.getMarkerInfo(event.latlng.lat, event.latlng.lng, this.currentZoom).subscribe( 
           res => {
             if (res.measurements.length > 0) {
@@ -120,7 +120,7 @@ export class MapComponent {
                   element.result_items.forEach(item => {
                     popupContent += item.title + ": " + item.value + "<br/>";
                   });
-                  const measurementUrl = this.router.createUrlTree(['/open-data-results', element.open_test_uuid]).toString();
+                  const measurementUrl = this.router.createUrlTree(['/open-data-results', element.open_test_uuid.substring(1)]).toString();
                   popupContent += '<a href="' + measurementUrl + '">' + translated["MAP.MARKER.MORE"] + '</a>';
                   popupContent += '<br/> <hr/>'
                   element.open_test_uuid;

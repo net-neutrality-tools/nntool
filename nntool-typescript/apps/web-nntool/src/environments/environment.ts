@@ -31,7 +31,7 @@ export const environment = {
     control: 'https://controller-de-01.net-neutrality.tools/api/v1/',
     result: 'https://result-de-01.net-neutrality.tools/api/v1/',
     search: 'https://search-de-01.net-neutrality.tools/api/v1/',
-    map: 'https://map-de-01.net-neutrality.tools/api/v1/',
+    map: 'https://map-de-01.net-neutrality.tools/api/v0/',
     statistic: 'https://statistic-de-01.net-neutrality.tools/api/v1/'
   },
   keys: {
