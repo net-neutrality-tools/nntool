@@ -64,6 +64,11 @@ let MEASUREMENT_AGENT =
 
 ////
 
+let STATISTICS_URL = "https://nntool.net-neutrality.tools/statistics"
+let HELP_URL = "https://nntool.net-neutrality.tools/help"
+
+////
+
 let BEREC_WHITE      = UIColor.white
 let BEREC_LIGHT_GRAY = UIColor(rgb: 0xEFEFEF)
 let BEREC_GRAY       = UIColor(rgb: 0xD0D0D0)
