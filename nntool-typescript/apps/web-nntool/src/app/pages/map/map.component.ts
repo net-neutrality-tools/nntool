@@ -18,7 +18,7 @@ export class MapComponent {
   private currentZoom: number;
 
   @Input()
-  private options = {};
+  options = {};
 
   private baseAerialKey: string = "MAP.SELECT.LAYER.AERIAL";
   private baseRoadKey: string = "MAP.SELECT.LAYER.ROAD";
@@ -29,9 +29,9 @@ export class MapComponent {
 
   private baseAerialLayer: L.TileLayer;
   private baseRoadLayer: L.TileLayer;
-  private baseCanvasLayer: L.TileLayer;
+  baseCanvasLayer: L.TileLayer;
   private baseCanvasGrayLayer: L.TileLayer;
-  private heatmapOverlay: L.TileLayer; 
+  heatmapOverlay: L.TileLayer; 
   private pointmapOverlay: L.TileLayer;
 
   private baseMaps: L.Control.LayersObject;
