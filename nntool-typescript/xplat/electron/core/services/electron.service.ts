@@ -18,7 +18,7 @@ export class ElectronService {
     }
   }
 
-  public on(channel: string, listener: Function): void {
+  public on(channel: string, listener: (...args: any[]) => void): void {
     if (!this._ipc) {
       return;
     }

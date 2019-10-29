@@ -26,6 +26,6 @@ class StatisticsViewController: UIViewController {
 
         navigationItem.applyIconFontAttributes()
 
-        embeddWebBrowserWithUrlString("https://net-neutrality.tools")
+        embeddWebBrowserWithUrlString(STATISTICS_URL)
     }
 }

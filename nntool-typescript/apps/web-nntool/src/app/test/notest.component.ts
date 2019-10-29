@@ -1,4 +1,4 @@
-import { Component, Injectable } from '@angular/core';
+/*import { Component, Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -19,4 +19,4 @@ export class TestGuard implements CanDeactivate<NetTestComponent> {
 @Component({
   template: ''
 })
-export class NetTestComponent {}
+export class NetTestComponent {}*/

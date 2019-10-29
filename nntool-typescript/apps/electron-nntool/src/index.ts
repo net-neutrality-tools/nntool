@@ -2,22 +2,16 @@ import { app, BrowserWindow, ipcMain, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
-let serve;
-const args = process.argv.slice(1);
-serve = args.some(val => val === '--serve');
+let win: BrowserWindow;
 
-let win: Electron.BrowserWindow = null;
+const args = process.argv.slice(1);
+const serve = args.some(val => val === '--serve');
 
 const getFromEnv = parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;
 const isEnvSet = 'ELECTRON_IS_DEV' in process.env;
-const debugMode = isEnvSet
-  ? getFromEnv
-  : process.defaultApp ||
-    /node_modules[\\/]electron[\\/]/.test(process.execPath);
+const debugMode =
+  serve || (isEnvSet ? getFromEnv : process.defaultApp || /node_modules[\\/]electron[\\/]/.test(process.execPath));
 
-/**
- * Electron window settings
- */
 const mainWindowSettings: Electron.BrowserWindowConstructorOptions = {
   frame: true,
   resizable: true,
@@ -51,32 +45,32 @@ function createWindow() {
   if (debugMode) {
     process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
-    mainWindowSettings.width =  1280;
+    mainWindowSettings.width = 1280;
     mainWindowSettings.height = 800;
   } else {
-    mainWindowSettings.width = sizes.width;
-    mainWindowSettings.height = sizes.height;
-    mainWindowSettings.x = 0;
-    mainWindowSettings.y = 0;
+    mainWindowSettings.width = Math.trunc(sizes.width * 0.75);
+    mainWindowSettings.height = Math.trunc(sizes.height * 0.85);
   }
 
   win = new BrowserWindow(mainWindowSettings);
+  win.center();
 
   let launchPath;
   if (serve) {
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/../../../node_modules/electron`)
     });
+
     launchPath = 'http://localhost:4200';
-    win.loadURL(launchPath);
   } else {
     launchPath = url.format({
       pathname: path.join(__dirname, 'index.html'),
       protocol: 'file:',
       slashes: true
     });
-    win.loadURL(launchPath);
   }
+
+  win.loadURL(launchPath);
 
   console.log('launched electron with:', launchPath);
 
@@ -90,26 +84,34 @@ function createWindow() {
   initMainListener();
 
   if (debugMode) {
-    // Open the DevTools.
     win.webContents.openDevTools();
-    // client.create(applicationRef);
   }
 }
 
 try {
+  // This method will be called when Electron has finished
+  // initialization and is ready to create browser windows.
+  // Some APIs can only be used after this event occurs.
   app.on('ready', createWindow);
 
+  // Quit when all windows are closed.
   app.on('window-all-closed', () => {
+    // On OS X it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
       app.quit();
     }
   });
 
   app.on('activate', () => {
-    // On macOS it's common to re-create a window in the app when the
+    // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (win === null) {
       createWindow();
     }
   });
-} catch (err) {}
+} catch (e) {
+  // Catch Error
+  // throw e;
+  console.error(e);
+}

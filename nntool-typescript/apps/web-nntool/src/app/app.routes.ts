@@ -1,5 +1,4 @@
-import { ModuleWithProviders } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { NetTestComponent, TestGuard } from './test/test.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -115,5 +114,3 @@ export const routes: Routes = [
     redirectTo: '404'
   }
 ];
-
-export const routing: ModuleWithProviders = RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' });

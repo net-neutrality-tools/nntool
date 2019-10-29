@@ -41,6 +41,17 @@ public interface MeasurementRepository extends CouchDbRepository<Measurement> {
 	
 	////
 	
+	@View(
+		designDocument = "Measurement", viewName = "by_agent_uuid", includeDocs = true, descending = true,
+		startKey = {
+			@Key(highSentinel = true)
+		},
+		endKey = {
+			@Key(nullValue = true)
+		}
+	)
+	Page<Measurement> findAllTest123(Pageable pageable);
+	
 // spring-data-couchdb Demo:
 	
 //	@MangoQuery("{\n" + 
