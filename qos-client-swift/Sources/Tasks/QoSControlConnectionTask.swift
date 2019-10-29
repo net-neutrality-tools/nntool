@@ -1,10 +1,6 @@
 import Foundation
 
 class QoSControlConnectionTask: QoSTask {
-
-    enum ParseError: Error {
-        case parseError(String)
-    }
     
     let controlConnectionParams: ControlConnectionParameters
 

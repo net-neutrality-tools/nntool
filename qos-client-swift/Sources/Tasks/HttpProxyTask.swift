@@ -47,8 +47,20 @@ class HttpProxyTask: QoSTask {
         url = try container.decode(String.self, forKey: .url) // TODO: url check?
 
         range = try container.decodeIfPresent(String.self, forKey: .range)
-        downloadTimeout = try container.decodeIfPresent(UInt64.self, forKey: .downloadTimeout)
-        connectionTimeout = try container.decodeIfPresent(UInt64.self, forKey: .connectionTimeout)
+        
+        downloadTimeout = try? container.decodeIfPresent(UInt64.self, forKey: .downloadTimeout)
+        if downloadTimeout == nil {
+            if let downloadTimeoutString = try? container.decodeIfPresent(String.self, forKey: .downloadTimeout) {
+                downloadTimeout = UInt64(downloadTimeoutString)
+            }
+        }
+        
+        connectionTimeout = try? container.decodeIfPresent(UInt64.self, forKey: .connectionTimeout)
+        if connectionTimeout == nil {
+            if let connectionTimeoutString = try? container.decodeIfPresent(String.self, forKey: .connectionTimeout) {
+                connectionTimeout = UInt64(connectionTimeoutString)
+            }
+        }
 
         try super.init(from: decoder)
     }

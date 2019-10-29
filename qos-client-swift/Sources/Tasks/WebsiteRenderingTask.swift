@@ -19,7 +19,7 @@ class WebsiteRenderingTask: QoSTask {
     }
 
     override var objectiveTimeoutKey: String? {
-        return "website_objective_timeout"
+        return "timeout"
     }
 
     override var result: QoSTaskResult {
