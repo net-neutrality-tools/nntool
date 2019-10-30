@@ -11,7 +11,18 @@ buildscript {
 apply plugin: 'com.android.application'
 
 android {
+    def getCurrentGitHash = { ->
+        def baos = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-parse', '--short', 'HEAD'
+            standardOutput = baos
+        }
+        return baos.toString().trim()
+    }
+
     compileSdkVersion Integer.parseInt(android_compile_sdk_version)
+
+
     defaultConfig {
         applicationId "at.alladin.nettest.nntool.android.app"
         minSdkVersion Integer.parseInt(android_min_sdk_version)
@@ -19,6 +30,8 @@ android {
         versionCode Integer.parseInt(android_app_version_code)
         versionName android_app_version_name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "GIT_CURRENT_COMMIT", "\"${getCurrentGitHash()}\""
 
         externalNativeBuild {
             cmake {
