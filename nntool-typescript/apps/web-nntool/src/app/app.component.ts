@@ -41,7 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private guardService: Guard,
     private storage: BrowserStorageService,
     private renderer: Renderer2,
-    private appService: AppService,
+    public appService: AppService,
     private activatedRoute: ActivatedRoute,
     private userService: UserService
   ) {

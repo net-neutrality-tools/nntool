@@ -268,7 +268,7 @@
             "name": "GSM",
             "group_name": "2G",
             "category": "MOBILE",
-            "doctype": "EmbeddedNetworkType"
+            "docType": "EmbeddedNetworkType"
         },
         {
             "_id": "network_type_EDGE",
@@ -276,7 +276,7 @@
             "name": "EDGE",
             "group_name": "2G",
             "category": "MOBILE",
-            "doctype": "EmbeddedNetworkType"
+            "docType": "EmbeddedNetworkType"
         },
         {
             "_id": "network_type_UMTS",

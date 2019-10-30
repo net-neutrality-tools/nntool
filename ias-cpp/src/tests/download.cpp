@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-30
+ *      \date Last update: 2019-10-18
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -38,11 +38,13 @@ Download::Download( CConfigManager *pConfig, CConfigManager *pXml, CConfigManage
 {
 	mServerName = pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
 	mServer 	= pXml->readString(sProvider,"IP","1.1.1.1");
+
 	#ifdef __ANDROID__
-	    mClient = pXml->readString(sProvider, "CLIENT_IP", "0.0.0.0");
+		mClient = pXml->readString(sProvider, "CLIENT_IP", "0.0.0.0");
 	#else
-	    mClient = "0.0.0.0";
-	#endif
+		mClient = "0.0.0.0";
+    #endif
+
 	mPort   	= pXml->readLong(sProvider,"DL_PORT",80);
 	mTls		= pXml->readLong(sProvider,"TLS",0);
 

@@ -5,3 +5,30 @@
     <p>{{ 'STATISTICS.DESCRIPTION' | translate }}</p>
   </nntool-section-content>
 </nntool-section-intro>
+
+<nntool-section-features>
+  <nntool-section-content>
+    <!--<div class="flex--columns">
+      <div class="content--column">
+        <input type="text" />
+      </div>
+      <div class="content--column">
+        <input type="text" />
+      </div>
+      <div class="content--column">
+        <input type="text" />
+      </div>
+      <div class="content--column">-->
+    <input type="text" />
+    <!--</div>
+    </div>-->
+  </nntool-section-content>
+</nntool-section-features>
+
+<nntool-section-arguments>
+  <nntool-section-content>
+    <div class="section-table">
+      <nntool-result-table #providerStatisticsTable [settings]="settings" [source]="tableSource"></nntool-result-table>
+    </div>
+  </nntool-section-content>
+</nntool-section-arguments>

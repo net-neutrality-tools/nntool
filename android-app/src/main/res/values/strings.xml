@@ -127,7 +127,19 @@
     <string name="preference_enable_qos_summary">Enable Quality of Service testing</string>
     <string name="preference_single_test_selection_title">Test selection</string>
     <string name="preference_single_test_selection_summary">Enable/Disable specific tests</string>
+    <string name="preference_ipv4_only_title">IPv4 only</string>
+    <string name="preference_ipv4_only_summary">Force IPv4 if available</string>
+    <string name="preference_current_commit_hash">Unique commit hash of the current app</string>
+    <string name="preference_current_commit_hash_copy_toast">Copied commit hash</string>
+
+    <string name="preference_disassociate_user">Delete user</string>
+    <string name="preference_disassociate_user_summary">Delete association with your measurements and revoke consent to terms and conditions</string>
+    <string name="preference_disassociate_user_warning_title">Delete current user</string>
+    <string name="preference_disassociate_user_warning_content">Do you really wish to delete your user? This will remove all measurements from your history and revoke your consent to the terms and conditions.</string>
+    <string name="preference_disassociate_user_progress_dialog">Deleting user…</string>
+
     <string name="preference_category_test_selection">Test selection</string>
+    <string name="preference_category_other_settings">Other settings</string>
 
     <!-- Preference test selection specific strings -->
 

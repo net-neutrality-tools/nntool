@@ -8,5 +8,8 @@ export interface UserSettings {
     no_anonymize_before_delete_user?: boolean;
     delete_user: boolean;
     client_uuid?: boolean;
+    measurement_selection: boolean;
+    measurement_selection_speed: boolean;
+    measurement_selection_qos: boolean;
   };
 }

@@ -1,7 +1,7 @@
-<nntool-section-intro>
+<!--<nntool-section-intro>
   <nntool-section-header headerTranslationKey="NAV.MAP" icon="icon-map" loadingIndicator="true">
   </nntool-section-header>
-</nntool-section-intro>
+</nntool-section-intro>-->
 
 <nntool-section-map class="section">
   <div id="leaflet-canvas" class="leaflet-container" style="height: 800px" 
@@ -12,9 +12,8 @@
     <div [leafletLayer]="baseCanvasLayer"></div>
     <div [leafletLayer]="heatmapOverlay"></div>
     <div *ngIf="isPointmapShown()" [leafletLayer]="pointmapOverlay"></div>
-
-</div>
-  <div id="map_legend" *ngIf="legend">
+  </div>
+  <!--<div id="map_legend" *ngIf="legend">
     <h2 class="legend-label">
       {{ 'MAP.LEGEND' | translate }}<ng-container *ngIf="unit">{{ ' (' + unit + ')' }}</ng-container>
     </h2>
@@ -24,5 +23,5 @@
         {{ cap }}
       </span>
     </div>
-  </div>
+  </div>-->
 </nntool-section-map>

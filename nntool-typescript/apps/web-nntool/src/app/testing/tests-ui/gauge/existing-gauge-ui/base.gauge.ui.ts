@@ -103,7 +103,7 @@ export abstract class BaseMeasurementGauge {
     switch (value) {
       case StateView.READY:
       case StateView.COMPLETE:
-        newState = 'h';
+        newState = 'GO';
         break;
       case StateView.ERROR:
         newState = 'w';

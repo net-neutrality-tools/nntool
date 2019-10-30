@@ -8,7 +8,6 @@ import { RequestsService } from './requests.service';
 import { SpringServerDataSource } from './table/spring-server.data-source';
 import { SpringServerSourceConf } from './table/spring-server-source.conf';
 import { WebsiteSettings } from '../models/settings/settings.interface';
-import { query } from '../../../../../../node_modules/@angular/animations';
 
 @Injectable()
 export class SearchApiService {
@@ -49,8 +48,11 @@ export class SearchApiService {
       queryString += '&q=' + q;
     }
 
-    window.open(Location.joinWithSlash(this.config.servers.search, 'measurements.' + extension + queryString));
-    //window.location.href = Location.joinWithSlash(this.config.servers.search, 'measurements.' + extension + queryString);
+    //window.open(Location.joinWithSlash(this.config.servers.search, 'measurements.' + extension + queryString)); // this opens a new window in Electron...
+    window.location.href = Location.joinWithSlash(
+      this.config.servers.search,
+      'measurements.' + extension + queryString
+    );
   }
 
   public getSingleOpenDataMeasurement(openDataUuid: string): Observable<any> {
@@ -95,34 +97,10 @@ export class SearchApiService {
   }
 
   public exportSingleOpenDataMeasurement(openDataUuid: string, extension: string) {
-    window.open(Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid + '.' + extension));
-    //window.location.href = Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid + '.' + extension);
+    //window.open(Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid + '.' + extension)); // this opens a new window in Electron...
+    window.location.href = Location.joinWithSlash(
+      this.config.servers.search,
+      'measurements/' + openDataUuid + '.' + extension
+    );
   }
-
-  ////
-
-  /*public getOpenDataMeasurements(): Observable<any> {
-    return new Observable((observer: any) => {
-      this.requests
-        .getJson<any>(
-          // TODO: use search-service url from settings request
-          Location.joinWithSlash(this.config.servers.search, 'measurements'),
-          {}
-        )
-        .subscribe(
-          (data: any) => {
-            this.logger.debug('opendata measurements', data);
-
-            observer.next(data);
-          },
-          (err: HttpErrorResponse) => {
-            this.logger.error('Error retrieving opendata measurements', err);
-            observer.error(err);
-          },
-          () => {
-            observer.complete();
-          }
-        );
-    });
-  }*/
 }

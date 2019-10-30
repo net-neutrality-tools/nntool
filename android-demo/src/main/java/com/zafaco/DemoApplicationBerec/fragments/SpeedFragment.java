@@ -319,8 +319,7 @@ public class SpeedFragment extends Fragment implements FocusedFragment
                         switch(jsonReport.getString("test_case"))
                         {
                             case "rtt_udp":
-                                JSONArray jRTTArray = new JSONArray(jsonReport.getString("rtt_udp_info"));
-                                JSONObject jRTT = jRTTArray.getJSONObject(jRTTArray.length()-1);
+                                JSONObject jRTT = new JSONObject(jsonReport.getString("rtt_udp_info"));
 
                                 updateUi(jRTT.getDouble("average_ns")/1000/1000+" ms", (TextView) mView.findViewById(R.id.rtt));
                                 break;

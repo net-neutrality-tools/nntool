@@ -18,7 +18,9 @@ package at.alladin.nntool.client.v2.task;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 import org.xbill.DNS.A6Record;
@@ -105,7 +107,7 @@ public class DnsTask extends AbstractQoSTask {
 			onStart(testResult);
 			
 	  		long start = System.nanoTime();
-	  		List<JSONObject> dnsResult = lookupDns(host, record, resolver, (int)(timeout / 1000000), testResult);
+	  		List<Map<String, Object>> dnsResult = lookupDns(host, record, resolver, (int)(timeout / 1000000), testResult);
 	  		testResult.getResultMap().put(RESULT_ENTRY, dnsResult);
 	  		long duration = System.nanoTime() - start;
 	  		//testResult.getResultMap().put(RESULT_DURATION, (duration / 1000000));
@@ -138,9 +140,9 @@ public class DnsTask extends AbstractQoSTask {
 	 * @param resolver
 	 * @return
 	 */
-	public static List<JSONObject> lookupDns(String domainName, String record, String resolver, int timeout, QoSTestResult testResult) {
+	public static List<Map<String, Object>> lookupDns(String domainName, String record, String resolver, int timeout, QoSTestResult testResult) {
 		//List<String> result = new ArrayList<String>();
-		List<JSONObject> result = new ArrayList<JSONObject>();
+		List<Map<String, Object>> result = new ArrayList<>();
 		
 		//Lookup dnsLookup = null;
 		try {
@@ -160,7 +162,7 @@ public class DnsTask extends AbstractQoSTask {
 				
 				if (records != null && records.length > 0) {
 					for (int i = 0; i < records.length; i++) {
-						JSONObject dnsEntry = new JSONObject();
+						Map<String, Object> dnsEntry = new HashMap<>();
 						if (records[i] instanceof MXRecord) {
 							dnsEntry.put(RESULT_PRIORITY, String.valueOf(((MXRecord) records[i]).getPriority()));
 							dnsEntry.put(RESULT_ADDRESS, ((MXRecord) records[i]).getTarget().toString());
