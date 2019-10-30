@@ -29,8 +29,6 @@ import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.interfaces.TrafficGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.system.SystemInfoGatherer;
-import at.alladin.nettest.nntool.android.app.view.CpuAndRamView;
 import at.alladin.nettest.nntool.android.app.view.GeoLocationView;
 import at.alladin.nettest.nntool.android.app.view.InterfaceTrafficView;
 import at.alladin.nettest.nntool.android.app.view.Ipv4v6View;
@@ -56,8 +54,6 @@ public class TitleFragment extends ActionBarFragment {
     private GeoLocationView geoLocationView;
 
     private InterfaceTrafficView interfaceTrafficView;
-
-    private CpuAndRamView cpuAndRamView;
 
     private Ipv4v6View ipv4v6View;
 
@@ -108,8 +104,6 @@ public class TitleFragment extends ActionBarFragment {
         geoLocationView = v.findViewById(R.id.view_geo_location);
 
         interfaceTrafficView = v.findViewById(R.id.view_interface_traffic);
-
-        cpuAndRamView = v.findViewById(R.id.view_cpu_ram);
 
         ipv4v6View = v.findViewById(R.id.view_ipv4v6_status);
 
@@ -243,7 +237,6 @@ public class TitleFragment extends ActionBarFragment {
         final SignalGatherer signalGatherer = informationProvider.getGatherer(SignalGatherer.class);
         final GeoLocationGatherer geoLocationGatherer = informationProvider.getGatherer(GeoLocationGatherer.class);
         final TrafficGatherer trafficGatherer = informationProvider.getGatherer(TrafficGatherer.class);
-        final SystemInfoGatherer systemInfoGatherer = informationProvider.getGatherer(SystemInfoGatherer.class);
 
         if (networkGatherer != null && providerSignalView != null) {
             networkGatherer.addListener(providerSignalView);
@@ -261,9 +254,6 @@ public class TitleFragment extends ActionBarFragment {
             trafficGatherer.addListener(interfaceTrafficView);
         }
 
-        if (systemInfoGatherer != null && cpuAndRamView != null) {
-            systemInfoGatherer.addListener(cpuAndRamView);
-        }
     }
 
     public void stopInformationProvider() {
@@ -293,10 +283,6 @@ public class TitleFragment extends ActionBarFragment {
             trafficGatherer.removeListener(interfaceTrafficView);
         }
 
-        final SystemInfoGatherer systemInfoGatherer = informationProvider.getGatherer(SystemInfoGatherer.class);
-        if (systemInfoGatherer != null && cpuAndRamView != null) {
-            systemInfoGatherer.removeListener(cpuAndRamView);
-        }
     }
 
     protected View.OnClickListener getNewOnClickListener () {

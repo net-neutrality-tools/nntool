@@ -1,52 +1,65 @@
 <LinearLayout
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:clickable="true"
     android:gravity="center"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        >
 
         <TextView
             style="@style/Nettest.Title.CpuRam.Text"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight=".4"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:text="@string/ipv4_text" />
 
         <at.alladin.nettest.nntool.android.app.view.AlladinTextView
             android:id="@+id/ipv4_status_text"
             style="@style/Nettest.Title.CpuRam.Text"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight=".6"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:textColor="@color/ip_address_unavailable"
             android:text="@string/ifont_close" />
-    </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <View android:background="@color/theme_app_bg"
+        android:layout_weight=".1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        >
 
         <TextView
             style="@style/Nettest.Title.CpuRam.Text"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight=".4"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:text="@string/ipv6_text" />
 
         <at.alladin.nettest.nntool.android.app.view.AlladinTextView
             android:id="@+id/ipv6_status_text"
             style="@style/Nettest.Title.CpuRam.Text"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight=".6"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:textColor="@color/ip_address_unavailable"
             android:text="@string/ifont_close" />
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>
