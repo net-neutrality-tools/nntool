@@ -44,11 +44,9 @@ public class MapOverlayTileProvider extends UrlTileProvider {
             return null;
         }
         try {
-            final URI t = new URI(mapServiceUrl);
-            final URL test = new URL(mapServiceUrl + "/tiles/" + type.pathSuffix + String.format(Locale.US, "/?path=%d/%d/%d&point_diameter=%d&size=%d",
+            return new URL(mapServiceUrl + "/tiles/" + type.pathSuffix + String.format(Locale.US, "/?path=%d/%d/%d&point_diameter=%d&size=%d",
                     zoom, x, y, 12, tilesize));
-            return test;
-        } catch (URISyntaxException | MalformedURLException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
