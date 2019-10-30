@@ -1,5 +1,7 @@
 package at.alladin.nettest.nntool.android.app.workflow.settings;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -9,10 +11,12 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import at.alladin.nettest.nntool.android.app.BuildConfig;
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.async.DisassociateAgentTask;
@@ -37,6 +41,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private final static String QOS_TEST_SELECTION_CATEGORY_KEY = "selection_qos";
     private final static String DISASSOCIATE_USER_KEY = "settings_disassociate_user";
+    private final static String PREFERENCE_COMMIT_HASH = "setting_current_commit_hash";
 
     private static Map<QoSMeasurementTypeDto, SettingsResponse.TranslatedQoSTypeInfo> qosTranslationInfo = null;
     private String rootKey;
@@ -130,6 +135,20 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                                     progressDialog.dismiss();
                                 }
                             }, null);
+                    return true;
+                });
+            }
+
+            final Preference commitPreference = findPreference(PREFERENCE_COMMIT_HASH);
+            if (commitPreference != null) {
+                commitPreference.setSummary(BuildConfig.GIT_CURRENT_COMMIT);
+                commitPreference.setOnPreferenceClickListener(preference -> {
+                    final ClipboardManager manager = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                    if (manager != null) {
+                        ClipData clip = ClipData.newPlainText(getString(R.string.preference_current_commit_hash), commitPreference.getSummary());
+                        manager.setPrimaryClip(clip);
+                        Toast.makeText(getContext(), getString(R.string.preference_current_commit_hash_copy_toast), Toast.LENGTH_SHORT).show();
+                    }
                     return true;
                 });
             }
