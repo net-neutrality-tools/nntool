@@ -170,15 +170,27 @@ public class TitleFragment extends ActionBarFragment {
 
                             if (ipResponse != null) {
                                 for (Map.Entry<IpResponse.IpVersion, RequestAgentIpTask.IpResponseWrapper> e : ipResponse.entrySet()) {
+                                    final RequestAgentIpTask.IpResponseWrapper val = e.getValue();
+                                    if (val == null) {
+                                        continue;
+                                    }
+                                    String ipPrivate = null;
+                                    String ipPublic = null;
                                     switch (e.getKey()) {
                                         case IPv4:
-                                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE, e.getValue().getLocalAddress().getHostAddress());
-                                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PUBLIC, e.getValue().getIpResponse().getIpAddress());
+                                            ipPrivate = MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE;
+                                            ipPublic = MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PUBLIC;
                                             break;
                                         case IPv6:
-                                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE, e.getValue().getLocalAddress().getHostAddress());
-                                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC, e.getValue().getIpResponse().getIpAddress());
+                                            ipPrivate = MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE;
+                                            ipPublic = MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC;
                                             break;
+                                    }
+                                    if (ipPrivate != null && val.getLocalAddress() != null && val.getLocalAddress().getHostAddress() != null) {
+                                        bundle.putSerializable(ipPrivate, e.getValue().getLocalAddress().getHostAddress());
+                                    }
+                                    if (ipPublic != null && val.getIpResponse() != null && val.getIpResponse().getIpAddress() != null) {
+                                        bundle.putSerializable(ipPublic, e.getValue().getIpResponse().getIpAddress());
                                     }
                                 }
                             }

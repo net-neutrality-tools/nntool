@@ -34,7 +34,6 @@ public class MapOverlayTileProvider extends UrlTileProvider {
     public MapOverlayTileProvider (final MapOverlayType type, final Context context) {
         super (tilesize, tilesize);
         mapServiceUrl = PreferencesUtil.getMapServiceUrl(context);
-        mapServiceUrl = "10.9.8.39";
         maxZoomForPointMap = type == MapOverlayType.HEATMAP ? null : context.getResources().getInteger(R.integer.default_map_max_zoom_for_point_map);
         this.type = type;
     }
@@ -45,10 +44,10 @@ public class MapOverlayTileProvider extends UrlTileProvider {
             return null;
         }
         try {
-            final URI uri = new URI("http", null, mapServiceUrl, 8084, String.format("/api/v0/tiles/%s/", type.pathSuffix), String.format(Locale.US, "%spath=%d/%d/%d&point_diameter=%d&size=%d",
-                    "", zoom, x, y, 12, tilesize), null);
-            Log.d(TAG, uri.toString());
-            return uri.toURL();
+            final URI t = new URI(mapServiceUrl);
+            final URL test = new URL(mapServiceUrl + "/tiles/" + type.pathSuffix + String.format(Locale.US, "/?path=%d/%d/%d&point_diameter=%d&size=%d",
+                    zoom, x, y, 12, tilesize));
+            return test;
         } catch (URISyntaxException | MalformedURLException ex) {
             ex.printStackTrace();
         }

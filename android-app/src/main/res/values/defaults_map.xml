@@ -6,8 +6,8 @@
     <string translatable="false" name="default_map_start_center_lon">7.752895</string>
 
     <bool translatable="false" name="default_map_service_settings_override">false</bool>
-    <string translatable="false" name="default_map_service_host">MAP_SERVICE_HOST</string>
-    <string translatable="false" name="default_map_service_path_prefix">/</string>
+    <string translatable="false" name="default_map_service_host">https://map-de-01.net-neutrality.tools</string>
+    <string translatable="false" name="default_map_service_path_prefix"></string>
     <integer translatable="false" name="default_map_service_port">8084</integer>
-    <bool translatable="false" name="default_map_service_connection_is_encrypted">false</bool>
+    <bool translatable="false" name="default_map_service_connection_is_encrypted">true</bool>
 </resources>
