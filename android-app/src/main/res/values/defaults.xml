@@ -2,5 +2,5 @@
     <string translatable="false" name="default_speed_configuration_version">1.0.0</string>
     <string translatable="false" name="default_qos_configuration_version">1.0.0</string>
 
-    <string name="default_help_page_link">localhost:help</string>
+    <string name="default_help_page_link">https://nntool.net-neutrality.tools/help</string>
 </resources>
