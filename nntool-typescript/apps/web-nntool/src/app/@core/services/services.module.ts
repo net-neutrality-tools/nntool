@@ -16,6 +16,7 @@ import { TestSettingsService } from './test/test-settings.service';
 import { LocationService } from './location.service';
 import { Guard } from './guard.service';
 import { WINDOW_REF_PROVIDER, WINDOW_PROVIDER } from './window.service';
+import { StatisticApiService } from './statistic-api.service';
 
 const Services = [
   ConfigService,
@@ -29,16 +30,17 @@ const Services = [
   MapService,
   ResultApiService,
   SearchApiService,
+  StatisticApiService,
   TestService,
   TestSettingsService,
   LocationService,
   Guard,
   WINDOW_REF_PROVIDER,
-  WINDOW_PROVIDER,
+  WINDOW_PROVIDER
 ];
 
 @NgModule({
-  imports: [SharedModule,],
+  imports: [SharedModule],
   providers: [...Services]
 })
-export class ServicesModule { }
+export class ServicesModule {}

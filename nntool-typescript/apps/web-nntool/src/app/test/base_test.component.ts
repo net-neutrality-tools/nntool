@@ -13,7 +13,7 @@ import { AppService } from '../@core/services/app.service';
 
 @Injectable()
 export class TestGuard implements CanDeactivate<BaseNetTestComponent> {
-  constructor() { }
+  constructor() {}
 
   public canDeactivate(
     component: BaseNetTestComponent,
@@ -40,11 +40,11 @@ export abstract class BaseNetTestComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected get screenNr(): number {
+  public get screenNr(): number {
     return this._screenNr;
   }
 
-  protected set screenNr(value: number) {
+  public set screenNr(value: number) {
     this._screenNr = value;
   }
 
@@ -61,7 +61,7 @@ export abstract class BaseNetTestComponent implements OnInit, OnDestroy {
   public format: (value: any, setting: any) => any = formatUtils;
 
   protected config: WebsiteSettings;
-  protected measurementLink: string = null;
+  public measurementLink: string = null;
   protected _screenNr = 0;
   private _testInProgress = false;
 

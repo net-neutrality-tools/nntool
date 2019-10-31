@@ -50,40 +50,6 @@ public interface LmapReportModelMapper {
 
 	String QOS_TEST_UID_KEY = "qos_test_uid";
 	String QOS_TEST_TYPE_KEY = "test_type";
-
-	// Explicit map method not necessary if all fields have the same name
-//	@Mappings({
-//		@Mapping(source = "time", target = "time"),
-//		@Mapping(source = "relativeTimeNs", target = "relativeTimeNs"),
-//		
-//		@Mapping(source = "accuracy", 	target = "accuracy"),
-//		@Mapping(source = "altitude", 	target = "altitude"),
-//		@Mapping(source = "heading", 	target = "heading"),
-//		@Mapping(source = "speed", 		target = "speed"),
-//		@Mapping(source = "provider", 	target = "provider"),
-//		@Mapping(source = "latitude", 	target = "latitude"),
-//		@Mapping(source = "longitude", 	target = "longitude")
-//	})
-//	GeoLocation map(GeoLocationDto geoLocationDto);
-	
-//	@Mappings({
-//		@Mapping(source = "time", target = "time"),
-//		@Mapping(source = "relativeTimeNs", target = "relativeTimeNs"),
-//		
-//		private Integer networkTypeId;
-//		private LocalDateTime time;
-//	    private Long relativeTimeNs;
-//		private Integer wifiLinkSpeedBps;
-//		private Integer wifiRssiDbm;
-//		private Integer signalStrength2g3gDbm;
-//	    private Integer lteRsrpDbm;
-//	    private Integer lteRsrqDb;
-//	    private Integer lteRssnrDb;
-//	    private Integer lteCqi;
-//	    private String wifiSsid;
-//	    private String wifiBssid;
-//	})
-//	Signal map(SignalDto signalDto);
 	
 	@Mappings({
 		@Mapping(target = "uuid", ignore = true), // generate
@@ -209,7 +175,7 @@ public interface LmapReportModelMapper {
 	})
 	SubMeasurementTime mapSubMeasurementTime(SubMeasurementResult subMeasurementResult, LocalDateTime startTimeNs);
 	
-	default Long parseAverageDownload (final SpeedMeasurementResult result) {
+	default Long parseAverageDownload(final SpeedMeasurementResult result) {
 		if (result.getBytesDownload() == null || result.getDurationDownloadNs() == null) {
 			return null; //was: 0L
 		}
@@ -217,7 +183,7 @@ public interface LmapReportModelMapper {
 		return (long) (result.getBytesDownload() * 8 / (result.getDurationDownloadNs() / 1e9));
 	}
 	
-	default Long parseAverageUpload (final SpeedMeasurementResult result) {
+	default Long parseAverageUpload(final SpeedMeasurementResult result) {
 		if (result.getBytesUpload() == null || result.getDurationUploadNs() == null) {
 			return null; //was: 0L
 		}
@@ -225,7 +191,7 @@ public interface LmapReportModelMapper {
 		return (long) (result.getBytesUpload() * 8 / (result.getDurationUploadNs() / 1e9));
 	}
 	
-	default Map<MeasurementTypeDto, SubMeasurement> parseMeasurements (LmapReportDto lmapReportDto) {
+	default Map<MeasurementTypeDto, SubMeasurement> parseMeasurements(LmapReportDto lmapReportDto) {
 		Map<MeasurementTypeDto, SubMeasurement> ret = new HashMap<>();
 		
 		for (LmapResultDto resList : lmapReportDto.getResults()) {

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -22,13 +23,11 @@ import java.util.Iterator;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
-import at.alladin.nettest.nntool.android.app.async.RequestMapInfoTask;
 import at.alladin.nettest.nntool.android.app.async.RequestMapMarkerTask;
-import at.alladin.nettest.nntool.android.app.dialog.AbstractFullScreenDialogFragment;
+import at.alladin.nettest.nntool.android.app.workflow.help.HelpFragment;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementGroupItem;
 import at.alladin.nntool.shared.map.MapCoordinate;
 import at.alladin.nntool.shared.map.MapMarkerResponse;
-import at.alladin.nntool.shared.map.info.MapInfoResponse;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -144,7 +143,22 @@ public class MapFragment extends SupportMapFragment {
     public void onResume() {
         super.onResume();
         ((MainActivity) getActivity()).updateActionBar(getString(R.string.title_map));
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        final Integer helpSectionStringId = getHelpSectionStringId();
+        if (R.id.action_bar_show_help_action == item.getItemId()) {
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_fragment_layout, HelpFragment.newInstance(helpSectionStringId == null ?
+                            null : getString(helpSectionStringId)))
+                    .addToBackStack(null)
+                    .commit();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     //@Override

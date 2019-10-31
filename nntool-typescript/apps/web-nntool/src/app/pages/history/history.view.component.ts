@@ -10,9 +10,10 @@ import { WebsiteSettings } from '../../@core/models/settings/settings.interface'
   templateUrl: './history.view.component.html'
 })
 export class HistoryViewComponent implements OnInit {
+  public loading: boolean;
+
   private measurementUuid: string;
   private response: ResultGroupResponse;
-  private loading: boolean;
   private hasShareLinks: boolean = false;
 
   private fullMeasurementResponse: any;

@@ -15,10 +15,11 @@ export class ADocService {
     private requests: RequestsService,
     private translate: TranslateService,
     private http: HttpClient
-  ) { }
+  ) {}
 
   public getAdoc(adoc: string, lang: string): Observable<string> {
-    return this.http.get('/assets/i18n/view/' + lang + '/' + adoc + '.html', { responseType: 'text' }).pipe(first());
+    // TODO: add fallback to english
+    return this.http.get('./assets/i18n/view/' + lang + '/' + adoc + '.html', { responseType: 'text' }).pipe(first());
   }
 
   public setPage(adoc: string, lang?: string): Observable<string> {
@@ -32,7 +33,7 @@ export class ADocService {
     return new Observable((subscriber: Subscriber<string>) => {
       this.translate.getTranslation(lang).subscribe(
         (data: any) => {
-          this.logger.debug(data);
+          //this.logger.debug(data);
           if (
             !data ||
             !data.STATIC ||

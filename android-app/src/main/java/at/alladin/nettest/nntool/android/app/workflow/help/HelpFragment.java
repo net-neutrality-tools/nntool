@@ -1,8 +1,6 @@
 package at.alladin.nettest.nntool.android.app.workflow.help;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.DownloadListener;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -72,6 +71,7 @@ public class HelpFragment extends Fragment {
                 }
                 return super.onKeyDown(keyCode, event);
             }
+
         };
 
         webview.getSettings().setJavaScriptEnabled(true);
@@ -81,18 +81,16 @@ public class HelpFragment extends Fragment {
             public void onReceivedError(final WebView view, final int errorCode, final String description,
                                         final String failingUrl)
             {
-                Log.e(TAG, "Failed to load help with error: " + description);
-                //TODO: show error page
+                Log.e(TAG, "Received http error code " + errorCode + " when trying to load help. Rendering default page!");
+                webview.loadUrl("file:///android_asset/help_unavailable.html");
+                super.onReceivedError(view, errorCode, description, failingUrl);
             }
-        });
 
-        webview.setDownloadListener(new DownloadListener() {
-            public void onDownloadStart(String url, String userAgent,
-                                        String contentDisposition, String mimetype,
-                                        long contentLength) {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
+            @Override
+            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+                Log.e(TAG, "Received http error code " + errorResponse.getStatusCode() + " when trying to load help. Rendering default page!");
+                webview.loadUrl("file:///android_asset/help_unavailable.html");
+                super.onReceivedHttpError(view, request, errorResponse);
             }
         });
 

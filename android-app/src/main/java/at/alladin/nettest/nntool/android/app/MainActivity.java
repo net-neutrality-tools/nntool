@@ -20,7 +20,6 @@ import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
-import at.alladin.nettest.nntool.android.app.workflow.help.HelpFragment;
 import at.alladin.nettest.nntool.android.app.workflow.history.HistoryFragment;
 import at.alladin.nettest.nntool.android.app.workflow.main.TitleFragment;
 import at.alladin.nettest.nntool.android.app.workflow.map.MapFragment;
@@ -86,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
 
         switch (target) {
             case TITLE:
-                targetFragment = TitleFragment.newInstance();
+                targetFragment = TitleFragment.newInstance(workflowParameter);
+                navigation.getMenu().findItem(R.id.navigation_home).setChecked(true);
                 break;
             case MEASUREMENT_SPEED:
                 isBottomNavigationVisible = false;
@@ -208,7 +208,11 @@ public class MainActivity extends AppCompatActivity {
         if (!PreferencesUtil.isTermsAndConditionsAccepted(this, TermsAndConditionsFragment.TERMS_AND_CONDITIONS_VERSION)) {
             TermsAndConditionsFragment f = TermsAndConditionsFragment.newInstance();
             final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            f.show(ft, "TC");
+            final Fragment oldTermsFragment = getSupportFragmentManager().findFragmentByTag(TermsAndConditionsFragment.TERMS_FRAGMENT_TAG);
+            if (oldTermsFragment != null) {
+                ft.remove(oldTermsFragment);
+            }
+            f.show(ft, TermsAndConditionsFragment.TERMS_FRAGMENT_TAG);
         }
         else {
             registerMeasurementAgent();

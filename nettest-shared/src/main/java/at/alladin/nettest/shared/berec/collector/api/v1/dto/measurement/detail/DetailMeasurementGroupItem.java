@@ -1,6 +1,7 @@
 package at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
@@ -14,6 +15,7 @@ import com.google.gson.annotations.SerializedName;
  */
 @io.swagger.annotations.ApiModel(description = "This class specifies a single detail item with key, translated title, value and the unit of the value.")
 @JsonClassDescription("This class specifies a single detail item with key, translated title, value and the unit of the value.")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DetailMeasurementGroupItem {
 	
 	/**

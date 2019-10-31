@@ -12,19 +12,19 @@ import { MeasurementGauge } from './existing-gauge-ui/gauge.ui';
 import { GaugeUIState } from './gauge-ui-state';
 import { WebsiteSettings } from '../../../@core/models/settings/settings.interface';
 import { ConfigService } from '../../../@core/services/config.service';
+import { WINDOW } from '../../../@core/services/window.service';
 
-@Component({
+/*@Component({
   templateUrl: './gauge-ui.template.html'
-})
+})*/
 export abstract class GaugeUIComponent<
   T extends TestImplementation<TC, TS>,
   TC extends TestConfig,
   TS extends TestState
-  > extends Test<GaugeUIState, T, TC, TS> implements AfterViewInit {
+> extends Test<GaugeUIState, T, TC, TS> implements AfterViewInit {
+  public active: boolean;
+
   protected testGauge: BaseMeasurementGauge;
-
-  private active: boolean;
-
   private renderingConfig: WebsiteSettings;
 
   protected constructor(
@@ -32,7 +32,7 @@ export abstract class GaugeUIComponent<
     testImplementation: T,
     configService: ConfigService,
     protected translateService: TranslateService,
-    private window: Window
+    @Inject(WINDOW) private window: Window
   ) {
     super(testImplementation);
     this.state.subscribe(this.handleState);

@@ -4,11 +4,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
 import at.alladin.nettest.service.search.config.SearchServiceProperties;
 import at.alladin.nettest.shared.server.config.spring.DevelopmentWebCorsConfiguration;
+import at.alladin.nettest.shared.server.helper.ReturnCodeMessageSource;
 import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
 import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
 
@@ -26,7 +29,10 @@ import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
 	"at.alladin.nettest.service.search", 
 	"at.alladin.nettest.shared.server.web.api.v1"
 })
-@Import({ DevelopmentWebCorsConfiguration.class, GroupedMeasurementService.class })
+@Import({
+	DevelopmentWebCorsConfiguration.class, 
+	GroupedMeasurementService.class
+})
 public class SearchServiceApplication extends SpringBootServletInitializer {
 
 	/**
@@ -55,5 +61,12 @@ public class SearchServiceApplication extends SpringBootServletInitializer {
 	 */
 	public static void main(String[] args) throws Exception {
 		SpringApplicationHelper.runSpingApplication(CONFIGURATION_DIRECTORY_NAME, args, APPLICATION_CLASS);
+	}
+	
+	// TODO: result-service needs a way to get the translations from the database.
+	// TODO: We can either request them from the CouchDB or replicate them into Elasticsearch.
+	@Bean
+	public MessageSource messageSource() {
+		return new ReturnCodeMessageSource();
 	}
 }

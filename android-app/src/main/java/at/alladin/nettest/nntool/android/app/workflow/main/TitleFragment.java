@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,17 +29,17 @@ import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.interfaces.TrafficGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
-import at.alladin.nettest.nntool.android.app.util.info.system.SystemInfoGatherer;
-import at.alladin.nettest.nntool.android.app.view.CpuAndRamView;
 import at.alladin.nettest.nntool.android.app.view.GeoLocationView;
 import at.alladin.nettest.nntool.android.app.view.InterfaceTrafficView;
 import at.alladin.nettest.nntool.android.app.view.Ipv4v6View;
 import at.alladin.nettest.nntool.android.app.view.MeasurementServerSelectionView;
 import at.alladin.nettest.nntool.android.app.view.ProviderAndSignalView;
 import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
+import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementService;
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
+import at.alladin.nettest.nntool.android.app.workflow.tc.TermsAndConditionsFragment;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ip.IpResponse;
 
 /**
@@ -54,21 +55,40 @@ public class TitleFragment extends ActionBarFragment {
 
     private InterfaceTrafficView interfaceTrafficView;
 
-    private CpuAndRamView cpuAndRamView;
-
     private Ipv4v6View ipv4v6View;
 
     private InformationProvider informationProvider;
 
     private MeasurementServerSelectionView measurementServerSelectionView;
 
+    private WorkflowTitleParameter workflowTitleParameter;
+
+    public static TitleFragment newInstance () {
+        return newInstance(null);
+    }
+
     /**
      *
      * @return
      */
-    public static TitleFragment newInstance() {
+    public static TitleFragment newInstance (final WorkflowParameter workflowParameter) {
         final TitleFragment fragment = new TitleFragment();
+        if (workflowParameter instanceof WorkflowTitleParameter) {
+            fragment.setWorkflowTitleParameter((WorkflowTitleParameter) workflowParameter);
+        }
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+
+        if (workflowTitleParameter != null && workflowTitleParameter.isShowTermsAndConditionsOnLoad()) {
+            final TermsAndConditionsFragment f = TermsAndConditionsFragment.newInstance();
+            final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            f.show(ft, TermsAndConditionsFragment.TERMS_FRAGMENT_TAG);
+        }
+
+        super.onCreate(savedInstanceState);
     }
 
     @Nullable
@@ -84,8 +104,6 @@ public class TitleFragment extends ActionBarFragment {
         geoLocationView = v.findViewById(R.id.view_geo_location);
 
         interfaceTrafficView = v.findViewById(R.id.view_interface_traffic);
-
-        cpuAndRamView = v.findViewById(R.id.view_cpu_ram);
 
         ipv4v6View = v.findViewById(R.id.view_ipv4v6_status);
 
@@ -146,15 +164,27 @@ public class TitleFragment extends ActionBarFragment {
 
                             if (ipResponse != null) {
                                 for (Map.Entry<IpResponse.IpVersion, RequestAgentIpTask.IpResponseWrapper> e : ipResponse.entrySet()) {
+                                    final RequestAgentIpTask.IpResponseWrapper val = e.getValue();
+                                    if (val == null) {
+                                        continue;
+                                    }
+                                    String ipPrivate = null;
+                                    String ipPublic = null;
                                     switch (e.getKey()) {
                                         case IPv4:
-                                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE, e.getValue().getLocalAddress().getHostAddress());
-                                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PUBLIC, e.getValue().getIpResponse().getIpAddress());
+                                            ipPrivate = MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE;
+                                            ipPublic = MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PUBLIC;
                                             break;
                                         case IPv6:
-                                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE, e.getValue().getLocalAddress().getHostAddress());
-                                            bundle.putSerializable(MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC, e.getValue().getIpResponse().getIpAddress());
+                                            ipPrivate = MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE;
+                                            ipPublic = MeasurementService.EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC;
                                             break;
+                                    }
+                                    if (ipPrivate != null && val.getLocalAddress() != null && val.getLocalAddress().getHostAddress() != null) {
+                                        bundle.putSerializable(ipPrivate, e.getValue().getLocalAddress().getHostAddress());
+                                    }
+                                    if (ipPublic != null && val.getIpResponse() != null && val.getIpResponse().getIpAddress() != null) {
+                                        bundle.putSerializable(ipPublic, e.getValue().getIpResponse().getIpAddress());
                                     }
                                 }
                             }
@@ -219,7 +249,6 @@ public class TitleFragment extends ActionBarFragment {
         final SignalGatherer signalGatherer = informationProvider.getGatherer(SignalGatherer.class);
         final GeoLocationGatherer geoLocationGatherer = informationProvider.getGatherer(GeoLocationGatherer.class);
         final TrafficGatherer trafficGatherer = informationProvider.getGatherer(TrafficGatherer.class);
-        final SystemInfoGatherer systemInfoGatherer = informationProvider.getGatherer(SystemInfoGatherer.class);
 
         if (networkGatherer != null && providerSignalView != null) {
             networkGatherer.addListener(providerSignalView);
@@ -237,9 +266,6 @@ public class TitleFragment extends ActionBarFragment {
             trafficGatherer.addListener(interfaceTrafficView);
         }
 
-        if (systemInfoGatherer != null && cpuAndRamView != null) {
-            systemInfoGatherer.addListener(cpuAndRamView);
-        }
     }
 
     public void stopInformationProvider() {
@@ -269,10 +295,6 @@ public class TitleFragment extends ActionBarFragment {
             trafficGatherer.removeListener(interfaceTrafficView);
         }
 
-        final SystemInfoGatherer systemInfoGatherer = informationProvider.getGatherer(SystemInfoGatherer.class);
-        if (systemInfoGatherer != null && cpuAndRamView != null) {
-            systemInfoGatherer.removeListener(cpuAndRamView);
-        }
     }
 
     protected View.OnClickListener getNewOnClickListener () {
@@ -307,5 +329,13 @@ public class TitleFragment extends ActionBarFragment {
     @Override
     public Integer getHelpSectionStringId() {
         return null;
+    }
+
+    public WorkflowTitleParameter getWorkflowTitleParameter() {
+        return workflowTitleParameter;
+    }
+
+    public void setWorkflowTitleParameter(WorkflowTitleParameter workflowTitleParameter) {
+        this.workflowTitleParameter = workflowTitleParameter;
     }
 }

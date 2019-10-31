@@ -21,13 +21,15 @@ export enum MediaEnum {
 }
 
 const MEDIA_MAP = {
-  FACEBOOK: "https://facebook.com/sharer/sharer.php?u=_SELFURL_",
-  TWITTER: "https://twitter.com/intent/tweet?text=_PLACEHOLDER_",
-  MAIL: "mailto:?body=_PLACEHOLDER_%0A_SELFURL_"
-}
+  FACEBOOK: 'https://facebook.com/sharer/sharer.php?u=_SELFURL_',
+  TWITTER: 'https://twitter.com/intent/tweet?text=_PLACEHOLDER_',
+  MAIL: 'mailto:?body=_PLACEHOLDER_%0A_SELFURL_'
+};
 
-class MediaUtils { 
+class MediaUtils {
   public static getLink(media: MediaEnum, message: string, url: string) {
-    return MEDIA_MAP[media].replace(/_PLACEHOLDER_/g, message.replace(/\n/g, "%0A").replace(/,/g, "%2C")).replace(/_SELFURL_/g, url);
+    return MEDIA_MAP[media]
+      .replace(/_PLACEHOLDER_/g, message.replace(/\n/g, '%0A').replace(/,/g, '%2C'))
+      .replace(/_SELFURL_/g, url);
   }
 }
