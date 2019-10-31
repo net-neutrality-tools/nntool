@@ -28,6 +28,8 @@ export const environment = {
     //control: 'http://localhost:18080/api/v1/',
     //result: 'http://localhost:8082/api/v1/',
     //search: 'http://localhost:8083/api/v1/',
+    //map: 'http://localhost:8084/api/v1/',
+    //statistic: 'http://localhost:8085/api/v1/',
     control: 'https://controller-de-01.net-neutrality.tools/api/v1/',
     result: 'https://result-de-01.net-neutrality.tools/api/v1/',
     search: 'https://search-de-01.net-neutrality.tools/api/v1/',
