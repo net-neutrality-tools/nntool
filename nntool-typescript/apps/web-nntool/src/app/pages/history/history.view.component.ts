@@ -12,12 +12,12 @@ import { WebsiteSettings } from '../../@core/models/settings/settings.interface'
 export class HistoryViewComponent implements OnInit {
   public loading: boolean;
 
-  private measurementUuid: string;
-  private response: ResultGroupResponse;
-  private hasShareLinks: boolean = false;
+  public response: ResultGroupResponse;
+  public hasShareLinks: boolean = false;
+  public qosMeasurementResult: QoSMeasurementResult;
 
+  private measurementUuid: string;
   private fullMeasurementResponse: any;
-  private qosMeasurementResult: QoSMeasurementResult;
   private config: WebsiteSettings;
 
   constructor(
