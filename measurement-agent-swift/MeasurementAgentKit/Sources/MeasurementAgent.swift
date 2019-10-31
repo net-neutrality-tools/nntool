@@ -22,6 +22,7 @@ public class MeasurementAgent {
 
     var controlService: ControlService!
     public private(set) var resultService: ResultService?
+    public private(set) var mapService: MapService?
 
     private var settings: LocalSettings
 
@@ -108,8 +109,8 @@ public class MeasurementAgent {
         self.settings.controllerServiceBaseUrlIpv6 = settings.urls.controllerServiceIpv6
 
         self.settings.resultServiceBaseUrl = settings.urls.resultService
-        self.settings.mapServiceUrl = settings.urls.mapService
-        self.settings.websiteUrl = settings.urls.website
+        self.settings.mapServiceBaseUrl = settings.urls.mapService
+        self.settings.websiteBaseUrl = settings.urls.website
 
         createServices(localSettings: self.settings)
 
@@ -121,6 +122,10 @@ public class MeasurementAgent {
 
         if let resultServiceBaseUrl = localSettings.resultServiceBaseUrl {
             resultService = ResultService(baseURL: resultServiceBaseUrl, agent: self)
+        }
+
+        if let mapServiceBaseUrl = localSettings.mapServiceBaseUrl {
+            mapService = MapService(baseURL: mapServiceBaseUrl, agent: self)
         }
     }
 

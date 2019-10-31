@@ -118,12 +118,30 @@ class VoipTask: QoSControlConnectionTask {
             sampleRate = serverSampleRate
         }
 
-        if let serverCallDurationNs = try container.decodeIfPresent(UInt64.self, forKey: .callDurationNs) {
-            callDurationNs = serverCallDurationNs
+        var serverCallDurationNs = try? container.decodeIfPresent(UInt64.self, forKey: .callDurationNs)
+        if serverCallDurationNs == nil {
+            if let serverCallDurationNsString = try? container.decodeIfPresent(String.self, forKey: .callDurationNs) {
+                serverCallDurationNs = UInt64(serverCallDurationNsString)
+            }
+        }
+        
+        if let cdns = serverCallDurationNs {
+            callDurationNs = cdns
         }
 
-        portOut = try container.decodeIfPresent(UInt16.self, forKey: .portOut)
-        portIn = try container.decodeIfPresent(UInt16.self, forKey: .portIn)
+        portOut = try? container.decodeIfPresent(UInt16.self, forKey: .portOut)
+        if portOut == nil {
+            if let portOutString = try? container.decodeIfPresent(String.self, forKey: .portOut) {
+                portOut = UInt16(portOutString)
+            }
+        }
+
+        portIn = try? container.decodeIfPresent(UInt16.self, forKey: .portIn)
+        if portIn == nil {
+            if let portInString = try? container.decodeIfPresent(String.self, forKey: .portIn) {
+                portIn = UInt16(portInString)
+            }
+        }
 
         if let serverDelayNs = try container.decodeIfPresent(UInt64.self, forKey: .delayNs) {
             delayNs = serverDelayNs
