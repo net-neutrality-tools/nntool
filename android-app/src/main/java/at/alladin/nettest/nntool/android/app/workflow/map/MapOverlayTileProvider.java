@@ -1,15 +1,9 @@
 package at.alladin.nettest.nntool.android.app.workflow.map;
 
 import android.content.Context;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.UrlTileProvider;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Locale;
 
