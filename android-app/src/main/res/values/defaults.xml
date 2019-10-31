@@ -3,4 +3,7 @@
     <string translatable="false" name="default_qos_configuration_version">1.0.0</string>
 
     <string name="default_help_page_link">https://nntool.net-neutrality.tools/help</string>
+    <string name="default_help_page_error_html_path">file:///android_asset/help_unavailable.html</string>
+    <string name="default_statistics_page_link">https://nntool.net-neutrality.tools/statistics</string>
+    <string name="default_statistics_page_error_html_path">file:///android_asset/statistics_unavailable.html</string>
 </resources>
