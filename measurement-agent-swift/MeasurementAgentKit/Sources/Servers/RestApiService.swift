@@ -154,7 +154,7 @@ public class RestApiService {
         }
 
         logger.debug("--- REQUEST BODY ---")
-        logger.debug(String(data: requestData, encoding: .utf8)!) // debug print
+        logger.debug(String(data: requestData, encoding: .utf8)!) // debug print, TODO: pretty print?
         logger.debug("--- /REQUEST BODY ---")
 
         let request =

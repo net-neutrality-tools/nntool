@@ -41,17 +41,20 @@ class ControlService: RestApiService {
 
     ///
     func getSettings(agentUuid: String/*, settingsRequest: SettingsRequest*/, onSuccess: SuccessCallback<SettingsResponse>?, onFailure: FailureCallback?) {
-        //request("/measurement-agents/\(agentUuid)/settings", method: .get, responseEntityType: SettingsResponse.self, onSuccess: onSuccess, onFailure: onFailure)
+        request("/measurement-agents/\(agentUuid)/settings", method: .get, responseEntityType: SettingsResponse.self, onSuccess: onSuccess, onFailure: onFailure)
     }
 
+    ///
     func initiateMeasurement(controlDto: LmapControlDto, onSuccess: SuccessCallback<LmapControlDto>?, onFailure: FailureCallback?) {
         request("/measurements", method: .post, requestEntity: controlDto, wrapInApiRequest: false, responseEntityType: LmapControlDto.self, onSuccess: onSuccess, onFailure: onFailure)
     }
 
+    ///
     func getSpeedMeasurementPeers(onSuccess: SuccessCallback<SpeedMeasurementPeerResponse>?, onFailure: FailureCallback?) {
         request("/speed-measurement-peers", method: .get, responseEntityType: SpeedMeasurementPeerResponse.self, onSuccess: onSuccess, onFailure: onFailure)
     }
 
+    ///
     func getIp(onSuccess: SuccessCallback<IpResponse>?, onFailure: FailureCallback?) {
         request("/ip", method: .get, responseEntityType: IpResponse.self, onSuccess: onSuccess, onFailure: onFailure)
     }

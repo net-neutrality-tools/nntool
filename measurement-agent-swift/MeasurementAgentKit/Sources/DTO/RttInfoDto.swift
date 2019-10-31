@@ -67,24 +67,24 @@ public class RttInfoDto: Codable {
     public var packetSize: Int?
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+
     /// Average rtt in nanoseconds
     public var averageNs: UInt64?
 
     /// Maximum rtt in nanoseconds
     public var maximumNs: UInt64?
-    
+
     /// Median rtt in nanoseconds
     public var medianNs: UInt64?
-        
+
     /// Minimum rtt in nanoseconds
     public var minimumNs: UInt64?
-    
+
     /// Standard deviation rtt in nanoseconds
     public var standardDeviationNs: UInt64?
-    
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+
     public init() {
 
     }
@@ -98,7 +98,7 @@ public class RttInfoDto: Codable {
         case numError = "num_error"
         case numMissing = "num_missing"
         case packetSize = "packet_size"
-        
+
         case averageNs = "average_ns"
         case maximumNs = "maximum_ns"
         case medianNs = "median_ns"

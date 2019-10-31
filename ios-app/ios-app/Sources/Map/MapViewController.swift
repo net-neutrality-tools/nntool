@@ -25,6 +25,22 @@ class MapViewController: UIViewController {
 
     private var mapView: GMSMapView! // !
 
+    private var heatmapLayer: GMSURLTileLayer! // !
+    private var pointLayer: GMSURLTileLayer! // !
+
+    private lazy var mapService: MapService? = {
+        return MEASUREMENT_AGENT.mapService
+    }()
+
+    var currentMarker: GMSMarker?
+
+    private lazy var emptyMarkerIcon: UIImage! = {
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: 1, height: 1), false, 0.0)
+        let icon = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return icon
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -34,10 +50,15 @@ class MapViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         if mapView == nil {
             initializeMapView()
+        } else {
+            refresh()
         }
     }
 
-    //var x: NSKeyValueObservation!
+    private func refresh() {
+        heatmapLayer.clearTileCache()
+        pointLayer.clearTileCache()
+    }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
 
@@ -54,9 +75,11 @@ class MapViewController: UIViewController {
     }
 
     private func initializeMapView() {
-        var initialLocation = CLLocationCoordinate2D(latitude: 47.493910, longitude: 11.644471) // TODO: config
-
-        let camera = GMSCameraPosition.camera(withLatitude: initialLocation.latitude, longitude: initialLocation.longitude, zoom: 4) // TODO
+        let camera = GMSCameraPosition.camera(
+            withLatitude: MAP_VIEW_INITIAL_LOCATION_LATITUDE,
+            longitude: MAP_VIEW_INITIAL_LOCATION_LONGITUDE,
+            zoom: Float(MAP_VIEW_INITIAL_ZOOM)
+        )
 
         mapView = GMSMapView.map(withFrame: view.bounds, camera: camera)
 
@@ -79,13 +102,12 @@ class MapViewController: UIViewController {
 
         ///
 
-        let heatmapLayer = createLayer { (x, y, zoom) -> URL? in
-            URL(string: "http://localhost:8084/api/v0/tiles/heatmap/\(zoom)/\(x)/\(y).png")
-            //URL(string: "http://localhost:8084/api/v1/tiles/heatmaps/default/\(zoom)/\(x)/\(y).png") // TODO: parameters
+        heatmapLayer = createLayer { (x, y, zoom) -> URL? in
+            self.mapService?.tileLayerUrl(.heatmap, x: x, y: y, zoom: zoom) // TODO: parameters
         }
 
-        let pointLayer = createLayer(zIndex: 101) { (x, y, zoom) -> URL? in
-            URL(string: "http://localhost:8084/api/v0/tiles/points/\(zoom)/\(x)/\(y).png")
+        pointLayer = createLayer(zIndex: 101) { (x, y, zoom) -> URL? in
+            self.mapService?.tileLayerUrl(.points, x: x, y: y, zoom: zoom) // TODO: parameters
         }
 
         heatmapLayer.map = mapView
@@ -102,8 +124,89 @@ class MapViewController: UIViewController {
 
         return layer
     }
+
+    private func buildMarkerSnippet(_ marker: MapMarker) -> String? {
+        let lines = marker.results?.map { item -> String in
+            var line = ""
+
+            if let title = item.title {
+                line += title
+            }
+
+            if let value = item.value {
+                line += ": " + value
+            }
+
+            if let unit = item.unit {
+                line += " " + unit
+            }
+
+            return line
+        }
+
+        return lines?.joined(separator: "\n")
+    }
 }
 
 extension MapViewController: GMSMapViewDelegate {
 
+    func mapView(_ mapView: GMSMapView, idleAt position: GMSCameraPosition) {
+        if position.zoom >= Float(MAP_VIEW_POINT_LAYER_ZOOM_THRESHOLD) {
+            pointLayer.map = mapView
+        } else {
+            pointLayer.map = nil
+        }
+    }
+
+    func mapView(_ mapView: GMSMapView, didTapAt coordinate: CLLocationCoordinate2D) {
+        currentMarker?.map = nil
+        mapView.selectedMarker = nil
+        currentMarker = nil
+
+        guard pointLayer.map != nil else {
+            // We are not showing points -> do nothing on tap
+            return
+        }
+
+        let coord = MapCoordinate()
+        coord.latitude = coordinate.latitude
+        coord.longitude = coordinate.longitude
+        coord.zoom = UInt(mapView.camera.zoom)
+
+        let mapMarkerRequest = MapMarkerRequest()
+        mapMarkerRequest.coordinates = coord
+
+        mapService?.getMarkers(mapMarkerRequest: mapMarkerRequest, onSuccess: { response in
+            guard let marker = response.markers?.first else {
+                return
+            }
+
+            self.currentMarker = GMSMarker(position: coordinate)
+            self.currentMarker?.icon = self.emptyMarkerIcon
+            self.currentMarker?.userData = marker
+            self.currentMarker?.appearAnimation = .pop
+            self.currentMarker?.map = mapView
+            self.currentMarker?.title = "Measurement" // TODO: translate
+            self.currentMarker?.snippet = self.buildMarkerSnippet(marker)
+
+            DispatchQueue.main.async {
+                self.mapView.selectedMarker = self.currentMarker
+            }
+        }, onFailure: { error in
+            logger.error(error)
+        })
+    }
+
+    func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
+        guard let markerData = marker.userData as? MapMarker, var openDataUuid = markerData.openDataUuid else {
+            return
+        }
+
+        // TODO: remove O on server-side
+        if openDataUuid.starts(with: "O") {
+            openDataUuid.removeFirst()
+        }
+
+        presentWebBrowserWithUrlString("https://nntool.net-neutrality.tools/open-data-results/\(openDataUuid)")
+    }
 }
