@@ -48,7 +48,6 @@ const MEDIA_MAP = {
 
 class MediaUtils { 
   public static getLink(media: string, message: string, url: string) {
-    debugger;
     return MEDIA_MAP[media].url.replace(/_PLACEHOLDER_/g, message.replace(/\n/g, "%0A").replace(/,/g, "%2C")).replace(/_SELFURL_/g, url);
   }
 
