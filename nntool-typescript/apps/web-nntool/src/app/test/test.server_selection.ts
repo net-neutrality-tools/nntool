@@ -12,7 +12,7 @@ import { ConfigService } from '../@core/services/config.service';
   templateUrl: './test.server_selection.html'
 })
 export class ServerSelectionComponent implements OnInit {
-  private speedServerList: SpeedMeasurementPeer[];
+  public speedServerList: SpeedMeasurementPeer[];
 
   private currentSpeedServer: SpeedMeasurementPeer;
 
@@ -20,7 +20,7 @@ export class ServerSelectionComponent implements OnInit {
     private readonly requestService: RequestsService,
     private readonly requestInfoService: RequestInfoService,
     private readonly configService: ConfigService
-  ) { }
+  ) {}
 
   public ngOnInit(): void {
     // Request measurement peer

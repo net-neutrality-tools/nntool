@@ -10,6 +10,11 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
+  - GoogleMaps (3.1.0):
+    - GoogleMaps/Maps (= 3.1.0)
+  - GoogleMaps/Base (3.1.0)
+  - GoogleMaps/Maps (3.1.0):
+    - GoogleMaps/Base
   - MeasurementAgentKit (0.0.1):
     - nntool-shared-swift (~> 0.0.1)
     - ReachabilitySwift (~> 5.0.0-beta1)
@@ -58,6 +63,7 @@ DEPENDENCIES:
   - BartyCrouch (~> 3.13.0)
   - CocoaLumberjack (>= 3.4.2)
   - FMDB (>= 2.7.2)
+  - GoogleMaps (~> 3.1.0)
   - MeasurementAgentKit (from `../measurement-agent-swift`)
   - nntool-shared-swift (from `../nntool-shared-swift`)
   - PocketSocket (from `../PocketSocket`)
@@ -75,6 +81,7 @@ SPEC REPOS:
     - CocoaLumberjack
     - CodableJSON
     - FMDB
+    - GoogleMaps
     - ObjcExceptionBridging
     - R.swift
     - R.swift.Library
@@ -105,6 +112,7 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
   CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  GoogleMaps: 5c13302e6fe6bb6e686b267196586b91cd594225
   MeasurementAgentKit: ee7929596184ed2f8e1f1c00882ead4298f965d7
   nntool-shared-swift: 7955a6c51917bcf2f42316eb259da095c80a7398
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
@@ -121,6 +129,6 @@ SPEC CHECKSUMS:
   WKWebViewWithURLProtocol: f7f2b367c40680105794a068ed2bb2cd5922c27c
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: 369c028d240dd0e1ad60641ba20929271968a223
+PODFILE CHECKSUM: 51b1a323f44592154857faaf6489b86b2218c175
 
 COCOAPODS: 1.7.1

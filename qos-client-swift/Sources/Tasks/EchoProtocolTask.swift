@@ -54,8 +54,15 @@ class EchoProtocolTask: QoSTask {
         host = try container.decode(String.self, forKey: .host)
         payload = try container.decode(String.self, forKey: .payload)
 
-        if let portString = try container.decodeIfPresent(String.self, forKey: .port), let port = UInt16(portString) {
-            self.port = port
+        var serverPort = try? container.decodeIfPresent(UInt16.self, forKey: .port)
+        if serverPort == nil {
+            if let serverPortString = try? container.decodeIfPresent(String.self, forKey: .port) {
+                serverPort = UInt16(serverPortString)
+            }
+        }
+        
+        if let sp = serverPort {
+            port = sp
         }
 
         if let pType = try container.decodeIfPresent(ProtocolType.self, forKey: .protocolType) {

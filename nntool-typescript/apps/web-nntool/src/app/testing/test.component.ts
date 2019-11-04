@@ -26,7 +26,7 @@ export abstract class Test<
   @Output()
   protected errorMsgChange: EventEmitter<string> = new EventEmitter<string>();
   protected state: Observable<US>;
-  protected manualStartShouldBeDisabled = false;
+  public manualStartShouldBeDisabled = false;
 
   protected abstract testStateToUIState: (state: TS) => US;
 

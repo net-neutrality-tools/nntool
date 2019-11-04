@@ -64,6 +64,6 @@ extension UIViewController {
 
     ///
     @IBAction func presentHelp() {
-        presentWebBrowserWithUrlString("https://net-neutrality.tools")
+        presentWebBrowserWithUrlString(HELP_URL)
     }
 }

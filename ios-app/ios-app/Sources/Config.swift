@@ -19,8 +19,11 @@ import Foundation
 import MeasurementAgentKit
 import CodableJSON
 
+let MEASUREMENT_AGENT_CONTROLLER_BASE_URL = "https://controller-de-01.net-neutrality.tools/api/v1"
+/*"http://localhost:18080/api/v1"*/
+
 let MEASUREMENT_AGENT =
-    MeasurementAgentBuilder(controllerServiceBaseUrl: "https://controller-de-01.net-neutrality.tools/api/v1" /*"http://localhost:18080/api/v1"*/)
+    MeasurementAgentBuilder(controllerServiceBaseUrl: MEASUREMENT_AGENT_CONTROLLER_BASE_URL)
         .program(task: .speed, config: ProgramConfiguration(name: "IAS", version: "1.0.0") { (taskDto: LmapTaskDto) in
             let p = IASProgram()
 
@@ -61,6 +64,22 @@ let MEASUREMENT_AGENT =
             return p
         })
         .build()
+
+////
+
+// GoogleMaps API key is required. The app will crash on the map view if no key is provided.
+let GOOGLE_MAPS_API_KEY = ""
+
+let MAP_VIEW_INITIAL_LOCATION_LATITUDE = 47.493910
+let MAP_VIEW_INITIAL_LOCATION_LONGITUDE = 11.644471
+let MAP_VIEW_INITIAL_ZOOM = 4
+
+let MAP_VIEW_POINT_LAYER_ZOOM_THRESHOLD = 12
+
+////
+
+let STATISTICS_URL = "https://nntool.net-neutrality.tools/statistics"
+let HELP_URL = "https://nntool.net-neutrality.tools/help"
 
 ////
 

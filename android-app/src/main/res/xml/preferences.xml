@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="root_preference_screen">
+    <Preference
+        android:key="setting_current_commit_hash"
+        android:title="@string/preference_current_commit_hash"
+        />
     <PreferenceCategory
         android:title="@string/preference_category_test_selection">
         <SwitchPreferenceCompat

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, Inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Test } from '../../test.component';
 import { TestConfig } from '../../tests-implementation/test-config';
@@ -7,17 +7,19 @@ import { TestState } from '../../tests-implementation/test-state';
 import { BarUIState } from './bar-ui-state';
 import { BarUIShowableTestTypeEnum } from './enums/bar-ui-showable-test-type.enum';
 import { ConfigService } from '../../../@core/services/config.service';
+import { WINDOW } from '../../../@core/services/window.service';
 
 class Point {
-  constructor(public x: number, public y: number) { }
+  constructor(public x: number, public y: number) {}
 }
 
-@Component({
+/*@Component({
   templateUrl: './bar-ui.template.html'
-})
+})*/
 export abstract class BarUIComponent<T extends TestImplementation<TC, TS>, TC extends TestConfig, TS extends TestState>
   extends Test<BarUIState, T, TC, TS>
   implements AfterViewInit {
+  public active: boolean;
   private resolutionScaleFactor = 2;
   private canvas: HTMLCanvasElement;
   private canvasContext: CanvasRenderingContext2D;
@@ -25,7 +27,6 @@ export abstract class BarUIComponent<T extends TestImplementation<TC, TS>, TC ex
   private barWidth: number;
   private barLength: number;
   private drawing = false;
-  private active: boolean;
 
   private translations: { [key: string]: any };
   private barColors: { [key: string]: string };
@@ -35,7 +36,7 @@ export abstract class BarUIComponent<T extends TestImplementation<TC, TS>, TC ex
     testImplementation: T,
     configService: ConfigService,
     protected translateService: TranslateService,
-    private window: Window
+    @Inject(WINDOW) private window: Window
   ) {
     super(testImplementation);
 

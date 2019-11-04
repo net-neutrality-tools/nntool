@@ -109,7 +109,6 @@ class IASProgram: NSObject, ProgramProtocol {
         let res = IasMeasurementResult()
 
         guard let r = result else {
-            // TODO: status
             // TODO: reason
 
             res.status = .failed // or .aborted
@@ -118,8 +117,6 @@ class IASProgram: NSObject, ProgramProtocol {
 
         res.relativeStartTimeNs = relativeStartTimeNs
         res.relativeEndTimeNs = relativeEndTimeNs
-
-        // TODO
 
         res.status = .finished
 
@@ -135,7 +132,15 @@ class IASProgram: NSObject, ProgramProtocol {
             res.rttInfo?.packetSize = rttInfo["packet_size"] as? Int
             res.rttInfo?.requestedNumPackets = 10 // TODO
 
-            res.rttInfo?.rtts = [RttDto]() // TODO
+            // TODO: these values should be calculated on the collector.
+            res.rttInfo?.averageNs = rttInfo["average_ns"] as? UInt64
+            res.rttInfo?.maximumNs = rttInfo["maximum_ns"] as? UInt64
+            res.rttInfo?.medianNs = rttInfo["median_ns"] as? UInt64
+            res.rttInfo?.minimumNs = rttInfo["minimum_ns"] as? UInt64
+            res.rttInfo?.standardDeviationNs = rttInfo["standard_deviation_ns"] as? UInt64
+            //
+
+            res.rttInfo?.rtts = (rttInfo["rtts"] as? [UInt64])?.map { RttDto(rttNs: $0, relativeTimeNs: nil) }
         }
 
         res.connectionInfo = ConnectionInfoDto()

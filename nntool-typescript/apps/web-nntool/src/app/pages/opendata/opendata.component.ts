@@ -7,9 +7,9 @@ import { ConfigService } from '../../@core/services/config.service';
   templateUrl: './opendata.component.html'
 })
 export class OpendataComponent implements OnInit {
-  private dates: Date[] = [];
+  public dates: Date[] = [];
 
-  private selectedDate?: Date;
+  public selectedDate?: Date;
 
   constructor(
     private logger: NGXLogger,

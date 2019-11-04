@@ -8,17 +8,15 @@ import { UserService } from '../../@core/services/user.service';
   templateUrl: './history.view.component.html'
 })
 export class HistoryViewComponent implements OnInit {
+  public loading: boolean;
+
   private measurementUuid: string;
-  private response: ResultGroupResponse;
-  private loading: boolean;
+  public response: ResultGroupResponse;
 
   private fullMeasurementResponse: any;
-  private qosMeasurementResult: QoSMeasurementResult;
+  public qosMeasurementResult: QoSMeasurementResult;
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private userService: UserService
-  ) {
+  constructor(private activatedRoute: ActivatedRoute, private userService: UserService) {
     this.loading = true;
     this.measurementUuid = activatedRoute.snapshot.paramMap.get('uuid');
   }
