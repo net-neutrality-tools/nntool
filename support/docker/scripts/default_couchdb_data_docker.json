@@ -624,6 +624,14 @@
                             "key": "geoLocationInfo.distanceMovedMetres",
                             "translation_key": "result.moved_distance",
                             "unit": "result.moved_distance.unit"
+                        },
+                        {
+                            "key": "agentInfo.appVersionName",
+                            "translation_key": "key_client_software_version"
+                        },
+                        {
+                            "key": "agentInfo.timezone",
+                            "translation_key": "key_timezone"
                         }
                     ]
                 },
@@ -645,8 +653,8 @@
                         },
                         {
                             "key": "speed.durationDownloadNs",
-                            "format": "DIV_1E9",
-                            "unit": "RESULT_DURATION_UNIT",
+                            "unit": "RESULT_MS_UNIT",
+                            "format": "DIV_1E6",
                             "translation_key": "key_duration_dl"
                         },
                         {
@@ -663,8 +671,8 @@
                         },
                         {
                             "key": "speed.durationUploadNs",
-                            "format": "DIV_1E9",
-                            "unit": "RESULT_DURATION_UNIT",
+                            "unit": "RESULT_MS_UNIT",
+                            "format": "DIV_1E6",
                             "translation_key": "key_duration_ul"
                         },
                         {
@@ -945,7 +953,7 @@
                 "key_speed_download_bytes": "Data downloaded during the actual test",
                 "key_speed_download_ndt": "Download (NDT)",
                 "key_speed_parameter_group": "Speed Parameter",
-                "description_speed_parameter_group": "Detailed results from the execute speed measurement",
+                "description_speed_parameter_group": "Detailed results from the executed speed measurement",
                 "key_speed_test_duration": "Speedtest Duration",
                 "key_speed_upload": "Upload Speed",
                 "key_speed_upload_bytes": "Data uploaded during the actual test",

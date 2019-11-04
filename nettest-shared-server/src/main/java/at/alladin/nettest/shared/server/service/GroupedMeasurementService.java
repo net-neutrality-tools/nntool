@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,8 @@ import at.alladin.nettest.shared.server.service.SpeedtestDetailGroup.SpeedtestDe
  */
 @Service
 public class GroupedMeasurementService {
+	
+	private final Logger logger = LoggerFactory.getLogger(GroupedMeasurementService.class);
 
 	private static final Locale STRING_FORMAT_LOCALE = Locale.US;
 	
@@ -120,6 +124,15 @@ public class GroupedMeasurementService {
 		
 		final Map<MeasurementTypeDto, FullSubMeasurement> subMeasurements = measurement.getMeasurements();
 		
+		boolean hasQoSMeasurements = false;
+		if (subMeasurements != null) {
+			final FullQoSMeasurement qosMeasurement = (FullQoSMeasurement) subMeasurements.get(MeasurementTypeDto.QOS);
+			hasQoSMeasurements = qosMeasurement != null && qosMeasurement.getResults() != null && qosMeasurement.getResults().size() > 0;
+		}
+		
+		ret.setHasQoSResults(hasQoSMeasurements);
+
+		
 		for (final SpeedtestDetailGroup groupDefinition : groupStructure) {
 			//create a corresponding responseGroup w/formatted and i18ed values
 			final DetailMeasurementGroup responseGroup = new DetailMeasurementGroup();
@@ -158,6 +171,7 @@ public class GroupedMeasurementService {
 				}
 				
 				if (value == null) {
+					logger.debug("Unable to find object @ {}", key);
 					continue;
 				}
 				

@@ -123,6 +123,9 @@ public class ResultFragment extends ActionBarFragment {
                         resultListView.expandGroup(i);
                     }
                 }
+                if (measurementResponse.getHasQoSResults() == null || !measurementResponse.getHasQoSResults()) {
+                    toQoSButton.setVisibility(View.GONE);
+                }
             }
 
         });
