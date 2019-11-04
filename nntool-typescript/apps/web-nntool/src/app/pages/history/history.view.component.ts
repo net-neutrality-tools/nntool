@@ -13,7 +13,7 @@ export class HistoryViewComponent implements OnInit {
   public loading: boolean;
 
   public response: ResultGroupResponse;
-  public hasShareLinks: boolean = true;
+  public hasShareLinks: boolean = false;
   public qosMeasurementResult: QoSMeasurementResult;
 
   private measurementUuid: string;
@@ -35,16 +35,16 @@ export class HistoryViewComponent implements OnInit {
     this.userService.loadMeasurementDetail(this.measurementUuid).subscribe((data: any) => {
       this.loading = false;
       this.response = data.data;
+
+      this.hasShareLinks = this.config.socialMediaSettings 
+        && this.config.socialMediaSettings.history 
+        && this.config.socialMediaSettings.history.medias ? true : false;
     });
 
     this.userService.loadFullMeasurement(this.measurementUuid).subscribe((data: any) => {
       this.fullMeasurementResponse = data.data;
       this.qosMeasurementResult = this.fullMeasurementResponse.measurements.QOS;
     });
-
-    this.hasShareLinks = this.config.socialMediaSettings 
-                            && this.config.socialMediaSettings.history 
-                            && this.config.socialMediaSettings.history.medias ? true : false;
   }
 
   public getUrl() {
