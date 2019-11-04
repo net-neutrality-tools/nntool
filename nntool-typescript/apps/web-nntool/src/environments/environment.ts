@@ -157,7 +157,7 @@ export const environment = {
   },
   socialMediaSettings: {
     history: {
-      //medias: ['FACEBOOK', 'TWITTER', 'MAIL']
+      medias: ["FACEBOOK", "TWITTER", "MAIL", "WHATSAPP"]
     }
   }
 };

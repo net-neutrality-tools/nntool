@@ -1,10 +1,8 @@
-import { MediaEnum } from '../../components/share-link/share-link.component';
-
 export interface SocialMediaSettings {
   openData?: {
-    medias?: MediaEnum[];
+    medias?: string[];
   };
   history?: {
-    medias?: MediaEnum[];
+    medias?: string[];
   };
 }

@@ -13,7 +13,7 @@ export class HistoryViewComponent implements OnInit {
   public loading: boolean;
 
   public response: ResultGroupResponse;
-  public hasShareLinks: boolean = false;
+  public hasShareLinks: boolean = true;
   public qosMeasurementResult: QoSMeasurementResult;
 
   private measurementUuid: string;
@@ -27,7 +27,7 @@ export class HistoryViewComponent implements OnInit {
   ) {
     this.loading = true;
     this.measurementUuid = activatedRoute.snapshot.paramMap.get('uuid');
-    this.config = configService.getConfig();
+    this.config = this.configService.getConfig();
   }
 
   public ngOnInit() {
@@ -42,7 +42,9 @@ export class HistoryViewComponent implements OnInit {
       this.qosMeasurementResult = this.fullMeasurementResponse.measurements.QOS;
     });
 
-    this.hasShareLinks = this.config.socialMediaSettings && this.config.socialMediaSettings.history ? true : false;
+    this.hasShareLinks = this.config.socialMediaSettings 
+                            && this.config.socialMediaSettings.history 
+                            && this.config.socialMediaSettings.history.medias ? true : false;
   }
 
   public getUrl() {

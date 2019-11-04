@@ -1,0 +1,87 @@
+// out: social-share.css, compress: true
+
+// COLOR DEFINITION
+@facebook: rgb(66,103,178);
+@twitter: rgb(29, 161, 242);
+@whatsapp: rgb(37, 211, 102);
+@email: rgb(41,40,41);
+@grey: rgb(218,218,218);
+@white: rgb(255,255,255);
+
+.social-share__list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  font-size: 80%;
+  justify-content: space-around;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  & .social-share__item {
+    margin-bottom: 1em;
+  }
+}
+.social-share__link {
+  border-radius: .333em;
+  display: inline-block;
+  padding: .3em 1em .1em .3em;
+  text-decoration: none;
+  &:hover,
+  &:active,
+  &:focus {
+    background: @grey;
+  }
+}
+.social-share__text,
+.social-share__icon  {
+  display: table-cell;
+  vertical-align: middle;
+}
+.social-share__vector {
+  height: 1.666em;
+  margin-right: .666em;
+  width: 1.666em;
+}
+.social-share__text {
+  font-size: 1.2em;
+}
+.facebook-share {
+  background: @facebook;
+  color: @white;
+  & .social-share__vector {
+    fill: rgb(255, 255, 255);
+  }
+}
+.twitter-share {
+  background: @twitter;
+  color: @white;
+  & .social-share__vector {
+    fill: rgb(255, 255, 255);
+  }
+}
+.whatsapp-share {
+  background: @whatsapp;
+  color: @white;
+  & .social-share__vector {
+    fill: rgb(255, 255, 255);
+  }
+}
+.email-share {
+  background: @email;
+  color: @white;
+  & .social-share__vector {
+    fill: rgb(255, 255, 255);
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .social-share__list {
+    justify-content: flex-start;
+    & .social-share__item {
+      margin-right: 1em;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
