@@ -205,7 +205,8 @@
     "MORE": "Show more..",
     "LOADING": "Loading..",
     "NO_DATA": "Currently no measurements",
-    "RMBTWS": "Browser"
+    "RMBTWS": "Browser",
+    "SHARE_LINK": "share"
   },
   "RESULT": {
     "HEADER": "Nettest Result",
