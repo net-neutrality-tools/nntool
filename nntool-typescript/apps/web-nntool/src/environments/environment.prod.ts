@@ -144,5 +144,10 @@ export const environment = {
       measurement_selection_speed: true,
       measurement_selection_qos: true
     }
+  },
+  socialMediaSettings: {
+    history: {
+      medias: ["FACEBOOK", "TWITTER", "MAIL", "WHATSAPP"]
+    }
   }
 };

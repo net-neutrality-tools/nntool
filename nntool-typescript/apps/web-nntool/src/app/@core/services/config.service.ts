@@ -20,13 +20,13 @@ export interface MapSettingsResponse {
 }
 
 export interface MapViewSettings {
-  position: number[],
-    zoom_initial: number,
-    zoom_min: number,
-    zoom_max: number,
-    hybrid: {
-      zoom_level: number
-    }
+  position: number[];
+  zoom_initial: number;
+  zoom_min: number;
+  zoom_max: number;
+  hybrid: {
+    zoom_level: number;
+  };
 }
 
 declare var __TEST_CONFIG__: any;
@@ -35,8 +35,6 @@ declare var __TEST_CONFIG__: any;
 export class ConfigService {
   private config: WebsiteSettings = environment;
   private constants: any = __TEST_CONFIG__;
-
-  constructor() { }
 
   public clearArray(a: any[]): void {
     while (a.length > 0) {

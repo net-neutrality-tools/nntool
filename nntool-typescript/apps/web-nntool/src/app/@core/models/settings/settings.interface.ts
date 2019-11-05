@@ -5,6 +5,7 @@ import { ServerSettings } from './server.settings.interface';
 import { StatisticsSettings } from './statistics.settings.interface';
 import { OpendataSettings } from './opendata.settings.interface';
 import { UserSettings } from './user.settings.interface';
+import { SocialMediaSettings } from './social-media.settings.interface';
 
 export interface WebsiteSettings {
   /**
@@ -88,4 +89,9 @@ export interface WebsiteSettings {
    * Which style element to use for classification colors
    */
   classificationColorStyle?: string;
+
+  /**
+   * social media (share buttons/links) settings
+   */
+  socialMediaSettings?: SocialMediaSettings;
 }

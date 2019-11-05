@@ -29,6 +29,6 @@ export const SlideAnimation = [
         'padding-bottom': '0'
       })
     ),
-    transition('true <=> false', animate('500ms ease-in-out'))
+    transition('true <=> false', animate('137ms ease-in-out'))
   ])
 ];
