@@ -389,94 +389,242 @@
                     "qos_server_uuid": "qos_server"
                 }
             },
-            "speedtest_detail_groups": [
+           "speedtest_detail_groups": [
                 {
                     "key": "group_overview",
-                    "icon": "r",
+                    "icon": "b",
                     "values": [
                         {
-                            "key": "speed.rttInfo.averageNs",
-                            "format": "DIV_1E6",
-                            "unit": "ms",
-                            "translation_key": "translate_ping",
-                            "share_text": "share_ping {}",
-                            "share_priority": 3
-                        },
-                        {
                             "key": "speed.throughputAvgDownloadBps",
-                            "unit": "Mbps",
+                            "unit": "RESULT_WIFI_LINK_SPEED_UNIT",
                             "format": "DIV_1E6",
-                            "translation_key": "translate_down",
-                            "share_text": "share_download {}",
+                            "translation_key": "RESULT_DOWNLOAD",
+                            "share_text": "RESULT_SHARE_DOWNLOAD",
                             "share_priority": 1
                         },
                         {
                             "key": "speed.throughputAvgUploadBps",
-                            "unit": "Mbps",
+                            "unit": "RESULT_WIFI_LINK_SPEED_UNIT",
                             "format": "DIV_1E6",
-                            "translation_key": "translate_up",
-                            "share_text": "share_upload {}",
+                            "translation_key": "RESULT_UPLOAD",
+                            "share_text": "RESULT_SHARE_UPLOAD",
                             "share_priority": 2
                         },
                         {
+                            "key": "speed.rttInfo.averageNs",
+                            "format": "DIV_1E6",
+                            "unit": "RESULT_MS_UNIT",
+                            "translation_key": "RESULT_PING",
+                            "share_text": "RESULT_SHARE_PING",
+                            "share_priority": 3
+                        },
+                        {
                             "key": "openDataUuid",
-                            "translation_key": "uuid"
+                            "translation_key": "key_open_test_uuid"
                         },
                         {
                             "key": "systemUuid",
-                            "translation_key": "measurement_system_uuid",
-                            "share_text": "share_system {}",
+                            "translation_key": "result.system_uuid",
+                            "share_text": "RESULT_SHARE_SYSTEM_UUID",
                             "share_priority": 5
                         }
                     ]
                 },
                 {
-                    "key": "group_device",
-                    "icon": "b",
+                    "key": "group_network",
+                    "icon": "d",
                     "values": [
                         {
-                            "key": "deviceInfo.osInfo.name",
-                            "translation_key": "translate_osName"
+                            "key": "networkInfo.networkPointInTimeInfo.agentPublicIp",
+                            "translation_key": "key_client_public_ip"
                         },
                         {
-                            "key": "deviceInfo.osInfo.version",
-                            "translation_key": "translate_version"
+                            "key": "networkInfo.networkPointInTimeInfo.agentPrivateIp",
+                            "translation_key": "key_client_local_ip"
                         },
                         {
-                            "key": "deviceInfo.codeName",
-                            "translation_key": "translate_codename"
+                            "key": "networkInfo.networkPointInTimeInfo.agentPublicIpCountryCode",
+                            "translation_key": "key_country_geoip"
                         },
                         {
-                            "key": "deviceInfo.model",
-                            "translation_key": "translate_model"
+                            "key": "networkInfo.networkPointInTimeInfo.networkTypeName",
+                            "translation_key": "RESULT_NETWORK_TYPE"
                         },
                         {
-                            "key": "agentInfo.timezone",
-                            "translation_key": "translate_timezone"
+                            "key": "networkInfo.networkPointInTimeInfo.networkTypeGroupName",
+                            "translation_key": "result.network.network_group_name"
                         },
                         {
-                            "key": "geoLocationInfo.distanceMovedMetres",
-                            "translation_key": "translate_distMetres",
-                            "unit": "m"
+                            "key": "networkInfo.networkPointInTimeInfo.providerShortName",
+                            "translation_key": "key_provider"
+                        },
+                        {
+                            "key": "networkInfo.networkPointInTimeInfo.ssid",
+                            "translation_key": "key_wifi_ssid"
+                        },
+                        {
+                            "key": "networkInfo.networkPointInTimeInfo.bssid",
+                            "translation_key": "key_wifi_bssid"
+                        },
+                        {
+                            "key": "networkInfo.networkPointInTimeInfo.networkOperatorMccMnc",
+                            "translation_key": "result.network.provider_mcc_mnc"
+                        },
+                        {
+                            "key": "networkInfo.networkPointInTimeInfo.networkOperatorName",
+                            "translation_key": "key_network_operator_name"
+                        },
+                        {
+                            "key": "networkInfo.networkPointInTimeInfo.simOperatorName",
+                            "translation_key": "key_network_sim_operator_name"
                         }
                     ]
                 },
                 {
-                    "key": "group_speed_connectivity",
-                    "icon": "ú",
+                    "key": "group_device",
+                    "icon": "g",
+                    "values": [
+                        {
+                            "key": "deviceInfo.osInfo.name",
+                            "translation_key": "result.os"
+                        },
+                        {
+                            "key": "deviceInfo.osInfo.version",
+                            "translation_key": "key_os_version"
+                        },
+                        {
+                            "key": "deviceInfo.codeName",
+                            "translation_key": "result.device.codename"
+                        },
+                        {
+                            "key": "deviceInfo.model",
+                            "translation_key": "key_model"
+                        },
+                        {
+                            "key": "agentInfo.timezone",
+                            "translation_key": "key_timezone"
+                        },
+                        {
+                            "key": "geoLocationInfo.distanceMovedMetres",
+                            "translation_key": "result.moved_distance",
+                            "unit": "result.moved_distance.unit"
+                        },
+                        {
+                            "key": "agentInfo.appVersionName",
+                            "translation_key": "key_client_software_version"
+                        },
+                        {
+                            "key": "agentInfo.timezone",
+                            "translation_key": "key_timezone"
+                        }
+                    ]
+                },
+                {
+                    "key": "speed_parameter_group",
+                    "icon": "B",
+                    "values": [
+                        {
+                            "key": "speed.throughputAvgDownloadBps",
+                            "unit": "RESULT_WIFI_LINK_SPEED_UNIT",
+                            "format": "DIV_1E6",
+                            "translation_key": "RESULT_DOWNLOAD"
+                        },
+                        {
+                            "key": "speed.bytesDownload",
+                            "format": "DIV_1E6",
+                            "unit": "RESULT_TOTAL_BYTES_UNIT",
+                            "translation_key": "key_speed_download_bytes"
+                        },
+                        {
+                            "key": "speed.durationDownloadNs",
+                            "unit": "RESULT_MS_UNIT",
+                            "format": "DIV_1E6",
+                            "translation_key": "key_duration_dl"
+                        },
+                        {
+                            "key": "speed.throughputAvgUploadBps",
+                            "unit": "RESULT_WIFI_LINK_SPEED_UNIT",
+                            "format": "DIV_1E6",
+                            "translation_key": "RESULT_UPLOAD"
+                        },
+                        {
+                            "key": "speed.bytesUpload",
+                            "format": "DIV_1E6",
+                            "unit": "RESULT_TOTAL_BYTES_UNIT",
+                            "translation_key": "key_speed_upload_bytes"
+                        },
+                        {
+                            "key": "speed.durationUploadNs",
+                            "unit": "RESULT_MS_UNIT",
+                            "format": "DIV_1E6",
+                            "translation_key": "key_duration_ul"
+                        },
+                        {
+                            "key": "speed.rttInfo.averageNs",
+                            "format": "DIV_1E6",
+                            "unit": "RESULT_MS_UNIT",
+                            "translation_key": "key_ping_average"
+                        },
+                        {
+                            "key": "speed.rttInfo.medianNs",
+                            "format": "DIV_1E6",
+                            "unit": "RESULT_MS_UNIT",
+                            "translation_key": "key_ping_median"
+                        },
+                        {
+                            "key": "speed.rttInfo.minNs",
+                            "format": "DIV_1E6",
+                            "unit": "RESULT_MS_UNIT",
+                            "translation_key": "key_ping_min"
+                        },
+                        {
+                            "key": "speed.rttInfo.maxNs",
+                            "format": "DIV_1E6",
+                            "unit": "RESULT_MS_UNIT",
+                            "translation_key": "key_ping_max"
+                        }
+                    ]
+                },
+                {
+                    "key": "group_connectivity",
+                    "icon": "q",
                     "values": [
                         {
                             "key": "speed.connectionInfo.address",
-                            "translation_key": "address",
-                            "share_text": "share_address {}"
+                            "translation_key": "key_server_address",
+                            "share_text": "RESULT_SHARE_MEASUREMENT_SERVER_ADDRESS"
+                        },
+                        {
+                            "key": "speed.connectionInfo.ipAddress",
+                            "translation_key": "key_server_ip"
                         },
                         {
                             "key": "speed.connectionInfo.port",
-                            "translation_key": "port"
+                            "translation_key": "key_port"
                         },
                         {
                             "key": "speed.connectionInfo.encrypted",
-                            "translation_key": "encryption"
+                            "translation_key": "key_encryption"
+                        },
+                        {
+                            "key": "speed.connectionInfo.agentInterfaceTotalTraffic.bytesRx",
+                            "translation_key": "result.connection.total_bytes_received",
+                            "unit": "RESULT_TOTAL_BYTES_UNIT",
+                            "format": "DIV_1E6"
+                        },
+                        {
+                            "key": "speed.connectionInfo.agentInterfaceTotalTraffic.bytesTx",
+                            "translation_key": "result.connection.total_bytes_transmitted",
+                            "unit": "RESULT_TOTAL_BYTES_UNIT",
+                            "format": "DIV_1E6"
+                        },
+                        {
+                            "key": "speed.connectionInfo.actualNumStreamsDownload",
+                            "translation_key": "key_num_threads"
+                        },
+                        {
+                            "key": "speed.connectionInfo.actualNumStreamsUpload",
+                            "translation_key": "key_num_threads_ul"
                         }
                     ]
                 }
@@ -554,6 +702,302 @@
             "port": "8000",
             "address_ipv4": "127.0.0.1",
             "enabled": false
+        },
+        {
+            "docType": "Translation",
+            "language": "en",
+            "translations": {
+                "RESULT_DB_UNIT": "dB",
+                "RESULT_DETAILS": "Test Result (click on hyperlinked values for advanced search)",
+                "RESULT_DOWNLOAD": "Download",
+                "RESULT_DOWNLOAD_UNIT": "Mbps",
+                "RESULT_DURATION_UNIT": "s",
+                "RESULT_HOME_NETWORK": "Home Network",
+                "RESULT_LTE_RSRP": "Signal (4G)",
+                "RESULT_LTE_RSRP_UNIT": "dBm",
+                "RESULT_MEASUREMENT": "Measurement Result",
+                "RESULT_MOBILE_NETWORK": "Mobile Network",
+                "RESULT_MS_UNIT": "ms",
+                "RESULT_NETWORK_TYPE": "Connection",
+                "RESULT_OPERATOR_NAME": "Provider",
+                "RESULT_PING": "Ping",
+                "RESULT_PING_UNIT": "ms",
+                "RESULT_PING_UNIT_SQUARED": "ms²",
+                "RESULT_PROVIDER": "Operator",
+                "RESULT_ROAMING": "Roaming",
+                "RESULT_SHARE_SUBJECT": "nntool result - {0}",
+                "RESULT_SHARE_TEXT": "My Result\nDate/time {0}\nDownload {1}\nUpload {2}\nPing {3}\n{4}Network type {5}\n{6}{7}Platform {8}\nModel {9}\n{10}{11}",
+                "RESULT_SHARE_TEXT_LOCATION_ADD": "Location {0}",
+                "RESULT_SHARE_TEXT_MOBILE_ADD": "Mobile Network {0}",
+                "RESULT_SHARE_TEXT_PROVIDER_ADD": "Operator {0}",
+                "RESULT_SHARE_TEXT_RSRP_ADD": "Signal Strength (RSRP) {0}",
+                "RESULT_SHARE_TEXT_SIGNAL_ADD": "Signal Strength {0}",
+                "RESULT_SHARE_INTRO": "My measurement result from the BEREC nettest system:",
+                "RESULT_SHARE_DOWNLOAD": "Download speed: {0}",
+                "RESULT_SHARE_UPLOAD": "Upload speed: {0}",
+                "RESULT_SHARE_PING": "Ping: {0}",
+                "RESULT_SHARE_SYSTEM_UUID": "Measurement system UUID: {0}",
+                "RESULT_SHARE_MEASUREMENT_SERVER_ADDRESS": "Measurement server address: {0}",
+                "RESULT_SIGNAL": "Signal",
+                "RESULT_SIGNAL_RSRP": "Signal (RSRP)",
+                "RESULT_SIGNAL_UNIT": "dBm",
+                "RESULT_TOTAL_BYTES_UNIT": "MB",
+                "RESULT_UPLOAD": "Upload",
+                "RESULT_UPLOAD_UNIT": "Mbps",
+                "RESULT_WIFI_LINK_SPEED_UNIT": "Mbps",
+                "RESULT_WIFI_SSID": "WiFi SSID",
+                "result.system_uuid": "System UUID",
+                "result.os": "Operating System",
+                "result.device.codename": "Device codename",
+                "result.moved_distance": "Distance moved",
+                "result.moved_distance.unit": "m",
+                "result.network.network_group_name": "Connection group",
+                "result.network.provider_mcc_mnc": "Provider MccMnc",
+                "result.connection.total_bytes_received": "Total bytes received during measurement",
+                "result.connection.total_bytes_transmitted": "Total bytes transmitted during measurement",
+                "dash.failure": "Video streaming test failed",
+                "dash.success": "Video streaming test succeeded",
+                "dash.old_testinfo": "%EVAL result = (typeof mkit_result !== 'undefined') ? ('Dash test detailed result: ' + String(nn.prettifyJson(mkit_result))) : 'No result available';%",
+                "dash.testinfo": "%EVAL result = (typeof mkit_result !== 'undefined') ? ('Video streaming possible with a bitrate of ' + String(JSON.parse(mkit_result).test_keys.simple.median_bitrate) + ' kbps. This equals a video resolution of ' + String(nn.getAchievableStreamingResolution(JSON.parse(mkit_result).test_keys.simple.median_bitrate)) + '.' ) : 'No result available';%",
+                "dns.failure": "DNS request failed (resolver: %PARAM dns_objective_resolver%)",
+                "dns.success": "DNS request succeeded (resolver: %PARAM dns_objective_resolver%)",
+                "dns.testinfo": "DNS request for the domain: %PARAM dns_objective_host%\nRequested Record: %PARAM dns_objective_dns_record%\n\nTest Result:\nDNS Status: %PARAM dns_result_status%\nDNS Entries: %PARAM dns_result_entries%\nTest Duration: %PARAM duration_ns 1000000 0 f% ms",
+                "dns.unknowndomain.failure": "Requesting a non-existent domain has returned the invalid result: %PARAM dns_result_entries%",
+                "dns.unknowndomain.info": "A non-existent domain (%PARAM dns_objective_host%) was requested to check the response of the domain's DNS %PARAM dns_objective_dns_record% record.\nThe correct answer should be 'NXDOMAIN' (non-existent domain).\nDNS Status: '%PARAM dns_result_status%';\nDuration: %PARAM duration_ns 1000000 0 f% ms",
+                "dns.unknowndomain.success": "DNS-request for a non-existent domain succeeded. No entries have been returned.",
+                "http.failure": "Received content differs from the original. Modification is likely.",
+                "http.success": "Received content equals the original. No modification detected.",
+                "http.testinfo": "Target: '%PARAM http_objective_url%'\nRange: %PARAM http_objective_range%\nDuration: %PARAM duration_ns 1000000000 1 f% s\nLength: %PARAM http_result_length%\nStatus Code: %PARAM http_result_status%\nHash: %PARAM http_result_hash%\nHeader: \n%PARAM http_result_header%",
+                "key_altitude": "Altitude",
+                "key_cell_id": "Cell-ID",
+                "key_cell_id_multiple": "Multiple Cells",
+                "key_cell_name": "Cell Name",
+                "key_client_local_ip": "Internal IP",
+                "key_client_name": "Software Name",
+                "key_client_position": "Position",
+                "key_client_public_ip": "External IP",
+                "key_client_public_ip_anonymized": "External IP Anonymized",
+                "key_client_public_ip_as": "IP Network (AS)",
+                "key_client_public_ip_as_name": "IP Network Name",
+                "key_client_public_ip_rdns": "Hostname",
+                "key_client_software_version": "Software Version",
+                "key_client_type": "ANT Type",
+                "key_client_version": "ANT version",
+                "key_country_asn": "Country of AS",
+                "key_country_geoip": "Country of IP",
+                "key_country_location": "Country of Geo-Location",
+                "key_device_information_group": "Device Information",
+                "key_duration": "Nominal Test Duration",
+                "key_duration_dl": "Duration Download",
+                "key_duration_ul": "Duration Upload",
+                "key_encryption": "Encryption",
+                "key_encryption_false": "No",
+                "key_encryption_true": "Yes",
+                "key_geo_source_browser": "Browser",
+                "key_geo_source_gps": "GPS",
+                "key_geo_source_network": "Network",
+                "key_heading": "Heading",
+                "key_location": "Location",
+                "key_model": "Model",
+                "key_motion": "Motion",
+                "key_municipality": "Municipality",
+                "key_nat_type": "NAT Status",
+                "key_network_operator": "Mobile Network",
+                "key_network_operator_name": "Network (Display)",
+                "key_network_sim_operator": "Home Network",
+                "key_network_sim_operator_name": "Home Network (Display)",
+                "key_network_type": "Network Type",
+                "key_num_threads": "Parallel Connections DL",
+                "key_num_threads_ul": "Parallel Connections UL",
+                "key_open_test_uuid": "Open Test-ID",
+                "key_os_version": "Platform Version",
+                "key_ping_median": "Median Ping",
+                "key_ping_average": "Average Ping",
+                "key_ping_min": "Minimum Ping",
+                "key_ping_max": "Maximum Ping",
+                "key_ping_ndt": "Latency (NDT)",
+                "key_ping_variance": "Ping Variance",
+                "key_ping_standard_deviation": "Ping Standard Deviation",
+                "key_ping_standard_deviation_squared": "Ping Variance",
+                "key_platform_rmbtws": "Browser",
+                "key_plattform": "Platform",
+                "key_port": "Measurement Server Port",
+                "key_provider": "Operator",
+                "key_provider_information_group": "Provider Information",
+                "key_region": "Region",
+                "key_roaming": "Roaming",
+                "key_server_ip": "Measurement Server IP",
+                "key_server_address": "Measurement Server address",
+                "key_server_location_name": "Testserver Geo-Location",
+                "key_server_name": "Measurement Server Name",
+                "key_settlement": "Settlement",
+                "key_signal_rsrp": "Signal Strength (RSRP)",
+                "key_signal_rsrq": "Signal Quality (RSRQ)",
+                "key_signal_strength": "Signal Strength",
+                "key_speed_download": "Download Speed",
+                "key_speed_download_bytes": "Data downloaded during the actual test",
+                "key_speed_download_ndt": "Download (NDT)",
+                "key_speed_parameter_group": "Speed Parameter",
+                "description_speed_parameter_group": "Detailed results from the executed speed measurement",
+                "key_speed_test_duration": "Speedtest Duration",
+                "key_speed_upload": "Upload Speed",
+                "key_speed_upload_bytes": "Data uploaded during the actual test",
+                "key_speed_upload_ndt": "Upload (NDT)",
+                "key_tag": "Tag",
+                "key_test_specifications_group": "Test Specifications",
+                "key_testdl_if_bytes_download": "DL-Volume NIC (DL-Test)",
+                "key_testdl_if_bytes_upload": "UL-Volume NIC (DL-Test)",
+                "key_testul_if_bytes_download": "DL-Volume NIC (UL-Test)",
+                "key_testul_if_bytes_upload": "UL-Volume NIC (UL-Test)",
+                "key_time": "Test Time",
+                "key_time_dl": "Time Offset DL",
+                "key_time_ul": "Time Offset UL",
+                "key_timezone": "Timezone",
+                "key_total_bytes": "Data Amount ANT-Test",
+                "key_total_if_bytes": "Data Amount NIC",
+                "key_uuid": "Test-ID",
+                "key_whitespace": "White-Spot",
+                "key_wifi_bssid": "WiFi BSSID",
+                "key_wifi_link_speed": "WiFi Link Speed",
+                "key_wifi_ssid": "WiFi SSID",
+                "key_zip_code": "ZIP",
+                "mkit.failure": "Measurement not completed due to an error",
+                "mkit.success": "Measurement completed successfully",
+                "key_group_overview": "Overview",
+                "description_group_overview": "General result of the performed measurement",
+                "key_group_network": "Network",
+                "description_group_network": "Details about the used network during the measurement",
+                "key_group_device": "Device",
+                "description_group_device": "Details about the device used for the measurement",
+                "key_group_connectivity": "Connectivity",
+                "description_group_connectivity": "Details about the connection to the measurement peer",
+                "MKIT_DASH_title": "Video Streaming",
+                "DNS_title": "DNS",
+                "HTTP_PROXY_title": "Unmodified Content",
+                "NON_TRANSPARENT_PROXY_title": "Transparent Connection",
+                "TCP_title": "TCP Ports",
+                "TRACEROUTE_title": "Traceroute",
+                "UDP_title": "UDP Ports",
+                "VOIP_title": "Voice over IP",
+                "MKIT_WEB_CONNECTIVITY_title": "Connectivity Status",
+                "WEBSITE_title": "Webpage",
+                "MKIT_DASH_description": "Video Streaming description",
+                "DNS_description": "DNS description",
+                "HTTP_PROXY_description": "Unmodified Content description",
+                "NON_TRANSPARENT_PROXY_description": "Transparent Connection description",
+                "TCP_description": "TCP Ports description",
+                "TRACEROUTE_description": "Traceroute description",
+                "UDP_description": "UDP Ports description",
+                "VOIP_description": "Voice over IP description",
+                "MKIT_WEB_CONNECTIVITY_description": "Connectivity Status description",
+                "WEBSITE_description": "Webpage description",
+                "MKIT_DASH_icon": "ë",
+                "DNS_icon": "á",
+                "HTTP_PROXY_icon": "é",
+                "NON_TRANSPARENT_PROXY_icon": "í",
+                "TCP_icon": "ó",
+                "TRACEROUTE_icon": "ú",
+                "UDP_icon": "ì",
+                "VOIP_icon": "à",
+                "MKIT_WEB_CONNECTIVITY_icon": "ë",
+                "WEBSITE_icon": "è",
+                "ndt.failure": "Network diagnostics test was not successful",
+                "ndt.success": "Network diagnostics test was successful",
+                "ndt.testinfo": "%EVAL result = (typeof mkit_result !== 'undefined') ? ('Network diagnostics test detailed result: ' + String(nn.prettifyJson(mkit_result))) : 'No result available';%",
+                "ntp.failure": "Request to NST server was manipulated.",
+                "ntp.success": "Request to measurement server was not modified.",
+                "ntp.testinfo": "Content '%PARAM nontransproxy_objective_request%' requested from measurement server.\nThe answer was: '%PARAM nontransproxy_result_response%'",
+                "tcp.failure": "Test failed. Connection could not be established.",
+                "tcp.failure.request": "Response '%PARAM tcp_result_out_response%' differs from request.",
+                "tcp.in.testinfo": "TCP Incoming:\nAn incoming connection on port %PARAM tcp_objective_in_port% was attempted. Result: %PARAM tcp_result_in%.",
+                "tcp.out.testinfo": "TCP Outgoing:\nAn outgoing connection to NST server on port %PARAM tcp_objective_out_port% was attempted.",
+                "tcp.success": "Test succeeded. Connection was established.",
+                "test.dash": "The Dash test analyzes the video streaming performance of the network connection.",
+                "test.desc.dash": "Test video streaming performance",
+                "test.desc.dns": "Target: %PARAM dns_objective_host% \nEntry: %PARAM dns_objective_dns_record%\nResolver: %PARAM dns_objective_resolver%",
+                "test.desc.http": "Target: %PARAM http_objective_url%",
+                "test.desc.ndt": "Perform network diagnostics",
+                "test.desc.ntp": "Port: %PARAM nontransproxy_objective_port%\nRequest: %PARAM nontransproxy_objective_request%",
+                "test.desc.tcp.in": "TCP Incoming, Port: %PARAM tcp_objective_in_port%",
+                "test.desc.tcp.out": "TCP Outgoing, Port: %PARAM tcp_objective_out_port%",
+                "test.desc.tcp.out.110": "E-mail retrieval (POP3, TCP port 110 outgoing)",
+                "test.desc.tcp.out.143": "E-mail retrieval and storage (IMAP, TCP port 143 outgoing)",
+                "test.desc.tcp.out.21": "File Transfer Protocol (FTP, TCP port 21 outgoing)",
+                "test.desc.tcp.out.22": "Secure Login and File Transfers (SSH, TCP port 22 outgoing)",
+                "test.desc.tcp.out.25": "E-mail Transmission (SMTP, TCP port 25 outgoing)",
+                "test.desc.tcp.out.465": "Secure E-mail Transmission (SMTPS, TCP-Port 465 outgoing)",
+                "test.desc.tcp.out.5060": "Control of Communication Sessions (SIP, TCP port 5060 outgoing)",
+                "test.desc.tcp.out.53": "Domain Name Resolving (DNS, TCP port 53 outgoing)",
+                "test.desc.tcp.out.554": "Control of Audio and Visual Media Streaming (RTSP, TCP port 554 outgoing)",
+                "test.desc.tcp.out.585": "Secure E-mail Retrieval and Storage (IMAPS, TCP port 585 outgoing)",
+                "test.desc.tcp.out.587": "E-mail Transmission (SMTP, TCP port 587 outgoing)",
+                "test.desc.tcp.out.6881": "Peer-to-Peer File Sharing (BitTorrent, TCP port 6881 outgoing)",
+                "test.desc.tcp.out.80": "Website Protocol (HTTP, TCP port 80 outgoing)",
+                "test.desc.tcp.out.9001": "Online Anonymity (TOR, TCP port 9001 outgoing)",
+                "test.desc.tcp.out.993": "Secure E-mail Retrieval and Storage (IMAPS, TCP port 993 outgoing)",
+                "test.desc.tcp.out.995": "Secure E-mail Retrieval (POP3S, TCP port 995 outgoing)",
+                "test.desc.trace": "Traceroute Target: %PARAM traceroute_objective_host%",
+                "test.desc.udp.in": "UDP Incoming, Port: %PARAM udp_objective_in_port%, Number of Packets: %PARAM udp_objective_in_num_packets%",
+                "test.desc.udp.out": "UDP Outgoing, Port: %PARAM udp_objective_out_port%, Number of Packets: %PARAM udp_objective_out_num_packets%",
+                "test.desc.udp.out.123": "Time Synchronisation (NTP, UDP port 123 outgoing)",
+                "test.desc.udp.out.27005": "Online Games Streaming (UDP port 27005 outgoing)",
+                "test.desc.udp.out.27015": "Online Games Streaming (UDP port 27015 outgoing)",
+                "test.desc.udp.out.500": "Establishment and Usage of Secure Services (ISAKMP, UDP port 500 outgoing)",
+                "test.desc.udp.out.5004": "Streaming of Audio and Visual Media (RTP, UDP port 5004 outgoing)",
+                "test.desc.udp.out.5005": "Quality of Service for Audio and Visual Media Streaming (RTCP, UDP port 5005 outgoing)",
+                "test.desc.udp.out.5060": "Communication Sessions (SIP, UDP port 5060 outgoing)",
+                "test.desc.udp.out.53": "Domain Name Resolving (DNS, UDP port 53 outgoing)",
+                "test.desc.udp.out.554": "Control of Audio and Visual Media Streaming (RTSP, UDP port 554 outgoing)",
+                "test.desc.udp.out.7078": "Voice over IP (VoIP, UDP port 7078 outgoing)",
+                "test.desc.udp.out.7082": "Voice over IP (VoIP, UDP port 7082 outgoing)",
+                "test.desc.voip": "Simulated VoIP call. Duration: %PARAM voip_objective_call_duration 1000000 1 f% ms",
+                "test.desc.web_connectivity": "%EVAL result = (typeof mkit_result !== 'undefined') ? ('Test internet connectivity with target: ' + String(JSON.parse(mkit_result).input)) : 'Test internet connectivity';%",
+                "test.desc.website": "Target: %PARAM website_objective_url%",
+                "test.description": "n/a",
+                "test.dns": "DNS is a fundamental internet service to translate domain names to IP addresses. Each DNS test checks if this service is available, if answers are correct and measures server response time.",
+                "test.http": "This test downloads a test web resource (e.g. image) and checks, if it was modified during transport.",
+                "test.ndt": "The NDT test provides plenty of tests to analyze network configuration and performance, with the aim of identifying potential issues in the network.",
+                "test.ntp": "This test checks if a request is modified by a proxy or other middlebox.",
+                "test.tcp": "TCP is the most common connection-oriented internet protocol. Typical services http for websites or smtp for e-mail.",
+                "test.test": "Test\ntest\nTEST",
+                "test.timeout.exceeded": "Test timeout exceeded. Test failed.",
+                "test.trace": "Traceroute shows the route across IP based networks.",
+                "test.udp": "UDP is an important connectionless internet protocol. Typical services real-time communication like VoIP or video streaming.",
+                "test.voip": "Voice over IP (VoIP) is a technology for the delivery of voice communication over IP based networks.",
+                "test.website": "The website rendering test downloads a reference web page (mobile Kepler page by ETSI), checks completeness, correct rendering and measures duration.",
+                "timeout": "Test was not completed. Timeout exceeded!",
+                "trace.testinfo": "Traceroute Test Parameters:\nHost: %PARAM traceroute_objective_host%\nMax. Hops: %PARAM traceroute_objective_max_hops%\n\nTraceroute Test Results:\nHops Needed: %PARAM traceroute_result_hops%\nTraceroute Result: %PARAM traceroute_result_status%\n\nFull Route:\n%EVAL result=String(nn.parseTraceroute(traceroute_result_details))%",
+                "traceroute.failure": "An error occured during traceroute test.",
+                "traceroute.success": "Traceroute test was successful.",
+                "udp.failure": "UDP-Test failed. Some packets were lost.",
+                "udp.in.testinfo": "UDP Incoming:\nNumber of Packets Requested: %PARAM udp_objective_in_num_packets%, Received by Client: %PARAM udp_result_in_num_packets%, Returned to Server: %PARAM udp_result_in_response_num_packets%.\nPacket Loss Ratio: %PARAM udp_result_in_packet_loss_rate%\\\\%",
+                "udp.out.testinfo": "UDP Outgoing:\nSending and receiving packets to NST server on port %PARAM udp_objective_out_port% attempted.\nNumber of Packets Sent: %PARAM udp_objective_out_num_packets%, Packets Received by Server: %PARAM udp_result_out_num_packets%, Packets Received in reverse by Client: %PARAM udp_result_out_response_num_packets%.\nPacket Loss Ratio: %PARAM udp_result_out_packet_loss_rate%\\\\%",
+                "udp.success": "UDP test succeeded. All packets were transferred.",
+                "value_cell_id_multiple": "True",
+                "value_roaming_international": "International",
+                "value_roaming_national": "National",
+                "value_roaming_none": "No",
+                "voip.incoming.packet.failure": "Incoming communication is missing. \nNo incoming voice packet arrived at target.",
+                "voip.incoming.packet.success": "Receiving voice packets on port %PARAM voip_objective_in_port% is possible.",
+                "voip.jitter.incoming.failure": "Incoming mean jitter is too high/empty: incoming voice packets are missing.",
+                "voip.jitter.incoming.success": "Incoming mean jitter is acceptable for VoIP communication",
+                "voip.jitter.outgoing.failure": "Outgoing mean jitter is too high/empty: outgoing voice packets are missing.",
+                "voip.jitter.outgoing.success": "Outgoing mean jitter is acceptable for VoIP communication.",
+                "voip.outgoing.packet.failure": "Outgoing communication is missing. No outgoing voice packet arrived at target.",
+                "voip.outgoing.packet.success": "Sending voice packets to port %PARAM voip_objective_out_port% is possible.",
+                "voip.testinfo": "Test Parameters\nSample Rate: %PARAM voip_objective_sample_rate%, Bits per Sample: %PARAM voip_objective_bits_per_sample%\nCall Duration: %PARAM voip_objective_call_duration 1000000 1 f% ms\nPacket Delay: %PARAM voip_objective_delay 1000000 1 f% ms\nPayload Type: %EVAL result=String(nn.getPayloadType(voip_objective_payload))%\nTarget Port: %PARAM voip_objective_out_port%\n\nTest Results\n\nIncoming Voice Stream:\nMax. Jitter: %PARAM voip_result_in_max_jitter 1000000 2 f% ms\nMean Jitter: %PARAM voip_result_in_mean_jitter 1000000 2 f% ms\nMax. Delta: %PARAM voip_result_in_max_delta 1000000 2 f% ms\nSkew: %PARAM voip_result_in_skew 1000000 2 f% ms\nPackets Received: %PARAM voip_result_in_num_packets%\nSequence Errors: %PARAM voip_result_in_sequence_error%\nShortest/Longest Sequence: %PARAM voip_result_in_short_seq% / %PARAM voip_result_in_long_seq%\n\nOutgoing Voice Stream:\nMax. Jitter: %PARAM voip_result_out_max_jitter 1000000 2 f% ms\nMean Jitter: %PARAM voip_result_out_mean_jitter 1000000 2 f% ms\nMax. Delta: %PARAM voip_result_out_max_delta 1000000 2 f% ms\nSkew: %PARAM voip_result_out_skew 1000000 2 f% ms\nPackets Received: %PARAM voip_result_out_num_packets%\nSequence Errors: %PARAM voip_result_out_sequence_error%\nShortest/Longest Sequence: %PARAM voip_result_out_short_seq% / %PARAM voip_result_out_long_seq%",
+                "voip.testinfo.long": "Test Parameters\nSample Rate: %PARAM voip_objective_sample_rate%, Bits per Sample: %PARAM voip_objective_bits_per_sample%\nCall Duration: %PARAM voip_objective_call_duration 1000000 1 f% ms\nPacket Delay: %PARAM voip_objective_delay 1000000 1 f% ms\nPayload Type: %EVAL result=String(nn.getPayloadType(voip_objective_payload))%\n\nTest Results\nIncoming Voice Stream:\nTarget Port: %PARAM voip_objective_in_port%\nMax. Jitter: %PARAM voip_result_in_max_jitter 1000000 2 f% ms\nMean Jitter: %PARAM voip_result_in_mean_jitter 1000000 2 f% ms\nMax. Delta: %PARAM voip_result_in_max_delta 1000000 2 f% ms\nSkew: %PARAM voip_result_in_skew 1000000 2 f% ms\nPackets Received: %PARAM voip_result_in_num_packets%\nSequence Errors: %PARAM voip_result_in_sequence_error%\nShortest/Longest Sequence: %PARAM voip_result_in_short_seq% / %PARAM voip_result_in_long_seq%\n\nOutgoing Voice Stream:\nTarget Port: %PARAM voip_objective_out_port%\nMax. Jitter: %PARAM voip_result_out_max_jitter 1000000 2 f% ms\nMean Jitter: %PARAM voip_result_out_mean_jitter 1000000 2 f% ms\nMax. Delta: %PARAM voip_result_out_max_delta 1000000 2 f% ms\nSkew: %PARAM voip_result_out_skew 1000000 2 f% ms\nPackets Received: %PARAM voip_result_out_num_packets%\nSequence Errors: %PARAM voip_result_out_sequence_error%\nShortest/Longest Sequence: %PARAM voip_result_out_short_seq% / %PARAM voip_result_out_long_seq%\n",
+                "voip.timeout": "Test timeout exceeded. Test failed.",
+                "web_connectivity.failure": "Target website not reachable",
+                "web_connectivity.success": "Target website successfully reached",
+                "web_connectivity.testinfo": "%EVAL result = (typeof mkit_result !== 'undefined') ? ('Test internet connectivity with target: ' + String(nn.prettifyJson(mkit_result))) : 'No result available';%",
+                "website.200": "Webpage transferred successfully.",
+                "website.error": "Error occured during test.",
+                "website.long": "Transfer of %PARAM website_objective_url% took more than %PARAM website_objective_timeout 1000000000 0 f% s.\nDuration: %PARAM website_result_duration_ns 1000000000 1 f% s",
+                "website.not_found": "Website not found.",
+                "website.short": "Transfer of %PARAM website_objective_url% took less than %PARAM website_objective_timeout 1000000000 0 f% s.\nDuration: %PARAM website_result_duration_ns 1000000000 1 f% s",
+                "website.testinfo": "The transfer of %PARAM website_objective_url% took %PARAM duration_ns 1000000000 1 f% s.\n\nTransferred Data DL: %PARAM website_result_rx_bytes 1000 1 f% kB\nTransferred Data UL: %PARAM website_result_tx_bytes 1000 1 f% kB\nHTTP Status Code: %PARAM website_result_status%"
+            }
         }
     ]
 }

@@ -40,6 +40,16 @@ public class DetailMeasurementResponse extends BasicResponse {
 	@JsonProperty(required = true, value = "share_measurement_text")
 	private String shareMeasurementText;
 	
+	/**
+	 * True, if the measurement has results for QoS tests.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "True, if the measurement has results for QoS tests.")
+	@JsonPropertyDescription("True, if the measurement has results for QoS tests.")
+	@Expose
+	@SerializedName("has_qos_results")
+	@JsonProperty(required = true, value = "has_qos_results")
+	private Boolean hasQoSResults;
+	
 	public List<DetailMeasurementGroup> getGroups() {
 		return groups;
 	}
@@ -56,9 +66,18 @@ public class DetailMeasurementResponse extends BasicResponse {
 		this.shareMeasurementText = shareMeasurementText;
 	}
 
+	public Boolean getHasQoSResults() {
+		return hasQoSResults;
+	}
+
+	public void setHasQoSResults(Boolean hasQoSResults) {
+		this.hasQoSResults = hasQoSResults;
+	}
+
 	@Override
 	public String toString() {
-		return "DetailMeasurementResponse [groups=" + groups + "]";
+		return "DetailMeasurementResponse [groups=" + groups + ", shareMeasurementText=" + shareMeasurementText
+				+ ", hasQoSResults=" + hasQoSResults + "]";
 	}
 	
 }

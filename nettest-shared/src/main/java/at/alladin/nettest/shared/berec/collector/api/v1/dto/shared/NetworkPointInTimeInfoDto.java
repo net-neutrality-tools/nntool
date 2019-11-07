@@ -254,6 +254,24 @@ public class NetworkPointInTimeInfoDto {
     @SerializedName("sim_operator_name")
     @JsonProperty("sim_operator_name")
     private String simOperatorName;
+	
+    /**
+     * Indicates if this is a roaming connection, if available (null = unknown).
+     */
+	@JsonPropertyDescription("Indicates if this is a roaming connection, if available (null = unknown).")
+    @Expose
+    @SerializedName("roaming")
+    @JsonProperty("roaming")
+    private Boolean roaming;
+
+    /**
+     * The roaming type, if available.
+     */
+	@JsonPropertyDescription("The roaming type, if available.")
+    @Expose
+    @SerializedName("roaming_type")
+    @JsonProperty("roaming_type")
+    private String roamingType;
 
 	public LocalDateTime getTime() {
 		return time;
@@ -438,4 +456,21 @@ public class NetworkPointInTimeInfoDto {
 	public void setAgentPrivateIp(String agentPrivateIp) {
 		this.agentPrivateIp = agentPrivateIp;
 	}
+
+	public Boolean getRoaming() {
+		return roaming;
+	}
+
+	public void setRoaming(Boolean roaming) {
+		this.roaming = roaming;
+	}
+
+	public String getRoamingType() {
+		return roamingType;
+	}
+
+	public void setRoamingType(String roamingType) {
+		this.roamingType = roamingType;
+	}
+	
 }
