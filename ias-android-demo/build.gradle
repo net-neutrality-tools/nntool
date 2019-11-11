@@ -64,8 +64,8 @@ android
 dependencies {
     //api fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
 
-    api project(':android-common')
-    api project(':android-speed')
+    api project(':ias-android-common')
+    api project(':ias-android-speed')
     api project(':qos-client-android')
 
     api 'com.android.support:multidex:1.0.3'

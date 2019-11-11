@@ -60,7 +60,7 @@ dependencies
 {
     implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
 
-    //implementation project(path: ':android-common')
+    //implementation project(path: ':ias-android-common')
 
     implementation 'com.android.support:multidex:1.0.3'
 
