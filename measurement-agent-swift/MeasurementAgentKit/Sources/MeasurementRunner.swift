@@ -129,6 +129,8 @@ public class MeasurementRunner {
 
         var taskResultDict = [MeasurementTypeDto: SubMeasurementResult]()
 
+        var measurementFailed = false
+        
         for task in tasks {
             if isCanceled {
                 logger.info("Measurement runner is cancelled.")
@@ -172,7 +174,9 @@ public class MeasurementRunner {
 
                 taskResultDict[taskType] = result
             } catch {
-                // TODO: fail whole measurement or just submeasurement?
+                // TODO: call program failure callback
+                measurementFailed = true
+                break
             }
 
             delegate?.measurementRunner(self, didFinishProgramWithName: taskName, implementation: programInstance)
@@ -182,9 +186,13 @@ public class MeasurementRunner {
 
         informationCollector.stop()
 
-        logger.info("-- all finished")
+        logger.info("-- all finished (has error: \(measurementFailed)")
 
-        submitMeasurementResult(tasks: tasks, taskResultDict: taskResultDict, startTime: startTime, startTimeNs: startTimeNs, timeBasedResult: informationCollector.getResult())
+        if measurementFailed {
+            delegate?.measurementDidFail(self)
+        } else {
+            submitMeasurementResult(tasks: tasks, taskResultDict: taskResultDict, startTime: startTime, startTimeNs: startTimeNs, timeBasedResult: informationCollector.getResult())
+        }
     }
 
     private func submitMeasurementResult(tasks: [LmapTaskDto], taskResultDict: [MeasurementTypeDto: SubMeasurementResult], startTime: Date, startTimeNs: UInt64, timeBasedResult: TimeBasedResultDto) {

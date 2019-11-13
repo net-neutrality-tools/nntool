@@ -31,6 +31,8 @@ class IASProgram: NSObject, ProgramProtocol {
 
     let measurementFinishedSemaphore = DispatchSemaphore(value: 0)
 
+    var measurementFailed = false
+
     var config: IasMeasurementConfiguration?
 
     var serverAddress: String?
@@ -45,7 +47,14 @@ class IASProgram: NSObject, ProgramProtocol {
     private var interfaceTrafficDownloadStart: InterfaceTraffic?
     private var interfaceTrafficUploadStart: InterfaceTraffic?
     private var interfaceTrafficUploadEnd: InterfaceTraffic?
-
+    
+    let encoder = JSONEncoder()
+    
+    enum IASError: Error {
+        case measurementError
+    }
+    
+    // swiftlint:disable cyclomatic_complexity
     func run(relativeStartTimeNs: UInt64) throws -> SubMeasurementResult {
         self.relativeStartTimeNs = relativeStartTimeNs
 
@@ -57,8 +66,6 @@ class IASProgram: NSObject, ProgramProtocol {
 
         ////
 
-        speed.platform = "mobile"
-
         if let addr = serverAddress, let port = serverPort {
             speed.targetsTld = ""
             speed.targets = [addr]
@@ -69,19 +76,12 @@ class IASProgram: NSObject, ProgramProtocol {
             speed.targetsPort = "80"
         }
 
+        speed.platform = "mobile"
         speed.performRttMeasurement      = true
         speed.performDownloadMeasurement = true
         speed.performUploadMeasurement   = true
         speed.performRouteToClientLookup = false
         speed.performGeolocationLookup   = false
-
-        //speed.parallelStreamsDownload = 4
-        //speed.frameSizeDownload = 32768
-
-        //speed.parallelStreamsUpload = 4
-        //speed.frameSizeUpload = 32768
-
-        let encoder = JSONEncoder()
 
         // add speed classes (need to transform to Dictionary until Speed library works with objects)
         if let c = config {
@@ -91,7 +91,7 @@ class IASProgram: NSObject, ProgramProtocol {
                 }
             }
 
-            for ul in c.download {
+            for ul in c.upload {
                 if let ulDict = try? JSONSerialization.jsonObject(with: encoder.encode(ul), options: []) {
                     speed.uploadClasses.add(ulDict)
                 }
@@ -107,12 +107,20 @@ class IASProgram: NSObject, ProgramProtocol {
         let relativeEndTimeNs = TimeHelper.currentTimeNs() - relativeStartTimeNs
 
         let res = IasMeasurementResult()
+        
+        if measurementFailed {
+            // TODO: reason
+            //res.status = .failed
+            //return res
+            throw IASError.measurementError
+        }
 
         guard let r = result else {
             // TODO: reason
 
-            res.status = .failed // or .aborted
-            return res
+            //res.status = .failed // or .aborted
+            //return res
+            throw IASError.measurementError
         }
 
         res.relativeStartTimeNs = relativeStartTimeNs
@@ -153,13 +161,7 @@ class IASProgram: NSObject, ProgramProtocol {
             res.connectionInfo?.actualNumStreamsDownload = lastDownloadInfo["num_streams_end"] as? Int
             res.connectionInfo?.requestedNumStreamsDownload = lastDownloadInfo["num_streams_start"] as? Int
 
-            res.connectionInfo?.webSocketInfoDownload = WebSocketInfoDto()
-            res.connectionInfo?.webSocketInfoDownload?.frameCount = lastDownloadInfo["frame_count"] as? Int
-            res.connectionInfo?.webSocketInfoDownload?.frameCountIncludingSlowStart = lastDownloadInfo["frame_count_including_slow_start"] as? Int
-            res.connectionInfo?.webSocketInfoDownload?.frameSize = lastDownloadInfo["frame_size"] as? Int
-            res.connectionInfo?.webSocketInfoDownload?.overhead = lastDownloadInfo["overhead"] as? Int
-            res.connectionInfo?.webSocketInfoDownload?.overheadIncludingSlowStart = lastDownloadInfo["overhead_including_slow_start"] as? Int
-            res.connectionInfo?.webSocketInfoDownload?.overheadPerFrame = lastDownloadInfo["overhead_per_frame"] as? Int
+            res.connectionInfo?.webSocketInfoDownload = createWebsocketInfoDto(lastDownloadInfo)
         }
 
         if let lastUploadInfo = (r["upload_info"] as? [[AnyHashable: Any]])?.last {
@@ -170,13 +172,7 @@ class IASProgram: NSObject, ProgramProtocol {
             res.connectionInfo?.actualNumStreamsUpload = lastUploadInfo["num_streams_end"] as? Int
             res.connectionInfo?.requestedNumStreamsUpload = lastUploadInfo["num_streams_start"] as? Int
 
-            res.connectionInfo?.webSocketInfoUpload = WebSocketInfoDto()
-            res.connectionInfo?.webSocketInfoUpload?.frameCount = lastUploadInfo["frame_count"] as? Int
-            res.connectionInfo?.webSocketInfoUpload?.frameCountIncludingSlowStart = lastUploadInfo["frame_count_including_slow_start"] as? Int
-            res.connectionInfo?.webSocketInfoUpload?.frameSize = lastUploadInfo["frame_size"] as? Int
-            res.connectionInfo?.webSocketInfoUpload?.overhead = lastUploadInfo["overhead"] as? Int
-            res.connectionInfo?.webSocketInfoUpload?.overheadIncludingSlowStart = lastUploadInfo["overhead_including_slow_start"] as? Int
-            res.connectionInfo?.webSocketInfoUpload?.overheadPerFrame = lastUploadInfo["overhead_per_frame"] as? Int
+            res.connectionInfo?.webSocketInfoUpload = createWebsocketInfoDto(lastUploadInfo)
         }
 
         if let timeInfo = r["time_info"] as? [AnyHashable: UInt64] {
@@ -220,6 +216,19 @@ class IASProgram: NSObject, ProgramProtocol {
 
         return res
     }
+    // swiftlint:enable cyclomatic_complexity
+
+    func createWebsocketInfoDto(_ dict: [AnyHashable: Any]) -> WebSocketInfoDto {
+        let wsInfo = WebSocketInfoDto()
+        wsInfo.frameCount = dict["frame_count"] as? Int
+        wsInfo.frameCountIncludingSlowStart = dict["frame_count_including_slow_start"] as? Int
+        wsInfo.frameSize = dict["frame_size"] as? Int
+        wsInfo.overhead = dict["overhead"] as? Int
+        wsInfo.overheadIncludingSlowStart = dict["overhead_including_slow_start"] as? Int
+        wsInfo.overheadPerFrame = dict["overhead_per_frame"] as? Int
+
+        return wsInfo
+    }
 
     func cancel() {
         speed.measurementStop()
@@ -232,7 +241,7 @@ extension IASProgram: SpeedDelegate {
         //logger.debug(response.description)
 
         logger.debug("showKpisFromResponse (delegate: \(String(describing: delegate)))")
-
+        
         logger.debug(response["cmd"])
         logger.debug(response["test_case"])
         /*logger.debug(response["msg"])
@@ -245,6 +254,10 @@ extension IASProgram: SpeedDelegate {
             case "info": handleCmdInfo(response)
             case "report": handleCmdReport(response)
             case "finish": handleCmdFinish(response)
+            case "error":
+                logger.debug("MEASUREMENT ERROR -> aborting")
+                measurementFailed = true
+                speed.measurementStop()
             default: break
             }
         }
