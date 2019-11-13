@@ -1,4 +1,4 @@
-package com.zafaco.moduleCommon;
+package com.zafaco.common;
 
 /*!
     \file Tool.java
@@ -20,7 +20,6 @@ package com.zafaco.moduleCommon;
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -39,7 +38,6 @@ import android.os.Build;
 import android.provider.Settings;
 import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.google.gson.Gson;
 

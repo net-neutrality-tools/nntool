@@ -20,7 +20,7 @@ import at.alladin.nettest.nntool.android.app.view.BottomMeasurementResultSummary
 import at.alladin.nettest.nntool.android.app.view.MeasurementRecentResultSelectorView;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
 import at.alladin.nettest.nntool.android.app.workflow.main.TitleFragment;
-import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
+import com.zafaco.speed.SpeedMeasurementState;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)

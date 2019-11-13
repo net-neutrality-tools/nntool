@@ -1,4 +1,4 @@
-package com.zafaco.moduleCommon.listener;
+package com.zafaco.common.listener;
 
 /*!
     \file ListenerWireless.java
@@ -26,8 +26,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 
-import com.zafaco.moduleCommon.Tool;
-import com.zafaco.moduleCommon.interfaces.ModulesInterface;
+import com.zafaco.common.Tool;
+import com.zafaco.common.interfaces.ModulesInterface;
 
 import org.json.JSONObject;
 

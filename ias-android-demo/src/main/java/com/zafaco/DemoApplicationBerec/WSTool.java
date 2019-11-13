@@ -26,10 +26,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.zafaco.moduleCommon.Common;
-import com.zafaco.moduleCommon.Database;
-import com.zafaco.moduleCommon.Http;
-import com.zafaco.moduleCommon.Tool;
+import com.zafaco.common.Common;
+import com.zafaco.common.Database;
+import com.zafaco.common.Http;
+import com.zafaco.common.Tool;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -178,7 +178,7 @@ public final class WSTool
 
 		try
         {
-            jData.put("common", com.zafaco.moduleCommon.BuildConfig.VERSION_NAME);
+            jData.put("common", com.zafaco.common.BuildConfig.VERSION_NAME);
 
             switch (sTestCase)
             {

@@ -1,4 +1,4 @@
-package com.zafaco.moduleCommon.listener;
+package com.zafaco.common.listener;
 
 /*!
     \file ListenerTelefon.java
@@ -25,15 +25,15 @@ import android.os.Build;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
-import com.zafaco.moduleCommon.Tool;
-import com.zafaco.moduleCommon.interfaces.ModulesInterface;
+import com.zafaco.common.Tool;
+import com.zafaco.common.interfaces.ModulesInterface;
 
 import org.json.JSONObject;
 
 /**
- * Class ListenerTelefon
+ * Class ListenerPhone
  */
-public class ListenerTelefon extends PhoneStateListener
+public class ListenerPhone extends PhoneStateListener
 {
 	/**************************** Variables ****************************/
 
@@ -52,11 +52,11 @@ public class ListenerTelefon extends PhoneStateListener
 	/*******************************************************************/
 
     /**
-     * Method ListenerTelefon
+     * Method ListenerPhone
      * @param ctx
      * @param intCall
      */
-	public ListenerTelefon(Context ctx, ModulesInterface intCall)
+	public ListenerPhone(Context ctx, ModulesInterface intCall)
 	{
 		this.ctx = ctx;
 		this.interfaceCallback = intCall;

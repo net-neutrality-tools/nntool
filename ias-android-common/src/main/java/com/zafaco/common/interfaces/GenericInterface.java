@@ -1,4 +1,4 @@
-package com.zafaco.moduleCommon.interfaces;
+package com.zafaco.common.interfaces;
 
 /*!
     \file GenericInterface.java

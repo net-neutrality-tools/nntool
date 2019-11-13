@@ -1,4 +1,4 @@
-package com.zafaco.moduleCommon.listener;
+package com.zafaco.common.listener;
 
 /*!
     \file ListenerGeoLocation.java
@@ -24,7 +24,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.wifi.WifiManager;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -36,8 +35,8 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.zafaco.moduleCommon.Tool;
-import com.zafaco.moduleCommon.interfaces.ModulesInterface;
+import com.zafaco.common.Tool;
+import com.zafaco.common.interfaces.ModulesInterface;
 
 import org.json.JSONObject;
 

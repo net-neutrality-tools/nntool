@@ -1,4 +1,4 @@
-package com.zafaco.moduleCommon;
+package com.zafaco.common;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package at.alladin.nettest.nntool.android.speed.jni.exception;
+package com.zafaco.speed.jni.exception;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)

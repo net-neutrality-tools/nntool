@@ -2,7 +2,6 @@ package at.alladin.nettest.nntool.android.app.workflow.measurement;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -10,25 +9,18 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
-import at.alladin.nettest.nntool.android.app.async.OnTaskFinishedCallback;
-import at.alladin.nettest.nntool.android.app.async.SendReportTask;
 import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
-import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
-import at.alladin.nettest.nntool.android.app.util.RequestUtil;
 import at.alladin.nettest.nntool.android.app.view.AlladinTextView;
 import at.alladin.nettest.nntool.android.app.view.BottomMeasurementResultSummaryView;
 import at.alladin.nettest.nntool.android.app.view.CanvasArcDoubleGaugeWithLabels;
@@ -36,8 +28,7 @@ import at.alladin.nettest.nntool.android.app.view.TopProgressBarView;
 import at.alladin.nettest.nntool.android.app.workflow.ActionBarFragment;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
-import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
+import com.zafaco.speed.SpeedMeasurementState;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)

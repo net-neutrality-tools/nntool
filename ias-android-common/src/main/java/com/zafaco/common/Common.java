@@ -1,4 +1,4 @@
-package com.zafaco.moduleCommon;
+package com.zafaco.common;
 
 /*!
     \file Common.java
