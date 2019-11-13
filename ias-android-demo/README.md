@@ -22,11 +22,11 @@ Launch the App *android-demo* in android-simulator or on an android-device and s
 
 ---------------
 
-## Port Blocking
+## Port Blocking ##
 
 For the port blocking module a specified set of ports is tested against a defined test-service.
 
-### Settings
+### Settings ###
 
 Available settings are located in the src/main/res/values/defaults.xml file (of the android-demo project).
 They are:
@@ -38,7 +38,7 @@ They are:
 (Note that all UDP ports that shall be successfully tested against need be enabled in the qos-service config.properties file. 
 The corresponding setting is "server.udp.ports", which takes a list of ports to be enabled for UDP blocking tests)
 
-### Results
+### Results ###
 
 The results in the demo-application of the port-blocking module are only displayed as Json array 
 (for more information see [the JSON standard](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)). 
@@ -58,7 +58,7 @@ For udp results, the port is reachable if the value under "udp\_objective\_out\_
 
 ---------------
 
-## Echo Protocol
+## Echo Protocol ##
 
 For the echo protocol test a given payload is sent to a specified server and the returned payload is checked for equality with the originally sent one.
 
@@ -71,7 +71,7 @@ They are:
 * qos\_echo\_service\_tcp\_ports: which is a list of TCP ports to test the echo service on (Note: the default echo-service port is 7)
 * qos\_echo\_service\_udp\_ports: which is a list of UDP ports to test the echo service on (Note: the default echo-service port is 7)
 
-### Results
+### Results ###
 
 The result of the echo-protocol test is found under the "echo\_protocol\_status" key. It has one of the following 3 values:
 
@@ -79,6 +79,22 @@ The result of the echo-protocol test is found under the "echo\_protocol\_status"
 * TIMEOUT: the test ran into a timeout during the execution
 * ERROR: an error occurred during the echo-protocol test
 
-
 ---------------
 
+## License ##
+
+ias-android-demo is released under the AGPLv3 <https://www.gnu.org/licenses/agpl-3.0.txt>
+
+Copyright (C) 2016-2019 zafaco GmbH
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3 
+as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
