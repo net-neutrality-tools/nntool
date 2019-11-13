@@ -12,7 +12,7 @@
 
 /*!
  *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-19
+ *      \date Last update: 2019-11-13
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
@@ -42,6 +42,7 @@ class CConnection
 		SSL_CTX* ctx;
 		SSL* ssl;
 
+		void toggleBlocking(bool activate);
 		void tlsSetup(bool client);
 		int tlsConnect();
 		void tlsPrintError();
@@ -72,6 +73,12 @@ class CConnection
 		//! TCP Server Sockets
 		int tcpSocketServer( int &nPort );
 		int tcp6SocketServer( int &nPort );
+
+		//! Set Socket to non-blocking
+		void setBlocking();
+
+		//! Set Socket to non-blocking
+		void setNonBlocking();
 
 		//! TLS specific functions
 		int tlsServe();
