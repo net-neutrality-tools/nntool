@@ -1,5 +1,3 @@
-package com.zafaco.common.listener;
-
 /*!
     \file ListenerNetwork.java
     \author zafaco GmbH <info@zafaco.de>
@@ -19,6 +17,8 @@ package com.zafaco.common.listener;
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+package com.zafaco.common.listener;
 
 import android.content.Context;
 import android.telephony.CellLocation;
