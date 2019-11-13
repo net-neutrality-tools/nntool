@@ -39,6 +39,7 @@ import UIKit
         }
         set {
             startButton?.isEnabled = newValue
+            startButton?.backgroundColor = newValue ? BEREC_RED : BEREC_DARK_GRAY
         }
     }
 
