@@ -400,6 +400,22 @@ int CConnection::tcp6SocketServer( int &nPort )
 	return mSocket;
 }
 
+void CConnection::setBlocking()
+{
+	toggleBlocking(true);
+}
+
+void CConnection::setNonBlocking()
+{
+	toggleBlocking(false);
+}
+
+void CConnection::toggleBlocking(bool activate)
+{
+	const int flags = fcntl(mSocket, F_GETFL, 0);
+	fcntl(mSocket, F_SETFL, activate ? flags ^ O_NONBLOCK : flags | O_NONBLOCK);
+}
+
 int CConnection::tlsServe()
 {
 	mTls = 1;
