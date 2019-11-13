@@ -1,22 +1,9 @@
-/*
-*********************************************************************************
-*                                                                               *
-*       ..--== zafaco GmbH ==--..                                               *
-*                                                                               *
-*       Website: http://www.zafaco.de                                           *
-*                                                                               *
-*       Copyright 2017 - 2018                                                   *
-*                                                                               *
-*********************************************************************************
+/*!
+    \file darwin.js
+    \author Tomás Pollak
+    \editor zafaco GmbH <info@zafaco.de>
+    \date Last update: 2019-11-13
 */
-
-/*!   \file darwin.js
- *      @description Network Detection Class macOS
- *      \author Tomás Pollak
- *      \editor Mike Kosek <kosek@zafaco.de>
- *      \date Last update: 2018-10-19
- *      \note Copyright (c) 2017 - 2018 zafaco GmbH. All rights reserved.
- */
 
 "use strict";
 
@@ -47,10 +34,6 @@ function determine_nic_type(str)
         ? 'wired'
         : str.match(/Wi-?Fi|AirPort/i)
           ? 'wireless'
-          //: str.match(/FireWire/i)
-          //  ? 'FireWire'
-          //  : str.match(/Thunderbolt/i)
-          //    ? 'Thunderbolt'
               : 'other';
 }
 
