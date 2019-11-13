@@ -24,6 +24,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.Measurem
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.disassociate.DisassociateResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
+import at.alladin.nettest.shared.server.helper.ReturnCodeMessageSource;
 import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Measurement;
@@ -111,6 +112,9 @@ public class CouchDbStorageServiceMockitTest {
 
 	@Mocked @Injectable
 	private DeviceRepository deviceRepository;
+	
+	@Mocked @Injectable
+	private ReturnCodeMessageSource messageSource;
 
 	private LmapReportDto lmapReportDto;
 	
@@ -317,19 +321,20 @@ public class CouchDbStorageServiceMockitTest {
 			measurementServerRepository.findByPublicIdentifier("peer_id");
 			result = server;
 
-			lmapTaskMapper.map((Settings) any, (MeasurementServer) any, anyString);
+			lmapTaskMapper.map((Settings) any, (MeasurementServer) any, anyString, false);
 			result = new Delegate() {
-				public LmapTaskDto delegate(Settings settings, MeasurementServer server, String type) {
+				public LmapTaskDto delegate(Settings settings, MeasurementServer server, String type, boolean useIPv6) {
 					assertEquals("unexpected settings provided to mapper", SETTINGS_UUID, settings.getId());
 					assertEquals("unexpected server provided to mapper", "peer", server.getName());
 					assertEquals("unexpected server provided to mapper", "peer_id", server.getPublicIdentifier());
 					assertEquals("unexpected type provided to mapper", "SPEED", type);
+					assertEquals("unexpected useIPv6 value provided to mapper", false, useIPv6);
 					return new LmapTaskDto();
 				}
 			};
 		}};
 
-		assertNotNull("Invalid object returned", couchDbStorageService.getTaskDto(MeasurementTypeDto.SPEED, capability, SETTINGS_UUID));
+		assertNotNull("Invalid object returned", couchDbStorageService.getTaskDto(MeasurementTypeDto.SPEED, capability, SETTINGS_UUID, false));
 	}
 
 	@Test(expected = StorageServiceException.class)
