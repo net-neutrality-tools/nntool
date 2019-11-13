@@ -1,7 +1,12 @@
 package at.alladin.nettest.service.controller.web.api.v1;
 
+import java.net.Inet6Address;
+import java.net.UnknownHostException;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +24,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapAgentDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
+import at.alladin.nettest.shared.server.helper.IpAddressHelper;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 import io.swagger.annotations.ApiParam;
@@ -33,6 +39,8 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/api/v1/measurements")
 public class MeasurementInitiationResource {
 
+	private static final Logger logger = LoggerFactory.getLogger(MeasurementInitiationResource.class);
+	
 	@Autowired
 	private StorageService storageService;
 	
@@ -48,6 +56,7 @@ public class MeasurementInitiationResource {
 	 *
 	 * @param measurementInitiationRequest
 	 * @return
+	 * @throws UnknownHostException 
 	 */
 	@io.swagger.annotations.ApiOperation(value = "Request a new measurement.", notes = "This request will fetch the current measurement parameters and configuration from the server.")
 	@io.swagger.annotations.ApiResponses({
@@ -58,7 +67,7 @@ public class MeasurementInitiationResource {
 	@PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> requestMeasurement(@ApiParam("Initiation request") @RequestBody LmapControlDto measurementInitiationRequest,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws UnknownHostException {
 		
 		final LmapAgentDto agentDto = measurementInitiationRequest.getAgent();
 		
@@ -82,11 +91,15 @@ public class MeasurementInitiationResource {
 		
 		measurementDeviceInformationService.fillDeviceInformation(measurementInitiationRequest.getAdditionalRequestInfo(), request);
 		
+		////
+		
+		boolean useIPv6 = IpAddressHelper.extractIpAddressFromHttpServletRequest(request) instanceof Inet6Address;
+		logger.info("Measurement initiation with (useIPv6 = {})", useIPv6);
+		
 		// TODO: load balancing
-		final LmapControlDto lmapControlDto = measurementConfigurationService.getLmapControlDtoForCapabilities(capabilityDto);
+		final LmapControlDto lmapControlDto = measurementConfigurationService.getLmapControlDtoForCapabilities(capabilityDto, useIPv6);
 		lmapControlDto.setAdditionalRequestInfo(measurementInitiationRequest.getAdditionalRequestInfo());
 		lmapControlDto.setAgent(agentDto);
-		
 		
 		//measurementInitiationRequest.getAgent().getAgentId();
 		

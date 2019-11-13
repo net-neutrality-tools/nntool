@@ -97,6 +97,15 @@ public class MeasurementServer {
 	@SerializedName("port_tls")
 	@JsonProperty("port_tls")
 	private Integer portTls;
+	
+	/**
+	 * If TLS encrypted should be preferred.
+	 */
+	@JsonPropertyDescription("If TLS encrypted should be preferred.")
+	@Expose
+	@SerializedName("prefer_encryption")
+	@JsonProperty("prefer_encryption")
+	private boolean preferEncryption;
 
 	/**
 	 * @see MeasurementServerInfo
@@ -203,6 +212,14 @@ public class MeasurementServer {
 
 	public void setPortTls(Integer portTls) {
 		this.portTls = portTls;
+	}
+	
+	public boolean isPreferEncryption() {
+		return preferEncryption;
+	}
+	
+	public void setPreferEncryption(boolean preferEncryption) {
+		this.preferEncryption = preferEncryption;
 	}
 
 	public MeasurementServerInfo getInfo() {
