@@ -17,6 +17,7 @@ Pod::Spec.new do |s|
 
     s.dependency 'Siesta', '~> 1.4.3'
     s.dependency 'ReachabilitySwift', '~> 5.0.0-beta1'
+    s.dependency 'CocoaAsyncSocket', '~> 7.6.3'
     s.dependency 'nntool-shared-swift', '~> 0.0.1'
     
     s.frameworks = 'CoreLocation', 'SystemConfiguration'

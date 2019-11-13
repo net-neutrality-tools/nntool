@@ -16,6 +16,7 @@ PODS:
   - GoogleMaps/Maps (3.1.0):
     - GoogleMaps/Base
   - MeasurementAgentKit (0.0.1):
+    - CocoaAsyncSocket (~> 7.6.3)
     - nntool-shared-swift (~> 0.0.1)
     - ReachabilitySwift (~> 5.0.0-beta1)
     - Siesta (~> 1.4.3)
@@ -113,7 +114,7 @@ SPEC CHECKSUMS:
   CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GoogleMaps: 5c13302e6fe6bb6e686b267196586b91cd594225
-  MeasurementAgentKit: ee7929596184ed2f8e1f1c00882ead4298f965d7
+  MeasurementAgentKit: eb8429c2033606240be749481a3f6a0fbb1574da
   nntool-shared-swift: 7955a6c51917bcf2f42316eb259da095c80a7398
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   PocketSocket: 9c6867d66fb4f962af96b9b07f4b45bb561b2c2a

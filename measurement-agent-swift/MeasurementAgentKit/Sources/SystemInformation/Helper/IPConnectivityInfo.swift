@@ -16,6 +16,7 @@
  ******************************************************************************/
 
 import Foundation
+import CocoaAsyncSocket
 
 public struct IPStatus {
     public var localAddress: String?
@@ -105,13 +106,33 @@ public class IPConnectivityInfo {
     }
 
     public func getLocalIPv4Address() -> String? {
-        return getLocalActiveIpAddress(family: AF_INET)
+        return getLocalActiveIpAddressFromUdpSocket(family: AF_INET)
     }
 
     public func getLocalIPv6Address() -> String? {
-        return getLocalActiveIpAddress(family: AF_INET6)
+        return getLocalActiveIpAddressFromUdpSocket(family: AF_INET6)
     }
-
+    
+    public func getLocalActiveIpAddressFromUdpSocket(family: Int32) -> String? {
+        var host: String?
+        
+        switch family {
+        case AF_INET6:
+            host = controlServiceV6.service.baseURL?.host
+        default:
+            host = controlServiceV4.service.baseURL?.host
+        }
+        
+        if let h = host {
+            if let socketIp = SocketIpHelper().getIpFromSocket(family: family, host: h, timeoutMs: 1000) {
+                logger.debug("Got IP from socket: \(socketIp)")
+                return socketIp
+            }
+        }
+        
+        return getLocalActiveIpAddress(family: family)
+    }
+    
     public func getLocalActiveIpAddress(family: Int32) -> String? {
         var addrs: UnsafeMutablePointer<ifaddrs>?
         guard getifaddrs(&addrs) == 0 else {
@@ -141,17 +162,18 @@ public class IPConnectivityInfo {
             guard flags & (IFF_UP|IFF_RUNNING|IFF_LOOPBACK) == (IFF_UP|IFF_RUNNING) else {
                 continue
             }
+            
+            // skip link local addresses
+            guard !isLinkLocal(addr: iface.ifa_addr, family: family) else {
+                logger.debug("Skipping ip address \(ifaAddrToString(iface.ifa_addr)) because it is link-local")
+                continue
+            }
 
             // TODO: check for interface type (name.hasPrefix("en") => wifi, name.hasPrefix("pdp_ip") => wwan)
 
-            var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
-            if getnameinfo(
-                    iface.ifa_addr, socklen_t(iface.ifa_addr.pointee.sa_len),
-                    &hostname, socklen_t(hostname.count),
-                    nil, socklen_t(0), NI_NUMERICHOST
-                ) == 0 {
-
-                address = String(cString: hostname)
+            if let ip = ifaAddrToString(iface.ifa_addr) {
+                address = ip
+                logger.debug("Found ip address \(address)")
                 break
             }
         }
@@ -159,5 +181,75 @@ public class IPConnectivityInfo {
         freeifaddrs(addrs)
 
         return address
+    }
+    
+    private func ifaAddrToString(_ addr: UnsafeMutablePointer<sockaddr>) -> String? {
+        var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+        let addrSaLen = socklen_t(addr.pointee.sa_len)
+        if getnameinfo(addr, addrSaLen, &hostname, socklen_t(hostname.count), nil, socklen_t(0), NI_NUMERICHOST) == 0 {
+            return String(cString: hostname)
+        }
+        
+        return nil
+    }
+    
+    private func isLinkLocal(addr: UnsafeMutablePointer<sockaddr>, family: Int32) -> Bool {
+        switch family {
+        case AF_INET:
+            let saddr = addr.withMemoryRebound(to: sockaddr_in.self, capacity: 1) {
+                $0.pointee.sin_addr.s_addr
+            }
+            return (saddr & IN_CLASSB_NET.bigEndian) == IN_LINKLOCALNETNUM.bigEndian
+        case AF_INET6:
+            let addr8u6 = addr.withMemoryRebound(to: sockaddr_in6.self, capacity: 1) {
+                $0.pointee.sin6_addr.__u6_addr.__u6_addr8
+            }
+            return addr8u6.0 == 0xfe && (addr8u6.1 & 0xc0) == 0x80
+        default: return false
+        }
+    }
+}
+
+class SocketIpHelper: NSObject {
+    
+    private var semaphore = DispatchSemaphore(value: 0)
+    private var family: Int32!
+    private var ipAddress: String?
+    
+    func getIpFromSocket(family: Int32, host: String, timeoutMs: Int) -> String? {
+        self.family = family
+        
+        let udpSocket = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue.global(qos: .default))
+        
+        do {
+            try udpSocket.connect(toHost: host, onPort: 11111)
+        } catch {
+            return nil
+        }
+        
+        semaphore.wait(timeout: .now() + .microseconds(timeoutMs))
+        
+        return ipAddress
+    }
+}
+
+extension SocketIpHelper: GCDAsyncUdpSocketDelegate {
+    func udpSocket(_ sock: GCDAsyncUdpSocket, didConnectToAddress address: Data) {
+        switch family {
+        case AF_INET6:
+            ipAddress = sock.localHost_IPv6()
+        default:
+            ipAddress = sock.localHost_IPv4()
+        }
+        
+        semaphore.signal()
+    }
+    
+    func udpSocket(_ sock: GCDAsyncUdpSocket, didNotConnect error: Error?) {
+        semaphore.signal()
+    }
+    
+    func udpSocketDidClose(_ sock: GCDAsyncUdpSocket, withError error: Error?) {
+        semaphore.signal()
     }
 }

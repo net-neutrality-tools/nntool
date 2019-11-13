@@ -10,6 +10,7 @@ abstract_target 'All' do
   
   pod 'Siesta', '~> 1.4.3'
   pod 'ReachabilitySwift', '~> 5.0.0-beta1'
+  pod 'CocoaAsyncSocket', '~> 7.6.3'
   
   target 'MeasurementAgentKit_iOS' do
     platform :ios, '10.0'
