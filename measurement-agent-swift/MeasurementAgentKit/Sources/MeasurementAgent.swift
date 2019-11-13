@@ -20,7 +20,11 @@ import Foundation
 ///
 public class MeasurementAgent {
 
-    var controlService: ControlService!
+    private(set) var controlService: ControlService!
+    
+    private(set) var controlServiceV4: ControlService?
+    private(set) var controlServiceV6: ControlService?
+    
     public private(set) var resultService: ResultService?
     public private(set) var mapService: MapService?
 
@@ -28,6 +32,12 @@ public class MeasurementAgent {
 
     public var uuid: String? {
         return settings.uuid
+    }
+    
+    public var isIpv4Only = false {
+        didSet {
+            updateControlService()
+        }
     }
 
     private var programs = [MeasurementTypeDto: ProgramConfiguration]()
@@ -118,7 +128,15 @@ public class MeasurementAgent {
     }
 
     private func createServices(localSettings: LocalSettings) {
-        controlService = ControlService(baseURL: localSettings.controllerServiceBaseUrl, agent: self)
+        if let controllerServiceBaseUrlV4 = localSettings.controllerServiceBaseUrlIpv4 {
+            controlServiceV4 = ControlService(baseURL: controllerServiceBaseUrlV4, agent: self)
+        }
+
+        // controllerServiceBaseUrl has both A and AAAA recods. If IPv6 is available, it will be used as default.
+        // Therefore it is save to use controllerServiceBaseUrl for the controlServiceV6.
+        controlServiceV6 = ControlService(baseURL: localSettings.controllerServiceBaseUrl, agent: self)
+        
+        updateControlService()
 
         if let resultServiceBaseUrl = localSettings.resultServiceBaseUrl {
             resultService = ResultService(baseURL: resultServiceBaseUrl, agent: self)
@@ -128,7 +146,19 @@ public class MeasurementAgent {
             mapService = MapService(baseURL: mapServiceBaseUrl, agent: self)
         }
     }
+    
+    private func updateControlService() {
+        if isIpv4Only {
+            controlService = controlServiceV4
+            logger.debug("<--> controlService = controlServiceV4")
+        } else {
+            controlService = controlServiceV6
+            logger.debug("<--> controlService = controlServiceV6")
+        }
+    }
 
+    //////////
+    
     public func newMeasurementRunner() -> MeasurementRunner? {
         guard let agentUuid = uuid else {
             return nil

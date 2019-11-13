@@ -1,4 +1,5 @@
 PODS:
+  - CocoaAsyncSocket (7.6.3)
   - CodableJSON (1.1.4)
   - Nimble (8.0.2)
   - nntool-shared-swift (0.0.1):
@@ -21,6 +22,7 @@ PODS:
     - ObjcExceptionBridging
 
 DEPENDENCIES:
+  - CocoaAsyncSocket (~> 7.6.3)
   - Nimble (~> 8.0.1)
   - nntool-shared-swift (from `../nntool-shared-swift`)
   - ReachabilitySwift (~> 5.0.0-beta1)
@@ -28,6 +30,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - CocoaAsyncSocket
     - CodableJSON
     - Nimble
     - ObjcExceptionBridging
@@ -42,6 +45,7 @@ EXTERNAL SOURCES:
     :path: "../nntool-shared-swift"
 
 SPEC CHECKSUMS:
+  CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
   Nimble: 622629381bda1dd5678162f21f1368cec7cbba60
   nntool-shared-swift: 7955a6c51917bcf2f42316eb259da095c80a7398
@@ -52,6 +56,6 @@ SPEC CHECKSUMS:
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: 82bbcdf23fb30f6f86a9f9c949c193c54fe838f5
+PODFILE CHECKSUM: 9d70f957b0fe3d93c793a5ee10b728337a0aba99
 
 COCOAPODS: 1.7.1
