@@ -41,7 +41,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.zafaco.DemoApplicationBerec.interfaces.FocusedFragment;
-import com.zafaco.moduleCommon.Tool;
+import com.zafaco.common.Tool;
 import com.zafaco.DemoApplicationBerec.R;
 import com.zafaco.DemoApplicationBerec.WSTool;
 import com.zafaco.DemoApplicationBerec.fragments.*;

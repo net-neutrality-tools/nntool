@@ -1,4 +1,4 @@
-package com.zafaco.moduleCommon;
+package com.zafaco.common;
 
 /*
  *********************************************************************************
@@ -18,7 +18,6 @@ package com.zafaco.moduleCommon;
  *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
  */
 
-import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -37,7 +36,6 @@ import android.os.Build;
 import android.provider.Settings;
 import android.telephony.ServiceState;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.google.gson.Gson;
 

@@ -19,8 +19,8 @@ package com.zafaco.DemoApplicationBerec.fragments;
  */
 
 import com.zafaco.DemoApplicationBerec.interfaces.FocusedFragment;
-import com.zafaco.moduleCommon.Common;
-import com.zafaco.moduleCommon.Tool;
+import com.zafaco.common.Common;
+import com.zafaco.common.Tool;
 import com.zafaco.DemoApplicationBerec.R;
 import com.zafaco.DemoApplicationBerec.WSTool;
 
@@ -48,10 +48,10 @@ import java.text.DecimalFormat;
 
 import java.util.Objects;
 
-import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
-import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
-import at.alladin.nettest.nntool.android.speed.jni.JniSpeedMeasurementClient;
-import at.alladin.nettest.nntool.android.speed.jni.exception.AndroidJniCppException;
+import com.zafaco.speed.SpeedMeasurementState;
+import com.zafaco.speed.SpeedTaskDesc;
+import com.zafaco.speed.jni.JniSpeedMeasurementClient;
+import com.zafaco.speed.jni.exception.AndroidJniCppException;
 
 /**
  * Class SpeedFragment

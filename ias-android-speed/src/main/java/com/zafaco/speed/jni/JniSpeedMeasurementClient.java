@@ -1,4 +1,4 @@
-package at.alladin.nettest.nntool.android.speed.jni;
+package com.zafaco.speed.jni;
 
 import android.support.annotation.Keep;
 import android.util.Log;
@@ -6,10 +6,10 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
-import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
-import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
-import at.alladin.nettest.nntool.android.speed.jni.exception.AndroidJniCppException;
+import com.zafaco.speed.JniSpeedMeasurementResult;
+import com.zafaco.speed.SpeedMeasurementState;
+import com.zafaco.speed.SpeedTaskDesc;
+import com.zafaco.speed.jni.exception.AndroidJniCppException;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)

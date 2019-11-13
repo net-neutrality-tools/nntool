@@ -1,4 +1,4 @@
-package at.alladin.nettest.nntool.android.speed;
+package com.zafaco.speed;
 
 import java.io.Serializable;
 

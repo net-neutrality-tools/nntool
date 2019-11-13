@@ -19,17 +19,17 @@ void JNICALL JNI_OnUnload(JavaVM* vm, void* reserved) {
 }
 
 extern "C" JNIEXPORT
-void JNICALL Java_at_alladin_nettest_nntool_android_speed_jni_JniSpeedMeasurementClient_startMeasurement (JNIEnv* env, jobject thiz) {
+void JNICALL Java_com_zafaco_speed_jni_JniSpeedMeasurementClient_startMeasurement (JNIEnv* env, jobject thiz) {
     AndroidConnector::getInstance().startMeasurement();
 }
 
 extern "C" JNIEXPORT
-void JNICALL Java_at_alladin_nettest_nntool_android_speed_jni_JniSpeedMeasurementClient_stopMeasurement (JNIEnv* env, jobject thiz) {
+void JNICALL Java_com_zafaco_speed_jni_JniSpeedMeasurementClient_stopMeasurement (JNIEnv* env, jobject thiz) {
     AndroidConnector::getInstance().stopMeasurement();
 }
 
 extern "C" JNIEXPORT
-void JNICALL Java_at_alladin_nettest_nntool_android_speed_jni_JniSpeedMeasurementClient_shareMeasurementState (JNIEnv* env, jobject caller, jobject speedTaskDesc,
+void JNICALL Java_com_zafaco_speed_jni_JniSpeedMeasurementClient_shareMeasurementState (JNIEnv* env, jobject caller, jobject speedTaskDesc,
                     jobject baseMeasurementState, jobject pingMeasurementState, jobject downloadMeasurementState, jobject uploadMeasurementState) {
     AndroidConnector &connector = AndroidConnector::getInstance();
     connector.registerSharedObject(env, caller, baseMeasurementState, pingMeasurementState, downloadMeasurementState, uploadMeasurementState);
@@ -37,7 +37,7 @@ void JNICALL Java_at_alladin_nettest_nntool_android_speed_jni_JniSpeedMeasuremen
 }
 
 extern "C" JNIEXPORT
-void JNICALL Java_at_alladin_nettest_nntool_android_speed_jni_JniSpeedMeasurementClient_cleanUp (JNIEnv* env, jobject caller) {
+void JNICALL Java_com_zafaco_speed_jni_JniSpeedMeasurementClient_cleanUp (JNIEnv* env, jobject caller) {
     AndroidConnector::getInstance().unregisterSharedObject();
 }
 
@@ -48,35 +48,35 @@ jint AndroidConnector::jniLoad(JavaVM* vm) {
         return JNI_ERR; // JNI version not supported.
     }
 
-    jclass clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/jni/JniSpeedMeasurementClient");
+    jclass clazz = env->FindClass("com/zafaco/speed/jni/JniSpeedMeasurementClient");
     jniHelperClass = (jclass) env->NewGlobalRef(clazz);
     callbackID = env->GetMethodID(jniHelperClass, "cppCallback", "(Ljava/lang/String;)V");
-    cppCallbackFinishedID = env->GetMethodID(jniHelperClass, "cppCallbackFinished", "(Ljava/lang/String;Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult;)V");
+    cppCallbackFinishedID = env->GetMethodID(jniHelperClass, "cppCallbackFinished", "(Ljava/lang/String;Lcom/zafaco/speed/JniSpeedMeasurementResult;)V");
 
-    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/jni/exception/AndroidJniCppException");
+    clazz = env->FindClass("com/zafaco/speed/jni/exception/AndroidJniCppException");
     jniExceptionClass = (jclass) env->NewGlobalRef(clazz);
 
     //get the fields for the SpeedphaseState
-    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementState$SpeedPhaseState");
+    clazz = env->FindClass("com/zafaco/speed/SpeedMeasurementState$SpeedPhaseState");
     fieldAvgThroughput = env->GetFieldID(clazz, "throughputAvgBps", "J");
 
     //get the fields for the PingPhaseState
-    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementState$PingPhaseState");
+    clazz = env->FindClass("com/zafaco/speed/SpeedMeasurementState$PingPhaseState");
     fieldAverageMs = env->GetFieldID(clazz, "averageMs", "J");
 
     //get the fields for the SpeedMeasurementState
-    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedMeasurementState");
+    clazz = env->FindClass("com/zafaco/speed/SpeedMeasurementState");
     fieldProgress = env->GetFieldID(clazz, "progress", "F");
 
     setMeasurementPhaseByStringValueID = env->GetMethodID(clazz, "setMeasurementPhaseByStringValue", "(Ljava/lang/String;)V");
 
-    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult");
+    clazz = env->FindClass("com/zafaco/speed/JniSpeedMeasurementResult");
     speedMeasurementResultClazz = (jclass) env->NewGlobalRef(clazz);
-    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$RttUdpResult");
+    clazz = env->FindClass("com/zafaco/speed/JniSpeedMeasurementResult$RttUdpResult");
     resultUdpClazz = (jclass) env->NewGlobalRef(clazz);
-    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$BandwidthResult");
+    clazz = env->FindClass("com/zafaco/speed/JniSpeedMeasurementResult$BandwidthResult");
     resultBandwidthClazz = (jclass) env->NewGlobalRef(clazz);
-    clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$TimeInfo");
+    clazz = env->FindClass("com/zafaco/speed/JniSpeedMeasurementResult$TimeInfo");
     timeClazz = (jclass) env->NewGlobalRef(clazz);
 
     //according to the google examples, we can keep the reference to the javaVM until android takes it away from us
@@ -95,7 +95,7 @@ void AndroidConnector::registerSharedObject(JNIEnv* env, jobject caller, jobject
 }
 
 void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
-    const jclass clazz = env->FindClass("at/alladin/nettest/nntool/android/speed/SpeedTaskDesc");
+    const jclass clazz = env->FindClass("com/zafaco/speed/SpeedTaskDesc");
 
     jfieldID toParseId = env->GetFieldID(clazz, "speedServerAddrV4", "Ljava/lang/String;");
     jstring serverUrl = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
@@ -277,7 +277,7 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
     parse.staticFloatValueOf = env->GetStaticMethodID(parse.floatClass, "valueOf", "(F)Ljava/lang/Float;");
 
     if (message["rtt_udp_info"].is_object()) {
-        jmethodID setMethod = env->GetMethodID(speedMeasurementResultClazz, "setRttUdpResult", "(Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$RttUdpResult;)V");
+        jmethodID setMethod = env->GetMethodID(speedMeasurementResultClazz, "setRttUdpResult", "(Lcom/zafaco/speed/JniSpeedMeasurementResult$RttUdpResult;)V");
         initId = env->GetMethodID(resultUdpClazz, "<init>", "()V");
 
         Json const & rttEntry = message["rtt_udp_info"];
@@ -361,7 +361,7 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
     }
 
     if (message["download_info"].is_array()) {
-        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "addDownloadInfo", "(Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$BandwidthResult;)V");
+        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "addDownloadInfo", "(Lcom/zafaco/speed/JniSpeedMeasurementResult$BandwidthResult;)V");
         initId = env->GetMethodID(resultBandwidthClazz, "<init>", "()V");
 
         for (Json const & downloadEntry : message["download_info"].array_items()) {
@@ -372,7 +372,7 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
     }
 
     if (message["upload_info"].is_array()) {
-        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "addUploadInfo", "(Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$BandwidthResult;)V");
+        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "addUploadInfo", "(Lcom/zafaco/speed/JniSpeedMeasurementResult$BandwidthResult;)V");
         initId = env->GetMethodID(resultBandwidthClazz, "<init>", "()V");
 
         for (Json const & downloadEntry : message["upload_info"].array_items()) {
@@ -384,7 +384,7 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
 
     if (message["time_info"].is_object()) {
         Json const & timeEntry = message["time_info"];
-        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "setTimeInfo", "(Lat/alladin/nettest/nntool/android/speed/JniSpeedMeasurementResult$TimeInfo;)V");
+        jmethodID addMethod = env->GetMethodID(speedMeasurementResultClazz, "setTimeInfo", "(Lcom/zafaco/speed/JniSpeedMeasurementResult$TimeInfo;)V");
 
         initId = env->GetMethodID(timeClazz, "<init>", "()V");
         jobject timeObj = env->NewObject(timeClazz, initId);

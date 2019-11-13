@@ -14,8 +14,8 @@ import android.widget.TextView;
 import com.zafaco.DemoApplicationBerec.R;
 import com.zafaco.DemoApplicationBerec.WSTool;
 import com.zafaco.DemoApplicationBerec.interfaces.FocusedFragment;
-import com.zafaco.moduleCommon.Common;
-import com.zafaco.moduleCommon.Tool;
+import com.zafaco.common.Common;
+import com.zafaco.common.Tool;
 
 import java.text.DecimalFormat;
 import java.util.List;

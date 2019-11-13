@@ -1,4 +1,4 @@
-package com.zafaco.moduleCommon.listener;
+package com.zafaco.common.listener;
 
 /*
  *********************************************************************************
@@ -25,8 +25,8 @@ import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 
-import com.zafaco.moduleCommon.Tool;
-import com.zafaco.moduleCommon.interfaces.ModulesInterface;
+import com.zafaco.common.Tool;
+import com.zafaco.common.interfaces.ModulesInterface;
 
 import org.json.JSONObject;
 
