@@ -37,6 +37,7 @@ class IASProgram: NSObject, ProgramProtocol {
 
     var serverAddress: String?
     var serverPort: String?
+    var encryption = false
 
     private var currentPhase = SpeedMeasurementPhase.initialize
 
@@ -47,13 +48,13 @@ class IASProgram: NSObject, ProgramProtocol {
     private var interfaceTrafficDownloadStart: InterfaceTraffic?
     private var interfaceTrafficUploadStart: InterfaceTraffic?
     private var interfaceTrafficUploadEnd: InterfaceTraffic?
-    
+
     let encoder = JSONEncoder()
-    
+
     enum IASError: Error {
         case measurementError
     }
-    
+
     // swiftlint:disable cyclomatic_complexity
     func run(relativeStartTimeNs: UInt64) throws -> SubMeasurementResult {
         self.relativeStartTimeNs = relativeStartTimeNs
@@ -75,6 +76,10 @@ class IASProgram: NSObject, ProgramProtocol {
             speed.targets = ["peer-ias-de-01-ipv4"]
             speed.targetsPort = "80"
         }
+        
+        speed.wss = encryption ? 1 : 0
+
+        //logger.info("IAS: measuring against host: \(String(describing: speed.targets.first)), port: \(String(describing: speed.targetsPort))")
 
         speed.platform = "mobile"
         speed.performRttMeasurement      = true
@@ -107,7 +112,7 @@ class IASProgram: NSObject, ProgramProtocol {
         let relativeEndTimeNs = TimeHelper.currentTimeNs() - relativeStartTimeNs
 
         let res = IasMeasurementResult()
-        
+
         if measurementFailed {
             // TODO: reason
             //res.status = .failed
@@ -190,7 +195,7 @@ class IASProgram: NSObject, ProgramProtocol {
         }
 
         res.connectionInfo?.address = serverAddress
-        //res.connectionInfo?.encrypted
+        res.connectionInfo?.encrypted = encryption
         //res.connectionInfo?.encryptionInfo
         if let serverPort = serverPort, let port = UInt16(serverPort) {
             res.connectionInfo?.port = port
@@ -241,7 +246,7 @@ extension IASProgram: SpeedDelegate {
         //logger.debug(response.description)
 
         logger.debug("showKpisFromResponse (delegate: \(String(describing: delegate)))")
-        
+
         logger.debug(response["cmd"])
         logger.debug(response["test_case"])
         /*logger.debug(response["msg"])

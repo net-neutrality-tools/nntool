@@ -112,27 +112,27 @@ public class IPConnectivityInfo {
     public func getLocalIPv6Address() -> String? {
         return getLocalActiveIpAddressFromUdpSocket(family: AF_INET6)
     }
-    
+
     public func getLocalActiveIpAddressFromUdpSocket(family: Int32) -> String? {
         var host: String?
-        
+
         switch family {
         case AF_INET6:
             host = controlServiceV6.service.baseURL?.host
         default:
             host = controlServiceV4.service.baseURL?.host
         }
-        
+
         if let h = host {
             if let socketIp = SocketIpHelper().getIpFromSocket(family: family, host: h, timeoutMs: 1000) {
                 logger.debug("Got IP from socket: \(socketIp)")
                 return socketIp
             }
         }
-        
+
         return getLocalActiveIpAddress(family: family)
     }
-    
+
     public func getLocalActiveIpAddress(family: Int32) -> String? {
         var addrs: UnsafeMutablePointer<ifaddrs>?
         guard getifaddrs(&addrs) == 0 else {
@@ -162,7 +162,7 @@ public class IPConnectivityInfo {
             guard flags & (IFF_UP|IFF_RUNNING|IFF_LOOPBACK) == (IFF_UP|IFF_RUNNING) else {
                 continue
             }
-            
+
             // skip link local addresses
             guard !isLinkLocal(addr: iface.ifa_addr, family: family) else {
                 logger.debug("Skipping ip address \(ifaAddrToString(iface.ifa_addr)) because it is link-local")
@@ -182,17 +182,17 @@ public class IPConnectivityInfo {
 
         return address
     }
-    
+
     private func ifaAddrToString(_ addr: UnsafeMutablePointer<sockaddr>) -> String? {
         var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
         let addrSaLen = socklen_t(addr.pointee.sa_len)
         if getnameinfo(addr, addrSaLen, &hostname, socklen_t(hostname.count), nil, socklen_t(0), NI_NUMERICHOST) == 0 {
             return String(cString: hostname)
         }
-        
+
         return nil
     }
-    
+
     private func isLinkLocal(addr: UnsafeMutablePointer<sockaddr>, family: Int32) -> Bool {
         switch family {
         case AF_INET:
@@ -211,24 +211,24 @@ public class IPConnectivityInfo {
 }
 
 class SocketIpHelper: NSObject {
-    
+
     private var semaphore = DispatchSemaphore(value: 0)
     private var family: Int32!
     private var ipAddress: String?
-    
+
     func getIpFromSocket(family: Int32, host: String, timeoutMs: Int) -> String? {
         self.family = family
-        
+
         let udpSocket = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue.global(qos: .default))
-        
+
         do {
             try udpSocket.connect(toHost: host, onPort: 11111)
         } catch {
             return nil
         }
-        
+
         semaphore.wait(timeout: .now() + .microseconds(timeoutMs))
-        
+
         return ipAddress
     }
 }
@@ -241,14 +241,14 @@ extension SocketIpHelper: GCDAsyncUdpSocketDelegate {
         default:
             ipAddress = sock.localHost_IPv4()
         }
-        
+
         semaphore.signal()
     }
-    
+
     func udpSocket(_ sock: GCDAsyncUdpSocket, didNotConnect error: Error?) {
         semaphore.signal()
     }
-    
+
     func udpSocketDidClose(_ sock: GCDAsyncUdpSocket, withError error: Error?) {
         semaphore.signal()
     }

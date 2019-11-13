@@ -268,7 +268,7 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
 
         DispatchQueue.main.async {
             self.showNavigationItems()
-            
+
             self.progressInfoBar?.reset()
             self.speedMeasurementGaugeView?.reset()
 

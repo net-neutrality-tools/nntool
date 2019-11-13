@@ -130,7 +130,7 @@ public class MeasurementRunner {
         var taskResultDict = [MeasurementTypeDto: SubMeasurementResult]()
 
         var measurementFailed = false
-        
+
         for task in tasks {
             if isCanceled {
                 logger.info("Measurement runner is cancelled.")

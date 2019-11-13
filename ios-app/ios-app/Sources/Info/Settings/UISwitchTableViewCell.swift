@@ -19,21 +19,21 @@ import Foundation
 import UIKit
 
 class UISwitchTableViewCell: UITableViewCell {
-    
+
     let uiSwitch = UISwitch()
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+
         initUiSwitch()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        
+
         initUiSwitch()
     }
-    
+
     private func initUiSwitch() {
         accessoryView = uiSwitch
     }
