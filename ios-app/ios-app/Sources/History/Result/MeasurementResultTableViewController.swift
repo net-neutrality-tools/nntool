@@ -112,7 +112,7 @@ class MeasurementResultTableViewController: UITableViewController {
             qosResults?[type]?.evaluationCount += result.evaluationCount ?? 0
 
             let task = QoSTaskResultItem(
-                title: "Test #\((qosResults?[type]?.tasks.count ?? 0) + 1)", // TODO: translate
+                title: "\(R.string.localizable.historyQosTask()) #\((qosResults?[type]?.tasks.count ?? 0) + 1)",
                 localizedDescription: result.description,
                 localizedSummary: result.summary,
                 successCount: result.successCount ?? 0,

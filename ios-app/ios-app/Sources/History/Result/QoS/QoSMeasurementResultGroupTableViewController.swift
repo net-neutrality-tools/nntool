@@ -88,9 +88,9 @@ extension QoSMeasurementResultGroupTableViewController {
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
-            return "Details" // TODO: translate
+            return R.string.localizable.historyQosGroupDetails()
         } else {
-            return "Tasks" // TODO: translate
+            return R.string.localizable.historyQosGroupTasks()
         }
     }
 

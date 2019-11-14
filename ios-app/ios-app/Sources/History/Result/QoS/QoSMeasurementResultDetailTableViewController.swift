@@ -90,11 +90,11 @@ extension QoSMeasurementResultDetailTableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "desc" // TODO: translate
+            return R.string.localizable.historyQosDetailDescription()
         case 1:
-            return "Results" // TODO: translate
+            return R.string.localizable.historyQosDetailResults()
         case 2:
-            return "Details" // TODO: translate
+            return R.string.localizable.historyQosDetailDetails()
         default:
             return nil
         }

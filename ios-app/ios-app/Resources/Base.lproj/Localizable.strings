@@ -3,6 +3,8 @@
 ///////////////////////////
 
 "general.units.bps" = "bps";
+"general.units.ms" = "ms";
+"general.not-available" = "n/a";
 
 ///////////////////////////
 // Terms of service
@@ -16,6 +18,26 @@
 "tos.error.registration.close" = "Close App";
 
 ///////////////////////////
+// Home screen
+///////////////////////////
+
+"home.location" = "Location";
+
+"home.pre-measurement-alert.title" = "Pre Measurement Alert";
+"home.pre-measurement-alert.message" = "Traffic Warning";
+"home.pre-measurement-alert.continue" = "Continue";
+"home.pre-measurement-alert.abort" = "Abort";
+
+///////////////////////////
+// Network
+///////////////////////////
+
+"network.unknown" = "Unknown";
+"network.no-connection" = "No connection";
+"network.wifi.technology.name" = "WiFi";
+"network.wifi.unknown" = "Unknown";
+
+///////////////////////////
 // Measurement
 ///////////////////////////
 
@@ -25,3 +47,38 @@
 "measurement.speed.phase.upload" = "Upload";
     
 "measurement.gauge.start" = "GO";
+"measurement.initiating" = "Initiating measurement";
+
+"measurement.abort-alert.title" = "Abort Measurement?";
+"measurement.abort-alert.message" = "Do you really want to abort the current measurement?";
+"measurement.abort-alert.continue" = "Continue";
+"measurement.abort-alert.abort" = "Abort Measurement";
+
+"measurement.failure-alert.title" = "Measurement Error";
+"measurement.failure-alert.message" = "An error occured during measurement. Do you want to retry?";
+"measurement.failure-alert.retry" = "Retry";
+"measurement.failure-alert.abort" = "Abort Measurement";
+
+///////////////////////////
+// History
+///////////////////////////
+
+"history.list.date-format" = "yyyy-MM-dd HH:mm";
+"history.list.disassociate-measurement" = "Delete";
+
+// QoS
+
+"history.qos.task" = "Task";
+
+"history.qos.group.details" = "Details";
+"history.qos.group.tasks" = "Tasks";
+
+"history.qos.detail.details" = "Details";
+"history.qos.detail.results" = "Results";
+"history.qos.detail.description" = "Description";
+
+///////////////////////////
+// Map
+///////////////////////////
+
+"map.marker.title" = "Measurement";

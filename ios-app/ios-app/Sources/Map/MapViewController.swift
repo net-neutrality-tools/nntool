@@ -193,7 +193,7 @@ extension MapViewController: GMSMapViewDelegate {
             self.currentMarker?.userData = marker
             self.currentMarker?.appearAnimation = .pop
             self.currentMarker?.map = mapView
-            self.currentMarker?.title = "Measurement" // TODO: translate
+            self.currentMarker?.title = R.string.localizable.mapMarkerTitle()
             self.currentMarker?.snippet = self.buildMarkerSnippet(marker)
 
             DispatchQueue.main.async {

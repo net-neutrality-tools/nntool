@@ -83,16 +83,18 @@ extension HistoryTableViewController: PaginatedTableViewDataSource {
             fatalError("todo")
         }
 
-        cell.dateLabel?.text = "n/a"
-        cell.rttLabel?.text = "n/a"
-        cell.downloadLabel?.text = "n/a"
-        cell.uploadLabel?.text = "n/a"
+        let naString = R.string.localizable.generalNotAvailable()
+        
+        cell.dateLabel?.text = naString
+        cell.rttLabel?.text = naString
+        cell.downloadLabel?.text = naString
+        cell.uploadLabel?.text = naString
 
-        cell.technologyLabel?.text = item.networkTypeName ?? "n/a"
+        cell.technologyLabel?.text = item.networkTypeName ?? naString
 
         if let startTime = item.startTime {
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm" // :ss
+            dateFormatter.dateFormat = R.string.localizable.historyListDateFormat()
             dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
 
             cell.dateLabel?.text = dateFormatter.string(from: startTime)
@@ -139,9 +141,9 @@ extension HistoryTableViewController: PaginatedTableViewDelegate {
             }
 
             DispatchQueue.main.async { //After(deadline: .now() + 2.0) {
-                logger.debug(response.totalPages)
-                logger.debug(pageNumber)
-                logger.debug("MORE DATA?: \(response.totalPages != pageNumber)")
+                //logger.debug(response.totalPages)
+                //logger.debug(pageNumber)
+                //logger.debug("MORE DATA?: \(response.totalPages != pageNumber)")
                 onSuccess?(response.totalPages != pageNumber)
             }
         }, onFailure: { error in
@@ -179,7 +181,10 @@ extension HistoryTableViewController: PaginatedTableViewDelegate {
             return nil
         }
 
-        let disassociateAction = UITableViewRowAction(style: .destructive, title: "Delete") { (_, _) in // TODO: translate
+        let disassociateAction = UITableViewRowAction(
+            style: .destructive,
+            title: R.string.localizable.historyListDisassociateMeasurement()
+        ) { (_, _) in
             MEASUREMENT_AGENT.resultService?.disassociateMeasurement(measurementUuid: uuid, onSuccess: { _ in
                 DispatchQueue.main.async {
                     self.data?.remove(at: indexPath.row)

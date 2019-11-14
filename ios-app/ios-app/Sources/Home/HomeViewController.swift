@@ -130,7 +130,7 @@ class HomeViewController: CustomNavigationBarViewController {
         locationTracker.start(updateLocationCallback: { location in
             DispatchQueue.main.async {
                 self.deviceInfoView?.locationLabel?.text = location.coordinate.dmFormattedString
-                self.deviceInfoView?.locationInfoLabel?.text = "Location ±\(String(format: "%dm", Int(location.horizontalAccuracy)))"
+                self.deviceInfoView?.locationInfoLabel?.text = "\(R.string.localizable.homeLocation()) ±\(String(format: "%dm", Int(location.horizontalAccuracy)))"
             }
         })
 
@@ -151,8 +151,8 @@ class HomeViewController: CustomNavigationBarViewController {
             DispatchQueue.main.async {
                 self.speedMeasurementGaugeView?.isStartButtonEnabled = false
 
-                self.speedMeasurementGaugeView?.networkTypeLabel?.text = "Unknown"
-                self.speedMeasurementGaugeView?.networkDetailLabel?.text = "No connection"
+                self.speedMeasurementGaugeView?.networkTypeLabel?.text = R.string.localizable.networkUnknown()
+                self.speedMeasurementGaugeView?.networkDetailLabel?.text = R.string.localizable.networkNoConnection()
             }
         })
         reachability?.start()
@@ -184,12 +184,15 @@ class HomeViewController: CustomNavigationBarViewController {
     }
 
     func displayPreMeasurementWarningAlert() {
-        // TODO: add localization
-        let alert = UIAlertController(title: "Pre Measurement Alert", message: "Traffic Warning", preferredStyle: .alert)
+        let alert = UIAlertController(
+            title: R.string.localizable.homePreMeasurementAlertTitle(),
+            message: R.string.localizable.homePreMeasurementAlertMessage(),
+            preferredStyle: .alert
+        )
 
-        alert.addAction(UIAlertAction(title: "Abort", style: .default))
+        alert.addAction(UIAlertAction(title: R.string.localizable.homePreMeasurementAlertAbort(), style: .default))
 
-        alert.addAction(UIAlertAction(title: "Continue", style: .destructive) { _ in
+        alert.addAction(UIAlertAction(title: R.string.localizable.homePreMeasurementAlertContinue(), style: .destructive) { _ in
             self.performSegue(withIdentifier: R.segue.homeViewController.show_speed_measurement_view_controller, sender: self)
         })
 
@@ -204,7 +207,7 @@ class HomeViewController: CustomNavigationBarViewController {
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.deviceInfoView?.cpuValueLabel?.text = "n/a%"
+                    self.deviceInfoView?.cpuValueLabel?.text = "\(R.string.localizable.generalNotAvailable())%"
                 }
             }
 
@@ -214,7 +217,7 @@ class HomeViewController: CustomNavigationBarViewController {
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.deviceInfoView?.cpuValueLabel?.text = "n/a%"
+                    self.deviceInfoView?.cpuValueLabel?.text = "\(R.string.localizable.generalNotAvailable())%"
                 }
             }
 

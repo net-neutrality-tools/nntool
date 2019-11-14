@@ -75,8 +75,8 @@ class MeasurementViewController: CustomNavigationBarViewController {
             }
         }, whenUnreachable: {
             DispatchQueue.main.async {
-                self.speedMeasurementGaugeView?.networkTypeLabel?.text = "Unknown"
-                self.speedMeasurementGaugeView?.networkDetailLabel?.text = "No connection"
+                self.speedMeasurementGaugeView?.networkTypeLabel?.text = R.string.localizable.networkUnknown()
+                self.speedMeasurementGaugeView?.networkDetailLabel?.text = R.string.localizable.networkNoConnection()
             }
         })
         reachability?.start()
@@ -96,11 +96,15 @@ class MeasurementViewController: CustomNavigationBarViewController {
             return
         }
 
-        let alert = UIAlertController(title: "Abort Measurement?", message: "Do you really want to abort the current measurement?", preferredStyle: .alert)
+        let alert = UIAlertController(
+            title: R.string.localizable.measurementAbortAlertTitle(),
+            message: R.string.localizable.measurementAbortAlertMessage(),
+            preferredStyle: .alert
+        )
 
-        alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.measurementAbortAlertContinue(), style: .default, handler: nil))
 
-        alert.addAction(UIAlertAction(title: "Abort Measurement", style: .destructive) { _ in
+        alert.addAction(UIAlertAction(title: R.string.localizable.measurementAbortAlertAbort(), style: .destructive) { _ in
             self.stopMeasurement()
         })
 
@@ -197,11 +201,11 @@ class MeasurementViewController: CustomNavigationBarViewController {
 
         // TODO: localization
 
-        alert.addAction(UIAlertAction(title: "Retry", style: .default) { _ in
+        alert.addAction(UIAlertAction(title: R.string.localizable.measurementFailureAlertRetry(), style: .default) { _ in
             self.startMeasurement()
         })
 
-        alert.addAction(UIAlertAction(title: "Abort Measurement", style: .destructive) { _ in
+        alert.addAction(UIAlertAction(title: R.string.localizable.measurementFailureAlertAbort(), style: .destructive) { _ in
             self.returnToHomeScreen()
         })
 
@@ -221,7 +225,7 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
         logger.debug("!^! measurementWillStartRequestingControlModel")
 
         DispatchQueue.main.async {
-            self.progressAlert = UIAlertController.createLoadingAlert(title: "Initiating measurement") // TODO: localization
+            self.progressAlert = UIAlertController.createLoadingAlert(title: R.string.localizable.measurementInitiating())
             self.present(self.progressAlert!, animated: true, completion: nil)
         }
     }
@@ -282,7 +286,10 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
         isRunning = false
 
         let presentFailureAlert = {
-            self.showMeasurementFailureAlert(title: "Error", message: "TODO: Measurement Error") // TODO: localization
+            self.showMeasurementFailureAlert(
+                title: R.string.localizable.measurementFailureAlertTitle(),
+                message: R.string.localizable.measurementFailureAlertMessage()
+            )
         }
 
         DispatchQueue.main.async {
@@ -373,13 +380,13 @@ extension MeasurementViewController: IASProgramDelegate {
                 let msValue = value / Double(NSEC_PER_MSEC)
                 let msString = String(format: "%.2f", msValue)
 
-                self.progressInfoBar?.setRightValue(value: "\(msString) ms") // TODO: translation, unit from phase enum?
+                self.progressInfoBar?.setRightValue(value: "\(msString) \(R.string.localizable.generalUnitsMs())")
                 self.speedMeasurementBasicResultView?.setText(msString, forPhase: phase)
             case .download, .upload:
                 let mbpsValue = value / 1_000_000.0
                 let mbpsString = String(format: "%.2f", mbpsValue)
 
-                self.progressInfoBar?.setRightValue(value: "\(mbpsString) Mbit/s") // TODO: translation, unit from phase enum?
+                self.progressInfoBar?.setRightValue(value: "\(mbpsString) M\(R.string.localizable.generalUnitsBps())")
                 self.speedMeasurementBasicResultView?.setText(mbpsString, forPhase: phase)
 
                 let mbpsLog = SpeedHelper.throughputLogarithmMbps(bps: value)

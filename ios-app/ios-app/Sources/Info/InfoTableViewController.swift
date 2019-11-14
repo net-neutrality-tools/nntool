@@ -46,7 +46,7 @@ class InfoTableViewController: UITableViewController {
             }
         } else if indexPath.section == 2 {
             if indexPath.row == 0 {
-                cell.detailTextLabel?.text = MEASUREMENT_AGENT.uuid ?? "n/a"
+                cell.detailTextLabel?.text = MEASUREMENT_AGENT.uuid ?? R.string.localizable.generalNotAvailable()
             } else if indexPath.row == 1 {
                 let (versionStr, versionInt, buildDate) = BundleHelper.getAppVersionInfo()
                 let gitInfo = BundleHelper.getBundleGitInfoString()
@@ -54,7 +54,7 @@ class InfoTableViewController: UITableViewController {
                 if let vs = versionStr, let vi = versionInt, let bd = buildDate, let gi = gitInfo {
                     cell.detailTextLabel?.text = "\(vs) (\(vi), \(bd)), \(gi)"
                 } else {
-                    cell.detailTextLabel?.text = "n/a"
+                    cell.detailTextLabel?.text = R.string.localizable.generalNotAvailable()
                 }
             }
         }
