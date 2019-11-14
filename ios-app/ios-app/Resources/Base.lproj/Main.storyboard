@@ -74,7 +74,7 @@
                     <navigationItem key="navigationItem" title="Measurement Peer" id="KbN-6Z-1ap">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="RXe-eQ-KTe">
                             <connections>
-                                <action selector="cancel" destination="PxG-10-4qD" id="cZ7-FJ-8bO"/>
+                                <segue destination="x9d-cA-TAu" kind="unwind" unwindAction="unwindCancel:" id="EQc-53-fb8"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Save" id="vGh-of-JFy">
@@ -1471,6 +1471,6 @@
         <image name="tabbar_icon_statistics" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="cR3-Gv-0fL"/>
+        <segue reference="b35-qr-BZB"/>
     </inferredMetricsTieBreakers>
 </document>

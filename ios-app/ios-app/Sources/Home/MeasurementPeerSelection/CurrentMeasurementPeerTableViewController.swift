@@ -53,8 +53,14 @@ class CurrentMeasurementPeerTableViewController: UITableViewController {
         default: break
         }
     }
+    
+    @IBAction func unwindCancel(_ segue: UIStoryboardSegue) {
+        tableView.deselectRow(at: IndexPath(row: 0, section: 0), animated: true)
+    }
 
     @IBAction func unwindSave(_ segue: UIStoryboardSegue) {
+        tableView.deselectRow(at: IndexPath(row: 0, section: 0), animated: true)
+        
         if let src = segue.source as? MeasurementPeerSelectionTableViewController {
             selectedMeasurementPeer = src.selectedMeasurementPeer
         }
