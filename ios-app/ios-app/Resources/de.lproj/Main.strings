@@ -1,0 +1,105 @@
+
+/* Class = "UILabel"; text = "Enable IAS measurements"; ObjectID = "4IV-Z2-hdO"; */
+"4IV-Z2-hdO.text" = "Enable IAS measurements";
+
+/* Class = "UITableViewSection"; headerTitle = "General"; ObjectID = "56F-aD-oZg"; */
+"56F-aD-oZg.headerTitle" = "General";
+
+/* Class = "UINavigationItem"; title = "Statistics"; ObjectID = "5bl-1F-OMU"; */
+"5bl-1F-OMU.title" = "Statistics";
+
+/* Class = "UIBarButtonItem"; title = "Agree"; ObjectID = "6eY-vG-cH0"; */
+"6eY-vG-cH0.title" = "Agree";
+
+/* Class = "UILabel"; text = "E-Mail"; ObjectID = "7Jh-PZ-BSL"; */
+"7Jh-PZ-BSL.text" = "E-Mail";
+
+/* Class = "UITableViewController"; title = "Measurement Report"; ObjectID = "ChL-OL-d1x"; */
+"ChL-OL-d1x.title" = "Measurement Report";
+
+/* Class = "UINavigationItem"; title = "Measurement Peer"; ObjectID = "KbN-6Z-1ap"; */
+"KbN-6Z-1ap.title" = "Measurement Peer";
+
+/* Class = "UITabBarItem"; title = "History"; ObjectID = "L6X-xT-IeA"; */
+"L6X-xT-IeA.title" = "History";
+
+/* Class = "UINavigationItem"; title = "History"; ObjectID = "Mmb-sK-eHA"; */
+"Mmb-sK-eHA.title" = "History";
+
+/* Class = "UITabBarItem"; title = "Info/Settings"; ObjectID = "Mn3-gT-0AI"; */
+"Mn3-gT-0AI.title" = "Info/Settings";
+
+/* Class = "UILabel"; text = "Terms and Conditions"; ObjectID = "OIS-94-O9F"; */
+"OIS-94-O9F.text" = "Terms and Conditions";
+
+/* Class = "UINavigationItem"; title = "BEREC nntool"; ObjectID = "OJr-pn-QHU"; */
+"OJr-pn-QHU.title" = "BEREC nntool";
+
+/* Class = "UILabel"; text = "Choose specific measurements"; ObjectID = "QA0-d2-0h8"; */
+"QA0-d2-0h8.text" = "Choose specific measurements";
+
+/* Class = "UINavigationItem"; title = "Map"; ObjectID = "QbD-PX-y4u"; */
+"QbD-PX-y4u.title" = "Map";
+
+/* Class = "UINavigationItem"; title = "Info"; ObjectID = "RAF-NH-28k"; */
+"RAF-NH-28k.title" = "Info";
+
+/* Class = "UILabel"; text = "Version"; ObjectID = "RST-3a-XK6"; */
+"RST-3a-XK6.text" = "Version";
+
+/* Class = "UIBarButtonItem"; title = "Cancel"; ObjectID = "RXe-eQ-KTe"; */
+"RXe-eQ-KTe.title" = "Cancel";
+
+/* Class = "UIBarButtonItem"; title = "Decline"; ObjectID = "STj-LP-kRl"; */
+"STj-LP-kRl.title" = "Decline";
+
+/* Class = "UILabel"; text = "IPv4 only"; ObjectID = "Smk-ed-IEz"; */
+"Smk-ed-IEz.text" = "IPv4 only";
+
+/* Class = "UILabel"; text = "QoS Group"; ObjectID = "TqB-bQ-8r6"; */
+"TqB-bQ-8r6.text" = "QoS Group";
+
+/* Class = "UILabel"; text = "Select a Measurement Peer"; ObjectID = "X48-qC-w0f"; */
+"X48-qC-w0f.text" = "Select a Measurement Peer";
+
+/* Class = "UITabBarItem"; title = "Home"; ObjectID = "Yym-ll-ifY"; */
+"Yym-ll-ifY.title" = "Home";
+
+/* Class = "UITabBarItem"; title = "Map"; ObjectID = "ZQ4-Xk-nVb"; */
+"ZQ4-Xk-nVb.title" = "Map";
+
+/* Class = "UIButton"; normalTitle = "View Your Measurement Report"; ObjectID = "ade-vS-2jV"; */
+"ade-vS-2jV.normalTitle" = "View Your Measurement Report";
+
+/* Class = "UINavigationItem"; title = "Terms and Conditions"; ObjectID = "dJR-Fk-BlD"; */
+"dJR-Fk-BlD.title" = "Terms and Conditions";
+
+/* Class = "UILabel"; text = "Website"; ObjectID = "ggr-ue-prG"; */
+"ggr-ue-prG.text" = "Website";
+
+/* Class = "UITabBarItem"; title = "Statistics"; ObjectID = "gyp-Ux-1u3"; */
+"gyp-Ux-1u3.title" = "Statistics";
+
+/* Class = "UINavigationItem"; title = "BEREC nntool"; ObjectID = "hp5-mn-BBe"; */
+"hp5-mn-BBe.title" = "BEREC nntool";
+
+/* Class = "UITableViewSection"; headerTitle = "Measurement selection"; ObjectID = "iKc-wi-ZHf"; */
+"iKc-wi-ZHf.headerTitle" = "Measurement selection";
+
+/* Class = "UINavigationItem"; title = "Settings"; ObjectID = "ndR-Sc-hOE"; */
+"ndR-Sc-hOE.title" = "Settings";
+
+/* Class = "UINavigationItem"; title = "Measurement Report"; ObjectID = "ocZ-Iw-AVT"; */
+"ocZ-Iw-AVT.title" = "Measurement Report";
+
+/* Class = "UILabel"; text = "Agent UUID"; ObjectID = "uzl-r8-5g6"; */
+"uzl-r8-5g6.text" = "Agent UUID";
+
+/* Class = "UIBarButtonItem"; title = "Save"; ObjectID = "vGh-of-JFy"; */
+"vGh-of-JFy.title" = "Save";
+
+/* Class = "UILabel"; text = "Map"; ObjectID = "w0G-lm-F8b"; */
+"w0G-lm-F8b.text" = "Map";
+
+/* Class = "UILabel"; text = "Enable QoS measurements"; ObjectID = "w2Z-vX-smk"; */
+"w2Z-vX-smk.text" = "Enable QoS measurements";

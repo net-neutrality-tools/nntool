@@ -219,6 +219,7 @@
 		E029274822D63CAB001FCAEC /* ios-app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ios-app.entitlements"; sourceTree = "<group>"; };
 		E029274E22D790EA001FCAEC /* add_build_infos.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = add_build_infos.sh; sourceTree = "<group>"; };
 		E029318F237C4A5E009CAB3A /* UISwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISwitchTableViewCell.swift; sourceTree = "<group>"; };
+		E0293192237DABE0009CAB3A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementPeerSelectionTableViewController.swift; sourceTree = "<group>"; };
 		E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeScreenDeviceInfoView.xib; sourceTree = "<group>"; };
 		E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Format.swift"; sourceTree = "<group>"; };
@@ -770,6 +771,7 @@
 			buildConfigurationList = E026A5A82241271A00BACDB5 /* Build configuration list for PBXNativeTarget "BEREC_nntool" */;
 			buildPhases = (
 				1AB73F8B8DD73C0088EF14CF /* [CP] Check Pods Manifest.lock */,
+				E0293193237DAC60009CAB3A /* Run BartyCrouch */,
 				E0C4527322CDF87500FA4B44 /* Run R.swift */,
 				E026A57A2241271700BACDB5 /* Sources */,
 				E026A57B2241271700BACDB5 /* Frameworks */,
@@ -1089,6 +1091,24 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/ios-app/Scripts/add_build_infos.sh\"\n";
 		};
+		E0293193237DAC60009CAB3A /* Run BartyCrouch */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run BartyCrouch";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which $PODS_ROOT/BartyCrouch/bartycrouch > /dev/null; then\n    cd $PODS_ROOT/..\n    $PODS_ROOT/BartyCrouch/bartycrouch update -x\n    $PODS_ROOT/BartyCrouch/bartycrouch lint -x\nelse\n    echo \"warning: BartyCrouch not installed, please run 'pod install'\"\nfi\n";
+		};
 		E0B9A33222495BBB002AB640 /* Run swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1125,7 +1145,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/ios-app/Sources/Generated/R.generated.swift\"\n";
+			shellScript = "if which \"$PODS_ROOT/R.swift/rswift\" > /dev/null; then\n    \"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/ios-app/Sources/Generated/R.generated.swift\"\nelse\n    echo \"warning: R.swift not installed, please run 'pod install'\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1268,6 +1288,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				E026A5882241271700BACDB5 /* Base */,
+				E0293192237DABE0009CAB3A /* de */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
