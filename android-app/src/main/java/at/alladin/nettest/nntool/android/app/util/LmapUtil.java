@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
+import com.zafaco.speed.SpeedTaskDesc;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.common.LmapOptionDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapControlDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
