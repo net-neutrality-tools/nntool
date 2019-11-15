@@ -44,6 +44,7 @@ class CConnection
 		SSL_CTX* ctx;
 		SSL* ssl;
 
+		void toggleBlocking(bool activate);
 		void tlsSetup(bool client);
 		int tlsConnect();
 		void tlsPrintError();
@@ -74,6 +75,12 @@ class CConnection
 		//! TCP Server Sockets
 		int tcpSocketServer( int &nPort );
 		int tcp6SocketServer( int &nPort );
+
+		//! Set Socket to non-blocking
+		void setBlocking();
+
+		//! Set Socket to non-blocking
+		void setNonBlocking();
 
 		//! TLS specific functions
 		int tlsServe();
