@@ -1,9 +1,11 @@
 /*!
     \file SpeedTaskDesc.java
     \author zafaco GmbH <info@zafaco.de>
+    \author alladin-IT GmbH <info@alladin.at>
     \date Last update: 2019-11-13
 
     Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2019 alladin-IT GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
