@@ -67,8 +67,8 @@ export class MeasurementGauge extends BaseMeasurementGauge {
       this.gaugeFont = 'times';
     }
 
-    //in order to display the GO correctly in a non-icon font, set the icon font to intial at first
-    this.stateView.style.fontFamily = "intial";
+    //in order to display the GO correctly in a non-icon font, set the icon font to initial at first
+    this.stateView.style.fontFamily = "initial";
   }
 
   public resizeEvent() {
@@ -169,7 +169,7 @@ export class MeasurementGauge extends BaseMeasurementGauge {
       this.stateView.innerText = this.stateContent;
       //reset icon font usage based on displayed state
       if (value === StateView.READY || value === StateView.COMPLETE) {
-        this.stateView.style.fontFamily = "intial";
+        this.stateView.style.fontFamily = "initial";
       } else {
         this.stateView.style.fontFamily = "";
       }
