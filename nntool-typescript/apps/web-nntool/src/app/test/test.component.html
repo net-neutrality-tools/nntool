@@ -14,6 +14,13 @@
       [visible]="user && user.acceptTC && screenNr === 1"
       (statusChange)="handleTestSeriesStatusChange($event)"
     >
+      <app-loop-settings 
+        *ngIf="user.enableLoopMode && (user.executePingMeasurement || user.executeDownloadMeasurement || user.executeUploadMeasurement || user.executeQosMeasurement)"
+        #startableTest [config]="qosConfig"
+        (finished)="portBlockingTestFinished($event)" 
+        (errorMsgChange)="errorMsg = $event" 
+        (statusChange)="($event)">
+      </app-loop-settings>
       <app-speed-test-gauge
         *ngIf="user.executePingMeasurement || user.executeDownloadMeasurement || user.executeUploadMeasurement"
         #startableTest

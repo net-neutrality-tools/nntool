@@ -335,6 +335,11 @@
     },
     "BAR": {
       "UDP": "UDP"
+    },
+    "LOOP": {
+      "TITLE": "Looped measurements",
+      "TIME_BETWEEN_TESTS": "Time between tests (in seconds):",
+      "NUMBER_REPETITIONS": "Number of test-runs:"
     }
   },
   "SETTINGS": {
@@ -354,6 +359,10 @@
       "DOWNLOAD_MEASUREMENT": "Download",
       "UPLOAD_MEASUREMENT": "Upload",
       "QOS_MEASUREMENT": "Quality of Service"
+    },
+    "LOOPMODE": {
+      "HEADER": "Execute multiple measurements in a row:",
+      "ENABLE_TEXT": "Show loop mode screen on test start"
     }
   }
 }

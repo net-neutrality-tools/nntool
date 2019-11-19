@@ -24,6 +24,7 @@ import { CoreModule } from './@core/core.module';
 import { PagesModule } from './pages/pages.module';
 import { SharedModule } from './shared/shared.module';
 import { environment } from '../environments/environment';
+import { LoopSettingsComponent } from './testing/tests/loop-settings';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -62,6 +63,7 @@ const MAIN_DECLARATIONS = [AppComponent];
     ...TEST_DECLARATIONS,
     SpeedTestGaugeComponent,
     PortBlockingTestBarComponent,
+    LoopSettingsComponent,
     TestSeriesComponent
   ],
   providers: [...TEST_PROVIDERS, SpeedTestImplementation, PortBlockingTestImplementation]
