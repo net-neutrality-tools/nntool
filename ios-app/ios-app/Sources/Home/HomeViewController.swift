@@ -130,7 +130,7 @@ class HomeViewController: CustomNavigationBarViewController {
         locationTracker.start(updateLocationCallback: { location in
             DispatchQueue.main.async {
                 self.deviceInfoView?.locationLabel?.text = location.coordinate.dmFormattedString
-                self.deviceInfoView?.locationInfoLabel?.text = "\(R.string.localizable.homeLocation()) ±\(String(format: "%dm", Int(location.horizontalAccuracy)))"
+                self.deviceInfoView?.locationInfoLabel?.text = "\(R.string.localizable.homeDeviceInfoLocation()) ±\(String(format: "%dm", Int(location.horizontalAccuracy)))"
             }
         })
 

@@ -13,7 +13,7 @@
 "tos.popup.registering" = "Registering agent";
 
 "tos.error.registration.title" = "Registration error";
-"tos.error.registration.message" = "Agent could not be registered, TODO: message";
+"tos.error.registration.message" = "Agent could not be registered.";
 "tos.error.registration.retry" = "Retry";
 "tos.error.registration.close" = "Close App";
 
@@ -21,12 +21,20 @@
 // Home screen
 ///////////////////////////
 
-"home.location" = "Location";
-
 "home.pre-measurement-alert.title" = "Pre Measurement Alert";
 "home.pre-measurement-alert.message" = "Traffic Warning";
 "home.pre-measurement-alert.continue" = "Continue";
 "home.pre-measurement-alert.abort" = "Abort";
+
+"home.device-info.cpu" = "CPU";
+"home.device-info.ram" = "RAM";
+"home.device-info.ipv4" = "IPv4";
+"home.device-info.ipv6" = "IPv6";
+
+"home.device-info.traffic-in" = "Traffic in";
+"home.device-info.traffic-out" = "Traffic out";
+
+"home.device-info.location" = "Location";
 
 ///////////////////////////
 // Network
@@ -42,7 +50,7 @@
 ///////////////////////////
 
 "measurement.speed.phase.init" = "Init";
-"measurement.speed.phase.rtt" = "RTT";
+"measurement.speed.phase.rtt" = "Ping";
 "measurement.speed.phase.download" = "Download";
 "measurement.speed.phase.upload" = "Upload";
     
@@ -63,7 +71,7 @@
 // History
 ///////////////////////////
 
-"history.list.date-format" = "yyyy-MM-dd HH:mm";
+"history.list.date-format" = "dd.MM.yyyy HH:mm";
 "history.list.disassociate-measurement" = "Delete";
 
 // QoS

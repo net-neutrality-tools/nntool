@@ -33,6 +33,24 @@ import UIKit
     @IBOutlet var locationLabel: UILabel?
     @IBOutlet var locationInfoLabel: UILabel?
 
+    @IBOutlet private var cpuTitleLabel: UILabel?
+    @IBOutlet private var ramTitleLabel: UILabel?
+
+    @IBOutlet private var ipv4TitleLabel: UILabel?
+    @IBOutlet private var ipv6TitleLabel: UILabel?
+
+    @IBOutlet private var trafficInTitleLabel: UILabel?
+    @IBOutlet private var trafficOutTitleLabel: UILabel?
+
+    override func awakeFromNib() {
+        cpuTitleLabel?.text = R.string.localizable.homeDeviceInfoCpu()
+        ramTitleLabel?.text = R.string.localizable.homeDeviceInfoRam()
+        ipv4TitleLabel?.text = R.string.localizable.homeDeviceInfoIpv4()
+        ipv6TitleLabel?.text = R.string.localizable.homeDeviceInfoIpv6()
+        trafficInTitleLabel?.text = R.string.localizable.homeDeviceInfoTrafficIn()
+        trafficOutTitleLabel?.text = R.string.localizable.homeDeviceInfoTrafficOut()
+    }
+    
     func reset() {
         cpuValueLabel?.text = ""
         memValueLabel?.text = ""

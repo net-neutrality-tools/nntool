@@ -45,6 +45,7 @@ import UIKit
 
     override func awakeFromNib() {
         startButtonSystemFont = startButton?.titleLabel?.font
+        startButton?.titleLabel?.text = R.string.localizable.measurementGaugeStart()
     }
 
     ///
