@@ -72,10 +72,12 @@ extension QoSGroupOverviewCell: UICollectionViewDataSource {
         cell.iconLabel?.text = item.icon
         cell.groupNameLabel?.text = item.localizedName
 
-        if item.successCount == item.evaluationCount {
+        let successfulTasks = item.tasks.filter { $0.isSuccessful() }.count
+
+        if successfulTasks == item.tasks.count {
             cell.statusIconLabel?.text = IconFont.check.rawValue
             cell.statusIconLabel?.textColor = UIColor.green
-        } else if item.successCount == 0 {
+        } else if successfulTasks == 0 {
             cell.statusIconLabel?.text = IconFont.cross.rawValue
             cell.statusIconLabel?.textColor = UIColor.red
         } else {
@@ -83,7 +85,7 @@ extension QoSGroupOverviewCell: UICollectionViewDataSource {
             cell.statusIconLabel?.textColor = UIColor.yellow
         }
 
-        cell.statusLabel?.text = "\(item.successCount)/\(item.evaluationCount)"
+        cell.statusLabel?.text = "\(successfulTasks)/\(item.tasks.count)"
 
         return cell
     }
