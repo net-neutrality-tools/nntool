@@ -31,7 +31,7 @@ class HomeViewController: CustomNavigationBarViewController {
     @IBOutlet private var selectSpeedMeasurementPeerLabel: UILabel?
     @IBOutlet private var selectSpeedMeasurementPeerSeparatorView: UIView?
     @IBOutlet private var selectSpeedMeasurementPeerContainerView: UIView?
-
+    
     private var currentMeasurementPeerTableViewController: CurrentMeasurementPeerTableViewController?
 
     private let cpuUsageInfo = CpuUsageInfo()
@@ -254,14 +254,14 @@ class HomeViewController: CustomNavigationBarViewController {
         logger.debug("updating ip status: \(String(describing: status))")
 
         var icon: IconFont = .cross
-        var color = BEREC_DARK_GRAY
+        var color = COLOR_IP_INFO_UNAVAILABLE
 
         if let status = status, status.hasInternetConnection {
             icon = .check
             if status.isNat {
-                color = UIColor.yellow
+                color = COLOR_IP_INFO_NAT
             } else {
-                color = UIColor.green
+                color = COLOR_IP_INFO_NO_NAT
             }
         }
 
