@@ -60,6 +60,17 @@ class HomeViewController: CustomNavigationBarViewController {
             }
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard MEASUREMENT_AGENT.isRegistered() else {
+            return
+        }
+        
+        loadMeasurementPeers()
+        startUpdatingDeviceInfo()
+    }
 
     ///
     override func viewDidAppear(_ animated: Bool) {
@@ -69,15 +80,12 @@ class HomeViewController: CustomNavigationBarViewController {
             performSegue(withIdentifier: R.segue.homeViewController.present_modally_terms_and_conditions, sender: self)
             return
         }
-
-        loadMeasurementPeers()
-        start()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        stop()
+        stopUpdatingDeviceInfo()
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -123,7 +131,7 @@ class HomeViewController: CustomNavigationBarViewController {
         }
     }
 
-    private func start() {
+    private func startUpdatingDeviceInfo() {
         deviceInfoView?.reset()
 
         // TODO: display error message if location permission is not granted
@@ -168,7 +176,7 @@ class HomeViewController: CustomNavigationBarViewController {
         }
     }
 
-    private func stop() {
+    private func stopUpdatingDeviceInfo() {
         locationTracker.stop()
 
         timer?.removeAllObservers(thenStop: true)
@@ -275,6 +283,7 @@ class HomeViewController: CustomNavigationBarViewController {
 extension HomeViewController: TermsAndConditionsDelegate {
 
     func didAcceptTermsAndConditions() {
-        start()
+        loadMeasurementPeers()
+        stopUpdatingDeviceInfo()
     }
 }

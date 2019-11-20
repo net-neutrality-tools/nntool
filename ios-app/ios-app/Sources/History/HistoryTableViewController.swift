@@ -84,7 +84,7 @@ extension HistoryTableViewController: PaginatedTableViewDataSource {
         }
 
         let naString = R.string.localizable.generalNotAvailable()
-        
+
         cell.dateLabel?.text = naString
         cell.rttLabel?.text = naString
         cell.downloadLabel?.text = naString

@@ -76,7 +76,7 @@ class IASProgram: NSObject, ProgramProtocol {
             speed.targets = ["peer-ias-de-01-ipv4"]
             speed.targetsPort = "80"
         }
-        
+
         speed.wss = encryption ? 1 : 0
 
         //logger.info("IAS: measuring against host: \(String(describing: speed.targets.first)), port: \(String(describing: speed.targetsPort))")
