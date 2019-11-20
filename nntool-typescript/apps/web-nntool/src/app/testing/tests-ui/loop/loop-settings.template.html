@@ -1,18 +1,38 @@
 <div class="nettest-bar-alladin" [hidden]="!active">
-    <form>
-        {{ 'NETTEST.LOOP.TIME_BETWEEN_TESTS' | translate }}<br>
-        <input type="number" name="firstname" value="10" min="1">
-        <br>
-        {{ 'NETTEST.LOOP.NUMBER_REPETITIONS' | translate }}<br>
-        <input type="number" name="lastname" value="5" min="1" max="20">
-    </form>
-    <!--
-    default: class="btn__nettest-state"
-    in progress: class="btn__nettest-state inprogress"
-    complete: class="btn__nettest-state complete"
-    -->
-    <button class="btn__nettest-state" [ngClass]="{'inprogress': manualStartShouldBeDisabled}" id="nettest-state"
-        (click)="requestStart()">
-        h
-    </button>
+    <div *ngIf="testImplementation.curRepetitions == 0">
+        <form>
+            {{ 'NETTEST.LOOP.TIME_BETWEEN_TESTS' | translate }}<br>
+            <input type="number" name="firstname" [(ngModel)]="testImplementation.loopModeConfig.timeBetweenRepetitions" min="1">
+            <br>
+            {{ 'NETTEST.LOOP.NUMBER_REPETITIONS' | translate }}<br>
+            <input type="number" name="lastname" [(ngModel)]="testImplementation.loopModeConfig.numRepetitions" min="1" max="20">
+        </form>
+        <!--
+        default: class="btn__nettest-state"
+        in progress: class="btn__nettest-state inprogress"
+        complete: class="btn__nettest-state complete"
+        -->
+        <button class="btn__nettest-state" [ngClass]="{'inprogress': manualStartShouldBeDisabled}" id="nettest-state"
+            (click)="requestStart()">
+            h
+        </button>
+    </div>
+
+    <div *ngIf="testImplementation.curRepetitions > 0">
+        <div class="flex--columns home">
+            <div class="content--column">
+                <header class="column-header">
+                    <h3>{{ 'NETTEST.LOOP.TEST_COUNTER' | translate }}</h3>
+                    <h2>{{testImplementation.curRepetitions}}/{{testImplementation.loopModeConfig.numRepetitions}}</h2>
+                </header>
+            </div>
+            <div class="content--column">
+                <header class="column-header">
+                    <h3>{{ 'NETTEST.LOOP.TIME_LEFT' | translate }}</h3>
+                    <h2 *ngIf="testImplementation.curRepetitions < testImplementation.loopModeConfig.numRepetitions">{{testImplementation.timeLeftString}}</h2>
+                    <h2 *ngIf="testImplementation.curRepetitions == testImplementation.loopModeConfig.numRepetitions">{{ 'NETTEST.LOOP.FINISHED' | translate }}</h2>
+                </header>
+            </div>
+        </div>
+    </div>
 </div>

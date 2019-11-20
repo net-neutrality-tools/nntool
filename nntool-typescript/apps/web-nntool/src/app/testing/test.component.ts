@@ -12,6 +12,9 @@ export abstract class StartableTest {
   public requestStart: () => void;
   public onChangedRunningState: Observable<TestComponentStatus>;
   public setActive: (active: boolean) => void;
+  public onOnlyReInit() {
+
+  }
 }
 
 export abstract class Test<

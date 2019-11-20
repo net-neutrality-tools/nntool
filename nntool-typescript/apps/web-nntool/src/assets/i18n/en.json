@@ -338,8 +338,11 @@
     },
     "LOOP": {
       "TITLE": "Looped measurements",
-      "TIME_BETWEEN_TESTS": "Time between tests (in seconds):",
-      "NUMBER_REPETITIONS": "Number of test-runs:"
+      "TIME_BETWEEN_TESTS": "Time between tests (in minutes):",
+      "NUMBER_REPETITIONS": "Number of test-runs:",
+      "TIME_LEFT": "Next test",
+      "TEST_COUNTER": "Test counter",
+      "FINISHED": "Loop mode finished"
     }
   },
   "SETTINGS": {

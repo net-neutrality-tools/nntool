@@ -19,6 +19,15 @@ export class LoopSettingsImplementation extends TestImplementation<PortBlockingT
 
   private $state: Subject<LoopSettingsTestState>;
 
+  public loopModeConfig: PortBlockingTestConfig = {
+    numRepetitions: LoopSettingsImplementation.BASE_CONFIG.numRepetitions,
+    timeBetweenRepetitions: LoopSettingsImplementation.BASE_CONFIG.timeBetweenRepetitions
+  };
+
+  public curRepetitions = 0;
+  public loopModeDelay = 0;
+  public timeLeftString = "";
+
   constructor(testSchedulerService: TestSchedulerService, private zone: NgZone) {
     // TODO: Add missing services
     super(testSchedulerService);
@@ -30,15 +39,17 @@ export class LoopSettingsImplementation extends TestImplementation<PortBlockingT
     const extendedConfig = LoopSettingsImplementation.BASE_CONFIG;
     const state = this.generateInitState(config);
 
-   setTimeout(state.basicState = BasicTestState.ENDED, 3000);
+    console.log("curRepetitions: " + this.curRepetitions);
+    setTimeout(() => {
+      state.basicState = BasicTestState.ENDED;
+      this.curRepetitions++;
+      this.$state.next(state);
+    }, 500);
   };
 
   protected generateInitState = (config: PortBlockingTestConfig) => {
-
     const state: LoopSettingsTestState = new LoopSettingsTestState();
-
     state.basicState = BasicTestState.INITIALIZED;
-
     return state;
   };
 
