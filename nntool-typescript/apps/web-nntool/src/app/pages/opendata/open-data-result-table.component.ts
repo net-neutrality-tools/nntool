@@ -6,6 +6,7 @@ import { fromEvent } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { SpringServerDataSource } from '../../@core/services/table/spring-server.data-source';
 import { SearchApiService } from '../../@core/services/search-api.service';
+import { DateParseService } from '../../@core/services/date-parse.service';
 
 @Component({
   templateUrl: './open-data-result-table.component.html',
@@ -20,7 +21,7 @@ export class OpenDataResultTableComponent implements OnInit {
         title: 'Time',
         filter: false, // TODO: use this for search query?
         valuePrepareFunction: (cell, row) => {
-          return new Date(Date.parse(row.start_time)).toLocaleString();
+          return this.dateParseService.parseDateIntoFormat(new Date(Date.parse(row.start_time)));
         }
       },
       open_data_uuid: {
@@ -30,7 +31,7 @@ export class OpenDataResultTableComponent implements OnInit {
       },
       'measurements.SPEED.rtt_info.average_ns': {
         // or median?
-        title: 'RTT (ms)',
+        title: 'Ping (ms)',
         filter: false,
         valuePrepareFunction: (cell, row) => {
           if (row.measurements.SPEED && row.measurements.SPEED.rtt_info && row.measurements.SPEED.rtt_info.average_ns) {
@@ -73,7 +74,8 @@ export class OpenDataResultTableComponent implements OnInit {
     private logger: NGXLogger,
     private router: Router,
     private translationService: TranslateService,
-    private searchApiService: SearchApiService
+    private searchApiService: SearchApiService,
+    private dateParseService: DateParseService
   ) {
     this.tableSource = this.searchApiService.getServerDataSource();
   }

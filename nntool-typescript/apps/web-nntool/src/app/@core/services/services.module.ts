@@ -17,6 +17,7 @@ import { LocationService } from './location.service';
 import { Guard } from './guard.service';
 import { WINDOW_REF_PROVIDER, WINDOW_PROVIDER } from './window.service';
 import { StatisticApiService } from './statistic-api.service';
+import { DateParseService } from './date-parse.service';
 
 const Services = [
   ConfigService,
@@ -34,6 +35,7 @@ const Services = [
   TestService,
   TestSettingsService,
   LocationService,
+  DateParseService,
   Guard,
   WINDOW_REF_PROVIDER,
   WINDOW_PROVIDER
