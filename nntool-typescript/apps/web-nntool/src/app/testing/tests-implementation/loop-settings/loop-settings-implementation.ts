@@ -56,4 +56,10 @@ export class LoopSettingsImplementation extends TestImplementation<PortBlockingT
   protected clean = (): void => {
     this.$state = null;
   };
+
+  public onDestroy(): void {
+    this.curRepetitions = 0;
+    this.loopModeDelay = 0;
+    this.timeLeftString = "";
+  }
 }

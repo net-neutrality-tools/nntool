@@ -1,4 +1,4 @@
-import { Component, Inject, AfterViewInit, NgZone } from '@angular/core';
+import { Component, Inject, AfterViewInit, NgZone, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { PortBlockingTestTypeEnum } from '../tests-implementation/port-blocking/enums/port-blocking-test-type';
 import { PortBlockingTestConfig } from '../tests-implementation/port-blocking/port-blocking-test-config';
@@ -21,7 +21,7 @@ export class LoopSettingsComponent extends BarUIComponent<
 LoopSettingsImplementation,
 PortBlockingTestConfig,
 LoopSettingsTestState
-> {
+> implements OnDestroy {
     // TODO: rethink DI in this use case, testImplementation should not be one instance, if there were more than one test at once
     // TODO: Remove this constructor when DI on generic type figured out
     constructor(
@@ -42,6 +42,10 @@ LoopSettingsTestState
         if (this.testImpl.curRepetitions > 0) {
             this.startTimerForNextTest();
         }
+    }
+
+    ngOnDestroy() {
+        this.testImpl.onDestroy();
     }
 
     protected testStateToUIState = (state: PortBlockingTestState): BarUIState => {
