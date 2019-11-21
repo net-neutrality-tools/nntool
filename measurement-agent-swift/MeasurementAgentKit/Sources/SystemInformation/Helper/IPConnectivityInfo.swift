@@ -85,22 +85,24 @@ public class IPConnectivityInfo {
 
         ipv6Status.localAddress = getLocalIPv6Address()
 
-        DispatchQueue.main.async {
-            self.controlServiceV6.getIp(onSuccess: { response in
-                guard let version = response.ipVersion, version == .ipv6 else {
-                    return
-                }
+        if ipv6Status.localAddress != nil {
+            DispatchQueue.main.async {
+                self.controlServiceV6.getIp(onSuccess: { response in
+                    guard let version = response.ipVersion, version == .ipv6 else {
+                        return
+                    }
 
-                ipv6Status.publicAddress = response.ipAddress
-                ipv6Status.hasInternetConnection = true
+                    ipv6Status.publicAddress = response.ipAddress
+                    ipv6Status.hasInternetConnection = true
 
-                semaphore.signal()
-            }, onFailure: { _ in
-                semaphore.signal()
-            })
+                    semaphore.signal()
+                }, onFailure: { _ in
+                    semaphore.signal()
+                })
+            }
+
+            _ = semaphore.wait(timeout: .now() + .seconds(3))
         }
-
-        _ = semaphore.wait(timeout: .now() + .seconds(2))
 
         return ipv6Status
     }
