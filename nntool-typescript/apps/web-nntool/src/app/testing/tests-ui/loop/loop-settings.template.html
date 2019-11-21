@@ -1,11 +1,11 @@
 <div class="nettest-bar-alladin" [hidden]="!active">
-    <div *ngIf="testImplementation.curRepetitions == 0">
+    <div *ngIf="testImpl.curRepetitions == 0">
         <form>
             {{ 'NETTEST.LOOP.TIME_BETWEEN_TESTS' | translate }}<br>
-            <input type="number" name="firstname" [(ngModel)]="testImplementation.loopModeConfig.timeBetweenRepetitions" min="1">
+            <input type="number" name="firstname" [(ngModel)]="testImpl.loopModeConfig.timeBetweenRepetitions" min="1">
             <br>
             {{ 'NETTEST.LOOP.NUMBER_REPETITIONS' | translate }}<br>
-            <input type="number" name="lastname" [(ngModel)]="testImplementation.loopModeConfig.numRepetitions" min="1" max="20">
+            <input type="number" name="lastname" [(ngModel)]="testImpl.loopModeConfig.numRepetitions" min="1" max="20">
         </form>
         <!--
         default: class="btn__nettest-state"
@@ -18,23 +18,23 @@
         </button>
     </div>
 
-    <div *ngIf="testImplementation.curRepetitions > 0">
+    <div *ngIf="testImpl.curRepetitions > 0">
         <div class="flex--columns home">
             <div class="content--column">
                 <header class="column-header">
                     <h3>{{ 'NETTEST.LOOP.TEST_COUNTER' | translate }}</h3>
-                    <h2>{{testImplementation.curRepetitions}}/{{testImplementation.loopModeConfig.numRepetitions}}</h2>
+                    <h2>{{testImpl.curRepetitions}}/{{testImpl.loopModeConfig.numRepetitions}}</h2>
                 </header>
             </div>
             <div class="content--column">
                 <header class="column-header">
-                    <h3 *ngIf="testImplementation.curRepetitions < testImplementation.loopModeConfig.numRepetitions">{{ 'NETTEST.LOOP.TIME_LEFT' | translate }}</h3>
-                    <h2 *ngIf="testImplementation.curRepetitions < testImplementation.loopModeConfig.numRepetitions">{{testImplementation.timeLeftString}}</h2>
-                    <h2 *ngIf="testImplementation.curRepetitions === testImplementation.loopModeConfig.numRepetitions">{{ 'NETTEST.LOOP.FINISHED' | translate }}</h2>
+                    <h3 *ngIf="testImpl.curRepetitions < testImpl.loopModeConfig.numRepetitions">{{ 'NETTEST.LOOP.TIME_LEFT' | translate }}</h3>
+                    <h2 *ngIf="testImpl.curRepetitions < testImpl.loopModeConfig.numRepetitions">{{testImpl.timeLeftString}}</h2>
+                    <h2 *ngIf="testImpl.curRepetitions === testImpl.loopModeConfig.numRepetitions">{{ 'NETTEST.LOOP.FINISHED' | translate }}</h2>
                 </header>
             </div>
         </div>
-        <button *ngIf="testImplementation.curRepetitions === testImplementation.loopModeConfig.numRepetitions" class="button" (click)="ngOnDestroy()">
+        <button *ngIf="testImpl.curRepetitions === testImpl.loopModeConfig.numRepetitions" class="button" (click)="ngOnDestroy()">
             {{ 'NETTEST.LOOP.RESET' | translate }}
         </button>
     </div>

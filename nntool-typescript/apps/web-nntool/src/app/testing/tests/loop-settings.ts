@@ -28,14 +28,13 @@ LoopSettingsTestState
         testImplementation: LoopSettingsImplementation,
         configService: ConfigService,
         translateService: TranslateService,
-        @Inject(WINDOW) window: Window,
-        public zone: NgZone
+        @Inject(WINDOW) window: Window
     ) {
         super(testImplementation, configService, translateService, window);
         this.testImpl = testImplementation;
     }
 
-    private testImpl: LoopSettingsImplementation;
+    public testImpl: LoopSettingsImplementation;
 
 
     public onOnlyReInit() {
@@ -49,32 +48,7 @@ LoopSettingsTestState
     }
 
     protected testStateToUIState = (state: PortBlockingTestState): BarUIState => {
-        const barUIState: BarUIState = new BarUIState();
-        barUIState.types = [];
-        /*
-        state.types.forEach(
-            (type: {
-                key: PortBlockingTestTypeEnum;
-                ports: Array<{
-                    number: number;
-                    reachable: boolean;
-                    finished: boolean;
-                }>;
-            }) => {
-                const mappedType: {
-                    key: BarUIShowableTestTypeEnum;
-                    ports: Array<{
-                        number: number;
-                        reachable: boolean;
-                        finished: boolean;
-                    }>;
-                } = { key: undefined, ports: undefined };
-                mappedType.key = BarUIShowableTestTypeEnum[PortBlockingTestTypeEnum[type.key]];
-                mappedType.ports = type.ports;
-                barUIState.types.push(mappedType);
-            }
-        );*/
-        return barUIState;
+        return new BarUIState();
     };
 
     public startTimerForNextTest() {
@@ -97,15 +71,11 @@ LoopSettingsTestState
           }
     
           this.testImpl.timeLeftString = this.toHHMMSS(timeLeft);
-          
-          this.zone.run(() => {
-
-          });
 
         }, 1000)
       }
     
-      private toHHMMSS(timeLeft) {
+      private toHHMMSS(timeLeft): string {
         var date = new Date(null);
         date.setSeconds(timeLeft); // specify value for SECONDS here
         return date.toISOString().substr(11, 8);
