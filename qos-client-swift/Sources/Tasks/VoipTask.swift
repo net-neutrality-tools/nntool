@@ -124,7 +124,7 @@ class VoipTask: QoSControlConnectionTask {
                 serverCallDurationNs = UInt64(serverCallDurationNsString)
             }
         }
-        
+
         if let cdns = serverCallDurationNs {
             callDurationNs = cdns
         }

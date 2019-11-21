@@ -53,14 +53,14 @@ class TracerouteTask: QoSTask {
         } else {
             r["traceroute_result_status"] = JSON(QoSTaskStatus.ok.rawValue)
         }
-        
+
         if let hops = hopDetails, hops.count > 0 {
             r["traceroute_result_hops"] = JSON(hops.count)
             r["traceroute_result_details"] = JSON(hops)
         } else {
             r["traceroute_result_status"] = JSON(QoSTaskStatus.error.rawValue)
         }
-        
+
         return r
     }
 
@@ -172,7 +172,7 @@ class TracerouteTask: QoSTask {
 
         close(sendSocket)
         close(receiveSocket)
-        
+
         if hopResult == nil {
             hopDetails = nil
         }

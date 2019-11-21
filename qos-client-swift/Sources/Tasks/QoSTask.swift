@@ -11,7 +11,7 @@ class QoSTask: Operation, Codable {
     enum ParseError: Error {
         case parseError(String)
     }
-    
+
     var taskLogger: QoSLogger!
 
     let progress = Progress(totalUnitCount: 100)
