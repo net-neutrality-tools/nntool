@@ -49,6 +49,10 @@ export class UserInfo {
       userInfo.executeQosMeasurement = obj.executeQosMeasurement;
     }
 
+    if (typeof obj.enableLoopMode !== 'undefined') {
+      userInfo.enableLoopMode = obj.enableLoopMode;
+    }
+
     return userInfo;
   }
   /**
@@ -94,6 +98,8 @@ export class UserInfo {
 
   public executeQosMeasurement = true;
 
+  public enableLoopMode = false;
+
   public apply(other: UserInfo): void {
     this.disassociated = other.disassociated;
     this.invisible = other.invisible;
@@ -106,6 +112,7 @@ export class UserInfo {
     this.executePingMeasurement = other.executePingMeasurement;
     this.executeUploadMeasurement = other.executeUploadMeasurement;
     this.executeQosMeasurement = other.executeQosMeasurement;
+    this.enableLoopMode = other.enableLoopMode;
   }
 
   public toJson(): string {
@@ -120,7 +127,8 @@ export class UserInfo {
       executeDownloadMeasurement: this.executeDownloadMeasurement,
       executePingMeasurement: this.executePingMeasurement,
       executeUploadMeasurement: this.executeUploadMeasurement,
-      executeQosMeasurement: this.executeQosMeasurement
+      executeQosMeasurement: this.executeQosMeasurement,
+      enableLoopMode: this.enableLoopMode
     };
 
     return JSON.stringify(obj);

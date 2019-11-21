@@ -90,7 +90,7 @@
     "asciidoctor.js": "~1.5.9",
     "codelyzer": "~5.1.0",
     "dotenv": "8.0.0",
-    "electron": "^6.0.10",
+    "electron": "5.0.12",
     "electron-builder": "^20.28.4",
     "electron-installer-dmg": "~3.0.0",
     "electron-packager": "~14.0.4",

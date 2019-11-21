@@ -16,6 +16,8 @@ import { BrowserStorageService } from './@core/services/storage.service';
 import { AppService } from './@core/services/app.service';
 import { UserService, UserInfo } from './@core/services/user.service';
 
+declare var window;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
@@ -178,8 +180,12 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private updateTitle(): void {
+    const titleTranslationKey =
+      typeof window !== 'undefined' && window.process && window.process.type
+        ? 'WEBSITE.TITLE_ELECTRON'
+        : 'WEBSITE.TITLE';
     this.subs.push(
-      this.translateService.get('WEBSITE.TITLE').subscribe(res => {
+      this.translateService.get(titleTranslationKey).subscribe(res => {
         this.titleService.setTitle(res);
       })
     );

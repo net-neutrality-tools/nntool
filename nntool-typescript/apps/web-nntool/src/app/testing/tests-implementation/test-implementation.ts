@@ -6,6 +6,7 @@ import { TestState } from './test-state';
 
 export abstract class TestImplementation<TC extends TestConfig, TS extends TestState> {
   public abstract start: (config: TC, $state: Subject<TS>) => void;
+  public onDestroy() : void {}
 
   protected abstract generateInitState: (config: TC) => TS;
   protected abstract clean: () => void;

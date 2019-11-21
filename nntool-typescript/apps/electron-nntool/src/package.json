@@ -17,6 +17,7 @@
     "copyright": "Copyright © 2018-2019 nntool-typescript",
     "asar": true,
     "npmRebuild": false,
+    "electronVersion": "5.0.12",
     "directories": {
       "buildResources": "icons",
       "output": "../electronnntool-packages"
