@@ -21,7 +21,7 @@ import MeasurementAgentKit
 
 class MeasurementResultTableViewController: UITableViewController {
 
-    private let SUBTITLE_CELL_TEXT_COUNT_THRESHOLD = 20
+    private let SUBTITLE_CELL_TEXT_COUNT_THRESHOLD = 30
 
     var measurementUuid: String?
 
