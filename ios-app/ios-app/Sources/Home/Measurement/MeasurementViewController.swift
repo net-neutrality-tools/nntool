@@ -189,7 +189,7 @@ class MeasurementViewController: CustomNavigationBarViewController {
         navigationController?.popToRootViewController(animated: false)
     }
 
-    private func stop() {
+    private func stopProgress() {
         overallProgressObservation?.invalidate()
         overallProgressObservation = nil
 
@@ -249,16 +249,19 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
     func measurementDidStop(_ runner: MeasurementRunner) {
         isRunning = false
 
-        stop()
+        stopProgress()
 
         DispatchQueue.main.async {
             self.showNavigationItems()
             self.speedMeasurementGaugeView?.isStartButtonEnabled = true
 
-            self.progressAlert?.dismiss(animated: true) {
+            self.progressInfoBar?.reset()
+            self.speedMeasurementGaugeView?.reset()
+
+            /*self.progressAlert?.dismiss(animated: true) {
                 self.progressAlert = nil
                 self.returnToHomeScreen()
-            }
+            }*/
         }
     }
 
@@ -271,10 +274,10 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
         isRunning = false
 
         DispatchQueue.main.async {
-            self.showNavigationItems()
+            //self.showNavigationItems()
 
-            self.progressInfoBar?.reset()
-            self.speedMeasurementGaugeView?.reset()
+            //self.progressInfoBar?.reset()
+            //self.speedMeasurementGaugeView?.reset()
 
             self.showViewMeasurementResultButton()
         }

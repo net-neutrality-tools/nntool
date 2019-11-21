@@ -1,7 +1,4 @@
 
-/* Class = "UILabel"; text = "Enable IAS measurements"; ObjectID = "4IV-Z2-hdO"; */
-"4IV-Z2-hdO.text" = "Enable IAS measurements";
-
 /* Class = "UITableViewSection"; headerTitle = "General"; ObjectID = "56F-aD-oZg"; */
 "56F-aD-oZg.headerTitle" = "General";
 
@@ -35,8 +32,8 @@
 /* Class = "UINavigationItem"; title = "BEREC nntool"; ObjectID = "OJr-pn-QHU"; */
 "OJr-pn-QHU.title" = "BEREC nntool";
 
-/* Class = "UILabel"; text = "Choose specific measurements"; ObjectID = "QA0-d2-0h8"; */
-"QA0-d2-0h8.text" = "Choose specific measurements";
+/* Class = "UILabel"; text = "Choose measurements"; ObjectID = "QA0-d2-0h8"; */
+"QA0-d2-0h8.text" = "Choose measurements";
 
 /* Class = "UINavigationItem"; title = "Map"; ObjectID = "QbD-PX-y4u"; */
 "QbD-PX-y4u.title" = "Map";
@@ -100,6 +97,3 @@
 
 /* Class = "UILabel"; text = "Map"; ObjectID = "w0G-lm-F8b"; */
 "w0G-lm-F8b.text" = "Map";
-
-/* Class = "UILabel"; text = "Enable QoS measurements"; ObjectID = "w2Z-vX-smk"; */
-"w2Z-vX-smk.text" = "Enable QoS measurements";

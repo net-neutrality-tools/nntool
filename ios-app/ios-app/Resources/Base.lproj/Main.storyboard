@@ -3,7 +3,7 @@
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -475,7 +475,7 @@
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" rowHeight="32" id="J2Q-MO-TgD" customClass="MeasurementPeerSelectionTableViewCell" customModule="BEREC_nntool" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="337.5" height="32"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="J2Q-MO-TgD" id="cGp-qM-eJb" customClass="HomeScreenMeasurementPeerSelectionView" customModule="BEREC_nntool" customModuleProvider="target">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="J2Q-MO-TgD" id="cGp-qM-eJb">
                                             <rect key="frame" x="0.0" y="0.0" width="310.5" height="32"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -1348,48 +1348,14 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="Measurement selection" id="iKc-wi-ZHf">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="4IV-Z2-hdO" style="IBUITableViewCellStyleDefault" id="9C5-hK-VfE" customClass="UISwitchTableViewCell" customModule="BEREC_nntool" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="155.5" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="9C5-hK-VfE" id="OPo-ED-ifx">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Enable IAS measurements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="4IV-Z2-hdO">
-                                                    <rect key="frame" x="16" y="0.0" width="343" height="44"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.30196078430000001" green="0.31764705879999999" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="w2Z-vX-smk" style="IBUITableViewCellStyleDefault" id="bqf-Js-r8M" customClass="UISwitchTableViewCell" customModule="BEREC_nntool" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="199.5" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bqf-Js-r8M" id="dqT-VX-MUd">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Enable QoS measurements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="w2Z-vX-smk">
-                                                    <rect key="frame" x="16" y="0.0" width="343" height="44"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.30196078430000001" green="0.31764705879999999" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="QA0-d2-0h8" style="IBUITableViewCellStyleDefault" id="7UG-RU-jem">
-                                        <rect key="frame" x="0.0" y="243.5" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="155.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7UG-RU-jem" id="MQc-A3-QQk">
                                             <rect key="frame" x="0.0" y="0.0" width="348" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Choose specific measurements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="QA0-d2-0h8">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Choose measurements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="QA0-d2-0h8">
                                                     <rect key="frame" x="16" y="0.0" width="324" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1398,6 +1364,9 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="MB8-6E-4BS" kind="show" id="sa5-dE-Ri9"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -1425,6 +1394,57 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eGe-wb-AX3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2710" y="1487"/>
+        </scene>
+        <!--Measurement Type Selection Table View Controller-->
+        <scene sceneID="iNR-A5-KBb">
+            <objects>
+                <tableViewController id="MB8-6E-4BS" customClass="MeasurementTypeSelectionTableViewController" customModule="BEREC_nntool" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="KUf-ye-fVi">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="program_task_tableviewcell" textLabel="TVh-bg-xkt" detailTextLabel="tek-1h-fKy" style="IBUITableViewCellStyleSubtitle" id="vVR-3f-mgK">
+                                <rect key="frame" x="0.0" y="55.5" width="375" height="55.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vVR-3f-mgK" id="NW1-jL-Yg6">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="55.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="TVh-bg-xkt">
+                                            <rect key="frame" x="16" y="10" width="33.5" height="20.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tek-1h-fKy">
+                                            <rect key="frame" x="16" y="31.5" width="44" height="14.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="MB8-6E-4BS" id="S6N-ZV-Poq"/>
+                            <outlet property="delegate" destination="MB8-6E-4BS" id="y5A-Wj-537"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="jiM-j7-CHD"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="L6P-RS-VMN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3574" y="1487"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">

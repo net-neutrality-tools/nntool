@@ -40,8 +40,30 @@ public class MeasurementAgent {
         }
     }
 
-    private var programs = [MeasurementTypeDto: ProgramConfiguration]()
+    private var programConfigurations = [MeasurementTypeDto: ProgramConfiguration]()
     private var programOrder = [MeasurementTypeDto]()
+
+    public var programs: [ProgramConfiguration] {
+        get {
+            return [ProgramConfiguration](programConfigurations.values).sorted { $0.name < $1.name }
+        }
+    }
+
+    public func enableProgram(_ programName: String, enable: Bool = true) {
+        guard let measurementTypeDto = programConfigurations.filter({ $0.value.name == programName }).first?.key else {
+            return
+        }
+
+        programConfigurations[measurementTypeDto]?.isEnabled = enable
+    }
+
+    public func enableProgramTask(_ programName: String, taskName: String, enable: Bool = true) {
+        guard let measurementTypeDto = programConfigurations.filter({ $0.value.name == programName }).first?.key else {
+            return
+        }
+
+        programConfigurations[measurementTypeDto]?.enableTask(name: taskName, enable: enable)
+    }
 
     public init(configuration: MeasurementAgentConfiguration) {
         do {
@@ -58,7 +80,7 @@ public class MeasurementAgent {
 
     public func registerProgramForTask(_ task: MeasurementTypeDto, withConfiguration config: ProgramConfiguration) {
         programOrder.append(task)
-        programs[task] = config
+        programConfigurations[task] = config
     }
 
     public func isRegistered() -> Bool {
@@ -164,7 +186,7 @@ public class MeasurementAgent {
             return nil
         }
 
-        return MeasurementRunner(agent: self, controlService: controlService, agentUuid: agentUuid, programOrder: programOrder, programs: programs)
+        return MeasurementRunner(agent: self, controlService: controlService, agentUuid: agentUuid, programOrder: programOrder, programs: programConfigurations)
     }
 
     public func getSpeedMeasurementPeers(onSuccess: @escaping ([SpeedMeasurementPeerResponse.SpeedMeasurementPeer]) -> Void, onFailure: @escaping (Error) -> Void) {

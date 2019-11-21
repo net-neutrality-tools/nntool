@@ -24,8 +24,17 @@ let MEASUREMENT_AGENT_CONTROLLER_BASE_URL = "https://controller-de-01.net-neutra
 
 let MEASUREMENT_AGENT =
     MeasurementAgentBuilder(controllerServiceBaseUrl: MEASUREMENT_AGENT_CONTROLLER_BASE_URL)
-        .program(task: .speed, config: ProgramConfiguration(name: "IAS", version: "1.0.0") { (taskDto: LmapTaskDto) in
+        .program(
+            task: .speed,
+            config: ProgramConfiguration(
+                name: "IAS",
+                version: "1.0.0",
+                isEnabled: true,
+                availableTasks: ["rtt", "download", "upload"]
+            ) { (taskDto: LmapTaskDto, programConfiguration: ProgramConfiguration) in
             let p = IASProgram()
+
+            p.programConfiguration = programConfiguration
 
             if let measurementConfig = (taskDto.getMeasurementParametersByName("parameters_speed")?.content as? IasMeasurementTypeParametersDto)?.measurementConfiguration {
 
@@ -43,7 +52,14 @@ let MEASUREMENT_AGENT =
 
             return p
         })
-        .program(task: .qos, config: ProgramConfiguration(name: "QOS", version: "1.0.0") { (taskDto: LmapTaskDto) in
+        .program(
+            task: .qos,
+            config: ProgramConfiguration(
+                name: "QOS",
+                version: "1.0.0",
+                isEnabled: true,
+                availableTasks: QoSMeasurementType.allCases.map { $0.rawValue.lowercased() }
+            ) { (taskDto: LmapTaskDto, programConfiguration: ProgramConfiguration) in
             let p = QoSProgram()
 
             if var objectives = (taskDto.getMeasurementParametersByName("parameters_qos")?.content as? QoSMeasurementTypeParametersDto)?.objectives {
@@ -52,6 +68,12 @@ let MEASUREMENT_AGENT =
 
                     for item in objectives {
                         let (k, v) = item
+
+                        guard programConfiguration.enabledTasks.contains(k.lowercased()) else {
+                            logger.debug("ignoring \(k) -> '\(v)' because it is not enabled")
+                            objectives.removeValue(forKey: k)
+                            continue
+                        }
 
                         for var (index, i) in v.enumerated() {
                             if i["server_addr"] == nil || i["server_port"] == nil {

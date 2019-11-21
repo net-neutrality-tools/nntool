@@ -50,7 +50,7 @@ import UIKit
         trafficInTitleLabel?.text = R.string.localizable.homeDeviceInfoTrafficIn()
         trafficOutTitleLabel?.text = R.string.localizable.homeDeviceInfoTrafficOut()
     }
-    
+
     func reset() {
         cpuValueLabel?.text = ""
         memValueLabel?.text = ""

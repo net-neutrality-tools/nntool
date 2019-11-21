@@ -24,9 +24,6 @@ class SettingsTableViewController: UITableViewController {
 
     @IBOutlet private var ipv4OnlySwitchCell: UISwitchTableViewCell?
 
-    @IBOutlet private var iasSwitchCell: UISwitchTableViewCell?
-    @IBOutlet private var qosSwitchCell: UISwitchTableViewCell?
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -35,9 +32,6 @@ class SettingsTableViewController: UITableViewController {
         bindSwitch(ipv4OnlySwitchCell?.uiSwitch, toSettingsKey: "nntool.general.ipv4only") { isOn in
             MEASUREMENT_AGENT.isIpv4Only = isOn
         }
-
-        bindSwitch(iasSwitchCell?.uiSwitch, toSettingsKey: "nntool.measurements.ias.enabled")
-        bindSwitch(qosSwitchCell?.uiSwitch, toSettingsKey: "nntool.measurements.qos.enabled")
     }
 
     private func bindSwitch(_ uiSwitch: UISwitch?, toSettingsKey key: String, onChange: ((Bool) -> Void)? = nil) {

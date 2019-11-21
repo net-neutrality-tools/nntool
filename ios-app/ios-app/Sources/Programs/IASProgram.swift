@@ -27,6 +27,8 @@ class IASProgram: NSObject, ProgramProtocol {
 
     var delegate: IASProgramDelegate?
 
+    var programConfiguration: ProgramConfiguration?
+
     let speed = Speed()
 
     let measurementFinishedSemaphore = DispatchSemaphore(value: 0)
@@ -79,12 +81,10 @@ class IASProgram: NSObject, ProgramProtocol {
 
         speed.wss = encryption ? 1 : 0
 
-        //logger.info("IAS: measuring against host: \(String(describing: speed.targets.first)), port: \(String(describing: speed.targetsPort))")
-
         speed.platform = "mobile"
-        speed.performRttMeasurement      = true
-        speed.performDownloadMeasurement = true
-        speed.performUploadMeasurement   = true
+        speed.performRttMeasurement      = programConfiguration?.enabledTasks.contains("rtt") ?? true
+        speed.performDownloadMeasurement = programConfiguration?.enabledTasks.contains("download") ?? true
+        speed.performUploadMeasurement   = programConfiguration?.enabledTasks.contains("upload") ?? true
         speed.performRouteToClientLookup = false
         speed.performGeolocationLookup   = false
 

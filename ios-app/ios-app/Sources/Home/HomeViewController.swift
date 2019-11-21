@@ -31,7 +31,7 @@ class HomeViewController: CustomNavigationBarViewController {
     @IBOutlet private var selectSpeedMeasurementPeerLabel: UILabel?
     @IBOutlet private var selectSpeedMeasurementPeerSeparatorView: UIView?
     @IBOutlet private var selectSpeedMeasurementPeerContainerView: UIView?
-    
+
     private var currentMeasurementPeerTableViewController: CurrentMeasurementPeerTableViewController?
 
     private let cpuUsageInfo = CpuUsageInfo()
@@ -60,14 +60,14 @@ class HomeViewController: CustomNavigationBarViewController {
             }
         }
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         guard MEASUREMENT_AGENT.isRegistered() else {
             return
         }
-        
+
         loadMeasurementPeers()
         startUpdatingDeviceInfo()
     }
@@ -284,6 +284,6 @@ extension HomeViewController: TermsAndConditionsDelegate {
 
     func didAcceptTermsAndConditions() {
         loadMeasurementPeers()
-        stopUpdatingDeviceInfo()
+        startUpdatingDeviceInfo()
     }
 }

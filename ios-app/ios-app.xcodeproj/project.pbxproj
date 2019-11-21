@@ -51,6 +51,7 @@
 		E044DE0222D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */; };
 		E044DE0E22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */; };
 		E044DE1022D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */; };
+		E0515B852385511C00DB799F /* MeasurementTypeSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0515B842385511C00DB799F /* MeasurementTypeSelectionTableViewController.swift */; };
 		E059879B232A3DE9004771C2 /* NetworkInfoReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = E059879A232A3DE9004771C2 /* NetworkInfoReachability.swift */; };
 		E059879E232BFA49004771C2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E059879C232BFA48004771C2 /* Localizable.strings */; };
 		E069C28F22F8143600344A67 /* PaginatedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C28E22F8143600344A67 /* PaginatedTableView.swift */; };
@@ -223,6 +224,7 @@
 		E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementPeerSelectionTableViewController.swift; sourceTree = "<group>"; };
 		E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeScreenDeviceInfoView.xib; sourceTree = "<group>"; };
 		E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Format.swift"; sourceTree = "<group>"; };
+		E0515B842385511C00DB799F /* MeasurementTypeSelectionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasurementTypeSelectionTableViewController.swift; sourceTree = "<group>"; };
 		E059879A232A3DE9004771C2 /* NetworkInfoReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoReachability.swift; sourceTree = "<group>"; };
 		E059879D232BFA48004771C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E059879F232BFA64004771C2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -360,8 +362,8 @@
 			isa = PBXGroup;
 			children = (
 				E00F48D0225F764400EAD0C0 /* IASProgram.swift */,
-				E00F48D2225F77C400EAD0C0 /* QoSProgram.swift */,
 				E00F4AFE2266234200EAD0C0 /* IASProgramDelegate.swift */,
+				E00F48D2225F77C400EAD0C0 /* QoSProgram.swift */,
 				E00F4B002266235700EAD0C0 /* QoSProgramDelegate.swift */,
 			);
 			path = Programs;
@@ -589,6 +591,7 @@
 			isa = PBXGroup;
 			children = (
 				E0AF3DF022413BF200FDBFD1 /* SettingsTableViewController.swift */,
+				E0515B842385511C00DB799F /* MeasurementTypeSelectionTableViewController.swift */,
 				E029318F237C4A5E009CAB3A /* UISwitchTableViewCell.swift */,
 			);
 			path = Settings;
@@ -1192,6 +1195,7 @@
 				E0CC268722E772EE005DEED0 /* MeasurementResultTableViewController.swift in Sources */,
 				E0B9A36B224B812A002AB640 /* TermsAndConditionsInfoViewController.swift in Sources */,
 				E0B9A371224B9A66002AB640 /* QoSMeasurementViewController.swift in Sources */,
+				E0515B852385511C00DB799F /* MeasurementTypeSelectionTableViewController.swift in Sources */,
 				E0AF3DFA22413C9500FDBFD1 /* HistoryTableViewController.swift in Sources */,
 				E0AA400422F96EED0039DC2B /* CollectionViewFlowLayoutConfig.swift in Sources */,
 				E0C4526C22CB867600FA4B44 /* LogConfig.swift in Sources */,
