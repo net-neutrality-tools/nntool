@@ -40,8 +40,8 @@
       </app-port-blocking-test-bar>
     </app-test-series>
     <div class="warning-area" *ngIf="!user.executePingMeasurement && !user.executeDownloadMeasurement && !user.executeUploadMeasurement && !user.executeQosMeasurement">  
-    <h2 class="warning-title">{{'NETTEST.ERROR.NO_MEASUREMENT_SELECTED_TITLE' | translate }}</h2>
-    <p class="warning-solution" style="cursor: pointer" routerLink="/settings">{{'NETTEST.ERROR.NO_MEASUREMENT_SELECTED_MESSAGE' | translate }}</p>
+      <h2 class="warning-title">{{'NETTEST.ERROR.NO_MEASUREMENT_SELECTED_TITLE' | translate }}</h2>
+      <p class="warning-solution" style="cursor: pointer" routerLink="/settings">{{'NETTEST.ERROR.NO_MEASUREMENT_SELECTED_MESSAGE' | translate }}</p>
     </div>
     <div class="screen-tc" id="nettest-tc" *ngIf="user && !user.acceptTC">
       <h2 class="text-center">{{ 'NETTEST.INTRO.HEADER' | translate }}</h2>

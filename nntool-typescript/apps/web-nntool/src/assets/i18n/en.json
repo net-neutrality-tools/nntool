@@ -344,7 +344,9 @@
       "TEST_COUNTER": "Test counter",
       "FINISHED": "Loop mode finished",
       "RESET": "Start another test run",
-      "STOP": "Stop current test run"
+      "STOP": "Stop current test run",
+      "INVALID_INPUT_HEADER": "Invalid parameters",
+      "INVALID_INPUT_DESCRIPTION": "The number of test-runs must be between 1 and 20. The time between test runs must be between 1 and 160 minutes."
     }
   },
   "SETTINGS": {

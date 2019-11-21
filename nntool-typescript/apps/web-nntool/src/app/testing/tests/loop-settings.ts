@@ -36,8 +36,9 @@ LoopSettingsTestState
 
     public testImpl: LoopSettingsImplementation;
 
+    public showInvalidInputWarning: boolean = false;
+    
     private timerInterval: any;
-
 
     public onOnlyReInit() {
         if (this.testImpl.curRepetitions > 0) {
@@ -53,6 +54,16 @@ LoopSettingsTestState
     protected testStateToUIState = (state: PortBlockingTestState): BarUIState => {
         return new BarUIState();
     };
+
+    public requestStart() {
+      if (this.testImpl.loopModeConfig.numRepetitions <= 0 || this.testImpl.loopModeConfig.numRepetitions > 20
+        || this.testImpl.loopModeConfig.timeBetweenRepetitions <= 0 || this.testImpl.loopModeConfig.timeBetweenRepetitions >= 160) {
+        this.showInvalidInputWarning = true;
+        return;
+      }
+      this.showInvalidInputWarning = false;
+      super.requestStart();
+    }
 
     public startTimerForNextTest() {
         if (this.testImpl.curRepetitions >= this.testImpl.loopModeConfig.numRepetitions) {
