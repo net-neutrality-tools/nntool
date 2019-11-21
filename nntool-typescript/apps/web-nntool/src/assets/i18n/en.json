@@ -311,7 +311,7 @@
     "ERROR": {
       "TITLE": "Error",
       "MESSAGE": "An error occurred during the measurement.",
-      "NO_MEASUREMENT_SELECTED_TITLE": "No measurement has been selected!",
+      "NO_MEASUREMENT_SELECTED_TITLE": "No measurement has been selected",
       "NO_MEASUREMENT_SELECTED_MESSAGE": "Please select at least one measurement from the settings page!"
     },
     "VIEW_RESULT": "View your measurement report",
@@ -343,7 +343,8 @@
       "TIME_LEFT": "Next test",
       "TEST_COUNTER": "Test counter",
       "FINISHED": "Loop mode finished",
-      "RESET": "Start another test run"
+      "RESET": "Start another test run",
+      "STOP": "Stop current test run"
     }
   },
   "SETTINGS": {

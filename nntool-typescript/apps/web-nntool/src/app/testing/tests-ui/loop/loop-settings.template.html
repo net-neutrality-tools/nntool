@@ -37,5 +37,9 @@
         <button *ngIf="testImpl.curRepetitions === testImpl.loopModeConfig.numRepetitions" class="button" (click)="ngOnDestroy()">
             {{ 'NETTEST.LOOP.RESET' | translate }}
         </button>
+        <button *ngIf="testImpl.curRepetitions < testImpl.loopModeConfig.numRepetitions" class="button"
+            (click)="ngOnDestroy()">
+            {{ 'NETTEST.LOOP.STOP' | translate }}
+        </button>
     </div>
 </div>

@@ -16,8 +16,7 @@
     >
       <app-loop-settings 
         *ngIf="user.enableLoopMode && (user.executePingMeasurement || user.executeDownloadMeasurement || user.executeUploadMeasurement || user.executeQosMeasurement)"
-        #startableTest [config]="qosConfig"
-        (finished)="portBlockingTestFinished($event)" 
+        #startableTest [config]="qosConfig" 
         (errorMsgChange)="errorMsg = $event" 
         (statusChange)="($event)">
       </app-loop-settings>

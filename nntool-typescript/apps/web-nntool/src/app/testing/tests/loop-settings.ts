@@ -36,6 +36,8 @@ LoopSettingsTestState
 
     public testImpl: LoopSettingsImplementation;
 
+    private timerInterval: any;
+
 
     public onOnlyReInit() {
         if (this.testImpl.curRepetitions > 0) {
@@ -45,6 +47,7 @@ LoopSettingsTestState
 
     ngOnDestroy() {
         this.testImpl.onDestroy();
+        clearInterval(this.timerInterval);
     }
 
     protected testStateToUIState = (state: PortBlockingTestState): BarUIState => {
@@ -61,11 +64,11 @@ LoopSettingsTestState
 
         let timeLeft = this.testImpl.loopModeConfig.timeBetweenRepetitions * 60;
         this.testImpl.timeLeftString = this.toHHMMSS(timeLeft);
-        let interval = setInterval(() => {
+        this.timerInterval = setInterval(() => {
           if(timeLeft > 1) {
             timeLeft--;
           } else {
-            clearInterval(interval);
+            clearInterval(this.timerInterval);
             timeLeft = 0;
             this.requestStart();
           }
