@@ -47,6 +47,8 @@ class SystemInformationCollector {
 
     private let timeBasedResult = TimeBasedResultDto()
 
+    private let timerDispatchQueue = DispatchQueue(label: "at.alladin.nettest.nntool.information-collector.timer-dispatch-queue")
+
     private var timer: Repeater?
 
     func start(startNs: UInt64) {
@@ -63,7 +65,7 @@ class SystemInformationCollector {
 
         logger.debug("STARTING SYSTEM INFO COLLECTOR TIMER")
 
-        DispatchQueue.global(qos: .background).async {
+        timerDispatchQueue.async {
             self.collectors.forEach { $0.start(self.timeBasedResult, startNs: startNs) }
 
             self.timer = Repeater.every(.seconds(1)) { _ in
@@ -75,7 +77,7 @@ class SystemInformationCollector {
     func stop() {
         logger.debug("STOPPING SYSTEM INFO COLLECTOR TIMER")
 
-        DispatchQueue.global(qos: .background).async {
+        timerDispatchQueue.async {
             self.timer?.removeAllObservers(thenStop: true)
             self.timer = nil
 
