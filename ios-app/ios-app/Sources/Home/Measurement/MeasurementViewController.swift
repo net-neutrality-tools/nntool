@@ -32,6 +32,9 @@ class MeasurementViewController: CustomNavigationBarViewController {
 
     @IBOutlet private var viewMeasurementResultButton: UIButton?
 
+    @IBOutlet private var viewMeasurementResultButtonTopConstraint: NSLayoutConstraint?
+    @IBOutlet private var viewMeasurementResultButtonBottomConstraint: NSLayoutConstraint?
+
     private var measurementRunner: MeasurementRunner?
 
     private var progressAlert: UIAlertController?
@@ -63,6 +66,12 @@ class MeasurementViewController: CustomNavigationBarViewController {
         // the navigation button item appearance doesn't work as expected (very odd behaviour...).
         // As a workaround we change the title of this element after setting the appearance.
         navigationItem.rightBarButtonItem?.icon = .help
+
+        // Shrink constraint constant if displaying on iPhone 5s or SE.
+        if DeviceHelper.isSmalliPhone() {
+            viewMeasurementResultButtonTopConstraint?.constant = 5
+            viewMeasurementResultButtonBottomConstraint?.constant = 5
+        }
 
         speedMeasurementGaugeView?.startButtonActionCallback = {
             guard MEASUREMENT_AGENT.isAtLeastOneMeasurementTaskEnabled() else {

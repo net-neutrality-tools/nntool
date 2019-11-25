@@ -5,6 +5,8 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -184,63 +186,65 @@
                                                 <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="qos_group_collectionview_cell" id="bFK-Zr-rtk" customClass="QoSGroupCollectionViewCell" customModule="BEREC_nntool" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="117" height="114"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                                    <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="xmc-R4-DUJ">
                                                         <rect key="frame" x="0.0" y="0.0" width="117" height="114"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="à" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lSd-eg-E7N" userLabel="Icon Label">
-                                                                <rect key="frame" x="38.5" y="5" width="40" height="40"/>
-                                                                <fontDescription key="fontDescription" name="berec-icons" family="berec-icons" pointSize="40"/>
-                                                                <color key="textColor" red="0.57254901960000004" green="0.1215686275" blue="0.33725490200000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <nil key="highlightedColor"/>
-                                                                <attributedString key="userComments">
-                                                                    <fragment content="#bc-ignore!"/>
-                                                                </attributedString>
-                                                            </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="fpl-VG-iNH" userLabel="Title Label">
-                                                                <rect key="frame" x="6" y="50" width="105" height="20.5"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <nil key="highlightedColor"/>
-                                                                <attributedString key="userComments">
-                                                                    <fragment content="#bc-ignore!"/>
-                                                                </attributedString>
-                                                            </label>
-                                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NbX-rf-itI">
-                                                                <rect key="frame" x="35.5" y="84" width="46" height="20"/>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="xR2-Tp-y6X">
+                                                                <rect key="frame" x="6" y="5.5" width="105" height="103"/>
                                                                 <subviews>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="v" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wNF-qb-b19">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
-                                                                        <fontDescription key="fontDescription" name="berec-icons" family="berec-icons" pointSize="20"/>
-                                                                        <nil key="textColor"/>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="à" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lSd-eg-E7N" userLabel="Icon Label">
+                                                                        <rect key="frame" x="32.5" y="0.0" width="40" height="40"/>
+                                                                        <fontDescription key="fontDescription" name="berec-icons" family="berec-icons" pointSize="40"/>
+                                                                        <color key="textColor" red="0.57254901960000004" green="0.1215686275" blue="0.33725490200000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <nil key="highlightedColor"/>
                                                                         <attributedString key="userComments">
                                                                             <fragment content="#bc-ignore!"/>
                                                                         </attributedString>
                                                                     </label>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10/10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRy-ie-fA5">
-                                                                        <rect key="frame" x="20" y="0.0" width="26" height="20"/>
-                                                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group name" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="fpl-VG-iNH" userLabel="Title Label">
+                                                                        <rect key="frame" x="5.5" y="48" width="94" height="20.5"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                         <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                         <nil key="highlightedColor"/>
                                                                         <attributedString key="userComments">
                                                                             <fragment content="#bc-ignore!"/>
                                                                         </attributedString>
                                                                     </label>
+                                                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="NbX-rf-itI">
+                                                                        <rect key="frame" x="29.5" y="76.5" width="46" height="26.5"/>
+                                                                        <subviews>
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="v" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wNF-qb-b19">
+                                                                                <rect key="frame" x="0.0" y="3.5" width="20" height="20"/>
+                                                                                <fontDescription key="fontDescription" name="berec-icons" family="berec-icons" pointSize="20"/>
+                                                                                <nil key="textColor"/>
+                                                                                <nil key="highlightedColor"/>
+                                                                                <attributedString key="userComments">
+                                                                                    <fragment content="#bc-ignore!"/>
+                                                                                </attributedString>
+                                                                            </label>
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="10/10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRy-ie-fA5">
+                                                                                <rect key="frame" x="20" y="7.5" width="26" height="12"/>
+                                                                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                                                <nil key="highlightedColor"/>
+                                                                                <attributedString key="userComments">
+                                                                                    <fragment content="#bc-ignore!"/>
+                                                                                </attributedString>
+                                                                            </label>
+                                                                        </subviews>
+                                                                    </stackView>
                                                                 </subviews>
                                                             </stackView>
                                                         </subviews>
-                                                    </view>
+                                                        <constraints>
+                                                            <constraint firstItem="xR2-Tp-y6X" firstAttribute="height" secondItem="xmc-R4-DUJ" secondAttribute="height" multiplier="0.9" id="9fI-fA-TH3"/>
+                                                            <constraint firstItem="xR2-Tp-y6X" firstAttribute="width" secondItem="xmc-R4-DUJ" secondAttribute="width" multiplier="0.9" id="Hrp-Ux-EOn"/>
+                                                            <constraint firstItem="xR2-Tp-y6X" firstAttribute="centerX" secondItem="xmc-R4-DUJ" secondAttribute="centerX" id="mJL-jn-DeK"/>
+                                                            <constraint firstItem="xR2-Tp-y6X" firstAttribute="centerY" secondItem="xmc-R4-DUJ" secondAttribute="centerY" id="nhA-d1-qMy"/>
+                                                        </constraints>
+                                                    </collectionViewCellContentView>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstItem="NbX-rf-itI" firstAttribute="centerX" secondItem="bFK-Zr-rtk" secondAttribute="centerX" id="6Z1-Bi-Efy"/>
-                                                        <constraint firstItem="lSd-eg-E7N" firstAttribute="centerX" secondItem="bFK-Zr-rtk" secondAttribute="centerX" id="6sx-HE-KWv"/>
-                                                        <constraint firstItem="fpl-VG-iNH" firstAttribute="top" secondItem="lSd-eg-E7N" secondAttribute="bottom" constant="5" id="Bhu-R7-z9w"/>
-                                                        <constraint firstItem="fpl-VG-iNH" firstAttribute="centerX" secondItem="bFK-Zr-rtk" secondAttribute="centerX" id="bcQ-Mc-CMT"/>
-                                                        <constraint firstAttribute="bottom" secondItem="NbX-rf-itI" secondAttribute="bottom" constant="10" id="rA3-lz-3aY"/>
-                                                        <constraint firstItem="fpl-VG-iNH" firstAttribute="width" secondItem="bFK-Zr-rtk" secondAttribute="width" multiplier="0.9" id="sIS-eb-sCq"/>
-                                                        <constraint firstItem="lSd-eg-E7N" firstAttribute="top" secondItem="bFK-Zr-rtk" secondAttribute="top" constant="5" id="yva-LX-0H5"/>
-                                                    </constraints>
                                                     <connections>
                                                         <outlet property="groupNameLabel" destination="fpl-VG-iNH" id="Thj-ag-1bA"/>
                                                         <outlet property="iconLabel" destination="lSd-eg-E7N" id="QhV-b6-hDV"/>
@@ -630,7 +634,7 @@
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1pP-dV-42J">
                                                             <rect key="frame" x="0.0" y="0.5" width="172" height="50"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="WiFi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1CQ-pp-8m3">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="WiFi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="1CQ-pp-8m3">
                                                                     <rect key="frame" x="0.0" y="16.5" width="51.5" height="17"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <color key="textColor" red="0.30196078431372547" green="0.31764705882352939" blue="0.36470588235294116" alpha="1" colorSpace="calibratedRGB"/>
@@ -639,7 +643,7 @@
                                                                         <fragment content="#bc-ignore!"/>
                                                                     </attributedString>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2019-07-24 23:59" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYu-Kt-oaL">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2019-07-24 23:59" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="mYu-Kt-oaL">
                                                                     <rect key="frame" x="51.5" y="16.5" width="120.5" height="17"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <color key="textColor" red="0.30196078431372547" green="0.31764705882352939" blue="0.36470588235294116" alpha="1" colorSpace="calibratedRGB"/>
@@ -663,7 +667,7 @@
                                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="QjA-SP-MX6">
                                                             <rect key="frame" x="173" y="17" width="172" height="17"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61Y-cd-0H2">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="61Y-cd-0H2">
                                                                     <rect key="frame" x="0.0" y="0.0" width="57.5" height="17"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <color key="textColor" red="0.30196078431372547" green="0.31764705882352939" blue="0.36470588235294116" alpha="1" colorSpace="calibratedRGB"/>
@@ -672,7 +676,7 @@
                                                                         <fragment content="#bc-ignore!"/>
                                                                     </attributedString>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y2e-XU-dd2">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="y2e-XU-dd2">
                                                                     <rect key="frame" x="57.5" y="0.0" width="57" height="17"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <color key="textColor" red="0.30196078431372547" green="0.31764705882352939" blue="0.36470588235294116" alpha="1" colorSpace="calibratedRGB"/>
@@ -681,7 +685,7 @@
                                                                         <fragment content="#bc-ignore!"/>
                                                                     </attributedString>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UoQ-aN-crd">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="UoQ-aN-crd">
                                                                     <rect key="frame" x="114.5" y="0.0" width="57.5" height="17"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <color key="textColor" red="0.30196078431372547" green="0.31764705882352939" blue="0.36470588235294116" alpha="1" colorSpace="calibratedRGB"/>
@@ -812,11 +816,11 @@
                             <constraint firstItem="j2f-ZU-0jV" firstAttribute="centerX" secondItem="43k-dR-OY1" secondAttribute="centerX" id="E2o-t1-IoC"/>
                             <constraint firstItem="43k-dR-OY1" firstAttribute="centerX" secondItem="2ZN-ok-MoS" secondAttribute="centerX" id="Edp-6I-qGw"/>
                             <constraint firstItem="43k-dR-OY1" firstAttribute="width" secondItem="ZCO-kG-2qz" secondAttribute="width" multiplier="0.9" id="IvX-Zd-c1t"/>
+                            <constraint firstItem="ade-vS-2jV" firstAttribute="top" secondItem="MM6-Ex-lJm" secondAttribute="bottom" constant="20" id="KA2-ul-376"/>
                             <constraint firstItem="MM6-Ex-lJm" firstAttribute="top" secondItem="43k-dR-OY1" secondAttribute="bottom" constant="5" id="KG4-68-q3E"/>
                             <constraint firstItem="ade-vS-2jV" firstAttribute="width" secondItem="ZCO-kG-2qz" secondAttribute="width" multiplier="0.9" id="Kc3-Ie-n2w"/>
                             <constraint firstItem="Ovj-et-Dag" firstAttribute="width" secondItem="43k-dR-OY1" secondAttribute="width" id="M4g-vt-cvB"/>
                             <constraint firstItem="43k-dR-OY1" firstAttribute="height" secondItem="ZCO-kG-2qz" secondAttribute="height" multiplier="0.7" id="NUx-6d-GnA"/>
-                            <constraint firstItem="ade-vS-2jV" firstAttribute="top" secondItem="MM6-Ex-lJm" secondAttribute="bottom" constant="20" id="PZn-AX-hrQ"/>
                             <constraint firstItem="43k-dR-OY1" firstAttribute="top" secondItem="ZCO-kG-2qz" secondAttribute="top" constant="10" id="WWc-U2-JcI"/>
                             <constraint firstItem="ZCO-kG-2qz" firstAttribute="bottom" secondItem="ade-vS-2jV" secondAttribute="bottom" constant="20" id="Zxb-HS-F19"/>
                             <constraint firstItem="j2f-ZU-0jV" firstAttribute="width" secondItem="43k-dR-OY1" secondAttribute="width" id="dr1-qH-V9u"/>
@@ -846,6 +850,8 @@
                         <outlet property="speedMeasurementBasicResultView" destination="MM6-Ex-lJm" id="wDV-Gu-rOY"/>
                         <outlet property="speedMeasurementGaugeView" destination="43k-dR-OY1" id="VMQ-oe-A0r"/>
                         <outlet property="viewMeasurementResultButton" destination="ade-vS-2jV" id="PO6-3t-ygn"/>
+                        <outlet property="viewMeasurementResultButtonBottomConstraint" destination="Zxb-HS-F19" id="cDm-oj-m0f"/>
+                        <outlet property="viewMeasurementResultButtonTopConstraint" destination="KA2-ul-376" id="dda-fF-mfq"/>
                         <segue destination="ChL-OL-d1x" kind="show" identifier="show_measurement_result" id="b35-qr-BZB"/>
                         <segue destination="U5t-jx-Usx" kind="show" identifier="present_settings_from_again_no_measurement_task_enabled_alert" id="Fti-RK-jur"/>
                     </connections>
