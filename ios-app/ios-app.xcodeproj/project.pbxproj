@@ -10,6 +10,7 @@
 		028BCD1C5DB207312A53426F /* Pods_All_Speed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAC9DAE7413ECAE8092FFC80 /* Pods_All_Speed.framework */; };
 		4E39AF08D64A16ACF982E352 /* Pods_All_BEREC_nntool.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4042E14D8B38AC9EAFAC182E /* Pods_All_BEREC_nntool.framework */; };
 		B0A836C925FAEE0ED120983A /* Pods_All_Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3142E3D228324ABA957A394 /* Pods_All_Common.framework */; };
+		E0024634238C41D400681144 /* MeasurementHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0024633238C41D300681144 /* MeasurementHelper.swift */; };
 		E00F48D1225F764400EAD0C0 /* IASProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48D0225F764400EAD0C0 /* IASProgram.swift */; };
 		E00F48D3225F77C400EAD0C0 /* QoSProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48D2225F77C400EAD0C0 /* QoSProgram.swift */; };
 		E00F48E0225F7D2600EAD0C0 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E00F48D9225F7D2600EAD0C0 /* Common.framework */; };
@@ -175,6 +176,7 @@
 		AFAED326C34595EF58CC0F9C /* Pods-All-Speed.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-Speed.debug.xcconfig"; path = "Target Support Files/Pods-All-Speed/Pods-All-Speed.debug.xcconfig"; sourceTree = "<group>"; };
 		B3142E3D228324ABA957A394 /* Pods_All_Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D329819C8E115D34CA521957 /* Pods-All-ios-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-ios-app.release.xcconfig"; path = "Target Support Files/Pods-All-ios-app/Pods-All-ios-app.release.xcconfig"; sourceTree = "<group>"; };
+		E0024633238C41D300681144 /* MeasurementHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementHelper.swift; sourceTree = "<group>"; };
 		E00F48D0225F764400EAD0C0 /* IASProgram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IASProgram.swift; sourceTree = "<group>"; };
 		E00F48D2225F77C400EAD0C0 /* QoSProgram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSProgram.swift; sourceTree = "<group>"; };
 		E00F48D9225F7D2600EAD0C0 /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -612,6 +614,7 @@
 				E0B9A33422498127002AB640 /* MeasurementViewController.swift */,
 				E0B9A370224B9A66002AB640 /* QoSMeasurementViewController.swift */,
 				E0E9BB0F226F57DA00146699 /* SpeedMeasurementPhase.swift */,
+				E0024633238C41D300681144 /* MeasurementHelper.swift */,
 			);
 			path = Measurement;
 			sourceTree = "<group>";
@@ -1187,6 +1190,7 @@
 				E0B9A359224AB092002AB640 /* HomeScreenDeviceInfoView.swift in Sources */,
 				E0CC269D22E8CEE6005DEED0 /* HistoryItemCell.swift in Sources */,
 				E0EA84E72282C1B000EB73BF /* SpeedHelper.swift in Sources */,
+				E0024634238C41D400681144 /* MeasurementHelper.swift in Sources */,
 				E0293190237C4A5E009CAB3A /* UISwitchTableViewCell.swift in Sources */,
 				E0E9BB10226F57DA00146699 /* SpeedMeasurementPhase.swift in Sources */,
 				E0B9A343224A6017002AB640 /* AbstractTwoArcGaugeView.swift in Sources */,
