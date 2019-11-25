@@ -1,6 +1,7 @@
 package at.alladin.nettest.nntool.android.app.workflow.main;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -41,6 +42,7 @@ import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementSer
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
 import at.alladin.nettest.nntool.android.app.workflow.tc.TermsAndConditionsFragment;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ip.IpResponse;
+import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
@@ -191,16 +193,28 @@ public class TitleFragment extends ActionBarFragment {
 
                             final ArrayList<MeasurementType> followUpActions = new ArrayList<>();
 
-                            if (PreferencesUtil.isQoSEnabled(getContext())) {
-                                followUpActions.add(MeasurementType.QOS);
-                                bundle.putBoolean(MeasurementService.EXTRAS_KEY_QOS_EXECUTE, true);
+                            final Context context = getContext();
+                            if (PreferencesUtil.isQoSEnabled(context)) {
+                                boolean isQoSTypeEnabled = false;
+                                for (QosMeasurementType t : QosMeasurementType.values()) {
+                                    if (PreferencesUtil.isQoSTypeEnabled(context, t)) {
+                                        isQoSTypeEnabled = true;
+                                        break;
+                                    }
+                                }
+                                if (isQoSTypeEnabled) {
+                                    followUpActions.add(MeasurementType.QOS);
+                                    bundle.putBoolean(MeasurementService.EXTRAS_KEY_QOS_EXECUTE, true);
+                                } else {
+                                    bundle.putBoolean(MeasurementService.EXTRAS_KEY_QOS_EXECUTE, false);
+                                }
                             } else {
                                 bundle.putBoolean(MeasurementService.EXTRAS_KEY_QOS_EXECUTE, false);
                             }
 
                             MeasurementType toExecute = null;
-                            if (PreferencesUtil.isSpeedEnabled(getContext()) &&
-                                    (PreferencesUtil.isPingEnabled(getContext()) || PreferencesUtil.isDownloadEnabled(getContext()) || PreferencesUtil.isUploadEnabled(getContext()))) {
+                            if (PreferencesUtil.isSpeedEnabled(context) &&
+                                    (PreferencesUtil.isPingEnabled(context) || PreferencesUtil.isDownloadEnabled(context) || PreferencesUtil.isUploadEnabled(context))) {
                                 toExecute = MeasurementType.SPEED;
                                 bundle.putBoolean(MeasurementService.EXTRAS_KEY_SPEED_EXECUTE, true);
                             } else if (followUpActions.size() > 0) {
