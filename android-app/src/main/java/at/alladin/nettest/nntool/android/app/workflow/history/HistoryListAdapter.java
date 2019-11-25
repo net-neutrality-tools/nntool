@@ -24,6 +24,8 @@ public class HistoryListAdapter extends ArrayAdapter<BriefMeasurementResponse> {
 
     final DecimalFormat speedFormat = new DecimalFormat("0.#");
 
+    private String timeFormat;
+
     private class ViewHolder {
         TextView connection;
         TextView date;
@@ -34,6 +36,9 @@ public class HistoryListAdapter extends ArrayAdapter<BriefMeasurementResponse> {
 
     public HistoryListAdapter(Context context, List<BriefMeasurementResponse> objects) {
         super(context, R.layout.history_list_item, objects);
+        if (context != null) {
+            timeFormat = context.getString(R.string.date_time_format_pattern);
+        }
     }
 
     @Override
@@ -70,7 +75,7 @@ public class HistoryListAdapter extends ArrayAdapter<BriefMeasurementResponse> {
         }
 
         if (item.getStartTime() != null) {
-            viewHolder.date.setText(item.getStartTime().toDateTime().toString());
+            viewHolder.date.setText(timeFormat != null ? item.getStartTime().toDateTime().toString(timeFormat) : item.getStartTime().toDateTime().toString());
         }
 
         return convertView;
