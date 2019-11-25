@@ -17,6 +17,7 @@
             <connections>
                 <outlet property="cpuTitleLabel" destination="cIH-5B-FiG" id="Hs0-wX-vtT"/>
                 <outlet property="cpuValueLabel" destination="taH-JK-cfa" id="exF-rm-hQV"/>
+                <outlet property="deviceInfoStackView" destination="GB9-Nl-aO0" id="cIn-oo-d2b"/>
                 <outlet property="ipv4TitleLabel" destination="crR-Iw-QJY" id="tNy-Wi-zwe"/>
                 <outlet property="ipv4ValueLabel" destination="OZy-c0-AKe" id="Kge-or-jkI"/>
                 <outlet property="ipv6TitleLabel" destination="h2U-IW-ejJ" id="dL6-qQ-ZRX"/>
@@ -195,7 +196,7 @@
                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ulF-DS-piS">
                             <rect key="frame" x="122" y="0.0" width="131" height="32.5"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="III" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ibx-FW-Y5h">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="III" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ibx-FW-Y5h">
                                     <rect key="frame" x="0.0" y="0.0" width="51" height="32.5"/>
                                     <fontDescription key="fontDescription" name="berec-icons" family="berec-icons" pointSize="17"/>
                                     <color key="textColor" red="0.81568627450980391" green="0.81568627450980391" blue="0.81568627450980391" alpha="1" colorSpace="calibratedRGB"/>
@@ -204,7 +205,7 @@
                                         <fragment content="#bc-ignore!"/>
                                     </attributedString>
                                 </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="JJJ" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fdv-rD-y9m">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="JJJ" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Fdv-rD-y9m">
                                     <rect key="frame" x="51" y="0.0" width="80" height="32.5"/>
                                     <fontDescription key="fontDescription" name="berec-icons" family="berec-icons" pointSize="17"/>
                                     <color key="textColor" red="0.81568627450980391" green="0.81568627450980391" blue="0.81568627450980391" alpha="1" colorSpace="calibratedRGB"/>

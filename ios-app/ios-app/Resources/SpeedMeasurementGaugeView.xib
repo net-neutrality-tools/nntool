@@ -29,7 +29,7 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sKl-5i-9cr" customClass="CircularButton" customModule="BEREC_nntool" customModuleProvider="target">
-                    <rect key="frame" x="131.5" y="141" width="112.5" height="112.5"/>
+                    <rect key="frame" x="138.5" y="148" width="98.5" height="98.5"/>
                     <color key="backgroundColor" red="0.5725490196078431" green="0.12156862745098039" blue="0.33725490196078434" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="sKl-5i-9cr" secondAttribute="height" multiplier="1:1" id="yeB-8G-gEz"/>
@@ -46,7 +46,7 @@
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Network" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kBi-UX-95n">
-                    <rect key="frame" x="143.5" y="283.5" width="88" height="29"/>
+                    <rect key="frame" x="143.5" y="276.5" width="88" height="29"/>
                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                     <color key="textColor" red="0.30196078430000001" green="0.31764705879999999" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
@@ -55,7 +55,7 @@
                     </attributedString>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Network details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="onQ-LI-TWF">
-                    <rect key="frame" x="128" y="317.5" width="119.5" height="20.5"/>
+                    <rect key="frame" x="128" y="310.5" width="119.5" height="20.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.30196078430000001" green="0.31764705879999999" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
@@ -72,8 +72,8 @@
                 <constraint firstItem="kBi-UX-95n" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="M8D-Bm-5Ka"/>
                 <constraint firstItem="onQ-LI-TWF" firstAttribute="top" secondItem="kBi-UX-95n" secondAttribute="bottom" constant="5" id="X8q-EM-mdd"/>
                 <constraint firstItem="El7-Va-Mxo" firstAttribute="width" secondItem="vUN-kp-3ea" secondAttribute="width" id="aBd-FE-rdS"/>
+                <constraint firstItem="sKl-5i-9cr" firstAttribute="height" secondItem="vUN-kp-3ea" secondAttribute="height" multiplier="0.25" id="gNe-ln-Crt"/>
                 <constraint firstItem="sKl-5i-9cr" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="hqp-m6-8NO"/>
-                <constraint firstItem="sKl-5i-9cr" firstAttribute="width" secondItem="vUN-kp-3ea" secondAttribute="width" multiplier="0.3" id="l8O-dj-0nM"/>
                 <constraint firstItem="onQ-LI-TWF" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="n0C-4O-I3U"/>
                 <constraint firstItem="El7-Va-Mxo" firstAttribute="centerX" secondItem="sKl-5i-9cr" secondAttribute="centerX" id="siP-DF-ABZ"/>
             </constraints>

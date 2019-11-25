@@ -21,6 +21,8 @@ import UIKit
 ///
 @IBDesignable class HomeScreenDeviceInfoView: NibView {
 
+    @IBOutlet var deviceInfoStackView: UIStackView?
+    
     @IBOutlet var cpuValueLabel: UILabel?
     @IBOutlet var memValueLabel: UILabel?
 
@@ -49,6 +51,11 @@ import UIKit
         ipv6TitleLabel?.text = R.string.localizable.homeDeviceInfoIpv6()
         trafficInTitleLabel?.text = R.string.localizable.homeDeviceInfoTrafficIn()
         trafficOutTitleLabel?.text = R.string.localizable.homeDeviceInfoTrafficOut()
+
+        // Change some UI constraints for iPhone 5s and SE
+        if DeviceHelper.isSmalliPhone() {
+            deviceInfoStackView?.spacing = 80
+        }
     }
 
     func reset() {
