@@ -22,6 +22,8 @@
 
     <string name="geo_location_accuracy">Location ± {}</string>
 
+    <string name="date_time_format_pattern">dd.MM.yyyy HH:mm</string>
+
     <string name="task_register_agent_dialog_info">Registering measurement agent…</string>
     <string name="task_measurement_initiation_dialog_info">Initiating measurement…</string>
     <string name="task_send_report_dialog_info">Sending report to collector…</string>

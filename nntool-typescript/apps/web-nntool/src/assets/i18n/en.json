@@ -140,7 +140,7 @@
         "NAME": "Name",
         "DOWN": "Down",
         "UP": "Up",
-        "PING": "RTT",
+        "PING": "Ping",
         "COUNT": "Count"
       },
       "LIST_PROVIDERS": {
@@ -150,7 +150,7 @@
         "DOWN": "Down",
         "UP": "Up",
         "SIGNAL": "Signal",
-        "PING": "RTT",
+        "PING": "Ping",
         "COUNT": "Count"
       },
       "OS_PART": {
@@ -201,7 +201,7 @@
     "NAME": "Provider/Device",
     "DOWN": "Down (Mbit/s)",
     "UP": "Up (Mbit/s)",
-    "PING": "RTT (ms)",
+    "PING": "Ping (ms)",
     "SIGNAL": "Signal (dBm)",
     "TIME": "Date",
     "MORE": "Show more..",
@@ -218,7 +218,7 @@
       "UPLOAD": "upload",
       "SIGNAL": "signal"
     },
-    "PING": "RTT",
+    "PING": "Ping",
     "DOWNLOAD": "Download",
     "UPLOAD": "Upload",
     "SIGNAL": "Signal",
@@ -268,9 +268,9 @@
         "num_threads_requested": "Number of Threads requested",
         "num_threads_ul": "Number of Threads Upload",
         "open_test_uuid": "Opentest UUID",
-        "ping_classification": "RTT Classification",
-        "ping_ms": "RTT",
-        "ping_variance": "RTT Variance",
+        "ping_classification": "Ping Classification",
+        "ping_ms": "Ping",
+        "ping_variance": "Ping Variance",
         "platform": "Platform",
         "public_ip_as_name": "Public IP as Name",
         "product": "Product",
