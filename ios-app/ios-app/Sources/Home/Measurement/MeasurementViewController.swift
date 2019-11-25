@@ -65,7 +65,16 @@ class MeasurementViewController: CustomNavigationBarViewController {
         navigationItem.rightBarButtonItem?.icon = .help
 
         speedMeasurementGaugeView?.startButtonActionCallback = {
-            self.startMeasurement()
+            guard MEASUREMENT_AGENT.isAtLeastOneMeasurementTaskEnabled() else {
+                self.displayNoMeasurementTaskEnabledWarningAlert()
+                return
+            }
+
+            if MEASUREMENT_TRAFFIC_WARNING_ENABLED {
+                self.displayPreMeasurementWarningAlert()
+            } else {
+                self.startMeasurement()
+            }
         }
 
         reachability = NetworkInfoReachability(whenReachable: { (type, details) in
@@ -89,6 +98,18 @@ class MeasurementViewController: CustomNavigationBarViewController {
 
         reachability?.stop()
         reachability = nil
+    }
+
+    func displayNoMeasurementTaskEnabledWarningAlert() {
+        present(MeasurementHelper.createNoMeasurementTaskEnabledWarningAlert({
+            self.performSegue(withIdentifier: R.segue.measurementViewController.present_settings_from_again_no_measurement_task_enabled_alert, sender: self)
+        }), animated: true, completion: nil)
+    }
+
+    func displayPreMeasurementWarningAlert() {
+        present(MeasurementHelper.createPreMeasurementWarningAlert({
+            self.startMeasurement()
+        }), animated: true, completion: nil)
     }
 
     @IBAction func viewTapped() {

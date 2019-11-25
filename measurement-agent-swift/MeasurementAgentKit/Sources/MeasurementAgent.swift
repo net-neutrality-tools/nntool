@@ -188,6 +188,10 @@ public class MeasurementAgent {
     }
 
     //////////
+    
+    public func isAtLeastOneMeasurementTaskEnabled() -> Bool {
+        return programConfigurations.filter({ $0.value.isEnabled && !$0.value.enabledTasks.isEmpty }).count > 0
+    }
 
     public func newMeasurementRunner() -> MeasurementRunner? {
         guard let agentUuid = uuid else {

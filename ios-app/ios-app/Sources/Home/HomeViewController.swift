@@ -52,10 +52,15 @@ class HomeViewController: CustomNavigationBarViewController {
 
         deviceInfoView?.reset()
 
-        if MEASUREMENT_TRAFFIC_WARNING_ENABLED {
-            speedMeasurementGaugeView?.startButtonActionCallback = displayPreMeasurementWarningAlert
-        } else {
-            speedMeasurementGaugeView?.startButtonActionCallback = {
+        speedMeasurementGaugeView?.startButtonActionCallback = {
+            guard MEASUREMENT_AGENT.isAtLeastOneMeasurementTaskEnabled() else {
+                self.displayNoMeasurementTaskEnabledWarningAlert()
+                return
+            }
+
+            if MEASUREMENT_TRAFFIC_WARNING_ENABLED {
+                self.displayPreMeasurementWarningAlert()
+            } else {
                 self.performSegue(withIdentifier: R.segue.homeViewController.show_speed_measurement_view_controller, sender: self)
             }
         }
@@ -191,20 +196,16 @@ class HomeViewController: CustomNavigationBarViewController {
         ipInfo = nil
     }
 
+    func displayNoMeasurementTaskEnabledWarningAlert() {
+        present(MeasurementHelper.createNoMeasurementTaskEnabledWarningAlert({
+            self.performSegue(withIdentifier: R.segue.homeViewController.present_settings_from_no_measurement_task_enabled_alert, sender: self)
+        }), animated: true, completion: nil)
+    }
+
     func displayPreMeasurementWarningAlert() {
-        let alert = UIAlertController(
-            title: R.string.localizable.homePreMeasurementAlertTitle(),
-            message: R.string.localizable.homePreMeasurementAlertMessage(),
-            preferredStyle: .alert
-        )
-
-        alert.addAction(UIAlertAction(title: R.string.localizable.homePreMeasurementAlertAbort(), style: .default))
-
-        alert.addAction(UIAlertAction(title: R.string.localizable.homePreMeasurementAlertContinue(), style: .destructive) { _ in
+        present(MeasurementHelper.createPreMeasurementWarningAlert({
             self.performSegue(withIdentifier: R.segue.homeViewController.show_speed_measurement_view_controller, sender: self)
-        })
-
-        present(alert, animated: true, completion: nil)
+        }), animated: true, completion: nil)
     }
 
     private func updateDeviceInfo() {

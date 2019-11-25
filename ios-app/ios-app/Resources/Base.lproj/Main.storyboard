@@ -598,6 +598,7 @@
                         <outlet property="speedMeasurementGaugeView" destination="sus-O4-eXm" id="diK-TR-UWX"/>
                         <segue destination="t4f-Xg-rdd" kind="presentation" identifier="present_modally_terms_and_conditions" id="tY1-um-iz5"/>
                         <segue destination="l2h-VI-UHi" kind="show" identifier="show_speed_measurement_view_controller" animates="NO" id="LFm-Ye-88T"/>
+                        <segue destination="U5t-jx-Usx" kind="show" identifier="present_settings_from_no_measurement_task_enabled_alert" id="UO4-fK-qiT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
@@ -846,6 +847,7 @@
                         <outlet property="speedMeasurementGaugeView" destination="43k-dR-OY1" id="VMQ-oe-A0r"/>
                         <outlet property="viewMeasurementResultButton" destination="ade-vS-2jV" id="PO6-3t-ygn"/>
                         <segue destination="ChL-OL-d1x" kind="show" identifier="show_measurement_result" id="b35-qr-BZB"/>
+                        <segue destination="U5t-jx-Usx" kind="show" identifier="present_settings_from_again_no_measurement_task_enabled_alert" id="Fti-RK-jur"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vl1-bK-3IW" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1615,6 +1617,7 @@
         <image name="tabbar_icon_statistics" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="Fti-RK-jur"/>
         <segue reference="b35-qr-BZB"/>
     </inferredMetricsTieBreakers>
 </document>

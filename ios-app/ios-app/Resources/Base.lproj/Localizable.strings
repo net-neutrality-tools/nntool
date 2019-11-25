@@ -21,6 +21,11 @@
 // Home screen
 ///////////////////////////
 
+"home.no-measurement-task-enabled-alert.title" = "No Measurement enabled";
+"home.no-measurement-task-enabled-alert.message" = "The measurement is currently not possible because all available measurement programs and/or tasks are disabled.";
+"home.no-measurement-task-enabled-alert.open-settings" = "Open Settings";
+"home.no-measurement-task-enabled-alert.abort" = "Abort";
+
 "home.pre-measurement-alert.title" = "Pre Measurement Alert";
 "home.pre-measurement-alert.message" = "Traffic Warning";
 "home.pre-measurement-alert.continue" = "Continue";
