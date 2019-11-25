@@ -53,7 +53,11 @@
 "measurement.speed.phase.rtt" = "Ping";
 "measurement.speed.phase.download" = "Download";
 "measurement.speed.phase.upload" = "Upload";
-    
+
+"measurement.speed.phase.rtt.description" = "Ping phase description";
+"measurement.speed.phase.download.description" = "Download phase description";
+"measurement.speed.phase.upload.description" = "Upload phase description";
+
 "measurement.gauge.start" = "GO";
 "measurement.initiating" = "Initiating measurement";
 
@@ -90,3 +94,10 @@
 ///////////////////////////
 
 "map.marker.title" = "Measurement";
+
+///////////////////////////
+// Settings
+///////////////////////////
+
+"settings.measurement-type-selection.enable" = "ENABLE";
+"settings.measurement-type-selection.disable" = "DISABLE";

@@ -21,7 +21,7 @@ import ActionKit
 
 ///
 class MeasurementTypeSelectionTableViewController: UITableViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -42,16 +42,18 @@ extension MeasurementTypeSelectionTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.program_task_tableviewcell.identifier, for: indexPath)
 
-        let taskName = MEASUREMENT_AGENT.programs[indexPath.section].availableTasks[indexPath.row]
+        let task = MEASUREMENT_AGENT.programs[indexPath.section].availableTasks[indexPath.row]
 
-        cell.textLabel?.text = taskName
-        cell.accessoryType = MEASUREMENT_AGENT.programs[indexPath.section].enabledTasks.contains(taskName) ? .checkmark : .none
+        cell.textLabel?.text = task.localizedName ?? task.name
+        cell.detailTextLabel?.text = task.localizedDescription
+        cell.detailTextLabel?.numberOfLines = 0
+        cell.accessoryType = MEASUREMENT_AGENT.programs[indexPath.section].enabledTasks.contains(task.name) ? .checkmark : .none
 
         return cell
     }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return MEASUREMENT_AGENT.programs[indexPath.section].isEnabled ? 44 : 0
+        return MEASUREMENT_AGENT.programs[indexPath.section].isEnabled ? UITableView.automaticDimension : 0
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -75,7 +77,11 @@ extension MeasurementTypeSelectionTableViewController {
 
         enableButton?.frame = CGRect(x: view.frame.size.width - 85, y: view.frame.size.height - 28, width: 77, height: 26)
         enableButton?.tag = section
-        enableButton?.setTitle(MEASUREMENT_AGENT.programs[section].isEnabled ? "DISABLE" : "ENABLE", for: .normal)
+        enableButton?.setTitle(
+            MEASUREMENT_AGENT.programs[section].isEnabled ?
+                R.string.localizable.settingsMeasurementTypeSelectionDisable() :
+                R.string.localizable.settingsMeasurementTypeSelectionEnable(),
+            for: .normal)
         enableButton?.titleLabel?.font = UIFont(descriptor: headerLabelFont.fontDescriptor, size: 11)
         enableButton?.contentHorizontalAlignment = .right
         enableButton?.setTitleColor(tableView.tintColor, for: .normal)
@@ -86,10 +92,10 @@ extension MeasurementTypeSelectionTableViewController {
 
             if program.isEnabled {
                 MEASUREMENT_AGENT.enableProgram(program.name, enable: false)
-                button.setTitle("ENABLE", for: .normal)
+                button.setTitle(R.string.localizable.settingsMeasurementTypeSelectionEnable(), for: .normal)
             } else {
                 MEASUREMENT_AGENT.enableProgram(program.name)
-                button.setTitle("DISABLE", for: .normal)
+                button.setTitle(R.string.localizable.settingsMeasurementTypeSelectionDisable(), for: .normal)
             }
 
             self.tableView.beginUpdates()
@@ -101,13 +107,13 @@ extension MeasurementTypeSelectionTableViewController {
         if let cell = tableView.cellForRow(at: indexPath) {
             let program = MEASUREMENT_AGENT.programs[indexPath.section]
 
-            let taskName = program.availableTasks[indexPath.row]
+            let task = program.availableTasks[indexPath.row]
 
-            if program.isTaskEnabled(taskName) {
-                MEASUREMENT_AGENT.enableProgramTask(program.name, taskName: taskName, enable: false)
+            if program.isTaskEnabled(task.name) {
+                MEASUREMENT_AGENT.enableProgramTask(program.name, taskName: task.name, enable: false)
                 cell.accessoryType = .none
             } else {
-                MEASUREMENT_AGENT.enableProgramTask(program.name, taskName: taskName)
+                MEASUREMENT_AGENT.enableProgramTask(program.name, taskName: task.name)
                 cell.accessoryType = .checkmark
             }
 

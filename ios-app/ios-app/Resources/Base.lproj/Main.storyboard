@@ -1348,7 +1348,7 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="Measurement selection" id="iKc-wi-ZHf">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="QA0-d2-0h8" style="IBUITableViewCellStyleDefault" id="7UG-RU-jem">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="QA0-d2-0h8" style="IBUITableViewCellStyleDefault" id="7UG-RU-jem">
                                         <rect key="frame" x="0.0" y="155.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7UG-RU-jem" id="MQc-A3-QQk">
@@ -1440,7 +1440,16 @@
                             <outlet property="delegate" destination="MB8-6E-4BS" id="y5A-Wj-537"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="jiM-j7-CHD"/>
+                    <navigationItem key="navigationItem" id="jiM-j7-CHD">
+                        <barButtonItem key="rightBarButtonItem" title="m" id="n6L-sR-rPT">
+                            <attributedString key="userComments">
+                                <fragment content="#bc-ignore!"/>
+                            </attributedString>
+                            <connections>
+                                <action selector="presentHelp" destination="MB8-6E-4BS" id="j6O-vg-jUW"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="L6P-RS-VMN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

@@ -30,7 +30,23 @@ let MEASUREMENT_AGENT =
                 name: "IAS",
                 version: "1.0.0",
                 isEnabled: true,
-                availableTasks: ["rtt", "download", "upload"]
+                availableTasks: [
+                    ProgramTask(
+                        name: "rtt",
+                        localizedName: R.string.localizable.measurementSpeedPhaseRtt(),
+                        localizedDescription: R.string.localizable.measurementSpeedPhaseRttDescription()
+                    ),
+                    ProgramTask(
+                        name: "download",
+                        localizedName: R.string.localizable.measurementSpeedPhaseDownload(),
+                        localizedDescription: R.string.localizable.measurementSpeedPhaseDownloadDescription()
+                    ),
+                    ProgramTask(
+                        name: "upload",
+                        localizedName: R.string.localizable.measurementSpeedPhaseUpload(),
+                        localizedDescription: R.string.localizable.measurementSpeedPhaseUploadDescription()
+                    )
+                ]
             ) { (taskDto: LmapTaskDto, programConfiguration: ProgramConfiguration) in
             let p = IASProgram()
 
@@ -58,7 +74,7 @@ let MEASUREMENT_AGENT =
                 name: "QOS",
                 version: "1.0.0",
                 isEnabled: true,
-                availableTasks: QoSMeasurementType.allCases.map { $0.rawValue.lowercased() }
+                availableTasks: QoSMeasurementType.allCases.map { ProgramTask(name: $0.rawValue.lowercased()) }
             ) { (taskDto: LmapTaskDto, programConfiguration: ProgramConfiguration) in
             let p = QoSProgram()
 

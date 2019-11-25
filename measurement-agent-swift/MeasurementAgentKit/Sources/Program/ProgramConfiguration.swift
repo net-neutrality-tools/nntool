@@ -17,6 +17,24 @@
 
 import Foundation
 
+public /*struct*/class ProgramTask {
+    public var name: String
+    
+    public var localizedName: String?
+    public var localizedDescription: String?
+    
+    public init(name: String, localizedName: String? = nil, localizedDescription: String? = nil) {
+        self.name = name
+        self.localizedName = localizedName
+        self.localizedDescription = localizedDescription
+    }
+    
+    public /*mutating*/ func updateLocalization(localizedName: String? = nil, localizedDescription: String? = nil) {
+        self.localizedName = localizedName
+        self.localizedDescription = localizedDescription
+    }
+}
+
 ///
 public struct ProgramConfiguration {
 
@@ -33,7 +51,7 @@ public struct ProgramConfiguration {
         }
     }
 
-    public var availableTasks: [String]
+    public var availableTasks: [ProgramTask]
     public var enabledTasks: Set<String>! {
         didSet {
             logger.debug("enabledTasks changed: \(oldValue) -> \(enabledTasks), storing")
@@ -48,7 +66,7 @@ public struct ProgramConfiguration {
         return "program.\(name.lowercased())."
     }
 
-    public init(name: String, version: String, isEnabled: Bool, availableTasks: [String] = [], enabledTasks: Set<String> = [], newInstance: @escaping InstantiationBlock) {
+    public init(name: String, version: String, isEnabled: Bool, availableTasks: [ProgramTask] = [], enabledTasks: Set<String> = [], newInstance: @escaping InstantiationBlock) {
         self.name = name
         self.version = version
         //self.isEnabled = isEnabled
@@ -66,12 +84,12 @@ public struct ProgramConfiguration {
         if let et = UserDefaults.standard.stringArray(forKey: settingsPrefix + "enabledTasks") {
             self.enabledTasks = Set<String>(et)
         } else {
-            self.enabledTasks = Set<String>(availableTasks)
+            self.enabledTasks = Set<String>(availableTasks.map { $0.name })
         }
     }
 
     public func isTaskEnabled(_ name: String) -> Bool {
-        guard availableTasks.contains(name) else {
+        guard availableTasks.map({ $0.name }).contains(name) else {
             return false
         }
 
@@ -79,7 +97,7 @@ public struct ProgramConfiguration {
     }
 
     public mutating func enableTask(name: String, enable: Bool = true) {
-        guard availableTasks.contains(name) else {
+        guard availableTasks.map({ $0.name }).contains(name) else {
             return
         }
 
