@@ -57,6 +57,22 @@
         </fieldset>
       </form>
 
+      <form *ngIf="shown.measurement_selection && (shown.measurement_selection_speed || shown.measurement_selection_qos)"
+        class="baseline settings-form">
+        <fieldset>
+          <p>
+            {{ 'SETTINGS.LOOPMODE.HEADER' | translate }}
+          </p>
+          <p>
+            <label *ngIf="shown.measurement_selection_speed" class="checkbox-label" for="user_show_loopmode">
+              <input type="checkbox" id="user_show_loopmode" name="user_show_loopmode" [(ngModel)]="enableLoopMode"
+                (ngModelChange)="save()" />
+              {{ 'SETTINGS.LOOPMODE.ENABLE_TEXT' | translate }}
+            </label>
+          </p>
+        </fieldset>
+      </form>
+
       <form name="user_settings" class="baseline settings-form">
         <fieldset>
           <p *ngIf="shown.client_uuid">{{ 'SETTINGS.CLIENT_UUID' | translate }}: {{ clientUuid ? clientUuid : '-' }}</p>

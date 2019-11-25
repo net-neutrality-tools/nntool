@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
-import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
+import com.zafaco.speed.JniSpeedMeasurementResult;
+import com.zafaco.speed.SpeedTaskDesc;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 
 /**

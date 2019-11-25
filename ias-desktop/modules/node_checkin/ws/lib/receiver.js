@@ -1,3 +1,10 @@
+/*!
+    \file receiver.js
+    \author Einar Otto Stangvik <einaros@gmail.com>
+    \editor zafaco GmbH <info@zafaco.de>
+    \date Last update: 2019-11-13
+*/
+
 'use strict';
 
 const stream = require('stream');

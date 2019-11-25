@@ -9,9 +9,12 @@ import { TestState } from './tests-implementation/test-state';
 import { UIState } from './tests-ui/ui-state';
 
 export abstract class StartableTest {
-  public requestStart: () => void;
+  public requestStart() {};
   public onChangedRunningState: Observable<TestComponentStatus>;
   public setActive: (active: boolean) => void;
+  public onOnlyReInit() {
+
+  }
 }
 
 export abstract class Test<
@@ -80,7 +83,7 @@ export abstract class Test<
     }
   }
 
-  public requestStart = () => {
+  public requestStart () {
     if (this.status === TestComponentStatus.WAITING && (this.config === undefined || this.config === null)) {
       this.$onStatusNotWaiting.next(TestComponentStatus.REQUESTS_CONFIG);
       this.status = TestComponentStatus.REQUESTS_CONFIG;

@@ -1,10 +1,4 @@
-// COLOR DEFINITION // TODO: use from main less files
-@pitch-black: rgb(41, 40, 41);
-@white: rgb(255, 255, 255);
-@red: rgb(146, 31, 86);
-@yellow: rgb(255, 200, 0);
-@green: rgb(13, 171, 0);
-@light-grey: rgb(241, 241, 241);
+@import '../../../../less/_variables.less';
 
 :host /deep/ ng2-smart-table {
   font-size: 1.6rem;
@@ -64,22 +58,62 @@
 
 //
 
-// :host /deep/ a.ng2-smart-page-link.page-link {
-// }
-// /* selected paging number */
-// :host /deep/ span.ng2-smart-page-link.page-link {
-// }
-// :host /deep/ span.ng2-smart-page-item.page-item.disabled {
-// }
-// /* previous paging button */
-// :host /deep/ a.ng2-smart-page-link.page-link.page-link-prev {
-// }
-// /* previous paging button disabled */
-// :host /deep/ span.ng2-smart-page-link.page-link.page-link-prev.disabled {
-// }
-// /* next paging button */
-// :host /deep/ a.ng2-smart-page-link.page-link.page-link-next {
-// }
-// /* next paging button */
-// :host /deep/ span.ng2-smart-page-link.page-link.page-link-next.disabled {
-// }
+:host /deep/ .pagination {
+  & .page-item {
+    font-size: 1.6rem;
+    margin: 0 .25em;
+    &:first-child {
+      margin-right: 1em;
+      & a:before {
+        content: '|\49';
+        font-family:@icon-font;
+        text-transform: uppercase; /* 'I' */
+      }
+      & [aria-hidden='true'] {
+        display: none;
+      }
+    }
+    &:last-child {
+      margin-left: 1em;
+      & a:after {
+        content: '\4a|';
+        font-family:@icon-font;
+        text-transform: uppercase; /* 'J' */
+      }
+      & [aria-hidden='true'] {
+        display: none;
+      }
+    }
+    & a {
+      color: @red;
+    }
+    &.active {
+      color: @grey;
+    }
+  }
+}
+
+:host /deep/ .page-link.page-link-prev {
+  &:before {
+    content: '\49';
+    font-family:@icon-font;
+    text-transform: uppercase; /* 'I' */
+    font-size: 1.6rem;
+    font-weight: normal;
+  }
+  & [aria-hidden='true'] {
+    display: none;
+  }
+}
+:host /deep/ .page-link.page-link-next {
+  &:after {
+    content: '\4a';
+    font-family:@icon-font;
+    text-transform: uppercase; /* 'J' */
+    font-size: 1.8rem;
+    font-weight: normal;
+  }
+  & [aria-hidden='true'] {
+    display: none;
+  }
+}
