@@ -188,6 +188,7 @@ public class MeasurementService extends Service implements ServiceConnection {
         final String clientIpv4 = options.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE);
         final String clientIpv6 = options.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE);
 
+
         final boolean forceIpv4 = PreferencesUtil.isForceIpv4(getApplicationContext()) && clientIpv4 != null;
 
         //if ipV6 is available, use it

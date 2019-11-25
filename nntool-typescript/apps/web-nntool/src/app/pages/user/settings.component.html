@@ -60,6 +60,18 @@
       <form *ngIf="shown.measurement_selection && (shown.measurement_selection_speed || shown.measurement_selection_qos)"
         class="baseline settings-form">
         <fieldset>
+          <p *ngIf="shown.force_ip4">
+            <label class="checkbox-label" for="user_force_ip4">
+              <input type="checkbox" id="user_force_ip4" name="user_force_ip4" [(ngModel)]="forceIp" (ngModelChange)="save()" />
+              {{ 'SETTINGS.FORCE_IP4' | translate }}
+            </label>
+          </p>
+        </fieldset>
+      </form>
+
+      <form *ngIf="shown.measurement_selection && (shown.measurement_selection_speed || shown.measurement_selection_qos)"
+        class="baseline settings-form">
+        <fieldset>
           <p>
             {{ 'SETTINGS.LOOPMODE.HEADER' | translate }}
           </p>
@@ -98,18 +110,6 @@
                 (ngModelChange)="save()"
               />
               {{ 'SETTINGS.INVISIBLE' | translate }}
-            </label>
-          </p>
-          <p *ngIf="shown.force_ip4">
-            <label class="checkbox-label" for="user_force_ip4">
-              <input
-                type="checkbox"
-                id="user_force_ip4"
-                name="user_force_ip4"
-                [(ngModel)]="forceIp"
-                (ngModelChange)="save()"
-              />
-              {{ 'SETTINGS.FORCE_IP4' | translate }}
             </label>
           </p>
           <!--button type="submit" class="button" (click)="save()">{{ 'SETTINGS.SAVE' | translate }}</button-->

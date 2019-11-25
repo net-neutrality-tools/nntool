@@ -56,8 +56,9 @@ public class ConnectionUtil {
      * @param context
      * @return
      */
-    public static ControllerConnection createControllerConnection(final Context context) {
-        final String host = context.getResources().getString(R.string.default_controller_host);
+    public static ControllerConnection createControllerConnection(final Context context, final boolean usev4v6OnlyConnections) {
+        final String host = context.getResources().getString(usev4v6OnlyConnections ?
+                R.string.default_controller_host_ipv4 : R.string.default_controller_host);
         final String pathPrefix = context.getResources().getString(R.string.default_controller_path_prefix);
         final Integer port = context.getResources().getInteger(R.integer.default_controller_port);
         final boolean isEncypted = context.getResources().getBoolean(R.bool.default_controller_connection_is_encrypted);

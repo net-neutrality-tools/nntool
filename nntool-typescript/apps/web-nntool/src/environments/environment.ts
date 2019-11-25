@@ -144,7 +144,7 @@ export const environment = {
     allow_query_uuid: true,
     allow_set_uuid: false,
     shown: {
-      force_ip4: false,
+      force_ip4: true,
       invisible: false,
       anonymous_mode: true,
       no_anonymize_before_delete_user: false,
