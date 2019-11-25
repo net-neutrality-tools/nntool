@@ -76,13 +76,13 @@ extension QoSGroupOverviewCell: UICollectionViewDataSource {
 
         if successfulTasks == item.tasks.count {
             cell.statusIconLabel?.text = IconFont.check.rawValue
-            cell.statusIconLabel?.textColor = UIColor.green
+            cell.statusIconLabel?.textColor = COLOR_CHECKMARK_GREEN
         } else if successfulTasks == 0 {
             cell.statusIconLabel?.text = IconFont.cross.rawValue
-            cell.statusIconLabel?.textColor = UIColor.red
+            cell.statusIconLabel?.textColor = COLOR_CHECKMARK_RED
         } else {
             cell.statusIconLabel?.text = IconFont.check.rawValue
-            cell.statusIconLabel?.textColor = UIColor.yellow
+            cell.statusIconLabel?.textColor = COLOR_CHECKMARK_YELLOW
         }
 
         cell.statusLabel?.text = "\(successfulTasks)/\(item.tasks.count)"

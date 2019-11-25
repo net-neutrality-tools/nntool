@@ -68,11 +68,11 @@ extension QoSMeasurementResultDetailTableViewController {
 
                 switch evaluation.outcome! {
                 case .ok:
-                    cell.accessoryView = UILabel.createIconLabel(icon: .check, textColor: .green)
+                    cell.accessoryView = UILabel.createIconLabel(icon: .check, textColor: COLOR_CHECKMARK_GREEN)
                 case .info:
-                    cell.accessoryView = UILabel.createIconLabel(icon: .about, textColor: .darkGray)
+                    cell.accessoryView = UILabel.createIconLabel(icon: .about, textColor: COLOR_CHECKMARK_DARK_GRAY)
                 case .fail:
-                    cell.accessoryView = UILabel.createIconLabel(icon: .cross, textColor: .red)
+                    cell.accessoryView = UILabel.createIconLabel(icon: .cross, textColor: COLOR_CHECKMARK_RED)
                 }
             }
         case 2:

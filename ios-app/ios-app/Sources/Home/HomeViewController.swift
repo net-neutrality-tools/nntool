@@ -262,14 +262,14 @@ class HomeViewController: CustomNavigationBarViewController {
         logger.debug("updating ip status: \(String(describing: status))")
 
         var icon: IconFont = .cross
-        var color = COLOR_IP_INFO_UNAVAILABLE
+        var color = COLOR_CHECKMARK_DARK_GRAY
 
         if let status = status, status.hasInternetConnection {
             icon = .check
             if status.isNat {
-                color = COLOR_IP_INFO_NAT
+                color = COLOR_CHECKMARK_YELLOW
             } else {
-                color = COLOR_IP_INFO_NO_NAT
+                color = COLOR_CHECKMARK_GREEN
             }
         }
 
