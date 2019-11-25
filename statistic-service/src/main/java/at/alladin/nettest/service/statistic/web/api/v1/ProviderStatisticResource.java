@@ -18,7 +18,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
 
 /**
- *  * 
+ * 
  * @author alladin-IT GmbH (lb@alladin.at)
  *
  */
@@ -40,10 +40,15 @@ public class ProviderStatisticResource {
 	@GetMapping(path="/filters", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<ApiResponse<ProviderFilterResponseDto>> getFilters(ProviderStatisticsRequestParams params) {
 		final ProviderFilterResponseDto response = new ProviderFilterResponseDto();
-		response.setFilterList(filterService.getFiltersForProviderStatistics(null));
+		response.setFilters(filterService.getFiltersForProviderStatistics(null));
 		return ResponseHelper.ok(response);
 	}
 	
+	@io.swagger.annotations.ApiOperation(value = "Retrieve the provider statistics filtered by the provided params.")
+	@io.swagger.annotations.ApiResponses({
+		@io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = ApiResponse.class),
+		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
+	})
 	@GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<ApiResponse<ApiPagination<ProviderStatisticDto>>> getProviderStatistics(
 			ProviderStatisticsRequestParams params, Pageable page) {

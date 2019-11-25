@@ -7,6 +7,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
+ * 
  * @author Lukasz Budryk (lb@alladin.at)
  */
 @io.swagger.annotations.ApiModel(description = "Holds statistical information of a single provider.")
