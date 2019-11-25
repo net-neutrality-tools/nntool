@@ -56,9 +56,8 @@ public class QoSTaskExecutor {
         objectives.forEach { item in
             let (key, taskConfigurations) = item
 
-            // TODO: refactor localizedDescription to UI/Agent
             // TODO: refactor qos task creation into factory
-            guard let group = QoSTaskGroup.groupForKey(key, localizedDescription: key) else {
+            guard let group = QoSTaskGroup.groupForKey(key) else {
                 return
             }
 

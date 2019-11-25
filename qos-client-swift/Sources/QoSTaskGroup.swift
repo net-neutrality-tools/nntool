@@ -10,15 +10,13 @@ typealias QoSTaskInitializer = (QoSTaskConfiguration) -> (QoSTask?)
 public class QoSTaskGroup {
 
     private(set) public var key: String
-    var localizedDescription: String
 
-    class func groupForKey(_ key: String, localizedDescription desc: String) -> QoSTaskGroup? {
-        return QoSTaskGroup(key: key, localizedDescription: desc)
+    class func groupForKey(_ key: String) -> QoSTaskGroup? {
+        return QoSTaskGroup(key: key)
     }
 
-    init(key: String, localizedDescription desc: String) {
+    init(key: String) {
         self.key = key
-        self.localizedDescription = desc
     }
 
     func taskWithConfiguration(config: QoSTaskConfiguration) -> QoSTask? {
