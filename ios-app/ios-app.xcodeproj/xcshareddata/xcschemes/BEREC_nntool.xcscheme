@@ -85,11 +85,6 @@
             value = "disable"
             isEnabled = "NO">
          </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "DYLD_INSERT_LIBRARIES"
-            value = "/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/lib/darwin/libclang_rt.asan_iossim_dynamic.dylib"
-            isEnabled = "YES">
-         </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction

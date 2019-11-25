@@ -7,11 +7,11 @@ inhibit_all_warnings!
 
 abstract_target 'All' do
   pod 'nntool-shared-swift', :path => '../nntool-shared-swift'
-  
+
   pod 'Siesta', '~> 1.4.3'
-  pod 'ReachabilitySwift', '~> 5.0.0-beta1'
+  pod 'ReachabilitySwift', '~> 5.0.0'
   pod 'CocoaAsyncSocket', '~> 7.6.3'
-  
+
   target 'MeasurementAgentKit_iOS' do
     platform :ios, '10.0'
   end
@@ -19,7 +19,7 @@ abstract_target 'All' do
   target 'MeasurementAgentKitTests' do
       platform :ios, '10.0'
 
-      pod 'Nimble', '~> 8.0.1'
+      pod 'Nimble', '~> 8.0.4'
   end
 end
 
