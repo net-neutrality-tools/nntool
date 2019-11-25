@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.alladin.nettest.nntool.android.app.MainActivity;
 import at.alladin.nettest.nntool.android.app.R;
@@ -28,6 +29,8 @@ import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
 import at.alladin.nettest.nntool.android.app.util.info.gps.GeoLocationGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.interfaces.TrafficGatherer;
+import at.alladin.nettest.nntool.android.app.util.info.network.NetworkChangeEvent;
+import at.alladin.nettest.nntool.android.app.util.info.network.NetworkChangeListener;
 import at.alladin.nettest.nntool.android.app.util.info.network.NetworkGatherer;
 import at.alladin.nettest.nntool.android.app.util.info.signal.SignalGatherer;
 import at.alladin.nettest.nntool.android.app.view.GeoLocationView;
@@ -47,7 +50,7 @@ import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)
  */
-public class TitleFragment extends ActionBarFragment {
+public class TitleFragment extends ActionBarFragment implements NetworkChangeListener {
 
     private final static String TAG = TitleFragment.class.getSimpleName();
 
@@ -125,11 +128,7 @@ public class TitleFragment extends ActionBarFragment {
 
         measurementPeersTask.execute();
 
-        final RequestAgentIpTask requestAgentIpTask = new RequestAgentIpTask(getContext(), response -> {
-            ipv4v6View.updateIpStatus(response);
-        });
-
-        requestAgentIpTask.execute();
+        refreshAgentIp();
 
         //Log.i(TAG, "onCreateView");
         return v;
@@ -266,6 +265,7 @@ public class TitleFragment extends ActionBarFragment {
 
         if (networkGatherer != null && providerSignalView != null) {
             networkGatherer.addListener(providerSignalView);
+            networkGatherer.addListener(this);
         }
 
         if (signalGatherer != null && providerSignalView != null) {
@@ -292,6 +292,7 @@ public class TitleFragment extends ActionBarFragment {
         final NetworkGatherer networkGatherer = informationProvider.getGatherer(NetworkGatherer.class);
         if (networkGatherer != null && providerSignalView != null) {
             networkGatherer.removeListener(providerSignalView);
+            networkGatherer.removeListener(this);
         }
 
         final SignalGatherer signalGatherer = informationProvider.getGatherer(SignalGatherer.class);
@@ -351,5 +352,54 @@ public class TitleFragment extends ActionBarFragment {
 
     public void setWorkflowTitleParameter(WorkflowTitleParameter workflowTitleParameter) {
         this.workflowTitleParameter = workflowTitleParameter;
+    }
+
+
+    AtomicBoolean isRefreshingIp = new AtomicBoolean(false);
+    boolean lostNetworkConnection = false;
+    Integer lastNetworkId = null;
+
+    public void refreshAgentIp() {
+        if (!isRefreshingIp.getAndSet(true)) {
+            try {
+                final RequestAgentIpTask requestAgentIpTask = new RequestAgentIpTask(getContext(), response -> {
+                    ipv4v6View.updateIpStatus(response);
+                    isRefreshingIp.set(false);
+                });
+
+                requestAgentIpTask.execute();
+            }
+            catch (final Exception e) {
+                e.printStackTrace();
+                isRefreshingIp.set(false);
+            }
+        }
+    }
+
+    @Override
+    public void onNetworkChange(NetworkChangeEvent event) {
+        if (event == null) {
+            return;
+        }
+
+        Log.i(TAG, "network change event: " + event);
+
+        boolean hasRefreshIpStarted = false;
+
+        if (NetworkChangeEvent.NetworkChangeEventType.NO_CONNECTION.equals(event.getEventType())) {
+            lostNetworkConnection = true;
+        }
+        else if (lostNetworkConnection && !NetworkChangeEvent.NetworkChangeEventType.NO_CONNECTION.equals(event.getEventType())) {
+            Log.i(TAG,"Lost and reestablished connection. Refreshing IPs!");
+            lostNetworkConnection = false;
+            hasRefreshIpStarted = true;
+            refreshAgentIp();
+        }
+
+        if (!hasRefreshIpStarted && (lastNetworkId == null || lastNetworkId != event.getNetworkType())) {
+            lastNetworkId = event.getNetworkType();
+            Log.i(TAG,"NetworkType change detected. Refreshing IPs!");
+            refreshAgentIp();
+        }
     }
 }
