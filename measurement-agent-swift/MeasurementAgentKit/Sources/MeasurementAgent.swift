@@ -145,7 +145,7 @@ public class MeasurementAgent {
         self.settings.websiteBaseUrl = settings.urls.website
 
         createServices(localSettings: self.settings)
-        
+
         if let qoSProgram = programs.filter({ $0.name.lowercased() == "qos" }).first {
             for i in 0..<qoSProgram.availableTasks.count {
                 if let val = settings.qosTypeInfo?[qoSProgram.availableTasks[i].name.uppercased()] {

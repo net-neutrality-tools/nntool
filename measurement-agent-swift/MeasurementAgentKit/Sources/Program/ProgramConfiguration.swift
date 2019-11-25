@@ -19,16 +19,16 @@ import Foundation
 
 public /*struct*/class ProgramTask {
     public var name: String
-    
+
     public var localizedName: String?
     public var localizedDescription: String?
-    
+
     public init(name: String, localizedName: String? = nil, localizedDescription: String? = nil) {
         self.name = name
         self.localizedName = localizedName
         self.localizedDescription = localizedDescription
     }
-    
+
     public /*mutating*/ func updateLocalization(localizedName: String? = nil, localizedDescription: String? = nil) {
         self.localizedName = localizedName
         self.localizedDescription = localizedDescription

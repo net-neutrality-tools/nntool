@@ -21,7 +21,7 @@ import ActionKit
 
 ///
 class MeasurementTypeSelectionTableViewController: UITableViewController {
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 

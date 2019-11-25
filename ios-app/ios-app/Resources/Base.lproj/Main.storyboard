@@ -1296,6 +1296,10 @@
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
+                    <connections>
+                        <outlet property="emailTableViewCell" destination="Gxj-iN-QB3" id="MVW-yW-zgI"/>
+                        <outlet property="websiteTableViewCell" destination="Dm8-24-ye0" id="Of1-rc-P9o"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rUJ-gz-n6l" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

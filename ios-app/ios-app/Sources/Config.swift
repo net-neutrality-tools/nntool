@@ -123,6 +123,9 @@ let MAP_VIEW_POINT_LAYER_ZOOM_THRESHOLD = 12
 let STATISTICS_URL = "https://nntool.net-neutrality.tools/statistics"
 let HELP_URL = "https://nntool.net-neutrality.tools/help"
 
+let INFO_WEBSITE_URL = "https://nntool.net-neutrality.tools"
+let INFO_EMAIL = "todo@nntool.eu"
+
 ////
 
 let BEREC_WHITE      = UIColor.white
