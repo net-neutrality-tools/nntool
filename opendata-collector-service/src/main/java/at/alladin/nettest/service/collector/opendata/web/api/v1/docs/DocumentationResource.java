@@ -19,6 +19,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.CellInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.PointInTimeValueDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ReasonDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.RttDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.RttInfoDto;
@@ -27,7 +28,6 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.SpeedMeasurem
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.TrafficDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.WebSocketInfoDto;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
 import at.alladin.nettest.shared.server.web.api.v1.AbstractDocumentationResource;
 
 /**
@@ -72,7 +72,7 @@ public class DocumentationResource extends AbstractDocumentationResource {
 			MeasurementAgentTypeDto.class,
 			GeoLocationDto.class,
 			PointInTimeValueDto.class,
-			QoSMeasurementType.class,
+			QoSMeasurementTypeDto.class,
 			ReasonDto.class,
 			RttDto.class,
 			RttInfoDto.class,
