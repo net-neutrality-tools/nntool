@@ -60,7 +60,7 @@ class EchoProtocolTask: QoSTask {
                 serverPort = UInt16(serverPortString)
             }
         }
-        
+
         if let sp = serverPort {
             port = sp
         }

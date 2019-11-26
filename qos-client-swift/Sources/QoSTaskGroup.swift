@@ -10,35 +10,17 @@ typealias QoSTaskInitializer = (QoSTaskConfiguration) -> (QoSTask?)
 public class QoSTaskGroup {
 
     private(set) public var key: String
-    var localizedDescription: String
 
-    private static let qosTypeDict = [
-        "dns": DnsTask.self,
-        "udp": UdpPortTask.self,
-        "tcp": TcpPortTask.self,
-        "http_proxy": HttpProxyTask.self,
-        "traceroute": TracerouteTask.self,
-        "website": WebsiteRenderingTask.self,
-        "non_transparent_proxy": NonTransparentProxyTask.self,
-        "echo_protocol": EchoProtocolTask.self,
-        "voip": VoipTask.self,
-        "sip": SipTask.self,
-        // MeasurementKit
-        "mkit_web_connectivity": MeasurementKitTask.self,
-        "mkit_dash": MeasurementKitTask.self
-    ]
-
-    class func groupForKey(_ key: String, localizedDescription desc: String) -> QoSTaskGroup? {
-        return QoSTaskGroup(key: key, localizedDescription: desc)
+    class func groupForKey(_ key: String) -> QoSTaskGroup? {
+        return QoSTaskGroup(key: key)
     }
 
-    init(key: String, localizedDescription desc: String) {
+    init(key: String) {
         self.key = key
-        self.localizedDescription = desc
     }
 
     func taskWithConfiguration(config: QoSTaskConfiguration) -> QoSTask? {
-        let task = QoSTaskGroup.qosTypeDict[key.lowercased()]?.create(config: config)
+        let task = TaskType(rawValue: key.lowercased())?.taskClass().create(config: config)
         task?.group = self
 
         return task

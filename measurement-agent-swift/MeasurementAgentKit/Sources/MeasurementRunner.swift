@@ -129,6 +129,9 @@ public class MeasurementRunner {
 
         var taskResultDict = [MeasurementTypeDto: SubMeasurementResult]()
 
+        var measurementFailed = false
+        var programsRan = 0
+
         for task in tasks {
             if isCanceled {
                 logger.info("Measurement runner is cancelled.")
@@ -155,7 +158,11 @@ public class MeasurementRunner {
                 continue
             }
 
-            guard let programInstance = try? programConfiguration.newInstance(task) else {
+            guard programConfiguration.isEnabled && !programConfiguration.enabledTasks.isEmpty else {
+                continue
+            }
+
+            guard let programInstance = try? programConfiguration.newInstance(task, programConfiguration) else {
                 continue
             }
 
@@ -171,8 +178,11 @@ public class MeasurementRunner {
                 //logger.debug(":: -------")
 
                 taskResultDict[taskType] = result
+                programsRan += 1
             } catch {
-                // TODO: fail whole measurement or just submeasurement?
+                // TODO: call program failure callback
+                measurementFailed = true
+                break
             }
 
             delegate?.measurementRunner(self, didFinishProgramWithName: taskName, implementation: programInstance)
@@ -182,9 +192,14 @@ public class MeasurementRunner {
 
         informationCollector.stop()
 
-        logger.info("-- all finished")
+        logger.info("-- all finished (has error: \(measurementFailed)")
 
-        submitMeasurementResult(tasks: tasks, taskResultDict: taskResultDict, startTime: startTime, startTimeNs: startTimeNs, timeBasedResult: informationCollector.getResult())
+        if measurementFailed || programsRan == 0 {
+            // TODO: different error message if programsRan == 0
+            fail()
+        } else {
+            submitMeasurementResult(tasks: tasks, taskResultDict: taskResultDict, startTime: startTime, startTimeNs: startTimeNs, timeBasedResult: informationCollector.getResult())
+        }
     }
 
     private func submitMeasurementResult(tasks: [LmapTaskDto], taskResultDict: [MeasurementTypeDto: SubMeasurementResult], startTime: Date, startTimeNs: UInt64, timeBasedResult: TimeBasedResultDto) {

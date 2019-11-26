@@ -22,6 +22,18 @@ import QoSKit
 ///
 class QoSMeasurementViewController: UITableViewController {
 
+    private var qosTypeNameDict = [String: String]()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        if let qosProgram = MEASUREMENT_AGENT.programs.filter({ $0.name.lowercased() == "qos" }).first {
+            qosTypeNameDict = qosProgram.availableTasks.reduce(into: [String: String]()) {
+                $0[$1.name.lowercased()] = $1.localizedName
+            }
+        }
+    }
+
     var groups = [QoSTaskGroup]() {
         didSet {
             groupProgress = groups.reduce(into: [String: Float]()) { (result, group) in
@@ -53,7 +65,7 @@ class QoSMeasurementViewController: UITableViewController {
         if let qosCell = cell as? QoSGroupProgressCell {
             let group = groups[indexPath.row]
 
-            qosCell.groupName = group.key
+            qosCell.groupName = qosTypeNameDict[group.key.lowercased()] ?? group.key
             qosCell.progress = groupProgress?[group.key] ?? 0
         }
 

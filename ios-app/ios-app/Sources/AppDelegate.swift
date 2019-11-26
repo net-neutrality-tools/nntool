@@ -27,7 +27,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         applyAppearance()
 
-        GMSServices.provideAPIKey(GOOGLE_MAPS_API_KEY)
+        if GOOGLE_MAPS_API_KEY != "" {
+            GMSServices.provideAPIKey(GOOGLE_MAPS_API_KEY)
+        }
 
         afterStart(isNewlyLaunched: true)
 

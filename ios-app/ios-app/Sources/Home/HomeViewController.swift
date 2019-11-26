@@ -52,13 +52,29 @@ class HomeViewController: CustomNavigationBarViewController {
 
         deviceInfoView?.reset()
 
-        if MEASUREMENT_TRAFFIC_WARNING_ENABLED {
-            speedMeasurementGaugeView?.startButtonActionCallback = displayPreMeasurementWarningAlert
-        } else {
-            speedMeasurementGaugeView?.startButtonActionCallback = {
+        speedMeasurementGaugeView?.startButtonActionCallback = {
+            guard MEASUREMENT_AGENT.isAtLeastOneMeasurementTaskEnabled() else {
+                self.displayNoMeasurementTaskEnabledWarningAlert()
+                return
+            }
+
+            if MEASUREMENT_TRAFFIC_WARNING_ENABLED {
+                self.displayPreMeasurementWarningAlert()
+            } else {
                 self.performSegue(withIdentifier: R.segue.homeViewController.show_speed_measurement_view_controller, sender: self)
             }
         }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        guard MEASUREMENT_AGENT.isRegistered() else {
+            return
+        }
+
+        loadMeasurementPeers()
+        startUpdatingDeviceInfo()
     }
 
     ///
@@ -69,15 +85,12 @@ class HomeViewController: CustomNavigationBarViewController {
             performSegue(withIdentifier: R.segue.homeViewController.present_modally_terms_and_conditions, sender: self)
             return
         }
-
-        loadMeasurementPeers()
-        start()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        stop()
+        stopUpdatingDeviceInfo()
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -123,14 +136,14 @@ class HomeViewController: CustomNavigationBarViewController {
         }
     }
 
-    private func start() {
+    private func startUpdatingDeviceInfo() {
         deviceInfoView?.reset()
 
         // TODO: display error message if location permission is not granted
         locationTracker.start(updateLocationCallback: { location in
             DispatchQueue.main.async {
                 self.deviceInfoView?.locationLabel?.text = location.coordinate.dmFormattedString
-                self.deviceInfoView?.locationInfoLabel?.text = "Location ±\(String(format: "%dm", Int(location.horizontalAccuracy)))"
+                self.deviceInfoView?.locationInfoLabel?.text = "\(R.string.localizable.homeDeviceInfoLocation()) ±\(String(format: "%dm", Int(location.horizontalAccuracy)))"
             }
         })
 
@@ -151,8 +164,8 @@ class HomeViewController: CustomNavigationBarViewController {
             DispatchQueue.main.async {
                 self.speedMeasurementGaugeView?.isStartButtonEnabled = false
 
-                self.speedMeasurementGaugeView?.networkTypeLabel?.text = "Unknown"
-                self.speedMeasurementGaugeView?.networkDetailLabel?.text = "No connection"
+                self.speedMeasurementGaugeView?.networkTypeLabel?.text = R.string.localizable.networkUnknown()
+                self.speedMeasurementGaugeView?.networkDetailLabel?.text = R.string.localizable.networkNoConnection()
             }
         })
         reachability?.start()
@@ -168,7 +181,7 @@ class HomeViewController: CustomNavigationBarViewController {
         }
     }
 
-    private func stop() {
+    private func stopUpdatingDeviceInfo() {
         locationTracker.stop()
 
         timer?.removeAllObservers(thenStop: true)
@@ -183,17 +196,16 @@ class HomeViewController: CustomNavigationBarViewController {
         ipInfo = nil
     }
 
+    func displayNoMeasurementTaskEnabledWarningAlert() {
+        present(MeasurementHelper.createNoMeasurementTaskEnabledWarningAlert({
+            self.performSegue(withIdentifier: R.segue.homeViewController.present_settings_from_no_measurement_task_enabled_alert, sender: self)
+        }), animated: true, completion: nil)
+    }
+
     func displayPreMeasurementWarningAlert() {
-        // TODO: add localization
-        let alert = UIAlertController(title: "Pre Measurement Alert", message: "Traffic Warning", preferredStyle: .alert)
-
-        alert.addAction(UIAlertAction(title: "Abort", style: .default))
-
-        alert.addAction(UIAlertAction(title: "Continue", style: .destructive) { _ in
+        present(MeasurementHelper.createPreMeasurementWarningAlert({
             self.performSegue(withIdentifier: R.segue.homeViewController.show_speed_measurement_view_controller, sender: self)
-        })
-
-        present(alert, animated: true, completion: nil)
+        }), animated: true, completion: nil)
     }
 
     private func updateDeviceInfo() {
@@ -204,7 +216,7 @@ class HomeViewController: CustomNavigationBarViewController {
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.deviceInfoView?.cpuValueLabel?.text = "n/a%"
+                    self.deviceInfoView?.cpuValueLabel?.text = "\(R.string.localizable.generalNotAvailable())%"
                 }
             }
 
@@ -214,7 +226,7 @@ class HomeViewController: CustomNavigationBarViewController {
                 }
             } else {
                 DispatchQueue.main.async {
-                    self.deviceInfoView?.cpuValueLabel?.text = "n/a%"
+                    self.deviceInfoView?.cpuValueLabel?.text = "\(R.string.localizable.generalNotAvailable())%"
                 }
             }
 
@@ -251,14 +263,14 @@ class HomeViewController: CustomNavigationBarViewController {
         logger.debug("updating ip status: \(String(describing: status))")
 
         var icon: IconFont = .cross
-        var color = BEREC_DARK_GRAY
+        var color = COLOR_CHECKMARK_DARK_GRAY
 
         if let status = status, status.hasInternetConnection {
             icon = .check
             if status.isNat {
-                color = UIColor.yellow
+                color = COLOR_CHECKMARK_YELLOW
             } else {
-                color = UIColor.green
+                color = COLOR_CHECKMARK_GREEN
             }
         }
 
@@ -272,6 +284,7 @@ class HomeViewController: CustomNavigationBarViewController {
 extension HomeViewController: TermsAndConditionsDelegate {
 
     func didAcceptTermsAndConditions() {
-        start()
+        loadMeasurementPeers()
+        startUpdatingDeviceInfo()
     }
 }

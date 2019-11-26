@@ -36,7 +36,9 @@ class QoSGroupProgressCell: UITableViewCell {
             return progressView?.progress ?? 0
         }
         set {
-            progressView?.setProgress(newValue, animated: animatesProgressChanges)
+            UIView.animate(withDuration: 0.5) {
+                self.progressView?.setProgress(newValue, animated: self.animatesProgressChanges)
+            }
         }
     }
 

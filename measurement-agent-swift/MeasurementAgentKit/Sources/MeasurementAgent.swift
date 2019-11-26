@@ -20,7 +20,11 @@ import Foundation
 ///
 public class MeasurementAgent {
 
-    var controlService: ControlService!
+    private(set) var controlService: ControlService!
+
+    private(set) var controlServiceV4: ControlService?
+    private(set) var controlServiceV6: ControlService?
+
     public private(set) var resultService: ResultService?
     public private(set) var mapService: MapService?
 
@@ -30,8 +34,36 @@ public class MeasurementAgent {
         return settings.uuid
     }
 
-    private var programs = [MeasurementTypeDto: ProgramConfiguration]()
+    public var isIpv4Only = false {
+        didSet {
+            updateControlService()
+        }
+    }
+
+    private var programConfigurations = [MeasurementTypeDto: ProgramConfiguration]()
     private var programOrder = [MeasurementTypeDto]()
+
+    public var programs: [ProgramConfiguration] {
+        get {
+            return [ProgramConfiguration](programConfigurations.values).sorted { $0.name < $1.name }
+        }
+    }
+
+    public func enableProgram(_ programName: String, enable: Bool = true) {
+        guard let measurementTypeDto = programConfigurations.filter({ $0.value.name == programName }).first?.key else {
+            return
+        }
+
+        programConfigurations[measurementTypeDto]?.isEnabled = enable
+    }
+
+    public func enableProgramTask(_ programName: String, taskName: String, enable: Bool = true) {
+        guard let measurementTypeDto = programConfigurations.filter({ $0.value.name == programName }).first?.key else {
+            return
+        }
+
+        programConfigurations[measurementTypeDto]?.enableTask(name: taskName, enable: enable)
+    }
 
     public init(configuration: MeasurementAgentConfiguration) {
         do {
@@ -48,7 +80,7 @@ public class MeasurementAgent {
 
     public func registerProgramForTask(_ task: MeasurementTypeDto, withConfiguration config: ProgramConfiguration) {
         programOrder.append(task)
-        programs[task] = config
+        programConfigurations[task] = config
     }
 
     public func isRegistered() -> Bool {
@@ -114,11 +146,27 @@ public class MeasurementAgent {
 
         createServices(localSettings: self.settings)
 
+        if let qoSProgram = programs.filter({ $0.name.lowercased() == "qos" }).first {
+            for i in 0..<qoSProgram.availableTasks.count {
+                if let val = settings.qosTypeInfo?[qoSProgram.availableTasks[i].name.uppercased()] {
+                    qoSProgram.availableTasks[i].updateLocalization(localizedName: val.name, localizedDescription: val.description)
+                }
+            }
+        }
+
         try? MeasurementAgentSettingsHelper.saveLocalSettings(self.settings)
     }
 
     private func createServices(localSettings: LocalSettings) {
-        controlService = ControlService(baseURL: localSettings.controllerServiceBaseUrl, agent: self)
+        if let controllerServiceBaseUrlV4 = localSettings.controllerServiceBaseUrlIpv4 {
+            controlServiceV4 = ControlService(baseURL: controllerServiceBaseUrlV4, agent: self)
+        }
+
+        // controllerServiceBaseUrl has both A and AAAA recods. If IPv6 is available, it will be used as default.
+        // Therefore it is save to use controllerServiceBaseUrl for the controlServiceV6.
+        controlServiceV6 = ControlService(baseURL: localSettings.controllerServiceBaseUrl, agent: self)
+
+        updateControlService()
 
         if let resultServiceBaseUrl = localSettings.resultServiceBaseUrl {
             resultService = ResultService(baseURL: resultServiceBaseUrl, agent: self)
@@ -129,12 +177,28 @@ public class MeasurementAgent {
         }
     }
 
+    private func updateControlService() {
+        if isIpv4Only {
+            controlService = controlServiceV4
+            logger.debug("<--> controlService = controlServiceV4")
+        } else {
+            controlService = controlServiceV6
+            logger.debug("<--> controlService = controlServiceV6")
+        }
+    }
+
+    //////////
+    
+    public func isAtLeastOneMeasurementTaskEnabled() -> Bool {
+        return programConfigurations.filter({ $0.value.isEnabled && !$0.value.enabledTasks.isEmpty }).count > 0
+    }
+
     public func newMeasurementRunner() -> MeasurementRunner? {
         guard let agentUuid = uuid else {
             return nil
         }
 
-        return MeasurementRunner(agent: self, controlService: controlService, agentUuid: agentUuid, programOrder: programOrder, programs: programs)
+        return MeasurementRunner(agent: self, controlService: controlService, agentUuid: agentUuid, programOrder: programOrder, programs: programConfigurations)
     }
 
     public func getSpeedMeasurementPeers(onSuccess: @escaping ([SpeedMeasurementPeerResponse.SpeedMeasurementPeer]) -> Void, onFailure: @escaping (Error) -> Void) {

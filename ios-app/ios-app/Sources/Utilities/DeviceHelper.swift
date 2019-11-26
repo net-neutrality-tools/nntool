@@ -1,4 +1,4 @@
-// MeasurementAgentKit: QoSMeasurementType.swift, created on 05.08.19
+// ios-app: DeviceHelper.swift, created on 25.11.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,19 +16,15 @@
  ******************************************************************************/
 
 import Foundation
+import UIKit
 
-public enum QoSMeasurementType: String, CaseIterable, Codable {
-    case tcp = "TCP"
-    case udp = "UDP"
-    case dns = "DNS"
-    case nonTransparentProxy = "NON_TRANSPARENT_PROXY"
-    case httpProxy = "HTTP_PROXY"
-    case voip = "VOIP"
-    case traceroute = "TRACEROUTE"
-    case website = "WEBSITE"
-    case sip = "SIP"
-    case echoProtocol = "ECHO_PROTOCOL"
-
-    case mkitDash = "MKIT_DASH"
-    case mkitWebConnectivity = "MKIT_WEB_CONNECTIVITY"
+class DeviceHelper {
+    
+    private init() {
+        
+    }
+    
+    class func isSmalliPhone() -> Bool {
+        return UIDevice.current.userInterfaceIdiom == .phone && UIScreen.main.nativeBounds.height < 1334
+    }
 }

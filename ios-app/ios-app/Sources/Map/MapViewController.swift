@@ -75,6 +75,13 @@ class MapViewController: UIViewController {
     }
 
     private func initializeMapView() {
+        // Google Map View throws an NSException if the API key is not provided.
+        // To fix crashes of the app, we check if a Google Map API key is set prior to
+        // initializing the map view (The Google Maps API key is provided in AppDelegate).
+        guard GOOGLE_MAPS_API_KEY != "" else {
+            return
+        }
+
         let camera = GMSCameraPosition.camera(
             withLatitude: MAP_VIEW_INITIAL_LOCATION_LATITUDE,
             longitude: MAP_VIEW_INITIAL_LOCATION_LONGITUDE,
@@ -186,7 +193,7 @@ extension MapViewController: GMSMapViewDelegate {
             self.currentMarker?.userData = marker
             self.currentMarker?.appearAnimation = .pop
             self.currentMarker?.map = mapView
-            self.currentMarker?.title = "Measurement" // TODO: translate
+            self.currentMarker?.title = R.string.localizable.mapMarkerTitle()
             self.currentMarker?.snippet = self.buildMarkerSnippet(marker)
 
             DispatchQueue.main.async {

@@ -39,11 +39,13 @@ import UIKit
         }
         set {
             startButton?.isEnabled = newValue
+            startButton?.backgroundColor = newValue ? BEREC_RED : BEREC_DARK_GRAY
         }
     }
 
     override func awakeFromNib() {
         startButtonSystemFont = startButton?.titleLabel?.font
+        startButton?.titleLabel?.text = R.string.localizable.measurementGaugeStart()
     }
 
     ///
