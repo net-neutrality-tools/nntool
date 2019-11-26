@@ -12,9 +12,10 @@ include 'controller-service'
 include 'collector-service'
 include 'result-service'
 include 'search-service'
+include 'opendata-collector-service'
 
-include 'statistic-service'
 include 'map-service'
+include 'statistic-service'
 
 include 'qos-service'
 

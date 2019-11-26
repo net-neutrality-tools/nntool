@@ -18,7 +18,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
 
 /**
- *  * 
+ * 
  * @author alladin-IT GmbH (lb@alladin.at)
  *
  */
