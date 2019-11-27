@@ -7,8 +7,8 @@
                         {{opt.label}}
                     </option>
                 </select>
-                <input *ngSwitchCase="'INPUT_TEXT'" type="text" />
-                <input *ngSwitchCase="'INPUT_NUMBER'" type="number" />
+                <input *ngSwitchCase="'INPUT_TEXT'" type="text" [formControlName]="i"/>
+                <input *ngSwitchCase="'INPUT_NUMBER'" type="number" [formControlName]="i"/>
                 <div *ngSwitchDefault></div>
             </ng-container>
         </div>

@@ -10,9 +10,9 @@ export class BasicFilter {
 
     public key: string;
 
-    public default_value: any;
+    public default_value?: any;
 
-    public filter_type: FilterType;
+    public filter_type: FilterType | string;
 
     public options?: FilterOption[];
 }
