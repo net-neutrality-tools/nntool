@@ -1,4 +1,4 @@
-package at.alladin.nettest.service.collector.helper;
+package at.alladin.nettest.shared.server.opendata.jdbc;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

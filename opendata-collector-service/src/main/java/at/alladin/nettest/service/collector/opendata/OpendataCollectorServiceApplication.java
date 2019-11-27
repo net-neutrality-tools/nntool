@@ -28,7 +28,8 @@ import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
 	OpendataCollectorServiceProperties.class
 })
 @ComponentScan({
-	"at.alladin.nettest.service.collector.opendata", 
+	"at.alladin.nettest.service.collector.opendata",
+	"at.alladin.nettest.shared.server.opendata.service",
 	"at.alladin.nettest.shared.server.web.api.v1",
 })
 @Import({

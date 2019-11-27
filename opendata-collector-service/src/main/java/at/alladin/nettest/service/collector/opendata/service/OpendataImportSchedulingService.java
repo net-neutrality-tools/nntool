@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import at.alladin.nettest.service.collector.opendata.config.OpendataCollectorServiceProperties;
 import at.alladin.nettest.service.collector.opendata.config.OpendataCollectorServiceProperties.OpendataImport;
 import at.alladin.nettest.service.collector.opendata.config.OpendataCollectorServiceProperties.OpendataImport.Source;
+import at.alladin.nettest.shared.server.opendata.service.OpenDataMeasurementService;
 
 /**
  *
@@ -38,7 +39,7 @@ public class OpendataImportSchedulingService {
 	private RestTemplate restTemplate;
 	
 	@Autowired
-	private OpendataMeasurementImportService measurementInsertService;
+	private OpenDataMeasurementService openDataMeasurementService;
 	
 	@Autowired
 	private TaskScheduler taskScheduler;
@@ -57,13 +58,17 @@ public class OpendataImportSchedulingService {
 			return;
 		}
 		
+		if (!openDataMeasurementService.areOpenDataDatabasesAvailable()) {
+			return;
+		}
+		
 		sources.stream()
 			.filter(Source::isEnabled)
 			.forEach(source -> {
 				logger.debug("Initializing device import for: {}, using cron: {}", source.getName(), source.getCron());
 				
 				final ScheduledFuture<?> task = taskScheduler.schedule(
-					new OpendataImportWorker(source, opendataImport.getConfig(), restTemplate, measurementInsertService), 
+					new OpendataImportWorker(source, opendataImport.getConfig(), restTemplate, openDataMeasurementService), 
 					new CronTrigger(source.getCron())
 				);
 				

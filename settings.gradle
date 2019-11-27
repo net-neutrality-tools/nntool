@@ -1,5 +1,6 @@
 include 'nettest-shared'
 include 'nettest-shared-server'
+include 'nettest-shared-server-opendata'
 
 include 'couchdb-client'
 include 'spring-data-couchdb'

@@ -16,6 +16,7 @@ import at.alladin.nettest.service.collector.opendata.config.OpendataCollectorSer
 import at.alladin.nettest.service.collector.opendata.config.OpendataCollectorServiceProperties.OpendataImport.Source;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiPagination;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
+import at.alladin.nettest.shared.server.opendata.service.OpenDataMeasurementService;
 
 /**
  * 
@@ -30,14 +31,14 @@ public class OpendataImportWorker implements Runnable {
 	private final Config config;
 	
 	private final RestTemplate restTemplate;
-	private final OpendataMeasurementImportService opendataMeasurementImportService;
+	private final OpenDataMeasurementService openDataMeasurementService;
 	
-	public OpendataImportWorker(Source source, Config config, RestTemplate restTemplate, OpendataMeasurementImportService opendataMeasurementImportService) {
+	public OpendataImportWorker(Source source, Config config, RestTemplate restTemplate, OpenDataMeasurementService openDataMeasurementService) {
 		this.source = source;
 		this.config = config;
 		
 		this.restTemplate = restTemplate;
-		this.opendataMeasurementImportService = opendataMeasurementImportService;
+		this.openDataMeasurementService = openDataMeasurementService;
 	}
 	
 	//https://search-de-01.net-neutrality.tools/api/v1/measurements?page=0&size=5&sort=start_time,asc&q=start_time:["2019-11-26T13:00:00" TO now]
@@ -53,7 +54,7 @@ public class OpendataImportWorker implements Runnable {
 		
 		logger.debug("Running opendata import for source: {}, url: {}", sourceName, source.getUrl());
 		
-		final String latestStartTime = opendataMeasurementImportService.getLatestStartTime();
+		final String latestStartTime = openDataMeasurementService.getLatestStartTime();
 		
 		ApiPagination<Map<String, Object>> currentResult = null;
 		long page = 0;
@@ -78,7 +79,7 @@ public class OpendataImportWorker implements Runnable {
 			logger.debug("Importing {} measurements from page {} (source: {}, url: {}).", measurements.size(), page, sourceName, urlWithParams);
 
 			try {
-				opendataMeasurementImportService.insertMeasurements(measurements);
+				openDataMeasurementService.bulkStoreOpenDataMeasurement(measurements);
 			} catch (Exception ex) {
 				logger.error("Aborting opendata import of source {} due to exception during database inserts.", sourceName, ex);
 				return;

@@ -4,6 +4,7 @@ ext['elasticsearch.version'] = elasticsearch_rest_client_version
 
 dependencies {
 	implementation project(path: ':nettest-shared-server-storage-couchdb', configuration: 'default')
+	implementation project(':nettest-shared-server-opendata')
 
     // Server
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-undertow', version: spring_boot_version

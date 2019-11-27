@@ -1,0 +1,19 @@
+apply from: "${project.rootDir}/gradle/java8.gradle"
+
+dependencies {
+	implementation project(':nettest-shared-server')
+
+	// Elasticsearch
+  	implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: elasticsearch_rest_client_version
+
+	// PostgreSQL
+	implementation group: 'org.postgresql', name: 'postgresql', version: postgresql_version
+
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: spring_boot_version
+
+	////
+
+	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: spring_boot_version
+    testImplementation group: 'junit', name: 'junit', version: junit_version
+    testImplementation group: 'org.jmockit', name: 'jmockit', version: jmockit_version
+}
