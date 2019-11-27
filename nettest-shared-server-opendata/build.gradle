@@ -1,7 +1,7 @@
 apply from: "${project.rootDir}/gradle/java8.gradle"
 
 dependencies {
-	implementation project(':nettest-shared-server')
+	implementation project(path: ':nettest-shared-server', configuration: 'default')
 
 	// Elasticsearch
   	implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: elasticsearch_rest_client_version
