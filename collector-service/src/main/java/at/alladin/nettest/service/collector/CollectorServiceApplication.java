@@ -32,6 +32,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.config.EnableCouchDbStor
 })
 @ComponentScan({
 	"at.alladin.nettest.service.collector", 
+	"at.alladin.nettest.shared.server.opendata.service",
 	"at.alladin.nettest.shared.server.web.api.v1",
 })
 @Import({

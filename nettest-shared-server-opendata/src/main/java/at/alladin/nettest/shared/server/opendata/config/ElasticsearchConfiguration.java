@@ -1,4 +1,4 @@
-package at.alladin.nettest.service.collector.config;
+package at.alladin.nettest.shared.server.opendata.config;
 
 import javax.annotation.PostConstruct;
 
@@ -10,7 +10,6 @@ import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,12 +23,12 @@ import at.alladin.nettest.shared.server.config.ElasticSearchProperties;
  */
 @Configuration
 @ConditionalOnProperty(name = "collector.elasticsearch.host")
-public class ElasticsearchConfiguration {
+public abstract class ElasticsearchConfiguration {
 
 	private static final Logger logger = LoggerFactory.getLogger(ElasticsearchConfiguration.class);
 	
-	@Autowired
-	private CollectorServiceProperties collectorServiceProperties;
+	@Bean
+	public abstract ElasticSearchProperties elasticSearchProperties();
 	
 	/**
 	 * 
@@ -37,7 +36,7 @@ public class ElasticsearchConfiguration {
 	 */
 	@Bean(destroyMethod = "close", name = {"elasticSearchClient"})
 	public RestHighLevelClient elasticsearchClient() {
-		final ElasticSearchProperties e = collectorServiceProperties.getElasticsearch();
+		final ElasticSearchProperties e = elasticSearchProperties();
 		
 		final RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost(e.getHost(), e.getPort(), e.getScheme())));
 		
@@ -48,7 +47,7 @@ public class ElasticsearchConfiguration {
 	
 	@PostConstruct
 	private void createIndexIfNotExists() {
-		final String index = collectorServiceProperties.getElasticsearch().getIndex();
+		final String index = elasticSearchProperties().getIndex();
 		
 		try {
 		

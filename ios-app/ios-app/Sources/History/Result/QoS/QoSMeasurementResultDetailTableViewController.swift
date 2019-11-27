@@ -66,14 +66,22 @@ extension QoSMeasurementResultDetailTableViewController {
             if let evaluation = task?.evaluations?[indexPath.row] {
                 cell.textLabel?.text = evaluation.text
 
+                var accessoryLabel: UILabel?
+
                 switch evaluation.outcome! {
                 case .ok:
-                    cell.accessoryView = UILabel.createIconLabel(icon: .check, textColor: COLOR_CHECKMARK_GREEN)
+                    accessoryLabel = UILabel.createIconLabel(icon: .check, textColor: COLOR_CHECKMARK_GREEN)
                 case .info:
-                    cell.accessoryView = UILabel.createIconLabel(icon: .about, textColor: COLOR_CHECKMARK_DARK_GRAY)
+                    accessoryLabel = UILabel.createIconLabel(icon: .about, textColor: COLOR_CHECKMARK_DARK_GRAY)
                 case .fail:
-                    cell.accessoryView = UILabel.createIconLabel(icon: .cross, textColor: COLOR_CHECKMARK_RED)
+                    accessoryLabel = UILabel.createIconLabel(icon: .cross, textColor: COLOR_CHECKMARK_RED)
                 }
+
+                accessoryLabel?.sizeToFit()
+                accessoryLabel?.numberOfLines = 0
+                accessoryLabel?.textAlignment = .center
+
+                cell.accessoryView = accessoryLabel
             }
         case 2:
             cell = tableView.dequeueReusableCell(withIdentifier: R.reuseIdentifier.qos_task_description_cell.identifier, for: indexPath)

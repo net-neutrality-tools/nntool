@@ -193,8 +193,8 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 				}
 			}
 			else if (TASK_ECHO_PROTOCOL.equals(taskId)) {
-				if (taskDesc.getParams().get(AbstractEchoProtocolTask.RESULT_PROTOCOL) != null) {
-					final String protocol = (String) taskDesc.getParams().get(AbstractEchoProtocolTask.RESULT_PROTOCOL);
+				if (taskDesc.getParams().get(AbstractEchoProtocolTask.PROTOCOL) != null) {
+					final String protocol = (String) taskDesc.getParams().get(AbstractEchoProtocolTask.PROTOCOL);
 					if (AbstractEchoProtocolTask.PROTOCOL_TCP.equals(protocol)) {
 						test = new EchoProtocolTcpTask(this, taskDesc, threadCounter++);
 					} else if (AbstractEchoProtocolTask.PROTOCOL_UDP.equals(protocol)) {
