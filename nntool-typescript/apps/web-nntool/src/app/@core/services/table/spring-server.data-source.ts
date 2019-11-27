@@ -44,6 +44,10 @@ export class SpringServerDataSource extends ServerDataSource {
     return p;
   }
 
+  public setHttpParam(key: string, additionalParameter: any) {
+    this.conf.additonalParameters[key] = additionalParameter;
+  }
+
   // change: add search parameter (q=)
   protected requestElements(): Observable<any> {
     // reset page to 0 if new query is executed
@@ -63,7 +67,7 @@ export class SpringServerDataSource extends ServerDataSource {
   }
 
   // change: Spring Pageable does sorting this way: sort=<property>,<direction>
-  protected addSortRequestParams(httpParams: HttpParams): HttpParams {
+  protected addSortRequestParams (httpParams: HttpParams): HttpParams {
     if (this.sortConf) {
       this.sortConf.forEach(fieldConf => {
         //httpParams = httpParams.set(this.conf.sortFieldKey, fieldConf.field);
@@ -76,7 +80,7 @@ export class SpringServerDataSource extends ServerDataSource {
   }
 
   // change: Spring Pageable is zero-based
-  protected addPagerRequestParams(httpParams: HttpParams): HttpParams {
+  protected addPagerRequestParams (httpParams: HttpParams): HttpParams {
     if (this.pagingConf && this.pagingConf['page'] && this.pagingConf['perPage']) {
       const zeroBasedPage = parseInt(this.pagingConf['page']) - 1;
       httpParams = httpParams.set(this.conf.pagerPageKey, '' + zeroBasedPage);
@@ -89,11 +93,13 @@ export class SpringServerDataSource extends ServerDataSource {
   // change: allow additional request parameters
   protected createRequesParams(): HttpParams {
     let httpParams = super.createRequesParams();
-
     // add additional static params
     if (this.conf.additonalParameters) {
       Object.keys(this.conf.additonalParameters).forEach(key => {
-        httpParams = httpParams.set(key, this.conf.additonalParameters[key]);
+        //If we ever want to send nulls, this will prevent it
+        if (this.conf.additonalParameters[key]) {
+          httpParams = httpParams.set(key, this.conf.additonalParameters[key]);
+        }
       });
     }
 

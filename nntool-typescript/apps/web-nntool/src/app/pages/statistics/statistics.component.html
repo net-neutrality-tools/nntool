@@ -6,22 +6,29 @@
   </nntool-section-content>
 </nntool-section-intro>
 
-<nntool-section-features>
+<nntool-section-features *ngIf="filterResponse">
+   
+
   <nntool-section-content>
-    <!--<div class="flex--columns">
-      <div class="content--column">
-        <input type="text" />
-      </div>
-      <div class="content--column">
-        <input type="text" />
-      </div>
-      <div class="content--column">
-        <input type="text" />
-      </div>
-      <div class="content--column">-->
+
+    <div class="flex--columns" [formGroup]="dynamicForm">
+        <div class="content--column" formArrayName="filters" *ngFor="let filter of filterResponse.filters; let i = index">
+          <ng-container [ngSwitch]="filter.filter_type">
+            <select *ngSwitchCase="'DROPDOWN'" [formControlName]="i">
+              {{filter.default_value}}
+              <option *ngFor="let opt of filter.options" [value]="opt.value">
+                {{opt.label}}
+              </option>
+            </select>
+            <input *ngSwitchCase="'INPUT_TEXT'" type="text"/>
+            <input *ngSwitchCase="'INPUT_NUMBER'" type="number"/>
+            <div *ngSwitchDefault>
+              DEFAULT = {{item.value.filter_type}}</div>
+          </ng-container>
+        </div>
+    </div>
+
     <input type="text" />
-    <!--</div>
-    </div>-->
   </nntool-section-content>
 </nntool-section-features>
 
