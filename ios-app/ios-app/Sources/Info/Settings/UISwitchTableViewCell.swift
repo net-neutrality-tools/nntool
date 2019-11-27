@@ -1,4 +1,4 @@
-// MeasurementAgentKit: QoSMeasurementType.swift, created on 05.08.19
+// ios-app: UISwitchTableViewCell.swift, created on 13.11.19
 /*******************************************************************************
  * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
  *
@@ -16,19 +16,25 @@
  ******************************************************************************/
 
 import Foundation
+import UIKit
 
-public enum QoSMeasurementType: String, CaseIterable, Codable {
-    case tcp = "TCP"
-    case udp = "UDP"
-    case dns = "DNS"
-    case nonTransparentProxy = "NON_TRANSPARENT_PROXY"
-    case httpProxy = "HTTP_PROXY"
-    case voip = "VOIP"
-    case traceroute = "TRACEROUTE"
-    case website = "WEBSITE"
-    case sip = "SIP"
-    case echoProtocol = "ECHO_PROTOCOL"
+class UISwitchTableViewCell: UITableViewCell {
 
-    case mkitDash = "MKIT_DASH"
-    case mkitWebConnectivity = "MKIT_WEB_CONNECTIVITY"
+    let uiSwitch = UISwitch()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        initUiSwitch()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+
+        initUiSwitch()
+    }
+
+    private func initUiSwitch() {
+        accessoryView = uiSwitch
+    }
 }

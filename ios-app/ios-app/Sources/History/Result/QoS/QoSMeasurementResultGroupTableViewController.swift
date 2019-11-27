@@ -76,9 +76,9 @@ extension QoSMeasurementResultGroupTableViewController {
                 cell.detailTextLabel?.text = task.localizedDescription
 
                 if task.isSuccessful() {
-                    cell.accessoryView = UILabel.createIconLabel(icon: .check, textColor: .green)
+                    cell.accessoryView = UILabel.createIconLabel(icon: .check, textColor: COLOR_CHECKMARK_GREEN)
                 } else {
-                    cell.accessoryView = UILabel.createIconLabel(icon: .cross, textColor: .red)
+                    cell.accessoryView = UILabel.createIconLabel(icon: .cross, textColor: COLOR_CHECKMARK_RED)
                 }
             }
         }
@@ -88,9 +88,9 @@ extension QoSMeasurementResultGroupTableViewController {
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
-            return "Details" // TODO: translate
+            return R.string.localizable.historyQosGroupDetails()
         } else {
-            return "Tasks" // TODO: translate
+            return R.string.localizable.historyQosGroupTasks()
         }
     }
 

@@ -25,6 +25,10 @@ public class QoSTaskExecutor {
 
     var token: String?
 
+    enum QoSTaskExecutorError: Error {
+        case noObjectives
+    }
+
     ////
 
     public init() {
@@ -37,13 +41,6 @@ public class QoSTaskExecutor {
 
         let executor = CallbackQoSTaskExecutor(successCallback: successCallback, errorCallback: errorCallback)
         executor.startWithObjectives(objectives, token: token)
-
-        /*let delegate = CallbackDelegate(successCallback: successCallback, errorCallback: errorCallback)
-        
-        let executor = QoSTaskExecutor()
-        executor.delegate = delegate
-        
-        executor.startWithObjectives(objectives, token: token)*/
     }
 
     public func startWithObjectives(_ objectives: QoSObjectives, token: String? = "") {
@@ -59,9 +56,8 @@ public class QoSTaskExecutor {
         objectives.forEach { item in
             let (key, taskConfigurations) = item
 
-            // TODO: refactor localizedDescription to UI/Agent
             // TODO: refactor qos task creation into factory
-            guard let group = QoSTaskGroup.groupForKey(key, localizedDescription: key) else {
+            guard let group = QoSTaskGroup.groupForKey(key) else {
                 return
             }
 
@@ -95,8 +91,8 @@ public class QoSTaskExecutor {
 
         logger.debug(tasks)
 
-        if tasks.isEmpty { // if there are no tasks finish with empty result
-            delegate?.taskExecutorDidFinishWithResult([QoSTaskResult]())
+        if tasks.isEmpty { // Fail the measurement if there are no tasks
+            fail(error: QoSTaskExecutorError.noObjectives)
             return
         }
 
@@ -200,6 +196,7 @@ public class QoSTaskExecutor {
         if let p = prevGroup {
             finishOperation.addDependency(p)
         }
+
         queue.addOperation(finishOperation)
 
         WebsiteTaskUrlProtocol.start()
@@ -211,8 +208,8 @@ public class QoSTaskExecutor {
     ////
 
     private func fail(error: Error? = nil) {
-        cancel()
         delegate?.taskExecutorDidFail(self, withError: error)
+        cancel()
     }
 
     public func cancel() {

@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SpeedMeasurementGaugeView" customModule="ios_app" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SpeedMeasurementGaugeView" customModule="BEREC_nntool" customModuleProvider="target">
             <connections>
                 <outlet property="networkDetailLabel" destination="onQ-LI-TWF" id="LWm-Ke-7lk"/>
                 <outlet property="networkTypeLabel" destination="kBi-UX-95n" id="yy8-HP-uVz"/>
@@ -23,15 +21,15 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="394"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="El7-Va-Mxo" customClass="SpeedMeasurementGauge" customModule="ios_app" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="El7-Va-Mxo" customClass="SpeedMeasurementGauge" customModule="BEREC_nntool" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="9.5" width="375" height="375"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="El7-Va-Mxo" secondAttribute="height" multiplier="1:1" id="h4U-gn-wN2"/>
                     </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sKl-5i-9cr" customClass="CircularButton" customModule="ios_app" customModuleProvider="target">
-                    <rect key="frame" x="131.5" y="141" width="112.5" height="112.5"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sKl-5i-9cr" customClass="CircularButton" customModule="BEREC_nntool" customModuleProvider="target">
+                    <rect key="frame" x="138.5" y="148" width="98.5" height="98.5"/>
                     <color key="backgroundColor" red="0.5725490196078431" green="0.12156862745098039" blue="0.33725490196078434" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="sKl-5i-9cr" secondAttribute="height" multiplier="1:1" id="yeB-8G-gEz"/>
@@ -40,21 +38,30 @@
                     <state key="normal" title="GO">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
+                    <attributedString key="userComments">
+                        <fragment content="#bc-ignore!"/>
+                    </attributedString>
                     <connections>
                         <action selector="startButtonPrimaryActionTriggered" destination="-1" eventType="primaryActionTriggered" id="B0e-Jd-MoQ"/>
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Network" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kBi-UX-95n">
-                    <rect key="frame" x="143.5" y="283.5" width="88" height="29"/>
+                    <rect key="frame" x="143.5" y="276.5" width="88" height="29"/>
                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                     <color key="textColor" red="0.30196078430000001" green="0.31764705879999999" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
+                    <attributedString key="userComments">
+                        <fragment content="#bc-ignore!"/>
+                    </attributedString>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Network details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="onQ-LI-TWF">
-                    <rect key="frame" x="128" y="317.5" width="119.5" height="20.5"/>
+                    <rect key="frame" x="128" y="310.5" width="119.5" height="20.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.30196078430000001" green="0.31764705879999999" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
+                    <attributedString key="userComments">
+                        <fragment content="#bc-ignore!"/>
+                    </attributedString>
                 </label>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -65,8 +72,8 @@
                 <constraint firstItem="kBi-UX-95n" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="M8D-Bm-5Ka"/>
                 <constraint firstItem="onQ-LI-TWF" firstAttribute="top" secondItem="kBi-UX-95n" secondAttribute="bottom" constant="5" id="X8q-EM-mdd"/>
                 <constraint firstItem="El7-Va-Mxo" firstAttribute="width" secondItem="vUN-kp-3ea" secondAttribute="width" id="aBd-FE-rdS"/>
+                <constraint firstItem="sKl-5i-9cr" firstAttribute="height" secondItem="vUN-kp-3ea" secondAttribute="height" multiplier="0.25" id="gNe-ln-Crt"/>
                 <constraint firstItem="sKl-5i-9cr" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="hqp-m6-8NO"/>
-                <constraint firstItem="sKl-5i-9cr" firstAttribute="width" secondItem="vUN-kp-3ea" secondAttribute="width" multiplier="0.3" id="l8O-dj-0nM"/>
                 <constraint firstItem="onQ-LI-TWF" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="n0C-4O-I3U"/>
                 <constraint firstItem="El7-Va-Mxo" firstAttribute="centerX" secondItem="sKl-5i-9cr" secondAttribute="centerX" id="siP-DF-ABZ"/>
             </constraints>

@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -76,6 +77,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.RoamingType
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SubMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.DeviceRepository;
@@ -156,6 +158,9 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private ObjectMapper objectMapper;
+	
+	@Autowired
+	private MessageSource messageSource;
 
 	/*
 	 * (non-Javadoc)
@@ -231,7 +236,7 @@ public class CouchDbStorageService implements StorageService {
 			}
 		}
 		
-    doAdvancedQosEvaluations(measurement);
+		doAdvancedQosEvaluations(measurement);
 
 		try {
 			measurementRepository.save(measurement);
@@ -282,8 +287,7 @@ public class CouchDbStorageService implements StorageService {
 				try {
 					measurementAgentRepository.save(dbAgent);
 				} catch (Exception ex) {
-					ex.printStackTrace();
-					throw new StorageServiceException();
+					throw new StorageServiceException(ex);
 				}
 			}
 		} else {
@@ -294,7 +298,7 @@ public class CouchDbStorageService implements StorageService {
 			try {
 				measurementAgentRepository.save(agent);
 			} catch (Exception ex) {
-				throw new StorageServiceException();
+				throw new StorageServiceException(ex);
 			}
 			ret.setAgentUuid(agent.getUuid());
 		}
@@ -317,38 +321,38 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	@Override
-	public LmapTaskDto getTaskDto(final MeasurementTypeDto type, final LmapCapabilityTaskDto capability, final String settingsUuid) {
+	public LmapTaskDto getTaskDto(final MeasurementTypeDto type, final LmapCapabilityTaskDto capability, final String settingsUuid, boolean useIPv6) {
 		try {
 			final Settings settings = settingsRepository.findByUuid(settingsUuid);
+			final Map<MeasurementTypeDto, SubMeasurementSettings> measurementSettings = settings.getMeasurements();
 			
 			switch (type) {
 			case SPEED:
-				final SpeedMeasurementSettings speedSettings = (SpeedMeasurementSettings) settings.getMeasurements().get(type);
+				final SpeedMeasurementSettings speedSettings = (SpeedMeasurementSettings) measurementSettings.get(type);
 				MeasurementServer server = null;
 				if (capability != null && capability.getSelectedMeasurementPeerIdentifier() != null) {
 					try {
 						server = measurementPeerRepository.findByPublicIdentifier(capability.getSelectedMeasurementPeerIdentifier());
 					} catch (Exception ex) {
-						System.out.println(String.format("Failure obtaining requested measurement peer %s. Falling back to default peer.",
-								capability.getSelectedMeasurementPeerIdentifier()));
-						ex.printStackTrace();
+						logger.error("Failure obtaining requested measurement peer {}. Falling back to default peer.",
+								capability.getSelectedMeasurementPeerIdentifier(), ex);
 					}
 				}
 				if (server == null) {
 					server = measurementPeerRepository.findByUuid(speedSettings.getSpeedMeasurementServerUuid());
 				}
 				//TODO: load balancing needs to select correct measurement server
-				final LmapTaskDto ret = lmapTaskMapper.map(settings, server, type.toString());
+				final LmapTaskDto ret = lmapTaskMapper.map(settings, server, type.toString(), useIPv6);
 				return ret;
 			case QOS:
 				final List<QoSMeasurementObjective> qosObjectiveList = qosMeasurementObjectiveRepository.findAllByEnabled(true);
 				
-				if (settings.getMeasurements() != null && settings.getMeasurements().containsKey(MeasurementTypeDto.QOS)) {
-					final QoSMeasurementSettings qosSettings = (QoSMeasurementSettings) settings.getMeasurements().get(MeasurementTypeDto.QOS);
+				if (measurementSettings != null && measurementSettings.containsKey(MeasurementTypeDto.QOS)) {
+					final QoSMeasurementSettings qosSettings = (QoSMeasurementSettings) measurementSettings.get(MeasurementTypeDto.QOS);
 					return lmapTaskMapper.map(settings, measurementPeerRepository.findByUuid(
-							qosSettings.getQosServerUuid()), qosObjectiveList, type.toString());
+							qosSettings.getQosServerUuid()), qosObjectiveList, type.toString(), useIPv6);
 				} else {
-					return lmapTaskMapper.map(settings, null, qosObjectiveList, type.toString());
+					return lmapTaskMapper.map(settings, null, qosObjectiveList, type.toString(), useIPv6);
 				}
 				
 			default:
@@ -371,13 +375,12 @@ public class CouchDbStorageService implements StorageService {
 		ret.setQosTypeInfo(new LinkedHashMap<>());
 		for (QosMeasurementType type : QosMeasurementType.values()) {
 			final TranslatedQoSTypeInfo qosInfo = new TranslatedQoSTypeInfo();
-			qosInfo.setName(type.getNameKey()); //TODO: Messagesource
-			qosInfo.setDescription(type.getDescriptionKey()); //TODO: Messagesource
+			qosInfo.setName(messageSource.getMessage(type.getNameKey(), null, Locale.ENGLISH)); // TODO: locale, translation part has to be moved to controller
+			qosInfo.setDescription(messageSource.getMessage(type.getDescriptionKey(), null, Locale.ENGLISH)); // TODO: locale, translation part has to be moved to controller
 			try {
 				ret.getQosTypeInfo().put(QoSMeasurementTypeDto.valueOf(type.getValue().toUpperCase()),  qosInfo);				
 			} catch (Exception ex) {
-				logger.error("Trying to map invalid enum w/value: " + type.getValue());
-				ex.printStackTrace();
+				logger.error("Trying to map invalid enum w/value: " + type.getValue(), ex);
 			}
 		}
 		return ret;

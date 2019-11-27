@@ -22,8 +22,9 @@ class TracerouteTask: QoSTask {
 
     //
 
-    private var hopCount: Int?
     private var hopDetails: [JSON]?
+    private var maxHopsExceeded = false
+    private var timedOut = false
 
     ///
     enum CodingKeys4: String, CodingKey {
@@ -31,9 +32,9 @@ class TracerouteTask: QoSTask {
         case maxHops = "max_hops"
     }
 
-    override var statusKey: String? {
+    /*override var statusKey: String? {
         return "traceroute_result_status"
-    }
+    }*/
 
     override var objectiveTimeoutKey: String? {
         return "traceroute_objective_timeout"
@@ -45,8 +46,20 @@ class TracerouteTask: QoSTask {
         r["traceroute_objective_host"] = JSON(host)
         r["traceroute_objective_max_hops"] = JSON(maxHops)
 
-        r["traceroute_result_hops"] = JSON(hopDetails?.count)
-        r["traceroute_result_details"] = JSON(hopDetails)
+        if maxHopsExceeded {
+            r["traceroute_result_status"] = JSON("MAX_HOPS_EXCEEDED")
+        } else if timedOut {
+            r["traceroute_result_status"] = JSON(QoSTaskStatus.timeout.rawValue)
+        } else {
+            r["traceroute_result_status"] = JSON(QoSTaskStatus.ok.rawValue)
+        }
+
+        if let hops = hopDetails, hops.count > 0 {
+            r["traceroute_result_hops"] = JSON(hops.count)
+            r["traceroute_result_details"] = JSON(hops)
+        } else {
+            r["traceroute_result_status"] = JSON(QoSTaskStatus.error.rawValue)
+        }
 
         return r
     }
@@ -132,29 +145,37 @@ class TracerouteTask: QoSTask {
         var ipAddr: in_addr_t = 0
 
         hopDetails = [JSON]()
+        var hopResult: JSON?
 
         repeat {
             addr.sin_port = UInt16(minPort + ttl - 1).bigEndian
 
-            guard let hopResult = traceWithSendSock(sendSocket, recvSock: receiveSocket, ttl: ttl, port: bindAddr.sin_port, sockAddr: addr, ipAddr: &ipAddr) else {
-                break
+            hopResult = traceWithSendSock(sendSocket, recvSock: receiveSocket, ttl: ttl, port: bindAddr.sin_port, sockAddr: addr, ipAddr: &ipAddr)
+            if let hop = hopResult {
+                hopDetails?.append(hop)
             }
-
-            hopDetails?.append(hopResult)
 
             ttl += 1
             guard ttl <= maxHops else {
+                taskLogger.warning("Traceroute reached max hops (\(ttl) > \(maxHops))")
+                maxHopsExceeded = true
                 break
             }
 
             guard TimeHelper.currentTimeNs() - startedAt <= timeoutNs else {
+                taskLogger.warning("Traceroute timed out after \(timeoutNs)ns")
+                timedOut = true
                 break
             }
 
-        } while !isCancelled && ipAddr != addr.sin_addr.s_addr
+        } while hopResult != nil && !isCancelled && ipAddr != addr.sin_addr.s_addr
 
         close(sendSocket)
         close(receiveSocket)
+
+        if hopResult == nil {
+            hopDetails = nil
+        }
     }
 
     func traceWithSendSock(_ sendSock: Int32, recvSock: Int32, ttl: Int, port: in_port_t, sockAddr: sockaddr_in, ipAddr: inout in_addr_t) -> JSON? {

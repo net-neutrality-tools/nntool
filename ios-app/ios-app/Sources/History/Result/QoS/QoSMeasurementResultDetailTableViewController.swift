@@ -68,11 +68,11 @@ extension QoSMeasurementResultDetailTableViewController {
 
                 switch evaluation.outcome! {
                 case .ok:
-                    cell.accessoryView = UILabel.createIconLabel(icon: .check, textColor: .green)
+                    cell.accessoryView = UILabel.createIconLabel(icon: .check, textColor: COLOR_CHECKMARK_GREEN)
                 case .info:
-                    cell.accessoryView = UILabel.createIconLabel(icon: .about, textColor: .darkGray)
+                    cell.accessoryView = UILabel.createIconLabel(icon: .about, textColor: COLOR_CHECKMARK_DARK_GRAY)
                 case .fail:
-                    cell.accessoryView = UILabel.createIconLabel(icon: .cross, textColor: .red)
+                    cell.accessoryView = UILabel.createIconLabel(icon: .cross, textColor: COLOR_CHECKMARK_RED)
                 }
             }
         case 2:
@@ -90,11 +90,11 @@ extension QoSMeasurementResultDetailTableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "desc" // TODO: translate
+            return R.string.localizable.historyQosDetailDescription()
         case 1:
-            return "Results" // TODO: translate
+            return R.string.localizable.historyQosDetailResults()
         case 2:
-            return "Details" // TODO: translate
+            return R.string.localizable.historyQosDetailDetails()
         default:
             return nil
         }

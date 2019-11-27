@@ -1,10 +1,10 @@
 PODS:
   - Alamofire (4.8.2)
-  - BlueSocket (1.0.49)
+  - BlueSocket (1.0.52)
   - CocoaAsyncSocket (7.6.3)
   - CodableJSON (1.1.4)
-  - mkall (0.6.1)
-  - Nimble (8.0.1)
+  - mkall (0.6.2)
+  - Nimble (8.0.4)
   - nntool-shared-swift (0.0.1):
     - CodableJSON (~> 1.1.4)
     - Repeat (~> 0.5.7)
@@ -13,7 +13,7 @@ PODS:
   - ObjcExceptionBridging (1.0.1):
     - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
   - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
-  - Repeat (0.5.7)
+  - Repeat (0.5.8)
   - SwiftLint (0.31.0)
   - WKWebViewWithURLProtocol (0.1.0)
   - XCGLogger (7.0.0):
@@ -23,10 +23,10 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (~> 4.8.2)
-  - BlueSocket (~> 1.0.46)
+  - BlueSocket (~> 1.0.52)
   - CocoaAsyncSocket (~> 7.6.3)
-  - mkall (from `https://github.com/measurement-kit/mkall-ios.git`, tag `v0.6.1`)
-  - Nimble (~> 8.0.1)
+  - mkall (from `https://github.com/measurement-kit/mkall-ios.git`, tag `v0.6.2`)
+  - Nimble (~> 8.0.4)
   - nntool-shared-swift (from `../nntool-shared-swift`)
   - WKWebViewWithURLProtocol (~> 0.1.0)
 
@@ -46,29 +46,29 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   mkall:
     :git: https://github.com/measurement-kit/mkall-ios.git
-    :tag: v0.6.1
+    :tag: v0.6.2
   nntool-shared-swift:
     :path: "../nntool-shared-swift"
 
 CHECKOUT OPTIONS:
   mkall:
     :git: https://github.com/measurement-kit/mkall-ios.git
-    :tag: v0.6.1
+    :tag: v0.6.2
 
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
-  BlueSocket: 973993722fd579a62bb6469cdf7f1ccc8054796c
+  BlueSocket: 1acd943acb07b55905291d608649fcfbf8cbd57d
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
-  mkall: 18a23fed9a2615053019546cbdd514cb900bfb3e
-  Nimble: 45f786ae66faa9a709624227fae502db55a8bdd0
+  mkall: 95a9357950bdb90164651c1d08034327b8b9e019
+  Nimble: 18d5360282923225d62b09d781f63abc1a0111fc
   nntool-shared-swift: 7955a6c51917bcf2f42316eb259da095c80a7398
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
-  Repeat: 73c5ee602aed8f3c7bf1aa12d4cd0d3dc3edea0a
+  Repeat: 8e65710d09da68f06ed79e865b091ffdcc8d0279
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
   WKWebViewWithURLProtocol: f7f2b367c40680105794a068ed2bb2cd5922c27c
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: 7f435a2868dc56bb7899253c463d970e9b694612
+PODFILE CHECKSUM: 57798d0bda2950ede8dc9ea4cca111d082c2ec7b
 
 COCOAPODS: 1.7.1

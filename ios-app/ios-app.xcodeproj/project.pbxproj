@@ -10,6 +10,8 @@
 		028BCD1C5DB207312A53426F /* Pods_All_Speed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAC9DAE7413ECAE8092FFC80 /* Pods_All_Speed.framework */; };
 		4E39AF08D64A16ACF982E352 /* Pods_All_BEREC_nntool.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4042E14D8B38AC9EAFAC182E /* Pods_All_BEREC_nntool.framework */; };
 		B0A836C925FAEE0ED120983A /* Pods_All_Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3142E3D228324ABA957A394 /* Pods_All_Common.framework */; };
+		E0024634238C41D400681144 /* MeasurementHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0024633238C41D300681144 /* MeasurementHelper.swift */; };
+		E0024638238C501800681144 /* DeviceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0024637238C501800681144 /* DeviceHelper.swift */; };
 		E00F48D1225F764400EAD0C0 /* IASProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48D0225F764400EAD0C0 /* IASProgram.swift */; };
 		E00F48D3225F77C400EAD0C0 /* QoSProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48D2225F77C400EAD0C0 /* QoSProgram.swift */; };
 		E00F48E0225F7D2600EAD0C0 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E00F48D9225F7D2600EAD0C0 /* Common.framework */; };
@@ -47,9 +49,11 @@
 		E026A5992241271A00BACDB5 /* iosAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E026A5982241271A00BACDB5 /* iosAppTests.swift */; };
 		E026A5A42241271A00BACDB5 /* iosAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E026A5A32241271A00BACDB5 /* iosAppUITests.swift */; };
 		E029274522D60B01001FCAEC /* AttributedStringHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029274422D60B01001FCAEC /* AttributedStringHelper.swift */; };
+		E0293190237C4A5E009CAB3A /* UISwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029318F237C4A5E009CAB3A /* UISwitchTableViewCell.swift */; };
 		E044DE0222D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */; };
 		E044DE0E22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */; };
 		E044DE1022D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */; };
+		E0515B852385511C00DB799F /* MeasurementTypeSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0515B842385511C00DB799F /* MeasurementTypeSelectionTableViewController.swift */; };
 		E059879B232A3DE9004771C2 /* NetworkInfoReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = E059879A232A3DE9004771C2 /* NetworkInfoReachability.swift */; };
 		E059879E232BFA49004771C2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E059879C232BFA48004771C2 /* Localizable.strings */; };
 		E069C28F22F8143600344A67 /* PaginatedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E069C28E22F8143600344A67 /* PaginatedTableView.swift */; };
@@ -173,6 +177,8 @@
 		AFAED326C34595EF58CC0F9C /* Pods-All-Speed.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-Speed.debug.xcconfig"; path = "Target Support Files/Pods-All-Speed/Pods-All-Speed.debug.xcconfig"; sourceTree = "<group>"; };
 		B3142E3D228324ABA957A394 /* Pods_All_Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D329819C8E115D34CA521957 /* Pods-All-ios-app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-ios-app.release.xcconfig"; path = "Target Support Files/Pods-All-ios-app/Pods-All-ios-app.release.xcconfig"; sourceTree = "<group>"; };
+		E0024633238C41D300681144 /* MeasurementHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementHelper.swift; sourceTree = "<group>"; };
+		E0024637238C501800681144 /* DeviceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceHelper.swift; sourceTree = "<group>"; };
 		E00F48D0225F764400EAD0C0 /* IASProgram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IASProgram.swift; sourceTree = "<group>"; };
 		E00F48D2225F77C400EAD0C0 /* QoSProgram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSProgram.swift; sourceTree = "<group>"; };
 		E00F48D9225F7D2600EAD0C0 /* Common.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Common.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -217,9 +223,12 @@
 		E029274422D60B01001FCAEC /* AttributedStringHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedStringHelper.swift; sourceTree = "<group>"; };
 		E029274822D63CAB001FCAEC /* ios-app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ios-app.entitlements"; sourceTree = "<group>"; };
 		E029274E22D790EA001FCAEC /* add_build_infos.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = add_build_infos.sh; sourceTree = "<group>"; };
+		E029318F237C4A5E009CAB3A /* UISwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISwitchTableViewCell.swift; sourceTree = "<group>"; };
+		E0293192237DABE0009CAB3A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		E044DE0122D4861000BB70CE /* MeasurementPeerSelectionTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementPeerSelectionTableViewController.swift; sourceTree = "<group>"; };
 		E044DE0D22D4CA7A00BB70CE /* HomeScreenDeviceInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeScreenDeviceInfoView.xib; sourceTree = "<group>"; };
 		E044DE0F22D4EBD100BB70CE /* CLLocationCoordinate2D+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Format.swift"; sourceTree = "<group>"; };
+		E0515B842385511C00DB799F /* MeasurementTypeSelectionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasurementTypeSelectionTableViewController.swift; sourceTree = "<group>"; };
 		E059879A232A3DE9004771C2 /* NetworkInfoReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfoReachability.swift; sourceTree = "<group>"; };
 		E059879D232BFA48004771C2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E059879F232BFA64004771C2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -357,8 +366,8 @@
 			isa = PBXGroup;
 			children = (
 				E00F48D0225F764400EAD0C0 /* IASProgram.swift */,
-				E00F48D2225F77C400EAD0C0 /* QoSProgram.swift */,
 				E00F4AFE2266234200EAD0C0 /* IASProgramDelegate.swift */,
+				E00F48D2225F77C400EAD0C0 /* QoSProgram.swift */,
 				E00F4B002266235700EAD0C0 /* QoSProgramDelegate.swift */,
 			);
 			path = Programs;
@@ -586,6 +595,8 @@
 			isa = PBXGroup;
 			children = (
 				E0AF3DF022413BF200FDBFD1 /* SettingsTableViewController.swift */,
+				E0515B842385511C00DB799F /* MeasurementTypeSelectionTableViewController.swift */,
+				E029318F237C4A5E009CAB3A /* UISwitchTableViewCell.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -605,6 +616,7 @@
 				E0B9A33422498127002AB640 /* MeasurementViewController.swift */,
 				E0B9A370224B9A66002AB640 /* QoSMeasurementViewController.swift */,
 				E0E9BB0F226F57DA00146699 /* SpeedMeasurementPhase.swift */,
+				E0024633238C41D300681144 /* MeasurementHelper.swift */,
 			);
 			path = Measurement;
 			sourceTree = "<group>";
@@ -653,6 +665,7 @@
 				E069C28E22F8143600344A67 /* PaginatedTableView.swift */,
 				E0AA400322F96EEC0039DC2B /* CollectionViewFlowLayoutConfig.swift */,
 				E059879A232A3DE9004771C2 /* NetworkInfoReachability.swift */,
+				E0024637238C501800681144 /* DeviceHelper.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -767,6 +780,7 @@
 			buildConfigurationList = E026A5A82241271A00BACDB5 /* Build configuration list for PBXNativeTarget "BEREC_nntool" */;
 			buildPhases = (
 				1AB73F8B8DD73C0088EF14CF /* [CP] Check Pods Manifest.lock */,
+				E0293193237DAC60009CAB3A /* Run BartyCrouch */,
 				E0C4527322CDF87500FA4B44 /* Run R.swift */,
 				E026A57A2241271700BACDB5 /* Sources */,
 				E026A57B2241271700BACDB5 /* Frameworks */,
@@ -1086,6 +1100,24 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/ios-app/Scripts/add_build_infos.sh\"\n";
 		};
+		E0293193237DAC60009CAB3A /* Run BartyCrouch */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run BartyCrouch";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which $PODS_ROOT/BartyCrouch/bartycrouch > /dev/null; then\n    cd $PODS_ROOT/..\n    $PODS_ROOT/BartyCrouch/bartycrouch update -x\n    $PODS_ROOT/BartyCrouch/bartycrouch lint -x\nelse\n    echo \"warning: BartyCrouch not installed, please run 'pod install'\"\nfi\n";
+		};
 		E0B9A33222495BBB002AB640 /* Run swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1122,7 +1154,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/ios-app/Sources/Generated/R.generated.swift\"\n";
+			shellScript = "if which \"$PODS_ROOT/R.swift/rswift\" > /dev/null; then\n    \"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/ios-app/Sources/Generated/R.generated.swift\"\nelse\n    echo \"warning: R.swift not installed, please run 'pod install'\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1161,6 +1193,9 @@
 				E0B9A359224AB092002AB640 /* HomeScreenDeviceInfoView.swift in Sources */,
 				E0CC269D22E8CEE6005DEED0 /* HistoryItemCell.swift in Sources */,
 				E0EA84E72282C1B000EB73BF /* SpeedHelper.swift in Sources */,
+				E0024638238C501800681144 /* DeviceHelper.swift in Sources */,
+				E0024634238C41D400681144 /* MeasurementHelper.swift in Sources */,
+				E0293190237C4A5E009CAB3A /* UISwitchTableViewCell.swift in Sources */,
 				E0E9BB10226F57DA00146699 /* SpeedMeasurementPhase.swift in Sources */,
 				E0B9A343224A6017002AB640 /* AbstractTwoArcGaugeView.swift in Sources */,
 				E0B9A351224A8F65002AB640 /* NibView.swift in Sources */,
@@ -1168,6 +1203,7 @@
 				E0CC268722E772EE005DEED0 /* MeasurementResultTableViewController.swift in Sources */,
 				E0B9A36B224B812A002AB640 /* TermsAndConditionsInfoViewController.swift in Sources */,
 				E0B9A371224B9A66002AB640 /* QoSMeasurementViewController.swift in Sources */,
+				E0515B852385511C00DB799F /* MeasurementTypeSelectionTableViewController.swift in Sources */,
 				E0AF3DFA22413C9500FDBFD1 /* HistoryTableViewController.swift in Sources */,
 				E0AA400422F96EED0039DC2B /* CollectionViewFlowLayoutConfig.swift in Sources */,
 				E0C4526C22CB867600FA4B44 /* LogConfig.swift in Sources */,
@@ -1264,6 +1300,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				E026A5882241271700BACDB5 /* Base */,
+				E0293192237DABE0009CAB3A /* de */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";

@@ -80,7 +80,7 @@ extension UIBarButtonItem {
         setTitleTextAttributes(UIBarButtonItem.iconFontAttributes, for: .normal)
         setTitleTextAttributes(UIBarButtonItem.iconFontAttributes, for: .highlighted)
         setTitleTextAttributes(UIBarButtonItem.iconFontAttributes, for: .disabled)
-        setTitleTextAttributes(UIBarButtonItem.iconFontAttributes, for: .selected)
+        //setTitleTextAttributes(UIBarButtonItem.iconFontAttributes, for: .selected)
         setTitleTextAttributes(UIBarButtonItem.iconFontAttributes, for: .focused)
     }
 }

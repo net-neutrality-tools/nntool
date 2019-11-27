@@ -1,6 +1,5 @@
 package at.alladin.nettest.service.controller.web.api.v1;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ip.IpResponse;
+import at.alladin.nettest.shared.server.helper.IpAddressHelper;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
 
 /**
@@ -30,7 +30,7 @@ public class IpResource {
 
 	@SuppressWarnings("unused")
 	private final Logger logger = LoggerFactory.getLogger(IpResource.class);
-
+	
 	/**
 	 * Get client public IP address.
 	 * Returns public IP address and version of requesting client.
@@ -46,8 +46,6 @@ public class IpResource {
 	})*/
 	@GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<ApiResponse<IpResponse>> getIp(HttpServletRequest request) throws UnknownHostException {
-		// TODO: read other header fields to get forwarded ip from reverse proxy
-		final IpResponse r = new IpResponse(InetAddress.getByName(request.getRemoteAddr()));
-		return ResponseHelper.ok(r);
+		return ResponseHelper.ok(new IpResponse(IpAddressHelper.extractIpAddressFromHttpServletRequest(request)));
 	}
 }
