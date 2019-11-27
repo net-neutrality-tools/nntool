@@ -16,9 +16,10 @@
 
 package at.alladin.nntool.shared.qos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * 
@@ -29,33 +30,40 @@ import java.util.List;
 public class TracerouteResult extends AbstractResult {
 	
 	@JsonProperty("traceroute_objective_host")
+	@SerializedName("traceroute_objective_host")
 	private String url;
 	
 	@JsonProperty("traceroute_result_status")
+	@SerializedName("traceroute_result_status")
 	private String status;
 	
 	@JsonProperty("traceroute_result_duration")
+	@SerializedName("traceroute_result_duration")
 	private Long duration;
 		
 	@JsonProperty("traceroute_objective_timeout")
+	@SerializedName("traceroute_objective_timeout")
 	private Long timeout;
 	
 	@JsonProperty("traceroute_objective_max_hops")
+	@SerializedName("traceroute_objective_max_hops")
 	private Integer maxHops;
 	
 	@JsonProperty("traceroute_result_hops")
+	@SerializedName("traceroute_result_hops")
 	private Integer hops;
 	
 	@JsonProperty("traceroute_result_details")
+	@SerializedName("traceroute_result_details")
 	private List<PathElement> resultEntries;
 	
 	public final static class PathElement {
 		@JsonProperty("time")
-
+		@SerializedName("time")
 		long time;
 		
 		@JsonProperty("host")
-
+		@SerializedName("host")
 		String host;
 		
 		public PathElement() {

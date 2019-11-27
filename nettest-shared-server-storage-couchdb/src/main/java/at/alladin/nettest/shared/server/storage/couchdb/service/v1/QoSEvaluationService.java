@@ -126,7 +126,7 @@ public class QoSEvaluationService {
 			
 			result.setSummary(ret.getKeyToTranslationMap().get(result.getSummary()));
 			result.setDescription(ret.getKeyToTranslationMap().get(result.getDescription()));
-			
+						
 			final QoSMeasurementTypeDto typeDto = result.getType();
 			final Object summary = TestScriptInterpreter.interpret(result.getSummary(), qosTypeToFieldMap.get(typeDto), abstractResult, true, options);
 			final Object description = TestScriptInterpreter.interpret(result.getDescription(), qosTypeToFieldMap.get(typeDto), abstractResult, true, options);
