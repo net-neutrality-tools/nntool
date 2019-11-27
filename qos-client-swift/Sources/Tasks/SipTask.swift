@@ -80,42 +80,9 @@ class SipTask: QoSControlConnectionTask {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
 
-        var optionalPort = try? container.decodeIfPresent(UInt16.self, forKey: .port)
-        if optionalPort == nil {
-            if let portString = try? container.decodeIfPresent(String.self, forKey: .port) {
-                optionalPort = UInt16(portString)
-            }
-        }
-
-        var optionalCount = try? container.decodeIfPresent(Int.self, forKey: .count)
-        if optionalCount == nil {
-            if let countString = try? container.decodeIfPresent(String.self, forKey: .count) {
-                optionalCount = Int(countString)
-            }
-        }
-
-        var optionalCallDurationNs = try? container.decodeIfPresent(UInt64.self, forKey: .callDurationNs)
-        if optionalCallDurationNs == nil {
-            if let callDurationNsString = try? container.decodeIfPresent(String.self, forKey: .callDurationNs) {
-                optionalCallDurationNs = UInt64(callDurationNsString)
-            }
-        }
-
-        guard let port = optionalPort else {
-            throw ParseError.parseError("\"port\" could not be unmarshalled.")
-        }
-
-        guard let count = optionalCount else {
-            throw ParseError.parseError("\"count\" could not be unmarshalled.")
-        }
-
-        guard let callDurationNs = optionalCallDurationNs else {
-            throw ParseError.parseError("\"callDurationNs\" could not be unmarshalled.")
-        }
-
-        self.port = port
-        self.count = count
-        self.callDurationNs = callDurationNs
+        port = try container.decodeWithStringFallback(UInt16.self, forKey: .port)
+        count = try container.decodeWithStringFallback(Int.self, forKey: .count)
+        callDurationNs = try container.decodeWithStringFallback(UInt64.self, forKey: .callDurationNs)
 
         to = try container.decode(String.self, forKey: .to)
         from = try container.decode(String.self, forKey: .from)

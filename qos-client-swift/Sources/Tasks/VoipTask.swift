@@ -109,49 +109,31 @@ class VoipTask: QoSControlConnectionTask {
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
-
-        if let serverBitsPerSample = try container.decodeIfPresent(UInt8.self, forKey: .bitsPerSample) {
+        
+        portOut = container.decodeIfPresentWithStringFallback(UInt16.self, forKey: .portOut)
+        portIn = container.decodeIfPresentWithStringFallback(UInt16.self, forKey: .portIn)
+        
+        if let serverBitsPerSample = container.decodeIfPresentWithStringFallback(UInt8.self, forKey: .bitsPerSample) {
             bitsPerSample = serverBitsPerSample
         }
-
-        if let serverSampleRate = try container.decodeIfPresent(UInt16.self, forKey: .sampleRate) {
+        
+        if let serverSampleRate = container.decodeIfPresentWithStringFallback(UInt16.self, forKey: .sampleRate) {
             sampleRate = serverSampleRate
         }
 
-        var serverCallDurationNs = try? container.decodeIfPresent(UInt64.self, forKey: .callDurationNs)
-        if serverCallDurationNs == nil {
-            if let serverCallDurationNsString = try? container.decodeIfPresent(String.self, forKey: .callDurationNs) {
-                serverCallDurationNs = UInt64(serverCallDurationNsString)
-            }
+        if let serverCallDurationNs = container.decodeIfPresentWithStringFallback(UInt64.self, forKey: .callDurationNs) {
+            callDurationNs = serverCallDurationNs
         }
 
-        if let cdns = serverCallDurationNs {
-            callDurationNs = cdns
-        }
-
-        portOut = try? container.decodeIfPresent(UInt16.self, forKey: .portOut)
-        if portOut == nil {
-            if let portOutString = try? container.decodeIfPresent(String.self, forKey: .portOut) {
-                portOut = UInt16(portOutString)
-            }
-        }
-
-        portIn = try? container.decodeIfPresent(UInt16.self, forKey: .portIn)
-        if portIn == nil {
-            if let portInString = try? container.decodeIfPresent(String.self, forKey: .portIn) {
-                portIn = UInt16(portInString)
-            }
-        }
-
-        if let serverDelayNs = try container.decodeIfPresent(UInt64.self, forKey: .delayNs) {
+        if let serverDelayNs = container.decodeIfPresentWithStringFallback(UInt64.self, forKey: .delayNs) {
             delayNs = serverDelayNs
         }
 
-        if let serverPayloadType = try container.decodeIfPresent(UInt8.self, forKey: .payloadType) {
+        if let serverPayloadType = container.decodeIfPresentWithStringFallback(UInt8.self, forKey: .payloadType) {
             payloadType = serverPayloadType
         }
 
-        if let serverBufferNs = try container.decodeIfPresent(UInt64.self, forKey: .bufferNs) {
+        if let serverBufferNs = container.decodeIfPresentWithStringFallback(UInt64.self, forKey: .bufferNs) {
             bufferNs = serverBufferNs
         }
 
