@@ -75,11 +75,19 @@ extension QoSMeasurementResultGroupTableViewController {
                 cell.textLabel?.text = task.title
                 cell.detailTextLabel?.text = task.localizedDescription
 
+                var accessoryLabel: UILabel?
+
                 if task.isSuccessful() {
-                    cell.accessoryView = UILabel.createIconLabel(icon: .check, textColor: COLOR_CHECKMARK_GREEN)
+                    accessoryLabel = UILabel.createIconLabel(icon: .check, textColor: COLOR_CHECKMARK_GREEN)
                 } else {
-                    cell.accessoryView = UILabel.createIconLabel(icon: .cross, textColor: COLOR_CHECKMARK_RED)
+                    accessoryLabel = UILabel.createIconLabel(icon: .cross, textColor: COLOR_CHECKMARK_RED)
                 }
+
+                accessoryLabel?.sizeToFit()
+                accessoryLabel?.numberOfLines = 0
+                accessoryLabel?.textAlignment = .center
+
+                cell.accessoryView = accessoryLabel
             }
         }
 
