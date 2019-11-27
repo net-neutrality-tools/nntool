@@ -17,11 +17,13 @@
 package at.alladin.nntool.shared.qos.testscript;
 
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 
 import org.json.JSONArray;
@@ -42,6 +44,11 @@ public class SystemApi {
 	 * 
 	 */
 	private static final DecimalFormat DEFAULT_DECIMAL_FORMAT = new DecimalFormat("##0.00");
+	
+	/**
+	 * 
+	 */
+	private static final DecimalFormat DEFAULT_PERCENT_FORMAT = new DecimalFormat("0.#");
 	
 	/**
 	 * 
@@ -170,16 +177,32 @@ public class SystemApi {
 	 */
 	public String parseTraceroute(ArrayList<TracerouteResult.PathElement> path) { // TODO: is this one used?
 		StringBuilder sb = new StringBuilder();
-		for (TracerouteResult.PathElement e : path) {
-			sb.append(anonymizeIp(e.getHost()));
-			sb.append("  time=");
-			try {
-				sb.append(DEFAULT_DECIMAL_FORMAT.format((float)e.getTime() / 1000000f));
-				sb.append("ms\n");
+		for (Object ele : path) {
+			if (ele instanceof Map) {
+				Map<String, Object> e = (Map<String, Object>) ele;
+				sb.append(anonymizeIp(String.valueOf(e.get("host"))));
+				sb.append("  time=");
+				try {
+					sb.append(DEFAULT_DECIMAL_FORMAT.format(Float.valueOf(String.valueOf(e.get("time"))) / 1000000f));
+					sb.append("ms\n");
+				}
+				catch (Exception ex) {
+					sb.append(e.get("time"));
+					sb.append("ns\n");
+				}				
 			}
-			catch (Exception ex) {
-				sb.append(e.getTime());
-				sb.append("ns\n");
+			else if (ele instanceof TracerouteResult.PathElement) {
+				TracerouteResult.PathElement e = (TracerouteResult.PathElement) ele;
+				sb.append(anonymizeIp(e.getHost()));
+				sb.append("  time=");
+				try {
+					sb.append(DEFAULT_DECIMAL_FORMAT.format((float)e.getTime() / 1000000f));
+					sb.append("ms\n");
+				}
+				catch (Exception ex) {
+					sb.append(e.getTime());
+					sb.append("ns\n");
+				}
 			}
 		}
 		
@@ -238,6 +261,23 @@ public class SystemApi {
         randomUrl.append(suffix);
 
         return randomUrl.toString();
+	}
+	
+	/**
+	 * 
+	 * @param ratio
+	 * @return
+	 */
+	public String formatRatio(Object ratio) {
+		try {
+			BigDecimal number = new BigDecimal(String.valueOf(ratio));
+			return DEFAULT_PERCENT_FORMAT.format(number.multiply(new BigDecimal(100)).doubleValue());
+		}
+		catch (final Exception e) {
+			e.printStackTrace();
+		}
+		
+		return String.valueOf(ratio);
 	}
 	
 	/*public static void main(String[] args) {

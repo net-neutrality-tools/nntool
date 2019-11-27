@@ -64,7 +64,7 @@ public class RequestAgentIpTask extends AsyncTask<Void, Void, Map<IpResponse.IpV
         }
     }
 
-    private InetAddress getLocalInetAddress (final ControllerConnection controllerConnection, final IpResponse.IpVersion version) {
+    private InetAddress getLocalInetAddress(final ControllerConnection controllerConnection, final IpResponse.IpVersion version) {
         try (Socket s = new Socket()) {
             InetSocketAddress address = null;
             switch (version) {
