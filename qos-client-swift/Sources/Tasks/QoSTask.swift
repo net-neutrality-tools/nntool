@@ -8,10 +8,6 @@ public typealias QoSTaskCompletionCallback = (QoSTaskResult) -> Void
 
 class QoSTask: Operation, Codable {
 
-    enum ParseError: Error {
-        case parseError(String)
-    }
-
     var taskLogger: QoSLogger!
 
     let progress = Progress(totalUnitCount: 100)
@@ -78,14 +74,14 @@ class QoSTask: Operation, Codable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        if let uid = try? UInt(container.decode(String.self, forKey: .uid)) {
-            self.uid = uid
-        } else {
-            uid = try container.decode(UInt.self, forKey: .uid)
-        }
+        uid = try container.decodeWithStringFallback(UInt.self, forKey: .uid)
 
         concurrencyGroup = try container.decode(UInt.self, forKey: .concurrencyGroup)
         type = try container.decode(String.self, forKey: .type)
+        
+        if let serverTimeoutNs = container.decodeIfPresentWithStringFallback(UInt64.self, forKey: .timeoutNs) {
+            timeoutNs = serverTimeoutNs
+        }
 
         super.init()
 
@@ -103,7 +99,7 @@ class QoSTask: Operation, Codable {
         case uid = "qos_test_uid"
         case concurrencyGroup = "concurrency_group"
         case type = "qostest"
-        case timeout = "timeout"
+        case timeoutNs = "timeout"
     }
 
 // MARK: - Operation

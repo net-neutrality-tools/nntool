@@ -15,7 +15,7 @@ class TracerouteTask: QoSTask {
     private static let hopTimeoutS = 2
     private static var hopTimeoutNs = UInt64(hopTimeoutS) * NSEC_PER_SEC
 
-    private let shouldMaskIpAddress = true
+    private let shouldMaskIpAddress = false // IP addresses will be anonymized on the server
     private let ipAddressMaskParts = 1
 
     private let minPort = 32768
@@ -69,7 +69,7 @@ class TracerouteTask: QoSTask {
 
         host = try container.decode(String.self, forKey: .host)
 
-        if let serverMaxHops = try container.decodeIfPresent(UInt8.self, forKey: .maxHops) {
+        if let serverMaxHops = container.decodeIfPresentWithStringFallback(UInt8.self, forKey: .maxHops) {
             maxHops = serverMaxHops
         }
 
@@ -77,6 +77,8 @@ class TracerouteTask: QoSTask {
     }
 
     override func taskMain() {
+        progress.totalUnitCount = Int64(maxHops)
+        
         let startedAt = TimeHelper.currentTimeNs()
 
         var addr = sockaddr_in()
@@ -153,6 +155,7 @@ class TracerouteTask: QoSTask {
             hopResult = traceWithSendSock(sendSocket, recvSock: receiveSocket, ttl: ttl, port: bindAddr.sin_port, sockAddr: addr, ipAddr: &ipAddr)
             if let hop = hopResult {
                 hopDetails?.append(hop)
+                progress.completedUnitCount += 1
             }
 
             ttl += 1
@@ -176,6 +179,8 @@ class TracerouteTask: QoSTask {
         if hopResult == nil {
             hopDetails = nil
         }
+        
+        progress.completedUnitCount = progress.totalUnitCount
     }
 
     func traceWithSendSock(_ sendSock: Int32, recvSock: Int32, ttl: Int, port: in_port_t, sockAddr: sockaddr_in, ipAddr: inout in_addr_t) -> JSON? {
@@ -284,7 +289,7 @@ class TracerouteTask: QoSTask {
 
                             let hopHost = shouldMaskIpAddress ? maskIp(ip: remoteAddress, parts: ipAddressMaskParts): remoteAddress
 
-                            taskLogger.info("Adding hop (host=\"\(hopHost)\", time=\(hopDurationNs)")
+                            taskLogger.info("Adding hop (host=\"\(hopHost)\", time=\(hopDurationNs))")
 
                             return JSON([
                                 "host": JSON(hopHost),

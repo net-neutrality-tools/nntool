@@ -11,18 +11,9 @@ class QoSControlConnectionTask: QoSTask {
 
         let host = try container.decode(String.self, forKey: .host)
 
-        var optionalPort = try? container.decodeIfPresent(UInt16.self, forKey: .port)
-        if optionalPort == nil {
-            if let portString = try? container.decodeIfPresent(String.self, forKey: .port) {
-                optionalPort = UInt16(portString)
-            }
-        }
+        let serverPort = try container.decodeWithStringFallback(UInt16.self, forKey: .port)
 
-        guard let port = optionalPort else {
-            throw ParseError.parseError("\"server_port\" could not be unmarshalled.")
-        }
-
-        controlConnectionParams = ControlConnectionParameters(host: host, port: port)
+        controlConnectionParams = ControlConnectionParameters(host: host, port: serverPort)
 
         try super.init(from: decoder)
     }

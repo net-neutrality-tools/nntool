@@ -65,3 +65,30 @@ public class JsonHelper {
         }
     }
 }
+
+public extension KeyedDecodingContainer {
+ 
+    enum ParseError: Error {
+        case parseError(String)
+    }
+    
+    public func decodeIfPresentWithStringFallback<T: Decodable>(_ type: T.Type, forKey key: KeyedDecodingContainer<K>.Key) -> T? where T: LosslessStringConvertible {
+        
+        if let val = try? decodeIfPresent(type, forKey: key) {
+            return val
+        } else if let str = try? decodeIfPresent(String.self, forKey: key), let val = T(str) {
+            return val
+        }
+        
+        return nil
+    }
+    
+    public func decodeWithStringFallback<T: Decodable>(_ type: T.Type, forKey key: KeyedDecodingContainer<K>.Key) throws -> T where T: LosslessStringConvertible {
+        
+        if let val = decodeIfPresentWithStringFallback(type, forKey: key) {
+            return val
+        } else {
+            throw ParseError.parseError("Could not parse \(key)")
+        }
+    }
+}
