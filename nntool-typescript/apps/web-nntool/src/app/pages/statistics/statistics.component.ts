@@ -1,15 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { SpringServerDataSource } from '../../@core/services/table/spring-server.data-source';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { StatisticApiService } from '../../@core/services/statistic-api.service';
+import { ProviderFilterResponse, ProviderFilterResponseWrapper } from '../../@core/models/provider-filter-response';
+import { DynamicFormComponent, FormValues } from '../../@core/components/dynamic-form/dynamic-form.component';
 
 @Component({
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.less']
 })
-export class StatisticsComponent {
+export class StatisticsComponent implements OnInit {
   public settings = {
     //hideSubHeader: false,
     columns: {
@@ -77,10 +79,35 @@ export class StatisticsComponent {
 
   constructor(
     private logger: NGXLogger,
-    private router: Router,
-    private translationService: TranslateService,
     private statisticApiService: StatisticApiService
   ) {
     this.tableSource = this.statisticApiService.getProviderStatisticsServerDataSource();
+  }
+
+  public filterResponse: ProviderFilterResponse;
+
+  @ViewChild(DynamicFormComponent, { static: true}) public dynamo: DynamicFormComponent;
+
+  public ngOnInit(): void {
+    
+    this.statisticApiService.getProviderFilterConfiguration().subscribe(
+      (dataWrapper: ProviderFilterResponseWrapper) => {
+        this.filterResponse = dataWrapper.data;
+      },
+      (error: string) => {
+        this.logger.error(error);
+      }
+    );    
+  }
+
+  onFormChangeCallback($event: FormValues) {
+    if (this.tableSource && $event && $event.filters) {
+      this.filterResponse.filters.forEach((filter, index) => {
+        if ($event.filters[index]) {
+          this.tableSource.setHttpParam(filter.key, $event.filters[index]);
+        }
+      });
+      this.tableSource.refresh();
+    }
   }
 }

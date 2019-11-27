@@ -6,22 +6,18 @@
   </nntool-section-content>
 </nntool-section-intro>
 
-<nntool-section-features>
+<nntool-section-features *ngIf="filterResponse">
+   
+
   <nntool-section-content>
-    <!--<div class="flex--columns">
-      <div class="content--column">
-        <input type="text" />
-      </div>
-      <div class="content--column">
-        <input type="text" />
-      </div>
-      <div class="content--column">
-        <input type="text" />
-      </div>
-      <div class="content--column">-->
+
+    <dynamic-form 
+      [filterResponse]="filterResponse"
+      (formChangeCallback)="onFormChangeCallback($event)"
+      >
+    </dynamic-form>
+
     <input type="text" />
-    <!--</div>
-    </div>-->
   </nntool-section-content>
 </nntool-section-features>
 
