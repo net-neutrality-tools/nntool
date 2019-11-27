@@ -1,6 +1,6 @@
 <div class="flex--columns" [formGroup]="dynamicForm">
     <ng-container *ngIf="filterResponse">
-        <div class="content--column" formArrayName="filters" *ngFor="let filter of filterResponse.filters; let i = index">
+        <div style="width: 49%;" formArrayName="filters" *ngFor="let filter of filterResponse.filters; let i = index">
             <ng-container [ngSwitch]="filter.filter_type">
                 <select *ngSwitchCase="'DROPDOWN'" [formControlName]="i">
                     <option *ngFor="let opt of filter.options" [value]="opt.value">
