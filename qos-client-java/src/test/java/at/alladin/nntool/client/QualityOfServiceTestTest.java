@@ -113,13 +113,13 @@ public class QualityOfServiceTestTest {
         websiteTaskDesc = new TaskDesc("host", 80, false, "token", 1, 1, 1, 1, new HashMap<String, Object>(), ClientHolder.TASK_WEBSITE);
 
         Map<String, Object> echoParams = new HashMap<>();
-        echoParams.put(AbstractEchoProtocolTask.RESULT_PROTOCOL, AbstractEchoProtocolTask.PROTOCOL_TCP);
+        echoParams.put(AbstractEchoProtocolTask.PROTOCOL, AbstractEchoProtocolTask.PROTOCOL_TCP);
         echoTcpTaskDesc = new TaskDesc("host", 80, false, "token", 1, 1, 1, 1, echoParams, ClientHolder.TASK_ECHO_PROTOCOL);
         echoParams = new HashMap<>();
-        echoParams.put(AbstractEchoProtocolTask.RESULT_PROTOCOL, AbstractEchoProtocolTask.PROTOCOL_UDP);
+        echoParams.put(AbstractEchoProtocolTask.PROTOCOL, AbstractEchoProtocolTask.PROTOCOL_UDP);
         echoUdpTaskDesc = new TaskDesc("host", 80, false, "token", 1, 1, 1, 1, echoParams, ClientHolder.TASK_ECHO_PROTOCOL);
         echoParams = new HashMap<>();
-        echoParams.put(AbstractEchoProtocolTask.RESULT_PROTOCOL, "Not an echo protocol");
+        echoParams.put(AbstractEchoProtocolTask.PROTOCOL, "Not an echo protocol");
         echoUnknownTaskDesc = new TaskDesc("host", 80, false, "token", 1, 1, 1, 1, echoParams, ClientHolder.TASK_ECHO_PROTOCOL);
         echoNoProtocolTaskDesc = new TaskDesc("host", 80, false, "token", 1, 1, 1, 1, new HashMap<String, Object>(), ClientHolder.TASK_ECHO_PROTOCOL);
 

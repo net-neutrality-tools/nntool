@@ -31,6 +31,7 @@ import at.alladin.nettest.service.collector.service.MeasurementResultService;
 import at.alladin.nettest.service.collector.service.ResultPreProcessService;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
+import at.alladin.nettest.shared.server.opendata.service.OpenDataMeasurementService;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 
 /**
@@ -56,11 +57,15 @@ public class MeasurementResultResourceIntegrationTest {
 	@MockBean
 	private ResultPreProcessService resultPreProcessService;
 	
+	@MockBean
+	private OpenDataMeasurementService openDataMeasurementService;
+	
 	@Before
 	public void setup() {
 		final MeasurementResultService measurementResultService = new MeasurementResultService();
 		ReflectionTestUtils.setField(measurementResultService, "storageService", storageService);
 		ReflectionTestUtils.setField(measurementResultService, "collectorServiceProperties", collectorServiceProperties);
+		ReflectionTestUtils.setField(measurementResultService, "openDataMeasurementService", openDataMeasurementService);
 		
 		final MeasurementResultResource controller = new MeasurementResultResource();
 		ReflectionTestUtils.setField(controller, "measurementResultService", measurementResultService);
