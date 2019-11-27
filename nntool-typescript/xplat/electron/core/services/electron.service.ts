@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+/*import { Injectable } from '@angular/core';
 import { WindowService } from '@nntool-typescript/core';
 import { isElectron } from '@nntool-typescript/utils';
 import * as childProcess from 'child_process';
@@ -33,4 +33,4 @@ export class ElectronService {
 
     this._ipc.send(channel, ...args);
   }
-}
+}*/

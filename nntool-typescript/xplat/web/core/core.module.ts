@@ -5,7 +5,6 @@ import { BrowserModule } from '@angular/platform-browser';
 // libs
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { CoreModule, PlatformLanguageToken, PlatformWindowToken } from '@nntool-typescript/core';
 import { throwIfAlreadyLoaded } from '@nntool-typescript/utils';
 
 // bring in custom web services here...
@@ -29,16 +28,6 @@ export function createTranslateLoader(http: HttpClient) {
   imports: [
     BrowserModule,
     HttpClientModule,
-    CoreModule.forRoot([
-      {
-        provide: PlatformLanguageToken,
-        useFactory: platformLangFactory
-      },
-      {
-        provide: PlatformWindowToken,
-        useFactory: winFactory
-      }
-    ]),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

@@ -1,17 +1,13 @@
 import { NgModule } from '@angular/core';
-
-// libs
-import { environment } from '@nntool-typescript/core';
-
-// app
-import { CoreModule } from './core/core.module';
-import { SharedModule } from './features/shared/shared.module';
-
 import { AppComponent } from './app.component';
+import { routes } from './app.routes';
+import { RouterModule } from '@angular/router';
+import { AppSharedModule } from 'libs/module';
+import { PortalHomeComponent } from './portal-home/portal-home.component';
 
 @NgModule({
-  imports: [CoreModule, SharedModule],
-  declarations: [AppComponent],
+  imports: [AppSharedModule, RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload', useHash: false })],
+  declarations: [AppComponent, PortalHomeComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

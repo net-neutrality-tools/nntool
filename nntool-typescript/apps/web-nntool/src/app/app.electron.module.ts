@@ -1,10 +1,10 @@
-import { NntoolElectronCoreModule } from '@nntool-typescript/electron';
-import { AppComponent } from './app.component';
 import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
 import { routes } from './app.routes';
 import { RouterModule } from '@angular/router';
-import { AppSharedModule } from './app.shared.module';
+import { AppSharedModule } from 'libs/module';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { NntoolElectronCoreModule } from '@nntool-typescript/electron';
 
 @NgModule({
   imports: [
@@ -14,6 +14,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
   ],
   providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }],
   exports: [RouterModule],
+  declarations: [AppComponent],
   bootstrap: [AppComponent]
 })
 export class AppElectronModule {}

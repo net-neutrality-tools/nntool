@@ -59,7 +59,7 @@
     "@ngrx/store": "^8.2.0",
     "@ngx-translate/core": "~11.0.1",
     "@ngx-translate/http-loader": "~4.0.0",
-    "@nntool-typescript/scss": "file:libs/scss",
+    "@nntool-typescript/less": "file:libs/less",
     "@nntool-typescript/web": "file:xplat/web",
     "@nrwl/nx": "^7.8.7",
     "ng2-completer": "^3.0.2",
