@@ -69,6 +69,11 @@ public class HistoryListAdapter extends ArrayAdapter<BriefMeasurementResponse> {
             viewHolder.up.setText(m.getThroughputAvgUploadBps() != null ?
                     speedFormat.format(m.getThroughputAvgUploadBps() / 1e6) : getContext().getString(R.string.not_available_short));
         }
+        else {
+            viewHolder.ping.setText("");
+            viewHolder.down.setText("");
+            viewHolder.up.setText("");
+        }
         
         if (item.getNetworkTypeName() != null) {
             viewHolder.connection.setText(item.getNetworkTypeName());

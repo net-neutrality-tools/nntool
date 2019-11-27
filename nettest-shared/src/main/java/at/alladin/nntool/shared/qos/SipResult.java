@@ -59,13 +59,13 @@ public class SipResult extends AbstractResult {
 	private String result;
 	
 	@JsonProperty(SipTaskHelper.PARAM_RESULT_CCSR)	
-	private Double callCompletionSuccessRate;
+	private Object callCompletionSuccessRate;
 
 	@JsonProperty(SipTaskHelper.PARAM_RESULT_CSSR)	
-	private Double callSetupSuccessRate;
+	private Object callSetupSuccessRate;
 
 	@JsonProperty(SipTaskHelper.PARAM_RESULT_DCR)	
-	private Double callDroppedCallRate;
+	private Object callDroppedCallRate;
 
 	/**
 	 * 
@@ -106,7 +106,7 @@ public class SipResult extends AbstractResult {
 		this.result = result;
 	}
 
-	public Double getCallCompletionSuccessRate() {
+	public Object getCallCompletionSuccessRate() {
 		return callCompletionSuccessRate;
 	}
 
@@ -114,7 +114,7 @@ public class SipResult extends AbstractResult {
 		this.callCompletionSuccessRate = callCompletionSuccessRate;
 	}
 
-	public Double getCallSetupSuccessRate() {
+	public Object getCallSetupSuccessRate() {
 		return callSetupSuccessRate;
 	}
 
@@ -122,7 +122,7 @@ public class SipResult extends AbstractResult {
 		this.callSetupSuccessRate = callSetupSuccessRate;
 	}
 
-	public Double getCallDroppedCallRate() {
+	public Object getCallDroppedCallRate() {
 		return callDroppedCallRate;
 	}
 

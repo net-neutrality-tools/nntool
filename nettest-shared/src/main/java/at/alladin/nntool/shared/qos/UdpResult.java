@@ -71,6 +71,12 @@ public class UdpResult extends AbstractResult {
 	@JsonProperty("udp_result_out_packet_loss_rate")
 	private Object outgoingPlr;
 
+	@JsonProperty("udp_result_out_rtt_avg_ns")
+	private Object outRttAvgNs;
+
+	@JsonProperty("udp_result_in_rtt_avg_ns")
+	private Object inRttAvgNs;
+
 	/**
 	 * 
 	 */
@@ -164,6 +170,22 @@ public class UdpResult extends AbstractResult {
 
 	public void setOutgoingPlr(Object outgoingPlr) {
 		this.outgoingPlr = outgoingPlr;
+	}
+
+	public Object getOutRttAvgNs() {
+		return outRttAvgNs;
+	}
+
+	public void setOutRttAvgNs(Object outRttAvgNs) {
+		this.outRttAvgNs = outRttAvgNs;
+	}
+
+	public Object getInRttAvgNs() {
+		return inRttAvgNs;
+	}
+
+	public void setInRttAvgNs(Object inRttAvgNs) {
+		this.inRttAvgNs = inRttAvgNs;
 	}
 
 	@Override
