@@ -17,6 +17,7 @@ import { MeasurementClassifiedValueComponent } from './measurement/classified.va
 import { MeasurementFormattedValueComponent } from './measurement/formatted.value.component';
 import { FooterComponent } from './footer/footer.component';
 import { ShareLinkComponent } from './share-link/share-link.component';
+import { DynamicFormComponent } from './dynamic-form/dynamic-form.component';
 
 const COMPONENTS = [
   ResultTableComponent,
@@ -34,7 +35,8 @@ const COMPONENTS = [
   MeasurementClassifiedValueComponent,
   MeasurementFormattedValueComponent,
   FooterComponent,
-  ShareLinkComponent
+  ShareLinkComponent,
+  DynamicFormComponent
 ];
 
 @NgModule({

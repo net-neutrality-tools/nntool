@@ -1,11 +1,11 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { SpringServerDataSource } from '../../@core/services/table/spring-server.data-source';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { StatisticApiService } from '../../@core/services/statistic-api.service';
-import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
 import { ProviderFilterResponse, ProviderFilterResponseWrapper } from '../../@core/models/provider-filter-response';
+import { DynamicFormComponent, FormValues } from '../../@core/components/dynamic-form/dynamic-form.component';
 
 @Component({
   templateUrl: './statistics.component.html',
@@ -79,40 +79,20 @@ export class StatisticsComponent implements OnInit {
 
   constructor(
     private logger: NGXLogger,
-    private router: Router,
-    private translationService: TranslateService,
-    private statisticApiService: StatisticApiService,
-    private formBuilder: FormBuilder
+    private statisticApiService: StatisticApiService
   ) {
     this.tableSource = this.statisticApiService.getProviderStatisticsServerDataSource();
   }
 
   public filterResponse: ProviderFilterResponse;
 
-  public dynamicForm: FormGroup;
+  @ViewChild(DynamicFormComponent, { static: true}) public dynamo: DynamicFormComponent;
 
   public ngOnInit(): void {
     
     this.statisticApiService.getProviderFilterConfiguration().subscribe(
       (dataWrapper: ProviderFilterResponseWrapper) => {
         this.filterResponse = dataWrapper.data;
-        this.dynamicForm = this.formBuilder.group({
-          filters: this.formBuilder.array([this.formBuilder.control('')])
-        });
-
-        for (let filter of this.filterResponse.filters) {
-          let control: FormControl = this.formBuilder.control('');
-          (this.dynamicForm.get('filters') as FormArray).push(control);
-        }
-
-        this.dynamicForm.valueChanges.subscribe(val => {
-          this.onFormChangeCallback(val);
-        });
-
-        this.filterResponse.filters.forEach((filter, index) => {
-          (this.dynamicForm.get("filters") as FormArray).at(index).setValue(filter.default_value);
-        });
-
       },
       (error: string) => {
         this.logger.error(error);
@@ -120,15 +100,14 @@ export class StatisticsComponent implements OnInit {
     );    
   }
 
-  onFormChangeCallback(form: any) {
-    if (form && form.filters) {
+  onFormChangeCallback($event: FormValues) {
+    if (this.tableSource && $event && $event.filters) {
       this.filterResponse.filters.forEach((filter, index) => {
-        if (form.filters[index] && form.filters[index] !== "") {
-          this.tableSource.setHttpParam(filter.key, form.filters[index]);
+        if ($event.filters[index]) {
+          this.tableSource.setHttpParam(filter.key, $event.filters[index]);
         }
       });
       this.tableSource.refresh();
     }
   }
-
 }
