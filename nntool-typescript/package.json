@@ -28,6 +28,7 @@
     "clean": "npx rimraf hooks node_modules package-lock.json && npm i",
     "start.web.nntool": "npm run postinstall.web && ng serve web-nntool",
     "start.web.portal": "ng serve web-portal",
+    "build.web.portal": "npm run postinstall.web && ng build web-portal",
     "postinstall": "electron-rebuild install-app-deps",
     "postinstall.electron": "node tools/electron/postinstall && npm run build:ias:if-not-exists",
     "postinstall.web": "node tools/web/postinstall && npm run build:ias:if-not-exists",
