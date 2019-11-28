@@ -18,14 +18,21 @@
 import Foundation
 import UIKit
 import MeasurementAgentKit
+import MessageUI
 
 ///
 class InfoTableViewController: UITableViewController {
+
+    @IBOutlet private var websiteTableViewCell: UITableViewCell?
+    @IBOutlet private var emailTableViewCell: UITableViewCell?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         navigationItem.applyIconFontAttributes()
+
+        websiteTableViewCell?.detailTextLabel?.text = INFO_WEBSITE_URL
+        emailTableViewCell?.detailTextLabel?.text = INFO_EMAIL
     }
 
     ///
@@ -46,48 +53,66 @@ class InfoTableViewController: UITableViewController {
             }
         } else if indexPath.section == 2 {
             if indexPath.row == 0 {
-                cell.detailTextLabel?.text = MEASUREMENT_AGENT.uuid ?? "n/a"
+                cell.detailTextLabel?.text = MEASUREMENT_AGENT.uuid ?? R.string.localizable.generalNotAvailable()
             } else if indexPath.row == 1 {
-                let (versionStr, versionInt, buildDate) = BundleHelper.getAppVersionInfo()
-                let gitInfo = BundleHelper.getBundleGitInfoString()
-
-                if let vs = versionStr, let vi = versionInt, let bd = buildDate, let gi = gitInfo {
-                    cell.detailTextLabel?.text = "\(vs) (\(vi), \(bd)), \(gi)"
-                } else {
-                    cell.detailTextLabel?.text = "n/a"
-                }
+                cell.detailTextLabel?.text = BundleHelper.buildAppVersionInfoString() ?? R.string.localizable.generalNotAvailable()
             }
         }
 
         return cell
     }
 
-    /*override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 1 {
-            if indexPath.row == 0 { // website tapped
-                
-                
-                return
-            } else if indexPath.row == 1 { // email tapped
-                
-                return
-            }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.section == 1 else {
+            super.tableView(tableView, didSelectRowAt: indexPath)
+            return
         }
-        
-        super.tableView(tableView, didSelectRowAt: indexPath)
-    }*/
 
+        switch indexPath.row {
+        case 0: // website tapped
+            presentWebBrowserWithUrlString(INFO_WEBSITE_URL)
+        case 1: // email tapped
+            guard MFMailComposeViewController.canSendMail() else {
+                break
+            }
+
+            let mc = MFMailComposeViewController()
+            mc.mailComposeDelegate = self
+            mc.setToRecipients([INFO_EMAIL])
+            // TODO: Add app version string into message for convenience
+
+            self.present(mc, animated: true, completion: nil)
+        default: break
+        }
+
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+
+    // Copying of uuid and/or version is disabled because the app freezes on 'UIPasteboard.general.string = ...'.
     /*override func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
         return indexPath.section == 2
     }
-    
+
     override func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
         return action == #selector(copy(_:))
     }
-    
+
     override func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
         if action == #selector(copy(_:)) {
-            UIPasteboard.general.string = MEASUREMENT_AGENT.uuid
+            switch indexPath.row {
+            case 0: UIPasteboard.general.string = MEASUREMENT_AGENT.uuid
+            case 1: UIPasteboard.general.string = BundleHelper.buildAppVersionInfoString()
+            default: break
+            }
         }
     }*/
+}
+
+///
+extension InfoTableViewController: MFMailComposeViewControllerDelegate {
+
+    ///
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        self.dismiss(animated: true, completion: nil)
+    }
 }

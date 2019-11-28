@@ -17,17 +17,98 @@
 
 import Foundation
 
+public /*struct*/class ProgramTask {
+    public var name: String
+
+    public var localizedName: String?
+    public var localizedDescription: String?
+
+    public init(name: String, localizedName: String? = nil, localizedDescription: String? = nil) {
+        self.name = name
+        self.localizedName = localizedName
+        self.localizedDescription = localizedDescription
+    }
+
+    public /*mutating*/ func updateLocalization(localizedName: String? = nil, localizedDescription: String? = nil) {
+        self.localizedName = localizedName
+        self.localizedDescription = localizedDescription
+    }
+}
+
 ///
 public struct ProgramConfiguration {
+
+    public typealias InstantiationBlock = (LmapTaskDto, ProgramConfiguration /* TODO: use other object(s) */) throws -> (ProgramProtocol)
 
     public var name: String
     public var version: String
 
-    public var newInstance: (LmapTaskDto /* TODO: use other object */) throws -> (/*AnyProgram<Any>*/ProgramProtocol)
+    public var isEnabled: Bool! {
+        didSet {
+            logger.debug("isEnabled changed: \(oldValue) -> \(isEnabled), storing")
+            UserDefaults.standard.set(isEnabled, forKey: settingsPrefix + "isEnabled")
+            logger.debug("isEnabled after storing \(isEnabled)")
+        }
+    }
 
-    public init(name: String, version: String, newInstance: @escaping (LmapTaskDto /* TODO: use other object */) throws -> (/*AnyProgram<Any>*/ProgramProtocol)) {
+    public var availableTasks: [ProgramTask]
+    public var enabledTasks: Set<String>! {
+        didSet {
+            logger.debug("enabledTasks changed: \(oldValue) -> \(enabledTasks), storing")
+            UserDefaults.standard.set([String](enabledTasks), forKey: settingsPrefix + "enabledTasks")
+            logger.debug("enabledTasks after storing \(enabledTasks)")
+        }
+    }
+
+    public var newInstance: InstantiationBlock
+
+    private var settingsPrefix: String {
+        return "program.\(name.lowercased())."
+    }
+
+    public init(name: String, version: String, isEnabled: Bool, availableTasks: [ProgramTask] = [], enabledTasks: Set<String> = [], newInstance: @escaping InstantiationBlock) {
         self.name = name
         self.version = version
+        //self.isEnabled = isEnabled
+
+        self.availableTasks = availableTasks
+
         self.newInstance = newInstance
+
+        if let en = UserDefaults.standard.object(forKey: settingsPrefix + "isEnabled") as? Bool {
+            self.isEnabled = en
+        } else {
+            self.isEnabled = true
+        }
+
+        if let et = UserDefaults.standard.stringArray(forKey: settingsPrefix + "enabledTasks") {
+            self.enabledTasks = Set<String>(et)
+        } else {
+            self.enabledTasks = Set<String>(availableTasks.map { $0.name })
+        }
+    }
+
+    public func isTaskEnabled(_ name: String) -> Bool {
+        guard availableTasks.map({ $0.name }).contains(name) else {
+            return false
+        }
+
+        return enabledTasks.contains(name)
+    }
+
+    public mutating func enableTask(name: String, enable: Bool = true) {
+        guard availableTasks.map({ $0.name }).contains(name) else {
+            return
+        }
+
+        if enable {
+            enabledTasks.insert(name)
+        } else {
+            enabledTasks.remove(name)
+        }
+    }
+
+    public mutating func toggleTask(_ name: String) {
+        enableTask(name: name, enable: !isTaskEnabled(name))
     }
 }

@@ -54,9 +54,7 @@ class DnsTask: QoSTask {
 
         host = try container.decode(String.self, forKey: .host)
         resolver = try container.decodeIfPresent(String.self, forKey: .resolver)
-
-        let recordString = try container.decode(String.self, forKey: .record)
-        record = recordString
+        record = try container.decode(String.self, forKey: .record)
 
         try super.init(from: decoder)
     }

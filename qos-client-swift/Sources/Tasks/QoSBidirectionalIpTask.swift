@@ -32,19 +32,8 @@ class QoSBidirectionalIpTask: QoSControlConnectionTask {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys3.self)
 
-        portOut = try? container.decodeIfPresent(UInt16.self, forKey: .portOut)
-        if portOut == nil {
-            if let portOutString = try? container.decodeIfPresent(String.self, forKey: .portOut) {
-                portOut = UInt16(portOutString)
-            }
-        }
-
-        portIn = try? container.decodeIfPresent(UInt16.self, forKey: .portIn)
-        if portIn == nil {
-            if let portInString = try? container.decodeIfPresent(String.self, forKey: .portIn) {
-                portIn = UInt16(portInString)
-            }
-        }
+        portOut = container.decodeIfPresentWithStringFallback(UInt16.self, forKey: .portOut)
+        portIn = container.decodeIfPresentWithStringFallback(UInt16.self, forKey: .portIn)
 
         try super.init(from: decoder)
     }

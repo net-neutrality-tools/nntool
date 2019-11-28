@@ -71,8 +71,14 @@ public abstract class WebViewFragment extends ActionBarFragment {
     }
 
     protected void handleWebviewError(final WebView webView, final int errorCode) {
-        Log.e(TAG, "Received error code " + errorCode + " when trying to load help. Rendering default page!");
-        webView.loadUrl(getOnErrorHtmlPath());
+        Log.e(TAG, "Received error code " + errorCode + " when trying to load webView. Rendering default page!");
+        //on untimely navigation, the context may be lost just as the error is received (resulting in an illegal state exception)
+        try {
+            webView.loadUrl(getOnErrorHtmlPath());
+        } catch (IllegalStateException ex) {
+            Log.w(TAG, ex.getMessage());
+            Log.w(TAG, "User navigated away from webView, ignoring exception");
+        }
     }
 
 }

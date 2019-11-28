@@ -124,10 +124,22 @@ export class TestService {
 
         lmapControl['additional-request-info'] = requestInfo;
 
-        return this.requestService.postJson<LmapControl>(
-          `${this.configService.getServerControl()}measurements`,
-          lmapControl
-        );
+        let serverAddr: string = this.configService.getServerControl();
+
+        if (this.userService.user.forceIp) {
+          serverAddr = context.settings.urls.controller_service_ipv4;
+          console.log("forcing ipv4 controller");
+        }
+
+        if (!serverAddr.endsWith("/")) {
+          serverAddr += "/";
+        }
+
+         return this.requestService.postJson<LmapControl>(
+            `${serverAddr}measurements`,
+            lmapControl
+          );
+        
       })
     );
   }

@@ -10,6 +10,8 @@ public abstract class AbstractEchoProtocolTask extends AbstractQoSTask {
 
     public final static String RESULT_PROTOCOL = "echo_protocol_objective_protocol";
 
+    public final static String PROTOCOL = "protocol";
+
     public final static String PROTOCOL_TCP = "tcp";
 
     public final static String PROTOCOL_UDP = "udp";
@@ -29,7 +31,7 @@ public abstract class AbstractEchoProtocolTask extends AbstractQoSTask {
     public final static String PARAM_TIMEOUT = "timeout";
 
     //the port to test against
-    public final static String PARAM_SERVER_PORT = "echo_protocol_objective_server_port";
+    public final static String PARAM_SERVER_PORT = "port";
 
     //the server to test against
     public final static String PARAM_SERVER_ADDRESS = "echo_protocol_objective_server_addr";

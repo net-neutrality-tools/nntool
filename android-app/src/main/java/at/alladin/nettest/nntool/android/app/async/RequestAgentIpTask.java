@@ -35,7 +35,7 @@ public class RequestAgentIpTask extends AsyncTask<Void, Void, Map<IpResponse.IpV
 
     @Override
     protected Map<IpResponse.IpVersion, RequestAgentIpTask.IpResponseWrapper> doInBackground(Void... voids) {
-        final ControllerConnection controllerConnection = ConnectionUtil.createControllerConnection(context);
+        final ControllerConnection controllerConnection = ConnectionUtil.createControllerConnection(context, true);
         final Map<IpResponse.IpVersion, RequestAgentIpTask.IpResponseWrapper> ret = new HashMap<>();
         Log.d(TAG, "Requesting measurement agent ip");
         for (IpResponse.IpVersion ipVersion : IpResponse.IpVersion.values()) {
@@ -64,7 +64,7 @@ public class RequestAgentIpTask extends AsyncTask<Void, Void, Map<IpResponse.IpV
         }
     }
 
-    private InetAddress getLocalInetAddress (final ControllerConnection controllerConnection, final IpResponse.IpVersion version) {
+    private InetAddress getLocalInetAddress(final ControllerConnection controllerConnection, final IpResponse.IpVersion version) {
         try (Socket s = new Socket()) {
             InetSocketAddress address = null;
             switch (version) {

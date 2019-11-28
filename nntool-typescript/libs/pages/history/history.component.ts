@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { SpringServerDataSource } from '../../core/services/table/spring-server.data-source';
 import { UserService } from '../../core/services/user.service';
 import { ResultApiService } from '../../core/services/result-api.service';
+import { DateParseService } from '@nntool-typescript/core/services/date-parse.service';
 
 @Component({
   templateUrl: './history.component.html',
@@ -20,7 +21,7 @@ export class HistoryComponent {
         filter: false,
         sort: false,
         valuePrepareFunction: (cell, row) => {
-          return new Date(Date.parse(row.start_time)).toLocaleString();
+          return this.dateParseService.parseDateIntoFormat(new Date(Date.parse(row.start_time)));
         }
       },
       'device_info.device_code_name': {
@@ -33,7 +34,7 @@ export class HistoryComponent {
       },
       'measurements.SPEED.rtt_average_ns': {
         // or median?
-        title: 'RTT (ms)',
+        title: 'Ping (ms)',
         filter: false,
         sort: false,
         valuePrepareFunction: (cell, row) => {
@@ -78,7 +79,8 @@ export class HistoryComponent {
     private router: Router,
     private translationService: TranslateService,
     private userService: UserService,
-    private resultApiService: ResultApiService
+    private resultApiService: ResultApiService,
+    private dateParseService: DateParseService
   ) {
     this.tableSource = this.resultApiService.getServerDataSource(this.userService.user.uuid);
   }

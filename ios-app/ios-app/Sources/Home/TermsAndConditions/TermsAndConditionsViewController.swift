@@ -41,14 +41,17 @@ class TermsAndConditionsViewController: UIViewController {
         let font = UIFont.systemFont(ofSize: UIFont.buttonFontSize)
 
         declineButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .normal)
-        declineButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .selected)
+        declineButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .highlighted)
         declineButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .disabled)
+        declineButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .focused)
 
         agreeButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .normal)
-        agreeButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .selected)
+        agreeButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .highlighted)
         agreeButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .disabled)
+        agreeButtonItem?.setTitleTextAttributes([NSAttributedString.Key.font: font], for: .focused)
 
-        // TODO: wait until webview did finish loading to make decline/agree touchable
+        // TODO: wait until webview did finish loading to make agree touchable
+        //agreeButtonItem?.isEnabled = false
     }
 
     /// Show a popup with an error message and options to retry or close the App.

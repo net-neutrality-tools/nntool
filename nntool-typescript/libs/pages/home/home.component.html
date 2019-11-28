@@ -1,5 +1,6 @@
 <nntool-section-intro>
-  <nntool-section-header headerTranslationKey="HOME.HEADER"> </nntool-section-header>
+  <nntool-section-header *ngIf="isElectron" headerTranslationKey="HOME.HEADER_ELECTRON"> </nntool-section-header>
+  <nntool-section-header *ngIf="!isElectron" headerTranslationKey="HOME.HEADER"> </nntool-section-header>
   <nntool-section-content>
     <p [innerHTML]="'HOME.DESCRIPTION' | translate"></p>
   </nntool-section-content>

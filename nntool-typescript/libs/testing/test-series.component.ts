@@ -54,6 +54,7 @@ export class TestSeriesComponent implements AfterViewInit {
           this.currentFixedTestComponents[this.currentTestIndex].requestStart();
         } else {
           this.statusChange.emit(TestComponentStatus.WAITING);
+          this.currentFixedTestComponents[this.currentTestIndex].onOnlyReInit();
         }
         break;
       case TestComponentStatus.WORKING:

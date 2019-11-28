@@ -33,4 +33,56 @@ enum TaskType: String, Codable {
 
     ///
     case httpProxy = "http_proxy"
+
+    ///
+    case nonTransparentProxy = "non_transparent_proxy"
+
+    ///
+    case traceroute = "traceroute"
+
+    ///
+    case website = "website"
+
+    ///
+    case voip = "voip"
+
+    ///
+    case sip = "sip"
+
+    ///
+    case mkitWebConnectivity = "mkit_web_connectivity"
+
+    ///
+    case mkitDash = "mkit_dash"
+
+    ///
+
+    func taskClass() -> QoSTask.Type {
+        switch self {
+        case .tcpPort:
+            return TcpPortTask.self
+        case .udpPort:
+            return UdpPortTask.self
+        case .echoProtocol:
+            return EchoProtocolTask.self
+        case .dns:
+            return DnsTask.self
+        case .httpProxy:
+            return HttpProxyTask.self
+        case .nonTransparentProxy:
+            return NonTransparentProxyTask.self
+        case .traceroute:
+            return TracerouteTask.self
+        case .website:
+            return WebsiteRenderingTask.self
+        case .voip:
+            return VoipTask.self
+        case .sip:
+            return SipTask.self
+        case .mkitWebConnectivity:
+            return MeasurementKitTask.self
+        case .mkitDash:
+            return MeasurementKitTask.self
+        }
+    }
 }

@@ -17,21 +17,34 @@
 
 import Foundation
 import UIKit
+import ActionKit
 
 ///
 class SettingsTableViewController: UITableViewController {
+
+    @IBOutlet private var ipv4OnlySwitchCell: UISwitchTableViewCell?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         navigationItem.applyIconFontAttributes()
+
+        bindSwitch(ipv4OnlySwitchCell?.uiSwitch, toSettingsKey: "nntool.general.ipv4only") { isOn in
+            MEASUREMENT_AGENT.isIpv4Only = isOn
+        }
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+    private func bindSwitch(_ uiSwitch: UISwitch?, toSettingsKey key: String, onChange: ((Bool) -> Void)? = nil) {
+        uiSwitch?.isOn = UserDefaults.standard.bool(forKey: key)
+        uiSwitch?.addControlEvent(.valueChanged) { control in // (control: UIControl)
+            guard let sw = control as? UISwitch else {
+                return
+            }
 
-        cell.accessoryView = UISwitch()
+            logger.debug("Settings: Setting value \(sw.isOn) for key \(key)")
+            UserDefaults.standard.set(sw.isOn, forKey: key)
 
-        return cell
+            onChange?(sw.isOn)
+        }
     }
 }

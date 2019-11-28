@@ -80,9 +80,10 @@ class SipTask: QoSControlConnectionTask {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
 
-        port = try container.decode(UInt16.self, forKey: .port)
-        count = try container.decode(Int.self, forKey: .count)
-        callDurationNs = try container.decode(UInt64.self, forKey: .callDurationNs)
+        port = try container.decodeWithStringFallback(UInt16.self, forKey: .port)
+        count = try container.decodeWithStringFallback(Int.self, forKey: .count)
+        callDurationNs = try container.decodeWithStringFallback(UInt64.self, forKey: .callDurationNs)
+
         to = try container.decode(String.self, forKey: .to)
         from = try container.decode(String.self, forKey: .from)
         via = try container.decodeIfPresent(String.self, forKey: .via)

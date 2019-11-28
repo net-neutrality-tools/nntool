@@ -1,21 +1,3 @@
-@font-face {
-  font-family: 'berec-icons';
-  src: url('../assets/fonts/berec-icons.eot');
-  src: url('../assets/fonts/berec-icons.eot#iefix') format('embedded-opentype'),
-    url('../assets/fonts/berec-icons.woff2') format('woff2'), url('../assets/fonts/berec-icons.woff') format('woff'),
-    url('../assets/fonts/berec-icons.ttf') format('truetype'),
-    url('../assets/fonts/berec-icons.svg#berec-icons') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-
-// ==========================================================================
-// Less
-// ==========================================================================
-// COLOR DEFINITION
-@red: rgb(145, 18, 50);
-@yellow: rgb(255, 200, 0);
-@green: rgb(13, 171, 0);
 
 // FONT DEFINITION
 .font-thin {
@@ -30,7 +12,6 @@
 .font-bold {
   font-weight: 700;
 }
-@icon-font: 'berec-icons';
 
 // TEXT COLOR LIGHTNESS
 .smart-text-color (@a) when (lightness(@a) >=50%) {
@@ -611,9 +592,8 @@ pre {
 // ==========================================================================
 .menu {
   cursor: pointer;
-  //height: 2em;
   position: fixed;
-  margin: 1.6rem 0 0 0; //R.H. 2018-02-06
+  margin:0.8rem 0 0 0;
   opacity: 1;
   right: 0;
   top: 0;
@@ -625,51 +605,42 @@ pre {
   z-index: 1500;
 }
 .menu-icon {
-  height: 1em;
-  position: relative;
-  width: 2.4em;
-}
-.menu-icon:before {
-  content: '';
-  height: 2px;
-  left: 0;
-  position: absolute;
-  top: 0;
-  -webkit-transition: all ease-in-out 0.3s;
-  transition: all ease-in-out 0.3s;
   width: 1.6em;
 }
-.menu-icon:after {
+.menu-icon:before,
+.menu-icon:after,
+.menu-icon div {
+  background-color: @pitch-black;
   content: '';
+  display: block;
   height: 2px;
-  width: 1.6em;
-  left: 0;
-  position: absolute;
-  top: 0.6em;
+  margin: .4em 0;
   -webkit-transition: all ease-in-out 0.3s;
   transition: all ease-in-out 0.3s;
 }
 .menu:hover .menu-icon:before {
-  -webkit-transform: translate(0, -2px);
-  transform: translate(0, -2px);
-  -webkit-transition: all ease-in-out 0.3s;
-  transition: all ease-in-out 0.3s;
+  -webkit-transform:translate(0, -2px);
+  transform:translate(0, -2px);
+  -webkit-transition:all ease-in-out 0.3s;
+  transition:all ease-in-out 0.3s;
 }
-.menu:hover .menu-icon:after {
-  -webkit-transform: translate(0, 2px);
-  transform: translate(0, 2px);
-  -webkit-transition: all ease-in-out 0.3s;
-  transition: all ease-in-out 0.3s;
+.menu:hover .menu-icon:after  {
+  -webkit-transform:translate(0, 2px);
+  transform:translate(0, 2px);
+  -webkit-transition:all ease-in-out 0.3s;
+  transition:all ease-in-out 0.3s;
 }
 .menu-open .menu .menu-icon:before {
-  top: 0.5em; //R.H. 2018-02-06
-  -webkit-transform: rotate(45deg);
-  transform: rotate(45deg);
+  -webkit-transform: translateY(12px) rotate(45deg);
+  transform: translateY(.5em) rotate(45deg);
 }
 .menu-open .menu .menu-icon:after {
-  top: 0.5em; //R.H. 2018-02-06 top:0;
   -webkit-transform: rotate(-45deg);
-  transform: rotate(-45deg);
+  transform: translateY(-.525em) rotate(-45deg);
+}
+.menu-open .menu .menu-icon div {
+  -webkit-transform: rotate(0);
+  transform: scale(0);
 }
 .menu-container {
   height: 100vh;

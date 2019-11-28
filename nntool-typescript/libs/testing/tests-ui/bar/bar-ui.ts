@@ -64,6 +64,8 @@ export abstract class BarUIComponent<T extends TestImplementation<TC, TS>, TC ex
     }
   };
 
+  public onOnlyReInit() {}
+
   private configureBarUI(config: any) {
     this.translations = {
       UDP: 'UDP'
@@ -109,7 +111,7 @@ export abstract class BarUIComponent<T extends TestImplementation<TC, TS>, TC ex
     }
     this.drawing = true;
     this.clear();
-    if (state) {
+    if (state && state.types) {
       state.types.forEach(
         (type: {
           key: BarUIShowableTestTypeEnum;

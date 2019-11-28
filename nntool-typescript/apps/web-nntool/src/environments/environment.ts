@@ -28,6 +28,8 @@ export const environment = {
     //control: 'http://localhost:18080/api/v1/',
     //result: 'http://localhost:8082/api/v1/',
     //search: 'http://localhost:8083/api/v1/',
+    //map: 'http://localhost:8084/api/v1/',
+    //statistic: 'http://localhost:8085/api/v1/',
     control: 'https://controller-de-01.net-neutrality.tools/api/v1/',
     result: 'https://result-de-01.net-neutrality.tools/api/v1/',
     search: 'https://search-de-01.net-neutrality.tools/api/v1/',
@@ -142,7 +144,7 @@ export const environment = {
     allow_query_uuid: true,
     allow_set_uuid: false,
     shown: {
-      force_ip4: false,
+      force_ip4: true,
       invisible: false,
       anonymous_mode: true,
       no_anonymize_before_delete_user: false,
@@ -151,6 +153,11 @@ export const environment = {
       measurement_selection: true,
       measurement_selection_speed: true,
       measurement_selection_qos: true
+    }
+  },
+  socialMediaSettings: {
+    history: {
+      medias: ["FACEBOOK", "TWITTER", "MAIL", "WHATSAPP"]
     }
   }
 };

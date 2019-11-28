@@ -33,7 +33,7 @@ public class RequestSpeedMeasurementPeersTask extends AsyncTask<Void, Void, Spee
 
     @Override
     protected SpeedMeasurementPeerResponse doInBackground(Void... voids) {
-        final ControllerConnection controllerConnection = ConnectionUtil.createControllerConnection(context);
+        final ControllerConnection controllerConnection = ConnectionUtil.createControllerConnection(context, false);
         Log.d(TAG, "Requesting measurement peers");
         return controllerConnection.getMeasurementPeers(RequestUtil.prepareApiSpeedMeasurementPeerRequest(context));
     }

@@ -27,7 +27,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurem
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
 
-@Mapper(componentModel = "spring", uses = { DateTimeMapper.class, ConnectionInfoMapper.class })
+@Mapper(componentModel = "spring", uses = { DateTimeMapper.class, ConnectionInfoMapper.class})
 public interface FullMeasurementResponseMapper {
 
 	@Mappings({
@@ -51,7 +51,7 @@ public interface FullMeasurementResponseMapper {
 		@Mapping(source="speedRawData.download", target="downloadRawData"),
 		@Mapping(source="speedRawData.upload", target="uploadRawData"),
 		@Mapping(source="rttInfo.address", target="rttInfo.address"),
-		
+
 		//rttInfo.maximumNs, minimumNs
 	})
 	FullSpeedMeasurement map(SpeedMeasurement measurement);
@@ -64,13 +64,13 @@ public interface FullMeasurementResponseMapper {
 		@Mapping(source="measurementTime.endTime", target="endTime"),
 		@Mapping(source="statusInfo.status", target="status"),
 		@Mapping(source="statusInfo.reason", target="reason"),
-		
+
 		@Mapping(ignore = true, target = "keyToTranslationMap"),
 		@Mapping(ignore = true, target = "qosTypeToDescriptionMap"),
 		@Mapping(ignore = true, target = "results")
 	})
 	FullQoSMeasurement map(QoSMeasurement measurement);
-	
+
 	@Mappings({
 		@Mapping(/*source=""*/ignore = true, target="cpuAverage"), // TODO
 		@Mapping(/*source=""*/ignore = true, target="cpuMedian"), // TODO
@@ -82,56 +82,59 @@ public interface FullMeasurementResponseMapper {
 		@Mapping(/*source=""*/ignore = true, target="memoryMax") // TODO
 	})
 	OperatingSystemInfoDto map(OperatingSystemInfo osInfo);
-	
+
 	@Mappings({
 		@Mapping(source = "networkPointsInTime", target = "networkPointInTimeInfo"),
 		@Mapping(source = "signalInfo.signals", target = "signals"),
 	})
 	NetworkInfoDto map(NetworkInfo networkInfo);
-	
+
 	@Mappings({
 		@Mapping(source = "agentPrivateIp", target = "agentPrivateIp"),
 		@Mapping(source = "agentPublicIp", target = "agentPublicIp"),
 		@Mapping(source = "agentPublicIpCountryCode", target = "agentPublicIpCountryCode"),
-		
+
 		@Mapping(source = "networkType.category", target = "networkTypeCategory"),
 		@Mapping(source = "networkType.groupName", target = "networkTypeGroupName"),
 		@Mapping(source = "networkType.networkTypeId", target = "networkTypeId"),
 		@Mapping(source = "networkType.name", target = "networkTypeName"),
-		
+
 		@Mapping(source = "providerInfo.countryCodeAsn", target = "countryCodeAsn"),
 		@Mapping(source = "providerInfo.provider.name", target = "providerName"),
 		@Mapping(source = "providerInfo.provider.shortName", target = "providerShortName"),
 		@Mapping(source = "providerInfo.publicIpAsName", target = "publicIpAsName"),
 		@Mapping(source = "providerInfo.publicIpAsn", target = "publicIpAsn"),
-		
+
 		@Mapping(source = "networkMobileInfo.networkCountry", target = "networkCountry"),
 		@Mapping(source = "networkMobileInfo.networkOperatorMccMnc", target = "networkOperatorMccMnc"),
 		@Mapping(source = "networkMobileInfo.networkOperatorName", target = "networkOperatorName"),
 		@Mapping(source = "networkMobileInfo.simCountry", target = "simCountry"),
 		@Mapping(source = "networkMobileInfo.simOperatorMccMnc", target = "simOperatorMccMnc"),
 		@Mapping(source = "networkMobileInfo.simOperatorName", target = "simOperatorName"),
-		
+
 		@Mapping(source = "networkWifiInfo.initialSsid", target = "ssid"),
 		@Mapping(source = "networkWifiInfo.initialBssid", target = "bssid"),
+
+		@Mapping(source="networkMobileInfo.roaming", target="roaming"),
+		@Mapping(source="networkMobileInfo.roamingType", target="roamingType"),
 	})
 	NetworkPointInTimeInfoDto map(NetworkPointInTime npit);
-	
+
 	@InheritConfiguration
 	ComputedNetworkPointInTimeInfoDto map(ComputedNetworkPointInTime cnpit);
-	
+
 	default String map(MccMnc mccMnc) {
 		if (mccMnc == null) {
 			return null;
 		}
-		
+
 		Integer mcc = mccMnc.getMcc();
 		Integer mnc = mccMnc.getMnc();
-		
+
 		if (mcc == null && mnc == null) {
 			return null;
 		}
-		
+
 		return mcc + "-" + mnc;
 	}
 	

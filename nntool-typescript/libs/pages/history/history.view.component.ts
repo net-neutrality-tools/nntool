@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ResultGroupResponse } from '../../core/models/result.groups';
 import { QoSMeasurementResult } from '../../core/models/lmap/models/lmap-report/lmap-result/extensions/qos-measurement-result.model';
 import { UserService } from '../../core/services/user.service';
+import { ConfigService } from '../../core/services/config.service';
+import { WebsiteSettings } from '../../core/models/settings/settings.interface';
 
 @Component({
   templateUrl: './history.view.component.html'
@@ -10,15 +12,22 @@ import { UserService } from '../../core/services/user.service';
 export class HistoryViewComponent implements OnInit {
   public loading: boolean;
 
-  private measurementUuid: string;
   public response: ResultGroupResponse;
-
-  private fullMeasurementResponse: any;
+  public hasShareLinks: boolean = false;
   public qosMeasurementResult: QoSMeasurementResult;
 
-  constructor(private activatedRoute: ActivatedRoute, private userService: UserService) {
+  private measurementUuid: string;
+  private fullMeasurementResponse: any;
+  private config: WebsiteSettings;
+
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private userService: UserService,
+    private configService: ConfigService
+  ) {
     this.loading = true;
     this.measurementUuid = activatedRoute.snapshot.paramMap.get('uuid');
+    this.config = this.configService.getConfig();
   }
 
   public ngOnInit() {
@@ -26,11 +35,22 @@ export class HistoryViewComponent implements OnInit {
     this.userService.loadMeasurementDetail(this.measurementUuid).subscribe((data: any) => {
       this.loading = false;
       this.response = data.data;
+
+      this.hasShareLinks =
+        this.config.socialMediaSettings &&
+        this.config.socialMediaSettings.history &&
+        this.config.socialMediaSettings.history.medias
+          ? true
+          : false;
     });
 
     this.userService.loadFullMeasurement(this.measurementUuid).subscribe((data: any) => {
       this.fullMeasurementResponse = data.data;
       this.qosMeasurementResult = this.fullMeasurementResponse.measurements.QOS;
     });
+  }
+
+  public getUrl() {
+    return window.location.href;
   }
 }

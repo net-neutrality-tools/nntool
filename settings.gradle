@@ -1,5 +1,6 @@
 include 'nettest-shared'
 include 'nettest-shared-server'
+include 'nettest-shared-server-opendata'
 
 include 'couchdb-client'
 include 'spring-data-couchdb'
@@ -12,9 +13,10 @@ include 'controller-service'
 include 'collector-service'
 include 'result-service'
 include 'search-service'
+include 'opendata-collector-service'
 
-include 'statistic-service'
 include 'map-service'
+include 'statistic-service'
 
 include 'qos-service'
 
@@ -70,11 +72,11 @@ if (skipAndroid) {
 } else {
 	println '*) Including Android apps'
 
-	include 'android-common'
-	include 'android-speed'
+	include 'ias-android-common'
+	include 'ias-android-speed'
 	include 'qos-client-android'
 
-	include 'android-demo'
+	include 'ias-android-demo'
 
 	include 'android-app'
 }

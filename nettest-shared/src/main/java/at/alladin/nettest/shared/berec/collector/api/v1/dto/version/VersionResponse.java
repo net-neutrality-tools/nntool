@@ -84,6 +84,16 @@ public class VersionResponse extends BasicResponse {
 	private String statisticServiceVersion;
 
 	/**
+	 * Opendata Collector service version number.
+	 */
+	@io.swagger.annotations.ApiModelProperty("Opendata Collector service version number.")
+	@JsonPropertyDescription("Opendata Collector service version number.")
+	@Expose
+	@SerializedName("opendata_collector_service_version")
+	@JsonProperty("opendata_collector_service_version")
+	private String opendataCollectorServiceVersion;
+	
+	/**
 	 * 
 	 * @return
 	 */
@@ -177,5 +187,21 @@ public class VersionResponse extends BasicResponse {
 	 */
 	public void setStatisticServiceVersion(String statisticServiceVersion) {
 		this.statisticServiceVersion = statisticServiceVersion;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getOpendataCollectorServiceVersion() {
+		return opendataCollectorServiceVersion;
+	}
+	
+	/**
+	 * 
+	 * @param opendataCollectorServiceVersion
+	 */
+	public void setOpendataCollectorServiceVersion(String opendataCollectorServiceVersion) {
+		this.opendataCollectorServiceVersion = opendataCollectorServiceVersion;
 	}
 }

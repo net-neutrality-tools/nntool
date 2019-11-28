@@ -25,10 +25,6 @@ class MeasurementPeerSelectionTableViewController: UITableViewController {
     var measurementPeers: [SpeedMeasurementPeerResponse.SpeedMeasurementPeer]?
 
     var selectedMeasurementPeer: SpeedMeasurementPeerResponse.SpeedMeasurementPeer?
-
-    @IBAction func cancel() {
-        dismiss(animated: true, completion: nil)
-    }
 }
 
 // MARK: - TableView

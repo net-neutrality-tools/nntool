@@ -25,6 +25,16 @@ import UIKit
     @IBOutlet private var downloadValueLabel: UILabel?
     @IBOutlet private var uploadValueLabel: UILabel?
 
+    @IBOutlet private var rttTitleLabel: UILabel?
+    @IBOutlet private var downloadTitleLabel: UILabel?
+    @IBOutlet private var uploadTitleLabel: UILabel?
+
+    override func awakeFromNib() {
+        rttTitleLabel?.text = "\(R.string.localizable.measurementSpeedPhaseRtt()) (\(R.string.localizable.generalUnitsMs()))"
+        downloadTitleLabel?.text = "\(R.string.localizable.measurementSpeedPhaseDownload()) (M\(R.string.localizable.generalUnitsBps()))"
+        uploadTitleLabel?.text = "\(R.string.localizable.measurementSpeedPhaseUpload()) (M\(R.string.localizable.generalUnitsBps()))"
+    }
+
     func setText(_ text: String, forPhase phase: SpeedMeasurementPhase) {
         switch phase {
         case .rtt: rttValueLabel?.text = text

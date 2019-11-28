@@ -2,6 +2,7 @@
   "FOOTER": "<div class=\"wrapper h-card\">\n            <div class=\"section-columns\">\n                <div class=\"column\">\n                    <header>\n                        <h2 class=\"p-org\">BEREC</h2>\n                    </header>\n                    <p>\n                        <span class=\"p-street-address\">Lorem</span><br/>\n                        <span class=\"p-postal-code\">0000</span> <span class=\"p-locality\">ipsum</span>, <span class=\"p-country-name\">dolor</span>\n                    </p>\n                    <p>\n                        <a class=\"u-url website\" href=\"\">nntool.eu</a>\n                    </p>\n                </div>\n                <div class=\"column\">\n                    <header>\n                        <h2>Contact</h2>\n                    </header>\n                    <p>\n                        <a class=\"p-tel\" href=\"\">+11 1 111 11 11</a><br />\n                        <a class=\"p-mail\" href=\"\">.@.</a>\n                    </p>\n                    <p>\n                                            </p>\n                </div>\n            </div>\n        </div>",
   "WEBSITE": {
     "TITLE": "nntool.eu Website",
+    "TITLE_ELECTRON": "nntool.eu desktop app",
     "UNITS": {
       "SPEED_MBPS": "Mbit/s",
       "DURATION_MS": "ms",
@@ -33,6 +34,7 @@
   },
   "HOME": {
     "HEADER": "nntool.eu Website",
+    "HEADER_ELECTRON": "nntool.eu desktop app",
     "DESCRIPTION_BADGES": "<a href=\"\" class=\"app-store-badge en hide-text\">Download on the App Store</a><a href=\"\" class=\"google-play-badge en hide-text\">Get it on Google Play</a>",
     "MORE": "",
     "HEADER_TEXT": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
@@ -108,7 +110,7 @@
         "NAME": "Name",
         "DOWN": "Down",
         "UP": "Up",
-        "PING": "RTT",
+        "PING": "Ping",
         "COUNT": "Count"
       },
       "LIST_PROVIDERS": {
@@ -118,7 +120,7 @@
         "DOWN": "Down",
         "UP": "Up",
         "SIGNAL": "Signal",
-        "PING": "RTT",
+        "PING": "Ping",
         "COUNT": "Count"
       },
       "OS_PART": {
@@ -169,12 +171,13 @@
     "NAME": "Provider/Device",
     "DOWN": "Down (Mbit/s)",
     "UP": "Up (Mbit/s)",
-    "PING": "RTT (ms)",
+    "PING": "Ping (ms)",
     "SIGNAL": "Signal (dBm)",
     "MORE": "Show more..",
     "LOADING": "Loading..",
     "NO_DATA": "Currently no measurements",
-    "RMBTWS": "Browser"
+    "RMBTWS": "Browser",
+    "SHARE_LINK": "share"
   },
   "RESULT": {
     "HEADER": "Nettest Result",
@@ -184,7 +187,7 @@
       "UPLOAD": "upload",
       "SIGNAL": "signal"
     },
-    "PING": "RTT",
+    "PING": "Ping",
     "DOWNLOAD": "Download",
     "UPLOAD": "Upload",
     "SIGNAL": "Signal",
@@ -234,9 +237,9 @@
         "num_threads_requested": "Number of Threads requested",
         "num_threads_ul": "Number of Threads Upload",
         "open_test_uuid": "Opentest UUID",
-        "ping_classification": "RTT Classification",
-        "ping_ms": "RTT",
-        "ping_variance": "RTT Variance",
+        "ping_classification": "Ping Classification",
+        "ping_ms": "Ping",
+        "ping_variance": "Ping Variance",
         "platform": "Platform",
         "public_ip_as_name": "Public IP as Name",
         "product": "Product",
@@ -289,7 +292,7 @@
     "GAUGE": {
       "GO": "GO",
       "INIT": "Init",
-      "PING": "RTT",
+      "PING": "Ping",
       "DOWN": "Download",
       "UP": "Upload",
       "QOS": "QoS",
@@ -301,6 +304,15 @@
     },
     "BAR": {
       "UDP": "UDP"
+    },
+    "LOOP": {
+      "TITLE": "Looped measurements",
+      "TIME_BETWEEN_TESTS": "Time between tests (in minutes):",
+      "NUMBER_REPETITIONS": "Number of test-runs:",
+      "TIME_LEFT": "Next test",
+      "TEST_COUNTER": "Test counter",
+      "FINISHED": "Loop mode finished",
+      "RESET": "Start another test run"
     }
   },
   "SETTINGS": {

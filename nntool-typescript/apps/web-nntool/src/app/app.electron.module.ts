@@ -24,6 +24,7 @@ import { AppModule } from './app.module';
     NntoolElectronCoreModule,
     RouterModule.forRoot(routes, { /*onSameUrlNavigation: 'reload',*/ useHash: true })
   ],
-  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }]
+  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }],
+  bootstrap: [AppComponent]
 })
 export class AppElectronModule {}

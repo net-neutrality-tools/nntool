@@ -33,11 +33,11 @@ public class MeasurementConfigurationService {
 	@Autowired
 	private ControllerServiceProperties controllerServiceProperties;
 	
-	public LmapControlDto getLmapControlDtoForCapabilities (final LmapCapabilityDto capabilities) {
+	public LmapControlDto getLmapControlDtoForCapabilities(final LmapCapabilityDto capabilities, boolean useIPv6) {
 		final LmapControlDto ret = new LmapControlDto();
 		
 		ret.setCapabilities(capabilities);
-		ret.setTasks(getTaskListForCapabilities(capabilities));
+		ret.setTasks(getTaskListForCapabilities(capabilities, useIPv6));
 		ret.setEvents(getImmediateEventList());
 		ret.setSchedules(getLmapScheduleList(ret.getEvents().get(0).getName(), ret.getTasks()));
 		
@@ -50,7 +50,7 @@ public class MeasurementConfigurationService {
 	 * @param capabilities
 	 * @return
 	 */
-	private List<LmapTaskDto> getTaskListForCapabilities(final LmapCapabilityDto capabilities) {
+	private List<LmapTaskDto> getTaskListForCapabilities(final LmapCapabilityDto capabilities, boolean useIPv6) {
 		final List<LmapTaskDto> ret = new ArrayList<>();
 		
 		for (LmapCapabilityTaskDto capability : capabilities.getTasks()) {
@@ -61,7 +61,7 @@ public class MeasurementConfigurationService {
 				logger.error(String.format("Unknown measurement type of name %s requested. Ignoring.", capability.getTaskName()));
 				continue;
 			}
-			LmapTaskDto task = getMeasurementTaskConfiguration(type, capability);
+			LmapTaskDto task = getMeasurementTaskConfiguration(type, capability, useIPv6);
 			if (task != null) {
 				ret.add(task);
 			}
@@ -106,12 +106,12 @@ public class MeasurementConfigurationService {
 		return ret;
 	}
 	
-	private LmapTaskDto getMeasurementTaskConfiguration(final MeasurementTypeDto name, final LmapCapabilityTaskDto capability) {
+	private LmapTaskDto getMeasurementTaskConfiguration(final MeasurementTypeDto name, final LmapCapabilityTaskDto capability, boolean useIPv6) {
 		if (name == null || capability == null) {
 			return null;
 		}
 
-		final LmapTaskDto ret = storageService.getTaskDto(name, capability, controllerServiceProperties.getSettingsUuid());
+		final LmapTaskDto ret = storageService.getTaskDto(name, capability, controllerServiceProperties.getSettingsUuid(), useIPv6);
 		final List<String> tagList = new ArrayList<String>();
 		//tagList.add(version);
 		

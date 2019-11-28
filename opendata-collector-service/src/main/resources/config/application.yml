@@ -1,0 +1,24 @@
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+spring:
+  application:
+    name: opendata-collector-service
+
+  jackson:
+    serialization:
+      indent-output: true
+      write-dates-as-timestamps: false
+
+server:
+  port: 8086
+
+# ===================================================================
+# Open-Data Collector service specific properties
+# ===================================================================
+
+opendata-collector:
+

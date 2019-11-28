@@ -33,7 +33,7 @@ public class CodeInsteadOfExceptionMessageSource implements MessageSource {
 		try {
 			return messageSource.getMessage(code, args, locale);
 		} catch (NoSuchMessageException ex) {
-			logger.error(ex.getMessage());
+			logger.warn(ex.getMessage());
 			
 			return code;
 		}
@@ -44,7 +44,7 @@ public class CodeInsteadOfExceptionMessageSource implements MessageSource {
 		try {
 			return messageSource.getMessage(resolvable, locale);
 		} catch (NoSuchMessageException ex) {
-			logger.error(ex.getMessage());
+			logger.warn(ex.getMessage());
 			
 			return String.join(",", resolvable.getCodes());
 		}

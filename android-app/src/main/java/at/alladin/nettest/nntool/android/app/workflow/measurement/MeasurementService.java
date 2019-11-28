@@ -37,10 +37,10 @@ import at.alladin.nettest.nntool.android.app.util.info.InformationProvider;
 import at.alladin.nettest.nntool.android.app.util.info.InformationService;
 import at.alladin.nettest.nntool.android.app.util.info.interfaces.CurrentInterfaceTraffic;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
-import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
-import at.alladin.nettest.nntool.android.speed.SpeedMeasurementState;
-import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
-import at.alladin.nettest.nntool.android.speed.jni.JniSpeedMeasurementClient;
+import com.zafaco.speed.JniSpeedMeasurementResult;
+import com.zafaco.speed.SpeedMeasurementState;
+import com.zafaco.speed.SpeedTaskDesc;
+import com.zafaco.speed.jni.JniSpeedMeasurementClient;
 import at.alladin.nettest.qos.QoSMeasurementClientControlAdapter;
 import at.alladin.nettest.qos.android.QoSMeasurementClientAndroid;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.report.LmapReportDto;
@@ -187,6 +187,7 @@ public class MeasurementService extends Service implements ServiceConnection {
         final SpeedTaskDesc speedTaskDesc = (SpeedTaskDesc) options.getSerializable(EXTRAS_KEY_SPEED_TASK_DESC);
         final String clientIpv4 = options.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE);
         final String clientIpv6 = options.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE);
+
 
         final boolean forceIpv4 = PreferencesUtil.isForceIpv4(getApplicationContext()) && clientIpv4 != null;
 

@@ -31,6 +31,10 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This information is used to determine the location of your measurements.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This information is used to determine the location of your measurements.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>This information is used to determine the location of your measurements.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>berec-icons.ttf</string>
@@ -56,8 +60,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>

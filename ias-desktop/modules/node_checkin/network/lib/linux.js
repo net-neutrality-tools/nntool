@@ -1,22 +1,9 @@
-/*
-*********************************************************************************
-*                                                                               *
-*       ..--== zafaco GmbH ==--..                                               *
-*                                                                               *
-*       Website: http://www.zafaco.de                                           *
-*                                                                               *
-*       Copyright 2017                                                          *
-*                                                                               *
-*********************************************************************************
+/*!
+    \file linux.js
+    \author Tomás Pollak
+    \editor zafaco GmbH <info@zafaco.de>
+    \date Last update: 2019-11-13
 */
-
-/*!   \file darwin.js
- *      @description Network Detection Class linux
- *      \author Tomás Pollak
- *      \editor Mike Kosek <kosek@zafaco.de>
- *      \date Last update: 2017-11-09
- *      \note Copyright (c) 2017 zafaco GmbH. All rights reserved.
- */
 
 "use strict";
 

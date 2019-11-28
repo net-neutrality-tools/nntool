@@ -68,6 +68,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.NetworkInfoDt
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.NetworkPointInTimeInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.OperatingSystemInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.PointInTimeValueDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ReasonDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.RttDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.RttInfoDto;
@@ -227,7 +228,7 @@ public class DocumentationResource extends AbstractDocumentationResource {
 			NetworkPointInTimeInfoDto.class,
 			OperatingSystemInfoDto.class,
 			PointInTimeValueDto.class,
-			QoSMeasurementType.class,
+			QoSMeasurementTypeDto.class,
 			ReasonDto.class,
 			RttDto.class,
 			RttInfoDto.class,
@@ -279,6 +280,7 @@ public class DocumentationResource extends AbstractDocumentationResource {
 			ProviderMccMncMapping.class,
 			QoSMeasurement.class,
 			QoSMeasurementObjective.class,
+			QoSMeasurementType.class,
 			QoSResult.class,
 			RoamingType.class,
 			Rtt.class,

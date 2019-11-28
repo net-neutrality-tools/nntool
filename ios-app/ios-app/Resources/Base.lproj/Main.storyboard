@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -54,6 +56,9 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OdK-tM-ly3">
                                             <rect key="frame" x="16" y="31.5" width="44" height="14.5"/>
@@ -61,6 +66,9 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
@@ -74,7 +82,7 @@
                     <navigationItem key="navigationItem" title="Measurement Peer" id="KbN-6Z-1ap">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="RXe-eQ-KTe">
                             <connections>
-                                <action selector="cancel" destination="PxG-10-4qD" id="cZ7-FJ-8bO"/>
+                                <segue destination="x9d-cA-TAu" kind="unwind" unwindAction="unwindCancel:" id="EQc-53-fb8"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Save" id="vGh-of-JFy">
@@ -111,6 +119,9 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="4qU-Ly-xu2">
                                             <rect key="frame" x="315" y="12" width="44" height="20.5"/>
@@ -118,6 +129,9 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
@@ -135,6 +149,9 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9DT-EW-4md">
                                             <rect key="frame" x="16" y="31.5" width="44" height="14.5"/>
@@ -142,6 +159,9 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
@@ -166,51 +186,65 @@
                                                 <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="qos_group_collectionview_cell" id="bFK-Zr-rtk" customClass="QoSGroupCollectionViewCell" customModule="BEREC_nntool" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="117" height="114"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                                    <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="xmc-R4-DUJ">
                                                         <rect key="frame" x="0.0" y="0.0" width="117" height="114"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="à" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lSd-eg-E7N" userLabel="Icon Label">
-                                                                <rect key="frame" x="38.5" y="5" width="40" height="40"/>
-                                                                <fontDescription key="fontDescription" name="berec-icons" family="berec-icons" pointSize="40"/>
-                                                                <color key="textColor" red="0.57254901960000004" green="0.1215686275" blue="0.33725490200000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="fpl-VG-iNH" userLabel="Title Label">
-                                                                <rect key="frame" x="6" y="50" width="105" height="20.5"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NbX-rf-itI">
-                                                                <rect key="frame" x="35.5" y="84" width="46" height="20"/>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="xR2-Tp-y6X">
+                                                                <rect key="frame" x="6" y="5.5" width="105" height="103"/>
                                                                 <subviews>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="v" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wNF-qb-b19">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
-                                                                        <fontDescription key="fontDescription" name="berec-icons" family="berec-icons" pointSize="20"/>
-                                                                        <nil key="textColor"/>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="à" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lSd-eg-E7N" userLabel="Icon Label">
+                                                                        <rect key="frame" x="32.5" y="0.0" width="40" height="40"/>
+                                                                        <fontDescription key="fontDescription" name="berec-icons" family="berec-icons" pointSize="40"/>
+                                                                        <color key="textColor" red="0.57254901960000004" green="0.1215686275" blue="0.33725490200000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <nil key="highlightedColor"/>
+                                                                        <attributedString key="userComments">
+                                                                            <fragment content="#bc-ignore!"/>
+                                                                        </attributedString>
                                                                     </label>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10/10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRy-ie-fA5">
-                                                                        <rect key="frame" x="20" y="0.0" width="26" height="20"/>
-                                                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group name" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="fpl-VG-iNH" userLabel="Title Label">
+                                                                        <rect key="frame" x="5.5" y="48" width="94" height="20.5"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                         <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                         <nil key="highlightedColor"/>
+                                                                        <attributedString key="userComments">
+                                                                            <fragment content="#bc-ignore!"/>
+                                                                        </attributedString>
                                                                     </label>
+                                                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="NbX-rf-itI">
+                                                                        <rect key="frame" x="29.5" y="76.5" width="46" height="26.5"/>
+                                                                        <subviews>
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="v" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wNF-qb-b19">
+                                                                                <rect key="frame" x="0.0" y="3.5" width="20" height="20"/>
+                                                                                <fontDescription key="fontDescription" name="berec-icons" family="berec-icons" pointSize="20"/>
+                                                                                <nil key="textColor"/>
+                                                                                <nil key="highlightedColor"/>
+                                                                                <attributedString key="userComments">
+                                                                                    <fragment content="#bc-ignore!"/>
+                                                                                </attributedString>
+                                                                            </label>
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="10/10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRy-ie-fA5">
+                                                                                <rect key="frame" x="20" y="7.5" width="26" height="12"/>
+                                                                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                                                <nil key="highlightedColor"/>
+                                                                                <attributedString key="userComments">
+                                                                                    <fragment content="#bc-ignore!"/>
+                                                                                </attributedString>
+                                                                            </label>
+                                                                        </subviews>
+                                                                    </stackView>
                                                                 </subviews>
                                                             </stackView>
                                                         </subviews>
-                                                    </view>
+                                                        <constraints>
+                                                            <constraint firstItem="xR2-Tp-y6X" firstAttribute="height" secondItem="xmc-R4-DUJ" secondAttribute="height" multiplier="0.9" id="9fI-fA-TH3"/>
+                                                            <constraint firstItem="xR2-Tp-y6X" firstAttribute="width" secondItem="xmc-R4-DUJ" secondAttribute="width" multiplier="0.9" id="Hrp-Ux-EOn"/>
+                                                            <constraint firstItem="xR2-Tp-y6X" firstAttribute="centerX" secondItem="xmc-R4-DUJ" secondAttribute="centerX" id="mJL-jn-DeK"/>
+                                                            <constraint firstItem="xR2-Tp-y6X" firstAttribute="centerY" secondItem="xmc-R4-DUJ" secondAttribute="centerY" id="nhA-d1-qMy"/>
+                                                        </constraints>
+                                                    </collectionViewCellContentView>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstItem="NbX-rf-itI" firstAttribute="centerX" secondItem="bFK-Zr-rtk" secondAttribute="centerX" id="6Z1-Bi-Efy"/>
-                                                        <constraint firstItem="lSd-eg-E7N" firstAttribute="centerX" secondItem="bFK-Zr-rtk" secondAttribute="centerX" id="6sx-HE-KWv"/>
-                                                        <constraint firstItem="fpl-VG-iNH" firstAttribute="top" secondItem="lSd-eg-E7N" secondAttribute="bottom" constant="5" id="Bhu-R7-z9w"/>
-                                                        <constraint firstItem="fpl-VG-iNH" firstAttribute="centerX" secondItem="bFK-Zr-rtk" secondAttribute="centerX" id="bcQ-Mc-CMT"/>
-                                                        <constraint firstAttribute="bottom" secondItem="NbX-rf-itI" secondAttribute="bottom" constant="10" id="rA3-lz-3aY"/>
-                                                        <constraint firstItem="fpl-VG-iNH" firstAttribute="width" secondItem="bFK-Zr-rtk" secondAttribute="width" multiplier="0.9" id="sIS-eb-sCq"/>
-                                                        <constraint firstItem="lSd-eg-E7N" firstAttribute="top" secondItem="bFK-Zr-rtk" secondAttribute="top" constant="5" id="yva-LX-0H5"/>
-                                                    </constraints>
                                                     <connections>
                                                         <outlet property="groupNameLabel" destination="fpl-VG-iNH" id="Thj-ag-1bA"/>
                                                         <outlet property="iconLabel" destination="lSd-eg-E7N" id="QhV-b6-hDV"/>
@@ -244,11 +278,17 @@
                     <navigationItem key="navigationItem" title="Measurement Report" id="ocZ-Iw-AVT">
                         <rightBarButtonItems>
                             <barButtonItem title="m" id="rbc-Bl-6vX">
+                                <attributedString key="userComments">
+                                    <fragment content="#bc-ignore!"/>
+                                </attributedString>
                                 <connections>
                                     <action selector="presentHelp" destination="ChL-OL-d1x" id="T10-Sf-NwI"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="s" id="Yfz-Iw-Ury">
+                            <barButtonItem title="Á" id="Yfz-Iw-Ury">
+                                <attributedString key="userComments">
+                                    <fragment content="#bc-ignore!"/>
+                                </attributedString>
                                 <connections>
                                     <action selector="shareMeasurementResult" destination="ChL-OL-d1x" id="Tjz-rg-Fil"/>
                                 </connections>
@@ -357,6 +397,9 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
@@ -374,6 +417,9 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3Qf-4E-xaR">
                                             <rect key="frame" x="16" y="31.5" width="44" height="14.5"/>
@@ -381,6 +427,9 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
@@ -430,7 +479,7 @@
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" rowHeight="32" id="J2Q-MO-TgD" customClass="MeasurementPeerSelectionTableViewCell" customModule="BEREC_nntool" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="337.5" height="32"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="J2Q-MO-TgD" id="cGp-qM-eJb" customClass="HomeScreenMeasurementPeerSelectionView" customModule="BEREC_nntool" customModuleProvider="target">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="J2Q-MO-TgD" id="cGp-qM-eJb">
                                             <rect key="frame" x="0.0" y="0.0" width="310.5" height="32"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -439,6 +488,9 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.30196078430000001" green="0.31764705879999999" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
+                                                    <attributedString key="userComments">
+                                                        <fragment content="#bc-ignore!"/>
+                                                    </attributedString>
                                                 </label>
                                             </subviews>
                                             <constraints>
@@ -534,6 +586,9 @@
                     </view>
                     <navigationItem key="navigationItem" title="BEREC nntool" id="OJr-pn-QHU">
                         <barButtonItem key="rightBarButtonItem" title="m" id="BVx-mB-w44">
+                            <attributedString key="userComments">
+                                <fragment content="#bc-ignore!"/>
+                            </attributedString>
                             <connections>
                                 <action selector="presentHelp" destination="9pv-A4-QxB" id="YXv-kb-8mm"/>
                             </connections>
@@ -547,6 +602,7 @@
                         <outlet property="speedMeasurementGaugeView" destination="sus-O4-eXm" id="diK-TR-UWX"/>
                         <segue destination="t4f-Xg-rdd" kind="presentation" identifier="present_modally_terms_and_conditions" id="tY1-um-iz5"/>
                         <segue destination="l2h-VI-UHi" kind="show" identifier="show_speed_measurement_view_controller" animates="NO" id="LFm-Ye-88T"/>
+                        <segue destination="U5t-jx-Usx" kind="show" identifier="present_settings_from_no_measurement_task_enabled_alert" id="UO4-fK-qiT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
@@ -578,17 +634,23 @@
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1pP-dV-42J">
                                                             <rect key="frame" x="0.0" y="0.5" width="172" height="50"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="WiFi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1CQ-pp-8m3">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="WiFi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="1CQ-pp-8m3">
                                                                     <rect key="frame" x="0.0" y="16.5" width="51.5" height="17"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <color key="textColor" red="0.30196078431372547" green="0.31764705882352939" blue="0.36470588235294116" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
+                                                                    <attributedString key="userComments">
+                                                                        <fragment content="#bc-ignore!"/>
+                                                                    </attributedString>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2019-07-24 23:59" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYu-Kt-oaL">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2019-07-24 23:59" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="mYu-Kt-oaL">
                                                                     <rect key="frame" x="51.5" y="16.5" width="120.5" height="17"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <color key="textColor" red="0.30196078431372547" green="0.31764705882352939" blue="0.36470588235294116" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
+                                                                    <attributedString key="userComments">
+                                                                        <fragment content="#bc-ignore!"/>
+                                                                    </attributedString>
                                                                 </label>
                                                             </subviews>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -605,23 +667,32 @@
                                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="QjA-SP-MX6">
                                                             <rect key="frame" x="173" y="17" width="172" height="17"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61Y-cd-0H2">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="61Y-cd-0H2">
                                                                     <rect key="frame" x="0.0" y="0.0" width="57.5" height="17"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <color key="textColor" red="0.30196078431372547" green="0.31764705882352939" blue="0.36470588235294116" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
+                                                                    <attributedString key="userComments">
+                                                                        <fragment content="#bc-ignore!"/>
+                                                                    </attributedString>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y2e-XU-dd2">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="y2e-XU-dd2">
                                                                     <rect key="frame" x="57.5" y="0.0" width="57" height="17"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <color key="textColor" red="0.30196078431372547" green="0.31764705882352939" blue="0.36470588235294116" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
+                                                                    <attributedString key="userComments">
+                                                                        <fragment content="#bc-ignore!"/>
+                                                                    </attributedString>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UoQ-aN-crd">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="UoQ-aN-crd">
                                                                     <rect key="frame" x="114.5" y="0.0" width="57.5" height="17"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <color key="textColor" red="0.30196078431372547" green="0.31764705882352939" blue="0.36470588235294116" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
+                                                                    <attributedString key="userComments">
+                                                                        <fragment content="#bc-ignore!"/>
+                                                                    </attributedString>
                                                                 </label>
                                                             </subviews>
                                                         </stackView>
@@ -661,6 +732,9 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="History" id="Mmb-sK-eHA">
                         <barButtonItem key="rightBarButtonItem" title="m" id="hTX-xa-X4N">
+                            <attributedString key="userComments">
+                                <fragment content="#bc-ignore!"/>
+                            </attributedString>
                             <connections>
                                 <action selector="presentHelp" destination="7jK-Te-nnV" id="YCB-7p-mW0"/>
                             </connections>
@@ -742,11 +816,11 @@
                             <constraint firstItem="j2f-ZU-0jV" firstAttribute="centerX" secondItem="43k-dR-OY1" secondAttribute="centerX" id="E2o-t1-IoC"/>
                             <constraint firstItem="43k-dR-OY1" firstAttribute="centerX" secondItem="2ZN-ok-MoS" secondAttribute="centerX" id="Edp-6I-qGw"/>
                             <constraint firstItem="43k-dR-OY1" firstAttribute="width" secondItem="ZCO-kG-2qz" secondAttribute="width" multiplier="0.9" id="IvX-Zd-c1t"/>
+                            <constraint firstItem="ade-vS-2jV" firstAttribute="top" secondItem="MM6-Ex-lJm" secondAttribute="bottom" constant="20" id="KA2-ul-376"/>
                             <constraint firstItem="MM6-Ex-lJm" firstAttribute="top" secondItem="43k-dR-OY1" secondAttribute="bottom" constant="5" id="KG4-68-q3E"/>
                             <constraint firstItem="ade-vS-2jV" firstAttribute="width" secondItem="ZCO-kG-2qz" secondAttribute="width" multiplier="0.9" id="Kc3-Ie-n2w"/>
                             <constraint firstItem="Ovj-et-Dag" firstAttribute="width" secondItem="43k-dR-OY1" secondAttribute="width" id="M4g-vt-cvB"/>
                             <constraint firstItem="43k-dR-OY1" firstAttribute="height" secondItem="ZCO-kG-2qz" secondAttribute="height" multiplier="0.7" id="NUx-6d-GnA"/>
-                            <constraint firstItem="ade-vS-2jV" firstAttribute="top" secondItem="MM6-Ex-lJm" secondAttribute="bottom" constant="20" id="PZn-AX-hrQ"/>
                             <constraint firstItem="43k-dR-OY1" firstAttribute="top" secondItem="ZCO-kG-2qz" secondAttribute="top" constant="10" id="WWc-U2-JcI"/>
                             <constraint firstItem="ZCO-kG-2qz" firstAttribute="bottom" secondItem="ade-vS-2jV" secondAttribute="bottom" constant="20" id="Zxb-HS-F19"/>
                             <constraint firstItem="j2f-ZU-0jV" firstAttribute="width" secondItem="43k-dR-OY1" secondAttribute="width" id="dr1-qH-V9u"/>
@@ -762,6 +836,9 @@
                     </view>
                     <navigationItem key="navigationItem" title="BEREC nntool" id="hp5-mn-BBe">
                         <barButtonItem key="rightBarButtonItem" title="_" id="QGO-Yk-GtN">
+                            <attributedString key="userComments">
+                                <fragment content="#bc-ignore!"/>
+                            </attributedString>
                             <connections>
                                 <action selector="presentHelp" destination="l2h-VI-UHi" id="IxH-jb-LRh"/>
                             </connections>
@@ -773,7 +850,10 @@
                         <outlet property="speedMeasurementBasicResultView" destination="MM6-Ex-lJm" id="wDV-Gu-rOY"/>
                         <outlet property="speedMeasurementGaugeView" destination="43k-dR-OY1" id="VMQ-oe-A0r"/>
                         <outlet property="viewMeasurementResultButton" destination="ade-vS-2jV" id="PO6-3t-ygn"/>
+                        <outlet property="viewMeasurementResultButtonBottomConstraint" destination="Zxb-HS-F19" id="cDm-oj-m0f"/>
+                        <outlet property="viewMeasurementResultButtonTopConstraint" destination="KA2-ul-376" id="dda-fF-mfq"/>
                         <segue destination="ChL-OL-d1x" kind="show" identifier="show_measurement_result" id="b35-qr-BZB"/>
+                        <segue destination="U5t-jx-Usx" kind="show" identifier="present_settings_from_again_no_measurement_task_enabled_alert" id="Fti-RK-jur"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vl1-bK-3IW" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -863,6 +943,9 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.30196078430000001" green="0.31764705879999999" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
+                                        <attributedString key="userComments">
+                                            <fragment content="#bc-ignore!"/>
+                                        </attributedString>
                                     </label>
                                 </subviews>
                             </stackView>
@@ -946,6 +1029,9 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Map" id="QbD-PX-y4u">
                         <barButtonItem key="rightBarButtonItem" title="m" id="lZu-ZB-xcc">
+                            <attributedString key="userComments">
+                                <fragment content="#bc-ignore!"/>
+                            </attributedString>
                             <connections>
                                 <action selector="presentHelp" destination="RHh-Xv-KJu" id="QjH-m7-UVW"/>
                             </connections>
@@ -1007,6 +1093,9 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Statistics" id="5bl-1F-OMU">
                         <barButtonItem key="rightBarButtonItem" title="m" id="UlX-Ns-AlZ">
+                            <attributedString key="userComments">
+                                <fragment content="#bc-ignore!"/>
+                            </attributedString>
                             <connections>
                                 <action selector="presentHelp" destination="hhn-Rs-d9T" id="RTv-Ff-2xQ"/>
                             </connections>
@@ -1074,6 +1163,9 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.30196078430000001" green="0.31764705879999999" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
+                                                    <attributedString key="userComments">
+                                                        <fragment content="#bc-ignore!"/>
+                                                    </attributedString>
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1098,6 +1190,9 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.30196078430000001" green="0.31764705879999999" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
+                                                    <attributedString key="userComments">
+                                                        <fragment content="#bc-ignore!"/>
+                                                    </attributedString>
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1146,6 +1241,9 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" red="0.30196078430000001" green="0.31764705879999999" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
+                                                    <attributedString key="userComments">
+                                                        <fragment content="#bc-ignore!"/>
+                                                    </attributedString>
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1170,6 +1268,9 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" red="0.30196078430000001" green="0.31764705879999999" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
+                                                    <attributedString key="userComments">
+                                                        <fragment content="#bc-ignore!"/>
+                                                    </attributedString>
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1186,17 +1287,27 @@
                     <navigationItem key="navigationItem" title="Info" id="RAF-NH-28k">
                         <rightBarButtonItems>
                             <barButtonItem title="p" id="IRL-Nt-kfm">
+                                <attributedString key="userComments">
+                                    <fragment content="#bc-ignore!"/>
+                                </attributedString>
                                 <connections>
                                     <segue destination="U5t-jx-Usx" kind="show" id="h6a-A8-KCs"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="m" id="mMb-4b-A6V">
+                                <attributedString key="userComments">
+                                    <fragment content="#bc-ignore!"/>
+                                </attributedString>
                                 <connections>
                                     <action selector="presentHelp" destination="cz5-OC-ccP" id="4Ex-Md-3EN"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
+                    <connections>
+                        <outlet property="emailTableViewCell" destination="Gxj-iN-QB3" id="MVW-yW-zgI"/>
+                        <outlet property="websiteTableViewCell" destination="Dm8-24-ye0" id="Of1-rc-P9o"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rUJ-gz-n6l" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1228,10 +1339,10 @@
                         <sections>
                             <tableViewSection headerTitle="General" id="56F-aD-oZg">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="Smk-ed-IEz" style="IBUITableViewCellStyleDefault" id="6eu-1E-Ddn">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="Smk-ed-IEz" style="IBUITableViewCellStyleDefault" id="6eu-1E-Ddn" customClass="UISwitchTableViewCell" customModule="BEREC_nntool" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6eu-1E-Ddn" id="6N9-vS-MyW">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6eu-1E-Ddn" id="6N9-vS-MyW" customClass="UISwitchTableViewCell" customModule="BEREC_nntool" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -1247,17 +1358,17 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="QoS" id="iKc-wi-ZHf">
+                            <tableViewSection headerTitle="Measurement selection" id="iKc-wi-ZHf">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="4IV-Z2-hdO" style="IBUITableViewCellStyleDefault" id="9C5-hK-VfE">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="QA0-d2-0h8" style="IBUITableViewCellStyleDefault" id="7UG-RU-jem">
                                         <rect key="frame" x="0.0" y="155.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="9C5-hK-VfE" id="OPo-ED-ifx">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7UG-RU-jem" id="MQc-A3-QQk">
+                                            <rect key="frame" x="0.0" y="0.0" width="348" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Enable QoS measurements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="4IV-Z2-hdO">
-                                                    <rect key="frame" x="16" y="0.0" width="343" height="44"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Choose measurements" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="QA0-d2-0h8">
+                                                    <rect key="frame" x="16" y="0.0" width="324" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.30196078430000001" green="0.31764705879999999" blue="0.36470588240000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -1265,6 +1376,9 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="MB8-6E-4BS" kind="show" id="sa5-dE-Ri9"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -1277,15 +1391,81 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Settings" id="ndR-Sc-hOE">
                         <barButtonItem key="rightBarButtonItem" title="m" id="OOa-7S-bkv">
+                            <attributedString key="userComments">
+                                <fragment content="#bc-ignore!"/>
+                            </attributedString>
                             <connections>
                                 <action selector="presentHelp" destination="U5t-jx-Usx" id="phN-Ll-m5h"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="ipv4OnlySwitchCell" destination="6eu-1E-Ddn" id="0pU-pM-KcX"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eGe-wb-AX3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2710" y="1487"/>
+        </scene>
+        <!--Measurement Type Selection Table View Controller-->
+        <scene sceneID="iNR-A5-KBb">
+            <objects>
+                <tableViewController id="MB8-6E-4BS" customClass="MeasurementTypeSelectionTableViewController" customModule="BEREC_nntool" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="KUf-ye-fVi">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="program_task_tableviewcell" textLabel="TVh-bg-xkt" detailTextLabel="tek-1h-fKy" style="IBUITableViewCellStyleSubtitle" id="vVR-3f-mgK">
+                                <rect key="frame" x="0.0" y="55.5" width="375" height="55.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vVR-3f-mgK" id="NW1-jL-Yg6">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="55.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="TVh-bg-xkt">
+                                            <rect key="frame" x="16" y="10" width="33.5" height="20.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tek-1h-fKy">
+                                            <rect key="frame" x="16" y="31.5" width="44" height="14.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="MB8-6E-4BS" id="S6N-ZV-Poq"/>
+                            <outlet property="delegate" destination="MB8-6E-4BS" id="y5A-Wj-537"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="jiM-j7-CHD">
+                        <barButtonItem key="rightBarButtonItem" title="m" id="n6L-sR-rPT">
+                            <attributedString key="userComments">
+                                <fragment content="#bc-ignore!"/>
+                            </attributedString>
+                            <connections>
+                                <action selector="presentHelp" destination="MB8-6E-4BS" id="j6O-vg-jUW"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="L6P-RS-VMN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3574" y="1487"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
@@ -1369,12 +1549,15 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="BRC-UB-Nay">
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="BRC-UB-Nay">
                                             <rect key="frame" x="16" y="0.0" width="343" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
@@ -1392,6 +1575,9 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
@@ -1409,6 +1595,9 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
+                                            <attributedString key="userComments">
+                                                <fragment content="#bc-ignore!"/>
+                                            </attributedString>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
@@ -1434,6 +1623,7 @@
         <image name="tabbar_icon_statistics" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="cR3-Gv-0fL"/>
+        <segue reference="Fti-RK-jur"/>
+        <segue reference="b35-qr-BZB"/>
     </inferredMetricsTieBreakers>
 </document>

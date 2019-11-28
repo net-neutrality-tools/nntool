@@ -43,8 +43,9 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
   private readonly webNetworkType: number = 98;
   private readonly paramSpeed: string = 'parameters_speed';
   private readonly paramServerPort: string = 'server_port';
-  private readonly paramServerAddress: string = 'server_addr';
+  private readonly paramServerAddress: string = 'server_addr_default';
   private readonly paramCollector: string = 'result_collector_base_url';
+  private readonly paramEncryption: string = 'encryption';
   private speedControl: LmapTask = undefined;
   private qosControl: LmapTask = undefined;
   private testResults: Array<SpeedMeasurementResult | QoSMeasurementResult> = [];
@@ -214,6 +215,8 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
                 this.speedConfig.serverPort = option.value;
               } else if (option.name === this.paramSpeed) {
                 this.speedConfig.speedConfig = option['measurement-parameters'].measurement_configuration;
+              } else if (option.name === this.paramEncryption) {
+                this.speedConfig.encryption = option.value === 'true';
               }
               /* tslint:enable:no-string-literal */
             }

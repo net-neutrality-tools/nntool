@@ -89,6 +89,15 @@ export class SettingsComponent implements OnInit {
     this.save();
   }
 
+  set enableLoopMode(value: boolean) {
+    this.user.enableLoopMode = value;
+    this.save();
+  }
+
+  get enableLoopMode(): boolean {
+    return this.user.enableLoopMode;
+  }
+
   get clientUuid(): string {
     return this.user.uuid;
   }

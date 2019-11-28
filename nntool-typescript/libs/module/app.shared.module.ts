@@ -18,11 +18,11 @@ import { SpeedTestImplementation } from '../testing/tests-implementation/speed/s
 import { PortBlockingTestBarComponent } from '../testing/tests/port-blocking-test-bar';
 import { SpeedTestGaugeComponent } from '../testing/tests/speed-test-gauge';
 
-// app
 import { CoreModule } from '../core/core.module';
 import { PagesModule } from '../pages/pages.module';
 import { SharedModule } from '../shared/shared.module';
 import { environment } from '../core/environments/environment';
+import { LoopSettingsComponent } from '@nntool-typescript/testing/tests/loop-settings';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -61,6 +61,7 @@ const MAIN_DECLARATIONS = [];
     ...TEST_DECLARATIONS,
     SpeedTestGaugeComponent,
     PortBlockingTestBarComponent,
+    LoopSettingsComponent,
     TestSeriesComponent
   ],
   providers: [...TEST_PROVIDERS, SpeedTestImplementation, PortBlockingTestImplementation],

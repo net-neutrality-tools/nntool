@@ -40,20 +40,9 @@ class NonTransparentProxyTask: QoSControlConnectionTask {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
 
         request = try container.decode(String.self, forKey: .request)
-        
-        var serverPort = try? container.decodeIfPresent(UInt16.self, forKey: .port)
-        if serverPort == nil {
-            if let serverPortString = try? container.decodeIfPresent(String.self, forKey: .port) {
-                serverPort = UInt16(serverPortString)
-            }
-        }
-        
-        guard let sp = serverPort else {
-            throw ParseError.parseError("Could not parse port")
-        }
-        
-        port = sp
 
+        port = try container.decodeWithStringFallback(UInt16.self, forKey: .port)
+        
         try super.init(from: decoder)
     }
 

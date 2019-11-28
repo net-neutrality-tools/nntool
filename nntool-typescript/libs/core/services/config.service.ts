@@ -36,8 +36,6 @@ export class ConfigService {
   private config: WebsiteSettings = environment;
   private constants: any = __TEST_CONFIG__;
 
-  constructor() {}
-
   public clearArray(a: any[]): void {
     while (a.length > 0) {
       a.pop();
