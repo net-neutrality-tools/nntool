@@ -108,38 +108,7 @@ export const environment = {
       month: 9
     }
   },
-  statistics: {
-    graphs: {
-      list_filters: {},
-      list_devices: {
-        enabled: false
-      },
-      list_providers: {
-        enabled: false
-      },
-      os_part: {
-        enabled: true
-      },
-      technology_part: {
-        enabled: true
-      },
-      measurements_per_provider_speed: {
-        enabled: false
-      },
-      measurements_per_provider_over_time_speed: {
-        enabled: true,
-        show_box: 6,
-        select_method: 'random',
-        select_count: 6
-      },
-      measurements_per_provider_over_time_count: {
-        enabled: true
-      },
-      measurements_per_technology_over_time: {
-        enabled: true
-      }
-    }
-  },
+  statistics: {},
   user: {
     allow_query_uuid: true,
     allow_set_uuid: false,
@@ -157,7 +126,7 @@ export const environment = {
   },
   socialMediaSettings: {
     history: {
-      medias: ["FACEBOOK", "TWITTER", "MAIL", "WHATSAPP"]
+      medias: ['FACEBOOK', 'TWITTER', 'MAIL', 'WHATSAPP']
     }
   }
 };

@@ -1,5 +1,5 @@
-import { ElectronService } from './electron.service';
+//import { ElectronService } from './electron.service';
 
-export const ELECTRON_PROVIDERS: any[] = [ElectronService];
+//export const ELECTRON_PROVIDERS: any[] = [ElectronService];
 
-export * from './electron.service';
+//export * from './electron.service';

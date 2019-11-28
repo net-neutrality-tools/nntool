@@ -1,18 +1,137 @@
-<div class="p-x-20">
-  <nntool-header title="web-portal"></nntool-header>
+<div class="site-header" *ngIf="!guard.hiddenInApp">
+  <div class="logo">
+    <a [routerLink]="[config.landing_page]" class="logo--link" title="Start">{{ 'NAV.HOME' | translate }}</a>
+  </div>
+</div>
+<div class="menu" *ngIf="!guard.hiddenInApp">
+  <div class="menu-icon" (click)="menuOpen()">
+    <div class="hide-text">Menu</div>
+  </div>
+</div>
 
-  <h2>Nx</h2>
+<nav class="menu-container" *ngIf="!guard.hiddenInApp">
+  <div class="menu-scroller">
+    <ul class="main-nav">
+      <li class="menu-item" *ngIf="features.home">
+        <a
+          class="navbar-nav-item icon-watch"
+          [routerLink]="['/home']"
+          [routerLinkActive]="['active']"
+          (click)="menuClose()"
+        >
+          <span class="navbar-nav-item-text">{{ 'NAV.HOME' | translate }}</span>
+        </a>
+      </li>
+      <li class="menu-item" *ngIf="features.testresults">
+        <a
+          class="navbar-nav-item icon-search"
+          [routerLink]="['/open-data-results']"
+          [routerLinkActive]="['active']"
+          (click)="menuClose()"
+        >
+          <span class="navbar-nav-item-text">{{ 'NAV.RESULT_LIST' | translate }}</span>
+        </a>
+      </li>
+      <li class="menu-item" *ngIf="features.map">
+        <a
+          class="navbar-nav-item icon-map"
+          [routerLink]="['/map']"
+          [routerLinkActive]="['active']"
+          (click)="menuClose()"
+        >
+          <span class="navbar-nav-item-text">{{ 'NAV.MAP' | translate }}</span>
+        </a>
+      </li>
+      <li class="menu-item" *ngIf="features.statistics">
+        <a
+          class="navbar-nav-item icon-statistics"
+          [routerLink]="['/statistics']"
+          [routerLinkActive]="['active']"
+          (click)="menuClose()"
+        >
+          <span class="navbar-nav-item-text">{{ 'NAV.STATISTICS' | translate }}</span>
+        </a>
+      </li>
+      <li class="menu-item" *ngIf="features.opendata">
+        <a
+          class="navbar-nav-item icon-opendata"
+          [routerLink]="['/opendata']"
+          [routerLinkActive]="['active']"
+          (click)="menuClose()"
+        >
+          <span class="navbar-nav-item-text">{{ 'NAV.OPENDATA' | translate }}</span>
+        </a>
+      </li>
+      <li class="menu-item" *ngIf="features.help">
+        <a
+          class="navbar-nav-item icon-help"
+          [routerLink]="['/help']"
+          [routerLinkActive]="['active']"
+          (click)="menuClose()"
+        >
+          <span class="navbar-nav-item-text">{{ 'NAV.HELP' | translate }}</span>
+        </a>
+      </li>
+      <li class="menu-item" *ngIf="features.about">
+        <a
+          class="navbar-nav-item icon-about"
+          [routerLink]="['/about']"
+          [routerLinkActive]="['active']"
+          (click)="menuClose()"
+        >
+          <span class="navbar-nav-item-text">{{ 'NAV.ABOUT' | translate }}</span>
+        </a>
+      </li>
+    </ul>
 
-  <h2>PORTAL</h2>
-  An open source toolkit for enterprise Angular applications. Nx is designed to help you create and build enterprise
-  grade Angular applications. It provides an opinionated approach to application project structure and patterns.
+    <form class="language-form" *ngIf="translateService.getLangs() && translateService.getLangs().length > 1">
+      <fieldset>
+        <label for="language-selection" class="menu-item navbar-nav-item icon-language"
+          >{{ 'NAV.LANG.SELECT' | translate }}
+          <select
+            id="language-selection"
+            class="language-select"
+            #langSelect
+            (change)="translateService.use(langSelect.value)"
+          >
+            <option
+              *ngFor="let lang of translateService.getLangs()"
+              [value]="lang"
+              [selected]="lang === translateService.currentLang"
+            >
+              {{ 'NAV.LANG.' + lang.toUpperCase() | translate }}
+            </option>
+          </select>
+        </label>
+      </fieldset>
+    </form>
+  </div>
+</nav>
 
-  <h3>Quick Start & Documentation</h3>
+<div id="fullpage" class="main">
+  <router-outlet></router-outlet>
 
-  <a href="https://nrwl.io/nx">Watch a 5-minute video on how to get started with Nx.</a>
+  <!--<section class="section">
+    <div
+      class="wrapper section-columns"
+      *ngIf="
+        guard.showOpenddataMessage && config.opendata && config.opendata.external && config.opendata.external.length > 0
+      "
+    >
+      <p>
+        {{ 'OPENDATA.EXTERNAL.TEXT' | translate }}
+        <span
+          class="inline-item"
+          *ngFor="let source of config.opendata.external"
+          [innerHtml]="'OPENDATA.EXTERNAL.' + source | translate"
+        ></span>
+      </p>
+    </div>
+  </section>-->
 
-  <h1>{{ 'welcome' | translate }}!</h1>
-  <h3>Try things out</h3>
+  <!-- #section-footer -->
+  <nntool-footer *ngIf="features.footer && !guard.hiddenInApp"> </nntool-footer>
+  <!-- #section-footer end -->
 
-  <a href="https://nstudio.io/xplat">Learn more about xplat.</a>
+  <div class="scroll-indicator hide-text" *ngIf="appService.showScroll">SCROLL DOWN</div>
 </div>

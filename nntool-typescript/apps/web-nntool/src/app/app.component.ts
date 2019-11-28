@@ -7,14 +7,13 @@ import { NGXLogger } from 'ngx-logger';
 import { LangChangeEvent, TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-
-import { FeatureSettings } from './@core/models/settings/features.settings.interface';
-import { WebsiteSettings } from './@core/models/settings/settings.interface';
-import { Guard } from './@core/services/guard.service';
-import { ConfigService } from './@core/services/config.service';
-import { BrowserStorageService } from './@core/services/storage.service';
-import { AppService } from './@core/services/app.service';
-import { UserService, UserInfo } from './@core/services/user.service';
+import { FeatureSettings } from '@nntool-typescript/core/models/settings/features.settings.interface';
+import { WebsiteSettings } from '@nntool-typescript/core/models/settings/settings.interface';
+import { Guard } from '@nntool-typescript/core/services/guard.service';
+import { ConfigService } from '@nntool-typescript/core/services/config.service';
+import { BrowserStorageService } from '@nntool-typescript/core/services/storage.service';
+import { AppService } from '@nntool-typescript/core/services/app.service';
+import { UserService, UserInfo } from '@nntool-typescript/core/services/user.service';
 
 declare var window;
 

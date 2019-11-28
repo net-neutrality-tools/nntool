@@ -1,0 +1,124 @@
+@import '../_variables.less';
+
+// TEXT COLOR LIGHTNESS
+.smart-text-color (@a) when (lightness(@a) >=50%) {
+  // Its a light color return a dark output
+  color: @pitch-black;
+}
+.smart-text-color (@a) when (lightness(@a) < 50%) {
+  // Its a dark color return a light output
+  color: @white;
+}
+
+// ==========================================================================
+// Layout
+// ==========================================================================
+body {
+  background: @white;
+  .smart-text-color(@white);
+}
+
+// ==========================================================================
+// Header content
+// ==========================================================================
+.site-header {
+  background: @white;
+}
+
+// ==========================================================================
+// Menu
+// ==========================================================================
+.menu-icon:before {
+  background: @pitch-black;
+}
+.menu-icon:after {
+  background: @pitch-black;
+}
+.menu-open .menu .menu-icon:before {
+  background: @white;
+}
+.menu-open .menu .menu-icon:after {
+  background: @white;
+}
+
+// ==========================================================================
+// Content sections
+// ==========================================================================
+#section-technical {
+  background-color: @light-grey;
+  .smart-text-color(@light-grey);
+}
+#section-footer {
+  background-color: @pitch-black;
+  .smart-text-color(@pitch-black);
+}
+#section-footer a {
+  color: @white;
+}
+.stacktable.large-only tr:hover td,
+.no-stack tr:hover td {
+  background-color: @white;
+}
+.stacktable.large-only td,
+.no-stack td {
+  border-bottom: solid 1px @grey;
+}
+.stacktable.large-only tr:nth-child(even) td,
+.no-stack tr:nth-child(even) td {
+  background-color: @light-grey;
+}
+.content--column {
+  background: @white;
+}
+.qoe-view .icon {
+  color: @pitch-black !important;
+}
+.progress-track {
+  background: @light-grey;
+}
+/* Accordion elements */
+.accordion-toggle {
+  border: solid 1px @pitch-black;
+}
+.toggle-handler {
+  background: @pitch-black;
+  .smart-text-color(@pitch-black);
+}
+.accordion-content-column {
+  border-bottom: solid 1px @grey;
+}
+.accordion-content-column:last-child {
+  border: none;
+}
+
+/* Statistics details popup */
+tr.graph-table-summary-row td {
+  background-color: @white !important;
+}
+.graph-table-details {
+  background: @white;
+}
+tr:nth-child(even) td .graph-table-details {
+  background: @light-grey;
+}
+.graph-table-summary-row .graph-table-details {
+  background: @white !important;
+}
+
+// ==========================================================================
+// Helper classes
+// ==========================================================================
+::selection {
+  /* WebKit/Blink Browsers */
+  background-color: @pitch-black;
+  .smart-text-color(@pitch-black);
+}
+::-moz-selection {
+  /* Gecko Browsers */
+  background-color: @pitch-black;
+  .smart-text-color(@pitch-black);
+}
+mark {
+  background-color: @pitch-black;
+  .smart-text-color(@pitch-black);
+}
