@@ -350,8 +350,9 @@ extension IASProgram: SpeedDelegate {
     func measurementDidLoad(withResponse response: [AnyHashable: Any]!, withError error: Error!) {
         //logger.debug(response)
         //logger.debug(error)
-
         logger.debug("measurementDidLoad")
+
+        delegate?.iasMeasurement(self, didFinishPhase: .initialize)
 
         speed.measurementStart()
         delegate?.iasMeasurement(self, didStartPhase: .rtt)

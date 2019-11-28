@@ -188,9 +188,21 @@ public class MeasurementAgent {
     }
 
     //////////
-    
+
     public func isAtLeastOneMeasurementTaskEnabled() -> Bool {
-        return programConfigurations.filter({ $0.value.isEnabled && !$0.value.enabledTasks.isEmpty }).count > 0
+        return enabledProgramsCount() > 0
+    }
+
+    public func isProgramTypeEnabled(_ type: String) -> Bool {
+        guard let key = MeasurementTypeDto(rawValue: type) else {
+            return false
+        }
+
+        return programConfigurations.filter({ $0.key == key && $0.value.isEnabled && !$0.value.enabledTasks.isEmpty }).count > 0
+    }
+
+    public func enabledProgramsCount() -> Int {
+        return programConfigurations.filter({ $0.value.isEnabled && !$0.value.enabledTasks.isEmpty }).count
     }
 
     public func newMeasurementRunner() -> MeasurementRunner? {

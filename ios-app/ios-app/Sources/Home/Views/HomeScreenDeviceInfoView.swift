@@ -22,7 +22,7 @@ import UIKit
 @IBDesignable class HomeScreenDeviceInfoView: NibView {
 
     @IBOutlet var deviceInfoStackView: UIStackView?
-    
+
     @IBOutlet var cpuValueLabel: UILabel?
     @IBOutlet var memValueLabel: UILabel?
 

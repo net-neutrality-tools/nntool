@@ -42,7 +42,7 @@ class NonTransparentProxyTask: QoSControlConnectionTask {
         request = try container.decode(String.self, forKey: .request)
 
         port = try container.decodeWithStringFallback(UInt16.self, forKey: .port)
-        
+
         try super.init(from: decoder)
     }
 
