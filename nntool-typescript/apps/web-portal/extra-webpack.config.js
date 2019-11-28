@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
-const pkg = require('../../package.json');
 
 const asciidoctor = require('asciidoctor.js')();
 
