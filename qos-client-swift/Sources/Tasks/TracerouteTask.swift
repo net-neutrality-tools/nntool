@@ -78,7 +78,7 @@ class TracerouteTask: QoSTask {
 
     override func taskMain() {
         progress.totalUnitCount = Int64(maxHops)
-        
+
         let startedAt = TimeHelper.currentTimeNs()
 
         var addr = sockaddr_in()
@@ -179,7 +179,7 @@ class TracerouteTask: QoSTask {
         if hopResult == nil {
             hopDetails = nil
         }
-        
+
         progress.completedUnitCount = progress.totalUnitCount
     }
 

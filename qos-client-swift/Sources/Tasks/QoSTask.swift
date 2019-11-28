@@ -78,7 +78,7 @@ class QoSTask: Operation, Codable {
 
         concurrencyGroup = try container.decode(UInt.self, forKey: .concurrencyGroup)
         type = try container.decode(String.self, forKey: .type)
-        
+
         if let serverTimeoutNs = container.decodeIfPresentWithStringFallback(UInt64.self, forKey: .timeoutNs) {
             timeoutNs = serverTimeoutNs
         }

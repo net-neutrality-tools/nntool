@@ -349,7 +349,7 @@ function Ias()
                     {
                         var i = index;
                         //check for new class within bounds OR if lowest lower or highest upper bounds where exceeded
-                        if ((element.bounds.lower * 1000 * 1000 < data.throughput_avg_bps && element.bounds.upper * 1000 * 1000 > data.throughput_avg_bps)
+                        if ((element.bounds.lower * 1000 * 1000 <= data.throughput_avg_bps && element.bounds.upper * 1000 * 1000 > data.throughput_avg_bps)
                             || wsMeasurementParameters[data.test_case].classes[classIndexLowestBound].bounds.lower * 1000 * 1000 > data.throughput_avg_bps
                             || wsMeasurementParameters[data.test_case].classes[classIndexHighestBound].bounds.upper * 1000 * 1000 < data.throughput_avg_bps)
                         {

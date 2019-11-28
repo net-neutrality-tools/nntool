@@ -19,11 +19,11 @@ import Foundation
 import UIKit
 
 class DeviceHelper {
-    
+
     private init() {
-        
+
     }
-    
+
     class func isSmalliPhone() -> Bool {
         return UIDevice.current.userInterfaceIdiom == .phone && UIScreen.main.nativeBounds.height < 1334
     }

@@ -47,7 +47,7 @@ class HttpProxyTask: QoSTask {
         url = try container.decode(String.self, forKey: .url) // TODO: url check?
 
         range = try container.decodeIfPresent(String.self, forKey: .range)
-        
+
         downloadTimeout = container.decodeIfPresentWithStringFallback(UInt64.self, forKey: .downloadTimeout)
         connectionTimeout = container.decodeIfPresentWithStringFallback(UInt64.self, forKey: .connectionTimeout)
 

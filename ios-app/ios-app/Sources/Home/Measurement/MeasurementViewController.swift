@@ -184,10 +184,21 @@ class MeasurementViewController: CustomNavigationBarViewController {
         measurementRunner = MEASUREMENT_AGENT.newMeasurementRunner()
         // TODO: fail measurement if runner is nil (could be because agent is not registered)
 
-        overallProgress = Progress(totalUnitCount: 200)
+        overallProgress = Progress(totalUnitCount: Int64(MEASUREMENT_AGENT.enabledProgramsCount()) * 100)
 
-        iasProgress = Progress(totalUnitCount: 100, parent: overallProgress!, pendingUnitCount: 100)
-        qosProgress = Progress(totalUnitCount: 100, parent: overallProgress!, pendingUnitCount: 100)
+        if MEASUREMENT_AGENT.isProgramTypeEnabled("SPEED") {
+            iasProgress = Progress(totalUnitCount: 100, parent: overallProgress!, pendingUnitCount: 100)
+
+            iasPhaseProgress = [SpeedMeasurementPhase: Progress]()
+            iasPhaseProgress?[.initialize] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
+            iasPhaseProgress?[.rtt] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
+            iasPhaseProgress?[.download] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
+            iasPhaseProgress?[.upload] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
+        }
+
+        if MEASUREMENT_AGENT.isProgramTypeEnabled("QOS") {
+            qosProgress = Progress(totalUnitCount: 100, parent: overallProgress!, pendingUnitCount: 100)
+        }
 
         DispatchQueue.main.async {
             self.progressInfoBar?.setLeftValue(value: "0%", newIcon: .hourglass)
@@ -198,12 +209,6 @@ class MeasurementViewController: CustomNavigationBarViewController {
                 self.progressInfoBar?.setLeftValue(value: String(format: "%d%%", Int(p.fractionCompleted * 100)))
             }
         }
-
-        iasPhaseProgress = [SpeedMeasurementPhase: Progress]()
-        iasPhaseProgress?[.initialize] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
-        iasPhaseProgress?[.rtt] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
-        iasPhaseProgress?[.download] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
-        iasPhaseProgress?[.upload] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
 
         measurementRunner?.delegate = self
         measurementRunner?.startMeasurement(preferredSpeedMeasurementPeer: preferredSpeedMeasurementPeer)
