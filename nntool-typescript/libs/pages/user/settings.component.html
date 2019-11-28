@@ -5,24 +5,28 @@
 <nntool-section-features>
   <nntool-section-content>
     <div class="section-columns">
-      <form *ngIf="shown.measurement_selection && (shown.measurement_selection_speed || shown.measurement_selection_qos)" class="baseline settings-form">
-        <fieldset>
-          <p>
-            {{ 'SETTINGS.MEASUREMENT_SELECTION.HEADER' | translate }}
-          </p>
-          <p >
-            <label *ngIf="shown.measurement_selection_speed" class="checkbox-label" for="user_execute_ping">
-              <input
-                type="checkbox"
-                id="user_execute_ping"
-                name="user_execute_ping"
-                [(ngModel)]="executePingMeasurement"
-                (ngModelChange)="save()"
-              />
-              {{ 'SETTINGS.MEASUREMENT_SELECTION.PING_MEASUREMENT' | translate }}
-            </label>
+      <div class="column">
+        <form
+          *ngIf="shown.measurement_selection && (shown.measurement_selection_speed || shown.measurement_selection_qos)"
+          class="baseline settings-form"
+        >
+          <fieldset>
+            <p>
+              {{ 'SETTINGS.MEASUREMENT_SELECTION.HEADER' | translate }}
+            </p>
+            <p>
+              <label *ngIf="shown.measurement_selection_speed" class="checkbox-label" for="user_execute_ping">
+                <input
+                  type="checkbox"
+                  id="user_execute_ping"
+                  name="user_execute_ping"
+                  [(ngModel)]="executePingMeasurement"
+                  (ngModelChange)="save()"
+                />
+                {{ 'SETTINGS.MEASUREMENT_SELECTION.PING_MEASUREMENT' | translate }}
+              </label>
 
-            <label *ngIf="shown.measurement_selection_speed" class="checkbox-label" for="user_execute_download">
+              <label *ngIf="shown.measurement_selection_speed" class="checkbox-label" for="user_execute_download">
                 <input
                   type="checkbox"
                   id="user_execute_download"
@@ -34,57 +38,80 @@
               </label>
 
               <label *ngIf="shown.measurement_selection_speed" class="checkbox-label" for="user_execute_upload">
-                  <input
-                    type="checkbox"
-                    id="user_execute_upload"
-                    name="user_execute_upload"
-                    [(ngModel)]="executeUploadMeasurement"
-                    (ngModelChange)="save()"
-                  />
-                  {{ 'SETTINGS.MEASUREMENT_SELECTION.UPLOAD_MEASUREMENT' | translate }}
-                </label>
-              <label *ngIf="shown.measurement_selection_qos" class="checkbox-label" for="user_execute_qos">
-                <input 
-                type="checkbox"
-                id="user_execute_qos"
-                name="user_execute_qos"
-                [(ngModel)]="executeQosMeasurement"
-                (ngModelChange)="save()"
-              />
-              {{ 'SETTINGS.MEASUREMENT_SELECTION.QOS_MEASUREMENT' | translate }}
+                <input
+                  type="checkbox"
+                  id="user_execute_upload"
+                  name="user_execute_upload"
+                  [(ngModel)]="executeUploadMeasurement"
+                  (ngModelChange)="save()"
+                />
+                {{ 'SETTINGS.MEASUREMENT_SELECTION.UPLOAD_MEASUREMENT' | translate }}
               </label>
-          </p>
-        </fieldset>
-      </form>
+              <label *ngIf="shown.measurement_selection_qos" class="checkbox-label" for="user_execute_qos">
+                <input
+                  type="checkbox"
+                  id="user_execute_qos"
+                  name="user_execute_qos"
+                  [(ngModel)]="executeQosMeasurement"
+                  (ngModelChange)="save()"
+                />
+                {{ 'SETTINGS.MEASUREMENT_SELECTION.QOS_MEASUREMENT' | translate }}
+              </label>
+            </p>
+          </fieldset>
+        </form>
+      </div>
+      <div class="column">
+        <form
+          *ngIf="shown.measurement_selection && (shown.measurement_selection_speed || shown.measurement_selection_qos)"
+          class="baseline settings-form"
+        >
+          <fieldset>
+            <p *ngIf="shown.force_ip4">
+              <label class="checkbox-label" for="user_force_ip4">
+                <input
+                  type="checkbox"
+                  id="user_force_ip4"
+                  name="user_force_ip4"
+                  [(ngModel)]="forceIp"
+                  (ngModelChange)="save()"
+                />
+                {{ 'SETTINGS.FORCE_IP4' | translate }}
+              </label>
+            </p>
+          </fieldset>
+        </form>
 
-      <form *ngIf="shown.measurement_selection && (shown.measurement_selection_speed || shown.measurement_selection_qos)"
-        class="baseline settings-form">
-        <fieldset>
-          <p *ngIf="shown.force_ip4">
-            <label class="checkbox-label" for="user_force_ip4">
-              <input type="checkbox" id="user_force_ip4" name="user_force_ip4" [(ngModel)]="forceIp" (ngModelChange)="save()" />
-              {{ 'SETTINGS.FORCE_IP4' | translate }}
-            </label>
-          </p>
-        </fieldset>
-      </form>
+        <form
+          *ngIf="shown.measurement_selection && (shown.measurement_selection_speed || shown.measurement_selection_qos)"
+          class="baseline settings-form"
+        >
+          <fieldset>
+            <p>
+              {{ 'SETTINGS.LOOPMODE.HEADER' | translate }}
+            </p>
+            <p>
+              <label *ngIf="shown.measurement_selection_speed" class="checkbox-label" for="user_show_loopmode">
+                <input
+                  type="checkbox"
+                  id="user_show_loopmode"
+                  name="user_show_loopmode"
+                  [(ngModel)]="enableLoopMode"
+                  (ngModelChange)="save()"
+                />
+                {{ 'SETTINGS.LOOPMODE.ENABLE_TEXT' | translate }}
+              </label>
+            </p>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </nntool-section-content>
+</nntool-section-features>
 
-      <form *ngIf="shown.measurement_selection && (shown.measurement_selection_speed || shown.measurement_selection_qos)"
-        class="baseline settings-form">
-        <fieldset>
-          <p>
-            {{ 'SETTINGS.LOOPMODE.HEADER' | translate }}
-          </p>
-          <p>
-            <label *ngIf="shown.measurement_selection_speed" class="checkbox-label" for="user_show_loopmode">
-              <input type="checkbox" id="user_show_loopmode" name="user_show_loopmode" [(ngModel)]="enableLoopMode"
-                (ngModelChange)="save()" />
-              {{ 'SETTINGS.LOOPMODE.ENABLE_TEXT' | translate }}
-            </label>
-          </p>
-        </fieldset>
-      </form>
-
+<nntool-section-technical>
+  <div class="section-columns">
+    <div class="column">
       <form name="user_settings" class="baseline settings-form">
         <fieldset>
           <p *ngIf="shown.client_uuid">{{ 'SETTINGS.CLIENT_UUID' | translate }}: {{ clientUuid ? clientUuid : '-' }}</p>
@@ -136,5 +163,5 @@
         </fieldset>
       </form>
     </div>
-  </nntool-section-content>
-</nntool-section-features>
+  </div>
+</nntool-section-technical>

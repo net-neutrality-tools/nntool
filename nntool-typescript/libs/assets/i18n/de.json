@@ -158,7 +158,7 @@
   },
   "HISTORY": {
     "HEADER": "My Results",
-    "NO_USER_UUID": "Currently no user uuid",
+    "NO_USER_UUID": "Currently no agent uuid",
     "NAME": "Device",
     "GRAPH": {
       "HEADER": "",
@@ -323,8 +323,8 @@
     "FORCE_IP4": "Force IPv4",
     "CLIENT_UUID": "Agent UUID",
     "SAVE": "Save",
-    "DISASSOCIATE_BEFORE_DELETE": "Anonymize all measurements before user reset.",
+    "DISASSOCIATE_BEFORE_DELETE": "Anonymize all measurements before agent reset.",
     "DELETE_TEXT": "Delete data",
-    "DELETE": "Reset user"
+    "DELETE": "Reset agent"
   }
 }
