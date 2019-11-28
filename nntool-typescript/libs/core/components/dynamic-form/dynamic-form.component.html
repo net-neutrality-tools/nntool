@@ -1,16 +1,17 @@
-<div class="flex--columns" [formGroup]="dynamicForm">
-    <ng-container *ngIf="filterResponse">
-        <div style="width: 49%;" formArrayName="filters" *ngFor="let filter of filterResponse.filters; let i = index">
-            <ng-container [ngSwitch]="filter.filter_type">
-                <select *ngSwitchCase="'DROPDOWN'" [formControlName]="i">
-                    <option *ngFor="let opt of filter.options" [value]="opt.value">
-                        {{opt.label}}
-                    </option>
-                </select>
-                <input *ngSwitchCase="'INPUT_TEXT'" type="text" [formControlName]="i"/>
-                <input *ngSwitchCase="'INPUT_NUMBER'" type="number" [formControlName]="i"/>
-                <div *ngSwitchDefault></div>
-            </ng-container>
-        </div>
-    </ng-container>
+<div class="section-columns" [formGroup]="dynamicForm">
+  <ng-container *ngIf="filterResponse">
+    <div class="column" formArrayName="filters" *ngFor="let filter of filterResponse.filters; let i = index">
+      <label for="">{{ filter.key }}</label>
+      <ng-container [ngSwitch]="filter.filter_type">
+        <select *ngSwitchCase="'DROPDOWN'" [formControlName]="i">
+          <option *ngFor="let opt of filter.options" [value]="opt.value">
+            {{ opt.label }}
+          </option>
+        </select>
+        <input *ngSwitchCase="'INPUT_TEXT'" type="text" [formControlName]="i" />
+        <input *ngSwitchCase="'INPUT_NUMBER'" type="number" [formControlName]="i" />
+        <div *ngSwitchDefault></div>
+      </ng-container>
+    </div>
+  </ng-container>
 </div>

@@ -7,17 +7,16 @@
 </nntool-section-intro>
 
 <nntool-section-features *ngIf="filterResponse">
-   
-
   <nntool-section-content>
-
-    <dynamic-form 
-      [filterResponse]="filterResponse"
-      (formChangeCallback)="onFormChangeCallback($event)"
-      >
-    </dynamic-form>
-
-    <input type="text" />
+    <fieldset>
+      <legend>Filters</legend>
+      <header class="column-header">
+        <!--<div class="icon icon-statistics"></div>-->
+        <h2>Filters</h2>
+      </header>
+      <dynamic-form [filterResponse]="filterResponse" (formChangeCallback)="onFormChangeCallback($event)">
+      </dynamic-form>
+    </fieldset>
   </nntool-section-content>
 </nntool-section-features>
 
