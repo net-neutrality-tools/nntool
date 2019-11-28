@@ -109,14 +109,14 @@ class VoipTask: QoSControlConnectionTask {
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
-        
+
         portOut = container.decodeIfPresentWithStringFallback(UInt16.self, forKey: .portOut)
         portIn = container.decodeIfPresentWithStringFallback(UInt16.self, forKey: .portIn)
-        
+
         if let serverBitsPerSample = container.decodeIfPresentWithStringFallback(UInt8.self, forKey: .bitsPerSample) {
             bitsPerSample = serverBitsPerSample
         }
-        
+
         if let serverSampleRate = container.decodeIfPresentWithStringFallback(UInt16.self, forKey: .sampleRate) {
             sampleRate = serverSampleRate
         }

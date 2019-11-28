@@ -19,11 +19,11 @@ import Foundation
 import UIKit
 
 class MeasurementHelper {
-    
+
     private init() {
-        
+
     }
-    
+
     class func createNoMeasurementTaskEnabledWarningAlert(_ openSettingsCallback: (() -> Void)? = nil) -> UIAlertController {
         let alert = UIAlertController(
             title: R.string.localizable.homeNoMeasurementTaskEnabledAlertTitle(),
@@ -39,7 +39,7 @@ class MeasurementHelper {
 
         return alert
     }
-    
+
     class func createPreMeasurementWarningAlert(_ continueMeasurementCallback: (() -> Void)? = nil) -> UIAlertController {
         let alert = UIAlertController(
             title: R.string.localizable.homePreMeasurementAlertTitle(),
