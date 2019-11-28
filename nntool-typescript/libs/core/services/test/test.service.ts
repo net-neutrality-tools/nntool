@@ -21,7 +21,7 @@ import { RegistrationRequestAPI } from '../../../test/models/registration/regist
 import { RequestAPI } from '../../../test/models/api/request.api';
 import { SettingsRequestAPI } from '../../../test/models/settings/settings-request.api';
 import { GeoLocation } from '../../../test/models/api/request-info.api';
-import { environment } from '../../environments/environment';
+import { environment } from '@env/environment';
 
 @Injectable()
 export class TestService {
@@ -128,18 +128,14 @@ export class TestService {
 
         if (this.userService.user.forceIp) {
           serverAddr = context.settings.urls.controller_service_ipv4;
-          console.log("forcing ipv4 controller");
+          console.log('forcing ipv4 controller');
         }
 
-        if (!serverAddr.endsWith("/")) {
-          serverAddr += "/";
+        if (!serverAddr.endsWith('/')) {
+          serverAddr += '/';
         }
 
-         return this.requestService.postJson<LmapControl>(
-            `${serverAddr}measurements`,
-            lmapControl
-          );
-        
+        return this.requestService.postJson<LmapControl>(`${serverAddr}measurements`, lmapControl);
       })
     );
   }

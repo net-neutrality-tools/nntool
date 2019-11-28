@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { UIModule } from '@nntool-typescript/web';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  imports: [UIModule],
-  exports: [UIModule, TranslateModule]
+  imports: [],
+  exports: [FormsModule, ReactiveFormsModule, BrowserModule, TranslateModule, RouterModule]
 })
-export class SharedModule { }
+export class SharedModule {}

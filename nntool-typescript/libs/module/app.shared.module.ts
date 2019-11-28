@@ -1,6 +1,6 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
@@ -21,7 +21,7 @@ import { SpeedTestGaugeComponent } from '../testing/tests/speed-test-gauge';
 import { CoreModule } from '../core/core.module';
 import { PagesModule } from '../pages/pages.module';
 import { SharedModule } from '../shared/shared.module';
-import { environment } from '../core/environments/environment';
+import { environment } from '@env/environment';
 import { LoopSettingsComponent } from '@nntool-typescript/testing/tests/loop-settings';
 
 // AoT requires an exported function for factories
@@ -48,6 +48,7 @@ const MAIN_DECLARATIONS = [];
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     DeviceDetectorModule.forRoot(),
     Ng2SmartTableModule,

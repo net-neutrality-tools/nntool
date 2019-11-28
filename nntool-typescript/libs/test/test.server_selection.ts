@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { environment } from '../core/environments/environment';
+import { environment } from '@env/environment';
 import { ResponseAPI } from './models/api/response.api';
 import { SpeedMeasurementPeer } from './models/server-selection/speed-measurement-peer';
 import { SpeedMeasurementPeerResponseAPI } from './models/server-selection/speed-measurement-peer-response.api';
