@@ -216,6 +216,37 @@ public enum QosMeasurementType {
         }
     }
 
+    public QoSMeasurementTypeDto getQosMeasurementTypeDto() {
+        switch(this) {
+            case DNS:
+                return QoSMeasurementTypeDto.DNS;
+            case TCP:
+                return QoSMeasurementTypeDto.TCP;
+            case UDP:
+                return QoSMeasurementTypeDto.UDP;
+            case VOIP:
+                return QoSMeasurementTypeDto.VOIP;
+            case WEBSITE:
+                return QoSMeasurementTypeDto.WEBSITE;
+            case HTTP_PROXY:
+                return QoSMeasurementTypeDto.HTTP_PROXY;
+            case ECHO_PROTOCOL:
+                return QoSMeasurementTypeDto.ECHO_PROTOCOL;
+            case NON_TRANSPARENT_PROXY:
+                return QoSMeasurementTypeDto.NON_TRANSPARENT_PROXY;
+            case TRACEROUTE:
+                return QoSMeasurementTypeDto.TRACEROUTE;
+            case SIP:
+                return QoSMeasurementTypeDto.SIP;
+            case MKIT_WEB_CONNECTIVITY:
+                return QoSMeasurementTypeDto.MKIT_WEB_CONNECTIVITY;
+            case MKIT_DASH:
+                return QoSMeasurementTypeDto.MKIT_DASH;
+            default:
+                return null;
+        }
+    }
+
     public static QosMeasurementType fromQosTypeDto(final QoSMeasurementTypeDto dto) {
         switch(dto) {
             case DNS:
