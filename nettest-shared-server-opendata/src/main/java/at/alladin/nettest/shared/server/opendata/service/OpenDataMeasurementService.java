@@ -39,6 +39,10 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.Ful
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullSpeedMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullSubMeasurement;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ComputedNetworkPointInTimeInfoDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.NetworkInfoDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.NetworkPointInTimeInfoDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.SignalDto;
 import at.alladin.nettest.shared.server.config.ElasticSearchProperties;
 import at.alladin.nettest.shared.server.opendata.jdbc.IasMeasurementPreparedStatementSetter;
 import at.alladin.nettest.shared.server.opendata.jdbc.MeasurementPreparedStatementSetter;
@@ -120,6 +124,8 @@ public class OpenDataMeasurementService {
 	public void storeOpenDataMeasurement(FullMeasurementResponse measurementDto) {
 		final String openDataUuid = measurementDto.getOpenDataUuid();
 		
+		removeNonOpendataFields(measurementDto);
+		
 		if (elasticSearchClient != null) {
 			try {
 				storeMeasurementInElasticsearch(measurementDto);
@@ -139,7 +145,7 @@ public class OpenDataMeasurementService {
 			}
 		}
 	}
-	
+
 	public void storeMeasurementInElasticsearch(FullMeasurementResponse measurementDto) throws Exception {
 		@SuppressWarnings("unchecked")
 		final IndexRequest indexRequest = new IndexRequest(elasticsearchProperties.getIndex())
@@ -170,6 +176,34 @@ public class OpenDataMeasurementService {
 		FullSubMeasurement qosSubMeasurement = subMeasurements.get(MeasurementTypeDto.QOS);
 		if (qosSubMeasurement != null && qosSubMeasurement instanceof FullQoSMeasurement) {
 			jdbcTemplate.update(INSERT_QOS_MEASUREMENT_SQL, new QoSMeasurementPreparedStatementSetter((FullQoSMeasurement) qosSubMeasurement, openDataUuid));
+		}
+	}
+	
+	////
+	
+	private void removeNonOpendataFields(FullMeasurementResponse measurementDto) {
+		measurementDto.setUuid(null);
+		
+		final ComputedNetworkPointInTimeInfoDto cnpit = measurementDto.getComputedNetworkInfo();
+		if (cnpit != null) {
+			cnpit.setAgentPrivateIp(null);
+			cnpit.setBssid(null);
+		}
+		
+		final NetworkInfoDto networkInfo = measurementDto.getNetworkInfo();
+		if (networkInfo != null) {
+			if (networkInfo.getNetworkPointInTimeInfo() != null) {
+				for (NetworkPointInTimeInfoDto t : networkInfo.getNetworkPointInTimeInfo()) {
+					t.setAgentPrivateIp(null);
+					t.setBssid(null);
+				}
+			}
+			
+			if (networkInfo.getSignals() != null) {
+				for (SignalDto s : networkInfo.getSignals()) {
+					s.setWifiBssid(null);
+				}
+			}
 		}
 	}
 	

@@ -215,7 +215,11 @@ public class SystemApi {
 	 * @return
 	 */
 	public String anonymizeIp(String ip) { // TODO: can this also be a rdns name?
-		if ("*".equals(ip)) {
+		if (ip == null || ip.length() == 0) {
+			return "*";
+		}
+		
+		if ("*".equals(ip) || ip.contains("x")) { // If IP address contains 'x' is has already been anonymized on the agent.
 			return ip;
 		}
 		
