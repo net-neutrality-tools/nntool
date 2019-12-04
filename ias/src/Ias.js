@@ -1,7 +1,7 @@
 /*!
     \file Ias.js
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-26
+    \date Last update: 2019-12-04
 
     Copyright (C) 2016 - 2019 zafaco GmbH
 
@@ -111,7 +111,7 @@ function Ias()
 
         console.log('Measurement Parameters: \n' + JSON.stringify(wsMeasurementParameters));
 
-        console.log("The browser developer console should only be used for debugging purposes, as an active developer console can cause performance issues");
+        console.warn("The browser developer console should only be used for debugging purposes, as an active developer console can cause performance issues");
 
         wsControlReset();
 
