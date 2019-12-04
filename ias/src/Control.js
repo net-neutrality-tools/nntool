@@ -797,12 +797,12 @@ function WSControl()
     {
         if (wsMeasurementTime === 0)
         {
-            var currentTime = performance.now();
+            var currentTime   = performance.now();
+            var reportMissing = false;
 
             //on upload, make sure that at least one report was received per stream to account for jitter
             if (wsTestCase === 'upload')
             {
-                var reportMissing = false;
                 for (var wsID = 0; wsID < wsWorkersStatus.length; wsID++)
                 {
                     var reportsReceived = 0;
@@ -831,14 +831,6 @@ function WSControl()
                         }
                     }
                 }
-
-                if (reportMissing)
-                {
-                    console.log("At least one stream has no upload reports, skipping calculation");
-                    classCheckFetchTimeout  = setTimeout(classCheckFetch, 500);
-                    classCheckReportTimeout = setTimeout(classCheckReport, classCheckReportTime);
-                    return;
-                }
             }
 
             classCheckValues.dataTotal = 0;
@@ -856,10 +848,8 @@ function WSControl()
 
                 if (classCheckValues.dataTotal === 0 || isNaN(classCheckValues.dataTotal))
                 {
-                    console.log("No data available, skipping calculation");
-                    classCheckFetchTimeout  = setTimeout(classCheckFetch, 500);
-                    classCheckReportTimeout = setTimeout(classCheckReport, classCheckReportTime);
-                    return;
+                    reportMissing = true;
+                    break;
                 }
 
                 if (wsTestCase === 'upload')
@@ -867,6 +857,20 @@ function WSControl()
                     var keyCountStream = Object.keys(classCheckUlReportDict[wsID]).length;
                     keyCount = (keyCountStream > keyCount) ? keyCountStream : keyCount;
                 }
+            }
+
+            if (reportMissing && ((currentTime - classCheckStartTime) + classCheckReportTime < wsStartupTime))
+            {
+                console.log("No data available and/or no upload reports, skipping calculation");
+                
+                classCheckFetchTimeout  = setTimeout(classCheckFetch, 500);
+                classCheckReportTimeout = setTimeout(classCheckReport, classCheckReportTime);
+                return;
+            }
+
+            if (reportMissing && !(currentTime - classCheckStartTime) + classCheckReportTime < wsStartupTime)
+            {
+                console.warn("Still no data available and/or no upload reports at final callback before measurement start, forcing class change");
             }
 
             if (wsTestCase === 'download')
