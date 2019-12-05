@@ -43,5 +43,23 @@
       </header>
       <p [innerHTML]="'HOME.TILES.HELP.DESCRIPTION' | translate"></p>
     </div>
+    <div class="content--column home clickable">
+      <header class="column-header">
+        <div class="icon icon-language" aria-hidden="true"></div>
+        <h3>{{ 'HOME.TILES.LANGUAGE_SELECT.HEADER' | translate }}</h3>
+      </header>
+      <div>
+        <p [innerHTML]="'HOME.TILES.LANGUAGE_SELECT.DESCRIPTION' | translate"></p>
+        <select #langSelect (change)="translateService.use(langSelect.value)">
+          <option
+            *ngFor="let lang of translateService.getLangs()"
+            [value]="lang"
+            [selected]="lang === translateService.currentLang"
+          >
+            {{ 'LANG.' + lang.toUpperCase() | translate }}
+          </option>
+        </select>
+      </div>
+    </div>
   </div>
 </nntool-section-technical>

@@ -3,7 +3,6 @@ package at.alladin.nettest.service.search.web.api.v1;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,14 +20,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import at.alladin.nettest.service.search.helper.CoarseResultHelper;
 import at.alladin.nettest.service.search.service.SearchService;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiPagination;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeneralMeasurementTypeDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullMeasurementResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullSpeedMeasurement;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullSubMeasurement;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
 import at.alladin.nettest.shared.server.helper.swagger.ApiPageable;
 import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
@@ -98,11 +102,18 @@ public class MeasurementSearchResource {
 	@GetMapping(value = "/{openDataUuid:[^\\.]+}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<ApiResponse<Map<String, Object>>> getMeasurement(
 		@ApiParam(value = "The open-data UUID", required = true) @PathVariable String openDataUuid, 
-		@ApiParam(value = "Set of included measurement types (e.g. SPEED, TCP_PORT, VOIP, ...). If nothing is provided all measurement types are returned") @RequestParam(name = "include", required = false) Set<GeneralMeasurementTypeDto> includedMeasurementTypes) {
+		@RequestParam(name = "coarse", required = false) boolean coarse
+		/*@ApiParam(value = "Set of included measurement types (e.g. SPEED, TCP_PORT, VOIP, ...). If nothing is provided all measurement types are returned") @RequestParam(name = "include", required = false) Set<GeneralMeasurementTypeDto> includedMeasurementTypes*/) {
 		
 		// TODO: remove measurement types not included in includedMeasurementTypes!
 		
-		return ResponseHelper.ok(searchService.findOneByOpenDataUuid(openDataUuid));
+		Map<String, Object> opendataMeasurement = searchService.findOneByOpenDataUuid(openDataUuid);
+		
+		if (coarse) { 
+			opendataMeasurement = CoarseResultHelper.makeCoarseResult(opendataMeasurement, objectMapper);
+		}
+		
+		return ResponseHelper.ok(opendataMeasurement);
 	}
 	
 	/**

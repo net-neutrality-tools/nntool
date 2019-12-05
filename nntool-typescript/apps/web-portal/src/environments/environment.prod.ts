@@ -18,7 +18,7 @@ export const environment = {
   },
   landing_page: 'home',
   user_agent: 'abc',
-  languages: ['en'],
+  languages: ['en', 'de'],
   servers: {
     control: 'https://controller-de-01.net-neutrality.tools/api/v1/',
     result: 'https://result-de-01.net-neutrality.tools/api/v1/',

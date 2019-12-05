@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import at.alladin.nettest.service.search.service.ExportService;
@@ -46,8 +47,8 @@ public class MeasurementExportResource {
 		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
 	})
 	@GetMapping({"/{openDataUuid:[^\\.]+}.{extension:[^\\.]+}"})
-	public void exportSingleMeasurement(@PathVariable String openDataUuid, @PathVariable String extension, HttpServletResponse response) {
-		exportService.exportSingleMeasurement(openDataUuid, determineExtension(extension), response);
+	public void exportSingleMeasurement(@PathVariable String openDataUuid, @PathVariable String extension, @RequestParam(name = "coarse", required = false) boolean coarse, HttpServletResponse response) {
+		exportService.exportSingleMeasurement(openDataUuid, coarse, determineExtension(extension), response);
 	}
 	
 	////

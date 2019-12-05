@@ -39,15 +39,15 @@ export class OpenDataResultComponent implements OnInit {
     });
   }
 
-  public exportAsCsv() {
-    this.searchApiService.exportSingleOpenDataMeasurement(this.openDataUuid, 'csv');
+  public exportAsCsv(coarse: boolean = false) {
+    this.searchApiService.exportSingleOpenDataMeasurement(this.openDataUuid, coarse, 'csv');
   }
 
-  public exportAsJson() {
-    this.searchApiService.exportSingleOpenDataMeasurement(this.openDataUuid, 'json');
+  public exportAsJson(coarse: boolean = false) {
+    this.searchApiService.exportSingleOpenDataMeasurement(this.openDataUuid, coarse, 'json');
   }
 
-  public exportAsYaml() {
-    this.searchApiService.exportSingleOpenDataMeasurement(this.openDataUuid, 'yaml');
+  public exportAsYaml(coarse: boolean = false) {
+    this.searchApiService.exportSingleOpenDataMeasurement(this.openDataUuid, coarse, 'yaml');
   }
 }

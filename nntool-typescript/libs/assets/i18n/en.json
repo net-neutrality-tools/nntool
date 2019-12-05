@@ -32,6 +32,10 @@
       "LB": "lb"
     }
   },
+  "LANG": {
+    "EN": "English",
+    "DE": "Deutsch"
+  },
   "PORTAL": {
     "HOME": {
       "HEADER": "nntool.eu Portal"
@@ -70,6 +74,14 @@
       "HELP": {
         "HEADER": "Help",
         "DESCRIPTION": "Detailed assistance with all supported functionality"
+      },
+      "SETTINGS": {
+        "HEADER": "Settings",
+        "DESCRIPTION": "View and change settings"
+      },
+      "LANGUAGE_SELECT": {
+        "HEADER": "Language",
+        "DESCRIPTION": "Choose your preferred language"
       }
     }
   },

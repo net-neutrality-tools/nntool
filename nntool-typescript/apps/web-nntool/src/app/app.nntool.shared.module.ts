@@ -7,11 +7,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from '@ngx-translate/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   imports: [AppSharedModule, RouterModule],
   exports: [TranslateModule, BrowserModule, BrowserAnimationsModule, CoreModule],
   providers: [TestGuard],
-  declarations: [AppComponent]
+  declarations: [AppComponent, HomeComponent]
 })
 export class AppNntoolSharedModule {}
