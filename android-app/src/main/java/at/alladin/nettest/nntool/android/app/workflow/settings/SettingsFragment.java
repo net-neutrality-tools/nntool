@@ -141,7 +141,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
             final Preference commitPreference = findPreference(PREFERENCE_COMMIT_HASH);
             if (commitPreference != null) {
-                commitPreference.setSummary(BuildConfig.GIT_CURRENT_COMMIT);
+                commitPreference.setSummary(BuildConfig.GIT_VERSION_STRING);
                 commitPreference.setOnPreferenceClickListener(preference -> {
                     final ClipboardManager manager = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                     if (manager != null) {
