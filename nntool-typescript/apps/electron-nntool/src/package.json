@@ -11,6 +11,16 @@
   "repository": {
     "url": "https://github.com/nstudio/xplat"
   },
+  "dependencies": {
+    "async": "3.1.0",
+    "ping": "0.2.2",
+    "isomorphic-fetch": "2.2.1",
+    "tiny-worker": "2.2.0",
+    "electron-cookies": "heap/electron-cookies",
+    "electron-unhandled": "2.2.0",
+    "network": "file:modules/node_checkin/network",
+    "ws": "file:modules/node_checkin/ws"
+  },
   "build": {
     "appId": "com.company.nntool",
     "productName": "Nntool",

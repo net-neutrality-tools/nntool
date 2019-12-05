@@ -9,12 +9,10 @@ import { TestState } from './tests-implementation/test-state';
 import { UIState } from './tests-ui/ui-state';
 
 export abstract class StartableTest {
-  public requestStart() {};
+  public requestStart() {}
   public onChangedRunningState: Observable<TestComponentStatus>;
   public setActive: (active: boolean) => void;
-  public onOnlyReInit() {
-
-  }
+  public onOnlyReInit() {}
 }
 
 export abstract class Test<
@@ -60,6 +58,11 @@ export abstract class Test<
   );
   private status: TestComponentStatus = TestComponentStatus.WAITING;
 
+  public onChangedRunningState: Observable<TestComponentStatus> = merge(
+    this.$onStatusNotWaiting.asObservable(),
+    this.onStatusWaiting$
+  );
+
   protected constructor(testImplementation: T) {
     super();
     this.state = this.$state.asObservable().pipe(map(this.testStateToUIStateWrapper));
@@ -67,11 +70,6 @@ export abstract class Test<
     // subscribed to trigger emitting "finished" output if there is no test-series parent
     this.testImplementation = testImplementation;
   }
-
-  public onChangedRunningState: Observable<TestComponentStatus> = merge(
-    this.$onStatusNotWaiting.asObservable(),
-    this.onStatusWaiting$
-  );
 
   public ngOnInit(): void {
     this.setActive(false);
@@ -83,7 +81,7 @@ export abstract class Test<
     }
   }
 
-  public requestStart () {
+  public requestStart() {
     if (this.status === TestComponentStatus.WAITING && (this.config === undefined || this.config === null)) {
       this.$onStatusNotWaiting.next(TestComponentStatus.REQUESTS_CONFIG);
       this.status = TestComponentStatus.REQUESTS_CONFIG;
@@ -91,7 +89,7 @@ export abstract class Test<
     } else if (this.status === TestComponentStatus.WAITING && this.config !== undefined && this.config !== null) {
       this.start();
     }
-  };
+  }
 
   private start = () => {
     // TODO: consider token

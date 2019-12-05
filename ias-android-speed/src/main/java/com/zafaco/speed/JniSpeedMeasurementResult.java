@@ -247,18 +247,22 @@ public class JniSpeedMeasurementResult {
 
         private Long standardDeviationNs;
 
-        private List<Long> singleRtts = new ArrayList<>();
+        private List<SingleRtt> singleRtts = new ArrayList<>();
 
         @Keep
-        public void addSingleRtt(Long rtt) {
-            singleRtts.add(rtt);
+        public void addSingleRtt(Long rttNs, Long relativeTimeNs) {
+            final SingleRtt toAdd = new SingleRtt();
+            toAdd.setRttNs(rttNs);
+            toAdd.setRelativeTimeNsMeasurementStart(relativeTimeNs);
+            singleRtts.add(toAdd);
         }
 
-        public List<Long> getSingleRtts() {
+        public List<SingleRtt> getSingleRtts() {
             return singleRtts;
         }
 
-        public void setSingleRtts(List<Long> singleRtts) {
+        @Keep
+        public void setSingleRtts(List<SingleRtt> singleRtts) {
             this.singleRtts = singleRtts;
         }
 
@@ -395,6 +399,38 @@ public class JniSpeedMeasurementResult {
                     ", peer='" + peer + '\'' +
                     ", progress=" + progress +
                     ", standardDeviationNs=" + standardDeviationNs +
+                    '}';
+        }
+    }
+
+    public static class SingleRtt {
+        private Long rttNs;
+
+        private Long relativeTimeNsMeasurementStart;
+
+        public Long getRttNs() {
+            return rttNs;
+        }
+
+        @Keep
+        public void setRttNs(Long rttNs) {
+            this.rttNs = rttNs;
+        }
+
+        public Long getRelativeTimeNsMeasurementStart() {
+            return relativeTimeNsMeasurementStart;
+        }
+
+        @Keep
+        public void setRelativeTimeNsMeasurementStart(Long relativeTimeNsMeasurementStart) {
+            this.relativeTimeNsMeasurementStart = relativeTimeNsMeasurementStart;
+        }
+
+        @Override
+        public String toString() {
+            return "SingleRtt{" +
+                    "rttNs=" + rttNs +
+                    ", relativeTimeNsMeasurementStart=" + relativeTimeNsMeasurementStart +
                     '}';
         }
     }

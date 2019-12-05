@@ -78,6 +78,8 @@ var callbackTimeout                 = 10000;
 var systemUsageStarted              = false;
 var systemUsageStopped              = false;
 
+var measurementStartTimestamp       = 0;
+
 
 
 
@@ -194,10 +196,16 @@ function iasCallback(data)
     data = jsTool.extend(data, deviceKPIs);
     data.route_info = routeKPIs;
 
-    if (!systemUsageStarted && data.cmd === 'info' && data.test_case === 'download')
+    if (!systemUsageStarted && data.cmd === 'info')
     {
         systemUsageStarted = true;
-        tool.startUpdatingSystemUsage();
+
+        if (typeof data.time_info !== 'undefined' && typeof data.time_info.measurement_start !== 'undefined')
+        {
+            measurementStartTimestamp = data.time_info.measurement_start;
+        }
+        
+        tool.startUpdatingSystemUsage(measurementStartTimestamp);
     }
     
     if (data.cmd === 'completed' || data.cmd === 'error')
@@ -284,11 +292,12 @@ function systemUsageCallback(data)
 {
     var systemUsage = JSON.parse(data);
     
-    if (typeof systemUsage.dsk_cpu_load_avg !== 'undefined' && !isNaN(systemUsage.dsk_cpu_load_avg) && systemUsage.dsk_cpu_load_avg <= 1)                   systemUsageKPIs.dsk_cpu_load_avg        = systemUsage.dsk_cpu_load_avg;
-    if (typeof systemUsage.dsk_cpu_load_max !== 'undefined' && !isNaN(systemUsage.dsk_cpu_load_max) && systemUsage.dsk_cpu_load_max <= 1)                   systemUsageKPIs.dsk_cpu_load_max        = systemUsage.dsk_cpu_load_max;
-    if (typeof systemUsage.dsk_cpu_load_max_core !== 'undefined' && !isNaN(systemUsage.dsk_cpu_load_max_core) && systemUsage.dsk_cpu_load_max_core <= 1)    systemUsageKPIs.dsk_cpu_load_max_core   = systemUsage.dsk_cpu_load_max_core;
-    if (typeof systemUsage.dsk_mem_load_avg !== 'undefined' && !isNaN(systemUsage.dsk_mem_load_avg) && systemUsage.dsk_mem_load_avg <= 1)                   systemUsageKPIs.dsk_mem_load_avg        = systemUsage.dsk_mem_load_avg;
-    if (typeof systemUsage.dsk_mem_load_max !== 'undefined' && !isNaN(systemUsage.dsk_mem_load_max) && systemUsage.dsk_mem_load_max <= 1)                   systemUsageKPIs.dsk_mem_load_max        = systemUsage.dsk_mem_load_max;
+    if (typeof systemUsage.system_usage_raw_data !== 'undefined')                                                                                                       systemUsageKPIs.system_usage_raw_data       = systemUsage.system_usage_raw_data;
+    if (typeof systemUsage.dsk_cpu_load_avg !== 'undefined' && !isNaN(systemUsage.dsk_cpu_load_avg) && systemUsage.dsk_cpu_load_avg <= 1)                               systemUsageKPIs.dsk_cpu_load_avg            = systemUsage.dsk_cpu_load_avg;
+    if (typeof systemUsage.dsk_cpu_load_avg_max !== 'undefined' && !isNaN(systemUsage.dsk_cpu_load_avg_max) && systemUsage.dsk_cpu_load_avg_max <= 1)                   systemUsageKPIs.dsk_cpu_load_avg_max        = systemUsage.dsk_cpu_load_avg_max;
+    if (typeof systemUsage.dsk_cpu_load_avg_max_core !== 'undefined' && !isNaN(systemUsage.dsk_cpu_load_avg_max_core) && systemUsage.dsk_cpu_load_avg_max_core <= 1)    systemUsageKPIs.dsk_cpu_load_avg_max_core   = systemUsage.dsk_cpu_load_avg_max_core;
+    if (typeof systemUsage.dsk_mem_load_avg !== 'undefined' && !isNaN(systemUsage.dsk_mem_load_avg) && systemUsage.dsk_mem_load_avg <= 1)                               systemUsageKPIs.dsk_mem_load_avg            = systemUsage.dsk_mem_load_avg;
+    if (typeof systemUsage.dsk_mem_load_avg_max !== 'undefined' && !isNaN(systemUsage.dsk_mem_load_avg_max) && systemUsage.dsk_mem_load_avg_max <= 1)                   systemUsageKPIs.dsk_mem_load_avg_max        = systemUsage.dsk_mem_load_avg_max;
 };
 
 function getLocationKPIsCallback(data)
@@ -307,7 +316,7 @@ function getRouteToTargetCallback(data)
     if (typeof routeToTarget.hops !== 'undefined' && routeToTarget.hops !== '-' && routeToTarget.hops.length !== 0)
     {
         routeKPIs.dsk_client_server_route_hops    = Number(routeToTarget.hops[routeToTarget.hops.length-1].id);
-        routeKPIs.dsk_client_server_route         = JSON.stringify(routeToTarget.hops);
+        routeKPIs.dsk_client_server_route         = routeToTarget.hops;
         
         routeToTargetCallbackCalled                 = true;
     }

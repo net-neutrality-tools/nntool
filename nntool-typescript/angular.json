@@ -21,8 +21,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["testing/tsconfig.libs.json", "testing/tsconfig.libs.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "testing/tsconfig.libs.json",
+              "testing/tsconfig.libs.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -45,8 +50,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["testing/tsconfig.xplat.json", "testing/tsconfig.xplat.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "testing/tsconfig.xplat.json",
+              "testing/tsconfig.xplat.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -170,8 +180,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/web-nntool/tsconfig.app.json", "apps/web-nntool/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "apps/web-nntool/tsconfig.app.json",
+              "apps/web-nntool/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -245,7 +260,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/web-nntool-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -352,8 +369,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/web-portal/tsconfig.app.json", "apps/web-portal/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "apps/web-portal/tsconfig.app.json",
+              "apps/web-portal/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "test": {
@@ -412,7 +434,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/web-portal-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -446,7 +470,6 @@
             "assets": [
               "apps/web-nntool/src/favicon.ico",
               "apps/web-nntool/src/assets",
-              "apps/web-nntool/src/assets",
               {
                 "glob": "**/*",
                 "input": "./libs/assets/",
@@ -455,7 +478,9 @@
               {
                 "glob": "**/*",
                 "input": "apps/electron-nntool/src/",
-                "ignore": ["**/*.ts"],
+                "ignore": [
+                  "**/*.ts"
+                ],
                 "output": ""
               }
             ],
@@ -466,16 +491,8 @@
             ],
             "scripts": [
               {
-                "input": "../ias/build/uglified/desktop/ias.desktop.js",
+                "input": "../ias/build/uglified/web/ias.web.js",
                 "bundleName": "ias.web"
-              },
-              {
-                "input": "../ias/build/uglified/desktop/WebWorker.js",
-                "bundleName": "WebWorker"
-              },
-              {
-                "input": "../ias/build/uglified/desktop/JSTool.js",
-                "bundleName": "Tool"
               }
             ]
           },

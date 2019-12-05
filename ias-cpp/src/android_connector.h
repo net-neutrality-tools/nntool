@@ -2,7 +2,7 @@
     \file android_connector.h
     \author zafaco GmbH <info@zafaco.de>
     \author alladin-IT GmbH <info@alladin.at>
-    \date Last update: 2019-11-13
+    \date Last update: 2019-11-26
 
     Copyright (C) 2016 - 2019 zafaco GmbH
     Copyright (C) 2019 alladin-IT GmbH
@@ -63,6 +63,7 @@ extern std::atomic_bool hasError;
 extern int TIMER_INDEX;
 extern int TIMER_DURATION;
 extern unsigned long long MEASUREMENT_DURATION;
+extern long long TIMESTAMP_MEASUREMENT_START;
 
 extern int NETTYPE;
 

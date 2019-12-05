@@ -153,7 +153,7 @@ class IASProgram: NSObject, ProgramProtocol {
             res.rttInfo?.standardDeviationNs = rttInfo["standard_deviation_ns"] as? UInt64
             //
 
-            res.rttInfo?.rtts = (rttInfo["rtts"] as? [UInt64])?.map { RttDto(rttNs: $0, relativeTimeNs: nil) }
+            res.rttInfo?.rtts = (rttInfo["rtts"] as? [[AnyHashable: Any]])?.map { RttDto(rttNs: $0["rtt_ns"] as? UInt64, relativeTimeNs: $0["relative_time_ns_measurement_start"] as? UInt64) }
         }
 
         res.connectionInfo = ConnectionInfoDto()
