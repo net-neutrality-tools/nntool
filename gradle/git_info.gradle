@@ -6,16 +6,18 @@ class GitInfo {
   private static String buildDate
 
   static {
-    def ciBranchName = System.env.CI_COMMIT_REF_NAME
-    if (ciBranchName != null && ciBranchName.length() > 0) {
-      println("In CI context, using CI_COMMIT_REF_NAME (${ciBranchName}) instead of 'git symbolic-ref --short HEAD'")
-      branchName = ciBranchName
+    def isCI = System.env.CI
+    if (isCI != null) {
+      println("In CI context, using CI_ environment variables instead of git commands.")
+      
+      branchName = System.env.CI_COMMIT_REF_NAME
+      commitRef = System.env.CI_COMMIT_SHORT_SHA
+      commitCount = "-1"
     } else {
       branchName = runGitCommand('symbolic-ref', '--short', 'HEAD')
+      commitRef = runGitCommand('describe', '--tags', '--always', '--first-parent') //runGitCommand('log', '--pretty=format:"%h"', '-n 1')
+      commitCount = runGitCommand('rev-list', 'HEAD', '--count')
     }
-
-    commitRef = runGitCommand('describe', '--tags', '--always', '--first-parent') //runGitCommand('log', '--pretty=format:"%h"', '-n 1')
-    commitCount = runGitCommand('rev-list', 'HEAD', '--count')
 
     buildDate = new Date().format('yyyy-MM-dd_HH:mm:ss')
   }
