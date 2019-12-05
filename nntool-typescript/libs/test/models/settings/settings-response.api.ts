@@ -50,7 +50,7 @@ export enum QoSMeasurementType {
   VOIP = 'VOIP',
   TRACEROUTE = 'TRACEROUTE',
   WEBSITE = 'WEBSITE',
-  AUDIO = 'AUDIO',
+  SIP = 'SIP',
   ECHO_PROTOCOL = 'ECHO_PROTOCOL',
 
   MKIT_DASH = 'MKIT_DASH',

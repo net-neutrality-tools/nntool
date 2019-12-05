@@ -34,6 +34,8 @@ plugins {
 	id 'com.adarshr.test-logger' version '1.6.0' // https://github.com/radarsh/gradle-test-logger-plugin
 }
 
+apply from: "${project.rootDir}/gradle/git_info.gradle"
+
 if (System.getProperty('include-code-coverage') != null) {
 	apply from: "${project.rootDir}/gradle/clover_aggregate.gradle"
 }
