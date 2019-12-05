@@ -21,7 +21,7 @@ public enum GeneralMeasurementTypeDto {
     VOIP,
     TRACEROUTE,
     WEBSITE,
-    AUDIO,
+    SIP,
 
     MKIT_DASH,
     MKIT_WEB_CONNECTIVITY;

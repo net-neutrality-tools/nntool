@@ -19,7 +19,6 @@ public enum QoSMeasurementTypeDto {
     VOIP,
     TRACEROUTE,
     WEBSITE,
-    AUDIO,
     ECHO_PROTOCOL,
     SIP,
 
