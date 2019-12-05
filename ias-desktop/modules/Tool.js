@@ -28,21 +28,27 @@ var os_functions    = require(__dirname + '/modules/' + process.platform + '.js'
 var ping            = require('ping');
 var dns             = require('dns');
 var fetch           = require('isomorphic-fetch');
+var jsTool          = new JSTool();
 
-var systemUsageUpdateInterval   = 1000;
-var systemUsageCheckInterval    = 800;
+var systemUsageUpdateInterval   = 500;
+var systemUsageCheckInterval    = 400;
 var systemUsageUpdateTimer;
+var systemUsageRawData          = [];
 var cpuUsageCheckTimer;
 var cpuLoadSum                  = 0.0;
 var cpuLoadCount                = 0;
+var cpuLoadCurrent              = 0.0;
 var cpuLoadAvg                  = 0.0;
 var cpuLoadMax                  = 0.0;
 var cpuLoadMaxCore              = 0.0;
 var memUsageCheckTimer;
 var memLoadSum                  = 0.0;
 var memLoadCount                = 0;
+var memLoadCurrent              = 0.0;
 var memLoadAvg                  = 0.0;
 var memLoadMax                  = 0.0;
+
+var timestampMeasurementStart   = 0;
 
 
 
@@ -170,22 +176,27 @@ Tool.prototype.getDeviceKPIs = function ()
     });
 };
 
-Tool.prototype.startUpdatingSystemUsage = function ()
+Tool.prototype.startUpdatingSystemUsage = function (measurementStartTimestamp)
 {
+    timestampMeasurementStart = measurementStartTimestamp;
+
     var cpuFirstMeasure = currentCPUUsage();
 
     cpuUsageCheckTimer = setInterval(function()
     { 
         var cpuSecondMeasure = currentCPUUsage(); 
 
-        //avg calc
+        //cur
         var idleDifference  = cpuSecondMeasure.idle     - cpuFirstMeasure.idle;
         var totalDifference = cpuSecondMeasure.total    - cpuFirstMeasure.total;
+        cpuLoadCurrent = ( 1 - (idleDifference / totalDifference) ).toFixed(10);
+
+        //avg
         cpuLoadSum += 1 - (idleDifference / totalDifference);
         cpuLoadCount ++;
         cpuLoadAvg = (cpuLoadSum / cpuLoadCount).toFixed(10);
         
-        //max calc core
+        //max per core
         var idleDifferenceMax  = cpuSecondMeasure.maxIdle   - cpuFirstMeasure.maxIdle;
         var totalDifferenceMax = cpuSecondMeasure.maxTick   - cpuFirstMeasure.maxTick;
         var max = (1 - (idleDifferenceMax / totalDifferenceMax)).toFixed(10);
@@ -201,14 +212,18 @@ Tool.prototype.startUpdatingSystemUsage = function ()
             cpuLoadMax = cpuLoadAvg;
         }
 
-        console.log('CPU Usage Current:     ' + cpuLoadAvg);
-        console.log('CPU Usage Max:         ' + cpuLoadMax);
-        console.log('CPU Usage Max Core:    ' + cpuLoadMaxCore);
-
+        /*
+        console.log('CPU Usage Current:      ' + cpuLoadCurrent);
+        console.log('CPU Usage Avg:          ' + cpuLoadAvg);
+        console.log('CPU Usage Avg Max:      ' + cpuLoadMax);
+        console.log('CPU Usage Avg Max Core: ' + cpuLoadMaxCore);
+        */
+        
     }, systemUsageCheckInterval);
     
     memUsageCheckTimer = setInterval(function()
     { 
+        memLoadCurrent = ( 1 - (os.freemem() / os.totalmem()) ).toFixed(10);
         memLoadSum += 1 - (os.freemem() / os.totalmem());
         memLoadCount ++;
         memLoadAvg = (memLoadSum / memLoadCount).toFixed(10);
@@ -222,12 +237,19 @@ Tool.prototype.startUpdatingSystemUsage = function ()
     systemUsageUpdateTimer = setInterval(function()
     {
         var data = {};
+
+        var raw_data = {};
+        raw_data.dsk_cpu_load_current = parseFloat(cpuLoadCurrent).toFixed(4);
+        raw_data.dsk_mem_load_current = parseFloat(memLoadCurrent).toFixed(4);
+        raw_data.relative_time_ns_measurement_start = (jsTool.getTimestamp() * 1000 * 1000 ) - timestampMeasurementStart;
+        systemUsageRawData.push(raw_data);
         
-        data.dsk_cpu_load_avg       = Number(cpuLoadAvg).toFixed(2);
-        data.dsk_cpu_load_max       = Number(cpuLoadMax).toFixed(2);
-        data.dsk_cpu_load_max_core  = Number(cpuLoadMaxCore).toFixed(2);
-        data.dsk_mem_load_avg       = Number(memLoadAvg).toFixed(2);
-        data.dsk_mem_load_max       = Number(memLoadAvg).toFixed(2);
+        data.system_usage_raw_data        = systemUsageRawData;
+        data.dsk_cpu_load_avg             = Number(cpuLoadAvg).toFixed(4);
+        data.dsk_cpu_load_avg_max         = Number(cpuLoadMax).toFixed(4);
+        data.dsk_cpu_load_avg_max_core    = Number(cpuLoadMaxCore).toFixed(4);
+        data.dsk_mem_load_avg             = Number(memLoadAvg).toFixed(4);
+        data.dsk_mem_load_avg_max         = Number(memLoadAvg).toFixed(4);
         
         systemUsageCallback(JSON.stringify(data));
         

@@ -67,6 +67,5 @@ const MAIN_DECLARATIONS = [];
   ],
   providers: [...TEST_PROVIDERS, SpeedTestImplementation, PortBlockingTestImplementation],
   exports: [TranslateModule, BrowserModule, BrowserAnimationsModule, CoreModule]
-  //bootstrap: [AppComponent]
 })
 export class AppSharedModule {}

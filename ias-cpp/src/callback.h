@@ -1,7 +1,7 @@
 /*!
     \file callback.h
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2019-11-26
 
     Copyright (C) 2016 - 2019 zafaco GmbH
 
@@ -38,6 +38,7 @@ class CCallback
 {
     friend void startTestCase(int nTestCase);
     friend void measurementStart(std::string measurementParameters);
+
 	private:
 		Json jMeasurementParameters;
 
@@ -47,8 +48,6 @@ class CCallback
 		void uploadCallback(string cmd);
 		Json::object getMeasurementResults(struct measurement tempMeasurement, struct measurement_data data, string cmd);
 
-		
-	
 	public:
 		Json::object jMeasurementResultsTime;
 		Json::object jMeasurementResultsPeer;
