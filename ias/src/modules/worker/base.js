@@ -1,7 +1,7 @@
 /*!
     \file base.js
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2019-11-26
 
     Copyright (C) 2016 - 2019 zafaco GmbH
 
@@ -394,7 +394,7 @@ function connect()
                         wsRttValues.rtts = [];
                         for (var rtt in data.rtts)
                         {
-                            wsRttValues.rtts.push(data.rtts[rtt].rtt_ns * 1000);
+                            wsRttValues.rtts.push({"rtt_ns": data.rtts[rtt].rtt_ns * 1000, "id": data.rtts[rtt].id});
                         }
                     }
                 }

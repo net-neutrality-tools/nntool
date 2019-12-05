@@ -448,7 +448,9 @@ function WSControl()
                     var ipcRendererMeasurement  = require('electron').ipcRenderer;
 
                     wsWorkersStatus[wsID]       = wsStateClosed;
-                    wsWorkers[wsID]             = new WorkerNode(path.join(__dirname, 'modules/WebWorker.js'));
+
+                    const { app } = require('electron').remote;
+                    wsWorkers[wsID] = new WorkerNode(path.join(app.getAppPath(), 'modules/WebWorker.js'));
 
                     ipcRendererMeasurement.send('iasSetWorkerPID', wsWorkers[wsID].child.pid),
 

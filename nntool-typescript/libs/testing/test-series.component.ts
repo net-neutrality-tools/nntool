@@ -1,4 +1,14 @@
-import { AfterViewInit, Component, ContentChildren, EventEmitter, Input, Output, QueryList } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ContentChildren,
+  EventEmitter,
+  Input,
+  Output,
+  QueryList,
+  AfterContentInit,
+  ChangeDetectorRef
+} from '@angular/core';
 import { TestComponentStatus } from './enums/test-component-status.enum';
 import { StartableTest } from './test.component';
 
@@ -31,17 +41,19 @@ export class TestSeriesComponent implements AfterViewInit {
                 console.log(test);
             }
         );*/
-    this.currentFixedTestComponents = this.testComponents.toArray();
-    this.currentFixedTestComponents.forEach((testComponent: StartableTest) => {
-      testComponent.setActive(false);
-      testComponent.onChangedRunningState.subscribe(this.testHasEnded);
-    });
-    if (this.currentFixedTestComponents.length > 0) {
-      this.currentFixedTestComponents[this.currentTestIndex].setActive(true);
-      if (this.autostart) {
-        this.currentFixedTestComponents[this.currentTestIndex].requestStart();
+    setTimeout(() => {
+      this.currentFixedTestComponents = this.testComponents.toArray();
+      this.currentFixedTestComponents.forEach((testComponent: StartableTest) => {
+        testComponent.setActive(false);
+        testComponent.onChangedRunningState.subscribe(this.testHasEnded);
+      });
+      if (this.currentFixedTestComponents.length > 0) {
+        this.currentFixedTestComponents[this.currentTestIndex].setActive(true);
+        if (this.autostart) {
+          this.currentFixedTestComponents[this.currentTestIndex].requestStart();
+        }
       }
-    }
+    }, 0);
   }
 
   private testHasEnded = (testComponentStatus: TestComponentStatus) => {

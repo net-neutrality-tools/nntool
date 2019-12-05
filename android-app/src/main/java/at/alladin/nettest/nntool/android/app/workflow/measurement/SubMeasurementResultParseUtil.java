@@ -105,7 +105,17 @@ public class SubMeasurementResultParseUtil {
             rttInfoDto.setMedianNs(lastRttResult.getMedianNs());
             rttInfoDto.setMinimumNs(lastRttResult.getMinNs());
             rttInfoDto.setStandardDeviationNs(lastRttResult.getStandardDeviationNs());
-            rttInfoDto.setRtts(parseIntoRttDto(result.getRttUdpResult().getSingleRtts()));
+            if (lastRttResult.getSingleRtts() != null && lastRttResult.getSingleRtts().size() > 0) {
+                final List<RttDto> rttList = new ArrayList<>();
+                RttDto toAdd;
+                for (JniSpeedMeasurementResult.SingleRtt rtt : lastRttResult.getSingleRtts()) {
+                    toAdd = new RttDto();
+                    toAdd.setRttNs(rtt.getRttNs());
+                    toAdd.setRelativeTimeNs(rtt.getRelativeTimeNsMeasurementStart());
+                    rttList.add(toAdd);
+                }
+                rttInfoDto.setRtts(rttList);
+            }
 
         }
 

@@ -47,8 +47,6 @@ public class JniSpeedMeasurementClient {
 
     private List<MeasurementStringListener> stringListeners = new ArrayList<>();
 
-    private List<MeasurementListener> listeners = new ArrayList<>();
-
     private List<MeasurementFinishedStringListener> finishedStringListeners = new ArrayList<>();
 
     private List<MeasurementFinishedListener> finishedListeners = new ArrayList<>();
@@ -112,10 +110,6 @@ public class JniSpeedMeasurementClient {
         stringListeners.add(listener);
     }
 
-    public void addMeasurementListener(final MeasurementListener listener) {
-        listeners.add(listener);
-    }
-
     public void addMeasurementFinishedListener(final MeasurementFinishedStringListener listener) {
         finishedStringListeners.add(listener);
     }
@@ -142,10 +136,6 @@ public class JniSpeedMeasurementClient {
 
     public interface MeasurementStringListener {
         void onMeasurement (final String result);
-    }
-
-    public interface MeasurementListener {
-        void onMeasurement (final JniSpeedMeasurementResult result, final SpeedTaskDesc taskDesc);
     }
 
     public interface MeasurementFinishedStringListener {

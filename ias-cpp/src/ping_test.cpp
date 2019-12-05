@@ -1,7 +1,7 @@
 /*!
     \file ping_test.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2019-11-28
 
     Copyright (C) 2016 - 2019 zafaco GmbH
 
@@ -92,8 +92,11 @@ TEST_CASE("Ping test")
         CHECK(stoi(result["num_received"].string_value()) == pXml->readLong("testing", "PING_QUERY", -1));
         
         CHECK(stoi(result["num_received"].string_value()) == stoi(result["num_sent"].string_value()));
-        
-        CHECK(std::find(rtts.begin(), rtts.end(), median) != rtts.end());
+
+        auto &n = result["rtts"].array_items()[result["rtts"].array_items().size() - 1];
+        Json::object m = n.object_items();
+
+        CHECK( (m["rtt_ns"].int_value() == median ? false : true) );
 
         ::RUNNING = false;
 

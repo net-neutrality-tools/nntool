@@ -1,7 +1,7 @@
 /*!
     \file typedef.h
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2019-11-26
 
     Copyright (C) 2016 - 2019 zafaco GmbH
 
@@ -65,6 +65,7 @@ class measurement_data
 		
 		map <int, unsigned long long> httpresponse;
 		map <int, unsigned long long> results;
+		map <int, long long> results_timestamp;
 		map <int, int> values_int;
 		map <int, double> values_double;
 		map <int, string> values_string;

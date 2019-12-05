@@ -172,7 +172,7 @@ exports.get_network_interfaces_list = function(callback) {
                     ipv4_address: nic.IPAddress,
                     vendor: nic.Manufacturer,
                     model: nic.Description,
-                    type: nic.Name.match(/802.11|wi-?fi|wireless|wlan|w-lan/i) ? 'wireless' : 'wired'
+                    type: nic.Name.match(/802.11|wi-?fi|wireless|wlan|w-lan|RangeBooster|ultimate-n|advanced-n|n300|funk|drahtlos|drathlos|wireless|Linksys.AE3000/i) ? 'wireless' : 'wired'
                 }
 				
                 var cmd = "netsh interface ip show subinterfaces";

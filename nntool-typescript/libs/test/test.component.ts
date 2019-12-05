@@ -27,6 +27,9 @@ import { UserService } from '../core/services/user.service';
 import { RequestsService } from '../core/services/requests.service';
 import { AppService } from '../core/services/app.service';
 import { LocationService } from '../core/services/location.service';
+import { PointInTimeValueAPI } from './models/measurements/point-in-time-value.api';
+import { WebSocketInfo } from '@nntool-typescript/core/models/lmap/models/lmap-report/lmap-result/extensions/web-socket-info.model';
+import { NumStreamsInfo } from '@nntool-typescript/core/models/lmap/models/lmap-report/lmap-result/extensions/num-streams-info.model';
 
 export { TestGuard } from './test.guard';
 
@@ -51,6 +54,9 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
   private testResults: Array<SpeedMeasurementResult | QoSMeasurementResult> = [];
   private startTimeStamp: string = undefined;
   private selectedSpeedMeasurementPeer: SpeedMeasurementPeer = undefined;
+
+  private network_info?: any;
+  private system_usage_info?: any;
 
   constructor(
     testService: TestService,
@@ -102,32 +108,31 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
 
     speedMeasurementResult.deserialize_type = 'speed_result';
     speedMeasurementResult.reason = null;
-    speedMeasurementResult.relative_end_time_ns = null;
-    speedMeasurementResult.relative_start_time_ns = null;
     speedMeasurementResult.status = null;
     speedMeasurementResult.rtt_info = new RttInfo();
     speedMeasurementResult.connection_info = new ConnectionInfo();
     speedMeasurementResult.connection_info.identifier = this.selectedSpeedMeasurementPeer.identifier;
+    speedMeasurementResult.connection_info.num_streams_info = new NumStreamsInfo();
 
     if (typeof speedTestResult.completeTestResult !== 'undefined') {
       const completeResult = speedTestResult.completeTestResult;
-      if (completeResult.download_info !== undefined && completeResult.download_info.length > 0) {
-        const currentDownload = completeResult.download_info[completeResult.download_info.length - 1];
-        // we sent the duration (not the duration_total), as the mbps are calculated from the duration => the total duration can be calculated from the relative starttimes
-        speedMeasurementResult.duration_download_ns = currentDownload.duration_ns;
-        speedMeasurementResult.bytes_download = currentDownload.bytes;
-        speedMeasurementResult.bytes_download_including_slow_start = currentDownload.bytes_including_slow_start;
-      }
+      //console.log(completeResult);
+
+      speedMeasurementResult.relative_start_time_ns = completeResult.time_info.measurement_start;
+      speedMeasurementResult.relative_end_time_ns = completeResult.time_info.measurement_end;
+
+      speedMeasurementResult.connection_info.address = completeResult.peer_info.url;
+      speedMeasurementResult.connection_info.port = completeResult.peer_info.port;
+      speedMeasurementResult.connection_info.encrypted = completeResult.peer_info.tls === '1';
+
+      // RTT
       if (completeResult.rtt_info !== undefined) {
         const currentRtt = completeResult.rtt_info;
         speedMeasurementResult.duration_rtt_ns = currentRtt.duration_ns;
         speedMeasurementResult.rtt_info = {
-          rtts: [
-            {
-              rtt_ns: speedTestResult.ping * 1000 * 1000,
-              relative_time_ns: undefined
-            }
-          ],
+          rtts: currentRtt.rtts.map(item => {
+            return { rtt_ns: item.rtt_ns, relative_time_ns: item.relative_time_ns_measurement_start };
+          }),
           requested_num_packets: 10, // TODO: fill w/server setting
           num_sent: currentRtt.num_sent,
           num_received: currentRtt.num_received,
@@ -136,28 +141,66 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
           packet_size: currentRtt.packet_size,
           average_ns: currentRtt.average_ns,
           maximum_ns: currentRtt.max_ns,
-          median_ns: currentRtt.median_ms,
+          median_ns: currentRtt.median_ns,
           minimum_ns: currentRtt.min_ns,
           standard_deviation_ns: currentRtt.standard_deviation_ns
         };
       }
+
+      // download
+      if (completeResult.download_info !== undefined && completeResult.download_info.length > 0) {
+        const currentDownload = completeResult.download_info[completeResult.download_info.length - 1];
+        // we sent the duration (not the duration_total), as the mbps are calculated from the duration => the total duration can be calculated from the relative starttimes
+        speedMeasurementResult.duration_download_ns = currentDownload.duration_ns;
+        speedMeasurementResult.bytes_download = currentDownload.bytes;
+        speedMeasurementResult.bytes_download_including_slow_start = currentDownload.bytes_including_slow_start;
+
+        speedMeasurementResult.connection_info.num_streams_info.requested_num_streams_download =
+          currentDownload.num_streams_start;
+        speedMeasurementResult.connection_info.num_streams_info.actual_num_streams_download =
+          currentDownload.num_streams_end;
+
+        const wsInfoDl = new WebSocketInfo();
+
+        wsInfoDl.frame_count = currentDownload.frame_count;
+        wsInfoDl.frame_size = currentDownload.frame_size;
+        wsInfoDl.frame_count_including_slow_start = currentDownload.frame_count_including_slow_start;
+        wsInfoDl.overhead = currentDownload.overhead;
+        wsInfoDl.overhead_per_frame = currentDownload.overhead_per_frame;
+        wsInfoDl.overhead_per_frame_including_slow_start = currentDownload.overhead_per_frame_including_slow_start;
+
+        speedMeasurementResult.connection_info.web_socket_info_download = wsInfoDl;
+      }
+
+      // upload
       if (completeResult.upload_info !== undefined && completeResult.upload_info.length > 0) {
         const currentUpload = completeResult.upload_info[completeResult.upload_info.length - 1];
         // we sent the duration (not the duration_total), as the mbps are calculated from the duration => the total duration can be calculated from the relative starttimes
         speedMeasurementResult.duration_upload_ns = currentUpload.duration_ns;
         speedMeasurementResult.bytes_upload = currentUpload.bytes;
         speedMeasurementResult.bytes_upload_including_slow_start = currentUpload.bytes_including_slow_start;
+
+        speedMeasurementResult.connection_info.num_streams_info.requested_num_streams_upload =
+          currentUpload.num_streams_start;
+        speedMeasurementResult.connection_info.num_streams_info.actual_num_streams_upload =
+          currentUpload.num_streams_end;
+
+        const wsInfoUl = new WebSocketInfo();
+
+        wsInfoUl.frame_count = currentUpload.frame_count;
+        wsInfoUl.frame_size = currentUpload.frame_size;
+        wsInfoUl.frame_count_including_slow_start = currentUpload.frame_count_including_slow_start;
+        wsInfoUl.overhead = currentUpload.overhead;
+        wsInfoUl.overhead_per_frame = currentUpload.overhead_per_frame;
+        wsInfoUl.overhead_per_frame_including_slow_start = currentUpload.overhead_per_frame_including_slow_start;
+
+        speedMeasurementResult.connection_info.web_socket_info_upload = wsInfoUl;
       }
-    } else {
-      // TODO: probably remove this!
-      speedMeasurementResult.bytes_download = speedTestResult.downBit / 8;
-      speedMeasurementResult.bytes_upload = speedTestResult.upBit / 8;
-      speedMeasurementResult.rtt_info.rtts = [
-        {
-          rtt_ns: speedTestResult.ping * 1000 * 1000,
-          relative_time_ns: undefined
-        }
-      ];
+
+      if (completeResult.client_info.type === 'DESKTOP') {
+        this.network_info = completeResult.network_info;
+        this.system_usage_info = completeResult.system_usage_info;
+      }
     }
 
     this.testResults.push(speedMeasurementResult);
@@ -204,21 +247,27 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
         switch (task.name) {
           case 'SPEED':
             this.speedConfig = new MeasurementSettings();
-            for (const i in task.option) {
-              const option: LmapOption = task.option[i];
-              /* tslint:disable:no-string-literal */
-              if (option.name === this.paramCollector) {
-                this.speedConfig.collectorAddress = option.value;
-              } else if (option.name === this.paramServerAddress) {
-                this.speedConfig.serverAddress = option.value;
-              } else if (option.name === this.paramServerPort) {
-                this.speedConfig.serverPort = option.value;
-              } else if (option.name === this.paramSpeed) {
-                this.speedConfig.speedConfig = option['measurement-parameters'].measurement_configuration;
-              } else if (option.name === this.paramEncryption) {
-                this.speedConfig.encryption = option.value === 'true';
+            for (const option of task.option) {
+              switch (option.name) {
+                case this.paramCollector:
+                  this.speedConfig.collectorAddress = option.value;
+                  break;
+                case this.paramServerAddress:
+                  this.speedConfig.serverAddress = option.value;
+                  break;
+                case this.paramServerPort:
+                  this.speedConfig.serverPort = option.value;
+                  break;
+                case this.paramSpeed: {
+                  /* tslint:disable:no-string-literal */
+                  this.speedConfig.speedConfig = option['measurement-parameters'].measurement_configuration;
+                  /* tslint:enable:no-string-literal */
+                  break;
+                }
+                case this.paramEncryption:
+                  this.speedConfig.encryption = option.value === 'true';
+                  break;
               }
-              /* tslint:enable:no-string-literal */
             }
             this.speedControl = task;
             break;
@@ -259,7 +308,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
     });
 
     lmapReport.time_based_result = new TimeBasedResultAPI();
-    const networkPointInTime: MeasurementResultNetworkPointInTimeAPI = new MeasurementResultNetworkPointInTimeAPI();
+    const networkPointInTime = new MeasurementResultNetworkPointInTimeAPI();
     networkPointInTime.network_type_id = this.webNetworkType;
     networkPointInTime.time = endTimeStamp;
     lmapReport.time_based_result.start_time = this.startTimeStamp;
@@ -269,6 +318,27 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
 
     this.locationService.stopTracking();
     lmapReport.time_based_result.geo_locations = this.locationService.getLocations();
+
+    if (this.network_info) {
+      const npit_info = lmapReport.time_based_result.network_points_in_time[0];
+
+      if (this.network_info.dsk_lan_detected) {
+        // LAN
+        npit_info.network_type_id = 98;
+      } else {
+        // WLAN
+        npit_info.network_type_id = 99;
+      }
+    }
+
+    if (this.system_usage_info) {
+      lmapReport.time_based_result.cpu_usage = [
+        new PointInTimeValueAPI<number>(this.system_usage_info.dsk_cpu_load_avg, 0)
+      ];
+      lmapReport.time_based_result.mem_usage = [
+        new PointInTimeValueAPI<number>(this.system_usage_info.dsk_mem_load_avg, 0)
+      ];
+    }
 
     this.testService
       .postMeasurementResults(

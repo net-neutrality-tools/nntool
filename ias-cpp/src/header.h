@@ -1,7 +1,7 @@
 /*!
     \file header.h
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2019-11-26
 
     Copyright (C) 2016 - 2019 zafaco GmbH
 
@@ -127,6 +127,7 @@ extern std::exception recentException;
 extern int TIMER_INDEX;
 extern int TIMER_DURATION;
 extern unsigned long long MEASUREMENT_DURATION;
+extern long long TIMESTAMP_MEASUREMENT_START;
 
 extern bool PERFORMED_RTT;
 extern bool PERFORMED_DOWNLOAD;

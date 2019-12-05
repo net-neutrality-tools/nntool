@@ -1,7 +1,7 @@
 /*!
     \file tcphandler.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2019-11-26
 
     Copyright (C) 2016 - 2019 zafaco GmbH
 
@@ -875,37 +875,36 @@ void CTcpHandler::setRoundTripTimeKPIs()
 void CTcpHandler::sendRoundTripTimeResponse(noPollCtx *ctx, noPollConn *conn)
 {
     Json::array jRtts;
+    int counter = 0;
 
     for (double rtt : rttVector)
     {
         Json jRtt = Json::object{
             {"rtt_ns", rtt},
+            {"id", counter}
         };
         jRtts.push_back(jRtt);
+        counter++;
     }
 
-    //only send the first, then every second and the last RTT Report
-    if (((rttRequestsSend-1)%2 == 1) || (rttRequestsSend == rttRequests))
-    {
-        Json rttReport = Json::object{
-            {"cmd",         "rttReport"},
-            {"avg",         CTool::to_string_precision(rttAvg, 3)},
-            {"med",         rttMed},  
-            {"min",         rttMin},
-            {"max",         rttMax},
-            {"req",         rttRequestsSend - 1},
-            {"rep",         rttReplies},
-            {"err",         rttErrors},
-            {"mis",         rttMissing},
-            {"pSz",         rttPacketsize},
-            {"std_dev_pop", CTool::to_string_precision(rttStdDevPop, 3)},
-            {"rtts",        jRtts},
-        };
+    Json rttReport = Json::object{
+        {"cmd",         "rttReport"},
+        {"avg",         CTool::to_string_precision(rttAvg, 3)},
+        {"med",         rttMed},  
+        {"min",         rttMin},
+        {"max",         rttMax},
+        {"req",         rttRequestsSend - 1},
+        {"rep",         rttReplies},
+        {"err",         rttErrors},
+        {"mis",         rttMissing},
+        {"pSz",         rttPacketsize},
+        {"std_dev_pop", CTool::to_string_precision(rttStdDevPop, 3)},
+        {"rtts",        jRtts},
+    };
 
-        nopoll_conn_send_text(conn, rttReport.dump().c_str(), rttReport.dump().length());
+    nopoll_conn_send_text(conn, rttReport.dump().c_str(), rttReport.dump().length());
 
-        TRC_DEBUG("WebSocket handler: rtt report send");
-    }
+    TRC_DEBUG("WebSocket handler: rtt report send");
 }
 
 

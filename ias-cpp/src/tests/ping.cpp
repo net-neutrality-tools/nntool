@@ -1,7 +1,7 @@
 /*!
     \file ping.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2019-11-26
 
     Copyright (C) 2016 - 2019 zafaco GmbH
 
@@ -282,14 +282,19 @@ int Ping::run()
 			}
 			
 			if(mPingResult.results.find(i) == mPingResult.results.end())
+			{
 				mPingResult.results[i] = mTimeDiff;
+			}
 			else
+			{
 				mPingResult.results[i] += mTimeDiff;
+			}
+			mPingResult.results_timestamp[i] = (CTool::get_timestamp() * 1000) - ::TIMESTAMP_MEASUREMENT_START; 
 
 			i++;
 			
-			//Sleep 1000ms
-			usleep(timeout);	
+			//Sleep 500ms
+			usleep(500000);	
 		}
 		
 		#ifndef NNTOOL

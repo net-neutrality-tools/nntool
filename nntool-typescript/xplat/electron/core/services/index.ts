@@ -1,5 +1,6 @@
-//import { ElectronService } from './electron.service';
+import { ElectronIasService } from './electron-ias.service';
+//import { IasService } from '@nntool-typescript/ias/ias.service';
 
-//export const ELECTRON_PROVIDERS: any[] = [ElectronService];
+export const ELECTRON_PROVIDERS: any[] = [/*IasService, */ ElectronIasService];
 
-//export * from './electron.service';
+export * from './electron-ias.service';

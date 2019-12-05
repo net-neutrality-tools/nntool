@@ -2,12 +2,12 @@ export class WebSocketInfo {
   /**
    * Size of a transmitted frame over the WebSocket protocol.
    */
-  public frameSize: number;
+  public frame_size: number;
 
   /**
    * Number of frames sent over the WebSocket protocol during measurement excluding slow-start phase.
    */
-  public frameCount: number;
+  public frame_count: number;
 
   /**
    * Number of frames sent over the WebSocket protocol during measurement including slow-start phase.

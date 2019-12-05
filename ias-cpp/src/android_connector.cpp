@@ -370,13 +370,24 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
         env->CallVoidMethod(singleResult, setId, obj);
         env->DeleteLocalRef(obj);
 
-        jmethodID addMethod = env->GetMethodID(resultUdpClazz, "addSingleRtt", "(Ljava/lang/Long;)V");
+        jmethodID addMethod = env->GetMethodID(resultUdpClazz, "addSingleRtt", "(Ljava/lang/Long;Ljava/lang/Long;)V");
         if (rttEntry["rtts"].is_array()) {
-            for (Json const & singleRtt : rttEntry["rtts"].array_items()) {
-                long long const rttValue = (long long) singleRtt.int_value();
-                obj = env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, rttValue);
-                env->CallVoidMethod(singleResult, addMethod, obj);
+            jobject timeStampObj;
+            for (json11::Json const & singleRtt : rttEntry["rtts"].array_items()) {
+                long long rttValue = -1;
+                if (singleRtt["rtt_ns"].is_number()) {
+                    rttValue = (long long) singleRtt["rtt_ns"].int_value();
+                }
+                obj = rttValue != - 1 ? env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, rttValue) : nullptr;
+                long long timeStamp = -1;
+                if (singleRtt["relative_time_ns_measurement_start"].is_string()) {
+                    timeStamp = std::stoll(singleRtt["relative_time_ns_measurement_start"].string_value());
+                }
+                timeStampObj = timeStamp != -1 ? env->CallStaticObjectMethod(parse.longClass, parse.staticLongValueOf, timeStamp) : nullptr;
+
+                env->CallVoidMethod(singleResult, addMethod, obj, timeStampObj);
                 env->DeleteLocalRef(obj);
+                env->DeleteLocalRef(timeStampObj);
             }
         }
         env->CallVoidMethod(speedMeasurementResult, setMethod, singleResult);

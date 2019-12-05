@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, config } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 import { MeasurementSettings } from '../../../test/models/measurement-settings';
 import { BasicTestState } from '../../enums/basic-test-state.enum';
@@ -9,80 +9,27 @@ import { SpeedTestStateEnum } from './enums/speed-test-state.enum';
 import { SpeedTestConfig } from './speed-test-config';
 import { SpeedTestState } from './speed-test-state';
 import { UserService } from '../../../core/services/user.service';
-
-declare var Ias: any;
+import { IasService } from '@nntool-typescript/ias/ias.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig, SpeedTestState> {
   private $state: Subject<SpeedTestState>;
-  private ias: any = undefined;
 
   constructor(
     private logger: NGXLogger,
     testSchedulerService: TestSchedulerService,
     private zone: NgZone,
-    private userService: UserService
+    private userService: UserService,
+    private iasService: IasService
   ) {
     // TODO: Add missing services
     super(testSchedulerService);
   }
 
-  protected generateInitState = (config: SpeedTestConfig) => {
-    const rttRequests = 10;
-    const rttRequestTimeout = 2000;
-    const rttRequestWait = 500;
-    const rttDuration = rttRequests * (rttRequestTimeout + rttRequestWait) * 1.1;
-    const downloadUploadDuration = 10000;
-
-    config = {
-      cmd: 'start',
-      platform: 'web',
-      wsTargets: ['peer-ias-de-01'],
-      wsTLD: 'net-neutrality.tools',
-      wsTargetPort: '80',
-      wsWss: 0,
-      wsAuthToken: 'placeholderToken',
-      wsAuthTimestamp: 'placeholderTimestamp',
-      performRouteToClientLookup: false,
-      performRttMeasurement: this.userService.user.executePingMeasurement,
-      performDownloadMeasurement: this.userService.user.executeDownloadMeasurement,
-      performUploadMeasurement: this.userService.user.executeUploadMeasurement,
-      wsParallelStreamsDownload: 4,
-      wsFrameSizeDownload: 32768,
-      downloadThroughputLowerBoundMbps: 0.95,
-      downloadThroughputUpperBoundMbps: 525,
-      wsParallelStreamsUpload: 4,
-      wsFrameSizeUpload: 65535,
-      uploadThroughputLowerBoundMbps: 0.95,
-      uploadThroughputUpperBoundMbps: 525,
-      uploadFramesPerCall: 1,
-      wsRttRequests: rttRequests,
-      wsRttRequestTimeout: rttRequestTimeout,
-      wsRttRequestWait: rttRequestWait,
-      wsRttTimeout: rttDuration,
-      wsMeasureTime: downloadUploadDuration,
-      rtt: { performMeasurement: true },
-      download: { performMeasurement: true },
-      upload: { performMeasurement: true }
-    };
-
-    const state: SpeedTestState = new SpeedTestState();
-    state.basicState = BasicTestState.INITIALIZED;
-    state.speedTestState = SpeedTestStateEnum.READY;
-    state.uuid = null;
-    state.serverName = null;
-    state.remoteIp = null;
-    state.provider = null;
-    state.location = null;
-    state.device = null;
-    state.technology = 'BROWSER';
-    return state;
-  };
-
   public start = (config: MeasurementSettings, $state: Subject<SpeedTestState>): void => {
-    if (this.ias !== undefined) {
+    if (this.iasService.isRunning()) {
       return;
     }
 
@@ -98,7 +45,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
 
     const extendedConfig = {
       cmd: 'start',
-      platform: 'web',
+      platform: this.iasService.getPlatform(),
       wsTargets: [config.serverAddress.substr(0, firstDotIndex)],
       wsTLD: config.serverAddress.substr(firstDotIndex + 1),
       wsTargetPort: config.serverPort,
@@ -107,7 +54,6 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
       wsAuthTimestamp: 'placeholderTimestamp',
       performRouteToClientLookup: true,
       routeToClientTargetPort: 8080,
-
       rtt: {
         performMeasurement: this.userService.user.executePingMeasurement
       },
@@ -117,8 +63,6 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
           config.speedConfig.download !== undefined &&
           config.speedConfig.download !== null,
         classes: config.speedConfig.download
-        /*"streams": 4,
-        "frameSize": 32768*/
       },
       upload: {
         performMeasurement:
@@ -126,9 +70,6 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
           config.speedConfig.upload !== undefined &&
           config.speedConfig.upload !== null,
         classes: config.speedConfig.upload
-        /*"streams": 4,
-                "frameSize": 65535,
-                "framesPerCall": 1*/
       },
       wsRttRequests: rttRequests,
       wsRttRequestTimeout: rttRequestTimeout,
@@ -145,23 +86,35 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
     this.setupCallback(extendedConfig);
 
     this.zone.runOutsideAngular(() => {
-      this.ias = new Ias();
-      this.ias.measurementStart(JSON.stringify(extendedConfig));
+      this.iasService.start(extendedConfig);
     });
   };
 
+  protected generateInitState = () => {
+    const state = new SpeedTestState();
+
+    state.basicState = BasicTestState.INITIALIZED;
+    state.speedTestState = SpeedTestStateEnum.READY;
+    state.uuid = null;
+    state.serverName = null;
+    state.remoteIp = null;
+    state.provider = null;
+    state.location = null;
+    state.device = null;
+    state.technology = 'BROWSER'; // TODO: desktop
+
+    return state;
+  };
+
   protected clean = (): void => {
-    if (this.ias) {
-      this.ias.measurementStop();
-      this.ias = null;
-    }
+    this.iasService.stop();
     this.$state = null;
   };
 
   private setupCallback = (config: SpeedTestConfig): void => {
-    const state = this.generateInitState(config);
+    const state = this.generateInitState();
 
-    (window as any).iasCallback = (data: any) => {
+    this.iasService.setCallback((data: any) => {
       // TODO: inject window object properly
       if (!this.$state) {
         return;
@@ -190,10 +143,12 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
           let currentDownload;
           if (currentState.cmd === 'report') {
             state.speedTestState = SpeedTestStateEnum.DOWN;
-            currentDownload = currentState.download_info[currentState.download_info.length - 1];
-            state.downBit = currentDownload.throughput_avg_bps;
-            state.downMBit = state.downBit / (1000 * 1000);
-            state.progress = currentDownload.duration_ns / (1000.0 * 1000.0) / config.wsMeasureTime;
+            if (currentState.download_info) {
+              currentDownload = currentState.download_info[currentState.download_info.length - 1];
+              state.downBit = currentDownload.throughput_avg_bps;
+              state.downMBit = state.downBit / (1000 * 1000);
+              state.progress = currentDownload.duration_ns / (1000.0 * 1000.0) / config.wsMeasureTime;
+            }
           }
           if (currentState.cmd === 'finish') {
             currentDownload = currentState.download_info[currentState.download_info.length - 1];
@@ -215,10 +170,12 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
           let currentUpload;
           if (currentState.cmd === 'report') {
             state.speedTestState = SpeedTestStateEnum.UP;
-            currentUpload = currentState.upload_info[currentState.upload_info.length - 1];
-            state.upMBit = currentUpload.throughput_avg_bps / (1000 * 1000);
-            state.upBit = currentUpload.throughput_avg_bps;
-            state.progress = currentUpload.duration_ns / (1000 * 1000) / config.wsMeasureTime;
+            if (currentState.upload_info) {
+              currentUpload = currentState.upload_info[currentState.upload_info.length - 1];
+              state.upMBit = currentUpload.throughput_avg_bps / (1000 * 1000);
+              state.upBit = currentUpload.throughput_avg_bps;
+              state.progress = currentUpload.duration_ns / (1000 * 1000) / config.wsMeasureTime;
+            }
           }
           if (currentState.cmd === 'finish') {
             state.speedTestState = SpeedTestStateEnum.UP_OK;
@@ -231,7 +188,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
             state.speedTestState = SpeedTestStateEnum.COMPLETE;
             state.progress = 0;
 
-            this.logger.debug('Mes uuids', data);
+            //this.logger.debug('Mes uuids', data);
             // this.testInProgress = false;
           }
           break;
@@ -243,11 +200,12 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
         state.basicState = BasicTestState.ENDED;
         state.progress = 0;
 
-        this.ias = undefined;
+        this.iasService.stop();
       }
       this.zone.run(() => this.$state.next(state));
       // this.testGauge.onStateChange(state);
-    };
+    });
+
     // this.testGauge.onStateChange(state);
     this.zone.run(() => this.$state.next(state));
   };
