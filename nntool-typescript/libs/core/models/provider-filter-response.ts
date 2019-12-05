@@ -12,6 +12,10 @@ export class BasicFilter {
 
     public default_value?: any;
 
+    public query_string?: string;
+
+    public value_multiplier?: number;
+
     public filter_type: FilterType | string;
 
     public options?: FilterOption[];
@@ -26,5 +30,6 @@ export class FilterOption {
 export enum FilterType {
     DROPDOWN,
     INPUT_TEXT,
-    INPUT_NUMBER
+    INPUT_NUMBER,
+    INPUT_DATE
 }

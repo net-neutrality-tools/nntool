@@ -1,4 +1,4 @@
-package at.alladin.nettest.shared.server.storage.couchdb.domain.model;
+package at.alladin.nettest.shared.berec.collector.api.v1.dto.shared;
 
 import java.util.Map;
 
@@ -8,7 +8,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QosBlockedPorts.QosBlockedPortType;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QosBlockedPortsDto.QosBlockedPortTypeDto;
+
 
 /**
  * 
@@ -16,7 +17,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QosBlockedP
  *
  */
 @JsonClassDescription("Model that contains advanced QoS evaluation.")
-public class QosAdvancedEvaluation {
+public class QosAdvancedEvaluationDto {
 
 	/**
 	 * see {@link QosBlockedPorts}
@@ -25,19 +26,19 @@ public class QosAdvancedEvaluation {
 	@Expose
 	@SerializedName("blocked_ports")
 	@JsonProperty("blocked_ports")
-	Map<QosBlockedPortType, QosBlockedPorts> blockedPorts;
-	
+	Map<QosBlockedPortTypeDto, QosBlockedPortsDto> blockedPorts;
+
 	@JsonPropertyDescription("The total number of blocked ports of all blocked port types.")
 	@Expose
 	@SerializedName("total_count_blocked_ports")
 	@JsonProperty("total_count_blocked_ports")
 	Integer totalCountBlockedPorts;
 
-	public Map<QosBlockedPortType, QosBlockedPorts> getBlockedPorts() {
+	public Map<QosBlockedPortTypeDto, QosBlockedPortsDto> getBlockedPorts() {
 		return blockedPorts;
 	}
 
-	public void setBlockedPorts(Map<QosBlockedPortType, QosBlockedPorts> blockedPorts) {
+	public void setBlockedPorts(Map<QosBlockedPortTypeDto, QosBlockedPortsDto> blockedPorts) {
 		this.blockedPorts = blockedPorts;
 	}
 

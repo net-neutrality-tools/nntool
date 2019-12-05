@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -44,6 +45,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasuremen
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse.SpeedMeasurementPeer;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QosBlockedPortsDto.QosBlockedPortTypeDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
 import at.alladin.nettest.shared.server.helper.IpAddressMatcher;
@@ -78,6 +80,8 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SubMeasurementSettings;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Signal;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SignalInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.DeviceRepository;
@@ -588,6 +592,23 @@ public class CouchDbStorageService implements StorageService {
 				}
 				
 			}
+			
+			if (measurement.getNetworkInfo().getSignalInfo() != null) {
+				
+				final List<Signal> signalList = measurement.getNetworkInfo().getSignalInfo().getSignals();
+				if (signalList != null) {
+					for (Signal sig : signalList) {
+						if (sig.getCellInfo() != null && sig.getCellInfo().getFrequency() != null) {
+							if (cpit == null) {
+								cpit = new ComputedNetworkPointInTime();
+							}
+							cpit.setFrequency(sig.getCellInfo().getFrequency());
+							break;
+						}
+					}
+				}
+			}
+			
 		}
 		
 		if (measurement.getNetworkInfo().getComputedNetworkInfo() == null) {
@@ -691,6 +712,8 @@ public class CouchDbStorageService implements StorageService {
 			//check for CGN by matching IP addresses from traceroute test (see RFC 6598)
 			IpAddressMatcher matcher = new IpAddressMatcher("100.64.0.0/10");
 			boolean isCgnCheckFinished = false;
+			
+			Integer numBlockedPorts = null;
 
 			for (QoSResult qos : qosMeasurement.getResults()) {
 				QosAdvancedEvaluation qosEval = measurement.getQosAdvancedEvaluation();
@@ -740,6 +763,11 @@ public class CouchDbStorageService implements StorageService {
 					blocked.setInCount(portInList.size());
 					blocked.setOutCount(portOutList.size());
 					
+					if (numBlockedPorts == null) {
+						numBlockedPorts = 0;
+					}
+					numBlockedPorts += blocked.getInCount() + blocked.getOutCount();
+					
 					if (!portInList.isEmpty()) {
 						blocked.setInPorts(portInList);
 					}
@@ -785,6 +813,11 @@ public class CouchDbStorageService implements StorageService {
 					blocked.setInCount(portInList.size());
 					blocked.setOutCount(portOutList.size());
 					
+					if (numBlockedPorts == null) {
+						numBlockedPorts = 0;
+					}
+					numBlockedPorts += blocked.getInCount() + blocked.getOutCount();
+					
 					if (!portInList.isEmpty()) {
 						blocked.setInPorts(portInList);
 					}
@@ -793,6 +826,11 @@ public class CouchDbStorageService implements StorageService {
 					}
 				}
 			}
+			
+			if (numBlockedPorts != null && measurement.getQosAdvancedEvaluation() != null) {
+				measurement.getQosAdvancedEvaluation().setTotalCountBlockedPorts(numBlockedPorts);
+			}
+			
 		}
 	}
 }
