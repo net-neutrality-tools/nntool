@@ -30,6 +30,7 @@ export class DynamicFormComponent implements OnInit {
           this.baseForm.push({
             key: filter.key,
             queryString: filter.query_string,
+            valueMultiplier: filter.value_multiplier,
             value: undefined
           });
           let control: FormControl = this.formBuilder.control('');
@@ -38,7 +39,7 @@ export class DynamicFormComponent implements OnInit {
 
         this.dynamicForm.valueChanges.subscribe(val => {
           this.baseForm.forEach((formVal, index) => {
-            this.baseForm[index].value = val.filters[index];
+            this.baseForm[index].value = formVal.valueMultiplier ? val.filters[index] * formVal.valueMultiplier : val.filters[index];
           });
           this.formChangeCallback.emit(this.baseForm);
         });
@@ -52,13 +53,9 @@ export class DynamicFormComponent implements OnInit {
 /**
  * The class returned on formChangeCallbackCalls
  */
-export class FormValues {
-  public filters: any[];
-
-}
-
 export class FormValue {
   public key: string;
   public queryString?: string;
+  public valueMultiplier?: number;
   public value: any;
 }
