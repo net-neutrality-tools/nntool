@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -44,6 +45,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasuremen
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse.SpeedMeasurementPeer;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QosBlockedPortsDto.QosBlockedPortTypeDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
 import at.alladin.nettest.shared.server.helper.IpAddressMatcher;
@@ -710,6 +712,8 @@ public class CouchDbStorageService implements StorageService {
 			//check for CGN by matching IP addresses from traceroute test (see RFC 6598)
 			IpAddressMatcher matcher = new IpAddressMatcher("100.64.0.0/10");
 			boolean isCgnCheckFinished = false;
+			
+			Integer numBlockedPorts = null;
 
 			for (QoSResult qos : qosMeasurement.getResults()) {
 				QosAdvancedEvaluation qosEval = measurement.getQosAdvancedEvaluation();
@@ -759,6 +763,11 @@ public class CouchDbStorageService implements StorageService {
 					blocked.setInCount(portInList.size());
 					blocked.setOutCount(portOutList.size());
 					
+					if (numBlockedPorts == null) {
+						numBlockedPorts = 0;
+					}
+					numBlockedPorts += blocked.getInCount() + blocked.getOutCount();
+					
 					if (!portInList.isEmpty()) {
 						blocked.setInPorts(portInList);
 					}
@@ -804,6 +813,11 @@ public class CouchDbStorageService implements StorageService {
 					blocked.setInCount(portInList.size());
 					blocked.setOutCount(portOutList.size());
 					
+					if (numBlockedPorts == null) {
+						numBlockedPorts = 0;
+					}
+					numBlockedPorts += blocked.getInCount() + blocked.getOutCount();
+					
 					if (!portInList.isEmpty()) {
 						blocked.setInPorts(portInList);
 					}
@@ -812,6 +826,11 @@ public class CouchDbStorageService implements StorageService {
 					}
 				}
 			}
+			
+			if (numBlockedPorts != null && measurement.getQosAdvancedEvaluation() != null) {
+				measurement.getQosAdvancedEvaluation().setTotalCountBlockedPorts(numBlockedPorts);
+			}
+			
 		}
 	}
 }

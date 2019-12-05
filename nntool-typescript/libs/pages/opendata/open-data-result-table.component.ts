@@ -189,13 +189,13 @@ export class OpenDataResultTableComponent implements OnInit {
       },
       {
         filter_type: "INPUT_NUMBER",
-        key: "ports_blocked_tcp",
-        query_string: "(qos_advanced_evaluation.blocked_ports.TCP.in_count:>= {} OR qos_advanced_evaluation.blocked_ports.TCP.out_count:>= {})"
+        key: "ports_blocked_greater",
+        query_string: "qos_advanced_evaluation.blocked_ports.total_count_blocked_ports:>="
       },
       {
         filter_type: "INPUT_NUMBER",
-        key: "ports_blocked_udp",
-        query_string: "(qos_advanced_evaluation.blocked_ports.UDP.in_count:>= {} OR qos_advanced_evaluation.blocked_ports.UDP.out_count:>= {})"
+        key: "ports_blocked_smaller",
+        query_string: "qos_advanced_evaluation.blocked_ports.total_count_blocked_ports:<="
       }
       );
     

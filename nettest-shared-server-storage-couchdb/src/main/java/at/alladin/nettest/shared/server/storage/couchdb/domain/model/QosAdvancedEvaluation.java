@@ -26,6 +26,12 @@ public class QosAdvancedEvaluation {
 	@SerializedName("blocked_ports")
 	@JsonProperty("blocked_ports")
 	Map<QosBlockedPortType, QosBlockedPorts> blockedPorts;
+	
+	@JsonPropertyDescription("The total number of blocked ports of all blocked port types.")
+	@Expose
+	@SerializedName("total_count_blocked_ports")
+	@JsonProperty("total_count_blocked_ports")
+	Integer totalCountBlockedPorts;
 
 	public Map<QosBlockedPortType, QosBlockedPorts> getBlockedPorts() {
 		return blockedPorts;
@@ -34,4 +40,13 @@ public class QosAdvancedEvaluation {
 	public void setBlockedPorts(Map<QosBlockedPortType, QosBlockedPorts> blockedPorts) {
 		this.blockedPorts = blockedPorts;
 	}
+
+	public Integer getTotalCountBlockedPorts() {
+		return totalCountBlockedPorts;
+	}
+
+	public void setTotalCountBlockedPorts(Integer totalCountBlockedPorts) {
+		this.totalCountBlockedPorts = totalCountBlockedPorts;
+	}
+	
 }
