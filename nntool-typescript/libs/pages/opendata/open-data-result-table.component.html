@@ -5,6 +5,9 @@
 
 <nntool-section-features>
   <nntool-section-content>
+    <dynamic-form [filterResponse]="filterResponse" (formChangeCallback)="onFormChangeCallback($event)">
+      
+    </dynamic-form>
     <input type="text" #fullTextSearchInput placeholder="Search (TODO: translate)" />
   </nntool-section-content>
 </nntool-section-features>

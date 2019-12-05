@@ -10,6 +10,7 @@
         </select>
         <input *ngSwitchCase="'INPUT_TEXT'" type="text" [formControlName]="i" />
         <input *ngSwitchCase="'INPUT_NUMBER'" type="number" [formControlName]="i" />
+        <input *ngSwitchCase="'INPUT_DATE'" type="date" [formControlName]="i"/>
         <div *ngSwitchDefault></div>
       </ng-container>
     </div>

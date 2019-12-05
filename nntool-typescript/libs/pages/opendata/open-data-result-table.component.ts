@@ -7,6 +7,9 @@ import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { SpringServerDataSource } from '../../core/services/table/spring-server.data-source';
 import { SearchApiService } from '../../core/services/search-api.service';
 import { DateParseService } from '@nntool-typescript/core/services/date-parse.service';
+import { ProviderFilterResponse, BasicFilter, FilterType, FilterOption } from '../../core/models/provider-filter-response';
+import { FormValues, FormValue } from '../../core/components/dynamic-form/dynamic-form.component';
+
 
 @Component({
   templateUrl: './open-data-result-table.component.html',
@@ -80,6 +83,8 @@ export class OpenDataResultTableComponent implements OnInit {
     this.tableSource = this.searchApiService.getServerDataSource();
   }
 
+  private filterResponse: ProviderFilterResponse;
+
   public ngOnInit() {
     fromEvent(this.fullTextSearchInput.nativeElement, 'keyup')
       .pipe(
@@ -99,6 +104,125 @@ export class OpenDataResultTableComponent implements OnInit {
         }
         this.tableSource.refresh();
       });
+
+      this.filterResponse = new ProviderFilterResponse();
+      this.filterResponse.filters = new Array<BasicFilter>();
+
+    this.filterResponse.filters.push(
+      {
+        filter_type: "DROPDOWN",
+        key: "connection_type",
+        query_string: "computed_network_info.network_type_group_name:",
+        options: [
+          { label: undefined, value: undefined },
+          { label: "LAN", value: "LAN" },
+          { label: "WLAN", value: "WLAN" },
+          { label: "2G", value: "2G" },
+          { label: "3G", value: "3G" },
+          { label: "4G", value: "4G" }
+        ] 
+      },
+      {
+        filter_type: "INPUT_TEXT",
+        key: "system_uuid",
+        query_string: "system_uuid:"
+      },
+      {
+        filter_type: "INPUT_NUMBER",
+        key: "download_greater",
+        query_string: "measurements.SPEED.throughput_avg_download_bps:>="
+      },
+      {
+        filter_type: "INPUT_NUMBER",
+        key: "download_smaller",
+        query_string: "measurements.SPEED.throughput_avg_download_bps:<="
+      },
+      {
+        filter_type: "INPUT_NUMBER",
+        key: "upload_greater",
+        query_string: "measurements.SPEED.throughput_avg_upload_bps:>="
+      },
+      {
+        filter_type: "INPUT_NUMBER",
+        key: "upload_smaller",
+        query_string: "measurements.SPEED.throughput_avg_upload_bps:<="
+      },
+      {
+        filter_type: "INPUT_NUMBER",
+        key: "rtt_greater",
+        query_string: "measurements.SPEED.rtt_info.average_ns:>="
+      },
+      {
+        filter_type: "INPUT_NUMBER",
+        key: "rtt_smaller",
+        query_string: "measurements.SPEED.rtt_info.average_ns:<="
+      },
+      {
+        filter_type: "INPUT_DATE",
+        key: "date_from",
+        query_string: "end_time:>="
+      },
+      {
+        filter_type: "INPUT_DATE",
+        key: "date_to",
+        query_string: "end_time:<="
+      },
+      {
+      filter_type: "INPUT_TEXT",
+      key: "asn",
+      query_string: "computed_network_info.public_ip_asn:"
+      },
+      {
+        filter_type: "INPUT_TEXT",
+        key: "provider",
+        query_string: "computed_network_info.network_operator_name:"
+      },
+      {
+        filter_type: "INPUT_TEXT",
+        key: "country",
+        query_string: "computed_network_info.network_country:"
+      },
+      {
+        filter_type: "INPUT_NUMBER",
+        key: "frequency",
+        query_string: "computed_network_info.frequency:"
+      },
+      {
+        filter_type: "INPUT_NUMBER",
+        key: "ports_blocked_tcp",
+        query_string: "(qos_advanced_evaluation.blocked_ports.TCP.in_count:>= {} OR qos_advanced_evaluation.blocked_ports.TCP.out_count:>= {})"
+      },
+      {
+        filter_type: "INPUT_NUMBER",
+        key: "ports_blocked_udp",
+        query_string: "(qos_advanced_evaluation.blocked_ports.UDP.in_count:>= {} OR qos_advanced_evaluation.blocked_ports.UDP.out_count:>= {})"
+      }
+      );
+    
+  }
+
+  onFormChangeCallback($event: FormValue[]) {
+    if (this.tableSource && $event) {
+      let queryString: string = "";
+      $event.forEach((value, index) => {
+        if (value.value && value.value !== "undefined") {
+          if (queryString.length > 0) {
+            queryString += " AND ";
+          }
+          if (value.queryString.includes("{}")) {
+            queryString += value.queryString.replace(/{}/g, value.value);
+          } else {
+            queryString += value.queryString + value.value;
+          }
+        }
+      });
+      if (queryString.length > 0) {
+        this.tableSource.setSearchQuery(queryString);
+      } else {
+        this.tableSource.removeSearchQuery();
+      }
+      this.tableSource.refresh();
+    }
   }
 
   public showOpenDataMeasurement(item: any) {

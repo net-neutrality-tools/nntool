@@ -78,6 +78,8 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SubMeasurementSettings;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Signal;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SignalInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.DeviceRepository;
@@ -588,6 +590,23 @@ public class CouchDbStorageService implements StorageService {
 				}
 				
 			}
+			
+			if (measurement.getNetworkInfo().getSignalInfo() != null) {
+				
+				final List<Signal> signalList = measurement.getNetworkInfo().getSignalInfo().getSignals();
+				if (signalList != null) {
+					for (Signal sig : signalList) {
+						if (sig.getCellInfo() != null && sig.getCellInfo().getFrequency() != null) {
+							if (cpit == null) {
+								cpit = new ComputedNetworkPointInTime();
+							}
+							cpit.setFrequency(sig.getCellInfo().getFrequency());
+							break;
+						}
+					}
+				}
+			}
+			
 		}
 		
 		if (measurement.getNetworkInfo().getComputedNetworkInfo() == null) {

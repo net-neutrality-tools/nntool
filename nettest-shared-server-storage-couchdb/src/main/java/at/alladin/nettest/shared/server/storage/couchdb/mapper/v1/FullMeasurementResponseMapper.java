@@ -36,7 +36,8 @@ public interface FullMeasurementResponseMapper {
 		@Mapping(source="measurementTime.endTime", target="endTime"),
 		@Mapping(source="geoLocationInfo.geoLocations", target="geoLocations"),
 		@Mapping(expression="java(parseSubMeasurementMap(measurement.getMeasurements()))", target="measurements"),
-		@Mapping(source = "networkInfo.computedNetworkInfo", target="computedNetworkInfo")
+		@Mapping(source = "networkInfo.computedNetworkInfo", target="computedNetworkInfo"),
+		@Mapping(source = "qosAdvancedEvaluation", target="qosAdvancedEvaluation")
 	})
 	FullMeasurementResponse map(Measurement measurement);
 	

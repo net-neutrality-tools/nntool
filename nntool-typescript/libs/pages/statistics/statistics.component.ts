@@ -3,7 +3,7 @@ import { SpringServerDataSource } from '../../core/services/table/spring-server.
 import { NGXLogger } from 'ngx-logger';
 import { StatisticApiService } from '../../core/services/statistic-api.service';
 import { ProviderFilterResponseWrapper, ProviderFilterResponse } from '../../core/models/provider-filter-response';
-import { FormValues, DynamicFormComponent } from '../../core/components/dynamic-form/dynamic-form.component';
+import { FormValues, DynamicFormComponent, FormValue } from '../../core/components/dynamic-form/dynamic-form.component';
 
 @Component({
   templateUrl: './statistics.component.html',
@@ -94,12 +94,10 @@ export class StatisticsComponent implements OnInit {
     );
   }
 
-  onFormChangeCallback($event: FormValues) {
-    if (this.tableSource && $event && $event.filters) {
-      this.filterResponse.filters.forEach((filter, index) => {
-        if ($event.filters[index]) {
-          this.tableSource.setHttpParam(filter.key, $event.filters[index]);
-        }
+  onFormChangeCallback($event: FormValue[]) {
+    if (this.tableSource && $event) {
+      $event.forEach(val => {
+        this.tableSource.setHttpParam(val.key, val.value);
       });
       this.tableSource.refresh();
     }

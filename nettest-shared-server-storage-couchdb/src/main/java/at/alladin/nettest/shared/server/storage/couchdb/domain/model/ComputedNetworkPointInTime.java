@@ -22,6 +22,15 @@ public class ComputedNetworkPointInTime extends NetworkPointInTime {
 	@SerializedName("nat_type_info")
 	@JsonProperty("nat_type_info")
 	NatTypeInfo natTypeInfo;
+	
+	/**
+	 * The computed frequency band of the signal array.
+	 */
+	@JsonPropertyDescription("The computed frequency band of the signal array.")
+	@Expose
+	@SerializedName("frequency")
+	@JsonProperty("frequency")
+	Integer frequency;
 
 	public NatTypeInfo getNatTypeInfo() {
 		return natTypeInfo;
@@ -31,8 +40,17 @@ public class ComputedNetworkPointInTime extends NetworkPointInTime {
 		this.natTypeInfo = natTypeInfo;
 	}
 
+	public Integer getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(Integer frequency) {
+		this.frequency = frequency;
+	}
+
 	@Override
 	public String toString() {
-		return "ComputedNetworkPointInTime [natTypeInfo=" + natTypeInfo + ", toString()=" + super.toString() + "]";
+		return "ComputedNetworkPointInTime [natTypeInfo=" + natTypeInfo + ", frequency=" + frequency + "]";
 	}
+
 }

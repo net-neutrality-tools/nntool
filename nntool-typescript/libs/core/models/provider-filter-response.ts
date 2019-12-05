@@ -12,6 +12,8 @@ export class BasicFilter {
 
     public default_value?: any;
 
+    public query_string?: string;
+
     public filter_type: FilterType | string;
 
     public options?: FilterOption[];

@@ -18,6 +18,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.DeviceInfoDto
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.NetworkInfoDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QosAdvancedEvaluationDto;
 
 /**
  * This DTO class contains all measurement information that is sent to the measurement agent.
@@ -166,6 +167,15 @@ public class FullMeasurementResponse extends BasicResponse {
 	@SerializedName("computed_network_info")
 	@JsonProperty(required = true, value = "computed_network_info")
 	private ComputedNetworkPointInTimeInfoDto computedNetworkInfo;
+	
+	/**
+	 * @see QosAdvancedEvaluation
+	 */
+	@JsonPropertyDescription("Contains advanced QoS related information.")
+	@Expose
+	@SerializedName("qos_advanced_evaluation")
+	@JsonProperty("qos_advanced_evaluation")
+	private QosAdvancedEvaluationDto qosAdvancedEvaluation;
 
 	public String getUuid() {
 		return uuid;
@@ -270,4 +280,13 @@ public class FullMeasurementResponse extends BasicResponse {
 	public void setComputedNetworkInfo(ComputedNetworkPointInTimeInfoDto computedNetworkInfo) {
 		this.computedNetworkInfo = computedNetworkInfo;
 	}
+
+	public QosAdvancedEvaluationDto getQosAdvancedEvaluation() {
+		return qosAdvancedEvaluation;
+	}
+
+	public void setQosAdvancedEvaluation(QosAdvancedEvaluationDto qosAdvancedEvaluation) {
+		this.qosAdvancedEvaluation = qosAdvancedEvaluation;
+	}
+	
 }

@@ -13,7 +13,9 @@ export class DynamicFormComponent implements OnInit {
     dynamicForm: FormGroup;
 
     @Output()
-    formChangeCallback = new EventEmitter<FormValues>();
+    formChangeCallback = new EventEmitter<FormValue[]>();
+
+    private baseForm: FormValue[];
 
     constructor(private formBuilder: FormBuilder) { }
 
@@ -22,19 +24,29 @@ export class DynamicFormComponent implements OnInit {
           filters: this.formBuilder.array([this.formBuilder.control('')])
         });
 
+        this.baseForm = new Array<FormValue>();
+
         for (let filter of this.filterResponse.filters) {
+          this.baseForm.push({
+            key: filter.key,
+            queryString: filter.query_string,
+            value: undefined
+          });
           let control: FormControl = this.formBuilder.control('');
           (this.dynamicForm.get('filters') as FormArray).push(control);
         }
 
         this.dynamicForm.valueChanges.subscribe(val => {
-          this.formChangeCallback.emit(val);
+          this.baseForm.forEach((formVal, index) => {
+            this.baseForm[index].value = val.filters[index];
+          });
+          this.formChangeCallback.emit(this.baseForm);
         });
 
         this.filterResponse.filters.forEach((filter, index) => {
           (this.dynamicForm.get("filters") as FormArray).at(index).setValue(filter.default_value);
         });
-    }
+  }
 }
 
 /**
@@ -42,4 +54,11 @@ export class DynamicFormComponent implements OnInit {
  */
 export class FormValues {
   public filters: any[];
+
+}
+
+export class FormValue {
+  public key: string;
+  public queryString?: string;
+  public value: any;
 }
