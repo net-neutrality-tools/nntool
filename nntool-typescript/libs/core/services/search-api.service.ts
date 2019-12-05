@@ -96,11 +96,11 @@ export class SearchApiService {
     });
   }
 
-  public exportSingleOpenDataMeasurement(openDataUuid: string, extension: string) {
+  public exportSingleOpenDataMeasurement(openDataUuid: string, coarse: boolean, extension: string) {
     //window.open(Location.joinWithSlash(this.config.servers.search, 'measurements/' + openDataUuid + '.' + extension)); // this opens a new window in Electron...
     window.location.href = Location.joinWithSlash(
       this.config.servers.search,
-      'measurements/' + openDataUuid + '.' + extension
+      'measurements/' + openDataUuid + '.' + extension + (coarse ? '?coarse=true' : '')
     );
   }
 }

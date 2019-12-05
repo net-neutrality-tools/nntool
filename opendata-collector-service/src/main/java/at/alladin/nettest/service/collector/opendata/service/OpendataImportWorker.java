@@ -40,24 +40,23 @@ public class OpendataImportWorker implements Runnable {
 		this.restTemplate = restTemplate;
 		this.openDataMeasurementService = openDataMeasurementService;
 	}
-	
-	//https://search-de-01.net-neutrality.tools/api/v1/measurements?page=0&size=5&sort=start_time,asc&q=start_time:["2019-11-26T13:00:00" TO now]
 
 	@Override
 	public void run() {
 		final String sourceName = source.getName();
 		
 		if (config.getBatchRunLimit() < 1) {
-			logger.debug("Skipping import for source {} because batch-run-limit must be greater than zero (current value: {}).", sourceName, config.getBatchRunLimit());
+			logger.info("Skipping import for source {} because batch-run-limit must be greater than zero (current value: {}).", sourceName, config.getBatchRunLimit());
 			return;
 		}
 		
-		logger.debug("Running opendata import for source: {}, url: {}", sourceName, source.getUrl());
+		logger.info("Running opendata import for source: {}, url: {}", sourceName, source.getUrl());
 		
 		final String latestStartTime = openDataMeasurementService.getLatestStartTime();
 		
 		ApiPagination<Map<String, Object>> currentResult = null;
 		long page = 0;
+		long measurementCount = 0;
 		
 		do {
 			final String urlWithParams = generateCurrentUrl(latestStartTime, page++);
@@ -84,6 +83,8 @@ public class OpendataImportWorker implements Runnable {
 				logger.error("Aborting opendata import of source {} due to exception during database inserts.", sourceName, ex);
 				return;
 			}
+			
+			measurementCount += measurements.size();
 
 			try { Thread.sleep(config.getTimeBetweenRequests()); } catch (InterruptedException e) { }
 		} while (
@@ -93,7 +94,7 @@ public class OpendataImportWorker implements Runnable {
 			&& page < config.getBatchRunLimit()
 		); // TODO: specify timeout?
 		
-		logger.debug("Finished opendata import after {} page(s) for source: {}, url: {}", page, sourceName, source.getUrl()); // (took {} seconds)
+		logger.info("Finished opendata import after {} page(s) ({} measurements) for source: {}, url: {}", page, measurementCount, sourceName, source.getUrl()); // (took {} seconds)
 	}
 
 	private String generateCurrentUrl(String startTime, long page) {

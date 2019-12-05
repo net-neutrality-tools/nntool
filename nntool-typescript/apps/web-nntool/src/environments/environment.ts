@@ -22,7 +22,7 @@ export const environment = {
   },
   landing_page: 'home',
   user_agent: 'abc',
-  languages: ['en'],
+  languages: ['en', 'de'],
   servers: {
     //control: 'http://localhost:8080/api/v1/'
     //control: 'http://localhost:18080/api/v1/',

@@ -12,24 +12,33 @@
   },
   "NAV": {
     "HOME": "nntool.eu",
-    "RESULT_LIST": "Recent Results",
-    "MAP": "Map",
-    "STATISTICS": "Statistics",
+    "RESULT_LIST": "Neueste Ergebnisse",
+    "MAP": "Karte",
+    "STATISTICS": "Statistik",
     "OPENDATA": "Opendata",
-    "HELP": "Help",
+    "HELP": "Hilfe",
     "ABOUT": "About",
     "TC": "Terms & Conditions",
-    "HISTORY": "History",
+    "HISTORY": "Verlauf",
     "NETTEST": "Nettest",
-    "SETTINGS": "Settings",
+    "SETTINGS": "Einstellungen",
     "DOCU": "Opendata Documentation",
     "LANG": {
-      "SELECT": "Language",
+      "SELECT": "Sprache",
       "EN": "en",
       "DE": "de",
       "FR": "fr",
       "HR": "hr",
       "LB": "lb"
+    }
+  },
+  "LANG": {
+    "EN": "English",
+    "DE": "Deutsch"
+  },
+  "PORTAL": {
+    "HOME": {
+      "HEADER": "nntool.eu Portal"
     }
   },
   "HOME": {
@@ -40,7 +49,41 @@
     "HEADER_TEXT": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
     "DESCRIPTION_HEADER": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.",
     "DESCRIPTION": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
-    "DESCRIPTION_WEBSOCKET": "Test"
+    "DESCRIPTION_WEBSOCKET": "Test",
+    "TILES": {
+      "TEST": {
+        "HEADER": "Nettest",
+        "DESCRIPTION": "Measure your internet speed"
+      },
+      "HISTORY": {
+        "HEADER": "Verlauf",
+        "DESCRIPTION": "Verlauf der eigenen Messungen"
+      },
+      "RESULT_LIST": {
+        "HEADER": "Neueste Ergebnisse",
+        "DESCRIPTION": "Neueste open-data Ergebnisse"
+      },
+      "MAP": {
+        "HEADER": "Karte",
+        "DESCRIPTION": "Messergebnisse auf einer interaktiven Karte anzeigen"
+      },
+      "STATISTICS": {
+        "HEADER": "Statistik",
+        "DESCRIPTION": "Statistics about all performed measurements"
+      },
+      "HELP": {
+        "HEADER": "Hilfe",
+        "DESCRIPTION": "Detailed assistance with all supported functionality"
+      },
+      "SETTINGS": {
+        "HEADER": "Einstellungen",
+        "DESCRIPTION": "Einstellungen anzeigen und ändern"
+      },
+      "LANGUAGE_SELECT": {
+        "HEADER": "Sprache",
+        "DESCRIPTION": "Wählen Sie die gewünschte Sprache"
+      }
+    }
   },
   "MAP": {
     "SEARCH": {
@@ -59,7 +102,11 @@
       "LAYER": {
         "HYBRID": "Automatic",
         "HEATMAP": "Heatmap",
-        "POINTS": "Points"
+        "POINTS": "Points",
+        "CANVAS_GRAYSCALE": "Grayscale view",
+        "CANVAS": "Canvas view",
+        "AERIAL": "Aerial view",
+        "ROAD": "Road view"
       },
       "MAP_OPTIONS": "Access",
       "STATISTICAL_METHOD": "Measure",
@@ -157,7 +204,7 @@
     "DOWNLOAD_TEXT": "Download"
   },
   "HISTORY": {
-    "HEADER": "My Results",
+    "HEADER": "History",
     "NO_USER_UUID": "Currently no agent uuid",
     "NAME": "Device",
     "GRAPH": {
@@ -173,6 +220,7 @@
     "UP": "Up (Mbit/s)",
     "PING": "Ping (ms)",
     "SIGNAL": "Signal (dBm)",
+    "TIME": "Date",
     "MORE": "Show more..",
     "LOADING": "Loading..",
     "NO_DATA": "Currently no measurements",
@@ -281,7 +329,9 @@
   "NETTEST": {
     "ERROR": {
       "TITLE": "Error",
-      "MESSAGE": "An error occurred during the measurement."
+      "MESSAGE": "An error occurred during the measurement.",
+      "NO_MEASUREMENT_SELECTED_TITLE": "No measurement has been selected",
+      "NO_MEASUREMENT_SELECTED_MESSAGE": "Please select at least one measurement from the settings page!"
     },
     "VIEW_RESULT": "View your measurement report",
     "INTRO": {
@@ -312,7 +362,10 @@
       "TIME_LEFT": "Next test",
       "TEST_COUNTER": "Test counter",
       "FINISHED": "Loop mode finished",
-      "RESET": "Start another test run"
+      "RESET": "Start another test run",
+      "STOP": "Stop current test run",
+      "INVALID_INPUT_HEADER": "Invalid parameters",
+      "INVALID_INPUT_DESCRIPTION": "The number of test-runs must be between 1 and 20. The time between test runs must be between 1 and 160 minutes."
     }
   },
   "SETTINGS": {
@@ -325,6 +378,17 @@
     "SAVE": "Save",
     "DISASSOCIATE_BEFORE_DELETE": "Anonymize all measurements before agent reset.",
     "DELETE_TEXT": "Delete data",
-    "DELETE": "Reset agent"
+    "DELETE": "Reset agent",
+    "MEASUREMENT_SELECTION": {
+      "HEADER": "Select enabled measurements:",
+      "PING_MEASUREMENT": "Ping",
+      "DOWNLOAD_MEASUREMENT": "Download",
+      "UPLOAD_MEASUREMENT": "Upload",
+      "QOS_MEASUREMENT": "Quality of Service"
+    },
+    "LOOPMODE": {
+      "HEADER": "Execute multiple measurements in a row:",
+      "ENABLE_TEXT": "Show loop mode screen on test start"
+    }
   }
 }

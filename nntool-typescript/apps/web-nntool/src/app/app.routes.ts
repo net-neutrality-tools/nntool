@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { Guard } from '@nntool-typescript/core/services/guard.service';
-import { HomeComponent } from '@nntool-typescript/pages/home/home.component';
 import { NetTestComponent } from '@nntool-typescript/test/test.component';
 import { TestGuard } from '@nntool-typescript/test/base_test.component';
 import { HistoryComponent } from '@nntool-typescript/pages/history/history.component';
@@ -14,6 +13,7 @@ import { TcComponent } from '@nntool-typescript/pages/adoc/tc.component';
 import { HelpComponent } from '@nntool-typescript/pages/adoc/help.component';
 import { SettingsComponent } from '@nntool-typescript/pages/user/settings.component';
 import { NotFoundComponent } from '@nntool-typescript/pages/adoc/notfound.component';
+import { HomeComponent } from './home/home.component';
 
 export const routes: Routes = [
   {

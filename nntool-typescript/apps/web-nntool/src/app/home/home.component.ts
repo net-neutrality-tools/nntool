@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 declare var window;
 
@@ -7,4 +8,6 @@ declare var window;
 })
 export class HomeComponent {
   public isElectron = typeof window !== 'undefined' && window.process && window.process.type;
+
+  constructor(public translateService: TranslateService) {}
 }

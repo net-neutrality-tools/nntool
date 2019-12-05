@@ -12,8 +12,13 @@
 
 <nntool-section-interactive>
   <div class="section-interaction">
-    <a class="button column" (click)="exportAsCsv()">Export as CSV</a>
-    <a class="button column" (click)="exportAsJson()">Export as JSON</a>
-    <a class="button column" (click)="exportAsYaml()">Export as YAML</a>
+    <a class="button column" (click)="exportAsCsv()">Export as detailed CSV</a>
+    <a class="button column" (click)="exportAsJson()">Export as detailed JSON</a>
+    <a class="button column" (click)="exportAsYaml()">Export as detailed YAML</a>
+  </div>
+  <div class="section-interaction">
+    <a class="button column" (click)="exportAsCsv(true)">Export as coarse CSV</a>
+    <a class="button column" (click)="exportAsJson(true)">Export as coarse JSON</a>
+    <a class="button column" (click)="exportAsYaml(true)">Export as coarse YAML</a>
   </div>
 </nntool-section-interactive>
