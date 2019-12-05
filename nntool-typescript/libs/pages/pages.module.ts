@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { HomeComponent } from './home/home.component';
 import { CoreModule } from '@nntool-typescript/core';
 import { ComponentsModule } from '../core/components/components.module';
 import { StatisticsComponent } from './statistics/statistics.component';
@@ -22,7 +21,6 @@ import { DocuComponent } from './adoc/docu.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 const COMPONENTS = [
-  HomeComponent,
   HistoryComponent,
   HistoryViewComponent,
   HistoryDeletionComponent,

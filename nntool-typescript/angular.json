@@ -21,13 +21,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "testing/tsconfig.libs.json",
-              "testing/tsconfig.libs.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["testing/tsconfig.libs.json", "testing/tsconfig.libs.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -50,13 +45,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "testing/tsconfig.xplat.json",
-              "testing/tsconfig.xplat.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["testing/tsconfig.xplat.json", "testing/tsconfig.xplat.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -149,7 +139,7 @@
               "namedChunks": true,
               "vendorChunk": true,
               "commonChunk": true,
-              "verbose": true
+              "verbose": false
             }
           }
         },
@@ -180,13 +170,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/web-nntool/tsconfig.app.json",
-              "apps/web-nntool/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["apps/web-nntool/tsconfig.app.json", "apps/web-nntool/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -260,9 +245,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/web-nntool-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -339,7 +322,7 @@
               "namedChunks": true,
               "vendorChunk": true,
               "commonChunk": true,
-              "verbose": true
+              "verbose": false
             }
           }
         },
@@ -369,13 +352,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/web-portal/tsconfig.app.json",
-              "apps/web-portal/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["apps/web-portal/tsconfig.app.json", "apps/web-portal/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -434,9 +412,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/web-portal-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -478,9 +454,7 @@
               {
                 "glob": "**/*",
                 "input": "apps/electron-nntool/src/",
-                "ignore": [
-                  "**/*.ts"
-                ],
+                "ignore": ["**/*.ts"],
                 "output": ""
               }
             ],
@@ -527,7 +501,7 @@
               "namedChunks": true,
               "vendorChunk": true,
               "commonChunk": true,
-              "verbose": true
+              "verbose": false
             }
           }
         },
