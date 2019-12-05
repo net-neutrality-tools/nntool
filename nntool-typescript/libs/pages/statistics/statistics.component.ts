@@ -3,7 +3,7 @@ import { SpringServerDataSource } from '../../core/services/table/spring-server.
 import { NGXLogger } from 'ngx-logger';
 import { StatisticApiService } from '../../core/services/statistic-api.service';
 import { ProviderFilterResponseWrapper, ProviderFilterResponse } from '../../core/models/provider-filter-response';
-import { FormValues, DynamicFormComponent, FormValue } from '../../core/components/dynamic-form/dynamic-form.component';
+import { DynamicFormComponent, FormValue } from '../../core/components/dynamic-form/dynamic-form.component';
 
 @Component({
   templateUrl: './statistics.component.html',

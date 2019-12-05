@@ -8,7 +8,7 @@ import { SpringServerDataSource } from '../../core/services/table/spring-server.
 import { SearchApiService } from '../../core/services/search-api.service';
 import { DateParseService } from '@nntool-typescript/core/services/date-parse.service';
 import { ProviderFilterResponse, BasicFilter, FilterType, FilterOption } from '../../core/models/provider-filter-response';
-import { FormValues, FormValue } from '../../core/components/dynamic-form/dynamic-form.component';
+import { FormValue } from '../../core/components/dynamic-form/dynamic-form.component';
 
 
 @Component({
