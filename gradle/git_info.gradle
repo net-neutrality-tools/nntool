@@ -1,15 +1,15 @@
 class GitInfo {
-  private static String branchName
-  private static String commitRef
-  private static String commitCount
-  //private static String commitDate
-  private static String buildDate
+  private String branchName
+  private String commitRef
+  private String commitCount
+  //private String commitDate
+  private String buildDate
 
-  static {
+  public GitInfo() {
     def isCI = System.env.CI
     if (isCI != null) {
       println("In CI context, using CI_ environment variables instead of git commands.")
-      
+
       branchName = System.env.CI_COMMIT_REF_NAME
       commitRef = System.env.CI_COMMIT_SHORT_SHA
       commitCount = "-1"
