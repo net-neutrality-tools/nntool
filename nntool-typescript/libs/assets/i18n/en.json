@@ -202,6 +202,7 @@
     "LABEL": "Further results are available on a monthly basis",
     "FULL_DOWNLOAD_TEXT": "Full export Open Data",
     "DOWNLOAD_TEXT": "Download",
+    "FULL_TEXT_PLACEHOLDER": "Enter search text…",
     "SHOW_TEXT_SEARCH": "Switch to full text search",
     "SHOW_FILTER_SEARCH": "Switch to filter search",
     "CONNECTION_TYPE": "Connection type",

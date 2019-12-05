@@ -1,6 +1,6 @@
 <div class="section-columns" [formGroup]="dynamicForm">
   <ng-container *ngIf="filterResponse">
-    <div class="column" formArrayName="filters" *ngFor="let filter of filterResponse.filters; let i = index">
+    <div class="column" style="width:49%" formArrayName="filters" *ngFor="let filter of filterResponse.filters; let i = index">
       <label for="">{{ (("OPENDATA.") + (filter.key | uppercase)) | translate }}</label>
       <ng-container [ngSwitch]="filter.filter_type">
         <select *ngSwitchCase="'DROPDOWN'" [formControlName]="i">
