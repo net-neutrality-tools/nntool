@@ -1,20 +1,22 @@
-/*
- *********************************************************************************
- *                                                                               *
- *       ..--== zafaco GmbH ==--..                                               *
- *                                                                               *
- *       Website: http://www.zafaco.de                                           *
- *                                                                               *
- *       Copyright 2019                                                          *
- *                                                                               *
- *********************************************************************************
- */
-
 /*!
- *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-29
- *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
- */
+    \file tcphandler.cpp
+    \author zafaco GmbH <info@zafaco.de>
+    \date Last update: 2019-11-26
+
+    Copyright (C) 2016 - 2019 zafaco GmbH
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License version 3 
+    as published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 
 #include "tcphandler.h"
@@ -873,37 +875,36 @@ void CTcpHandler::setRoundTripTimeKPIs()
 void CTcpHandler::sendRoundTripTimeResponse(noPollCtx *ctx, noPollConn *conn)
 {
     Json::array jRtts;
+    int counter = 0;
 
     for (double rtt : rttVector)
     {
         Json jRtt = Json::object{
             {"rtt_ns", rtt},
+            {"id", counter}
         };
         jRtts.push_back(jRtt);
+        counter++;
     }
 
-    //only send the first, then every second and the last RTT Report
-    if (((rttRequestsSend-1)%2 == 1) || (rttRequestsSend == rttRequests))
-    {
-        Json rttReport = Json::object{
-            {"cmd",         "rttReport"},
-            {"avg",         CTool::to_string_precision(rttAvg, 3)},
-            {"med",         rttMed},  
-            {"min",         rttMin},
-            {"max",         rttMax},
-            {"req",         rttRequestsSend - 1},
-            {"rep",         rttReplies},
-            {"err",         rttErrors},
-            {"mis",         rttMissing},
-            {"pSz",         rttPacketsize},
-            {"std_dev_pop", CTool::to_string_precision(rttStdDevPop, 3)},
-            {"rtts",        jRtts},
-        };
+    Json rttReport = Json::object{
+        {"cmd",         "rttReport"},
+        {"avg",         CTool::to_string_precision(rttAvg, 3)},
+        {"med",         rttMed},  
+        {"min",         rttMin},
+        {"max",         rttMax},
+        {"req",         rttRequestsSend - 1},
+        {"rep",         rttReplies},
+        {"err",         rttErrors},
+        {"mis",         rttMissing},
+        {"pSz",         rttPacketsize},
+        {"std_dev_pop", CTool::to_string_precision(rttStdDevPop, 3)},
+        {"rtts",        jRtts},
+    };
 
-        nopoll_conn_send_text(conn, rttReport.dump().c_str(), rttReport.dump().length());
+    nopoll_conn_send_text(conn, rttReport.dump().c_str(), rttReport.dump().length());
 
-        TRC_DEBUG("WebSocket handler: rtt report send");
-    }
+    TRC_DEBUG("WebSocket handler: rtt report send");
 }
 
 

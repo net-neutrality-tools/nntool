@@ -1,0 +1,109 @@
+spring:
+  application:
+    name: map-service
+    
+  profiles:
+    # This gets set during Gradle build.
+    # It can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`.
+    active: #spring.profiles.active#
+
+  #messages:
+  #  basename: i18n/messages
+  
+# define which tiles should be cached
+map-cache:
+  usePointTileCache: false
+  useHeatmapTileCache: true
+  useShapeTileCache: true
+  cacheIgnoreZoomLevel: 17
+  cacheStaleSeconds: 7200 #3600 * 2
+  cacheExpireSeconds: 2592000 #3600*24*30
+  
+map-settings:
+  maxZoomLevel: 21
+  #TODO: make this mess easier to look at (divide by UP/DOWN/... and MOBILE/WIFI/...)
+  mapServiceOptions:
+    - groupKey: "mobile"
+      typeKey: "download"
+      sqlValueColumn: "ias.throughput_avg_download_bps"
+      sqlFilter: "ias.throughput_avg_download_bps IS NOT NULL AND (t.initial_network_type_id)::int not in (0, 97, 98, 99)"
+      overlayType: "heatmap"
+      reverseScale: false
+    - groupKey: "mobile"
+      typeKey: "upload"
+      sqlValueColumn: "ias.throughput_avg_upload_bps"
+      sqlFilter: "ias.throughput_avg_upload_bps IS NOT NULL AND (t.initial_network_type_id)::int not in (0, 97, 98, 99)"
+      overlayType: "heatmap"
+      reverseScale: false 
+    - groupKey: "mobile"
+      typeKey: "ping"
+      sqlValueColumn: "ias.rtt_median_ns"
+      sqlFilter: "ias.rtt_median_ns IS NOT NULL AND (t.initial_network_type_id)::int not in (0, 97, 98, 99)"
+      overlayType: "heatmap"
+      reverseScale: true 
+    - groupKey: "mobile"
+      typeKey: "signal"
+      sqlValueColumn: "t.network_signal_info"
+      sqlFilter: "t.network_signal_info IS NOT NULL AND (t.initial_network_type)::int not in (0, 97, 98, 99)"
+      overlayType: "heatmap"
+      reverseScale: false
+    - groupKey: "wifi"
+      typeKey: "download"
+      sqlValueColumn: "ias.throughput_avg_download_bps"
+      sqlFilter: "ias.throughput_avg_download_bps IS NOT NULL AND (t.intial_network_type_id)::int = 99"
+      overlayType: "heatmap"
+      reverseScale: false
+    - groupKey: "wifi"
+      typeKey: "upload"
+      sqlValueColumn: "ias.throughput_avg_upload_bps"
+      sqlFilter: "ias.throughput_avg_upload_bps IS NOT NULL AND (t.initial_network_type_id)::int = 99"
+      overlayType: "heatmap"
+      reverseScale: false
+    - groupKey: "wifi"
+      typeKey: "ping"
+      sqlValueColumn: "ias.rtt_median_ns"
+      sqlFilter: "ias.rtt_median_ns IS NOT NULL AND (t.initial_network_type_id)::int = 99"
+      overlayType: "heatmap"
+      reverseScale: true
+    - groupKey: "wifi"
+      typeKey: "signal"
+      sqlValueColumn: "t.network_signal_info"
+      sqlFilter: "t.network_signal_info IS NOT NULL AND (t.initial_network_type)::int = 99"
+      overlayType: "heatmap"
+      reverseScale: false
+    - groupKey: "browser"
+      typeKey: "download"
+      sqlValueColumn: "ias.throughput_avg_download_bps"
+      sqlFilter: "ias.throughput_avg_download_bps IS NOT NULL AND (t.initial_network_type_id)::int = 98"
+      overlayType: "shapes"
+      reverseScale: false
+    - groupKey: "browser"
+      typeKey: "upload"
+      sqlValueColumn: "ias.throughput_avg_upload_bps"
+      sqlFilter: "ias.throughput_avg_upload_bps IS NOT NULL AND (t.initial_network_type_id)::int = 98"
+      overlayType: "shapes"
+      reverseScale: false
+    - groupKey: "browser"
+      typeKey: "ping"
+      sqlValueColumn: "ias.rtt_median_ns"
+      sqlFilter: "ias.rtt_median_ns IS NOT NULL AND (t.initial_network_type_id)::int = 98"
+      overlayType: "shapes"
+      reverseScale: true
+    - groupKey: "all"
+      typeKey: "download"
+      sqlValueColumn: "ias.throughput_avg_download_bps"
+      sqlFilter: "ias.throughput_avg_download_bps IS NOT NULL"
+      overlayType: "shapes"
+      reverseScale: false
+    - groupKey: "all"
+      typeKey: "upload"
+      sqlValueColumn: "ias.throughput_avg_download_bps"
+      sqlFilter: "ias.throughput_avg_download_bps IS NOT NULL"
+      overlayType: "shapes"
+      reverseScale: false
+    - groupKey: "all"
+      typeKey: "ping"
+      sqlValueColumn: "ias.rtt_median_ns"
+      sqlFilter: "ias.rtt_median_ns IS NOT NULL"
+      overlayType: "shapes"
+      reverseScale: true 

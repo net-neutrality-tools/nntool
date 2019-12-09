@@ -35,31 +35,31 @@ public class NetworkPointInTime {
     private Long relativeTimeNs;
 	
 	/**
-	 * Public IP address of the client.
+	 * Public IP address of the agent.
 	 */
-	@JsonPropertyDescription("Public IP address of the client.")
+	@JsonPropertyDescription("Public IP address of the agent.")
 	@Expose
-	@SerializedName("client_public_ip")
-	@JsonProperty("client_public_ip")
-	private String clientPublicIp;
+	@SerializedName("agent_public_ip")
+	@JsonProperty("agent_public_ip")
+	private String agentPublicIp;
 
 	/**
-	 * Private IP address of the client.
+	 * Private IP address of the agent.
 	 */
-	@JsonPropertyDescription("Private IP address of the client.")
+	@JsonPropertyDescription("Private IP address of the agent.")
 	@Expose
-	@SerializedName("client_private_ip")
-	@JsonProperty("client_private_ip")
-	private String clientPrivateIp;
+	@SerializedName("agent_private_ip")
+	@JsonProperty("agent_private_ip")
+	private String agentPrivateIp;
 	
 	/**
-	 * Country of the client which is gathered by Geo-IP lookup.
+	 * Country of the agent which is gathered by Geo-IP lookup.
 	 */
-	@JsonPropertyDescription("Country of the client which is gathered by Geo-IP lookup.")
+	@JsonPropertyDescription("Country of the agent which is gathered by Geo-IP lookup.")
 	@Expose
-	@SerializedName("client_public_ip_country_code")
-	@JsonProperty("client_public_ip_country_code")
-	private String clientPublicIpCountryCode;
+	@SerializedName("agent_public_ip_country_code")
+	@JsonProperty("agent_public_ip_country_code")
+	private String agentPublicIpCountryCode;
 	
 	/**
 	 * Reverse DNS for the public IP address.
@@ -122,20 +122,20 @@ public class NetworkPointInTime {
 		this.relativeTimeNs = relativeTimeNs;
 	}
 
-	public String getClientPublicIp() {
-		return clientPublicIp;
+	public String getAgentPublicIp() {
+		return agentPublicIp;
 	}
 
-	public void setClientPublicIp(String clientPublicIp) {
-		this.clientPublicIp = clientPublicIp;
+	public void setAgentPublicIp(String agentPublicIp) {
+		this.agentPublicIp = agentPublicIp;
 	}
 
-	public String getClientPublicIpCountryCode() {
-		return clientPublicIpCountryCode;
+	public String getAgentPublicIpCountryCode() {
+		return agentPublicIpCountryCode;
 	}
 
-	public void setClientPublicIpCountryCode(String clientPublicIpCountryCode) {
-		this.clientPublicIpCountryCode = clientPublicIpCountryCode;
+	public void setAgentPublicIpCountryCode(String agentPublicIpCountryCode) {
+		this.agentPublicIpCountryCode = agentPublicIpCountryCode;
 	}
 
 	public String getPublicIpRdns() {
@@ -178,12 +178,12 @@ public class NetworkPointInTime {
 		this.networkMobileInfo = networkMobileInfo;
 	}
 
-	public String getClientPrivateIp() {
-		return clientPrivateIp;
+	public String getAgentPrivateIp() {
+		return agentPrivateIp;
 	}
 
-	public void setClientPrivateIp(String clientPrivateIp) {
-		this.clientPrivateIp = clientPrivateIp;
+	public void setAgentPrivateIp(String agentPrivateIp) {
+		this.agentPrivateIp = agentPrivateIp;
 	}
 
 	@Override
@@ -191,9 +191,9 @@ public class NetworkPointInTime {
 		return "NetworkPointInTime{" +
 				"time=" + time +
 				", relativeTimeNs=" + relativeTimeNs +
-				", clientPublicIp='" + clientPublicIp + '\'' +
-				", clientPrivateIp='" + clientPrivateIp + '\'' +
-				", clientPublicIpCountryCode='" + clientPublicIpCountryCode + '\'' +
+				", agentPublicIp='" + agentPublicIp + '\'' +
+				", agentPrivateIp='" + agentPrivateIp + '\'' +
+				", agentPublicIpCountryCode='" + agentPublicIpCountryCode + '\'' +
 				", publicIpRdns='" + publicIpRdns + '\'' +
 				", networkType=" + networkType +
 				", providerInfo=" + providerInfo +

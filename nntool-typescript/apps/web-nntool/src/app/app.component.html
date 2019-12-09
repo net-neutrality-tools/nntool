@@ -161,7 +161,7 @@
 <div id="fullpage" class="main">
   <router-outlet></router-outlet>
 
-  <section class="section">
+  <!--<section class="section">
     <div
       class="wrapper section-columns"
       *ngIf="
@@ -177,10 +177,10 @@
         ></span>
       </p>
     </div>
-  </section>
+  </section>-->
 
   <!-- #section-footer -->
-  <app-footer *ngIf="features.footer && !guard.hiddenInApp"> </app-footer>
+  <nntool-footer *ngIf="features.footer && !guard.hiddenInApp"> </nntool-footer>
   <!-- #section-footer end -->
 
   <div class="scroll-indicator hide-text" *ngIf="appService.showScroll">SCROLL DOWN</div>

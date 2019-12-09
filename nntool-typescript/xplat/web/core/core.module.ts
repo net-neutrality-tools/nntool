@@ -1,59 +1,18 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 
-// libs
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { CoreModule, PlatformLanguageToken, PlatformWindowToken } from '@nntool-typescript/core';
 import { throwIfAlreadyLoaded } from '@nntool-typescript/utils';
-
-// bring in custom web services here...
-
-// factories
-export function winFactory() {
-  return window;
-}
-
-export function platformLangFactory() {
-  const browserLang = window.navigator.language || 'en'; // fallback English
-  // browser language has 2 codes, ex: 'en-US'
-  return browserLang.split('-')[0];
-}
-
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, `./assets/i18n/`, '.json');
-}
+import { WEBSITE_PROVIDERS, WebsiteIasService } from './services';
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    CoreModule.forRoot([
-      {
-        provide: PlatformLanguageToken,
-        useFactory: platformLangFactory
-      },
-      {
-        provide: PlatformWindowToken,
-        useFactory: winFactory
-      }
-    ]),
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient]
-      }
-    })
-  ]
+  providers: [...WEBSITE_PROVIDERS]
 })
-export class NntoolCoreModule {
+export class NntoolWebsiteCoreModule {
   constructor(
     @Optional()
     @SkipSelf()
-    parentModule: NntoolCoreModule
+    parentModule: NntoolWebsiteCoreModule,
+    private _iasService: WebsiteIasService
   ) {
-    throwIfAlreadyLoaded(parentModule, 'NntoolCoreModule');
+    throwIfAlreadyLoaded(parentModule, 'NntoolWebsiteCoreModule');
   }
 }

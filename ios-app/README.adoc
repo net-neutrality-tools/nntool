@@ -1,0 +1,25 @@
+= ios-app Documentation
+
+== Building
+
+=== Prerequisites
+
+- XCode >= 11
+- CocoaPods
+- NativeScript = 5.x
+- macOS >= MacOS 10.14 (Mojave)
+
+=== Build
+
+With fullfilled prerequisites perform the following steps:
+
+1. Build *ias*, see instructions in *ias/README.md*
+2. Build *ias-mobile*, see instructions in *ias-mobile/README.md*
+3. In directory *qos-client-swift* run *pod install* to install MeasurementKit
+4. In directory *ios-app*, run *pod install* to install required CocoaPods dependencies
+5. Open *ios-app.xcworkspace* in XCode and build target *BEREC_nntool*
+
+== Configuration
+
+The configuration of the app can be changed in the `Config.swift` (`<git_root>/ios-app/ios-app/Sources/Config.swift`) file.
+

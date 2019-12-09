@@ -1,20 +1,22 @@
-/*
- *********************************************************************************
- *                                                                               *
- *       ..--== zafaco GmbH ==--..                                               *
- *                                                                               *
- *       Website: http://www.zafaco.de                                           *
- *                                                                               *
- *       Copyright 2019                                                          *
- *                                                                               *
- *********************************************************************************
- */
-
 /*!
- *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-20
- *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
- */
+    \file load_balancing.cpp
+    \author zafaco GmbH <info@zafaco.de>
+    \date Last update: 2019-11-13
+
+    Copyright (C) 2016 - 2019 zafaco GmbH
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License version 3 
+    as published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include "load_balancing.h"
 
@@ -69,7 +71,10 @@ int CLoadBalancing::run()
     while (::RUNNING)
     {
         int nSocket = accept(mConnection->mSocket, (struct sockaddr *)&client, &clientlen);
-        if(nSocket == -1)continue;
+        if (nSocket == -1)
+        {
+            continue;
+        }
 
         setsockopt(nSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv, sizeof(timeval));
         setsockopt(nSocket, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv, sizeof(timeval));
@@ -97,23 +102,59 @@ int CLoadBalancing::run()
 
             TRC_INFO("Socket: TCP TLS connection received from Client IP " + ip + " on target Port " + to_string(port));
 
-            std::unique_ptr<char[]> rbufferOwner = std::make_unique<char[]>(MAXBUFFER);
+            std::unique_ptr<char[]> rbufferOwner = std::make_unique<char[]>(5000);
             char *rbuffer = rbufferOwner.get();
+
+            std::unique_ptr<char[]> rchunkOwner = std::make_unique<char[]>(50);
+            char *rchunk = rchunkOwner.get();
 
             string request;
 
-            bzero(rbuffer, MAXBUFFER);
+            bzero(rbuffer, 5000);
+            
+            unsigned long long timeout = 2*1e6;
+            unsigned long long currentTime;
+            unsigned long long startTime = CTool::get_timestamp();
+           
+            int bytes_received = 0;
+            mAcceptedConnection->setNonBlocking();
 
-            mAcceptedConnection->receive(rbuffer, MAXBUFFER, 0);
+            //read socket non-blocking chunked for at most timeout seconds
+            while(1)
+            {
+                currentTime = CTool::get_timestamp();
+                bzero(rchunk, 20);
+
+                bytes_received = mAcceptedConnection->receive(rchunk, 20, 0);
+
+                strcat(rbuffer, rchunk);
+
+                //break if timeout is reached or no bytes are outstanding
+                if ((currentTime - startTime) >= timeout || (bytes_received < 0 && strlen(rbuffer) != 0) )  
+                {
+                    break;
+                }
+
+                usleep(10);
+            }
 
             request = string(rbuffer);
 
-            std::size_t pos = request.find("\r\n\r\n");
-            request = request.substr(pos);
-
             Json jRequest = Json::object{};
+
             string error = "";
-            jRequest = Json::parse(request, error);
+
+            try 
+            {
+                std::size_t pos = request.find("\r\n\r\n");
+                request = request.substr(pos);
+
+                jRequest = Json::parse(request, error);
+            }
+            catch(exception e)
+            {
+                error = "1";
+            }
 
             //parse parameters
             if (error.compare("") != 0)
@@ -140,7 +181,7 @@ int CLoadBalancing::run()
             }
 
             pthread_mutex_lock(&mutexLoad);
-                string responseBody = Json(*jLoad).dump();
+            string responseBody = Json(*jLoad).dump();
             pthread_mutex_unlock(&mutexLoad);
 
 
@@ -169,7 +210,7 @@ int CLoadBalancing::run()
             }
 
             exit(0);
-       }
+        }
 
        close(nSocket);
     }

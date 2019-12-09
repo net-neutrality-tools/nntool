@@ -118,8 +118,7 @@ extension WebsiteTaskRunner: WKNavigationDelegate {
 
     ///
     func maybeDone() {
-        if status == .timeout {
-            // Already timed out
+        if status == .timeout || status == .error {
             return
         }
 

@@ -1,0 +1,35 @@
+[update]
+#tasks = ["interfaces", "code", "transform", "normalize"]
+tasks = ["interfaces", "normalize"]
+
+[update.interfaces]
+path = "ios-app/Resources"
+defaultToBase = false
+ignoreEmptyStrings = false
+unstripped = false
+
+#[update.code]
+#codePath = "."
+#localizablePath = "."
+#defaultToKeys = false
+#additive = true
+#unstripped = false
+
+#[update.transform]
+#codePath = "."
+#localizablePath = "."
+#transformer = "foundation"
+#supportedLanguageEnumPath = "."
+#typeName = "BartyCrouch"
+#translateMethodName = "translate"
+
+[update.normalize]
+path = "ios-app"
+sourceLocale = "en"
+harmonizeWithSource = true
+sortByKeys = true
+
+[lint]
+path = "ios-app"
+duplicateKeys = true
+emptyValues = true

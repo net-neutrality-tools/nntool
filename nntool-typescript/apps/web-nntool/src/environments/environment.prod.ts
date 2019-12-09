@@ -18,14 +18,13 @@ export const environment = {
   },
   landing_page: 'home',
   user_agent: 'abc',
-  languages: ['en'],
+  languages: ['en', 'de'],
   servers: {
-    map: '',
-    statistic: '',
-    // control: 'http://localhost:8080/api/v1/'
-    // control: 'http://localhost:18080/api/v1/'
     control: 'https://controller-de-01.net-neutrality.tools/api/v1/',
-    result: 'https://result-de-01.net-neutrality.tools/api/v1/'
+    result: 'https://result-de-01.net-neutrality.tools/api/v1/',
+    search: 'https://search-de-01.net-neutrality.tools/api/v1/',
+    map: 'https://map-de-01.net-neutrality.tools/api/v0/',
+    statistic: 'https://statistic-de-01.net-neutrality.tools/api/v1/'
   },
   keys: {
     google: ''
@@ -94,52 +93,30 @@ export const environment = {
     }
   },
   opendata: {
-    external: [],
-    allow_full_download: false,
-    report_start_date: '2017/03/01'
-  },
-  statistics: {
-    graphs: {
-      list_filters: {},
-      list_devices: {
-        enabled: false
-      },
-      list_providers: {
-        enabled: false
-      },
-      os_part: {
-        enabled: true
-      },
-      technology_part: {
-        enabled: true
-      },
-      measurements_per_provider_speed: {
-        enabled: false
-      },
-      measurements_per_provider_over_time_speed: {
-        enabled: true,
-        show_box: 6,
-        select_method: 'random',
-        select_count: 6
-      },
-      measurements_per_provider_over_time_count: {
-        enabled: true
-      },
-      measurements_per_technology_over_time: {
-        enabled: true
-      }
+    startDate: {
+      year: 2019,
+      month: 9
     }
   },
+  statistics: {},
   user: {
     allow_query_uuid: true,
     allow_set_uuid: false,
     shown: {
-      force_ip4: false,
+      force_ip4: true,
       invisible: false,
       anonymous_mode: true,
       no_anonymize_before_delete_user: false,
       delete_user: true,
-      client_uuid: true
+      client_uuid: true,
+      measurement_selection: true,
+      measurement_selection_speed: true,
+      measurement_selection_qos: true
+    }
+  },
+  socialMediaSettings: {
+    history: {
+      medias: ['FACEBOOK', 'TWITTER', 'MAIL', 'WHATSAPP']
     }
   }
 };

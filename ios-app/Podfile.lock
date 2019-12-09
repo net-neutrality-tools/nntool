@@ -1,17 +1,25 @@
 PODS:
+  - ActionKit (2.5.3)
   - Alamofire (4.8.2)
-  - BartyCrouch (3.13.0)
+  - BartyCrouch (4.0.2)
+  - BlueSocket (1.0.52)
   - CocoaAsyncSocket (7.6.3)
-  - CocoaLumberjack (3.5.2):
-    - CocoaLumberjack/Core (= 3.5.2)
-  - CocoaLumberjack/Core (3.5.2)
+  - CocoaLumberjack (3.6.0):
+    - CocoaLumberjack/Core (= 3.6.0)
+  - CocoaLumberjack/Core (3.6.0)
   - CodableJSON (1.1.4)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
+  - GoogleMaps (3.6.0):
+    - GoogleMaps/Maps (= 3.6.0)
+  - GoogleMaps/Base (3.6.0)
+  - GoogleMaps/Maps (3.6.0):
+    - GoogleMaps/Base
   - MeasurementAgentKit (0.0.1):
+    - CocoaAsyncSocket (~> 7.6.3)
     - nntool-shared-swift (~> 0.0.1)
-    - ReachabilitySwift (~> 5.0.0-beta1)
+    - ReachabilitySwift (~> 5.0.0)
     - Siesta (~> 1.4.3)
   - nntool-shared-swift (0.0.1):
     - CodableJSON (~> 1.1.4)
@@ -32,14 +40,15 @@ PODS:
     - PocketSocket/Client
   - QoSKit (0.0.1):
     - Alamofire (~> 4.8.2)
+    - BlueSocket (~> 1.0.52)
     - CocoaAsyncSocket (~> 7.6.3)
     - nntool-shared-swift (~> 0.0.1)
     - WKWebViewWithURLProtocol (~> 0.1.0)
-  - R.swift (5.0.3):
-    - R.swift.Library (~> 5.0.0)
-  - R.swift.Library (5.0.1)
-  - ReachabilitySwift (5.0.0-beta1)
-  - Repeat (0.5.7)
+  - R.swift (5.1.0):
+    - R.swift.Library (~> 5.1.0)
+  - R.swift.Library (5.1.0)
+  - ReachabilitySwift (5.0.0)
+  - Repeat (0.5.8)
   - Siesta (1.4.3):
     - Siesta/Core (= 1.4.3)
   - Siesta/Core (1.4.3)
@@ -53,25 +62,30 @@ PODS:
     - ObjcExceptionBridging
 
 DEPENDENCIES:
-  - BartyCrouch (~> 3.13.0)
+  - ActionKit (~> 2.5.3)
+  - BartyCrouch (~> 4.0.2)
   - CocoaLumberjack (>= 3.4.2)
   - FMDB (>= 2.7.2)
+  - GoogleMaps (~> 3.6.0)
   - MeasurementAgentKit (from `../measurement-agent-swift`)
   - nntool-shared-swift (from `../nntool-shared-swift`)
   - PocketSocket (from `../PocketSocket`)
   - QoSKit (from `../qos-client-swift`)
-  - R.swift (~> 5.0.3)
+  - R.swift (~> 5.1.0)
   - SwiftGen (~> 6.1.0)
   - WebBrowser (~> 0.1.5)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
+    - ActionKit
     - Alamofire
     - BartyCrouch
+    - BlueSocket
     - CocoaAsyncSocket
     - CocoaLumberjack
     - CodableJSON
     - FMDB
+    - GoogleMaps
     - ObjcExceptionBridging
     - R.swift
     - R.swift.Library
@@ -95,21 +109,24 @@ EXTERNAL SOURCES:
     :path: "../qos-client-swift"
 
 SPEC CHECKSUMS:
+  ActionKit: c1b6427fd36a0fe2223555679bcc5dea437af5b3
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
-  BartyCrouch: 69e5e6ec67e77951dc1c22aa48abbf05d175b81c
+  BartyCrouch: 3f3501276901326bf4150341ad801467da972e43
+  BlueSocket: 1acd943acb07b55905291d608649fcfbf8cbd57d
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
-  CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
+  CocoaLumberjack: 78b0c238666f4f58db069738ec176f4519557516
   CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  MeasurementAgentKit: ee7929596184ed2f8e1f1c00882ead4298f965d7
+  GoogleMaps: 82f8fe307193bb4de6ef6bf9e88f1d624b718f9d
+  MeasurementAgentKit: 3e77fda4618aa67b8ac48cf6b863df5de2fd06a3
   nntool-shared-swift: 7955a6c51917bcf2f42316eb259da095c80a7398
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   PocketSocket: 9c6867d66fb4f962af96b9b07f4b45bb561b2c2a
-  QoSKit: 18909a0262e523ad444556f827e05e4f12019308
-  R.swift: f5a87643b91ea569d23d6afb3eee9c743edde239
-  R.swift.Library: cfe85d569d9bae6cb262922db130e7c3a7a5fad1
-  ReachabilitySwift: 93a5956ef3f076d7e24bc65bfb1c5042e69b7276
-  Repeat: 73c5ee602aed8f3c7bf1aa12d4cd0d3dc3edea0a
+  QoSKit: ba7d68065c6fb012da6072d1d2731bc83e81181c
+  R.swift: 8cbc4fc69b740305b6a17c8a8ed968eb788962d9
+  R.swift.Library: fa85ce1e0d0b7e818cd9e080df910ba54d2776cc
+  ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
+  Repeat: 8e65710d09da68f06ed79e865b091ffdcc8d0279
   Siesta: 83795fdf6a43232d1d2909e1a3dfb92ab5916d26
   SwiftGen: f872ca75cbd17bf7103c17f13dcfa0d9a15667b0
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
@@ -117,6 +134,6 @@ SPEC CHECKSUMS:
   WKWebViewWithURLProtocol: f7f2b367c40680105794a068ed2bb2cd5922c27c
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: 8609c0e2e6a363536dc2d3142beb759bfd101936
+PODFILE CHECKSUM: ae9afb97b4cbffbf9fb8f6321a3fecfb87d6edb2
 
-COCOAPODS: 1.7.1
+COCOAPODS: 1.8.4

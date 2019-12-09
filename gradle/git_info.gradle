@@ -1,0 +1,59 @@
+class GitInfo {
+  private String branchName
+  private String commitRef
+  private String commitCount
+  //private String commitDate
+  private String buildDate
+
+  public GitInfo() {
+    def isCI = System.env.CI
+    if (isCI != null) {
+      println("In CI context, using CI_ environment variables instead of git commands.")
+
+      branchName = System.env.CI_COMMIT_REF_NAME
+      commitRef = System.env.CI_COMMIT_SHORT_SHA
+      commitCount = "-1"
+    } else {
+      branchName = runGitCommand('symbolic-ref', '--short', 'HEAD')
+      commitRef = runGitCommand('describe', '--tags', '--always', '--first-parent') //runGitCommand('log', '--pretty=format:"%h"', '-n 1')
+      commitCount = runGitCommand('rev-list', 'HEAD', '--count')
+    }
+
+    buildDate = new Date().format('yyyy-MM-dd_HH:mm:ss')
+  }
+
+  public String getBranchName() {
+    return branchName
+  }
+
+  public String getCommitRef() {
+    return commitRef
+  }
+
+  public String getCommitCount() {
+    return commitCount
+  }
+
+  public String getBuildDate() {
+    return buildDate
+  }
+
+  public String getGitVersionString() {
+    return branchName + '|' + commitCount + '|' + commitRef
+  }
+
+  public void printInfo() {
+    println("GIT INFO")
+    println("branch:\t\t" + branchName)
+    println("commit:\t\t" + commitRef)
+    println("commit_count:\t" + commitCount)
+    println("build_date:\t" + buildDate)
+  }
+
+  private static runGitCommand(String... commands) {
+    return ('git ' + commands.join(' ')).execute().text.trim()
+  }
+}
+
+gradle.ext.git_info = new GitInfo()
+gradle.ext.git_info.printInfo()

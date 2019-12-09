@@ -41,7 +41,7 @@ public interface StorageService {
 	
 	SettingsResponse getSettings(String settingsUuid) throws StorageServiceException; // TODO: custom exception
 	
-	LmapTaskDto getTaskDto(MeasurementTypeDto type, LmapCapabilityTaskDto capability, String settingsUuid) throws StorageServiceException; // TODO: add client info to fetch personalized settings 
+	LmapTaskDto getTaskDto(MeasurementTypeDto type, LmapCapabilityTaskDto capability, String settingsUuid, boolean useIPv6) throws StorageServiceException; // TODO: add client info to fetch personalized settings 
 
 	FullMeasurementResponse getFullMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid, String measurementUuid, Locale locale) throws StorageServiceException;
 	

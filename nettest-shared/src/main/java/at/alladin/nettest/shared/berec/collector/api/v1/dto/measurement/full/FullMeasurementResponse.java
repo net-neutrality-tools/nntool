@@ -13,10 +13,12 @@ import com.google.gson.annotations.SerializedName;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.BasicResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentInfoDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ComputedNetworkPointInTimeInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.DeviceInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.GeoLocationDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.MeasurementAgentInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.NetworkInfoDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QosAdvancedEvaluationDto;
 
 /**
  * This DTO class contains all measurement information that is sent to the measurement agent.
@@ -155,6 +157,25 @@ public class FullMeasurementResponse extends BasicResponse {
 	@SerializedName("network_info")
 	@JsonProperty(required = true, value = "network_info")
 	private NetworkInfoDto networkInfo;
+	
+	/**
+	 * @see ComputedNetworkPointInTimeInfoDto
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "Contains post-processed network related information gathered during the test.")
+	@JsonPropertyDescription("Contains post-processed network related information gathered during the test.")
+	@Expose
+	@SerializedName("computed_network_info")
+	@JsonProperty(required = true, value = "computed_network_info")
+	private ComputedNetworkPointInTimeInfoDto computedNetworkInfo;
+	
+	/**
+	 * @see QosAdvancedEvaluation
+	 */
+	@JsonPropertyDescription("Contains advanced QoS related information.")
+	@Expose
+	@SerializedName("qos_advanced_evaluation")
+	@JsonProperty("qos_advanced_evaluation")
+	private QosAdvancedEvaluationDto qosAdvancedEvaluation;
 
 	public String getUuid() {
 		return uuid;
@@ -243,12 +264,29 @@ public class FullMeasurementResponse extends BasicResponse {
 	public void setDeviceInfo(DeviceInfoDto deviceInfo) {
 		this.deviceInfo = deviceInfo;
 	}
-
+	
 	public NetworkInfoDto getNetworkInfo() {
 		return networkInfo;
 	}
-
+	
 	public void setNetworkInfo(NetworkInfoDto networkInfo) {
 		this.networkInfo = networkInfo;
 	}
+
+	public ComputedNetworkPointInTimeInfoDto getComputedNetworkInfo() {
+		return computedNetworkInfo;
+	}
+	
+	public void setComputedNetworkInfo(ComputedNetworkPointInTimeInfoDto computedNetworkInfo) {
+		this.computedNetworkInfo = computedNetworkInfo;
+	}
+
+	public QosAdvancedEvaluationDto getQosAdvancedEvaluation() {
+		return qosAdvancedEvaluation;
+	}
+
+	public void setQosAdvancedEvaluation(QosAdvancedEvaluationDto qosAdvancedEvaluation) {
+		this.qosAdvancedEvaluation = qosAdvancedEvaluation;
+	}
+	
 }

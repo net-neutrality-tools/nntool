@@ -1,20 +1,22 @@
-/*
- *********************************************************************************
- *                                                                               *
- *       ..--== zafaco GmbH ==--..                                               *
- *                                                                               *
- *       Website: http://www.zafaco.de                                           *
- *                                                                               *
- *       Copyright 2019                                                          *
- *                                                                               *
- *********************************************************************************
- */
-
 /*!
- *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-20
- *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
- */
+    \file connection.cpp
+    \author zafaco GmbH <info@zafaco.de>
+    \date Last update: 2019-11-13
+
+    Copyright (C) 2016 - 2019 zafaco GmbH
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License version 3 
+    as published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include "connection.h"
 
@@ -400,6 +402,22 @@ int CConnection::tcp6SocketServer( int &nPort )
 	return mSocket;
 }
 
+void CConnection::setBlocking()
+{
+	toggleBlocking(true);
+}
+
+void CConnection::setNonBlocking()
+{
+	toggleBlocking(false);
+}
+
+void CConnection::toggleBlocking(bool activate)
+{
+	const int flags = fcntl(mSocket, F_GETFL, 0);
+	fcntl(mSocket, F_SETFL, activate ? flags ^ O_NONBLOCK : flags | O_NONBLOCK);
+}
+
 int CConnection::tlsServe()
 {
 	mTls = 1;
@@ -433,7 +451,7 @@ int CConnection::tlsServe()
                 keyFile = certDir + dirName + "/" + dirName + ".key";
                                  
                 //Set cert
-			    if (SSL_CTX_use_certificate_file(ctx, certFile.c_str(), SSL_FILETYPE_PEM) <= 0)
+			    if (SSL_CTX_use_certificate_chain_file(ctx, certFile.c_str()) <= 0)
 			    {
 			        TRC_ERR("TLS Error while setting certificate file: ");
 			        tlsPrintError();
@@ -559,7 +577,10 @@ static int tlsVerifyCertificateCallback(int ok, X509_STORE_CTX *store_ctx)
 void CConnection::tlsSetup(bool client)
 {
 	SSL_library_init();
+
+	//change the following line to explicitly state ciphers and digests 
     OpenSSL_add_all_algorithms();
+
 	SSL_load_error_strings();
 	ERR_load_crypto_strings();
 

@@ -1,20 +1,22 @@
-/*
- *********************************************************************************
- *                                                                               *
- *       ..--== zafaco GmbH ==--..                                               *
- *                                                                               *
- *       Website: http://www.zafaco.de                                           *
- *                                                                               *
- *       Copyright 2019                                                          *
- *                                                                               *
- *********************************************************************************
- */
-
 /*!
- *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-28
- *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
- */
+    \file Ias.js
+    \author zafaco GmbH <info@zafaco.de>
+    \date Last update: 2019-11-26
+
+    Copyright (C) 2016 - 2019 zafaco GmbH
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License version 3 
+    as published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 /* global jsinterface, require, global */
 
@@ -88,7 +90,9 @@ function Ias()
     var waitTimeClassChangeDownload     = 8000;
     var waitTimeClassChangeUpload       = 15000;
 
-    var useWebWorkers                    = true;
+    var useWebWorkers                   = true;
+
+    var rttIdTimestampMapping           = {};
 
 
 
@@ -162,6 +166,11 @@ function Ias()
                 this.controlCallback(data);
                 return;
             }
+        }
+
+        if (!timestampKPIs.measurement_start)
+        {
+            timestampKPIs.measurement_start = jsTool.getTimestamp() * 1000 * 1000;
         }
 
         if (typeof window !== 'undefined' && !window.WebSocket)
@@ -347,7 +356,7 @@ function Ias()
                     {
                         var i = index;
                         //check for new class within bounds OR if lowest lower or highest upper bounds where exceeded
-                        if ((element.bounds.lower * 1000 * 1000 < data.throughput_avg_bps && element.bounds.upper * 1000 * 1000 > data.throughput_avg_bps)
+                        if ((element.bounds.lower * 1000 * 1000 <= data.throughput_avg_bps && element.bounds.upper * 1000 * 1000 > data.throughput_avg_bps)
                             || wsMeasurementParameters[data.test_case].classes[classIndexLowestBound].bounds.lower * 1000 * 1000 > data.throughput_avg_bps
                             || wsMeasurementParameters[data.test_case].classes[classIndexHighestBound].bounds.upper * 1000 * 1000 < data.throughput_avg_bps)
                         {
@@ -441,19 +450,49 @@ function Ias()
         delete cleanedData.msg;
         delete cleanedData.test_case;
 
+        var relative_time_ns_measurement_start = (jsTool.getTimestamp() * 1000 * 1000 ) - timestampKPIs.measurement_start;
+
         if (data.test_case === 'rtt')
         {
+            if (typeof cleanedData !== 'undefined' && typeof cleanedData.rtts !== 'undefined' && typeof cleanedData.rtts[cleanedData.rtts.length - 1].id !== 'undefined')
+            {
+                var id = cleanedData.rtts[cleanedData.rtts.length - 1].id;
+                if (typeof rttIdTimestampMapping[id] === 'undefined')
+                {
+                    rttIdTimestampMapping[id] = relative_time_ns_measurement_start;
+                }
+            }
+
+            if (typeof cleanedData.rtts !== 'undefined')
+            {
+                cleanedData.rtts.forEach(function(element, index)
+                {
+                    element.relative_time_ns_measurement_start = rttIdTimestampMapping[element.id];
+
+                    if (typeof element.relative_time_ns_measurement_start === 'undefined')
+                    {
+                        rttIdTimestampMapping[element.id] = relative_time_ns_measurement_start - 5e8;
+                        element.relative_time_ns_measurement_start = rttIdTimestampMapping[element.id];
+                    }
+
+                    delete(element.id);
+                });
+            }
+
             rttKPIs = cleanedData;
         }
 
         if (data.test_case === 'download' && typeof data.downloadKPIs !== 'undefined' && typeof data.downloadKPIs.throughput_avg_bps !== 'undefined')
         {
+            cleanedData.downloadKPIs.relative_time_ns_measurement_start = relative_time_ns_measurement_start;
+
             downloadKPIs.push(cleanedData.downloadKPIs);
 
             if (typeof cleanedData.downloadStreamKPIs !== 'undefined')
             {
                 for (index in cleanedData.downloadStreamKPIs)
                 {
+                    cleanedData.downloadStreamKPIs[index].relative_time_ns_measurement_start = relative_time_ns_measurement_start;
                     downloadStreamKPIs.push(cleanedData.downloadStreamKPIs[index]);
                 }
             }
@@ -461,12 +500,15 @@ function Ias()
 
         if (data.test_case === 'upload' && typeof data.uploadKPIs !== 'undefined' && typeof data.uploadKPIs.throughput_avg_bps !== 'undefined')
         {
+            cleanedData.uploadKPIs.relative_time_ns_measurement_start = relative_time_ns_measurement_start;
+
             uploadKPIs.push(cleanedData.uploadKPIs);
 
             if (typeof cleanedData.uploadStreamKPIs !== 'undefined')
             {
                 for (index in cleanedData.uploadStreamKPIs)
                 {
+                    cleanedData.uploadStreamKPIs[index].relative_time_ns_measurement_start = relative_time_ns_measurement_start;
                     uploadStreamKPIs.push(cleanedData.uploadStreamKPIs[index]);
                 }
             }
@@ -592,7 +634,7 @@ function Ias()
 
     /**
      * @function setEndTimestamps
-     * @description Set the Timestamp of the completion of the current Test Case
+     * @description Set the Timestamp of the completion of the current Test Case and the complete measurement
      * @private
      * @param {string} test_case Test Case
      */
@@ -609,6 +651,11 @@ function Ias()
         if ((performUploadMeasurement && performedUploadMeasurement && !timestampKPIs.upload_end)  || test_case === 'upload')
         {
             timestampKPIs.upload_end = jsTool.getTimestamp() * 1000 * 1000;
+        }
+
+        if (performRttMeasurement === performedRttMeasurement && performDownloadMeasurement === performedDownloadMeasurement && performUploadMeasurement === performedUploadMeasurement)
+        {
+            timestampKPIs.measurement_end = jsTool.getTimestamp() * 1000 * 1000;
         }
     }
 

@@ -23,6 +23,7 @@ spring:
           - Settings
           - MeasurementServer
           - QoSMeasurementObjective
+          - Translation
 
 server:
   port: 8080

@@ -32,6 +32,9 @@ class MeasurementViewController: CustomNavigationBarViewController {
 
     @IBOutlet private var viewMeasurementResultButton: UIButton?
 
+    @IBOutlet private var viewMeasurementResultButtonTopConstraint: NSLayoutConstraint?
+    @IBOutlet private var viewMeasurementResultButtonBottomConstraint: NSLayoutConstraint?
+
     private var measurementRunner: MeasurementRunner?
 
     private var progressAlert: UIAlertController?
@@ -64,8 +67,23 @@ class MeasurementViewController: CustomNavigationBarViewController {
         // As a workaround we change the title of this element after setting the appearance.
         navigationItem.rightBarButtonItem?.icon = .help
 
+        // Shrink constraint constant if displaying on iPhone 5s or SE.
+        if DeviceHelper.isSmalliPhone() {
+            viewMeasurementResultButtonTopConstraint?.constant = 5
+            viewMeasurementResultButtonBottomConstraint?.constant = 5
+        }
+
         speedMeasurementGaugeView?.startButtonActionCallback = {
-            self.startMeasurement()
+            guard MEASUREMENT_AGENT.isAtLeastOneMeasurementTaskEnabled() else {
+                self.displayNoMeasurementTaskEnabledWarningAlert()
+                return
+            }
+
+            if MEASUREMENT_TRAFFIC_WARNING_ENABLED {
+                self.displayPreMeasurementWarningAlert()
+            } else {
+                self.startMeasurement()
+            }
         }
 
         reachability = NetworkInfoReachability(whenReachable: { (type, details) in
@@ -75,8 +93,8 @@ class MeasurementViewController: CustomNavigationBarViewController {
             }
         }, whenUnreachable: {
             DispatchQueue.main.async {
-                self.speedMeasurementGaugeView?.networkTypeLabel?.text = "Unknown"
-                self.speedMeasurementGaugeView?.networkDetailLabel?.text = "No connection"
+                self.speedMeasurementGaugeView?.networkTypeLabel?.text = R.string.localizable.networkUnknown()
+                self.speedMeasurementGaugeView?.networkDetailLabel?.text = R.string.localizable.networkNoConnection()
             }
         })
         reachability?.start()
@@ -91,16 +109,32 @@ class MeasurementViewController: CustomNavigationBarViewController {
         reachability = nil
     }
 
+    func displayNoMeasurementTaskEnabledWarningAlert() {
+        present(MeasurementHelper.createNoMeasurementTaskEnabledWarningAlert({
+            self.performSegue(withIdentifier: R.segue.measurementViewController.present_settings_from_again_no_measurement_task_enabled_alert, sender: self)
+        }), animated: true, completion: nil)
+    }
+
+    func displayPreMeasurementWarningAlert() {
+        present(MeasurementHelper.createPreMeasurementWarningAlert({
+            self.startMeasurement()
+        }), animated: true, completion: nil)
+    }
+
     @IBAction func viewTapped() {
         if !isRunning {
             return
         }
 
-        let alert = UIAlertController(title: "Abort Measurement?", message: "Do you really want to abort the current measurement?", preferredStyle: .alert)
+        let alert = UIAlertController(
+            title: R.string.localizable.measurementAbortAlertTitle(),
+            message: R.string.localizable.measurementAbortAlertMessage(),
+            preferredStyle: .alert
+        )
 
-        alert.addAction(UIAlertAction(title: "Continue", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: R.string.localizable.measurementAbortAlertContinue(), style: .default, handler: nil))
 
-        alert.addAction(UIAlertAction(title: "Abort Measurement", style: .destructive) { _ in
+        alert.addAction(UIAlertAction(title: R.string.localizable.measurementAbortAlertAbort(), style: .destructive) { _ in
             self.stopMeasurement()
         })
 
@@ -150,10 +184,21 @@ class MeasurementViewController: CustomNavigationBarViewController {
         measurementRunner = MEASUREMENT_AGENT.newMeasurementRunner()
         // TODO: fail measurement if runner is nil (could be because agent is not registered)
 
-        overallProgress = Progress(totalUnitCount: 200)
+        overallProgress = Progress(totalUnitCount: Int64(MEASUREMENT_AGENT.enabledProgramsCount()) * 100)
 
-        iasProgress = Progress(totalUnitCount: 100, parent: overallProgress!, pendingUnitCount: 100)
-        qosProgress = Progress(totalUnitCount: 100, parent: overallProgress!, pendingUnitCount: 100)
+        if MEASUREMENT_AGENT.isProgramTypeEnabled("SPEED") {
+            iasProgress = Progress(totalUnitCount: 100, parent: overallProgress!, pendingUnitCount: 100)
+
+            iasPhaseProgress = [SpeedMeasurementPhase: Progress]()
+            iasPhaseProgress?[.initialize] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
+            iasPhaseProgress?[.rtt] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
+            iasPhaseProgress?[.download] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
+            iasPhaseProgress?[.upload] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
+        }
+
+        if MEASUREMENT_AGENT.isProgramTypeEnabled("QOS") {
+            qosProgress = Progress(totalUnitCount: 100, parent: overallProgress!, pendingUnitCount: 100)
+        }
 
         DispatchQueue.main.async {
             self.progressInfoBar?.setLeftValue(value: "0%", newIcon: .hourglass)
@@ -165,12 +210,6 @@ class MeasurementViewController: CustomNavigationBarViewController {
             }
         }
 
-        iasPhaseProgress = [SpeedMeasurementPhase: Progress]()
-        iasPhaseProgress?[.initialize] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
-        iasPhaseProgress?[.rtt] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
-        iasPhaseProgress?[.download] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
-        iasPhaseProgress?[.upload] = Progress(totalUnitCount: 25, parent: iasProgress!, pendingUnitCount: 25)
-
         measurementRunner?.delegate = self
         measurementRunner?.startMeasurement(preferredSpeedMeasurementPeer: preferredSpeedMeasurementPeer)
     }
@@ -181,10 +220,11 @@ class MeasurementViewController: CustomNavigationBarViewController {
     }
 
     private func returnToHomeScreen() {
+        showNavigationItems()
         navigationController?.popToRootViewController(animated: false)
     }
 
-    private func stop() {
+    private func stopProgress() {
         overallProgressObservation?.invalidate()
         overallProgressObservation = nil
 
@@ -196,11 +236,11 @@ class MeasurementViewController: CustomNavigationBarViewController {
 
         // TODO: localization
 
-        alert.addAction(UIAlertAction(title: "Retry", style: .default) { _ in
+        alert.addAction(UIAlertAction(title: R.string.localizable.measurementFailureAlertRetry(), style: .default) { _ in
             self.startMeasurement()
         })
 
-        alert.addAction(UIAlertAction(title: "Abort Measurement", style: .destructive) { _ in
+        alert.addAction(UIAlertAction(title: R.string.localizable.measurementFailureAlertAbort(), style: .destructive) { _ in
             self.returnToHomeScreen()
         })
 
@@ -220,7 +260,7 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
         logger.debug("!^! measurementWillStartRequestingControlModel")
 
         DispatchQueue.main.async {
-            self.progressAlert = UIAlertController.createLoadingAlert(title: "Initiating measurement") // TODO: localization
+            self.progressAlert = UIAlertController.createLoadingAlert(title: R.string.localizable.measurementInitiating())
             self.present(self.progressAlert!, animated: true, completion: nil)
         }
     }
@@ -244,15 +284,19 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
     func measurementDidStop(_ runner: MeasurementRunner) {
         isRunning = false
 
-        stop()
+        stopProgress()
 
         DispatchQueue.main.async {
+            self.showNavigationItems()
             self.speedMeasurementGaugeView?.isStartButtonEnabled = true
 
-            self.progressAlert?.dismiss(animated: true) {
+            self.progressInfoBar?.reset()
+            self.speedMeasurementGaugeView?.reset()
+
+            /*self.progressAlert?.dismiss(animated: true) {
                 self.progressAlert = nil
                 self.returnToHomeScreen()
-            }
+            }*/
         }
     }
 
@@ -265,9 +309,10 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
         isRunning = false
 
         DispatchQueue.main.async {
-            self.showNavigationItems()
-            self.progressInfoBar?.reset()
-            self.speedMeasurementGaugeView?.reset()
+            //self.showNavigationItems()
+
+            //self.progressInfoBar?.reset()
+            //self.speedMeasurementGaugeView?.reset()
 
             self.showViewMeasurementResultButton()
         }
@@ -279,7 +324,10 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
         isRunning = false
 
         let presentFailureAlert = {
-            self.showMeasurementFailureAlert(title: "Error", message: "TODO: Measurement Error") // TODO: localization
+            self.showMeasurementFailureAlert(
+                title: R.string.localizable.measurementFailureAlertTitle(),
+                message: R.string.localizable.measurementFailureAlertMessage()
+            )
         }
 
         DispatchQueue.main.async {
@@ -294,7 +342,7 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
         }
     }
 
-    func measurementRunner(_ runner: MeasurementRunner, willStartProgramWithName name: String, implementation: /*AnyProgram<Any>*/ProgramProtocol) {
+    func measurementRunner(_ runner: MeasurementRunner, willStartProgramWithName name: String, implementation: ProgramProtocol) {
         logger.debug("!^! willStart program \(name)")
 
         (implementation as? IASProgram)?.delegate = self
@@ -302,13 +350,19 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
 
         if implementation is QoSProgram {
             DispatchQueue.main.async {
-                self.speedMeasurementGaugeView?.isHidden = true
+                self.qosView?.alpha = 0
                 self.qosView?.isHidden = false
+                UIView.transition(with: self.qosView!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    self.qosView?.alpha = 1
+                    self.speedMeasurementGaugeView?.alpha = 0
+                }, completion: { _ in
+                    self.speedMeasurementGaugeView?.isHidden = true
+                })
             }
         }
     }
 
-    func measurementRunner(_ runner: MeasurementRunner, didFinishProgramWithName name: String, implementation: /*AnyProgram<Any>*/ProgramProtocol) {
+    func measurementRunner(_ runner: MeasurementRunner, didFinishProgramWithName name: String, implementation: ProgramProtocol) {
         logger.debug("!^! didFinish program \(name)")
 
         (implementation as? IASProgram)?.delegate = nil
@@ -322,9 +376,13 @@ extension MeasurementViewController: MeasurementRunnerDelegate {
 
         if implementation is QoSProgram {
             // view would switch too fast, user would not recognize the finished qos measurement
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+                self.speedMeasurementGaugeView?.alpha = 0
                 self.speedMeasurementGaugeView?.isHidden = false
-                self.qosView?.isHidden = true
+                UIView.transition(with: self.qosView!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    self.qosView?.alpha = 0
+                    self.speedMeasurementGaugeView?.alpha = 1
+                }, completion: { self.qosView?.isHidden = $0 })
             }
         }
     }
@@ -360,13 +418,13 @@ extension MeasurementViewController: IASProgramDelegate {
                 let msValue = value / Double(NSEC_PER_MSEC)
                 let msString = String(format: "%.2f", msValue)
 
-                self.progressInfoBar?.setRightValue(value: "\(msString) ms") // TODO: translation, unit from phase enum?
+                self.progressInfoBar?.setRightValue(value: "\(msString) \(R.string.localizable.generalUnitsMs())")
                 self.speedMeasurementBasicResultView?.setText(msString, forPhase: phase)
             case .download, .upload:
                 let mbpsValue = value / 1_000_000.0
                 let mbpsString = String(format: "%.2f", mbpsValue)
 
-                self.progressInfoBar?.setRightValue(value: "\(mbpsString) Mbit/s") // TODO: translation, unit from phase enum?
+                self.progressInfoBar?.setRightValue(value: "\(mbpsString) M\(R.string.localizable.generalUnitsBps())")
                 self.speedMeasurementBasicResultView?.setText(mbpsString, forPhase: phase)
 
                 let mbpsLog = SpeedHelper.throughputLogarithmMbps(bps: value)

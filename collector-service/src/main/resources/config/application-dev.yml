@@ -32,11 +32,11 @@ spring:
           - Translation
           - EmbeddedNetworkType
 
-  #datasource:
-  #  driver-class-name: org.postgresql.Driver
-  #  url: jdbc:postgresql://localhost:15432/nntool
-  #  username: nntool
-  #  password: nntool
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:15432/nntool
+    username: nntool
+    password: nntool
 
 server:
   port: 8081

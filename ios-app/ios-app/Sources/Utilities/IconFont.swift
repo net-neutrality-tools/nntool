@@ -43,6 +43,7 @@ enum IconFont: String {
     case nonTransparent = "í"
     case adjustment = "ò"
     case tcp = "ó"
+    case echoProtocol = "û"
     case filter = "ù"
     case traceroute = "ú"
     case logoInverse = "A"
@@ -50,6 +51,8 @@ enum IconFont: String {
     case trafficIn = "I"
     case trafficOut = "J"
     case hourglass = "O"
+    case androidShare = "À"
+    case iosShare = "Á"
 
     ///
     func repeating(_ count: Int) -> String {

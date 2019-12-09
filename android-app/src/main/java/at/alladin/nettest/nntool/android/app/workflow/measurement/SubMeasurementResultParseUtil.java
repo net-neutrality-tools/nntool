@@ -3,8 +3,8 @@ package at.alladin.nettest.nntool.android.app.workflow.measurement;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.alladin.nettest.nntool.android.speed.JniSpeedMeasurementResult;
-import at.alladin.nettest.nntool.android.speed.SpeedTaskDesc;
+import com.zafaco.speed.JniSpeedMeasurementResult;
+import com.zafaco.speed.SpeedTaskDesc;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.QoSMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SpeedMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
@@ -105,7 +105,17 @@ public class SubMeasurementResultParseUtil {
             rttInfoDto.setMedianNs(lastRttResult.getMedianNs());
             rttInfoDto.setMinimumNs(lastRttResult.getMinNs());
             rttInfoDto.setStandardDeviationNs(lastRttResult.getStandardDeviationNs());
-            rttInfoDto.setRtts(parseIntoRttDto(result.getRttUdpResult().getSingleRtts()));
+            if (lastRttResult.getSingleRtts() != null && lastRttResult.getSingleRtts().size() > 0) {
+                final List<RttDto> rttList = new ArrayList<>();
+                RttDto toAdd;
+                for (JniSpeedMeasurementResult.SingleRtt rtt : lastRttResult.getSingleRtts()) {
+                    toAdd = new RttDto();
+                    toAdd.setRttNs(rtt.getRttNs());
+                    toAdd.setRelativeTimeNs(rtt.getRelativeTimeNsMeasurementStart());
+                    rttList.add(toAdd);
+                }
+                rttInfoDto.setRtts(rttList);
+            }
 
         }
 

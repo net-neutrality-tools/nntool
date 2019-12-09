@@ -92,7 +92,7 @@ public class CanvasArcDoubleGaugeWithLabels extends AbstractCanvasWithLabels {
             final double maxLog = Math.log10(1000d);
             final double gaugeParts = speedLabelSize - 1;
 
-            final double logSpeed = ((gaugeParts - maxLog) + Math.log10(speedValue)) / gaugeParts;
+            final double logSpeed = Math.max(0.001d, ((gaugeParts - maxLog) + Math.log10(speedValue)) / gaugeParts);
             arcPaint.setColor(getResources().getColor(R.color.gauge_speed_fg));
             canvas.drawArc(speedRing.getBounds(), 0, (float) (ARC_ANGLE * logSpeed), false, arcPaint);
         }

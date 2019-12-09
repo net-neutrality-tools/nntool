@@ -1,45 +1,16 @@
-import { APP_BASE_HREF, CommonModule } from '@angular/common';
-import { Inject, ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
+import { NgModule } from '@angular/core';
+import { ComponentsModule } from './components/components.module';
+import { SharedModule } from '../shared/shared.module';
+import { PipesModule } from './pipes/pipes.module';
+import { ServicesModule } from './services/services.module';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
-// libs
-import { TranslateService } from '@ngx-translate/core';
-import { throwIfAlreadyLoaded } from '@nntool-typescript/utils';
-import { NxModule } from '@nrwl/nx';
-
-// app
-import { environment } from './environments/environment';
-import { CORE_PROVIDERS, PlatformLanguageToken } from './services';
-
-export const BASE_PROVIDERS: any[] = [
-  ...CORE_PROVIDERS,
-  {
-    provide: APP_BASE_HREF,
-    useValue: '/'
-  }
-];
+const COMPONENTS = [];
 
 @NgModule({
-  imports: [CommonModule, NxModule.forRoot()]
+  imports: [SharedModule, ComponentsModule, PipesModule, ServicesModule, LeafletModule],
+  exports: [...COMPONENTS, ComponentsModule, PipesModule, ServicesModule],
+  declarations: [...COMPONENTS],
+  entryComponents: [...COMPONENTS]
 })
-export class CoreModule {
-  // configuredProviders: *required to configure WindowService and others per platform
-  public static forRoot(configuredProviders: any[]): ModuleWithProviders {
-    return {
-      ngModule: CoreModule,
-      providers: [...BASE_PROVIDERS, ...configuredProviders]
-    };
-  }
-
-  constructor(
-    @Optional()
-    @SkipSelf()
-    parentModule: CoreModule,
-    @Inject(PlatformLanguageToken) lang: string,
-    translate: TranslateService
-  ) {
-    throwIfAlreadyLoaded(parentModule, 'CoreModule');
-
-    // ensure default platform language is set
-    translate.use(lang);
-  }
-}
+export class CoreModule {}

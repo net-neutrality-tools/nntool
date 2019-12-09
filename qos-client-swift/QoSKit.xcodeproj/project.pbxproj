@@ -15,20 +15,27 @@
 		E02D19201CF598E8002A02FE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E02D191F1CF598E8002A02FE /* Foundation.framework */; };
 		E02D19221CF598F3002A02FE /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E02D19211CF598F3002A02FE /* CoreLocation.framework */; };
 		E02D19241CF59900002A02FE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E02D19231CF59900002A02FE /* SystemConfiguration.framework */; };
+		E03130082322B5F100B6FE19 /* SipMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03130072322B5F100B6FE19 /* SipMessage.swift */; };
+		E031300A2326CEF500B6FE19 /* VoipTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03130092326CEF500B6FE19 /* VoipTask.swift */; };
 		E044DDF022D37B9900BB70CE /* NonTransparentProxyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DDED22D379A900BB70CE /* NonTransparentProxyTask.swift */; };
 		E044DDF322D39FEE00BB70CE /* WebsiteRenderingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DDF122D39FBB00BB70CE /* WebsiteRenderingTask.swift */; };
 		E044DDF822D3A19500BB70CE /* WebsiteTaskRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DDF622D3A19200BB70CE /* WebsiteTaskRunner.swift */; };
 		E044DDF922D3A19900BB70CE /* WebsiteTaskUrlProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DDF422D3A15000BB70CE /* WebsiteTaskUrlProtocol.swift */; };
+		E05487E3231B06C400B47184 /* TracerouteTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05487E2231B06C400B47184 /* TracerouteTask.swift */; };
+		E05487E5231C3C7400B47184 /* MeasurementKitTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05487E4231C3C7400B47184 /* MeasurementKitTask.swift */; };
+		E05487EA231C461500B47184 /* MeasurementKitEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05487E9231C461500B47184 /* MeasurementKitEvent.swift */; };
+		E05487EC231C48DD00B47184 /* MeasurementKitEventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05487EB231C48DD00B47184 /* MeasurementKitEventType.swift */; };
+		E05487EE231C5E3100B47184 /* MKAsyncTaskWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = E05487ED231C5E3100B47184 /* MKAsyncTaskWrapper.m */; };
 		E05D32C221F0F77D005E77F1 /* QoSKitUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D32C121F0F77D005E77F1 /* QoSKitUnitTests.swift */; };
 		E05D32C421F0F77D005E77F1 /* QoSKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0B1C7DE1CF4ADBA00F19282 /* QoSKit.framework */; };
 		E05D32E721F61ED8005E77F1 /* TcpStreamUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D32E621F61ED8005E77F1 /* TcpStreamUtil.swift */; };
 		E05D32F421F63CAA005E77F1 /* ControlConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D32F321F63CAA005E77F1 /* ControlConnection.swift */; };
 		E05D32FA21F7741F005E77F1 /* QoSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D32F921F7741F005E77F1 /* QoSLog.swift */; };
-		E05D331821F9FE2A005E77F1 /* UdpStreamUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D331721F9FE2A005E77F1 /* UdpStreamUtil.swift */; };
 		E05D331A21FA0255005E77F1 /* TaskType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D331921FA0255005E77F1 /* TaskType.swift */; };
 		E06951002110A6EB00CFA14B /* QoSKit.podspec.json in Resources */ = {isa = PBXBuildFile; fileRef = E06950FF2110A6EB00CFA14B /* QoSKit.podspec.json */; };
 		E08FC3552212DDC50018E747 /* SocketProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08FC3542212DDC50018E747 /* SocketProtocols.swift */; };
 		E0AAD03F1FE2BDFC0007ACE4 /* QoSKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E0B1C8131CF4AFFD00F19282 /* QoSKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E0B950CE231EF85D0069F20A /* SipTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B950CC231EE71C0069F20A /* SipTask.swift */; };
 		E0C4526E22CCCAA800FA4B44 /* HttpProxyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C4526D22CCCAA800FA4B44 /* HttpProxyTask.swift */; };
 		E0C4527822CE0B5700FA4B44 /* QoSLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C4527722CE0B5700FA4B44 /* QoSLogger.swift */; };
 		E0EA84CF22804CE200EB73BF /* QoSTaskExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84C322804CE100EB73BF /* QoSTaskExecutor.swift */; };
@@ -43,6 +50,10 @@
 		E0EA84D922804CE200EB73BF /* QoSTaskExecutorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84CE22804CE200EB73BF /* QoSTaskExecutorDelegate.swift */; };
 		E0EA84DC22804D0100EB73BF /* ControlConnectionParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84DA22804D0100EB73BF /* ControlConnectionParameters.swift */; };
 		E0EA84DD22804D0100EB73BF /* RequireControlConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84DB22804D0100EB73BF /* RequireControlConnection.swift */; };
+		E0EB4D322343D2120068BE34 /* UdpStreamUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EB4D312343D2120068BE34 /* UdpStreamUtil.swift */; };
+		E0EB4D352343D4040068BE34 /* RTPPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EB4D342343D4040068BE34 /* RTPPacket.swift */; };
+		E0EB4D382343E13C0068BE34 /* RTPPacketTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EB4D372343E13C0068BE34 /* RTPPacketTests.swift */; };
+		E0EB4D3B2343E7B70068BE34 /* ByteUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EB4D392343E3660068BE34 /* ByteUtil.swift */; };
 		F4811F60DED85159BABF53BA /* Pods_All_QoSKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 114F7D4D1BAD1E3E433F65C3 /* Pods_All_QoSKit_iOS.framework */; };
 		F94E822B8F7C493E828188B4 /* Pods_All_QoSKitUnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E73A07B37856DB8539662BA3 /* Pods_All_QoSKitUnitTests.framework */; };
 /* End PBXBuildFile section */
@@ -75,17 +86,25 @@
 		E02D19471CF5A3BE002A02FE /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		E02D19491CF5A3D2002A02FE /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		E02D194B1CF5A3D7002A02FE /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		E03130072322B5F100B6FE19 /* SipMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SipMessage.swift; sourceTree = "<group>"; };
+		E03130092326CEF500B6FE19 /* VoipTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoipTask.swift; sourceTree = "<group>"; };
 		E044DDED22D379A900BB70CE /* NonTransparentProxyTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonTransparentProxyTask.swift; sourceTree = "<group>"; };
 		E044DDF122D39FBB00BB70CE /* WebsiteRenderingTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsiteRenderingTask.swift; sourceTree = "<group>"; };
 		E044DDF422D3A15000BB70CE /* WebsiteTaskUrlProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsiteTaskUrlProtocol.swift; sourceTree = "<group>"; };
 		E044DDF622D3A19200BB70CE /* WebsiteTaskRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebsiteTaskRunner.swift; sourceTree = "<group>"; };
+		E05487E2231B06C400B47184 /* TracerouteTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TracerouteTask.swift; sourceTree = "<group>"; };
+		E05487E4231C3C7400B47184 /* MeasurementKitTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasurementKitTask.swift; sourceTree = "<group>"; };
+		E05487E7231C434600B47184 /* MeasurementKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeasurementKit.h; sourceTree = "<group>"; };
+		E05487E9231C461500B47184 /* MeasurementKitEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementKitEvent.swift; sourceTree = "<group>"; };
+		E05487EB231C48DD00B47184 /* MeasurementKitEventType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementKitEventType.swift; sourceTree = "<group>"; };
+		E05487ED231C5E3100B47184 /* MKAsyncTaskWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MKAsyncTaskWrapper.m; sourceTree = "<group>"; };
+		E05487EF231C5E4E00B47184 /* MKAsyncTaskWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MKAsyncTaskWrapper.h; sourceTree = "<group>"; };
 		E05D32BF21F0F77D005E77F1 /* QoSKitUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QoSKitUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E05D32C121F0F77D005E77F1 /* QoSKitUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSKitUnitTests.swift; sourceTree = "<group>"; };
 		E05D32C321F0F77D005E77F1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E05D32E621F61ED8005E77F1 /* TcpStreamUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TcpStreamUtil.swift; sourceTree = "<group>"; };
 		E05D32F321F63CAA005E77F1 /* ControlConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlConnection.swift; sourceTree = "<group>"; };
 		E05D32F921F7741F005E77F1 /* QoSLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSLog.swift; sourceTree = "<group>"; };
-		E05D331721F9FE2A005E77F1 /* UdpStreamUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UdpStreamUtil.swift; sourceTree = "<group>"; };
 		E05D331921FA0255005E77F1 /* TaskType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskType.swift; sourceTree = "<group>"; };
 		E06950F121109FCC00CFA14B /* QoSKit_iOS_Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = QoSKit_iOS_Shared.xcconfig; sourceTree = "<group>"; };
 		E06950F221109FCC00CFA14B /* QoSKit_iOS_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = QoSKit_iOS_Debug.xcconfig; sourceTree = "<group>"; };
@@ -99,6 +118,7 @@
 		E09255A92121DB5300326B48 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		E0B1C7DE1CF4ADBA00F19282 /* QoSKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = QoSKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0B1C8131CF4AFFD00F19282 /* QoSKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QoSKit.h; path = Sources/QoSKit.h; sourceTree = "<group>"; };
+		E0B950CC231EE71C0069F20A /* SipTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SipTask.swift; sourceTree = "<group>"; };
 		E0C4526D22CCCAA800FA4B44 /* HttpProxyTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpProxyTask.swift; sourceTree = "<group>"; };
 		E0C4527722CE0B5700FA4B44 /* QoSLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSLogger.swift; sourceTree = "<group>"; };
 		E0EA84C322804CE100EB73BF /* QoSTaskExecutor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSTaskExecutor.swift; sourceTree = "<group>"; };
@@ -113,6 +133,10 @@
 		E0EA84CE22804CE200EB73BF /* QoSTaskExecutorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSTaskExecutorDelegate.swift; sourceTree = "<group>"; };
 		E0EA84DA22804D0100EB73BF /* ControlConnectionParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlConnectionParameters.swift; sourceTree = "<group>"; };
 		E0EA84DB22804D0100EB73BF /* RequireControlConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequireControlConnection.swift; sourceTree = "<group>"; };
+		E0EB4D312343D2120068BE34 /* UdpStreamUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdpStreamUtil.swift; sourceTree = "<group>"; };
+		E0EB4D342343D4040068BE34 /* RTPPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTPPacket.swift; sourceTree = "<group>"; };
+		E0EB4D372343E13C0068BE34 /* RTPPacketTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTPPacketTests.swift; sourceTree = "<group>"; };
+		E0EB4D392343E3660068BE34 /* ByteUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteUtil.swift; sourceTree = "<group>"; };
 		E0F5B7A121FE2597007AE378 /* Pods-All-QoSKit_iOS.debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Pods-All-QoSKit_iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-All-QoSKit_iOS/Pods-All-QoSKit_iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		E0F5B7A221FE2597007AE378 /* Pods-All-QoSKit_iOS.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Pods-All-QoSKit_iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-All-QoSKit_iOS/Pods-All-QoSKit_iOS.release.xcconfig"; sourceTree = "<group>"; };
 		E0FC4C311D6C815B00D5D236 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.2.sdk/usr/lib/libresolv.tbd; sourceTree = DEVELOPER_DIR; };
@@ -187,9 +211,30 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		E05487E6231C431B00B47184 /* MeasurementKit */ = {
+			isa = PBXGroup;
+			children = (
+				E05487E8231C45F400B47184 /* Model */,
+				E05487E7231C434600B47184 /* MeasurementKit.h */,
+				E05487EF231C5E4E00B47184 /* MKAsyncTaskWrapper.h */,
+				E05487ED231C5E3100B47184 /* MKAsyncTaskWrapper.m */,
+			);
+			path = MeasurementKit;
+			sourceTree = "<group>";
+		};
+		E05487E8231C45F400B47184 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E05487E9231C461500B47184 /* MeasurementKitEvent.swift */,
+				E05487EB231C48DD00B47184 /* MeasurementKitEventType.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		E05D32C021F0F77D005E77F1 /* QoSKitUnitTests */ = {
 			isa = PBXGroup;
 			children = (
+				E0EB4D362343E12E0068BE34 /* Model */,
 				E05D32C121F0F77D005E77F1 /* QoSKitUnitTests.swift */,
 				E05D32C321F0F77D005E77F1 /* Info.plist */,
 			);
@@ -277,17 +322,19 @@
 		E0B1C8061CF4AEFC00F19282 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				E0EB4D332343D3F60068BE34 /* Model */,
+				E05487E6231C431B00B47184 /* MeasurementKit */,
 				E0EA84C322804CE100EB73BF /* QoSTaskExecutor.swift */,
 				E0EA84CE22804CE200EB73BF /* QoSTaskExecutorDelegate.swift */,
 				E0EA84C622804CE200EB73BF /* QoSTaskGroup.swift */,
 				E0EA84C422804CE100EB73BF /* QoSTaskStatus.swift */,
 				E05D32F921F7741F005E77F1 /* QoSLog.swift */,
 				E05D331921FA0255005E77F1 /* TaskType.swift */,
+				E0C4527722CE0B5700FA4B44 /* QoSLogger.swift */,
+				E029275022D79597001FCAEC /* TaskError.swift */,
 				E0EA84C722804CE200EB73BF /* Tasks */,
 				E0F5B7A821FE2C2B007AE378 /* Util */,
 				E0F5B7A721FE2C1E007AE378 /* Control */,
-				E0C4527722CE0B5700FA4B44 /* QoSLogger.swift */,
-				E029275022D79597001FCAEC /* TaskError.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -296,17 +343,38 @@
 			isa = PBXGroup;
 			children = (
 				E0EA84C822804CE200EB73BF /* DnsTask.swift */,
+				E0B950CC231EE71C0069F20A /* SipTask.swift */,
+				E05487E4231C3C7400B47184 /* MeasurementKitTask.swift */,
+				E05487E2231B06C400B47184 /* TracerouteTask.swift */,
 				E0C4526D22CCCAA800FA4B44 /* HttpProxyTask.swift */,
 				E0EA84C922804CE200EB73BF /* UdpPortTask.swift */,
 				E0EA84CA22804CE200EB73BF /* TcpPortTask.swift */,
 				E044DDED22D379A900BB70CE /* NonTransparentProxyTask.swift */,
 				E044DDF122D39FBB00BB70CE /* WebsiteRenderingTask.swift */,
 				E0EA84CB22804CE200EB73BF /* QoSTask.swift */,
+				E03130092326CEF500B6FE19 /* VoipTask.swift */,
 				E0EA84CC22804CE200EB73BF /* EchoProtocolTask.swift */,
 				E0EA84CD22804CE200EB73BF /* QoSControlConnectionTask.swift */,
 				B180E11D22849CA4000CF9E2 /* QoSBidirectionalIpTask.swift */,
 			);
 			path = Tasks;
+			sourceTree = "<group>";
+		};
+		E0EB4D332343D3F60068BE34 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E03130072322B5F100B6FE19 /* SipMessage.swift */,
+				E0EB4D342343D4040068BE34 /* RTPPacket.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E0EB4D362343E12E0068BE34 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E0EB4D372343E13C0068BE34 /* RTPPacketTests.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		E0F5B7A721FE2C1E007AE378 /* Control */ = {
@@ -323,10 +391,11 @@
 			isa = PBXGroup;
 			children = (
 				E05D32E621F61ED8005E77F1 /* TcpStreamUtil.swift */,
-				E05D331721F9FE2A005E77F1 /* UdpStreamUtil.swift */,
+				E0EB4D312343D2120068BE34 /* UdpStreamUtil.swift */,
 				E08FC3542212DDC50018E747 /* SocketProtocols.swift */,
 				E044DDF422D3A15000BB70CE /* WebsiteTaskUrlProtocol.swift */,
 				E044DDF622D3A19200BB70CE /* WebsiteTaskRunner.swift */,
+				E0EB4D392343E3660068BE34 /* ByteUtil.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -402,7 +471,7 @@
 					};
 					E0B1C7DD1CF4ADBA00F19282 = {
 						CreatedOnToolsVersion = 7.3.1;
-						LastSwiftMigration = 1020;
+						LastSwiftMigration = 1030;
 					};
 				};
 			};
@@ -524,24 +593,28 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-All-QoSKitUnitTests/Pods-All-QoSKitUnitTests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/BlueSocket/Socket.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/CodableJSON/CodableJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/ObjcExceptionBridging/ObjcExceptionBridging.framework",
 				"${BUILT_PRODUCTS_DIR}/Repeat/Repeat.framework",
 				"${BUILT_PRODUCTS_DIR}/WKWebViewWithURLProtocol/WKWebViewWithURLProtocol.framework",
 				"${BUILT_PRODUCTS_DIR}/XCGLogger/XCGLogger.framework",
+				"${PODS_ROOT}/mkall/mkall.framework",
 				"${BUILT_PRODUCTS_DIR}/nntool-shared-swift/nntool_shared_swift.framework",
 				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Socket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CodableJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjcExceptionBridging.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Repeat.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/WKWebViewWithURLProtocol.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XCGLogger.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/mkall.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nntool_shared_swift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
 			);
@@ -557,6 +630,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E0EB4D382343E13C0068BE34 /* RTPPacketTests.swift in Sources */,
 				E05D32C221F0F77D005E77F1 /* QoSKitUnitTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -565,13 +639,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E05487EE231C5E3100B47184 /* MKAsyncTaskWrapper.m in Sources */,
+				E05487E5231C3C7400B47184 /* MeasurementKitTask.swift in Sources */,
 				E05D32F421F63CAA005E77F1 /* ControlConnection.swift in Sources */,
 				E0EA84CF22804CE200EB73BF /* QoSTaskExecutor.swift in Sources */,
 				E05D32FA21F7741F005E77F1 /* QoSLog.swift in Sources */,
-				E05D331821F9FE2A005E77F1 /* UdpStreamUtil.swift in Sources */,
 				E044DDF322D39FEE00BB70CE /* WebsiteRenderingTask.swift in Sources */,
+				E0B950CE231EF85D0069F20A /* SipTask.swift in Sources */,
+				E031300A2326CEF500B6FE19 /* VoipTask.swift in Sources */,
+				E05487EC231C48DD00B47184 /* MeasurementKitEventType.swift in Sources */,
 				E044DDF022D37B9900BB70CE /* NonTransparentProxyTask.swift in Sources */,
+				E05487EA231C461500B47184 /* MeasurementKitEvent.swift in Sources */,
+				E0EB4D352343D4040068BE34 /* RTPPacket.swift in Sources */,
 				E0EA84D222804CE200EB73BF /* QoSTaskGroup.swift in Sources */,
+				E0EB4D322343D2120068BE34 /* UdpStreamUtil.swift in Sources */,
 				E05D32E721F61ED8005E77F1 /* TcpStreamUtil.swift in Sources */,
 				E08FC3552212DDC50018E747 /* SocketProtocols.swift in Sources */,
 				E0C4527822CE0B5700FA4B44 /* QoSLogger.swift in Sources */,
@@ -581,10 +662,13 @@
 				E0EA84D022804CE200EB73BF /* QoSTaskStatus.swift in Sources */,
 				E05D331A21FA0255005E77F1 /* TaskType.swift in Sources */,
 				E029275122D79597001FCAEC /* TaskError.swift in Sources */,
+				E05487E3231B06C400B47184 /* TracerouteTask.swift in Sources */,
 				E0EA84D422804CE200EB73BF /* UdpPortTask.swift in Sources */,
 				B180E11E22849CA4000CF9E2 /* QoSBidirectionalIpTask.swift in Sources */,
 				E0EA84D322804CE200EB73BF /* DnsTask.swift in Sources */,
+				E03130082322B5F100B6FE19 /* SipMessage.swift in Sources */,
 				E0EA84DD22804D0100EB73BF /* RequireControlConnection.swift in Sources */,
+				E0EB4D3B2343E7B70068BE34 /* ByteUtil.swift in Sources */,
 				E0C4526E22CCCAA800FA4B44 /* HttpProxyTask.swift in Sources */,
 				E0EA84D522804CE200EB73BF /* TcpPortTask.swift in Sources */,
 				E0EA84D622804CE200EB73BF /* QoSTask.swift in Sources */,
@@ -646,6 +730,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 arm64e armv7s";
 			};
 			name = Debug;
 		};
@@ -684,6 +769,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "arm64 arm64e armv7s";
 			};
 			name = Release;
 		};
@@ -819,6 +905,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7s";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -873,6 +960,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "arm64 armv7s";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};

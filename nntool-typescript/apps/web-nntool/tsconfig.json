@@ -1,7 +1,15 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "types": ["jasmine"]
+    "types": ["jasmine"],
+    "paths": {
+      "@env/*": ["apps/web-nntool/src/environments/*"],
+      "@nntool-typescript/*": ["libs/*"],
+      "@nntool-typescript/electron": ["xplat/electron/index.ts"],
+      "@nntool-typescript/electron/*": ["xplat/electron/*"],
+      "@nntool-typescript/web": ["xplat/web/index.ts"],
+      "@nntool-typescript/web/*": ["xplat/web/*"]
+    }
   },
   "include": ["**/*.ts"]
 }

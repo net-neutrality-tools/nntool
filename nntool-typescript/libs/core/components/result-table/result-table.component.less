@@ -1,0 +1,119 @@
+@import '../../../less/_variables.less';
+
+:host /deep/ ng2-smart-table {
+  font-size: 1.6rem;
+  width: 100%;
+}
+
+:host /deep/ ng2-smart-table table tr th {
+  border-bottom: solid 1px @red;
+}
+
+:host /deep/ ng2-smart-table table tr td {
+  font-size: 1.6rem;
+  padding: 0;
+}
+
+:host /deep/ ng2-smart-table-title {
+  color: @pitch-black;
+}
+
+:host /deep/ ng2-smart-table-title a {
+  color: @red;
+}
+
+:host /deep/ ng2-smart-table tr > th {
+  font-weight: 700;
+  font-family: 'museo-sans', sans-serif;
+  font-feature-settings: 'onum' 1;
+  vertical-align: top;
+  padding: 0;
+}
+
+:host /deep/ ng2-smart-table tr > td {
+  border-bottom: solid 1px #d0d0d0;
+  vertical-align: top;
+  position: relative;
+  padding: 0;
+  cursor: pointer;
+}
+
+/*:host /deep/ ng2-smart-table tr > td:nth-child(3),
+:host /deep/ ng2-smart-table tr > td:nth-child(4),
+:host /deep/ ng2-smart-table tr > td:nth-child(5) {
+  text-align: right;
+}*/
+
+:host /deep/ ng2-smart-table table tr:nth-child(even) td {
+  background-color: @light-grey;
+}
+
+// ----
+
+:host /deep/ ng2-smart-table nav {
+  //background-color: @red;
+  margin: 0 auto;
+  margin-top: 1em;
+}
+
+//
+
+:host /deep/ .pagination {
+  & .page-item {
+    font-size: 1.6rem;
+    margin: 0 0.25em;
+    &:first-child {
+      margin-right: 1em;
+      & a:before {
+        content: '|\49';
+        font-family: @icon-font;
+        text-transform: uppercase; /* 'I' */
+      }
+      & [aria-hidden='true'] {
+        display: none;
+      }
+    }
+    &:last-child {
+      margin-left: 1em;
+      & a:after {
+        content: '\4a|';
+        font-family: @icon-font;
+        text-transform: uppercase; /* 'J' */
+      }
+      & [aria-hidden='true'] {
+        display: none;
+      }
+    }
+    & a {
+      color: @red;
+    }
+    &.active {
+      color: @grey;
+    }
+  }
+}
+
+:host /deep/ .page-link.page-link-prev {
+  &:before {
+    content: '\49';
+    font-family: @icon-font;
+    text-transform: uppercase; /* 'I' */
+    font-size: 1.6rem;
+    font-weight: normal;
+  }
+  & [aria-hidden='true'] {
+    display: none;
+  }
+}
+:host /deep/ .page-link.page-link-next {
+  &:after {
+    content: '\4a';
+    font-family: @icon-font;
+    text-transform: uppercase; /* 'J' */
+    font-size: 1.8rem;
+    font-weight: normal;
+  }
+  & [aria-hidden='true'] {
+    display: none;
+  }
+}

@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,8 @@ import at.alladin.nettest.shared.server.service.SpeedtestDetailGroup.SpeedtestDe
  */
 @Service
 public class GroupedMeasurementService {
+	
+	private final Logger logger = LoggerFactory.getLogger(GroupedMeasurementService.class);
 
 	private static final Locale STRING_FORMAT_LOCALE = Locale.US;
 	
@@ -45,9 +49,7 @@ public class GroupedMeasurementService {
 	
 	private static final String QOS_PREFIX = "qos";
 	
-	private static final String SHARE_TEXT_PLACEHOLDER = "{}";
-	
-	private static final String SHARE_TEXT_INTRO_TRANSLATION_KEY = "share_text_intro";
+	private static final String SHARE_TEXT_INTRO_TRANSLATION_KEY = "RESULT_SHARE_INTRO";
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -122,6 +124,15 @@ public class GroupedMeasurementService {
 		
 		final Map<MeasurementTypeDto, FullSubMeasurement> subMeasurements = measurement.getMeasurements();
 		
+		boolean hasQoSMeasurements = false;
+		if (subMeasurements != null) {
+			final FullQoSMeasurement qosMeasurement = (FullQoSMeasurement) subMeasurements.get(MeasurementTypeDto.QOS);
+			hasQoSMeasurements = qosMeasurement != null && qosMeasurement.getResults() != null && qosMeasurement.getResults().size() > 0;
+		}
+		
+		ret.setHasQoSResults(hasQoSMeasurements);
+
+		
 		for (final SpeedtestDetailGroup groupDefinition : groupStructure) {
 			//create a corresponding responseGroup w/formatted and i18ed values
 			final DetailMeasurementGroup responseGroup = new DetailMeasurementGroup();
@@ -160,6 +171,7 @@ public class GroupedMeasurementService {
 				}
 				
 				if (value == null) {
+					logger.debug("Unable to find object @ {}", key);
 					continue;
 				}
 				
@@ -174,19 +186,12 @@ public class GroupedMeasurementService {
 					item.setKey(key);
 				}
 				
-				//do formatting
-				//special cases get their own formatting (not ideal...)
-				if(key.endsWith("network_type")) {
-					item.setValue(Helperfunctions.getNetworkTypeName(Integer.parseInt(val)));
-					//TODO: add specific rules for the items below
-				} else {
-					//default formatting
-					if(formatEnum != null){
-						val = formatResultValueString(val, formatEnum, format);
-					}
-					if(unit != null) {
-						item.setUnit(unit);
-					}
+				//default formatting
+				if(formatEnum != null){
+					val = formatResultValueString(val, formatEnum, format);
+				}
+				if(unit != null) {
+					item.setUnit(messageSource.getMessage(unit, null, locale));
 				}
 				
 				if(item.getValue() == null){
@@ -195,13 +200,9 @@ public class GroupedMeasurementService {
 				//provide the values for the share text
 				if (entry.getShareText() != null) {
 					final ShareText share = new ShareText();
-					////getLocalizedMessage(entry.getTranslationKey(), locale));
-					if (entry.getShareText().contains(SHARE_TEXT_PLACEHOLDER)) { 
-						share.setText(entry.getShareText().replace(SHARE_TEXT_PLACEHOLDER, item.getValue() + 
-							(item.getUnit() != null ? " " + item.getUnit() : "") + "\n"));
-					} else {
-						share.setText(entry.getShareText() + "\n");
-					}
+					share.setText(messageSource.getMessage(entry.getShareText(), 
+							new Object[] {item.getValue() + (item.getUnit() != null ? " " + item.getUnit() : "")},
+							locale));
 					share.setPriority(entry.getSharePriority() != null ? entry.getSharePriority() : Integer.MAX_VALUE);
 					shareTextQueue.add(share);
 				}
@@ -235,10 +236,11 @@ public class GroupedMeasurementService {
 		if (!shareTextQueue.isEmpty()) {
 			final StringBuilder builder = new StringBuilder();
 			//getLocalizedMessage(entry.getTranslationKey(), locale));
-			builder.append(SHARE_TEXT_INTRO_TRANSLATION_KEY).append("\n");
+			builder.append(messageSource.getMessage(SHARE_TEXT_INTRO_TRANSLATION_KEY, null, locale)).append("\n");
 			
 			for (ShareText s : shareTextQueue) {
-				builder.append(s.getText());
+				builder.append(s.getText())
+					.append("\n");
 			}
 			
 			ret.setShareMeasurementText(builder.toString());
@@ -256,6 +258,7 @@ public class GroupedMeasurementService {
 				return null;
 			}
 			try {
+				//potential TODO: use LambdaMetafactory
 				Field field = null;
 				while (currentClass != Object.class) {
 					try {
@@ -271,10 +274,20 @@ public class GroupedMeasurementService {
 				}
 				field.setAccessible(true);
 				
+				//TODO: potentially create graphs of lists?
 				currentObject = field.get(currentObject);
-				currentClass = field.getType();
+				if (currentObject instanceof List) {
+					final List<?> tmpList = (List<?>) currentObject;
+					if (!tmpList.isEmpty()) {
+						currentObject = tmpList.get(0);
+					}
+				}
+				if (currentObject != null) {
+					currentClass = currentObject.getClass();
+				}
 
-			} catch (IllegalArgumentException | IllegalAccessException | SecurityException e) {
+			} catch (Exception e) {
+				e.printStackTrace();
 				return null;
 			}
 		}

@@ -1,2 +1,2 @@
-export * from './base';
-export { NntoolCoreModule } from './core.module';
+//export * from './services';
+export { NntoolWebsiteCoreModule } from './core.module';

@@ -11,7 +11,9 @@ abstract_target 'All' do
   pod 'nntool-shared-swift', :path => '../nntool-shared-swift'
 
   pod 'CocoaAsyncSocket', '~> 7.6.3'
+  pod 'BlueSocket', '~> 1.0.52'
   pod 'Alamofire', '~> 4.8.2'
+  pod 'mkall', :git => 'https://github.com/measurement-kit/mkall-ios.git', :tag => 'v0.6.2'
   pod 'WKWebViewWithURLProtocol', '~> 0.1.0'
 
   target 'QoSKit_iOS' do
@@ -19,7 +21,7 @@ abstract_target 'All' do
   end
 
   target 'QoSKitUnitTests' do
-    pod 'Nimble', '~> 8.0.1'
+    pod 'Nimble', '~> 8.0.4'
   end
 end
 

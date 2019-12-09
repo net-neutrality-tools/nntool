@@ -36,45 +36,21 @@ class NonTransparentProxyTask: QoSControlConnectionTask {
         return r
     }
 
-    ///
-    override init?(config: QoSTaskConfiguration) {
-        guard let request = config[CodingKeys4.request.rawValue]?.stringValue else {
-            logger.debug("request nil")
-            return nil
-        }
-
-        guard let port = config[CodingKeys4.port.rawValue]?.uint16Value else {
-            logger.debug("port nil")
-            return nil
-        }
-
-        self.request = request
-        self.port = port
-
-        super.init(config: config)
-    }
-
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys4.self)
 
         request = try container.decode(String.self, forKey: .request)
-        port = try container.decode(UInt16.self, forKey: .port)
+
+        port = try container.decodeWithStringFallback(UInt16.self, forKey: .port)
 
         try super.init(from: decoder)
     }
 
     ///
-    override public func main() {
+    override public func taskMain() {
         let cmd = String(format: "NTPTEST %lu +ID%d", port, uid)
 
-        do {
-            let response = try self.executeCommand(cmd: cmd, waitForAnswer: true)
-
-            guard let r = response, r.starts(with: "OK") else {
-                status = .error
-                return
-            }
-        } catch {
+        guard executeCommandAndAwaitOk(cmd: cmd) else {
             status = .error
             return
         }
@@ -92,6 +68,8 @@ class NonTransparentProxyTask: QoSControlConnectionTask {
         semaphore = DispatchSemaphore(value: 0)
         let semaphoreResult = semaphore?.wait(timeout: .now() + .nanoseconds(Int(timeoutNs)))
 
+        socket.disconnect()
+
         if status == .unknown {
             if semaphoreResult == .timedOut {
                 status = .timeout
@@ -103,10 +81,7 @@ class NonTransparentProxyTask: QoSControlConnectionTask {
                 }
             }
         }
-
-        socket.disconnect()
     }
-
 }
 
 extension NonTransparentProxyTask: GCDAsyncSocketDelegate {

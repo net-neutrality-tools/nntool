@@ -41,6 +41,11 @@
 		E029274722D630D3001FCAEC /* NetworkInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029274622D630D3001FCAEC /* NetworkInfo.swift */; };
 		E029274A22D78CE2001FCAEC /* ApiRequestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029274922D78CE2001FCAEC /* ApiRequestHelper.swift */; };
 		E029274C22D78EAD001FCAEC /* BundleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029274B22D78EAD001FCAEC /* BundleHelper.swift */; };
+		E0312FC82354B58400260398 /* MapService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0312FC72354B58400260398 /* MapService.swift */; };
+		E0312FCB2369B7BB00260398 /* MapMarkerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0312FCA2369B7BB00260398 /* MapMarkerRequest.swift */; };
+		E0312FCE2369B85F00260398 /* MapCoordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0312FCD2369B85F00260398 /* MapCoordinate.swift */; };
+		E0312FD02369B8F600260398 /* MapMarkerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0312FCF2369B8F600260398 /* MapMarkerResponse.swift */; };
+		E0312FD22369B90900260398 /* MapMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0312FD12369B90900260398 /* MapMarker.swift */; };
 		E044DE0722D4896B00BB70CE /* CpuUsageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0622D4896B00BB70CE /* CpuUsageInfo.swift */; };
 		E044DE0922D489D700BB70CE /* MemoryUsageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0822D489D700BB70CE /* MemoryUsageInfo.swift */; };
 		E044DE0B22D48BB400BB70CE /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0A22D48BB400BB70CE /* LocationTracker.swift */; };
@@ -165,6 +170,11 @@
 		E029274622D630D3001FCAEC /* NetworkInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfo.swift; sourceTree = "<group>"; };
 		E029274922D78CE2001FCAEC /* ApiRequestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequestHelper.swift; sourceTree = "<group>"; };
 		E029274B22D78EAD001FCAEC /* BundleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleHelper.swift; sourceTree = "<group>"; };
+		E0312FC72354B58400260398 /* MapService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapService.swift; sourceTree = "<group>"; };
+		E0312FCA2369B7BB00260398 /* MapMarkerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMarkerRequest.swift; sourceTree = "<group>"; };
+		E0312FCD2369B85F00260398 /* MapCoordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCoordinate.swift; sourceTree = "<group>"; };
+		E0312FCF2369B8F600260398 /* MapMarkerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMarkerResponse.swift; sourceTree = "<group>"; };
+		E0312FD12369B90900260398 /* MapMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMarker.swift; sourceTree = "<group>"; };
 		E044DE0622D4896B00BB70CE /* CpuUsageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CpuUsageInfo.swift; sourceTree = "<group>"; };
 		E044DE0822D489D700BB70CE /* MemoryUsageInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryUsageInfo.swift; sourceTree = "<group>"; };
 		E044DE0A22D48BB400BB70CE /* LocationTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTracker.swift; sourceTree = "<group>"; };
@@ -330,6 +340,17 @@
 			path = Collector;
 			sourceTree = "<group>";
 		};
+		E0312FC92369B7A600260398 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				E0312FCA2369B7BB00260398 /* MapMarkerRequest.swift */,
+				E0312FCD2369B85F00260398 /* MapCoordinate.swift */,
+				E0312FCF2369B8F600260398 /* MapMarkerResponse.swift */,
+				E0312FD12369B90900260398 /* MapMarker.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
 		E044DE0522D488EF00BB70CE /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -481,6 +502,7 @@
 		E0B9A3E9224D574A002AB640 /* DTO */ = {
 			isa = PBXGroup;
 			children = (
+				E0312FC92369B7A600260398 /* Map */,
 				E0B9A414224E65CA002AB640 /* Shared */,
 				E0B9A411224E65AA002AB640 /* Controller */,
 				E01DEE812253B58A00983B1C /* Collector */,
@@ -516,6 +538,7 @@
 			children = (
 				E0B9A409224E634D002AB640 /* ControlService.swift */,
 				E0B9A40B224E6373002AB640 /* CollectorService.swift */,
+				E0312FC72354B58400260398 /* MapService.swift */,
 				E0B9A40D224E638B002AB640 /* ResultService.swift */,
 				E0B9A40F224E645B002AB640 /* RestApiService.swift */,
 			);
@@ -818,6 +841,7 @@
 				E029274A22D78CE2001FCAEC /* ApiRequestHelper.swift in Sources */,
 				E00F4AEF2264B41C00EAD0C0 /* MeasurementAgentConfiguration.swift in Sources */,
 				E00F4AFB22660B2B00EAD0C0 /* MeasurementRunner.swift in Sources */,
+				E0312FC82354B58400260398 /* MapService.swift in Sources */,
 				E0AE257A22F898E200D42310 /* FullMeasurementResponse.swift in Sources */,
 				E0B9A3DC224D4CF8002AB640 /* CellLocationDto.swift in Sources */,
 				E0CC269122E876D0005DEED0 /* DetailMeasurementGroupItem.swift in Sources */,
@@ -870,12 +894,14 @@
 				E0B9A3F7224D5D5E002AB640 /* LmapScheduleDto.swift in Sources */,
 				B141590D22B2B4EB00DD5C96 /* SystemInformationCollector.swift in Sources */,
 				E0B9A3E2224D50E1002AB640 /* LmapResultDto.swift in Sources */,
+				E0312FCB2369B7BB00260398 /* MapMarkerRequest.swift in Sources */,
 				E0B9A3E8224D5497002AB640 /* LmapConflictDto.swift in Sources */,
 				E0B9A3FB224D5FA9002AB640 /* ExecutionModeDto.swift in Sources */,
 				E0C451F922CA35B200FA4B44 /* NetworkInformationCollector.swift in Sources */,
 				E044DE0B22D48BB400BB70CE /* LocationTracker.swift in Sources */,
 				E0B9A3FF224D60B0002AB640 /* LmapActionDto.swift in Sources */,
 				E0B9A401224D6313002AB640 /* LmapSuppressionDto.swift in Sources */,
+				E0312FD22369B90900260398 /* MapMarker.swift in Sources */,
 				E0B9A410224E645B002AB640 /* RestApiService.swift in Sources */,
 				E0EA84E222807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift in Sources */,
 				E029274C22D78EAD001FCAEC /* BundleHelper.swift in Sources */,
@@ -895,10 +921,12 @@
 				E0B9A3E6224D544B002AB640 /* MeasurementTypeParametersDto.swift in Sources */,
 				B141591922B2C11900DD5C96 /* CpuUsageInformationCollector.swift in Sources */,
 				E0B9A418224E66FB002AB640 /* SettingsResponse.swift in Sources */,
+				E0312FCE2369B85F00260398 /* MapCoordinate.swift in Sources */,
 				E0B9A40A224E634D002AB640 /* ControlService.swift in Sources */,
 				E0CC268D22E87597005DEED0 /* DetailMeasurementResponse.swift in Sources */,
 				E00F48C7225F340000EAD0C0 /* RegistrationRequest.swift in Sources */,
 				E0CC269F22E8D39D005DEED0 /* ApiPagination.swift in Sources */,
+				E0312FD02369B8F600260398 /* MapMarkerResponse.swift in Sources */,
 				E08D4BBB22E702BF00FA3E3C /* SpeedMeasurementPeerResponse.swift in Sources */,
 				E0F3774022E9A78C00550948 /* BriefQoSMeasurement.swift in Sources */,
 				B1C64966228C1834007506A6 /* IasMeasurementResult.swift in Sources */,

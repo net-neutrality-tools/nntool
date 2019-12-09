@@ -115,7 +115,7 @@ The current version 4.5.0.7 was verified for port blocking measurements.
 
 With fullfilled prerequisites perform the following steps:
 
-1. Customize `ias-turnserver` for credentials, realm, ports and ip bindings. Please note, that the stated credentials and realmname must match the configured values in the ias-module.
+1. Customize `ias-turnserver` for credentials, realm, ports and ip bindings according to the Code-Documentation. Please note, that the stated credentials and realmname must match the configured values in the ias-module.
 2. Add execute-permission to `ias-turnserver`
 3. Copy `ias-turnserver` to `/etc/init.d/`
 4. Run `update-rc.d ias-turnserver defaults`
@@ -124,3 +124,21 @@ With fullfilled prerequisites perform the following steps:
 === Execution
 
 Use `service ias-turnserver {start|stop|status} for starting, stopping, status information.
+
+=== License
+
+ias-server is released under the AGPLv3 <https://www.gnu.org/licenses/agpl-3.0.txt>
+
+Copyright (C) 2016-2019 zafaco GmbH
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3 
+as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.

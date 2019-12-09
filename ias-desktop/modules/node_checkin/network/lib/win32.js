@@ -1,22 +1,9 @@
-/*
-*********************************************************************************
-*                                                                               *
-*       ..--== zafaco GmbH ==--..                                               *
-*                                                                               *
-*       Website: http://www.zafaco.de                                           *
-*                                                                               *
-*       Copyright 2017 - 2018                                                   *
-*                                                                               *
-*********************************************************************************
+/*!
+    \file win32.js
+    \author Tomás Pollak
+    \editor zafaco GmbH <info@zafaco.de>
+    \date Last update: 2019-11-13
 */
-
-/*!   \file darwin.js
- *      @description Network Detection Class windows
- *      \author Tomás Pollak
- *      \editor Mike Kosek <kosek@zafaco.de>
- *      \date Last update: 2018-02-23
- *      \note Copyright (c) 2017 - 2018 zafaco GmbH. All rights reserved.
- */
 
 "use strict";
 
@@ -37,35 +24,6 @@ function get_wmic_ip_value(what, nic_name, cb){
     });
   })
 }
-
-/*
-function get_wifi_speed(stdout, mac_address)
-{
-	var raw = stdout.toString().replace(/-/g, ":").trim().split('\n');
-	if (raw.length !== 0 && raw !== [''])
-	{
-		var next = false;
-		
-		for (var i=0; i<raw.length;i++)
-		{
-			if (raw[i].toLowerCase().indexOf(mac_address.toLowerCase()) !== -1)
-			{
-				next = true;
-			}
-			if (next && raw[i].toLowerCase().indexOf("tx") !== -1)
-			{
-				var speed = raw[i].trim().split(": ");
-				if (!isNaN(parseInt(speed[1])))
-				{
-					return parseInt(speed[1] / 1000000);
-				}
-
-				break;
-			}
-		}
-	}
-}
-*/
 
 function get_mtu(stdout, nic_name)
 {
@@ -214,7 +172,7 @@ exports.get_network_interfaces_list = function(callback) {
                     ipv4_address: nic.IPAddress,
                     vendor: nic.Manufacturer,
                     model: nic.Description,
-                    type: nic.Name.match(/802.11|wi-?fi|wireless|wlan|w-lan/i) ? 'wireless' : 'wired'
+                    type: nic.Name.match(/802.11|wi-?fi|wireless|wlan|w-lan|RangeBooster|ultimate-n|advanced-n|n300|funk|drahtlos|drathlos|wireless|Linksys.AE3000/i) ? 'wireless' : 'wired'
                 }
 				
                 var cmd = "netsh interface ip show subinterfaces";

@@ -22,6 +22,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -128,7 +129,7 @@ public class NioUdpMultiClientServer extends AbstractUdpServer<DatagramChannel> 
 									//Non RTP packet:
 									final int packetNumber = data[1];
 									
-									String timeStamp = null;
+									Long timeStamp = null;
 									
 									try {
 										char[] uuid = new char[36];
@@ -137,13 +138,17 @@ public class NioUdpMultiClientServer extends AbstractUdpServer<DatagramChannel> 
 											uuid[i - 2] = (char) data[i];
 										}
 										clientUuid = String.valueOf(uuid);
+
+										// timestamp
+										ByteBuffer byteBuffer = ByteBuffer.allocateDirect(dp.getLength() - 38);
+									    byteBuffer.order(ByteOrder.BIG_ENDIAN);
 										
-										char[] ts = new char[dp.getLength() - 38];
 										for (int i = 38; i < dp.getLength(); i++) {
-											ts[i - 38] = (char) data[i];
+											byteBuffer.put(data[i]);
 										}
 										
-										timeStamp = String.valueOf(ts);
+										byteBuffer.flip();
+									    timeStamp = byteBuffer.getLong();
 					
 									}
 									catch (Exception e) {

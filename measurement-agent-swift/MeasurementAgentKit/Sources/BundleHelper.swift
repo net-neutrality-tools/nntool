@@ -48,4 +48,15 @@ public class BundleHelper {
 
         return (versionName, versionCode, buildDate)
     }
+
+    public class func buildAppVersionInfoString() -> String? {
+        let (versionStr, versionInt, buildDate) = BundleHelper.getAppVersionInfo()
+        let gitInfo = BundleHelper.getBundleGitInfoString()
+
+        if let vs = versionStr, let vi = versionInt, let bd = buildDate, let gi = gitInfo {
+            return "\(vs) (\(vi), \(bd)), \(gi)"
+        } else {
+            return nil
+        }
+    }
 }

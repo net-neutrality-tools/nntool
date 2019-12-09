@@ -17,7 +17,7 @@
 
 import Foundation
 
-public enum QoSMeasurementType: String, Codable {
+public enum QoSMeasurementType: String, CaseIterable, Codable {
     case tcp = "TCP"
     case udp = "UDP"
     case dns = "DNS"
@@ -26,7 +26,7 @@ public enum QoSMeasurementType: String, Codable {
     case voip = "VOIP"
     case traceroute = "TRACEROUTE"
     case website = "WEBSITE"
-    case audio = "AUDIO"
+    case sip = "SIP"
     case echoProtocol = "ECHO_PROTOCOL"
 
     case mkitDash = "MKIT_DASH"

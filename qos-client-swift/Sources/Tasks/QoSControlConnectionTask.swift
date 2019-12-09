@@ -6,37 +6,14 @@ class QoSControlConnectionTask: QoSTask {
 
     var controlConnection: ControlConnection?
 
-    ///
-    override init?(config: QoSTaskConfiguration) {
-        logger.debug(config)
-
-        guard let host = config[CodingKeys2.host.rawValue]?.stringValue, !host.isEmpty else {
-            logger.debug("host nil")
-            return nil
-        }
-
-        guard let portStr = config[CodingKeys2.port.rawValue]?.stringValue, let port = UInt16(portStr), port > 0 else {
-            logger.debug("port nil")
-            return nil
-        }
-
-        /*guard let port = config[CodingKeys2.port.rawValue]?.uint16Value, port > 0 else {
-            logger.debug("port nil")
-            return nil
-        }*/
-
-        controlConnectionParams = ControlConnectionParameters(host: host, port: port)
-
-        super.init(config: config)
-    }
-
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys2.self)
 
         let host = try container.decode(String.self, forKey: .host)
-        let port = try container.decode(UInt16.self, forKey: .port)
 
-        controlConnectionParams = ControlConnectionParameters(host: host, port: port)
+        let serverPort = try container.decodeWithStringFallback(UInt16.self, forKey: .port)
+
+        controlConnectionParams = ControlConnectionParameters(host: host, port: serverPort)
 
         try super.init(from: decoder)
     }
@@ -57,7 +34,17 @@ class QoSControlConnectionTask: QoSTask {
 
 extension QoSControlConnectionTask: RequireControlConnection {
 
-    func executeCommand(cmd: String, waitForAnswer: Bool = false, timeoutNs: UInt64 = 5 * NSEC_PER_SEC) throws -> String? {
+    func executeCommandAndAwaitOk(cmd: String) -> Bool {
+        do {
+            let response = try executeCommand(cmd: cmd, waitForAnswer: true)
+
+            return response?.starts(with: "OK") ?? false
+        } catch {
+            return false
+        }
+    }
+
+    func executeCommand(cmd: String, waitForAnswer: Bool = false) throws -> String? {
         guard let cc = controlConnection else {
             //throw TODO: error
             return nil
@@ -78,11 +65,7 @@ extension QoSControlConnectionTask: RequireControlConnection {
             semaphore.signal()
         })
 
-        let semaphoreResult = semaphore.wait(timeout: .now() + .nanoseconds(Int(timeoutNs)))
-        if semaphoreResult == .timedOut {
-            //throw TODO: timeout
-            return nil
-        }
+        _ = semaphore.wait(timeout: DispatchTime.distantFuture)
 
         if let err = error {
             throw err

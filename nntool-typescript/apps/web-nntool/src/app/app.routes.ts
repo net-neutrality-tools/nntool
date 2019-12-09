@@ -1,20 +1,19 @@
-import { ModuleWithProviders } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-
-import { NetTestComponent, TestGuard } from './test/test.component';
-import { HomeComponent } from './pages/home/home.component';
-import { HistoryComponent } from './pages/history/history.component';
-import { HistoryViewComponent } from './pages/history/history.view.component';
-import { OpenDataResultTableComponent } from './pages/opendata/open-data-result-table.component';
-import { OpenDataResultComponent } from './pages/opendata/open-data-result.component';
-import { MapComponent } from './pages/map/map.component';
-import { StatisticsComponent } from './pages/statistics/statistics.component';
-import { OpendataComponent } from './pages/opendata/opendata.component';
-import { TcComponent } from './pages/adoc/tc.component';
-import { HelpComponent } from './pages/adoc/help.component';
-import { SettingsComponent } from './pages/user/settings.component';
-import { NotFoundComponent } from './pages/adoc/notfound.component';
-import { Guard } from './@core/services/guard.service';
+import { Routes } from '@angular/router';
+import { Guard } from '@nntool-typescript/core/services/guard.service';
+import { NetTestComponent } from '@nntool-typescript/test/test.component';
+import { TestGuard } from '@nntool-typescript/test/base_test.component';
+import { HistoryComponent } from '@nntool-typescript/pages/history/history.component';
+import { HistoryViewComponent } from '@nntool-typescript/pages/history/history.view.component';
+import { OpenDataResultTableComponent } from '@nntool-typescript/pages/opendata/open-data-result-table.component';
+import { OpenDataResultComponent } from '@nntool-typescript/pages/opendata/open-data-result.component';
+import { MapComponent } from '@nntool-typescript/pages/map/map.component';
+import { StatisticsComponent } from '@nntool-typescript/pages/statistics/statistics.component';
+import { OpendataComponent } from '@nntool-typescript/pages/opendata/opendata.component';
+import { TcComponent } from '@nntool-typescript/pages/adoc/tc.component';
+import { HelpComponent } from '@nntool-typescript/pages/adoc/help.component';
+import { SettingsComponent } from '@nntool-typescript/pages/user/settings.component';
+import { NotFoundComponent } from '@nntool-typescript/pages/adoc/notfound.component';
+import { HomeComponent } from './home/home.component';
 
 export const routes: Routes = [
   {
@@ -115,5 +114,3 @@ export const routes: Routes = [
     redirectTo: '404'
   }
 ];
-
-export const routing: ModuleWithProviders = RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' });

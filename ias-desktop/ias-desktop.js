@@ -1,20 +1,22 @@
-/*
- *********************************************************************************
- *                                                                               *
- *       ..--== zafaco GmbH ==--..                                               *
- *                                                                               *
- *       Website: http://www.zafaco.de                                           *
- *                                                                               *
- *       Copyright 2019.                                                         *
- *                                                                               *
- *********************************************************************************
- */
-
 /*!
- *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-09
- *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
- */
+    \file ias-desktop.js
+    \author zafaco GmbH <info@zafaco.de>
+    \date Last update: 2019-11-13
+
+    Copyright (C) 2016 - 2019 zafaco GmbH
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License version 3 
+    as published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 require('electron-cookies');
 
@@ -75,6 +77,8 @@ var callbackTimeout                 = 10000;
 
 var systemUsageStarted              = false;
 var systemUsageStopped              = false;
+
+var measurementStartTimestamp       = 0;
 
 
 
@@ -192,10 +196,16 @@ function iasCallback(data)
     data = jsTool.extend(data, deviceKPIs);
     data.route_info = routeKPIs;
 
-    if (!systemUsageStarted && data.cmd === 'info' && data.test_case === 'download')
+    if (!systemUsageStarted && data.cmd === 'info')
     {
         systemUsageStarted = true;
-        tool.startUpdatingSystemUsage();
+
+        if (typeof data.time_info !== 'undefined' && typeof data.time_info.measurement_start !== 'undefined')
+        {
+            measurementStartTimestamp = data.time_info.measurement_start;
+        }
+        
+        tool.startUpdatingSystemUsage(measurementStartTimestamp);
     }
     
     if (data.cmd === 'completed' || data.cmd === 'error')
@@ -282,11 +292,12 @@ function systemUsageCallback(data)
 {
     var systemUsage = JSON.parse(data);
     
-    if (typeof systemUsage.dsk_cpu_load_avg !== 'undefined' && !isNaN(systemUsage.dsk_cpu_load_avg) && systemUsage.dsk_cpu_load_avg <= 1)                   systemUsageKPIs.dsk_cpu_load_avg        = systemUsage.dsk_cpu_load_avg;
-    if (typeof systemUsage.dsk_cpu_load_max !== 'undefined' && !isNaN(systemUsage.dsk_cpu_load_max) && systemUsage.dsk_cpu_load_max <= 1)                   systemUsageKPIs.dsk_cpu_load_max        = systemUsage.dsk_cpu_load_max;
-    if (typeof systemUsage.dsk_cpu_load_max_core !== 'undefined' && !isNaN(systemUsage.dsk_cpu_load_max_core) && systemUsage.dsk_cpu_load_max_core <= 1)    systemUsageKPIs.dsk_cpu_load_max_core   = systemUsage.dsk_cpu_load_max_core;
-    if (typeof systemUsage.dsk_mem_load_avg !== 'undefined' && !isNaN(systemUsage.dsk_mem_load_avg) && systemUsage.dsk_mem_load_avg <= 1)                   systemUsageKPIs.dsk_mem_load_avg        = systemUsage.dsk_mem_load_avg;
-    if (typeof systemUsage.dsk_mem_load_max !== 'undefined' && !isNaN(systemUsage.dsk_mem_load_max) && systemUsage.dsk_mem_load_max <= 1)                   systemUsageKPIs.dsk_mem_load_max        = systemUsage.dsk_mem_load_max;
+    if (typeof systemUsage.system_usage_raw_data !== 'undefined')                                                                                                       systemUsageKPIs.system_usage_raw_data       = systemUsage.system_usage_raw_data;
+    if (typeof systemUsage.dsk_cpu_load_avg !== 'undefined' && !isNaN(systemUsage.dsk_cpu_load_avg) && systemUsage.dsk_cpu_load_avg <= 1)                               systemUsageKPIs.dsk_cpu_load_avg            = systemUsage.dsk_cpu_load_avg;
+    if (typeof systemUsage.dsk_cpu_load_avg_max !== 'undefined' && !isNaN(systemUsage.dsk_cpu_load_avg_max) && systemUsage.dsk_cpu_load_avg_max <= 1)                   systemUsageKPIs.dsk_cpu_load_avg_max        = systemUsage.dsk_cpu_load_avg_max;
+    if (typeof systemUsage.dsk_cpu_load_avg_max_core !== 'undefined' && !isNaN(systemUsage.dsk_cpu_load_avg_max_core) && systemUsage.dsk_cpu_load_avg_max_core <= 1)    systemUsageKPIs.dsk_cpu_load_avg_max_core   = systemUsage.dsk_cpu_load_avg_max_core;
+    if (typeof systemUsage.dsk_mem_load_avg !== 'undefined' && !isNaN(systemUsage.dsk_mem_load_avg) && systemUsage.dsk_mem_load_avg <= 1)                               systemUsageKPIs.dsk_mem_load_avg            = systemUsage.dsk_mem_load_avg;
+    if (typeof systemUsage.dsk_mem_load_avg_max !== 'undefined' && !isNaN(systemUsage.dsk_mem_load_avg_max) && systemUsage.dsk_mem_load_avg_max <= 1)                   systemUsageKPIs.dsk_mem_load_avg_max        = systemUsage.dsk_mem_load_avg_max;
 };
 
 function getLocationKPIsCallback(data)
@@ -305,7 +316,7 @@ function getRouteToTargetCallback(data)
     if (typeof routeToTarget.hops !== 'undefined' && routeToTarget.hops !== '-' && routeToTarget.hops.length !== 0)
     {
         routeKPIs.dsk_client_server_route_hops    = Number(routeToTarget.hops[routeToTarget.hops.length-1].id);
-        routeKPIs.dsk_client_server_route         = JSON.stringify(routeToTarget.hops);
+        routeKPIs.dsk_client_server_route         = routeToTarget.hops;
         
         routeToTargetCallbackCalled                 = true;
     }

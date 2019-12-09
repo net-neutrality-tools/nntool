@@ -8,7 +8,7 @@ public typealias QoSTaskCompletionCallback = (QoSTaskResult) -> Void
 
 class QoSTask: Operation, Codable {
 
-    var taskLogger: QoSLogger?
+    var taskLogger: QoSLogger!
 
     let progress = Progress(totalUnitCount: 100)
 
@@ -20,7 +20,7 @@ class QoSTask: Operation, Codable {
     var concurrencyGroup: UInt
     var type: String?
 
-    var timeoutNs: UInt64 = 10 * NSEC_PER_SEC // default: 10sec
+    var timeoutNs: UInt64 = 3 * NSEC_PER_SEC // default: 3sec
     var timeoutS: UInt64 {
         return timeoutNs / NSEC_PER_SEC
     }
@@ -54,42 +54,19 @@ class QoSTask: Operation, Codable {
             r[objectiveTimeoutKey] = JSON(timeoutNs)
         }
 
-        taskLogger?.debug("RESULT")
-
         return r
     }
 
-    init?(config: QoSTaskConfiguration) {
-        /*guard let uid = config[CodingKeys.uid.rawValue]?.uintValue, uid > 0 else {
-            logger.debug("uid nil")
-            return nil
-        }*/
-        guard let uidStr = config[CodingKeys.uid.rawValue]?.stringValue, let uid = UInt(uidStr), uid > 0 else {
-            logger.debug("uid nil")
-            return nil
-        }
+    class func create(config: QoSTaskConfiguration) -> Self? {
+        do {
+            let configData = try JSONEncoder().encode(config)
+            let task = try JSONDecoder().decode(self, from: configData)
 
-        guard let concurrencyGroup = config[CodingKeys.concurrencyGroup.rawValue]?.uintValue, concurrencyGroup > 0 else {
-            logger.debug("concurrencyGroup nil")
+            return task
+        } catch {
+            logger.error(error)
             return nil
         }
-
-        guard let type = config[CodingKeys.type.rawValue]?.stringValue else {
-            logger.debug("type nil")
-            return nil
-        }
-
-        self.uid = uid
-        self.concurrencyGroup = concurrencyGroup
-        self.type = type
-
-        if let tNs = config[CodingKeys.timeout.rawValue]?.uint64Value {
-            self.timeoutNs = tNs
-        }
-
-        super.init()
-
-        taskLogger = QoSLogger(task: self)
     }
 
 // MARK: - Codeable
@@ -97,9 +74,14 @@ class QoSTask: Operation, Codable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        uid = try container.decode(UInt.self, forKey: .uid)
+        uid = try container.decodeWithStringFallback(UInt.self, forKey: .uid)
+
         concurrencyGroup = try container.decode(UInt.self, forKey: .concurrencyGroup)
         type = try container.decode(String.self, forKey: .type)
+
+        if let serverTimeoutNs = container.decodeIfPresentWithStringFallback(UInt64.self, forKey: .timeoutNs) {
+            timeoutNs = serverTimeoutNs
+        }
 
         super.init()
 
@@ -117,22 +99,20 @@ class QoSTask: Operation, Codable {
         case uid = "qos_test_uid"
         case concurrencyGroup = "concurrency_group"
         case type = "qostest"
-        case timeout = "timeout"
-
-        // TODO: result
+        case timeoutNs = "timeout"
     }
 
 // MARK: - Operation
 
-    override func start() {
-        // if isCancelled -> log
+    func taskMain() {
+        fatalError("taskMain must be overriden in subclasses of QoSTask!")
+    }
 
-        // assert isFinished
-
+    override func main() {
         let startTimeNs = TimeHelper.currentTimeNs()
         self.startTimeNs = startTimeNs
 
-        super.start()
+        taskMain()
 
         durationNs = TimeHelper.currentTimeNs() - startTimeNs
 

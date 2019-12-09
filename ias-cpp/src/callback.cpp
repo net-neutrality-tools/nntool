@@ -1,20 +1,22 @@
-/*
- *********************************************************************************
- *                                                                               *
- *       ..--== zafaco GmbH ==--..                                               *
- *                                                                               *
- *       Website: http://www.zafaco.de                                           *
- *                                                                               *
- *       Copyright 2019                                                          *
- *                                                                               *
- *********************************************************************************
- */
-
 /*!
- *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-09-09
- *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
- */
+    \file callback.cpp
+    \author zafaco GmbH <info@zafaco.de>
+    \date Last update: 2019-11-26
+
+    Copyright (C) 2016 - 2019 zafaco GmbH
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License version 3 
+    as published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include "callback.h"
 
@@ -29,6 +31,10 @@ extern MeasurementPhase currentTestPhase;
 CCallback::CCallback(Json measurementParameters)
 {
 	jMeasurementParameters = measurementParameters;
+
+	::TIMESTAMP_MEASUREMENT_START = CTool::get_timestamp() * 1000;
+
+	jMeasurementResultsTime["measurement_start"] = to_string(::TIMESTAMP_MEASUREMENT_START);
 }
 
 //! \brief
@@ -87,6 +93,11 @@ void CCallback::callback(string cmd, string msg, int error_code, string error_de
                 PERFORMED_UPLOAD = true;
             }
         }
+    }
+
+    if (::RTT == PERFORMED_RTT && ::DOWNLOAD == PERFORMED_DOWNLOAD && ::UPLOAD == PERFORMED_UPLOAD)
+    {
+    	jMeasurementResultsTime["measurement_end"] = to_string(CTool::get_timestamp() * 1000);
     }
 
     if (cmd.compare("finish") == 0 && ::RTT == PERFORMED_RTT && ::DOWNLOAD == PERFORMED_DOWNLOAD && ::UPLOAD == PERFORMED_UPLOAD)
@@ -262,9 +273,15 @@ void CCallback::rttUdpCallback(string cmd)
 
 		Json::array jRtts;
 
+		int index = 1;
 		for ( auto &rtt : tempMeasurement.ping.interim_values )
 		{
-			jRtts.push_back(rtt * 1000);
+	        Json jRtt = Json::object{
+	            {"rtt_ns", rtt * 1000},
+	            {"relative_time_ns_measurement_start", std::to_string(mPingResult.results_timestamp[index])},
+	        };
+			jRtts.push_back(jRtt);
+			index++;
 		}
 			
 	//Unlock Mutex
@@ -315,6 +332,7 @@ void CCallback::downloadCallback(string cmd)
 			jMeasurementResultsStream["bytes_including_slow_start"] = 0;
 			jMeasurementResultsStream["relative_time_ns"] = 0;
 			jMeasurementResultsStream["relative_time_ns_total"] = 0;
+			jMeasurementResultsStream["relative_time_ns_measurement_start"] = 0;
 
 			(*itThread)->measurementTimeDuration = CTool::get_timestamp() - (*itThread)->measurementTimeStart;
 
@@ -450,6 +468,7 @@ void CCallback::downloadCallback(string cmd)
 			Json::object n = m.object_items();
 			n["relative_time_ns"] = jMeasurementResults["duration_ns"];
 			n["relative_time_ns_total"] = jMeasurementResults["duration_ns_total"];
+			n["relative_time_ns_measurement_start"] = jMeasurementResults["relative_time_ns_measurement_start"];
 			jMeasurementResultsDownloadStream.push_back(n);
 		}
 	}
@@ -481,6 +500,7 @@ void CCallback::uploadCallback(string cmd)
 			jMeasurementResultsStream["bytes_including_slow_start"] = 0;
 			jMeasurementResultsStream["relative_time_ns"] = 0;
 			jMeasurementResultsStream["relative_time_ns_total"] = 0;
+			jMeasurementResultsStream["relative_time_ns_measurement_start"] = 0;
 
 			(*itThread)->measurementTimeDuration = CTool::get_timestamp() - (*itThread)->measurementTimeStart;
 
@@ -633,6 +653,7 @@ void CCallback::uploadCallback(string cmd)
 			Json::object n = m.object_items();
 			n["relative_time_ns"] = jMeasurementResults["duration_ns"];
 			n["relative_time_ns_total"] = jMeasurementResults["duration_ns_total"];
+			n["relative_time_ns_measurement_start"] = jMeasurementResults["relative_time_ns_measurement_start"];
 			jMeasurementResultsUploadStream.push_back(n);
 		}
 	}
@@ -647,6 +668,7 @@ Json::object CCallback::getMeasurementResults(struct measurement tempMeasurement
 	jMeasurementResults["bytes_including_slow_start"] = to_string(data.datasize_total / 8);
 	jMeasurementResults["duration_ns"] = to_string(data.duration_ns);
 	jMeasurementResults["duration_ns_total"] = to_string(data.totaltime * 1000);
+	jMeasurementResults["relative_time_ns_measurement_start"] = to_string( (CTool::get_timestamp() * 1000) - ::TIMESTAMP_MEASUREMENT_START );
 	jMeasurementResults["num_streams_start"] = to_string(tempMeasurement.streams);
 	jMeasurementResults["progress"] = data.measurement_phase_progress;
 

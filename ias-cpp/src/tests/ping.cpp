@@ -1,21 +1,22 @@
-/*
- *********************************************************************************
- *                                                                               *
- *       ..--== zafaco GmbH ==--..                                               *
- *                                                                               *
- *       Website: http://www.zafaco.de                                           *
- *                                                                               *
- *       Copyright 2019                                                          *
- *                                                                               *
- *********************************************************************************
- */
-
 /*!
+    \file ping.cpp
+    \author zafaco GmbH <info@zafaco.de>
+    \date Last update: 2019-11-26
 
- *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-30
- *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
- */
+    Copyright (C) 2016 - 2019 zafaco GmbH
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License version 3 
+    as published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include "ping.h"
 
@@ -37,12 +38,14 @@ Ping::~Ping()
 Ping::Ping( CConfigManager *pXml, CConfigManager *pService, string sProvider )
 {		
 	mServerName	= pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
-	mServer 	= pXml->readString(sProvider,"PING_DESTINATION","1.1.1.1");	
+	mServer 	= pXml->readString(sProvider,"PING_DESTINATION","1.1.1.1");
+
 	#ifdef __ANDROID__
-        mClient = pXml->readString(sProvider, "CLIENT_IP", "0.0.0.0");
-    #else
-        mClient = "0.0.0.0";
-    #endif
+		mClient = pXml->readString(sProvider, "CLIENT_IP", "0.0.0.0");
+	#else
+		mClient = "0.0.0.0";
+	#endif
+
 	mPingQuery 	= pXml->readLong(sProvider,"PING_QUERY",30);
 	mPingQuery++;
 	nPingTarget	= mPingQuery -1;
@@ -279,14 +282,19 @@ int Ping::run()
 			}
 			
 			if(mPingResult.results.find(i) == mPingResult.results.end())
+			{
 				mPingResult.results[i] = mTimeDiff;
+			}
 			else
+			{
 				mPingResult.results[i] += mTimeDiff;
+			}
+			mPingResult.results_timestamp[i] = (CTool::get_timestamp() * 1000) - ::TIMESTAMP_MEASUREMENT_START; 
 
 			i++;
 			
-			//Sleep 1000ms
-			usleep(timeout);	
+			//Sleep 500ms
+			usleep(500000);	
 		}
 		
 		#ifndef NNTOOL

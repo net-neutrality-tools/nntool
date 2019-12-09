@@ -32,9 +32,9 @@ class LocalSettings: Codable {
 
     var resultServiceBaseUrl: String?
 
-    var mapServiceUrl: String?
+    var mapServiceBaseUrl: String?
 
-    var websiteUrl: String?
+    var websiteBaseUrl: String?
 
     init(controllerServiceBaseUrl: String) {
         self.configuredControllerServiceBaseUrl = controllerServiceBaseUrl
@@ -50,8 +50,8 @@ class LocalSettings: Codable {
         case controllerServiceBaseUrlIpv4 = "controller_service_base_url_ipv4"
         case controllerServiceBaseUrlIpv6 = "controller_service_base_url_ipv6"
         case resultServiceBaseUrl = "result_service_base_url"
-        case mapServiceUrl = "map_service_base_url"
-        case websiteUrl = "website_base_url"
+        case mapServiceBaseUrl = "map_service_base_url"
+        case websiteBaseUrl = "website_base_url"
     }
 }
 

@@ -1,20 +1,22 @@
-/*
- *********************************************************************************
- *                                                                               *
- *       ..--== zafaco GmbH ==--..                                               *
- *                                                                               *
- *       Website: http://www.zafaco.de                                           *
- *                                                                               *
- *       Copyright 2019                                                          *
- *                                                                               *
- *********************************************************************************
- */
-
 /*!
- *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-09-04
- *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
- */
+    \file iasclient.cpp
+    \author zafaco GmbH <info@zafaco.de>
+    \date Last update: 2019-11-13
+
+    Copyright (C) 2016 - 2019 zafaco GmbH
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License version 3 
+    as published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include "header.h"
 #include "callback.h"
@@ -50,6 +52,7 @@ bool TIMER_STOPPED;
 int TIMER_INDEX;
 int TIMER_DURATION;
 unsigned long long MEASUREMENT_DURATION;
+long long TIMESTAMP_MEASUREMENT_START;
 
 bool PERFORMED_RTT;
 bool PERFORMED_DOWNLOAD;
@@ -149,6 +152,8 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
 	}
 
+	/*-------------------------set parameters for demo implementation start------------------------*/
+
 	Json::object jRttParameters;
 	Json::object jDownloadParameters;
 	Json::object jUploadParameters;
@@ -182,10 +187,18 @@ int main(int argc, char** argv)
 
 	Json jMeasurementParametersJson = jMeasurementParameters;
 
+	/*-------------------------set parameters for demo implementation end------------------------*/
+
     #ifdef NNTOOL_CLIENT
     //register callback
     CTrace::setLogFunction([] (std::string const & cat, std::string const  &s) { std::cout << "[" + CTool::get_timestamp_string() + "] " + cat + ": " + s + "\n"; });
     #endif
+
+    //Signal Handler
+    signal(SIGFPE, signal_handler);
+    signal(SIGABRT, signal_handler);
+    signal(SIGSEGV, signal_handler);
+    signal(SIGCHLD, signal_handler);
 
 	measurementStart(jMeasurementParametersJson.dump());
 }
@@ -198,12 +211,6 @@ int main(int argc, char** argv)
  */
 void measurementStart(string measurementParameters)
 {
-    //Signal Handler
-    signal(SIGFPE, signal_handler);
-    signal(SIGABRT, signal_handler);
-    signal(SIGSEGV, signal_handler);
-    signal(SIGCHLD, signal_handler);
-
 	::TCP_STARTUP	= 3000000;
 	conf.sProvider 	= "nntool";
 

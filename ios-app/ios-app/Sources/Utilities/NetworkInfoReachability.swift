@@ -37,10 +37,10 @@ class NetworkInfoReachability {
                 #if targetEnvironment(simulator)
                 networkTypeString = "Simulator Network"
                 #else
-                networkTypeString = ssid ?? "Unknown"
+                networkTypeString = ssid ?? R.string.localizable.networkWifiUnknown()
                 #endif
 
-                networkDetailString = "WiFi"
+                networkDetailString = R.string.localizable.networkWifiTechnologyName()
             case .cellular:
                 let telephonyNetworkInfo = CTTelephonyNetworkInfo()
                 let carrier = telephonyNetworkInfo.subscriberCellularProvider

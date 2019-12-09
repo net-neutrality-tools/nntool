@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Files;
 
 import at.alladin.nettest.service.search.config.ExportProperties;
@@ -33,6 +34,7 @@ import at.alladin.nettest.service.search.config.ExportProperties.Zip.AdditionalZ
 import at.alladin.nettest.service.search.exception.BadExportRequestException;
 import at.alladin.nettest.service.search.exception.ExportException;
 import at.alladin.nettest.service.search.exception.MeasurementNotFoundException;
+import at.alladin.nettest.service.search.helper.CoarseResultHelper;
 import at.alladin.nettest.service.search.helper.ExportExtension;
 
 /**
@@ -52,20 +54,27 @@ public class ExportService {
 	@Autowired
 	private SearchService searchService;
 	
-	public void exportSingleMeasurement(String openDataUuid, String extension, HttpServletResponse response) {
+	@Autowired
+	private ObjectMapper objectMapper;
+	
+	public void exportSingleMeasurement(String openDataUuid, boolean coarse, String extension, HttpServletResponse response) {
 		if (StringUtils.isEmpty(openDataUuid)) {
 			throw new BadExportRequestException("open_data_uuid is required."); 
 		}
 		
 		final ExportExtension exportExtension = getExportExtension(extension);
 		
-		final Map<String, Object> measurement = searchService.findOneByOpenDataUuid(openDataUuid);
+		Map<String, Object> measurement = searchService.findOneByOpenDataUuid(openDataUuid);
 		
 		if (measurement == null) {
 			throw new MeasurementNotFoundException("Measurement with open_data_uuid " + openDataUuid + " not found.");
 		}
 		
-		final String filename = determineExportFilename(openDataUuid, extension);
+		if (coarse) { 
+			measurement = CoarseResultHelper.makeCoarseResult(measurement, objectMapper);
+		}
+		
+		final String filename = determineExportFilename(openDataUuid, coarse, extension);
 		
 		try {
 			write(Collections.singletonList(measurement), filename, exportExtension, false, response);
@@ -142,13 +151,17 @@ public class ExportService {
 	
 	////
 	
-	private String determineExportFilename(String openDataUuid, String extension/*, boolean shouldBeZipped*/) {
+	private String determineExportFilename(String openDataUuid, boolean coarse, String extension/*, boolean shouldBeZipped*/) {
 		final StringBuilder filenameBuilder = new StringBuilder();
 		
 		final Prefix prefix = exportProperties.getPrefix();
 		
 		addOptionalValue(filenameBuilder, prefix.getGlobal(), null, "_");
 		addOptionalValue(filenameBuilder, prefix.getSingleResult(), null, "_");
+		
+		if (coarse) {
+			filenameBuilder.append("coarse_");
+		}
 		
 		filenameBuilder.append(openDataUuid);
 		

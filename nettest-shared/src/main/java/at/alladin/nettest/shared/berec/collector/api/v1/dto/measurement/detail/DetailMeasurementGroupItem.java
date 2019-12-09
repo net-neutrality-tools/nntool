@@ -1,6 +1,7 @@
 package at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
@@ -14,6 +15,7 @@ import com.google.gson.annotations.SerializedName;
  */
 @io.swagger.annotations.ApiModel(description = "This class specifies a single detail item with key, translated title, value and the unit of the value.")
 @JsonClassDescription("This class specifies a single detail item with key, translated title, value and the unit of the value.")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DetailMeasurementGroupItem {
 	
 	/**
@@ -55,6 +57,24 @@ public class DetailMeasurementGroupItem {
 	@SerializedName("unit")
 	@JsonProperty("unit")
 	private String unit;
+	
+	/**
+	 * The classification number of the item.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "The classification number of the item.")
+	@JsonPropertyDescription("The classification number of the item.")
+	@Expose
+	private Integer classification;
+
+	/**
+	 * The classification color to be associated with the item.
+	 */
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "The classification color to be associated with the item.")
+	@JsonPropertyDescription("The classification color to be associated with the item.")
+	@Expose
+	@SerializedName("classification_color")
+	@JsonProperty("classification_color")
+	private String classificationColor;
 
 	public String getKey() {
 		return key;
@@ -88,10 +108,26 @@ public class DetailMeasurementGroupItem {
 		this.unit = unit;
 	}
 
+	public Integer getClassification() {
+		return classification;
+	}
+
+	public void setClassification(Integer classification) {
+		this.classification = classification;
+	}
+
+	public String getClassificationColor() {
+		return classificationColor;
+	}
+
+	public void setClassificationColor(String classificationColor) {
+		this.classificationColor = classificationColor;
+	}
+
 	@Override
 	public String toString() {
 		return "DetailMeasurementGroupItem [key=" + key + ", title=" + title + ", value=" + value + ", unit=" + unit
-				+ "]";
+				+ ", classification=" + classification + ", classificationColor=" + classificationColor + "]";
 	}
 	
 }

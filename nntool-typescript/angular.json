@@ -10,7 +10,8 @@
       "prefix": "nntool",
       "architect": {
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "___builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular-builders/custom-webpack:karma",
           "options": {
             "main": "testing/test.libs.ts",
             "tsConfig": "testing/tsconfig.libs.spec.json",
@@ -33,7 +34,8 @@
       "prefix": "nntool",
       "architect": {
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "___builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular-builders/custom-webpack:karma",
           "options": {
             "main": "testing/test.xplat.ts",
             "tsConfig": "testing/tsconfig.xplat.spec.json",
@@ -75,8 +77,20 @@
             "main": "apps/web-nntool/src/main.ts",
             "polyfills": "apps/web-nntool/src/polyfills.ts",
             "tsConfig": "apps/web-nntool/tsconfig.app.json",
-            "assets": ["apps/web-nntool/src/favicon.ico", "apps/web-nntool/src/assets"],
-            "styles": ["apps/web-nntool/src/assets/css/normalize.css", "apps/web-nntool/src/less/client.less"],
+            "assets": [
+              "apps/web-nntool/src/favicon.ico",
+              "apps/web-nntool/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./libs/assets/",
+                "output": "./assets"
+              }
+            ],
+            "styles": [
+              "libs/assets/css/normalize.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "libs/less/client.less"
+            ],
             "scripts": [
               {
                 "input": "../ias/build/uglified/web/ias.web.js",
@@ -107,7 +121,7 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": false,
+              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": false,
@@ -125,7 +139,7 @@
               "namedChunks": true,
               "vendorChunk": true,
               "commonChunk": true,
-              "verbose": true
+              "verbose": false
             }
           }
         },
@@ -161,14 +175,33 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "___builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular-builders/custom-webpack:karma",
           "options": {
+            "customWebpackConfig": {
+              "path": "apps/web-nntool/extra-webpack.spec.config.js",
+              "mergeStrategies": {
+                "externals": "replace"
+              }
+            },
             "main": "apps/web-nntool/src/test.ts",
             "tsConfig": "apps/web-nntool/tsconfig.spec.json",
             "karmaConfig": "apps/web-nntool/karma.conf.js",
             "polyfills": "apps/web-nntool/src/polyfills.ts",
-            "assets": ["apps/web-nntool/src/favicon.ico", "apps/web-nntool/src/assets"],
-            "styles": ["apps/web-nntool/src/assets/css/normalize.css", "apps/web-nntool/src/less/client.less"],
+            "assets": [
+              "apps/web-nntool/src/favicon.ico",
+              "apps/web-nntool/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./libs/assets/",
+                "output": "./assets"
+              }
+            ],
+            "styles": [
+              "libs/assets/css/normalize.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "libs/less/client.less"
+            ],
             "scripts": [
               {
                 "input": "../ias/build/uglified/web/ias.web.js",
@@ -229,15 +262,33 @@
       "prefix": "nntool",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "customWebpackConfig": {
+              "path": "apps/web-portal/extra-webpack.config.js",
+              "mergeStrategies": {
+                "externals": "replace"
+              }
+            },
             "outputPath": "dist/apps/web-portal",
             "index": "apps/web-portal/src/index.html",
             "main": "apps/web-portal/src/main.ts",
             "polyfills": "apps/web-portal/src/polyfills.ts",
             "tsConfig": "apps/web-portal/tsconfig.app.json",
-            "assets": ["apps/web-portal/src/favicon.ico", "apps/web-portal/src/assets"],
-            "styles": ["xplat/web/scss/_index.scss", "apps/web-portal/src/styles.scss"],
+            "assets": [
+              "apps/web-portal/src/favicon.ico",
+              "apps/web-portal/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./libs/assets/",
+                "output": "./assets"
+              }
+            ],
+            "styles": [
+              "libs/assets/css/normalize.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "libs/less/client.less"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -271,13 +322,19 @@
               "namedChunks": true,
               "vendorChunk": true,
               "commonChunk": true,
-              "verbose": true
+              "verbose": false
             }
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
+            "customWebpackConfig": {
+              "path": "apps/web-nntool/extra-webpack.config.js",
+              "mergeStrategies": {
+                "externals": "replace"
+              }
+            },
             "browserTarget": "web-portal:build:serve"
           },
           "configurations": {
@@ -300,15 +357,34 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "___builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular-builders/custom-webpack:karma",
           "options": {
+            "customWebpackConfig": {
+              "path": "apps/web-portal/extra-webpack.spec.config.js",
+              "mergeStrategies": {
+                "externals": "replace"
+              }
+            },
             "main": "apps/web-portal/src/test.ts",
             "tsConfig": "apps/web-portal/tsconfig.spec.json",
             "karmaConfig": "apps/web-portal/karma.conf.js",
             "polyfills": "apps/web-portal/src/polyfills.ts",
-            "styles": [],
-            "scripts": [],
-            "assets": []
+            "assets": [
+              "apps/web-portal/src/favicon.ico",
+              "apps/web-portal/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./libs/assets/",
+                "output": "./assets"
+              }
+            ],
+            "styles": [
+              "libs/assets/css/normalize.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "libs/less/client.less"
+            ],
+            "scripts": []
           }
         }
       }
@@ -372,24 +448,25 @@
               "apps/web-nntool/src/assets",
               {
                 "glob": "**/*",
+                "input": "./libs/assets/",
+                "output": "./assets"
+              },
+              {
+                "glob": "**/*",
                 "input": "apps/electron-nntool/src/",
                 "ignore": ["**/*.ts"],
                 "output": ""
               }
             ],
-            "styles": ["apps/web-nntool/src/assets/css/normalize.css", "apps/web-nntool/src/less/client.less"],
+            "styles": [
+              "libs/assets/css/normalize.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "libs/less/client.less"
+            ],
             "scripts": [
               {
-                "input": "../ias/build/uglified/desktop/ias.desktop.js",
+                "input": "../ias/build/uglified/web/ias.web.js",
                 "bundleName": "ias.web"
-              },
-              {
-                "input": "../ias/build/uglified/desktop/WebWorker.js",
-                "bundleName": "WebWorker"
-              },
-              {
-                "input": "../ias/build/uglified/desktop/JSTool.js",
-                "bundleName": "Tool"
               }
             ]
           },
@@ -406,7 +483,7 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": false,
+              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": false,
@@ -424,7 +501,7 @@
               "namedChunks": true,
               "vendorChunk": true,
               "commonChunk": true,
-              "verbose": true
+              "verbose": false
             }
           }
         },

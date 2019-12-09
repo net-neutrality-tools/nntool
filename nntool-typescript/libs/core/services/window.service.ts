@@ -1,68 +1,36 @@
-import { Inject, Injectable, ViewContainerRef } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { ClassProvider, FactoryProvider, InjectionToken, PLATFORM_ID } from '@angular/core';
 
-// app
-import { isObject } from '@nntool-typescript/utils';
-import { XPlatWindow } from '../models';
-import { PlatformWindowToken } from './tokens';
+export const WINDOW = new InjectionToken('WindowToken');
 
-@Injectable()
-export class WindowService {
-  constructor(@Inject(PlatformWindowToken) private _platformWindow: XPlatWindow) {}
+export abstract class WindowRef {
+  abstract get nativeWindow(): Window;
+}
 
-  public get navigator() {
-    return this._platformWindow.navigator;
+export class BrowserWindowRef extends WindowRef {
+  constructor() {
+    super();
   }
 
-  public get location() {
-    return this._platformWindow.location;
-  }
-
-  public get process() {
-    return this._platformWindow.process;
-  }
-
-  public get require() {
-    return this._platformWindow.require;
-  }
-
-  public alert(msg: any): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const result: any = this._platformWindow.alert(msg);
-      if (isObject(result) && result.then) {
-        // console.log('WindowService -- using result.then promise');
-        result.then(resolve, reject);
-      } else {
-        resolve();
-      }
-    });
-  }
-
-  public confirm(msg: any, action?: () => void /* used for fancyalerts on mobile*/): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const result: any = (this._platformWindow as any).confirm(msg, undefined);
-      if (isObject(result) && result.then) {
-        result.then(resolve, reject);
-      } else if (result) {
-        resolve();
-      } else {
-        reject();
-      }
-    });
-  }
-
-  public setTimeout(handler: (...args: any[]) => void, timeout?: number): number {
-    return this._platformWindow.setTimeout(handler, timeout);
-  }
-
-  public clearTimeout(timeoutId: number): void {
-    return this._platformWindow.clearTimeout(timeoutId);
-  }
-
-  public setInterval(handler: (...args: any[]) => void, ms?: number, ...args: any[]): number {
-    return this._platformWindow.setInterval(handler, ms, args);
-  }
-
-  public clearInterval(intervalId: number): void {
-    return this._platformWindow.clearInterval(intervalId);
+  get nativeWindow(): Window {
+    return window;
   }
 }
+
+export function windowFactory(browserWindowRef: BrowserWindowRef, platformId: object): Window | {} {
+  if (isPlatformBrowser(platformId)) {
+    return browserWindowRef.nativeWindow;
+  }
+  return {};
+}
+
+export const WINDOW_REF_PROVIDER: ClassProvider = {
+  provide: WindowRef,
+  useClass: BrowserWindowRef
+};
+
+export const WINDOW_PROVIDER: FactoryProvider = {
+  provide: WINDOW,
+  useFactory: windowFactory,
+  deps: [WindowRef, PLATFORM_ID]
+};

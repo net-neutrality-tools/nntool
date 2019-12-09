@@ -22,17 +22,19 @@ export const environment = {
   },
   landing_page: 'home',
   user_agent: 'abc',
-  languages: ['en'],
+  languages: ['en', 'de'],
   servers: {
-    map: '',
-    statistic: '',
-    // control: 'http://localhost:8080/api/v1/'
-    //    control: 'http://localhost:18080/api/v1/',
+    //control: 'http://localhost:8080/api/v1/'
+    //control: 'http://localhost:18080/api/v1/',
     //result: 'http://localhost:8082/api/v1/',
     //search: 'http://localhost:8083/api/v1/',
+    //map: 'http://localhost:8084/api/v1/',
+    //statistic: 'http://localhost:8085/api/v1/',
     control: 'https://controller-de-01.net-neutrality.tools/api/v1/',
     result: 'https://result-de-01.net-neutrality.tools/api/v1/',
-    search: 'https://statistic-de-01.net-neutrality.tools/api/v1/' // TODO: add search-... DNS entry.
+    search: 'https://search-de-01.net-neutrality.tools/api/v1/',
+    map: 'https://map-de-01.net-neutrality.tools/api/v0/',
+    statistic: 'https://statistic-de-01.net-neutrality.tools/api/v1/'
   },
   keys: {
     google: ''
@@ -76,8 +78,8 @@ export const environment = {
     view: {
       default_map: 'google',
       map_provider: ['google', 'googleSatellite', 'googleTerrain', 'googleHybrid', 'osm'],
-      position: [48.209, 16.37],
-      zoom_initial: 12,
+      position: [46.879966, 12.726909],
+      zoom_initial: 5,
       zoom_min: 1,
       zoom_max: 20,
       hybrid: {
@@ -106,48 +108,25 @@ export const environment = {
       month: 9
     }
   },
-  statistics: {
-    graphs: {
-      list_filters: {},
-      list_devices: {
-        enabled: false
-      },
-      list_providers: {
-        enabled: false
-      },
-      os_part: {
-        enabled: true
-      },
-      technology_part: {
-        enabled: true
-      },
-      measurements_per_provider_speed: {
-        enabled: false
-      },
-      measurements_per_provider_over_time_speed: {
-        enabled: true,
-        show_box: 6,
-        select_method: 'random',
-        select_count: 6
-      },
-      measurements_per_provider_over_time_count: {
-        enabled: true
-      },
-      measurements_per_technology_over_time: {
-        enabled: true
-      }
-    }
-  },
+  statistics: {},
   user: {
     allow_query_uuid: true,
     allow_set_uuid: false,
     shown: {
-      force_ip4: false,
+      force_ip4: true,
       invisible: false,
       anonymous_mode: true,
       no_anonymize_before_delete_user: false,
       delete_user: true,
-      client_uuid: true
+      client_uuid: true,
+      measurement_selection: true,
+      measurement_selection_speed: true,
+      measurement_selection_qos: true
+    }
+  },
+  socialMediaSettings: {
+    history: {
+      medias: ['FACEBOOK', 'TWITTER', 'MAIL', 'WHATSAPP']
     }
   }
 };

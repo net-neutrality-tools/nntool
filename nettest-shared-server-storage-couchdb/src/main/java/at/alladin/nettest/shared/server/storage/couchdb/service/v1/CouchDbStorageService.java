@@ -4,16 +4,20 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,6 +46,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasuremen
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse.SpeedMeasurementPeer;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.MeasurementServerDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QosBlockedPortsDto.QosBlockedPortTypeDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
 import at.alladin.nettest.shared.server.helper.IpAddressMatcher;
@@ -68,10 +73,16 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurem
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QosAdvancedEvaluation;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QosBlockedPorts;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QosBlockedPorts.QosBlockedPortType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.RoamingType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.QoSMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SubMeasurementSettings;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Signal;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SignalInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.DeviceRepository;
@@ -87,8 +98,10 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportMode
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.MeasurementAgentMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsResponseMapper;
+import at.alladin.nntool.shared.qos.TcpResult;
 import at.alladin.nntool.shared.qos.TracerouteResult;
 import at.alladin.nntool.shared.qos.TracerouteResult.PathElement;
+import at.alladin.nntool.shared.qos.UdpResult;
 
 /**
  * 
@@ -150,6 +163,9 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private ObjectMapper objectMapper;
+	
+	@Autowired
+	private MessageSource messageSource;
 
 	/*
 	 * (non-Javadoc)
@@ -225,7 +241,7 @@ public class CouchDbStorageService implements StorageService {
 			}
 		}
 		
-    doAdvancedQosEvaluations(measurement);
+		doAdvancedQosEvaluations(measurement);
 
 		try {
 			measurementRepository.save(measurement);
@@ -276,8 +292,7 @@ public class CouchDbStorageService implements StorageService {
 				try {
 					measurementAgentRepository.save(dbAgent);
 				} catch (Exception ex) {
-					ex.printStackTrace();
-					throw new StorageServiceException();
+					throw new StorageServiceException(ex);
 				}
 			}
 		} else {
@@ -288,7 +303,7 @@ public class CouchDbStorageService implements StorageService {
 			try {
 				measurementAgentRepository.save(agent);
 			} catch (Exception ex) {
-				throw new StorageServiceException();
+				throw new StorageServiceException(ex);
 			}
 			ret.setAgentUuid(agent.getUuid());
 		}
@@ -311,38 +326,38 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	@Override
-	public LmapTaskDto getTaskDto(final MeasurementTypeDto type, final LmapCapabilityTaskDto capability, final String settingsUuid) {
+	public LmapTaskDto getTaskDto(final MeasurementTypeDto type, final LmapCapabilityTaskDto capability, final String settingsUuid, boolean useIPv6) {
 		try {
 			final Settings settings = settingsRepository.findByUuid(settingsUuid);
+			final Map<MeasurementTypeDto, SubMeasurementSettings> measurementSettings = settings.getMeasurements();
 			
 			switch (type) {
 			case SPEED:
-				final SpeedMeasurementSettings speedSettings = (SpeedMeasurementSettings) settings.getMeasurements().get(type);
+				final SpeedMeasurementSettings speedSettings = (SpeedMeasurementSettings) measurementSettings.get(type);
 				MeasurementServer server = null;
 				if (capability != null && capability.getSelectedMeasurementPeerIdentifier() != null) {
 					try {
 						server = measurementPeerRepository.findByPublicIdentifier(capability.getSelectedMeasurementPeerIdentifier());
 					} catch (Exception ex) {
-						System.out.println(String.format("Failure obtaining requested measurement peer %s. Falling back to default peer.",
-								capability.getSelectedMeasurementPeerIdentifier()));
-						ex.printStackTrace();
+						logger.error("Failure obtaining requested measurement peer {}. Falling back to default peer.",
+								capability.getSelectedMeasurementPeerIdentifier(), ex);
 					}
 				}
 				if (server == null) {
 					server = measurementPeerRepository.findByUuid(speedSettings.getSpeedMeasurementServerUuid());
 				}
 				//TODO: load balancing needs to select correct measurement server
-				final LmapTaskDto ret = lmapTaskMapper.map(settings, server, type.toString());
+				final LmapTaskDto ret = lmapTaskMapper.map(settings, server, type.toString(), useIPv6);
 				return ret;
 			case QOS:
 				final List<QoSMeasurementObjective> qosObjectiveList = qosMeasurementObjectiveRepository.findAllByEnabled(true);
 				
-				if (settings.getMeasurements() != null && settings.getMeasurements().containsKey(MeasurementTypeDto.QOS)) {
-					final QoSMeasurementSettings qosSettings = (QoSMeasurementSettings) settings.getMeasurements().get(MeasurementTypeDto.QOS);
+				if (measurementSettings != null && measurementSettings.containsKey(MeasurementTypeDto.QOS)) {
+					final QoSMeasurementSettings qosSettings = (QoSMeasurementSettings) measurementSettings.get(MeasurementTypeDto.QOS);
 					return lmapTaskMapper.map(settings, measurementPeerRepository.findByUuid(
-							qosSettings.getQosServerUuid()), qosObjectiveList, type.toString());
+							qosSettings.getQosServerUuid()), qosObjectiveList, type.toString(), useIPv6);
 				} else {
-					return lmapTaskMapper.map(settings, null, qosObjectiveList, type.toString());
+					return lmapTaskMapper.map(settings, null, qosObjectiveList, type.toString(), useIPv6);
 				}
 				
 			default:
@@ -365,13 +380,12 @@ public class CouchDbStorageService implements StorageService {
 		ret.setQosTypeInfo(new LinkedHashMap<>());
 		for (QosMeasurementType type : QosMeasurementType.values()) {
 			final TranslatedQoSTypeInfo qosInfo = new TranslatedQoSTypeInfo();
-			qosInfo.setName(type.getNameKey()); //TODO: Messagesource
-			qosInfo.setDescription(type.getDescriptionKey()); //TODO: Messagesource
+			qosInfo.setName(messageSource.getMessage(type.getNameKey(), null, Locale.ENGLISH)); // TODO: locale, translation part has to be moved to controller
+			qosInfo.setDescription(messageSource.getMessage(type.getDescriptionKey(), null, Locale.ENGLISH)); // TODO: locale, translation part has to be moved to controller
 			try {
 				ret.getQosTypeInfo().put(QoSMeasurementTypeDto.valueOf(type.getValue().toUpperCase()),  qosInfo);				
 			} catch (Exception ex) {
-				logger.error("Trying to map invalid enum w/value: " + type.getValue());
-				ex.printStackTrace();
+				logger.error("Trying to map invalid enum w/value: " + type.getValue(), ex);
 			}
 		}
 		return ret;
@@ -404,13 +418,11 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Override
 	public DetailMeasurementResponse getDetailMeasurementByAgentAndMeasurementUuid(String measurementAgentUuid, String measurementUuid, final String settingsUuid, final Locale locale) throws StorageServiceException {
-		final Measurement measurement = obtainMeasurement(measurementAgentUuid, measurementUuid);
 		//TODO: default settings?
 		final Settings settings = settingsRepository.findByUuid(settingsUuid); // TODO: cache
 		
-		final FullMeasurementResponse fullMeasurementResponse = fullMeasurementResponseMapper.map(measurement);
-		
-		return groupedMeasurementService.groupResult(fullMeasurementResponse, settings.getSpeedtestDetailGroups(),
+		return groupedMeasurementService.groupResult(getFullMeasurementByAgentAndMeasurementUuid(measurementAgentUuid, measurementUuid, locale)
+				, settings.getSpeedtestDetailGroups(),
 				locale, 10000);
 	}
 	
@@ -567,10 +579,10 @@ public class CouchDbStorageService implements StorageService {
 
 	private NatTypeInfo computeNatType(final Measurement measurement, final ComputedNetworkPointInTime cpit) {
 		final NatType natType = cpit != null ?
-				NatType.getNatType(cpit.getClientPrivateIp(), cpit.getClientPublicIp()) : NatType.NOT_AVAILABLE;
+				NatType.getNatType(cpit.getAgentPrivateIp(), cpit.getAgentPublicIp()) : NatType.NOT_AVAILABLE;
 
 		final NatTypeInfo nat = new NatTypeInfo();
-		nat.setIpVersion(Helperfunctions.getIpVersion(cpit.getClientPrivateIp()));
+		nat.setIpVersion(Helperfunctions.getIpVersion(cpit.getAgentPrivateIp()));
 		nat.setNatType(natType);
 		nat.setIsBehindNat(natType != null
 				&& !natType.equals(NatType.NOT_AVAILABLE)
@@ -585,11 +597,14 @@ public class CouchDbStorageService implements StorageService {
 			if (npitList != null && npitList.size() > 0) {
 				final NetworkPointInTime npit = npitList.get(0);
 				if (npit != null) {
-					if (npit.getClientPrivateIp() != null && npit.getClientPublicIp() != null) {
+					if (npit.getAgentPrivateIp() != null && npit.getAgentPublicIp() != null) {
 						cpit = lmapReportModelMapper.map(npit);
 					}
 					if (npit.getNetworkType() != null) {
 						final EmbeddedNetworkType dbNetworkType = getNetworkTypeById(npit.getNetworkType().getNetworkTypeId());
+						if (cpit == null) {
+							cpit = new ComputedNetworkPointInTime();
+						}
 						if (dbNetworkType != null) {
 							cpit.setNetworkType(dbNetworkType);
 						}
@@ -597,6 +612,23 @@ public class CouchDbStorageService implements StorageService {
 				}
 				
 			}
+			
+			if (measurement.getNetworkInfo().getSignalInfo() != null) {
+				
+				final List<Signal> signalList = measurement.getNetworkInfo().getSignalInfo().getSignals();
+				if (signalList != null) {
+					for (Signal sig : signalList) {
+						if (sig.getCellInfo() != null && sig.getCellInfo().getFrequency() != null) {
+							if (cpit == null) {
+								cpit = new ComputedNetworkPointInTime();
+							}
+							cpit.setFrequency(sig.getCellInfo().getFrequency());
+							break;
+						}
+					}
+				}
+			}
+			
 		}
 		
 		if (measurement.getNetworkInfo().getComputedNetworkInfo() == null) {
@@ -609,7 +641,7 @@ public class CouchDbStorageService implements StorageService {
 	private ProviderInfo computeProviderInfo(final Measurement measurement, final ComputedNetworkPointInTime cpit) {
 		InetAddress clientAddress = null;
 		try {
-			clientAddress = InetAddress.getByName(cpit.getClientPublicIp());
+			clientAddress = InetAddress.getByName(cpit.getAgentPublicIp());
 		}
 		catch (final UnknownHostException e) {
 			e.printStackTrace();
@@ -700,8 +732,16 @@ public class CouchDbStorageService implements StorageService {
 			//check for CGN by matching IP addresses from traceroute test (see RFC 6598)
 			IpAddressMatcher matcher = new IpAddressMatcher("100.64.0.0/10");
 			boolean isCgnCheckFinished = false;
+			
+			Integer numBlockedPorts = null;
 
 			for (QoSResult qos : qosMeasurement.getResults()) {
+				QosAdvancedEvaluation qosEval = measurement.getQosAdvancedEvaluation();
+				if (qosEval == null) {
+					measurement.setQosAdvancedEvaluation(new QosAdvancedEvaluation());
+					qosEval = measurement.getQosAdvancedEvaluation();
+				}
+				
 				if (!isCgnCheckFinished && QoSMeasurementType.TRACEROUTE.equals(qos.getType())) {
 					TracerouteResult result = objectMapper.convertValue(qos.getResults(), TracerouteResult.class);
 					if (result.getResultEntries() != null) {
@@ -714,7 +754,103 @@ public class CouchDbStorageService implements StorageService {
 						}
 					}
 				}
+				else if(QoSMeasurementType.TCP.equals(qos.getType())) {
+					Map<QosBlockedPortType, QosBlockedPorts> map = qosEval.getBlockedPorts();
+					if (map == null) {
+						qosEval.setBlockedPorts(new HashMap<>());
+						map = qosEval.getBlockedPorts();
+					}
+					
+					final QosBlockedPorts blocked = new QosBlockedPorts();
+					map.put(QosBlockedPortType.TCP, blocked);
+					
+					final TcpResult result = objectMapper.convertValue(qos.getResults(), TcpResult.class);
+
+					final List<Integer> portInList = new ArrayList<>();
+					final List<Integer> portOutList = new ArrayList<>();
+					if (result.getInPort() != null) {
+						if(!"OK".equals(result.getInResult())) {
+							portInList.add(result.getInPort());
+						}
+					}
+					
+					if (result.getOutPort() != null) {
+						if (!"OK".equals(result.getOutResult())) {
+							portOutList.add(result.getOutPort());
+						}
+					}
+					
+					blocked.setInCount(portInList.size());
+					blocked.setOutCount(portOutList.size());
+					
+					if (numBlockedPorts == null) {
+						numBlockedPorts = 0;
+					}
+					numBlockedPorts += blocked.getInCount() + blocked.getOutCount();
+					
+					if (!portInList.isEmpty()) {
+						blocked.setInPorts(portInList);
+					}
+					if (!portOutList.isEmpty()) {
+						blocked.setOutPorts(portOutList);
+					}
+				}
+
+			
+				else if(QoSMeasurementType.UDP.equals(qos.getType())) {
+					Map<QosBlockedPortType, QosBlockedPorts> map = qosEval.getBlockedPorts();
+					if (map == null) {
+						qosEval.setBlockedPorts(new HashMap<>());
+						map = qosEval.getBlockedPorts();
+					}
+
+					final QosBlockedPorts blocked = new QosBlockedPorts();				
+					map.put(QosBlockedPortType.UDP, blocked);
+
+					final UdpResult result = objectMapper.convertValue(qos.getResults(), UdpResult.class);
+					
+					final List<Integer> portInList = new ArrayList<>();
+					final List<Integer> portOutList = new ArrayList<>();
+					if (result.getOutPort() != null && result.getResultOutNumPacketsResponse() != null) {
+						try { 
+							int packets = Integer.valueOf(result.getResultOutNumPacketsResponse().toString());
+							if (packets == 0) {
+								portOutList.add(Integer.valueOf(result.getOutPort().toString()));
+							}
+						}
+						catch (final Exception e) { }
+					}
+					if (result.getInPort() != null) {
+						try { 
+							int packets = Integer.valueOf(result.getResultInNumPacketsResponse().toString());
+							if (packets == 0) {
+								portInList.add(Integer.valueOf(result.getInPort().toString()));
+							}
+						}
+						catch (final Exception e) { }						
+					}
+					
+					blocked.setInCount(portInList.size());
+					blocked.setOutCount(portOutList.size());
+					
+					if (numBlockedPorts == null) {
+						numBlockedPorts = 0;
+					}
+					numBlockedPorts += blocked.getInCount() + blocked.getOutCount();
+					
+					if (!portInList.isEmpty()) {
+						blocked.setInPorts(portInList);
+					}
+					if (!portOutList.isEmpty()) {
+						blocked.setOutPorts(portOutList);
+					}
+				}
 			}
+			
+			if (numBlockedPorts != null && measurement.getQosAdvancedEvaluation() != null) {
+				measurement.getQosAdvancedEvaluation().setTotalCountBlockedPorts(numBlockedPorts);
+			}
+			
 		}
 	}
 

@@ -43,6 +43,8 @@ public interface LmapTaskMapper {
 	
 	public final static String SERVER_ADDRESS_IPV6 = "server_addr_ipv6";
 	
+	public final static String SERVER_ADDRESS_DEFAULT = "server_addr_default"; // should be only "server_addr"
+	
 	public final static String SERVER_PORT = "server_port";
 	
 	public final static String ENCRYPTION = "encryption";
@@ -51,19 +53,19 @@ public interface LmapTaskMapper {
 	
 	@Mappings({
 		@Mapping(target="options",
-				expression= "java( buildOptionQoSList(settings, measurementServer, qosObjectiveList) )"
+				expression= "java( buildOptionQoSList(settings, measurementServer, qosObjectiveList, useIPv6) )"
 				),
 		@Mapping(target="name", source="name")
 	})
-	LmapTaskDto map(Settings settings, MeasurementServer measurementServer, List<QoSMeasurementObjective> qosObjectiveList, String name);
+	LmapTaskDto map(Settings settings, MeasurementServer measurementServer, List<QoSMeasurementObjective> qosObjectiveList, String name, boolean useIPv6);
 	
 	@Mappings({
 		@Mapping(target="options",
-				expression= "java( buildOptionSpeedList(settings, measurementServer) )"
+				expression= "java( buildOptionSpeedList(settings, measurementServer, useIPv6) )"
 				),
 		@Mapping(target="name", source="name")
 	})
-	LmapTaskDto map(Settings settings, MeasurementServer measurementServer, String name);
+	LmapTaskDto map(Settings settings, MeasurementServer measurementServer, String name, boolean useIPv6);
 	
 	@Mappings({
 //		@Mapping(target="uploadClassList", source="uploadClassList"),
@@ -99,14 +101,14 @@ public interface LmapTaskMapper {
 		return ret;
 	}
 	
-	default List<LmapOptionDto> buildOptionSpeedList(final Settings settings, final MeasurementServer measurementServer) {
+	default List<LmapOptionDto> buildOptionSpeedList(final Settings settings, final MeasurementServer measurementServer, boolean useIPv6) {
 		final List<LmapOptionDto> ret = new ArrayList<>();
 		
 		if (settings != null && settings.getUrls() != null && settings.getUrls().getCollectorService() != null) {
 			ret.add(generateOption(RESULT_COLLECTOR_URL, settings.getUrls().getCollectorService()));
 		}
 		
-		addMeasurementServerOptionsToList(ret, measurementServer);
+		addMeasurementServerOptionsToList(ret, measurementServer, useIPv6);
 		
 		if (settings.getMeasurements() != null) {
 			final SpeedMeasurementSettings speedSettings = (SpeedMeasurementSettings) settings.getMeasurements().get(MeasurementTypeDto.SPEED);
@@ -122,14 +124,14 @@ public interface LmapTaskMapper {
 		return ret;
 	}
 	
-	default List<LmapOptionDto> buildOptionQoSList(final Settings settings, final MeasurementServer measurementServer, List<QoSMeasurementObjective> qosObjectiveList) {
+	default List<LmapOptionDto> buildOptionQoSList(final Settings settings, final MeasurementServer measurementServer, List<QoSMeasurementObjective> qosObjectiveList, boolean useIPv6) {
 		final List<LmapOptionDto> ret = new ArrayList<>();
 		
 		if (settings != null && settings.getUrls() != null && settings.getUrls().getCollectorService() != null) {
 			ret.add(generateOption(RESULT_COLLECTOR_URL, settings.getUrls().getCollectorService()));
 		}
 		
-		addMeasurementServerOptionsToList(ret, measurementServer);
+		addMeasurementServerOptionsToList(ret, measurementServer, useIPv6);
 		
 		final LmapOptionDto measurementOption = new LmapOptionDto();
 		if (qosObjectiveList != null) {
@@ -149,21 +151,45 @@ public interface LmapTaskMapper {
 		return option;
 	}
 	
-	default void addMeasurementServerOptionsToList(final List<LmapOptionDto> optionList, final MeasurementServer measurementServer) {
+	default void addMeasurementServerOptionsToList(final List<LmapOptionDto> optionList, final MeasurementServer measurementServer, boolean useIPv6) {
 		if (measurementServer != null) {
+			
+			////
+			// host ipv4/6
+			
 			if (measurementServer.getAddressIpv4() != null) {
 				optionList.add(generateOption(SERVER_ADDRESS, measurementServer.getAddressIpv4()));
 			}
+			
 			if (measurementServer.getAddressIpv6() != null) {
 				optionList.add(generateOption(SERVER_ADDRESS_IPV6, measurementServer.getAddressIpv6()));
 			}
-			if (measurementServer.getPort() != null) {
-				optionList.add(generateOption(SERVER_PORT, measurementServer.getPort().toString()));
+			
+			if (useIPv6) {
+				optionList.add(generateOption(SERVER_ADDRESS_DEFAULT, measurementServer.getAddressIpv6()));
+			} else {
+				optionList.add(generateOption(SERVER_ADDRESS_DEFAULT, measurementServer.getAddressIpv4()));
 			}
-			if (measurementServer.getPortTls() != null) {
-				optionList.add(generateOption(SERVER_PORT, measurementServer.getPortTls().toString()));
-				optionList.add(generateOption(ENCRYPTION, "true"));
+			
+			////
+			// port and encryption
+			
+			Integer port = null;
+			boolean encryption = false;
+			
+			if (measurementServer.isPreferEncryption()) {
+				port = measurementServer.getPortTls();
+				encryption = true;
 			}
+			
+			// Encryption is not preferred or no TLS port is configured -> fall back to non-encrypted port.
+			if (port == null) {
+				port = measurementServer.getPort();
+				encryption = false;
+			}
+			
+			optionList.add(generateOption(SERVER_PORT, String.valueOf(port)));
+			optionList.add(generateOption(ENCRYPTION, String.valueOf(encryption)));
 		}
 	}
 	

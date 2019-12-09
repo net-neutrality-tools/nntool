@@ -1,0 +1,32 @@
+<nntool-section-intro>
+  <nntool-section-header headerTranslationKey="RESULT_LIST.HEADER" icon="icon-search" loadingIndicator="true">
+  </nntool-section-header>
+</nntool-section-intro>
+
+<nntool-section-features>
+  <nntool-section-content>
+    <dynamic-form [hidden]="!showFilterFields" [filterResponse]="filterResponse" (formChangeCallback)="onFormChangeCallback($event)">
+    </dynamic-form>      
+    <input [hidden]="showFilterFields" type="text" #fullTextSearchInput placeholder="{{ 'OPENDATA.FULL_TEXT_PLACEHOLDER' | translate}}"/>
+    <br/>
+    <button class="button" (click)="switchSearchDisplay()">
+      {{ (showFilterFields ? 'OPENDATA.SHOW_TEXT_SEARCH' : 'OPENDATA.SHOW_FILTER_SEARCH') | translate }}
+    </button>
+  </nntool-section-content>
+</nntool-section-features>
+
+<nntool-section-arguments>
+  <nntool-section-content>
+    <div class="section-table">
+      <nntool-result-table #resultTable [settings]="settings" [source]="tableSource" (rowSelect)="showOpenDataMeasurement($event)"></nntool-result-table>
+    </div>
+  </nntool-section-content>
+</nntool-section-arguments>
+
+<nntool-section-interactive>
+  <div class="section-interaction">
+    <a class="button column" (click)="bulkExportAsCsv()">BULK Export as CSV</a>
+    <a class="button column" (click)="bulkExportAsJsonZip()">BULK Export as ZIP (JSON files)</a>
+    <a class="button column" (click)="bulkExportAsYamlZip()">BULK Export as ZIP (YAML files)</a>
+  </div>
+</nntool-section-interactive>

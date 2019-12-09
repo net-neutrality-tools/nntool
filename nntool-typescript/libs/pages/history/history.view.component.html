@@ -1,0 +1,16 @@
+<nntool-section-intro>
+  <nntool-section-header headerTranslationKey="RESULT.DETAIL.HEADER" icon="icon-watch" loadingIndicator="true">
+    <div class="section-content no-data">
+      <h2 *ngIf="!loading && (!response || response.groups.length === 0)">{{ 'RESULT_LIST.NO_DATA' | translate }}</h2>
+      <!--h2 *ngIf="translationKey === 'HISTORY' && !uuid">{{ translationKey + '.NO_USER_UUID' | translate }}</h2-->
+    </div>
+  </nntool-section-header>
+</nntool-section-intro>
+
+<nntool-grouped-result [response]="response" [loading]="loading"></nntool-grouped-result>
+
+<nntool-qos-result [qosMeasurementResult]="qosMeasurementResult"> </nntool-qos-result>
+
+<nntool-cher *ngIf="hasShareLinks" [medias]='config.socialMediaSettings.history.medias' [message]="response.share_measurement_text" [selfUrl]="getUrl()"></nntool-cher>
+
+<history-deletion-component> </history-deletion-component>

@@ -19,6 +19,9 @@ import java.util.Map;
 import java.util.Set;
 
 import at.alladin.nettest.nntool.android.app.R;
+import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsResponse;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 
 /**
@@ -27,6 +30,8 @@ import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 public class QosProgressView extends LinearLayout {
 
     private final static String TAG = "QosProgressView";
+
+    private Map<QoSMeasurementTypeDto, SettingsResponse.TranslatedQoSTypeInfo> qosTranslationInfo = null;
 
     private class ViewHolder {
         View mainView;
@@ -58,6 +63,8 @@ public class QosProgressView extends LinearLayout {
     public void init() {
         inflate(getContext(), R.layout.qos_measurement_progress_view, this);
 
+        qosTranslationInfo = PreferencesUtil.getQoSTypeInfo(getContext());
+
         if (isInEditMode()) {
             for (int i = 0; i < Math.min(6, QosMeasurementType.values().length); i++) {
                 setQosProgress(QosMeasurementType.values()[i], i * 15);
@@ -79,7 +86,13 @@ public class QosProgressView extends LinearLayout {
 
         holder.progressBar.setProgress(0);
 
-        holder.titleText.setText(qosType.toString());
+        if (qosTranslationInfo != null) {
+            SettingsResponse.TranslatedQoSTypeInfo typeInfo = qosTranslationInfo.get(qosType.getQosMeasurementTypeDto());
+            holder.titleText.setText(typeInfo != null ? typeInfo.getName() : qosType.toString());
+        }
+        else {
+            holder.titleText.setText(qosType.toString());
+        }
         viewHolderMap.put(qosType, holder);
 
         return holder;

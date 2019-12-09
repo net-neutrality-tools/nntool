@@ -15,7 +15,8 @@
     "asar": "2.0.1",
     "electron": "5.0.9",
     "electron-builder": "21.2.0",
-    "electron-packager": "14.0.4"
+    "electron-packager": "14.0.4",
+    "electron-rebuild": "^1.8.6"
   },
   "build": {
     "asar": true,
@@ -79,7 +80,7 @@
       "./modules/linux.js",
       "./modules/ias.desktop.js",
       "./modules/JSTool.js",
-      "./modules/Worker.js",
+      "./modules/WebWorker.js",
       "./modules/index.html",
       "ias-desktop.js",
       "./certificates/",
@@ -112,7 +113,7 @@
     "xml2js": "0.4.19"
   },
   "scripts": {
-    "copy:ias:build": "cp -R ../ias/build/uglified/desktop/ias.desktop.js ./modules/ && cp -R ../ias/build/uglified/desktop/Worker.js ./modules/ && cp -R ../ias/build/uglified/desktop/JSTool.js ./modules/",
+    "copy:ias:build": "cp -R ../ias/build/uglified/desktop/ias.desktop.js ./modules/ && cp -R ../ias/build/uglified/desktop/WebWorker.js ./modules/ && cp -R ../ias/build/uglified/desktop/JSTool.js ./modules/",
     "copy:ias:win": "xcopy ..\\ias\\build\\uglified\\desktop modules /s/h/e/k/f/c/y",
     "copy:ias:unix": "cp ../ias/build/uglified/desktop/* ./modules/",
     "copy:node_modules:win": "xcopy modules\\node_checkin\\network node_modules\\network\\ /s/h/e/k/f/c/y && xcopy modules\\node_checkin\\ws node_modules\\ws\\ /s/h/e/k/f/c/y",

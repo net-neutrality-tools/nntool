@@ -1,20 +1,22 @@
-/*
- *********************************************************************************
- *                                                                               *
- *       ..--== zafaco GmbH ==--..                                               *
- *                                                                               *
- *       Website: http://www.zafaco.de                                           *
- *                                                                               *
- *       Copyright 2019                                                          *
- *                                                                               *
- *********************************************************************************
- */
-
 /*!
- *      \author zafaco GmbH <info@zafaco.de>
- *      \date Last update: 2019-08-30
- *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
- */
+    \file upload.cpp
+    \author zafaco GmbH <info@zafaco.de>
+    \date Last update: 2019-11-13
+
+    Copyright (C) 2016 - 2019 zafaco GmbH
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License version 3 
+    as published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include "upload.h"
 
@@ -39,11 +41,13 @@ Upload::Upload( CConfigManager *pConfig, CConfigManager *pXml, CConfigManager *p
 {	
 	mServerName = pXml->readString(sProvider,"DNS_HOSTNAME","default.com");
 	mServer 	= pXml->readString(sProvider,"IP","1.1.1.1");
+
 	#ifdef __ANDROID__
-        mClient = pXml->readString(sProvider, "CLIENT_IP", "0.0.0.0");
-    #else
-        mClient = "0.0.0.0";
-    #endif
+		mClient = pXml->readString(sProvider, "CLIENT_IP", "0.0.0.0");
+	#else
+		mClient = "0.0.0.0";
+	#endif
+
 	mPort   	= pXml->readLong(sProvider,"DL_PORT",80);
 	mTls		= pXml->readLong(sProvider,"TLS",0);
 
@@ -282,12 +286,10 @@ int Upload::run()
 			
 			//Send signal, we are ready
 			syncing_threads[pid] = 1;
-			
-			//Got an error
-			if(mResponse == -1 || mResponse == 0)
-			{
-				TRC_ERR("Received an Error: Upload RECV == " + std::to_string(mResponse));
-				::hasError = true;
+
+			if (mResponse == -1 || mResponse == 0) {
+				//Got an error
+				TRC_ERR("Received an Error: Upload RECV == " + std::to_string(errno) + " error num: " + std::to_string(errno));
 				//break to the end of the loop
 				break;
 			}
@@ -453,6 +455,8 @@ int Upload::run()
 		#endif
 	
     } catch (std::exception & ex) {
+        TRC_ERR("Exception in upload: ");
+        TRC_ERR(ex.what());
         ::hasError = true;
         ::RUNNING = false;
         ::recentException = ex;
