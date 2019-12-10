@@ -188,6 +188,7 @@ public class RequestUtil {
                     final WifiOperator operator = (WifiOperator) operatorInfo.getOperatorInfo();
                     networkInfoDto.setBssid(operator.getBssid());
                     networkInfoDto.setSsid(operator.getSsid());
+                    networkInfoDto.setFrequency(operator.getFrequency());
                 }
                 else if (operatorInfo.getOperatorInfo() instanceof MobileOperator) {
                     final MobileOperator operator = (MobileOperator) operatorInfo.getOperatorInfo();

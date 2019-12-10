@@ -583,6 +583,11 @@
               "translation_key": "key_wifi_bssid"
             },
             {
+              "key": "computedNetworkInfo.frequency",
+              "translation_key": "key_mobile_frequency",
+              "unit": "RESULT_FREQUENCY_UNIT"
+            },
+            {
               "key": "networkInfo.networkPointInTimeInfo.networkOperatorMccMnc",
               "translation_key": "result.network.provider_mcc_mnc"
             },
@@ -593,6 +598,30 @@
             {
               "key": "networkInfo.networkPointInTimeInfo.simOperatorName",
               "translation_key": "key_network_sim_operator_name"
+            },
+            {
+              "key": "computedNetworkInfo.roamingType",
+              "translation_key": "key_roaming"
+            },
+            {
+              "key": "computedNetworkInfo.mobileFrequency",
+              "translation_key": "key_mobile_frequency"
+            },
+            {
+              "key": "computedNetworkInfo.natTypeInfo.natType",
+              "translation_key": "key_nat_type"
+            },
+            {
+              "key": "networkInfo.isCgnDetected",
+              "translation_key": "key_cgn_detected"
+            },
+            {
+              "key": "computedNetworkInfo.publicIpAsName",
+              "translation_key": "key_client_public_ip_as_name"
+            },
+            {
+              "key": "computedNetworkInfo.publicIpAsn",
+              "translation_key": "key_client_public_ip_as"
             }
           ]
         },
@@ -621,7 +650,7 @@
               "translation_key": "key_timezone"
             },
             {
-              "key": "geoLocationInfo.distanceMovedMetres",
+              "key": "distanceMovedMetres",
               "translation_key": "result.moved_distance",
               "unit": "result.moved_distance.unit"
             },
@@ -653,8 +682,8 @@
             },
             {
               "key": "speed.durationDownloadNs",
-              "unit": "RESULT_MS_UNIT",
-              "format": "DIV_1E6",
+              "unit": "RESULT_DURATION_UNIT",
+              "format": "DIV_1E9",
               "translation_key": "key_duration_dl"
             },
             {
@@ -671,8 +700,8 @@
             },
             {
               "key": "speed.durationUploadNs",
-              "unit": "RESULT_MS_UNIT",
-              "format": "DIV_1E6",
+              "unit": "RESULT_DURATION_UNIT",
+              "format": "DIV_1E9",
               "translation_key": "key_duration_ul"
             },
             {
@@ -698,6 +727,12 @@
               "format": "DIV_1E6",
               "unit": "RESULT_MS_UNIT",
               "translation_key": "key_ping_max"
+            },
+            {
+              "key": "speed.durationRttNs",
+              "unit": "RESULT_DURATION_UNIT",
+              "format": "DIV_1E9",
+              "translation_key": "key_duration_rtt"
             }
           ]
         },
@@ -827,6 +862,7 @@
         "RESULT_DOWNLOAD": "Download",
         "RESULT_DOWNLOAD_UNIT": "Mbps",
         "RESULT_DURATION_UNIT": "s",
+        "RESULT_FREQUENCY_UNIT": "MHz",
         "RESULT_HOME_NETWORK": "Home Network",
         "RESULT_LTE_RSRP": "Signal (4G)",
         "RESULT_LTE_RSRP_UNIT": "dBm",
@@ -905,6 +941,7 @@
         "key_duration": "Nominal Test Duration",
         "key_duration_dl": "Duration Download",
         "key_duration_ul": "Duration Upload",
+        "key_duration_rtt": "Duration Ping",
         "key_encryption": "Encryption",
         "key_encryption_false": "No",
         "key_encryption_true": "Yes",
@@ -913,6 +950,8 @@
         "key_geo_source_network": "Network",
         "key_heading": "Heading",
         "key_location": "Location",
+        "key_mobile_frequency": "Mobile Frequency",
+        "key_wifi_frequency": "Wifi Frequency",
         "key_model": "Model",
         "key_motion": "Motion",
         "key_municipality": "Municipality",
