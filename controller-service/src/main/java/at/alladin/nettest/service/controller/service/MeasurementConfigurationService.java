@@ -8,7 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import at.alladin.nettest.service.controller.config.ControllerServiceProperties;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.common.LmapOptionDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapActionDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityTaskDto;
@@ -20,6 +24,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapSch
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapStopDurationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
+import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.MeasurementServerDto;
+import at.alladin.nettest.shared.server.service.LoadBalancingService;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 
 @Service
@@ -32,8 +38,11 @@ public class MeasurementConfigurationService {
 	
 	@Autowired
 	private ControllerServiceProperties controllerServiceProperties;
-	
-	public LmapControlDto getLmapControlDtoForCapabilities(final LmapCapabilityDto capabilities, boolean useIPv6) {
+
+    @Autowired
+    private LoadBalancingService loadBalancingService;
+
+    public LmapControlDto getLmapControlDtoForCapabilities(final LmapCapabilityDto capabilities, boolean useIPv6) {
 		final LmapControlDto ret = new LmapControlDto();
 		
 		ret.setCapabilities(capabilities);
@@ -41,6 +50,58 @@ public class MeasurementConfigurationService {
 		ret.setEvents(getImmediateEventList());
 		ret.setSchedules(getLmapScheduleList(ret.getEvents().get(0).getName(), ret.getTasks()));
 		
+		try {
+			logger.debug("{}", new ObjectMapper().writeValueAsString(ret));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (loadBalancingService != null) {
+			MeasurementServerDto serverDto = loadBalancingService.getNextAvailableMeasurementServer(controllerServiceProperties.getSettingsUuid(), null);
+			if (serverDto != null && ret.getTasks() != null) {
+	            Integer port = null;
+	            boolean encryption = false;
+
+	            if (serverDto.isPreferEncryption()) {
+	                port = serverDto.getPortTls();
+	                encryption = true;
+	            }
+
+	            if (port == null) {
+	                port = serverDto.getPort();
+	                encryption = false;
+	            }
+				
+				for (final LmapTaskDto task : ret.getTasks()) {
+					if (task.getName() != null && task.getOptions() != null) {
+						final MeasurementTypeDto type = MeasurementTypeDto.valueOf(task.getName().toUpperCase());
+						if (type == MeasurementTypeDto.SPEED) {
+							for (final LmapOptionDto option : task.getOptions()) {
+								switch(option.getName()) {
+								case LmapTaskDto.SERVER_ADDRESS:
+									option.setValue(serverDto.getAddressIpv4());
+									break;
+								case LmapTaskDto.SERVER_ADDRESS_IPV6:
+									option.setValue(serverDto.getAddressIpv6());
+									break;
+								case LmapTaskDto.SERVER_ADDRESS_DEFAULT:
+									option.setValue(useIPv6 ? serverDto.getAddressIpv6() : serverDto.getAddressIpv4());
+									break;
+								case LmapTaskDto.SERVER_PORT:
+									option.setValue(String.valueOf(port));
+									break;
+								case LmapTaskDto.ENCRYPTION:
+									option.setValue(String.valueOf(encryption));
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
 		return ret;
 	}
 	

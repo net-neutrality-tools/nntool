@@ -1,4 +1,4 @@
-package at.alladin.nettest.service.controller;
+package at.alladin.nettest.service.loadbalancer;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -6,44 +6,46 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-import at.alladin.nettest.service.controller.config.ControllerServiceProperties;
+import at.alladin.nettest.service.loadbalancer.config.LoadbalancerServiceProperties;
 import at.alladin.nettest.shared.server.config.spring.DevelopmentWebCorsConfiguration;
 import at.alladin.nettest.shared.server.config.spring.MessageSourceConfiguration;
 import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
 import at.alladin.nettest.shared.server.storage.couchdb.config.EnableCouchDbStorage;
 
 /**
- * The controller's main class which allows the controller to be started as stand-alone Java application or inside a servlet container.
+ * The result-service main class which allows the collector to be started as stand-alone Java application or inside a servlet container.
  * 
  * @author alladin-IT GmbH (bp@alladin.at)
+ * @author alladin-IT GmbH (lb@alladin.at)
  *
  */
 @SpringBootApplication
 @EnableConfigurationProperties({
-	ControllerServiceProperties.class
+	LoadbalancerServiceProperties.class
 })
 @ComponentScan({
-	"at.alladin.nettest.service.controller",
+	"at.alladin.nettest.service.loadbalancer", 
 	"at.alladin.nettest.shared.server.web.api.v1",
-	"at.alladin.nettest.shared.server.service"
 })
 @Import({
 	DevelopmentWebCorsConfiguration.class,
 	MessageSourceConfiguration.class
 })
 @EnableCouchDbStorage
-public class ControllerServiceApplication extends SpringBootServletInitializer {
+@EnableScheduling
+public class LoadbalancerServiceApplication extends SpringBootServletInitializer {
 
 	/**
 	 * 
 	 */
-	private static final String CONFIGURATION_DIRECTORY_NAME = "controller-service";
+	private static final String CONFIGURATION_DIRECTORY_NAME = "loadbalancer-service";
 	
 	/**
 	 * 
 	 */
-	private static final Class<?> APPLICATION_CLASS = ControllerServiceApplication.class;
+	private static final Class<?> APPLICATION_CLASS = LoadbalancerServiceApplication.class;
 	
 	/*
 	 * (non-Javadoc)
