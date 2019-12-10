@@ -53,6 +53,51 @@ public class MeasurementServerDto {
 	@JsonProperty(required = true, value = "load_api_secret")
 	private String loadApiSecretKey;
 	
+	/**
+	 * Port used for non-encrypted communication.
+	 */
+	@JsonPropertyDescription("Port used for non-encrypted communication.")
+	@Expose
+	@SerializedName("port")
+	@JsonProperty("port")
+	private Integer port;
+	
+	/**
+	 * Port used for encrypted communication.
+	 */
+	@JsonPropertyDescription("Port used for encrypted communication.")
+	@Expose
+	@SerializedName("port_tls")
+	@JsonProperty("port_tls")
+	private Integer portTls;
+
+	/**
+	 * The measurement server's IPv4 address or name.
+	 */
+	@JsonPropertyDescription("The measurement server's IPv4 address or name.")
+	@Expose
+	@SerializedName("address_ipv4")
+	@JsonProperty("address_ipv4")
+	private String addressIpv4;
+
+	/**
+	 * The measurement server's IPv6 address or name.
+	 */
+	@JsonPropertyDescription("The measurement server's IPv6 address or name.")
+	@Expose
+	@SerializedName("address_ipv6")
+	@JsonProperty("address_ipv6")
+	private String addressIpv6;
+
+	/**
+	 * The measurement server's preferred encryption.
+	 */
+	@JsonPropertyDescription("The measurement server's preferred encryption.")
+	@Expose
+	@SerializedName("prefer_encryption")
+	@JsonProperty("prefer_encryption")	
+	private boolean preferEncryption;
+	
 	public String getIdentifier() {
 		return identifier;
 	}
@@ -84,10 +129,52 @@ public class MeasurementServerDto {
 	public void setLoadApiSecretKey(String loadApiSecretKey) {
 		this.loadApiSecretKey = loadApiSecretKey;
 	}
+	
+	public Integer getPort() {
+		return port;
+	}
+
+	public void setPort(Integer port) {
+		this.port = port;
+	}
+
+	public Integer getPortTls() {
+		return portTls;
+	}
+
+	public void setPortTls(Integer portTls) {
+		this.portTls = portTls;
+	}
+
+	public String getAddressIpv4() {
+		return addressIpv4;
+	}
+
+	public void setAddressIpv4(String addressIpv4) {
+		this.addressIpv4 = addressIpv4;
+	}
+
+	public String getAddressIpv6() {
+		return addressIpv6;
+	}
+
+	public void setAddressIpv6(String addressIpv6) {
+		this.addressIpv6 = addressIpv6;
+	}
+
+	public boolean isPreferEncryption() {
+		return preferEncryption;
+	}
+
+	public void setPreferEncryption(boolean preferEncryption) {
+		this.preferEncryption = preferEncryption;
+	}
 
 	@Override
 	public String toString() {
 		return "MeasurementServerDto [identifier=" + identifier + ", name=" + name + ", loadApiUrl=" + loadApiUrl
-				+ ", loadApiSecretKey=" + loadApiSecretKey + "]";
+				+ ", loadApiSecretKey=" + loadApiSecretKey + ", port=" + port + ", portTls=" + portTls
+				+ ", addressIpv4=" + addressIpv4 + ", addressIpv6=" + addressIpv6 + ", preferEncryption="
+				+ preferEncryption + "]";
 	}
 }

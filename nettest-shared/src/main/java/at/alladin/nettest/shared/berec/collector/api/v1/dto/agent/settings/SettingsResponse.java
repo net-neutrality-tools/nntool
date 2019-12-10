@@ -160,6 +160,17 @@ public class SettingsResponse extends BasicResponse {
 		@SerializedName("result_service")
 		@JsonProperty("result_service")
 		private String resultService;
+		
+		/**
+		 * Base URL of the load balancing service of the form "[protocol]://[domain]:[port]/[path]".
+		 * This domain name should have A and AAAA records.
+		 */
+		@io.swagger.annotations.ApiModelProperty("Base URL of the load balancing service of the form \"[protocol]://[domain]:[port]/[path]\". This domain name should have A and AAAA records.")
+		@JsonPropertyDescription("Base URL of the load balancing service of the form \"[protocol]://[domain]:[port]/[path]\". This domain name should have A and AAAA records.")
+		@Expose
+		@SerializedName("load_balancing_service")
+		@JsonProperty("load_balancing_service")
+		private String loadBalancingService;
 
 		/**
 		 * Base URL of the web site of the form "[protocol]://[domain]:[port]/[path]".
@@ -227,6 +238,14 @@ public class SettingsResponse extends BasicResponse {
 			this.resultService = resultService;
 		}
 
+		public String getLoadBalancingService() {
+			return loadBalancingService;
+		}
+
+		public void setLoadBalancingService(String loadBalancingService) {
+			this.loadBalancingService = loadBalancingService;
+		}
+
 		public String getWebsite() {
 			return website;
 		}
@@ -240,7 +259,7 @@ public class SettingsResponse extends BasicResponse {
 			return "Urls [controllerService=" + controllerService + ", controllerServiceIpv4=" + controllerServiceIpv4
 					+ ", controllerServiceIpv6=" + controllerServiceIpv6 + ", collectorService=" + collectorService
 					+ ", mapService=" + mapService + ", statisticService=" + statisticService + ", resultService="
-					+ resultService + ", website=" + website + "]";
+					+ resultService + ", loadBalancingService=" + loadBalancingService + ", website=" + website + "]";
 		}
 	}
 

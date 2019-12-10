@@ -16,10 +16,13 @@ public class LoadApiReport {
 	Long lastAttempt;
 
 	@JsonProperty("last_successful_attempt")
-	Long lastSuccessfulAttempt;
+	Long lastSuccessfulAttempt = -1L;
 
 	@JsonProperty("fails_since_last_attempt")
 	Integer failesSinceLastAttempt = 0;
+	
+	@JsonProperty("measurement_server_identifier")
+	String measurementServerIdentifier;
 
 	public LoadApiResponse getLastResponse() {
 		return lastResponse;
@@ -51,5 +54,13 @@ public class LoadApiReport {
 
 	public void setFailesSinceLastAttempt(Integer failesSinceLastAttempt) {
 		this.failesSinceLastAttempt = failesSinceLastAttempt;
+	}
+
+	public String getMeasurementServerIdentifier() {
+		return measurementServerIdentifier;
+	}
+
+	public void setMeasurementServerIdentifier(String measurementServerIdentifier) {
+		this.measurementServerIdentifier = measurementServerIdentifier;
 	}
 }

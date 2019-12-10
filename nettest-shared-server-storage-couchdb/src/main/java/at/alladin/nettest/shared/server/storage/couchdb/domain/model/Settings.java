@@ -227,6 +227,29 @@ public class Settings {
 		@SerializedName("website")
 		@JsonProperty("website")
 		private String website;
+		
+		/**
+		 * URL of the load balancing service of the form "[protocol]://[domain]:[port]/[path]" to obtain next free measurement server.
+		 * This domain name should have A and AAAA records.
+		 */
+		@io.swagger.annotations.ApiModelProperty("URL of the load balancing service of the form \"[protocol]://[domain]:[port]/[path]\" to obtain next free measurement server. This domain name should have A and AAAA records.")
+		@JsonPropertyDescription("URL of the load balancing service of the form \"[protocol]://[domain]:[port]/[path]\" to obtain next free measurement server. This domain name should have A and AAAA records.")
+		@Expose
+		@SerializedName("load_balancing_service_next_free")
+		@JsonProperty("load_balancing_service_next_free")
+		private String loadBalancingServiceNextFree;
+
+		/**
+		 * URL of the load balancing service of the form "[protocol]://[domain]:[port]/[path]" to obtain the current status/load of a measurement server.
+		 * This domain name should have A and AAAA records.
+		 */
+		@io.swagger.annotations.ApiModelProperty("URL of the load balancing service of the form \"[protocol]://[domain]:[port]/[path]\" to obtain the current status/load of a measurement server. This domain name should have A and AAAA records.")
+		@JsonPropertyDescription("URL of the load balancing service of the form \"[protocol]://[domain]:[port]/[path]\" to obtain the current status/load of a measurement server. This domain name should have A and AAAA records.")
+		@Expose
+		@SerializedName("load_balancing_service_load")
+		@JsonProperty("load_balancing_service_load")
+		private String loadBalancingServiceLoad;
+
 
 		public String getControllerService() {
 			return controllerService;
@@ -290,6 +313,22 @@ public class Settings {
 
 		public void setWebsite(String website) {
 			this.website = website;
+		}
+
+		public String getLoadBalancingServiceNextFree() {
+			return loadBalancingServiceNextFree;
+		}
+
+		public void setLoadBalancingServiceNextFree(String loadBalancingServiceNextFree) {
+			this.loadBalancingServiceNextFree = loadBalancingServiceNextFree;
+		}
+
+		public String getLoadBalancingServiceLoad() {
+			return loadBalancingServiceLoad;
+		}
+
+		public void setLoadBalancingServiceLoad(String loadBalancingServiceLoad) {
+			this.loadBalancingServiceLoad = loadBalancingServiceLoad;
 		}
 	}
 

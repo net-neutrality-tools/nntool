@@ -1,8 +1,10 @@
 package at.alladin.nettest.service.loadbalancer.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ScheduledFuture;
 
 import javax.annotation.PostConstruct;
@@ -41,7 +43,7 @@ public class MeasurementServerLoadMonitorService {
 	
 	Map<String, ScheduledFuture<?>> jobs = new HashMap<>();
 	
-	Map<String, LoadApiReport> reports = new HashMap<>(); 
+	Map<String, LoadApiReport> reports = new HashMap<>();
 	
 	@PostConstruct
 	public void init() {
@@ -62,15 +64,60 @@ public class MeasurementServerLoadMonitorService {
 				final LoadApiReport report = new LoadApiReport();
 				report.setLastAttempt(-1L);
 				report.setLastSuccessfulAttempt(-1L);
+				report.setMeasurementServerIdentifier(peer.getIdentifier());
 				reports.put(peer.getIdentifier(), report);
 			}
 		}
 	}
 	
+	public List<LoadApiReport> getReportList() {
+		return new ArrayList<LoadApiReport>(reports.values());
+	}
+	
 	public LoadApiReport getReportForMeasurementServer(final String identifier) {
 		return reports.get(identifier);
 	}
-	
+		
+	public MeasurementServerDto getNextAvailableMeasurementPeer(final String preferredIdentifier) {
+		String id = null; 
+		if (preferredIdentifier != null) {
+			final LoadApiReport report = reports.get(preferredIdentifier);
+			if (report != null) {
+				if (report.getFailesSinceLastAttempt() <= properties.getFailsAllowed() 
+						&& report.getLastResponse() != null) {
+					final LoadApiResponse response = report.getLastResponse();
+					if (!response.getIsOverloaded()) {
+						id = preferredIdentifier;
+					}
+				}
+			}
+		}
+		
+		if (id == null) {
+			//we are still missing a valid measurement server
+			for (final Entry<String, LoadApiReport> e : reports.entrySet()) {
+				final LoadApiReport report = e.getValue();
+				if (report != null) {
+					if (report.getFailesSinceLastAttempt() <= properties.getFailsAllowed() 
+							&& report.getLastResponse() != null) {
+						final LoadApiResponse response = report.getLastResponse();
+						if (!response.getIsOverloaded()) {
+							id = e.getKey();
+							break;
+						}
+					}
+				}	
+			}
+		}
+		
+		if (id != null) {
+			//valid measurement server found
+			return storageService.getSpeedMeasurementServerByPublicIdentifier(id);
+		}
+		
+		return null;
+	}
+
 	private final class LoadRunnable implements Runnable {
 		
 		final LoadCallable loadCallable;
@@ -84,10 +131,11 @@ public class MeasurementServerLoadMonitorService {
 			LoadApiReport report = reports.get(loadCallable.getPeer().getIdentifier());
 			if (report == null) {
 				report = new LoadApiReport();
-				reports.put(loadCallable.getPeer().getIdentifier(), report);
+				report.setMeasurementServerIdentifier(loadCallable.getPeer().getIdentifier());
+				reports.put(report.getMeasurementServerIdentifier(), report);
 			}
 			
-			logger.debug("Fetching Load report for measurement peer '{}'", loadCallable.getPeer().getIdentifier());
+			logger.debug("Fetching Load report for measurement peer '{}'", report.getMeasurementServerIdentifier());
 			report.setLastAttempt(System.currentTimeMillis());
 			
 			boolean requestHasFailed = true;

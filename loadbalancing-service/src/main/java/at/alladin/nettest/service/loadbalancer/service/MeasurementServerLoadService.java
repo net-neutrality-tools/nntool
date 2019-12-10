@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import at.alladin.nettest.service.loadbalancer.config.LoadbalancerServiceProperties;
 import at.alladin.nettest.service.loadbalancer.dto.LoadApiRequest;
 import at.alladin.nettest.service.loadbalancer.dto.LoadApiResponse;
 import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.MeasurementServerDto;
@@ -40,6 +41,9 @@ public class MeasurementServerLoadService {
 
 	@Autowired
 	StorageService storageService;
+	
+	@Autowired
+	LoadbalancerServiceProperties properties;
 
 	public void getLoadForMeasurementServer(final DeferredResult<ResponseEntity<?>> deferred, final String identifier) {
 		final MeasurementServerDto server = storageService.getSpeedMeasurementServerByPublicIdentifier(identifier);
@@ -72,14 +76,11 @@ public class MeasurementServerLoadService {
 		
 		@Override
 		public LoadApiResponse call() throws Exception {
-			// disable cert validation:
-			/*
 			HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-	            public boolean verify(String hostname, SSLSession session) {
-	                return true;
-	            }
+				public boolean verify(String hostname, SSLSession session) {
+					return true;
+				}
 	        });
-	        */
 			
 			final RestTemplate restTemplate = new RestTemplate();
 			
@@ -97,6 +98,7 @@ public class MeasurementServerLoadService {
 			requestBody.setSecret(peer.getLoadApiSecretKey());
 			
 			final HttpEntity<?> httpEntity = new HttpEntity<>(requestBody, headers);
+			
 			
 			ResponseEntity<LoadApiResponse> response = restTemplate.exchange(peer.getLoadApiUrl(), 
 					HttpMethod.POST, httpEntity, LoadApiResponse.class);

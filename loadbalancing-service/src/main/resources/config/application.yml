@@ -22,4 +22,5 @@ server:
 
 loadbalancer:
   enabled: false
-  default: 10000
+  delay: 15000
+  fails-allowed: 0 #the amount of failed load api calls, until the measurement peer becomes unavailable

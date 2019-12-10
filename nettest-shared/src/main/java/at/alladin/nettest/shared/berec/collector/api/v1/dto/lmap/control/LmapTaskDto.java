@@ -24,6 +24,30 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.common.LmapOpti
 @JsonInclude(Include.NON_EMPTY)
 public class LmapTaskDto {
 	
+	public final static String MEASUREMENT_PARAMETER_QOS = "parameters_qos";
+	
+	public final static String MEASUREMENT_PARAMETER_SPEED = "parameters_speed";
+	
+	public final static String QOS_NAME = "QOS";
+	
+	public final static String CONCURRENCY_GROUP = "concurrency_group";
+	
+	public final static String QOS_TEST_UID = "qos_test_uid";
+	
+	public final static String QOS_TEST_TYPE = "qostest";
+	
+	public final static String SERVER_ADDRESS = "server_addr";
+	
+	public final static String SERVER_ADDRESS_IPV6 = "server_addr_ipv6";
+	
+	public final static String SERVER_PORT = "server_port";
+	
+	public final static String ENCRYPTION = "encryption";
+	
+	public final static String RESULT_COLLECTOR_URL = "result_collector_base_url";
+
+	public final static String SERVER_ADDRESS_DEFAULT = "server_addr_default"; // should be only "server_addr"
+	
 	/**
 	 * The unique name of a Task.
 	 */

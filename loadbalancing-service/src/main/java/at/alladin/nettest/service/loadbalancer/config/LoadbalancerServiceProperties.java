@@ -17,6 +17,8 @@ public class LoadbalancerServiceProperties {
 
 	private Long delay = DEFAULT_DELAY;
 	
+	private Integer failsAllowed = 0;
+	
 	public Boolean getEnabled() {
 		return enabled;
 	}
@@ -33,4 +35,11 @@ public class LoadbalancerServiceProperties {
 		this.delay = delay;
 	}
 
+	public Integer getFailsAllowed() {
+		return failsAllowed;
+	}
+
+	public void setFailsAllowed(Integer failsAllowed) {
+		this.failsAllowed = failsAllowed;
+	}
 }
