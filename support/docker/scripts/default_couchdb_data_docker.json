@@ -601,7 +601,8 @@
             },
             {
               "key": "computedNetworkInfo.roamingType",
-              "translation_key": "key_roaming"
+              "translation_key": "key_roaming",
+              "format": "TRANSLATE_VALUE"
             },
             {
               "key": "computedNetworkInfo.mobileFrequency",
@@ -609,11 +610,13 @@
             },
             {
               "key": "computedNetworkInfo.natTypeInfo.natType",
-              "translation_key": "key_nat_type"
+              "translation_key": "key_nat_type",
+              "format": "TRANSLATE_VALUE"
             },
             {
               "key": "networkInfo.isCgnDetected",
-              "translation_key": "key_cgn_detected"
+              "translation_key": "key_cgn_detected",
+              "format": "TRANSLATE_BOOLEAN_VALUE"
             },
             {
               "key": "computedNetworkInfo.publicIpAsName",
@@ -755,7 +758,8 @@
             },
             {
               "key": "speed.connectionInfo.encrypted",
-              "translation_key": "key_encryption"
+              "translation_key": "key_encryption",
+              "format": "TRANSLATE_BOOLEAN_VALUE"
             },
             {
               "key": "speed.connectionInfo.agentInterfaceTotalTraffic.bytesRx",
@@ -1015,6 +1019,18 @@
         "key_wifi_link_speed": "WiFi Link Speed",
         "key_wifi_ssid": "WiFi SSID",
         "key_zip_code": "ZIP",
+        "key_yes": "Yes",
+        "key_no": "No",
+        "key_cgn_detected": "CGN detected?",
+        "key_NOT_AVAILABLE": "No information available",
+        "key_NO_NAT": "No NAT detected",
+        "key_LOCAL_TO_LOCAL": "Local-to-local NAT detected",
+        "key_LOCAL_TO_PUBLIC": "Local-to-public NAT detected",
+        "key_PUBLIC_TO_PUBLIC": "Public-to-public NAT detected",
+        "key_PUBLIC_TO_LOCAL": "Public-to-local NAT detected",
+        "key_NO_ROAMING": "No roaming",
+        "key_NATIONAL": "National roaming",
+        "key_INTERNATIONAL": "International roaming",
         "mkit.failure": "Measurement not completed due to an error",
         "mkit.success": "Measurement completed successfully",
         "key_group_overview": "Overview",
