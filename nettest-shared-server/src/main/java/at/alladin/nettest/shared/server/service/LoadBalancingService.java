@@ -3,6 +3,8 @@ package at.alladin.nettest.shared.server.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -28,6 +30,8 @@ import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 public class LoadBalancingService {
 
 	private final static String QUERY_VAR_PREFERRED_ID = "preferredId";
+	
+	private final Logger logger = LoggerFactory.getLogger(LoadBalancingService.class);
 	
 	@Autowired
 	StorageService storageService;
@@ -63,13 +67,19 @@ public class LoadBalancingService {
 		
 		final HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 		
-		ResponseEntity<ApiResponse<MeasurementServerDto>> responseEntity = restTemplate.exchange(settings.getNextFreeUrl(), 
-				HttpMethod.GET, httpEntity, new ParameterizedTypeReference<ApiResponse<MeasurementServerDto>>() { });
-		
-		if (responseEntity.getStatusCode() == HttpStatus.OK) {
-			final ApiResponse<MeasurementServerDto> response = responseEntity.getBody();
-			return response != null ? response.getData() : null;
-		} 
+		try {
+			ResponseEntity<ApiResponse<MeasurementServerDto>> responseEntity = restTemplate.exchange(settings.getNextFreeUrl(), 
+					HttpMethod.GET, httpEntity, new ParameterizedTypeReference<ApiResponse<MeasurementServerDto>>() { });
+			
+			if (responseEntity.getStatusCode() == HttpStatus.OK) {
+				final ApiResponse<MeasurementServerDto> response = responseEntity.getBody();
+				return response != null ? response.getData() : null;
+			}
+		}
+		catch (final Exception e) {
+			logger.info("Error fetching info from load balancing service: [{}] {}", settings.getNextFreeUrl(), e.getLocalizedMessage());
+			//e.printStackTrace();
+		}
 
 		return null;
 
