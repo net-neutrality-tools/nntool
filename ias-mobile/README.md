@@ -9,8 +9,7 @@
 ### Build ###
 With fullfilled prerequisites perform the following steps:
 1. Run *npm i* to install dependencies
-2. Run *tns build ios*
-2.1 If *tns build ios* fails, check if the following files have the executable bit set:
+2. Run *tns build ios*. If *tns build ios* fails, check if the following files have the executable bit set:
 * ias-mobile/platforms/ios/internal/nativescript-post-build
 * ias-mobile/platforms/ios/internal/nativescript-pre-build
 * ias-mobile/platforms/ios/internal/nativescript-pre-link
