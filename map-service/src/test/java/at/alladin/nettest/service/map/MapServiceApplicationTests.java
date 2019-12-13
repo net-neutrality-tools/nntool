@@ -15,6 +15,7 @@ import at.alladin.nettest.service.map.service.MapOptionsService;
 import at.alladin.nettest.service.map.service.MarkerService;
 import at.alladin.nettest.service.map.service.PointTileService;
 import at.alladin.nettest.service.map.service.ThresholdsPerTechnologyHelperService;
+import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 
 /**
  * 
@@ -51,6 +52,9 @@ public class MapServiceApplicationTests {
 	
 	@MockBean
 	private ThresholdsPerTechnologyHelperService thresholdsHelperService;
+	
+	@MockBean
+	private StorageService storageService;
 	
 	/**
 	 * 

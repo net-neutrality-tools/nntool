@@ -1,7 +1,7 @@
 /*!
     \file Ias.js
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-26
+    \date Last update: 2019-12-04
 
     Copyright (C) 2016 - 2019 zafaco GmbH
 
@@ -34,7 +34,7 @@ function Ias()
 {
     this.wsMeasurement;
 
-    var iasVersion                      = '1.0.0';
+    var iasVersion                      = '1.0.1';
     var platform;
     var cookieId                        = true;
 
@@ -111,7 +111,7 @@ function Ias()
 
         console.log('Measurement Parameters: \n' + JSON.stringify(wsMeasurementParameters));
 
-        console.log("The browser developer console should only be used for debugging purposes, as an active developer console can cause performance issues");
+        console.warn("The browser developer console should only be used for debugging purposes, as an active developer console can cause performance issues");
 
         wsControlReset();
 
@@ -324,26 +324,42 @@ function Ias()
             return;
         }
 
+        if (classIndexCurrent !== -1 && ((data.test_case === 'download' && typeof data.downloadKPIs !== 'undefined' && typeof data.downloadKPIs.throughput_avg_bps !== 'undefined') || (data.test_case === 'upload' && typeof data.uploadKPIs !== 'undefined' && typeof data.uploadKPIs.throughput_avg_bps !== 'undefined')))
+        {
+            data.throughput_avg_bps = (data.test_case === 'download') ? data.downloadKPIs.throughput_avg_bps : data.uploadKPIs.throughput_avg_bps;
+        }
+        
         if ((data.test_case === 'download' || data.test_case === 'upload') && typeof data.throughput_avg_bps !== 'undefined' && classIndexCurrent !== -1)
         {
             //check, if current class matches the class bounds
             if (wsMeasurementParameters[data.test_case].classes[classIndexCurrent].bounds.lower * 1000 * 1000 > data.throughput_avg_bps || wsMeasurementParameters[data.test_case].classes[classIndexCurrent].bounds.upper * 1000 * 1000 < data.throughput_avg_bps)
             {
                 data.out_of_bounds = true;
-                if (!classMatched)
+                if (data.cmd === 'classCheck')
                 {
-                    console.log('Current class is out of bounds');
+                    console.log('ClassCheck: Current class is out of bounds');
+                    classMatched = false;
                 }
             }
             else
             {
-                if (!classMatched)
-                {
-                    console.log('Current class is in bounds');
-                }
-                classMatched = true;
                 data.out_of_bounds = false;
+                if (data.cmd === 'classCheck')
+                {
+                    console.log('ClassCheck: Current class is in bounds');
+                    classMatched = true;
+                }
             }
+
+            if (typeof data.downloadKPIs !== 'undefined')
+            {
+                data.downloadKPIs.out_of_bounds = data.out_of_bounds;
+            }
+            else
+            {
+                data.uploadKPIs.out_of_bounds = data.out_of_bounds;
+            }
+            
 
             classChangePerforming = false;
             if (data.out_of_bounds  && !classMatched && data.cmd === 'classCheck')
@@ -366,17 +382,17 @@ function Ias()
                                 if (wsMeasurementParameters[data.test_case].classes[classIndexLowestBound].bounds.lower * 1000 * 1000 > data.throughput_avg_bps)
                                 {
                                     i = classIndexLowestBound;
-                                    console.log("Lowest bound of configured classes was exceeded");
+                                    console.log("ClassCheck: Lowest bound of configured classes was exceeded");
                                 }
                                 if (wsMeasurementParameters[data.test_case].classes[classIndexHighestBound].bounds.upper * 1000 * 1000 < data.throughput_avg_bps)
                                 {
                                     i = classIndexHighestBound;
-                                    console.log("Highest bound of configured classes was exceeded");
+                                    console.log("ClassCheck: ighest bound of configured classes was exceeded");
                                 }
 
                                 if (i === classIndexCurrent || classIndexUsed.includes(i))
                                 {
-                                    console.log('Class #' + i + ' was already used');
+                                    console.log('ClassCheck: Class #' + i + ' was already used');
                                 }
                                 else
                                 {
@@ -387,7 +403,7 @@ function Ias()
                             {
                                 if (index === classIndexCurrent || classIndexUsed.includes(index))
                                 {
-                                    console.log('Class #' + index + ' was already used');
+                                    console.log('ClassCheck: Class #' + index + ' was already used');
                                 }
                                 else
                                 {
@@ -400,7 +416,6 @@ function Ias()
                         if (newClassSelected)
                         {
                             classIndexCurrent = i;
-                            //classIndexUsed.push(classIndexCurrent);
                             classChangePerforming = true;
                             return false;
                         }
@@ -410,20 +425,20 @@ function Ias()
 
                     if (!newClassSelected)
                     {
-                        console.log('Class can not be changed, resuming measurement');
+                        console.log('ClassCheck: Class can not be changed, resuming measurement');
                         classMatched = true;
                     }
                 }
                 else
                 {
-                    console.log('Class can not be changed: class change limit reached');
+                    console.log('ClassCheck: Class can not be changed: class change limit reached');
                     classMatched = true;
                 }
             }
 
             if (classChangePerforming && data.cmd === 'classCheck')
             {
-                console.log('Changing Class');
+                console.log('ClassCheck: Changing Class');
                 wsControl.measurementStop(JSON.stringify(wsMeasurementParameters));
                 setTimeout(wsControlReset, 200);
                 setTimeout(startGcTimer, 500);
@@ -449,6 +464,7 @@ function Ias()
         delete cleanedData.cmd;
         delete cleanedData.msg;
         delete cleanedData.test_case;
+        delete cleanedData.throughput_avg_bps;
 
         var relative_time_ns_measurement_start = (jsTool.getTimestamp() * 1000 * 1000 ) - timestampKPIs.measurement_start;
 
