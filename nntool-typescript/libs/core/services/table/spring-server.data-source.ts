@@ -50,9 +50,9 @@ export class SpringServerDataSource extends ServerDataSource {
 
   // change: add search parameter (q=)
   protected requestElements(): Observable<any> {
-    // reset page to 0 if new query is executed
+    // reset page to 1 if new query is executed
     if (this.q !== this.requestedQ) {
-      this.pagingConf['page'] = 0;
+      this.pagingConf['page'] = 1; //every page is reduced by 1 anyway, so to start with the first page, set the page to 1
     }
 
     let httpParams = this.createRequesParams();
