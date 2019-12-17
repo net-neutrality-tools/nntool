@@ -57,9 +57,9 @@ export class LoopSettingsComponent
   public requestStart() {
     if (
       this.testImpl.loopModeConfig.numRepetitions <= 0 ||
-      this.testImpl.loopModeConfig.numRepetitions > 20 ||
+      this.testImpl.loopModeConfig.numRepetitions > 500 ||
       this.testImpl.loopModeConfig.timeBetweenRepetitions <= 0 ||
-      this.testImpl.loopModeConfig.timeBetweenRepetitions >= 160
+      this.testImpl.loopModeConfig.timeBetweenRepetitions >= 1440
     ) {
       this.showInvalidInputWarning = true;
       return;
