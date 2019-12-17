@@ -45,6 +45,7 @@ export class LoopSettingsComponent
   }
 
   ngOnDestroy() {
+    this.testImpl.alreadyStarted = false;
     this.testImpl.onDestroy();
     clearInterval(this.timerInterval);
   }
@@ -56,18 +57,38 @@ export class LoopSettingsComponent
   public requestStart() {
     if (
       this.testImpl.loopModeConfig.numRepetitions <= 0 ||
-      this.testImpl.loopModeConfig.numRepetitions > 20 ||
+      this.testImpl.loopModeConfig.numRepetitions > 500 ||
       this.testImpl.loopModeConfig.timeBetweenRepetitions <= 0 ||
-      this.testImpl.loopModeConfig.timeBetweenRepetitions >= 160
+      this.testImpl.loopModeConfig.timeBetweenRepetitions >= 1440
     ) {
       this.showInvalidInputWarning = true;
       return;
     }
+    
+    if (this.testImpl.loopModeConfig.startTime) {
+      const startDate = new Date(this.testImpl.loopModeConfig.startTime);
+
+      console.log("isNan: " + startDate.getTime() + " -> "  + isNaN(startDate.getTime()) + "");
+
+      if ((isNaN(startDate.getTime())) || (Date.now() - startDate.getTime() > 0)) {
+        this.showInvalidInputWarning = true;
+        return;
+      }
+    }
+    
     this.showInvalidInputWarning = false;
-    super.requestStart();
+
+    if (this.testImpl.loopModeConfig.startTime) {
+      this.startTimerForNextTest();
+    }
+    else {
+      super.requestStart();
+    }
   }
 
   public startTimerForNextTest() {
+    this.testImpl.alreadyStarted = true;
+
     if (this.testImpl.curRepetitions >= this.testImpl.loopModeConfig.numRepetitions) {
       console.log('REACHED END OF LOOP MODE!');
       return;
@@ -76,6 +97,13 @@ export class LoopSettingsComponent
     console.log('START TIMER FOR NEXT TEST!');
 
     let timeLeft = this.testImpl.loopModeConfig.timeBetweenRepetitions * 60;
+
+    if (this.testImpl.curRepetitions <= 0 && this.testImpl.loopModeConfig.startTime) {
+      const millisLeft = new Date(timeLeft = this.testImpl.loopModeConfig.startTime).getTime() - Date.now();
+      this.testImpl.loopModeConfig.startTime = null;
+      timeLeft = millisLeft / 1000;
+    }
+
     this.testImpl.timeLeftString = this.toHHMMSS(timeLeft);
     this.timerInterval = setInterval(() => {
       if (timeLeft > 1) {
@@ -91,8 +119,14 @@ export class LoopSettingsComponent
   }
 
   private toHHMMSS(timeLeft): string {
-    var date = new Date(null);
-    date.setSeconds(timeLeft); // specify value for SECONDS here
-    return date.toISOString().substr(11, 8);
+    var sec_num = parseInt(timeLeft, 10);
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor(sec_num / 60) % 60;
+    var seconds = sec_num % 60;
+
+    return [hours,minutes,seconds]
+        .map(v => v < 10 ? "0" + v : v)
+        .filter((v,i) => v !== "00" || i > 0)
+        .join(":");
   }
 }
