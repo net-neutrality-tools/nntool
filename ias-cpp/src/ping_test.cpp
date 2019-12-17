@@ -1,7 +1,7 @@
 /*!
     \file ping_test.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-28
+    \date Last update: 2019-12-13
 
     Copyright (C) 2016 - 2019 zafaco GmbH
 
@@ -69,7 +69,7 @@ TEST_CASE("Ping test")
 
         pXml->writeString("testing", "PING_DESTINATION", "127.0.0.1");
         pXml->writeString("testing", "DNS_HOSTNAME", "localhost");
-        pXml->writeString("testing", "PING_QUERY", "5");
+        pXml->writeString("testing", "PING_QUERY", "1");
         pConfig->writeString("security","authToken",token);
 	    pConfig->writeString("security","authTimestamp",to_string(time));
         pCallback = std::make_unique<CCallback>(jMeasurementParameters);
@@ -84,7 +84,7 @@ TEST_CASE("Ping test")
         pMeasurement->startMeasurement();
         Json::object result = pCallback->jMeasurementResultsRttUdp;
         TRC_DEBUG(Json(result).dump());
-        int median = stoi(result["median_ns"].string_value());
+        string median = result["median_ns"].string_value();
         Json::array rtts = result["rtts"].array_items();
 
         CHECK(pXml->readLong("testing", "PING_QUERY", 0)==rtts.size());
@@ -96,7 +96,7 @@ TEST_CASE("Ping test")
         auto &n = result["rtts"].array_items()[result["rtts"].array_items().size() - 1];
         Json::object m = n.object_items();
 
-        CHECK( (m["rtt_ns"].int_value() == median ? false : true) );
+        CHECK( (median.compare(to_string(m["rtt_ns"].int_value())) == 0 ? true : false) );
 
         ::RUNNING = false;
 
