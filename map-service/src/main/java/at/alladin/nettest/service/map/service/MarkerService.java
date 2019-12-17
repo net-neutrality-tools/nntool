@@ -147,7 +147,7 @@ public class MarkerService {
                     if (request.getOptions() != null && request.getOptions().containsKey("map_options")) {
                         optionStr = request.getOptions().get("map_options");
                     } else {//if (optionStr == null || optionStr.length() == 0) { // set default
-                        optionStr = "mobile/download";
+                        optionStr = "all/download";
                     }
 
                     final MapServiceOptions mo = mapOptionsService.getMapOptionsForKey(optionStr); //mso.getMapOptionMap().get(optionStr);
@@ -217,6 +217,7 @@ public class MarkerService {
 									+ ", t.mobile_sim_operator_name as mobile_sim_name"
                                     + ", t.initial_network_type_id as network_type_id"
                                     + ", t.network_signal_info as signals"
+                                    + ", COALESCE(t.mobile_network_lte_rsrp_dbm, t.mobile_network_signal_strength_2g3g_dbm, wifi_network_rssi_dbm) as signal_dbm"
 //                                    + ", t.uuid as uuid, t.client_uuid as client_uuid"
 									+ ", t.agent_uuid as client_uuid"
 									+ ", t.os_name as os_name"
@@ -343,30 +344,50 @@ public class MarkerService {
 
         final List<DetailMeasurementGroupItem> measurementResultList = new ArrayList<>();
         
+        ClassificationHelper.ClassificationItem classificationItem = null;
+        DetailMeasurementGroupItem markerItem = null;
+        
         final int fieldDown = rs.getInt("speed_download");
-        final String downloadString = String.format("%s %s", format.format(fieldDown / 1000000d), messageSource.getMessage("MARKER_DOWNLOAD_UNIT", null, locale));
-        ClassificationHelper.ClassificationItem classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.DOWNLOAD, fieldDown, networkTypeId);
-        DetailMeasurementGroupItem markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_DOWNLOAD", null, locale), downloadString, classificationItem);
-        measurementResultList.add(markerItem);
-        markerResultList.add(0, markerItem);
+        if (fieldDown != 0) {
+	        final String downloadString = String.format("%s %s", format.format(fieldDown / 1000000d), messageSource.getMessage("MARKER_DOWNLOAD_UNIT", null, locale));
+	        classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.DOWNLOAD, fieldDown, networkTypeId);
+	        markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_DOWNLOAD", null, locale), downloadString, classificationItem);
+	        measurementResultList.add(markerItem);
+	        markerResultList.add(0, markerItem);
+        }
 
         final int fieldUp = rs.getInt("speed_upload");
-        final String uploadString = String.format("%s %s", format.format(fieldUp / 1000000d),messageSource.getMessage("MARKER_UPLOAD_UNIT", null, locale));
-        classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.UPLOAD, fieldUp, networkTypeId);
-        markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_UPLOAD", null, locale), uploadString, classificationItem);
-        measurementResultList.add(markerItem);
-        markerResultList.add(1, markerItem);
+        if (fieldUp != 0) {
+	        final String uploadString = String.format("%s %s", format.format(fieldUp / 1000000d),messageSource.getMessage("MARKER_UPLOAD_UNIT", null, locale));
+	        classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.UPLOAD, fieldUp, networkTypeId);
+	        markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_UPLOAD", null, locale), uploadString, classificationItem);
+	        measurementResultList.add(markerItem);
+	        markerResultList.add(1, markerItem);
+        }
 
-        final int pingValue = (int) Math.round(rs.getDouble("ping_median") / 1000000d);
-        final String pingString = String.format("%s %s", format.format(pingValue),
-                messageSource.getMessage("MARKER_PING_UNIT", null, locale));
-        classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.PING, pingValue, networkTypeId);
-        markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_PING", null, locale), pingString, classificationItem);
-        measurementResultList.add(markerItem);
-        markerResultList.add(2, markerItem);
-
+        
+        final double pingDblValue = rs.getDouble("ping_median");
+        if (pingDblValue != 0) {
+	        final int pingValue = (int) Math.round(pingDblValue / 1000000d);
+	        final String pingString = String.format("%s %s", format.format(pingValue),
+	                messageSource.getMessage("MARKER_PING_UNIT", null, locale));
+	        classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.PING, pingValue, networkTypeId);
+	        markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_PING", null, locale), pingString, classificationItem);
+	        measurementResultList.add(markerItem);
+	        markerResultList.add(2, markerItem);
+        }
+        
         final int networkType = rs.getInt("network_type");
-
+                
+        final int signalDbmValue = rs.getInt("signal_dbm");
+        if (signalDbmValue != 0) {
+    		classificationItem = classificationService.classifyColor(ClassificationHelper.ClassificationType.SIGNAL, signalDbmValue, networkType);
+            markerItem = generateMeasurementItem(messageSource.getMessage("MARKER_SIGNAL", null, locale), signalDbmValue + " " + messageSource.getMessage("MARKER_SIGNAL_UNIT", null, locale), classificationItem);
+            measurementResultList.add(markerItem);
+            markerResultList.add(markerItem);
+        }
+        
+        /*
         final String signalField = rs.getString("signal_strength");
         if (signalField != null && signalField.length() != 0) {
             final int signalValue = rs.getInt("signal_strength");
@@ -384,7 +405,7 @@ public class MarkerService {
             measurementResultList.add(markerItem);
             markerResultList.add(markerItem);
         }
-
+        */
 
         ret.setMeasurementResults(measurementResultList);
 

@@ -164,11 +164,12 @@ export class MapComponent {
                   popupContent += '<br/> <hr/>';
                   //element.open_test_uuid;
                 });
-
-                L.popup()
+                
+                L.popup({'maxHeight': 400})
                   .setLatLng(L.latLng(res.measurements[0].geo_lat, res.measurements[0].geo_long))
                   .setContent(popupContent)
                   .openOn(map);
+
               });
             }
           });

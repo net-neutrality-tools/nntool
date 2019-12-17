@@ -162,8 +162,9 @@ public class TileResource {
     	}
     	
     	if (params.getMapOption() == null || params.getMapOption().equals("")) {
-    		params.setMapOption("mobile/download");
+    		params.setMapOption("all/download");
     	}
+    	
     	if (params.getQuantile() == null 
     			|| params.getQuantile() < 0 || params.getQuantile() > 1) {
     		params.setQuantile(0.5f);

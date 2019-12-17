@@ -181,7 +181,7 @@ public class PointTileService {
                         + " t.open_data_uuid", options.getSqlValueColumn(), whereSQL);
             } else {
                 sql = String.format(
-                		"SELECT ST_X(t.geo_location_geometry) x, ST_Y(t.geo_location_geometry) y, %s val "
+                		"SELECT ST_X(t.geo_location_geometry) x, ST_Y(t.geo_location_geometry) y, %1$s val "
                 		//+ (hightlightUUID == null ? "" : ", t.agent_uuid ")
                         + ", initial_network_type_id as network_type_id, to_json(network_signal_info) as signals "
                         + " FROM measurements t"
@@ -189,7 +189,7 @@ public class PointTileService {
 //                        + (hightlightUUID == null ? "" : " LEFT JOIN ha_client c ON (t.client_uuid=c.uuid AND c.uuid=?::uuid)")
                         + " WHERE "
                         //+ (hightlightUUID == null ? "" : " t.agent_uuid = ?::uuid AND ")
-                        + " %s"
+                        + " %2$s"
                         + " AND t.geo_location_geometry && ST_SetSRID(ST_MakeBox2D(ST_Point(?,?), ST_Point(?,?)), 900913)"
                         + " ORDER BY"
                         //+ (hightlightUUID == null ? "" : " t.agent_uuid DESC, ") 
