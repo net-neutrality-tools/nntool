@@ -192,7 +192,7 @@ public class HeatmapTileService {
 		final int tileSizeIdx = TileHelper.getTileSizeIdx(params.getSize());
 
 		final List<MapServiceSettings.SQLFilter> sqlFilterList = mapOptionsService
-				.getSqlFilterList(params.getFilterMap(), false, true);
+				.getSqlFilterList(params.getFilterMap(), true, true);
 
 		final int tileSize = TileHelper.getTileSizeLengthAt(tileSizeIdx);
 
