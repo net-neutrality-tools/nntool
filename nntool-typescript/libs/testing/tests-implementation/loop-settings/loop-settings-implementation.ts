@@ -21,12 +21,14 @@ export class LoopSettingsImplementation extends TestImplementation<PortBlockingT
 
   public loopModeConfig: PortBlockingTestConfig = {
     numRepetitions: LoopSettingsImplementation.BASE_CONFIG.numRepetitions,
-    timeBetweenRepetitions: LoopSettingsImplementation.BASE_CONFIG.timeBetweenRepetitions
+    timeBetweenRepetitions: LoopSettingsImplementation.BASE_CONFIG.timeBetweenRepetitions,
+    startTime: null
   };
 
   public curRepetitions = 0;
   public loopModeDelay = 0;
   public timeLeftString = "";
+  public alreadyStarted = false;
 
   constructor(testSchedulerService: TestSchedulerService, private zone: NgZone) {
     // TODO: Add missing services

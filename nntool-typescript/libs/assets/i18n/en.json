@@ -376,6 +376,7 @@
     },
     "LOOP": {
       "TITLE": "Looped measurements",
+      "START_TIME": "Schedule next test for:",
       "TIME_BETWEEN_TESTS": "Time between tests (in minutes):",
       "NUMBER_REPETITIONS": "Number of test-runs:",
       "TIME_LEFT": "Next test",
@@ -384,7 +385,7 @@
       "RESET": "Start another test run",
       "STOP": "Stop current test run",
       "INVALID_INPUT_HEADER": "Invalid parameters",
-      "INVALID_INPUT_DESCRIPTION": "The number of test-runs must be between 1 and 20. The time between test runs must be between 1 and 160 minutes."
+      "INVALID_INPUT_DESCRIPTION": "The number of test-runs must be between 1 and 100. The time between test runs must be between 1 and 1440 minutes."
     }
   },
   "SETTINGS": {
