@@ -12,10 +12,13 @@ public final class WifiOperator implements OperatorInfo {
 
     final int networkId;
 
+    final int frequency;
+
     public WifiOperator(final WifiInfo wifiInfo) {
         this.ssid = NetworkGatherer.removeQuotationsInCurrentSSIDForJellyBean(wifiInfo.getSSID());
         this.bssid = wifiInfo.getBSSID();
         this.networkId = wifiInfo.getNetworkId();
+        this.frequency = wifiInfo.getFrequency();
     }
 
     public String getSsid() {
@@ -30,6 +33,10 @@ public final class WifiOperator implements OperatorInfo {
         return networkId;
     }
 
+    public int getFrequency() {
+        return frequency;
+    }
+
     @Override
     public String getOperatorName() {
         return ssid;
@@ -40,7 +47,8 @@ public final class WifiOperator implements OperatorInfo {
         return "WifiOperator{" +
                 "ssid='" + ssid + '\'' +
                 ", bssid='" + bssid + '\'' +
-                ", networkId='" + networkId + '\'' +
+                ", networkId=" + networkId +
+                ", frequency=" + frequency +
                 '}';
     }
 }

@@ -35,9 +35,10 @@ public interface FullMeasurementResponseMapper {
 		@Mapping(source="measurementTime.durationNs", target="durationNs"),
 		@Mapping(source="measurementTime.endTime", target="endTime"),
 		@Mapping(source="geoLocationInfo.geoLocations", target="geoLocations"),
+		@Mapping(source = "geoLocationInfo.distanceMovedMetres", target="distanceMovedMetres"),
 		@Mapping(expression="java(parseSubMeasurementMap(measurement.getMeasurements()))", target="measurements"),
 		@Mapping(source = "networkInfo.computedNetworkInfo", target="computedNetworkInfo"),
-		@Mapping(source = "qosAdvancedEvaluation", target="qosAdvancedEvaluation")
+		@Mapping(source = "qosAdvancedEvaluation", target="qosAdvancedEvaluation"),
 	})
 	FullMeasurementResponse map(Measurement measurement);
 	
@@ -115,6 +116,7 @@ public interface FullMeasurementResponseMapper {
 
 		@Mapping(source = "networkWifiInfo.initialSsid", target = "ssid"),
 		@Mapping(source = "networkWifiInfo.initialBssid", target = "bssid"),
+		@Mapping(source = "networkWifiInfo.frequency", target = "frequency"),
 
 		@Mapping(source="networkMobileInfo.roaming", target="roaming"),
 		@Mapping(source="networkMobileInfo.roamingType", target="roamingType"),
@@ -122,6 +124,9 @@ public interface FullMeasurementResponseMapper {
 	NetworkPointInTimeInfoDto map(NetworkPointInTime npit);
 
 	@InheritConfiguration
+	@Mappings({
+		@Mapping(source = "frequency", target="mobileFrequency")
+	})
 	ComputedNetworkPointInTimeInfoDto map(ComputedNetworkPointInTime cnpit);
 
 	default String map(MccMnc mccMnc) {

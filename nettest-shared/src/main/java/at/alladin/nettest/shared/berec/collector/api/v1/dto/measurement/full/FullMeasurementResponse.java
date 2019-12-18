@@ -123,6 +123,15 @@ public class FullMeasurementResponse extends BasicResponse {
 	@JsonProperty(required = true, value = "geo_locations")
 	private List<GeoLocationDto> geoLocations;
 	
+	/**
+	 * The distance moved in metres, calculated from the geoLocations.
+	 */
+	@JsonPropertyDescription("The distance moved in metres, calculated from the geoLocations.")
+	@Expose
+	@SerializedName("distance_moved_metres")
+	@JsonProperty("distance_moved_metres")
+	private Integer distanceMovedMetres;
+	
 // measurement agentInfo
 	
 	/**
@@ -288,6 +297,14 @@ public class FullMeasurementResponse extends BasicResponse {
 
 	public void setQosAdvancedEvaluation(QosAdvancedEvaluationDto qosAdvancedEvaluation) {
 		this.qosAdvancedEvaluation = qosAdvancedEvaluation;
+	}
+
+	public Integer getDistanceMovedMetres() {
+		return distanceMovedMetres;
+	}
+
+	public void setDistanceMovedMetres(Integer distanceMovedMetres) {
+		this.distanceMovedMetres = distanceMovedMetres;
 	}
 	
 }

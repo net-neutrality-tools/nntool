@@ -33,6 +33,16 @@ public class NetworkWifiInfo {
 	@JsonProperty("initial_bssid")
     private String initialBssid;
 	
+	/**
+     * Radio frequency of the network.
+     */
+	@io.swagger.annotations.ApiModelProperty("Radio frequency of the network.")
+	@JsonPropertyDescription("Radio frequency of the network.")
+	@Expose
+    @SerializedName("frequency")
+	@JsonProperty("frequency")
+	private Integer frequency;
+	
 	public String getInitialSsid() {
 		return initialSsid;
 	}
@@ -48,4 +58,13 @@ public class NetworkWifiInfo {
 	public void setInitialBssid(String initialBssid) {
 		this.initialBssid = initialBssid;
 	}
+
+	public Integer getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(Integer frequency) {
+		this.frequency = frequency;
+	}
+	
 }
