@@ -69,6 +69,17 @@ export class OpenDataResultTableComponent implements OnInit {
             return 'n/a';
           }
         }
+      },
+      'qos_advanced_evaluation.blocked_ports.total_count_blocked_ports': {
+        title: 'Blocked Ports',
+        filter: false,
+        valuePrepareFunction: (cell, row) => {
+          if (row.qos_advanced_evaluation && row.qos_advanced_evaluation.blocked_ports && row.qos_advanced_evaluation.blocked_ports.total_count_blocked_ports) {
+            return (row.qos_advanced_evaluation.blocked_ports.total_count_blocked_ports);
+          } else {
+            return 'n/a';
+          }
+        }
       }
     }
   };
