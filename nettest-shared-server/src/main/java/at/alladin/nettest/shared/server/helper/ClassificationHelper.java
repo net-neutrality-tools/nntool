@@ -1,15 +1,5 @@
 package at.alladin.nettest.shared.server.helper;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
-
-//import at.alladin.nettest.shared.model.Measurement;
-import at.alladin.nettest.shared.model.Settings;
-import at.alladin.nettest.shared.model.Settings.ColorThresholds;
-import at.alladin.nettest.shared.model.Settings.ThresholdsPerTechnology;
-
 //TODO: move the stuff in this class into their own class
 public class ClassificationHelper {
 

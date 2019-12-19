@@ -10,7 +10,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 
 /**
  * This DTO class contains all QoS measurement information that is sent to the measurement agent.
