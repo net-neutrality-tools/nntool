@@ -11,10 +11,10 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
-import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
@@ -29,10 +29,10 @@ import at.alladin.nettest.service.map.domain.model.MapServiceSettings.SQLFilter;
 import at.alladin.nettest.service.map.domain.model.TileImage;
 import at.alladin.nettest.service.map.util.GeographyHelper;
 import at.alladin.nettest.service.map.util.TileHelper;
+import at.alladin.nettest.shared.server.helper.ClassificationHelper.ClassificationType;
 import at.alladin.nntool.shared.map.HeatmapTileParameters;
 import at.alladin.nntool.shared.map.MapTileParameters;
 import at.alladin.nntool.shared.map.MapTileType;
-import at.alladin.nettest.shared.server.helper.ClassificationHelper.ClassificationType;
 
 @Service
 @CacheConfig(cacheNames = {"heatmapTile"})
@@ -40,19 +40,19 @@ public class HeatmapTileService {
 	
 	private final Logger logger = LoggerFactory.getLogger(HeatmapTileService.class);
 
-	@Inject
+	@Autowired
 	private MapCacheConfig mapCacheConfig;
 
-	@Inject
+	@Autowired
 	private MapOptionsService mapOptionsService;
 
-	@Inject
+	@Autowired
 	private ClassificationService classificationService;
 
-	@Inject
+	@Autowired
 	private ColorMapperService colorMapperService;
 
-	@Inject
+	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
 	@SuppressWarnings("unchecked")

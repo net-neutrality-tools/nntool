@@ -6,13 +6,12 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import at.alladin.nettest.service.map.domain.model.MapServiceOptions;
 import at.alladin.nettest.service.map.domain.repository.SqlSettingsRepository;
-import at.alladin.nettest.shared.server.helper.ClassificationHelper;
 import at.alladin.nettest.shared.server.helper.ClassificationHelper.ClassificationType;
 import at.alladin.nettest.shared.server.model.ServerSettings.ColorThresholds;
 import at.alladin.nettest.shared.server.model.ServerSettings.SpeedThresholds;
@@ -26,7 +25,7 @@ import at.alladin.nettest.shared.server.model.ServerSettings.SpeedThresholds;
 @Service
 public class ThresholdsPerTechnologyHelperService {
 	
-	@Inject
+	@Autowired
 	private SqlSettingsRepository sqlSettingsRepository;
 
 	private SpeedThresholds speedThresholds = null;

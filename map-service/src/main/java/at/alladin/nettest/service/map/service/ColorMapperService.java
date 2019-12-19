@@ -1,11 +1,9 @@
 package at.alladin.nettest.service.map.service;
 
-import org.springframework.stereotype.Service;
-
-import java.util.Map;
-
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import at.alladin.nettest.service.map.domain.model.MapServiceOptions;
 import at.alladin.nettest.shared.server.helper.ClassificationHelper;
@@ -15,7 +13,7 @@ import at.alladin.nettest.shared.server.model.ServerSettings.SpeedThresholds;
 @Service
 public class ColorMapperService {
 	
-	@Inject
+	@Autowired
 	private ThresholdsPerTechnologyHelperService thresholdsHelperService;
 
     /**

@@ -1,5 +1,8 @@
 package at.alladin.nettest.service.map.web.api.v0;
 
+import java.util.Locale;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -7,10 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Locale;
-
-import javax.inject.Inject;
 
 import at.alladin.nettest.service.map.service.MarkerService;
 import at.alladin.nntool.shared.map.MapMarkerRequest;
@@ -22,7 +21,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/api/v0/tiles/markers")
 public class MarkerResource {
 
-    @Inject
+	@Autowired
 	private MarkerService markerService;
     
 	//TODO: BIG! Restrict CrossOrigin requests if possible

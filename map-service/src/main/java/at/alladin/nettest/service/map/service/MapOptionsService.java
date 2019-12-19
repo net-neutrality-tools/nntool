@@ -1,11 +1,5 @@
 package at.alladin.nettest.service.map.service;
 
-import com.google.common.base.Strings;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,13 +10,19 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.google.common.base.Strings;
 
 import at.alladin.nettest.service.map.config.MapCacheConfig;
 import at.alladin.nettest.service.map.config.MapServiceSettingsConfig;
 import at.alladin.nettest.service.map.domain.model.MapServiceOptions;
-import at.alladin.nettest.service.map.domain.model.MapServiceSettings;
 import at.alladin.nettest.service.map.domain.model.MapServiceOptions.SignalGroup;
+import at.alladin.nettest.service.map.domain.model.MapServiceSettings;
 import at.alladin.nettest.service.map.domain.repository.SqlSettingsRepository;
 import at.alladin.nettest.shared.server.helper.ClassificationHelper.ClassificationType;
 import at.alladin.nettest.shared.server.model.ServerSettings;
@@ -32,13 +32,13 @@ public class MapOptionsService {
 	
 	private final Logger logger = LoggerFactory.getLogger(MapOptionsService.class);
 
-    @Inject
+	@Autowired
     private SqlSettingsRepository sqlSettingsRepository;
     
-    @Inject
+	@Autowired
     private MapServiceSettingsConfig mapServiceConfig;
     
-    @Inject 
+	@Autowired 
     private MapCacheConfig cacheconfig;
 
     private MapServiceSettings mapServiceSettings;

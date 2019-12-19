@@ -41,6 +41,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.Measur
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.ProviderRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TranslationRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.BriefMeasurementResponseMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportModelMapper;
@@ -112,6 +113,9 @@ public class CouchDbStorageServiceMockitTest {
 
 	@Mocked @Injectable
 	private DeviceRepository deviceRepository;
+	
+	@Mocked @Injectable
+	private TranslationRepository translationRepository;
 	
 	@Mocked @Injectable
 	private ReturnCodeMessageSource messageSource;

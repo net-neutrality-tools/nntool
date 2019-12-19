@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright 2019 alladin-IT GmbH
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
+
 package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 
 import java.net.InetAddress;
@@ -10,7 +26,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -45,7 +60,6 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasuremen
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse.SpeedMeasurementPeer;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QosBlockedPortsDto.QosBlockedPortTypeDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
 import at.alladin.nettest.shared.server.helper.IpAddressMatcher;
@@ -81,7 +95,6 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.Qo
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SubMeasurementSettings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Signal;
-import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SignalInfo;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SpeedMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.SubMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.DeviceRepository;
@@ -91,6 +104,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.Measur
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.MeasurementRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.SettingsRepository;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.TranslationRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.BriefMeasurementResponseMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportModelMapper;
@@ -132,6 +146,9 @@ public class CouchDbStorageService implements StorageService {
 	
 	@Autowired
 	private EmbeddedNetworkTypeRepository embeddedNetworkTypeRepository;
+	
+	@Autowired
+	private TranslationRepository translationRepository;
 	
 	@Autowired
 	private QoSEvaluationService qosEvaluationService;
@@ -830,7 +847,16 @@ public class CouchDbStorageService implements StorageService {
 			if (numBlockedPorts != null && measurement.getQosAdvancedEvaluation() != null) {
 				measurement.getQosAdvancedEvaluation().setTotalCountBlockedPorts(numBlockedPorts);
 			}
-			
 		}
+	}
+	
+	public Map<Locale, Map<String, String>> getTranslations() {
+		final Map<Locale, Map<String, String>> translationMap = new HashMap<>();
+		
+		translationRepository.findAll().forEach(t -> {
+			translationMap.put(Locale.forLanguageTag(t.getLanguage()), t.getTranslations());
+		});
+		
+		return translationMap;
 	}
 }

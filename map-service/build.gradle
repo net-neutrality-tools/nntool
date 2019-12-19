@@ -1,72 +1,23 @@
 apply from: "${project.rootDir}/gradle/spring_boot_project.gradle"
 
-// https://github.com/springfox/springfox-demos/tree/master/boot-static-docs
-
 dependencies {
-	implementation project(path: ':nettest-shared', configuration: 'default')
-    compile project(':nettest-shared-server')
-    
-    // javax.
-    compile group: 'javax.transaction', name: 'javax.transaction-api'
-    compile group: 'javax.inject', name: 'javax.inject', version: javax_inject_version
-    
-    // Spring Framework
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: spring_boot_version
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-logging', version: spring_boot_version
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: spring_boot_version
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: spring_boot_version
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: spring_boot_version
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-undertow', version: spring_boot_version
-    
-    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: spring_boot_version) {
-        exclude module: 'spring-boot-starter-tomcat'
-    }
-    
-    // Spring boot devtools
-	compile("org.springframework.boot:spring-boot-devtools")
-    
-    // Springfox/Swagger
-	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: springfox_version
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: springfox_version
-    
-    // Postgresql connector
-	compile group: 'org.postgresql', name: 'postgresql', version: postgresql_version
-	
-	// JDBC connection pool, H2 DB
-	compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.8'
-	compile group: 'com.h2database', name: 'h2', version: '1.4.197'
-    
-    // Testing
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: spring_boot_version
-    
-    // TODO: exclude libraries that aren't needed (jackson, etc.)
-    
+    implementation project(path: ':nettest-shared-server-storage-postgresql', configuration: 'default')
+
+	// Server
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-undertow', version: spring_boot_version
+
     ///////////
-/*    compile group: 'joda-time', name: 'joda-time', version: joda_time_version
-    
-    // https://mvnrepository.com/artifact/ua_parser/ua-parser
-	compile group: 'ua_parser', name: 'ua-parser', version: ua_parser_version
-	
-	compile group: 'org.geotools', name: 'gt-main', version: geotools_version
-	compile group: 'org.geotools', name: 'gt-referencing', version: geotools_version
-	
-	
-	////////
-    
+
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: spring_boot_version
 
     testCompile group: 'junit', name: 'junit', version: junit_version
-    testCompile group: 'org.mockito', name: 'mockito-core'
     testCompile group: 'org.hamcrest', name: 'hamcrest-library'
     testCompile group: 'com.jayway.jsonpath', name: 'json-path'
     testCompile group: 'com.jayway.awaitility', name: 'awaitility', version: awaility_version
     testCompile group: 'org.assertj', name: 'assertj-core', version: assertj_core_version
-    
-    ///////////
-  */  
-    //optional group: 'org.springframework.boot', name:'spring-boot-configuration-processor', version: spring_boot_version
+    testCompile group: 'org.jmockit', name: 'jmockit', version: jmockit_version
 }
 
-//clean {
-//	delete "target"
-//}
+test {
+    jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
+}

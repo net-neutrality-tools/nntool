@@ -1,14 +1,5 @@
 package at.alladin.nettest.service.map.service;
 
-import org.json.JSONArray;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
-
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -18,16 +9,23 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
-import javax.inject.Inject;
+
+import org.json.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
 import at.alladin.nettest.service.map.config.MapCacheConfig;
 import at.alladin.nettest.service.map.domain.model.BoundingBox;
@@ -47,16 +45,16 @@ public class PointTileService {
 	
 	private final Logger logger = LoggerFactory.getLogger(PointTileService.class);
 
-    @Inject
+	@Autowired
     private MapCacheConfig mapCacheConfig;
 
-    @Inject
+	@Autowired
     private MapOptionsService mapOptionsService;
 
-    @Inject
+	@Autowired
     private ColorMapperService colorMapperService;
 
-    @Inject
+	@Autowired
     private JdbcTemplate jdbcTemplate;
 
     private ThreadLocal<TileImage>[] tileImages;

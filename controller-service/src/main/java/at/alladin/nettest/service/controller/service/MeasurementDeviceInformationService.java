@@ -30,9 +30,7 @@ public class MeasurementDeviceInformationService {
         }
     }
 
-
     public void fillDeviceInformation (final ApiRequestInfo apiRequestInfo, final HttpServletRequest request) {
-
         if (apiRequestInfo != null && apiRequestInfo.getAgentType() == DESKTOP) {
             // Got request from websocket client -> fill in info based on user agent
             final String ua = request.getHeader("user-agent");
@@ -80,6 +78,5 @@ public class MeasurementDeviceInformationService {
 
             }
         }
-
     }
 }

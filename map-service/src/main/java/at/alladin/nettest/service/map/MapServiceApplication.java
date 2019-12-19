@@ -4,13 +4,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.context.annotation.Import;
 
 import at.alladin.nettest.service.map.config.MapCacheConfig;
 import at.alladin.nettest.service.map.config.MapServiceSettingsConfig;
+import at.alladin.nettest.shared.server.config.spring.DevelopmentWebCorsConfiguration;
+import at.alladin.nettest.shared.server.config.spring.MessageSourceConfiguration;
 import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
 
 /**
@@ -23,8 +23,16 @@ import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
 	MapCacheConfig.class,
 	MapServiceSettingsConfig.class
 })
-
-@ComponentScan({"at.alladin.nettest.shared.server.service", "at.alladin.nettest.service.map.service", "at.alladin.nettest.service.map"})
+@ComponentScan({
+	"at.alladin.nettest.shared.server.service", 
+	"at.alladin.nettest.shared.server.storage.postgresql.service", 
+	"at.alladin.nettest.service.map.service", 
+	"at.alladin.nettest.service.map"
+})
+@Import({
+	DevelopmentWebCorsConfiguration.class,
+	MessageSourceConfiguration.class
+})
 public class MapServiceApplication extends SpringBootServletInitializer {
 
 	/**
@@ -54,15 +62,4 @@ public class MapServiceApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) throws Exception {
 		SpringApplicationHelper.runSpingApplication(CONFIGURATION_DIRECTORY_NAME, args, APPLICATION_CLASS);
 	}
-
-	/*
-	@Bean
-	public MessageSource messageSource() {
-		final ResourceBundleMessageSource messageSource = new SqlTranslationMessageSource();
-		messageSource.setBasename("language");
-		messageSource.setDefaultEncoding("UTF-8");
-		messageSource.setFallbackToSystemLocale(false);
-		return messageSource;
-	}
-	*/
 }
