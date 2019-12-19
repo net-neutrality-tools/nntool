@@ -16,4 +16,6 @@ import at.alladin.nettest.service.search.config.ExportProperties;
 public interface ExtensionDataWriter {
 
 	void write(List<Map<String, Object>> data, ExportProperties exportProperties, ExportExtension ext, OutputStream outputStream) throws IOException;
+	
+	void write(List<Map<String, Object>> data, ExportProperties exportProperties, ExportExtension ext, OutputStream outputStream, boolean writeCoarseResult) throws IOException;
 }
