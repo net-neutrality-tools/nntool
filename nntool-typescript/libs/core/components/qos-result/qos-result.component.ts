@@ -31,14 +31,19 @@ export class QoSResultComponent implements OnChanges {
           groupHolder.icon = desc.icon;
           groupHolder.title = desc.name;
           groupHolder.description = desc.description;
+          groupHolder.successes = 0;
+          groupHolder.failures = 0;
           resultMap[result.type] = groupHolder;
           this.qosGroups.push(groupHolder);
         }
 
         const group = resultMap[result.type];
-        group.successes += result.success_count;
-        group.failures += result.failure_count;
-
+        if (result.failure_count > 0) {
+          group.failures++;
+        } else {
+          group.successes++;
+        }
+        
         // need to manually add hidden here, as the preset value doesn't apply correctly w/the deserialization
         result.showSlideableItem = false;
         group.tests.push(result);
