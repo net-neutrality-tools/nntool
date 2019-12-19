@@ -92,7 +92,7 @@ map-settings:
     - groupKey: "all"
       typeKey: "download"
       sqlValueColumn: "ias.throughput_avg_download_bps"
-      sqlFilter: "ias.throughput_avg_download_bps IS NOT NULL"
+      sqlFilter: "ias.throughput_avg_download_bps IS NOT NULL AND ias.throughput_avg_download_bps > 0"
       overlayType: "shapes"
       reverseScale: false
     - groupKey: "all"

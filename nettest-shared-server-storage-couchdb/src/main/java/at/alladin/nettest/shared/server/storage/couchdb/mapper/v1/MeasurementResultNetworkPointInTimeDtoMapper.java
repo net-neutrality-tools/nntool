@@ -35,6 +35,7 @@ public interface MeasurementResultNetworkPointInTimeDtoMapper {
 	@Mappings({
 		@Mapping(source="ssid", target="networkWifiInfo.initialSsid"),
 		@Mapping(source="bssid", target="networkWifiInfo.initialBssid"),
+		@Mapping(source="frequency", target="networkWifiInfo.frequency"),
 		
 		@Mapping(source="networkCountry", target="networkMobileInfo.networkCountry"),
 		@Mapping(expression="java(toMccMnc(measurementResultNetworkPointInTimeDto.getNetworkOperatorMccMnc()))",
@@ -45,7 +46,9 @@ public interface MeasurementResultNetworkPointInTimeDtoMapper {
 		@Mapping(expression="java(toMccMnc(measurementResultNetworkPointInTimeDto.getSimOperatorMccMnc()))",
 		target="networkMobileInfo.simOperatorMccMnc"),
 		@Mapping(source="simOperatorName", target="networkMobileInfo.simOperatorName"),
-		@Mapping(source="networkTypeId", target="networkType.networkTypeId")
+		@Mapping(source="networkTypeId", target="networkType.networkTypeId"),
+		@Mapping(source="clientPublicIp", target="agentPublicIp"),
+		@Mapping(source="clientPrivateIp", target="agentPrivateIp"),
 	})
 	NetworkPointInTime map(MeasurementResultNetworkPointInTimeDto arg0);
 

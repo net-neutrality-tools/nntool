@@ -191,7 +191,9 @@ public class SpeedtestDetailGroup {
 			DIV_1000(1000d),	// => / 1000d
 			DIV_1E6(1000000d),	// => / 1000000d
 			DIV_1E9(1000000000d),	// => / 1000000000d
-			DIV_1E12(1000000000000d);	// => / 1000000000000d
+			DIV_1E12(1000000000000d),
+			TRANSLATE_VALUE(1d),
+			TRANSLATE_BOOLEAN_VALUE(1d);	// => / 1000000000000d
 			
 			private final double divider;
 			

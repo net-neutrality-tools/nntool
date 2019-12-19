@@ -208,6 +208,16 @@ public class NetworkPointInTimeInfoDto {
     @SerializedName("bssid")
 	@JsonProperty("bssid")
     private String bssid;
+	
+	/**
+     * Radio frequency of the wifi network.
+     */
+	@io.swagger.annotations.ApiModelProperty("Radio frequency of the wifi network.")
+	@JsonPropertyDescription("Radio frequency of the wifi network.")
+	@Expose
+    @SerializedName("frequency")
+	@JsonProperty("frequency")
+	private Integer frequency;
 
 // _ NetworkMobileInfo
 
@@ -415,6 +425,14 @@ public class NetworkPointInTimeInfoDto {
 
 	public void setBssid(String bssid) {
 		this.bssid = bssid;
+	}
+	
+	public Integer getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(Integer frequency) {
+		this.frequency = frequency;
 	}
 
 	public String getNetworkCountry() {

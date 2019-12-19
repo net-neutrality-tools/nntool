@@ -48,8 +48,12 @@ public class CsvExtensionDataWriter implements ExtensionDataWriter {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 	
 	@Override
-	public void write(List<Map<String, Object>> data, ExportProperties exportProperties, ExportExtension ext, OutputStream outputStream) throws IOException {
+	public void write(List<Map<String, Object>> data, ExportProperties exportProperties, ExportExtension ext, OutputStream outputStream, boolean isCoarseResult) throws IOException {
 		final List<CsvField> fields = exportProperties.getExtensions().getCsv().getFields();
+
+		if (isCoarseResult) {
+			fields.removeIf((field) -> field.getIncludeInCoarse() == null || !field.getIncludeInCoarse());
+		}
 		
 		if (fields.size() == 0) {
 			return;
@@ -95,5 +99,11 @@ public class CsvExtensionDataWriter implements ExtensionDataWriter {
 		csvGenerator.writeEndArray();
 		
 		csvGenerator.flush();
+	}
+	
+	
+	@Override
+	public void write(List<Map<String, Object>> data, ExportProperties exportProperties, ExportExtension ext, OutputStream outputStream) throws IOException {
+		this.write(data, exportProperties, ext, outputStream, false);
 	}
 }

@@ -174,6 +174,15 @@ public class MeasurementServer {
 	@JsonProperty("secret_key")
 	private String secretKey;
 
+	/**
+	 * @see MeasurementServerLoadApi
+	 */
+	@JsonPropertyDescription("Measurement server Load-API")
+	@Expose
+	@SerializedName("load_api")
+	@JsonProperty("load_api")
+	private MeasurementServerLoadApi loadApi;
+
 	public String getUuid() {
 		return uuid;
 	}
@@ -284,5 +293,13 @@ public class MeasurementServer {
 
 	public void setSecretKey(String secretKey) {
 		this.secretKey = secretKey;
+	}
+
+	public MeasurementServerLoadApi getLoadApi() {
+		return loadApi;
+	}
+
+	public void setLoadApi(MeasurementServerLoadApi loadApi) {
+		this.loadApi = loadApi;
 	}
 }

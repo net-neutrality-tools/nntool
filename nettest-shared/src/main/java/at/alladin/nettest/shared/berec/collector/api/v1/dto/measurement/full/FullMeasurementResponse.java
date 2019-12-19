@@ -22,6 +22,7 @@ import java.util.Map;
 import org.joda.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
@@ -137,6 +138,15 @@ public class FullMeasurementResponse extends BasicResponse {
 	@SerializedName("geo_locations")
 	@JsonProperty(required = true, value = "geo_locations")
 	private List<GeoLocationDto> geoLocations;
+	
+	/**
+	 * The distance moved in metres, calculated from the geoLocations.
+	 */
+	@JsonPropertyDescription("The distance moved in metres, calculated from the geoLocations.")
+	@Expose
+	@SerializedName("distance_moved_metres")
+	@JsonProperty("distance_moved_metres")
+	private Integer distanceMovedMetres;
 	
 // measurement agentInfo
 	
@@ -303,6 +313,14 @@ public class FullMeasurementResponse extends BasicResponse {
 
 	public void setQosAdvancedEvaluation(QosAdvancedEvaluationDto qosAdvancedEvaluation) {
 		this.qosAdvancedEvaluation = qosAdvancedEvaluation;
+	}
+
+	public Integer getDistanceMovedMetres() {
+		return distanceMovedMetres;
+	}
+
+	public void setDistanceMovedMetres(Integer distanceMovedMetres) {
+		this.distanceMovedMetres = distanceMovedMetres;
 	}
 	
 }

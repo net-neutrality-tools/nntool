@@ -40,8 +40,9 @@ import at.alladin.nettest.shared.server.storage.couchdb.config.EnableCouchDbStor
 	ControllerServiceProperties.class
 })
 @ComponentScan({
-	"at.alladin.nettest.service.controller", 
-	"at.alladin.nettest.shared.server.web.api.v1"
+	"at.alladin.nettest.service.controller",
+	"at.alladin.nettest.shared.server.web.api.v1",
+	"at.alladin.nettest.shared.server.service"
 })
 @Import({
 	DevelopmentWebCorsConfiguration.class,

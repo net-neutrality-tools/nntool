@@ -37,7 +37,6 @@ public class PartTreeMangoBasedCouchDbQuery extends AbstractCouchDbRepositoryQue
 
 	private final PartTree partTree;
 	
-	
 	public PartTreeMangoBasedCouchDbQuery(CouchDbQueryMethod method, CouchDbOperations operations) {
 		super(method, operations);
 		

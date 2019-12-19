@@ -93,7 +93,7 @@ public class ExportService {
 		final String filename = determineExportFilename(openDataUuid, coarse, extension);
 		
 		try {
-			write(Collections.singletonList(measurement), filename, exportExtension, false, response);
+			write(Collections.singletonList(measurement), filename, exportExtension, false, response, coarse);
 		} catch (IOException ex) {
 			throw new ExportException("Could not export single measurement with open_data_uuid " + openDataUuid + ".", ex);
 		}
@@ -265,6 +265,10 @@ public class ExportService {
 	}
 	
 	private void write(List<Map<String, Object>> data, String filename, ExportExtension extension, boolean shouldBeZipped, HttpServletResponse response) throws IOException {
+		this.write(data, filename, extension, shouldBeZipped, response, false);
+	}
+	
+	private void write(List<Map<String, Object>> data, String filename, ExportExtension extension, boolean shouldBeZipped, HttpServletResponse response, boolean coarse) throws IOException {
 		writeResponseHeader(extension, filename, response);
 		
 		final OutputStream outputStream;
@@ -275,7 +279,7 @@ public class ExportService {
         	outputStream = response.getOutputStream();
         }
 		
-		extension.getWriter().write(data, exportProperties, extension, outputStream);
+		extension.getWriter().write(data, exportProperties, extension, outputStream, coarse);
 		
 		outputStream.flush();
 	}

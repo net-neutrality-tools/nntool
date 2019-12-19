@@ -16,6 +16,16 @@
 
 package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
@@ -28,16 +38,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
@@ -60,6 +60,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasuremen
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse.SpeedMeasurementPeer;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
+import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.LoadBalancingSettingsDto;
+import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.MeasurementServerDto;
 import at.alladin.nettest.shared.model.qos.QosMeasurementType;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
 import at.alladin.nettest.shared.server.helper.IpAddressMatcher;
@@ -342,7 +344,31 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	@Override
-	public LmapTaskDto getTaskDto(final MeasurementTypeDto type, final LmapCapabilityTaskDto capability, final String settingsUuid, boolean useIPv6) {
+	public LoadBalancingSettingsDto getLoadBalancingSettings(final String settingsUuid) {
+		final LoadBalancingSettingsDto dto = new LoadBalancingSettingsDto();
+		try {
+			final Settings settings = settingsRepository.findByUuid(settingsUuid);
+			if (settings != null) {
+				final SpeedMeasurementSettings speedSettings = 
+						(SpeedMeasurementSettings) settings.getMeasurements().get(MeasurementTypeDto.SPEED);
+				if (speedSettings != null) {
+					dto.setDefaultMeasurementServerUuid(speedSettings.getSpeedMeasurementServerUuid());
+				}
+				if (settings.getUrls() != null) {
+					dto.setNextFreeUrl(settings.getUrls().getLoadBalancingServiceNextFree());
+					dto.setServerLoadUrl(settings.getUrls().getLoadBalancingServiceLoad());
+				}
+			}
+		}
+		catch (final Exception e) {
+			throw new StorageServiceException(e);
+		}
+		
+		return dto;
+	}
+	
+	@Override
+	public LmapTaskDto getTaskDto(final MeasurementTypeDto type, final LmapCapabilityTaskDto capability, final String settingsUuid, final boolean useIPv6) {
 		try {
 			final Settings settings = settingsRepository.findByUuid(settingsUuid);
 			final Map<MeasurementTypeDto, SubMeasurementSettings> measurementSettings = settings.getMeasurements();
@@ -408,8 +434,8 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	@Override
-	public Page<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid(final String measurementAgentUuid, 
-			final Pageable pageable) {
+	public Page<BriefMeasurementResponse> getPagedBriefMeasurementResponseByAgentUuid(String measurementAgentUuid,
+			Pageable pageable) throws StorageServiceException {
 		return measurementRepository
 			.findByAgentInfoUuidOrderByMeasurementTimeStartTimeDesc(measurementAgentUuid, pageable)
 			.map(briefMeasurementResponseMapper::map);
@@ -497,7 +523,52 @@ public class CouchDbStorageService implements StorageService {
 		return measurement;
 	}
 	
+	public List<MeasurementServerDto> getAllActiveSpeedMeasurementServers() throws StorageServiceException {
+		final List<MeasurementServer> peers = measurementPeerRepository.getAvailableSpeedMeasurementPeers();
+		
+		return peers
+				.stream()
+				.map(p -> {
+					final MeasurementServerDto dto = new MeasurementServerDto();
+					dto.setAddressIpv4(p.getAddressIpv4());
+					dto.setAddressIpv6(p.getAddressIpv6());
+					dto.setPort(p.getPort());
+					dto.setPortTls(p.getPortTls());
+					dto.setIdentifier(p.getPublicIdentifier());
+					dto.setName(p.getName());
+					if (p.getLoadApi() != null) {
+						dto.setLoadApiSecretKey(p.getLoadApi().getSecretKey());
+						dto.setLoadApiUrl(p.getLoadApi().getUrl());
+					}
+					return dto;
+				})
+				.collect(Collectors.toList());
+	}
+	
+	@Override
+	public MeasurementServerDto getSpeedMeasurementServerByPublicIdentifier(String identifier) {
+		final MeasurementServer p = measurementPeerRepository.findByPublicIdentifier(identifier);
+		if (p != null) {
+			final MeasurementServerDto dto = new MeasurementServerDto();
+			dto.setAddressIpv4(p.getAddressIpv4());
+			dto.setAddressIpv6(p.getAddressIpv6());
+			dto.setPort(p.getPort());
+			dto.setPortTls(p.getPortTls());
+			dto.setIdentifier(p.getPublicIdentifier());
+			dto.setName(p.getName());
+			dto.setPreferEncryption(p.isPreferEncryption());
+			if (p.getLoadApi() != null) {
+				dto.setLoadApiSecretKey(p.getLoadApi().getSecretKey());
+				dto.setLoadApiUrl(p.getLoadApi().getUrl());
+			}
+			return dto;
+		}
+		
+		return null;
+	}
+
 	public SpeedMeasurementPeerResponse getSpeedMeasurementPeers(ApiRequest<SpeedMeasurementPeerRequest> speedMeasurementPeerRequest) throws StorageServiceException {
+		
 		final List<MeasurementServer> peers = measurementPeerRepository.getAvailableSpeedMeasurementPeers();
 		
 		final SpeedMeasurementPeerResponse response = new SpeedMeasurementPeerResponse();

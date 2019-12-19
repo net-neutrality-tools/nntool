@@ -155,13 +155,6 @@ onmessage = function (event)
                 }
             }
             reportToControl('info', 'counter');
-
-            if (wsTestCase === 'upload')
-            {
-                wsData          = 0;
-                wsFrames        = 0;
-            }
-            
             break;
         }
 

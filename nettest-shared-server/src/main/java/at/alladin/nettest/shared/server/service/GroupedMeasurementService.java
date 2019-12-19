@@ -51,6 +51,10 @@ public class GroupedMeasurementService {
 	
 	private static final String SHARE_TEXT_INTRO_TRANSLATION_KEY = "RESULT_SHARE_INTRO";
 	
+	private static final String TRANSLATION_KEY_YES = "key_yes";
+	
+	private static final String TRANSLATION_KEY_NO = "key_no";
+	
 	@Autowired
 	private ObjectMapper objectMapper;
 
@@ -188,7 +192,7 @@ public class GroupedMeasurementService {
 				
 				//default formatting
 				if(formatEnum != null){
-					val = formatResultValueString(val, formatEnum, format);
+					val = formatResultValueString(val, formatEnum, format, locale);
 				}
 				if(unit != null) {
 					item.setUnit(messageSource.getMessage(unit, null, locale));
@@ -348,10 +352,17 @@ public class GroupedMeasurementService {
         return null;
     }
 	
-	private String formatResultValueString(final String value, final FormatEnum formatEnum, final Format format) {
+	private String formatResultValueString(final String value, final FormatEnum formatEnum, final Format format, final Locale locale) {
 		try {
-			return format.format(Double.parseDouble(value) / formatEnum.getDivider());
-		} catch (NumberFormatException | NullPointerException ex) {
+			switch (formatEnum) {
+			case TRANSLATE_BOOLEAN_VALUE:
+				return Boolean.valueOf(value) ? messageSource.getMessage(TRANSLATION_KEY_YES, null, locale) : messageSource.getMessage(TRANSLATION_KEY_NO, null, locale);
+			case TRANSLATE_VALUE:
+				return messageSource.getMessage("key_" + value, null, locale);
+			default:
+				return format.format(Double.parseDouble(value) / formatEnum.getDivider());
+			}
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			// do nothing with it, just return original value
 		}

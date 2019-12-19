@@ -43,17 +43,17 @@
                           </colgroup>
                           <tbody>
                             <tr *ngFor="let res of test.result_keys | keyvalue">
-                              <td *ngIf="res.value === 'ok'">
+                              <td *ngIf="(res.value | uppercase) === 'OK'">
                                 <span class="icon icon-check" [title]="test.summary"></span>
                               </td>
-                              <td *ngIf="res.value !== 'ok'">
+                              <td *ngIf="(res.value | uppercase) !== 'OK'">
                                 <span class="icon icon-close" [title]="test.summary"></span>
                               </td>
                               <td>{{ res.key }}</td>
                             </tr>
                           </tbody>
                         </table>
-                        <p [innerHTML]="test.description"></p>
+                        <p [innerHTML]="test.description" style="white-space: pre-wrap;"></p>
                       </div>
                     </div>
                   </td>

@@ -16,6 +16,7 @@
 
 package at.alladin.nettest.shared.server.service.storage.v1;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -37,6 +38,8 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.Ful
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.MeasurementResultResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerResponse;
+import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.LoadBalancingSettingsDto;
+import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.MeasurementServerDto;
 import at.alladin.nettest.shared.server.service.storage.v1.exception.StorageServiceException;
 
 /**
@@ -72,4 +75,10 @@ public interface StorageService {
 	SpeedMeasurementPeerResponse getSpeedMeasurementPeers(ApiRequest<SpeedMeasurementPeerRequest> speedMeasurementPeerRequest) throws StorageServiceException;
 	
 	Map<Locale, Map<String, String>> getTranslations();
+	
+  List<MeasurementServerDto> getAllActiveSpeedMeasurementServers() throws StorageServiceException;
+	
+	MeasurementServerDto getSpeedMeasurementServerByPublicIdentifier(final String identifier);
+	
+	LoadBalancingSettingsDto getLoadBalancingSettings(final String settingsUuid);
 }

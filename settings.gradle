@@ -16,6 +16,7 @@ include 'result-service'
 include 'search-service'
 include 'opendata-collector-service'
 
+include 'loadbalancing-service'
 include 'map-service'
 include 'statistic-service'
 

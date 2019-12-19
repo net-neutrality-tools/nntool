@@ -14,7 +14,7 @@
         <div style="width: 450px; float: left;">
 
             <div id="header">
-                <h1 style="padding-left:50px;">ias 1.0.0</h1>
+                <h1 style="padding-left:50px;">ias 1.0.1</h1>
             </div>
 
             <div style="padding-left:50px;border-spacing:100px;">
@@ -321,26 +321,23 @@
                 uploadClassVeryHigh.bounds.upper    = 9000;
                 uploadClassVeryHigh.framesPerCall   = 20;
 
-                if (iasParameters.platform === 'web')
+                if ((typeof require !== "undefined" && navigator.userAgent.indexOf("Windows") >= 0) || (typeof browserReport !== 'undefined' && browserReport.browser.name.search('Chrome') !== -1))
                 {
-                    if (browserReport.browser.name.search('Chrome') !== -1)
-                    {
-                        uploadClassDefault.default          = true;
-                        uploadClassDefault.streams          = 4;
-                        uploadClassDefault.frameSize        = 65535;
-                        uploadClassDefault.bounds           = {};
-                        uploadClassDefault.bounds.lower     = 0.95;
-                        uploadClassDefault.bounds.upper     = 210;
-                        uploadClassDefault.framesPerCall    = 2;
+                    uploadClassDefault.default          = true;
+                    uploadClassDefault.streams          = 4;
+                    uploadClassDefault.frameSize        = 65535;
+                    uploadClassDefault.bounds           = {};
+                    uploadClassDefault.bounds.lower     = 0.95;
+                    uploadClassDefault.bounds.upper     = 210;
+                    uploadClassDefault.framesPerCall    = 2;
 
-                        uploadClassHigh.default             = false;
-                        uploadClassHigh.streams             = 4;
-                        uploadClassHigh.frameSize           = 65535;
-                        uploadClassHigh.bounds              = {};
-                        uploadClassHigh.bounds.lower        = 190;
-                        uploadClassHigh.bounds.upper        = 1050;
-                        uploadClassHigh.framesPerCall       = 4;
-                    }
+                    uploadClassHigh.default             = false;
+                    uploadClassHigh.streams             = 4;
+                    uploadClassHigh.frameSize           = 65535;
+                    uploadClassHigh.bounds              = {};
+                    uploadClassHigh.bounds.lower        = 190;
+                    uploadClassHigh.bounds.upper        = 1050;
+                    uploadClassHigh.framesPerCall       = 4;
                 }
 
                 iasParameters.upload.classes.push(uploadClassLow);
@@ -599,8 +596,12 @@
 
         function load()
         {
-             location.reload();
-             iasSendToControl('load');
+            location.reload();
+
+            if (typeof require !== "undefined")
+            {
+                iasSendToControl('load');
+            }
         }
 
         function orderKeys(obj)

@@ -73,7 +73,7 @@ public class DetailMeasurementGroupItem {
 	@SerializedName("unit")
 	@JsonProperty("unit")
 	private String unit;
-	
+
 	/**
 	 * The classification number of the item.
 	 */
