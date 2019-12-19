@@ -110,6 +110,16 @@ public class VersionResponse extends BasicResponse {
 	private String opendataCollectorServiceVersion;
 	
 	/**
+	 * Loadbalancer service version number.
+	 */
+	@io.swagger.annotations.ApiModelProperty("Loadbalancer service version number.")
+	@JsonPropertyDescription("Loadbalancer service version number.")
+	@Expose
+	@SerializedName("loadbalancer_service_version")
+	@JsonProperty("loadbalancer_service_version")
+	private String LoadbalancerServiceVersion;
+	
+	/**
 	 * 
 	 * @return
 	 */
@@ -219,5 +229,21 @@ public class VersionResponse extends BasicResponse {
 	 */
 	public void setOpendataCollectorServiceVersion(String opendataCollectorServiceVersion) {
 		this.opendataCollectorServiceVersion = opendataCollectorServiceVersion;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getLoadbalancerServiceVersion() {
+		return LoadbalancerServiceVersion;
+	}
+	
+	/**
+	 * 
+	 * @param loadbalancerServiceVersion
+	 */
+	public void setLoadbalancerServiceVersion(String loadbalancerServiceVersion) {
+		LoadbalancerServiceVersion = loadbalancerServiceVersion;
 	}
 }
