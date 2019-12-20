@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright 2019 alladin-IT GmbH
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
+
 package at.alladin.nettest.service.loadbalancer.config;
 
 import static springfox.documentation.builders.PathSelectors.regex;
@@ -30,10 +46,10 @@ public class SwaggerConfiguration {
 	 * @return
 	 */
 	@Bean
-    public Docket resultApiV1() {
+    public Docket loadbalancerApiV1() {
         return new Docket(DocumentationType.SWAGGER_2)
-        		.groupName("result_v1")
-        		.apiInfo(resultApiInfoV1())
+        		.groupName("loadbalancer_v1")
+        		.apiInfo(loadbalancerApiInfoV1())
         		.select()
         			.apis(RequestHandlerSelectors.any())
         			.paths(regex("/api/v1/.*"))
@@ -50,10 +66,10 @@ public class SwaggerConfiguration {
 	 *
 	 * @return
 	 */
-	private ApiInfo resultApiInfoV1() {
+	private ApiInfo loadbalancerApiInfoV1() {
 		return new ApiInfoBuilder()
-			.title("result-service REST API")
-			.description("result-service REST API documentation of nntool.eu project.")
+			.title("loadbalancer-service REST API")
+			.description("loadbalancer-service REST API documentation of nntool.eu project.")
 			.license("Apache License 2.0")
 			.licenseUrl("https://www.apache.org/licenses/LICENSE-2.0.html")
 			.termsOfServiceUrl("https://nntool.eu")

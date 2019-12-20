@@ -1,17 +1,21 @@
+/*******************************************************************************
+ * Copyright 2013-2019 alladin-IT GmbH
+ * Copyright 2014-2016 SPECURE GmbH
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
+
 package at.alladin.nettest.service.map.service;
-
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Strings;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.MessageSource;
-import org.springframework.context.MessageSourceResolvable;
-import org.springframework.context.NoSuchMessageException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
 
 import java.math.RoundingMode;
 import java.sql.ResultSet;
@@ -26,7 +30,17 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
 
-import javax.inject.Inject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Strings;
 
 import at.alladin.nettest.service.map.domain.model.MapServiceOptions;
 import at.alladin.nettest.service.map.domain.model.MapServiceSettings;
@@ -54,35 +68,16 @@ public class MarkerService {
      */
     private static int CLICK_RADIUS = 10;
 
-    @Inject
+    @Autowired
     private ClassificationService classificationService;
 
-    @Inject
+    @Autowired
     private MapOptionsService mapOptionsService;
 
-    //TODO: @Inject message source
-    private MessageSource messageSource = new MessageSource() {
-		
-		@Override
-		public String getMessage(String code, Object[] args, String defaultMessage, Locale locale) {
-			// TODO Auto-generated method stub
-			return code;
-		}
-		
-		@Override
-		public String getMessage(String code, Object[] args, Locale locale) throws NoSuchMessageException {
-			// TODO Auto-generated method stub
-			return code;
-		}
-		
-		@Override
-		public String getMessage(MessageSourceResolvable resolvable, Locale locale) throws NoSuchMessageException {
-			// TODO Auto-generated method stub
-			return "resolvable";
-		}
-	};
+    @Autowired
+    private MessageSource messageSource;
 
-    @Inject
+	@Autowired
     private JdbcTemplate jdbcTemplate;
 
     public MapMarkerResponse obtainMarker(final MapMarkerRequest request, final Locale locale) {

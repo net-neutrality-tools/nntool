@@ -8,6 +8,7 @@ include 'couchdb-spring-boot-starter'
 include 'couchdb-spring-boot-autoconfigure'
 
 include 'nettest-shared-server-storage-couchdb'
+include 'nettest-shared-server-storage-postgresql'
 
 include 'controller-service'
 include 'collector-service'

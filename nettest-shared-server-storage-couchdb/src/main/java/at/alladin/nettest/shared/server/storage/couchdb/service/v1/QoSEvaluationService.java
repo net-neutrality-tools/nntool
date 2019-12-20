@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Copyright 2013-2019 alladin-IT GmbH
+ * Copyright 2014-2016 SPECURE GmbH
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
+
 package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 
 import java.lang.reflect.Field;
@@ -27,14 +44,13 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.Eva
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.FullQoSMeasurement;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.QoSTypeDescription;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurement;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementObjective;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSResult;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.repository.QoSMeasurementObjectiveRepository;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.FullMeasurementResponseMapper;
-import at.alladin.nntool.shared.db.QoSTestResult.TestType;
 import at.alladin.nntool.shared.qos.AbstractResult;
 import at.alladin.nntool.shared.qos.ResultComparer;
 import at.alladin.nntool.shared.qos.ResultDesc;
@@ -227,7 +243,7 @@ public class QoSEvaluationService {
 					continue;
 				}
 				try {
-					desc.setTestType(TestType.valueOf(objective.getType().toString()));
+					desc.setTestType(QosMeasurementType.valueOf(objective.getType().toString()));
 					desc.addTestResultUid(Long.parseLong(objective.getObjectiveId()));
 				} catch (IllegalArgumentException ex) {
 					ex.printStackTrace();

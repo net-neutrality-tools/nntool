@@ -22,6 +22,7 @@ server:
 
 collector:
   system-uuid: f0b6d3f1-40c8-4835-82df-747b28caa326
+  settings-uuid: "4e7567ef-175b-44f4-8436-8fd6d22dab48"
   
 # ===================================================================
 # External services specific properties

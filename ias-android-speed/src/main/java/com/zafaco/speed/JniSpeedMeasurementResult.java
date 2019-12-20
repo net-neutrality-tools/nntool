@@ -408,6 +408,15 @@ public class JniSpeedMeasurementResult {
 
         private Long relativeTimeNsMeasurementStart;
 
+        public SingleRtt() {
+
+        }
+
+        public SingleRtt(Long rttNs, Long relativeTimeNsMeasurementStart) {
+            this.rttNs = rttNs;
+            this.relativeTimeNsMeasurementStart = relativeTimeNsMeasurementStart;
+        }
+
         public Long getRttNs() {
             return rttNs;
         }

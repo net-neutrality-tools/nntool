@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Copyright 2013-2019 alladin-IT GmbH
+ * Copyright 2014-2016 SPECURE GmbH
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
+
 package at.alladin.nettest.service.map.service;
 
 import java.awt.BasicStroke;
@@ -11,10 +28,10 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
-import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
@@ -29,10 +46,10 @@ import at.alladin.nettest.service.map.domain.model.MapServiceSettings.SQLFilter;
 import at.alladin.nettest.service.map.domain.model.TileImage;
 import at.alladin.nettest.service.map.util.GeographyHelper;
 import at.alladin.nettest.service.map.util.TileHelper;
+import at.alladin.nettest.shared.server.helper.ClassificationHelper.ClassificationType;
 import at.alladin.nntool.shared.map.HeatmapTileParameters;
 import at.alladin.nntool.shared.map.MapTileParameters;
 import at.alladin.nntool.shared.map.MapTileType;
-import at.alladin.nettest.shared.server.helper.ClassificationHelper.ClassificationType;
 
 @Service
 @CacheConfig(cacheNames = {"heatmapTile"})
@@ -40,19 +57,19 @@ public class HeatmapTileService {
 	
 	private final Logger logger = LoggerFactory.getLogger(HeatmapTileService.class);
 
-	@Inject
+	@Autowired
 	private MapCacheConfig mapCacheConfig;
 
-	@Inject
+	@Autowired
 	private MapOptionsService mapOptionsService;
 
-	@Inject
+	@Autowired
 	private ClassificationService classificationService;
 
-	@Inject
+	@Autowired
 	private ColorMapperService colorMapperService;
 
-	@Inject
+	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
 	@SuppressWarnings("unchecked")

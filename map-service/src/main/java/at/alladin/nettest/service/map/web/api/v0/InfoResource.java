@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013-2017 alladin-IT GmbH
+ * Copyright 2013-2019 alladin-IT GmbH
  * Copyright 2014-2016 SPECURE GmbH
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,18 +17,17 @@
 
 package at.alladin.nettest.service.map.web.api.v0;
 
+import java.util.Locale;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Locale;
-
-import javax.inject.Inject;
 
 import at.alladin.nettest.service.map.service.InfoService;
 import at.alladin.nntool.shared.map.info.MapInfoResponse;
@@ -45,7 +44,7 @@ public class InfoResource{
 	
 	private final Logger logger = LoggerFactory.getLogger(InfoResource.class);
 
-	@Inject
+	@Autowired
 	private InfoService infoService;
     
 	//TODO: BIG! Restrict CrossOrigin requests if possible
