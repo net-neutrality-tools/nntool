@@ -185,6 +185,7 @@ public class ExportProperties {
 			
 			private String title;
 			private String pointer;
+			private Boolean includeInCoarse;
 			
 			public String getTitle() {
 				return title;
@@ -202,10 +203,20 @@ public class ExportProperties {
 				this.pointer = pointer;
 			}
 
+			public Boolean getIncludeInCoarse() {
+				return includeInCoarse;
+			}
+
+			public void setIncludeInCoarse(Boolean includeInCoarse) {
+				this.includeInCoarse = includeInCoarse;
+			}
+
 			@Override
 			public String toString() {
-				return "CsvField [title=" + title + ", pointer=" + pointer + "]";
+				return "CsvField [title=" + title + ", pointer=" + pointer + ", includeInCoarse=" + includeInCoarse
+						+ "]";
 			}
+			
 		}
 	}
 }

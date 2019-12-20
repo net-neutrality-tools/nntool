@@ -20,8 +20,7 @@ import at.alladin.nettest.service.search.config.ExportProperties;
 public class JsonAndYamlExtensionDataWriter implements ExtensionDataWriter {
 
 	@Override
-	public void write(List<Map<String, Object>> data, ExportProperties exportProperties, ExportExtension ext, OutputStream outputStream) throws IOException {
-		
+	public void write(List<Map<String, Object>> data, ExportProperties exportProperties, ExportExtension ext, OutputStream outputStream, boolean writeCoarseResult) throws IOException {		
 		final ObjectMapper mapper = createObjectMapper(exportProperties, ext);
 		
 		JsonNode node;
@@ -32,6 +31,11 @@ public class JsonAndYamlExtensionDataWriter implements ExtensionDataWriter {
 		}
 		
 		mapper.writeValue(outputStream, node);
+	}
+	
+	@Override
+	public void write(List<Map<String, Object>> data, ExportProperties exportProperties, ExportExtension ext, OutputStream outputStream) throws IOException {
+		this.write(data, exportProperties, ext, outputStream, false);
 	}
 	
 	private ObjectMapper createObjectMapper(ExportProperties exportProperties, ExportExtension ext) {

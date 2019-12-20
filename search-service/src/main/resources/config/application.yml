@@ -41,20 +41,124 @@ search-service:
         fields:
           - title: open_data_uuid
             pointer: /open_data_uuid
+            includeInCoarse: true         
           - title: start_time
             pointer: /start_time
+            includeInCoarse: true
+          - title: end_time
+            pointer: /end_time
+            includeInCoarse: true
           - title: os_name
             pointer: /device_info/os_info/name
+            includeInCoarse: true
           - title: os_version
             pointer: /device_info/os_info/version
           - title: app_version_code
             pointer: /agent_info/app_version_code
+            includeInCoarse: true
+          - title: device_code_name
+            pointer: /device_info/code_name
           - title: dl_avg_bps
             pointer: /measurements/SPEED/throughput_avg_download_bps
+            includeInCoarse: true
+          - title: dl_avg_log
+            pointer: /measurements/SPEED/throughput_avg_download_log
           - title: ul_avg_bps
             pointer: /measurements/SPEED/throughput_avg_upload_bps
+            includeInCoarse: true
+          - title: ul_avg_log
+            pointer: /measurements/SPEED/throughput_avg_upload_log
           - title: bytes_dl
             pointer: /measurements/SPEED/bytes_download
           - title: bytes_ul
-            pointer: /measurements/SPEED/bytes_pload
-      
+            pointer: /measurements/SPEED/bytes_upload
+          - title: system_uuid
+            pointer: /system_uuid
+            includeInCoarse: true
+          - title: implausible
+            pointer: /measurements/SPEED/implausible
+          - title: relative_speed_start_time
+            pointer: /measurements/SPEED/relative_start_time_ns
+          - title: relative_speed_end_time
+            pointer: /measurements/SPEED/relative_end_time_ns
+          - title: speed_start_time
+            pointer: /measurements/SPEED/start_time
+          - title: speed_end_time
+            pointer: /measurements/SPEED/end_time
+          - title: duration_ns
+            pointer: /measurements/SPEED/duration_ns
+            includeInCoarse: true
+          - title: speed_status
+            pointer: /measurements/SPEED/status
+            includeInCoarse: true
+          - title: duration_ping_ns
+            pointer: /measurements/SPEED/duration_rtt_ns
+          - title: duration_download_ns
+            pointer: /measurements/SPEED/duration_download_ns
+          - title: duration_upload_ns
+            pointer: /measurements/SPEED/duration_upload_ns
+          - title: relative_start_ping_ns
+            pointer: /measurements/SPEED/relative_start_time_rtt_ns
+          - title: relative_start_dl_ns
+            pointer: /measurements/SPEED/relative_start_time_download_ns
+          - title: relative_start_ul_ns
+            pointer: /measurements/SPEED/relative_start_time_upload_ns
+          - title: ping_packets_sent
+            pointer: /measurements/SPEED/rtt_info/num_sent
+            includeInCoarse: true
+          - title: ping_packets_received
+            pointer: /measurements/SPEED/rtt_info/num_received
+            includeInCoarse: true
+          - title: ping_packets_error
+            pointer: /measurements/SPEED/rtt_info/num_error
+            includeInCoarse: true
+          - title: ping_packets_missing
+            pointer: /measurements/SPEED/rtt_info/num_missing
+            includeInCoarse: true
+          - title: ping_packets_average_ns
+            pointer: /measurements/SPEED/rtt_info/average_ns
+            includeInCoarse: true
+          - title: ping_packets_median_ns
+            pointer: /measurements/SPEED/rtt_info/median_ns
+            includeInCoarse: true
+          - title: ping_packets_min_ns
+            pointer: /measurements/SPEED/rtt_info/min_ns
+          - title: ping_packets_max_ns
+            pointer: /measurements/SPEED/rtt_info/max_ns
+          - title: ping_packets_standard_deviation_ns
+            pointer: /measurements/SPEED/rtt_info/standard_deviation_ns
+          - title: agent_type
+            pointer: /agent_info/type
+            includeInCoarse: true
+          - title: agent_uuid
+            pointer: /agent_info/uuid
+            includeInCoarse: true
+          - title: agent_language
+            pointer: /agent_info/language
+          - title: agent_timezone
+            pointer: /agent_info/timezone
+          - title: cgn_detected
+            pointer: /network_info/is_cgn_detected
+          - title: network_type
+            pointer: /computed_network_info/network_type_name
+            includeInCoarse: true
+          - title: network_type_group
+            pointer: /computed_network_info/network_type_group_name
+            includeInCoarse: true
+          - title: network_type_category
+            pointer: /computed_network_info/network_type_category
+            includeInCoarse: true
+          - title: network_type_operator
+            pointer: /computed_network_info/network_operator_name
+            includeInCoarse: true
+          - title: network_type_operator_mcc_mnc
+            pointer: /computed_network_info/network_operator_mcc_mnc
+          - title: sim_operator
+            pointer: /computed_network_info/sim_operator_name
+            includeInCoarse: true
+          - title: sim_operator_mcc_mnc
+            pointer: /computed_network_info/sim_operator_mcc_mnc
+          - title: roaming
+            pointer: /computed_network_info/roaming_type
+            
+            
