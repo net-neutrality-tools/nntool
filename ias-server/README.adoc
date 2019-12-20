@@ -19,7 +19,7 @@ For a Debian based Linux run the following command as root:
 
 [source,bash]
 ----
-apt install build-essential make cmake automake g++ libtool liblog4cpp5-dev libssl-dev lcov
+apt install build-essential make cmake automake g++ libtool liblog4cpp5-dev libssl-dev lcov git
 ----
 
 ==== Build
