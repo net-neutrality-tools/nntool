@@ -28,7 +28,6 @@ import org.json.JSONObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import at.alladin.nntool.shared.db.QoSTestResult.TestType;
 import at.alladin.nntool.shared.qos.testscript.TestScriptInterpreter;
 
 
@@ -75,7 +74,7 @@ public class ResultDesc implements Comparable<ResultDesc> {
 	 */
 	@SerializedName("test")
 	@Expose
-	private TestType testType;
+	private QosMeasurementType testType;
 	
 	/**
 	 * 
@@ -147,11 +146,11 @@ public class ResultDesc implements Comparable<ResultDesc> {
 		return (parsedValue != null ? parsedValue : (parsedValue = String.valueOf(TestScriptInterpreter.interpret(value, fieldNameToFieldMap, resultObject, true, options))));
 	}
 
-	public TestType getTestType() {
+	public QosMeasurementType getTestType() {
 		return testType;
 	}
 
-	public void setTestType(TestType testType) {
+	public void setTestType(QosMeasurementType testType) {
 		this.testType = testType;
 	}
 	

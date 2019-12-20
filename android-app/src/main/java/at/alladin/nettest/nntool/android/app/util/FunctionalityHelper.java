@@ -23,7 +23,7 @@ import java.util.Set;
 
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 
 /**
  * @author Felix Kendlbacher (alladin-IT GmbH)

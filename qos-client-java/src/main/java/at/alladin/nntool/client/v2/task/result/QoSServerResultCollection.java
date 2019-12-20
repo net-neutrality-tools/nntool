@@ -21,14 +21,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map.Entry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.client.v2.task.result.QoSServerResult.DetailType;
 
 /**

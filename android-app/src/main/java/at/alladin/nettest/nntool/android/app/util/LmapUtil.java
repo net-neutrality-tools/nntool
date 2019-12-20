@@ -31,7 +31,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.Measurem
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.QoSMeasurementTypeParameters;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.SpeedMeasurementTypeParameters;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.client.v2.task.TaskDesc;
 
 /**

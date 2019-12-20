@@ -61,7 +61,7 @@ import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementSer
 import at.alladin.nettest.nntool.android.app.workflow.measurement.MeasurementType;
 import at.alladin.nettest.nntool.android.app.workflow.tc.TermsAndConditionsFragment;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ip.IpResponse;
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 
 /**
  * @author Lukasz Budryk (alladin-IT GmbH)

@@ -19,11 +19,10 @@ package at.alladin.nntool.client.v2.task.result;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
 
 import org.json.JSONObject;
 
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 
 /**
  * contains the result of a test after evaluation

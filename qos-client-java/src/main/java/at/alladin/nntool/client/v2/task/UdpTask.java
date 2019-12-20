@@ -40,7 +40,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nettest.shared.qos.UdpPayload;
 import at.alladin.nettest.shared.qos.util.UdpPayloadUtil;
 import at.alladin.nntool.client.QualityOfServiceTest;

@@ -43,7 +43,7 @@ import at.alladin.nettest.nntool.android.app.workflow.WorkflowParameter;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.SubMeasurementResult;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.QoSTestEnum;
 import at.alladin.nntool.client.v2.task.result.QoSResultCollector;

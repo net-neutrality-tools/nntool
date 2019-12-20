@@ -67,7 +67,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.T
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ConnectionInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.StatusDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.TrafficDto;
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.v2.task.TaskDesc;
 

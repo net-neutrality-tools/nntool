@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import at.alladin.nettest.qos.QoSMeasurementClientProgressListener;
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.client.v2.task.AbstractEchoProtocolTask;
 import at.alladin.nntool.client.v2.task.AbstractQoSTask;
 import at.alladin.nntool.client.v2.task.DnsTask;

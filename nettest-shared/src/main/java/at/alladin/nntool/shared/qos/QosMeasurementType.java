@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package at.alladin.nettest.shared.model.qos;
+package at.alladin.nntool.shared.qos;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,19 +22,6 @@ import java.util.Map;
 import com.google.gson.annotations.SerializedName;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
-import at.alladin.nntool.shared.qos.AbstractResult;
-import at.alladin.nntool.shared.qos.DnsResult;
-import at.alladin.nntool.shared.qos.EchoProtocolResult;
-import at.alladin.nntool.shared.qos.HttpProxyResult;
-import at.alladin.nntool.shared.qos.MkitDashResult;
-import at.alladin.nntool.shared.qos.MkitWebConnectivityResult;
-import at.alladin.nntool.shared.qos.NonTransparentProxyResult;
-import at.alladin.nntool.shared.qos.SipResult;
-import at.alladin.nntool.shared.qos.TcpResult;
-import at.alladin.nntool.shared.qos.TracerouteResult;
-import at.alladin.nntool.shared.qos.UdpResult;
-import at.alladin.nntool.shared.qos.VoipResult;
-import at.alladin.nntool.shared.qos.WebsiteResult;
 
 /**
  * The specific QoS type

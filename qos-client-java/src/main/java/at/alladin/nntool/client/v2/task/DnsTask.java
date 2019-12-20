@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
 import org.xbill.DNS.A6Record;
 import org.xbill.DNS.AAAARecord;
 import org.xbill.DNS.ARecord;
@@ -33,7 +32,7 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.ResolverConfig;
 import org.xbill.DNS.Section;
 
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.helper.Dig;
 import at.alladin.nntool.client.helper.Dig.DnsRequest;

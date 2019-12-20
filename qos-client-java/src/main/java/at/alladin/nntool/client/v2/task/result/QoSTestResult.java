@@ -19,7 +19,7 @@ package at.alladin.nntool.client.v2.task.result;
 import java.util.HashMap;
 import java.util.Locale;
 
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.client.TestResult;
 import at.alladin.nntool.client.v2.task.AbstractQoSTask;
 

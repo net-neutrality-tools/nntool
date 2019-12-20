@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import at.alladin.nettest.qos.QoSMeasurementClientProgressListener;
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.client.helper.TaskDescriptionHelper;
 import at.alladin.nntool.client.v2.task.AbstractEchoProtocolTask;
 import at.alladin.nntool.client.v2.task.DnsTask;

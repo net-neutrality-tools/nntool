@@ -16,7 +16,7 @@
 
 package at.alladin.nntool.client.v2.task;
 
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 
 /**

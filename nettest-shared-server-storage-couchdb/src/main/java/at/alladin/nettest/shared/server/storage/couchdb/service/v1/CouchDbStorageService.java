@@ -62,7 +62,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasuremen
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.LoadBalancingSettingsDto;
 import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.MeasurementServerDto;
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
 import at.alladin.nettest.shared.server.helper.IpAddressMatcher;
 import at.alladin.nettest.shared.server.service.GroupedMeasurementService;

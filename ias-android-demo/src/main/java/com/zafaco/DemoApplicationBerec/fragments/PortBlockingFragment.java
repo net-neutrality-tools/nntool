@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
 import at.alladin.nettest.qos.QoSMeasurementClientControlAdapter;
 import at.alladin.nettest.qos.QoSMeasurementClientProgressAdapter;
 import at.alladin.nettest.qos.android.QoSMeasurementClientAndroid;
-import at.alladin.nettest.shared.model.qos.QosMeasurementType;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.helper.TaskDescriptionHelper;
 import at.alladin.nntool.client.v2.task.result.QoSResultCollector;
