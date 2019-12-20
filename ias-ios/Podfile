@@ -22,7 +22,7 @@ target 'Common'
 use_frameworks!
 pod 'FMDB', '>= 2.7.2'
 pod 'CocoaLumberjack', '>= 3.4.2'
-pod 'PocketSocket', :path => '../PocketSocket'
+pod 'PocketSocket', :git => 'https://github.com/net-neutrality-tools/PocketSocket'
 
 target 'Speed'
 

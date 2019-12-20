@@ -19,7 +19,7 @@ For a Debian based Linux run the following command as root:
 
 [source,bash]
 ----
-apt install build-essential make cmake automake g++ libtool liblog4cpp5-dev libssl-dev lcov
+apt install build-essential make cmake automake g++ libtool liblog4cpp5-dev libssl-dev lcov git
 ----
 
 ==== Build
@@ -88,7 +88,7 @@ The usage of a TLS-secured connection is mandatory for the Load Balancing API.
 [source,bash]
 ----
 cd <nntool_eu_directory>
-docker build -f ias-server.Dockerfile -t nntool.eu/ias-server . 
+DOCKER_BUILDKIT=1 docker build -t nntool.eu/ias-server -f ias-server.Dockerfile .
 docker run --rm -it -p 20080:80 -p 20443:443 -p 28080:8080 -p 28443:8443 -p 44301:44301 nntool.eu/ias-server
 ----
 

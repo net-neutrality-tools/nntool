@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright 2019 alladin-IT GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
+
 import { Component, Input, NgZone } from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-bing-layer';
@@ -164,7 +180,7 @@ export class MapComponent {
                   popupContent += '<br/> <hr/>';
                   //element.open_test_uuid;
                 });
-                
+
                 L.popup({'maxHeight': 400})
                   .setLatLng(L.latLng(res.measurements[0].geo_lat, res.measurements[0].geo_long))
                   .setContent(popupContent)

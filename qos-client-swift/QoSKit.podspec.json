@@ -1,13 +1,13 @@
 {
     "name": "QoSKit",
     "version": "0.0.1",
-    "summary": "QoS client libary written in swift",
-    "homepage": "https://alladin.at",
+    "summary": "QoS client libary written in Swift",
+    "homepage": "https://net-neutrality.tools",
     "license": {
-        "type": "TODO: Apache v2"
+        "type": "Apache 2.0"
     },
     "source": {
-        "git": "https://github.com/alladin-it/...",
+        "git": "https://github.com/net-neutrality-tools/nntool",
         "tag": "0.0.1"
     },
     "authors": "alladin-IT GmbH",

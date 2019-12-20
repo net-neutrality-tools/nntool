@@ -1,6 +1,7 @@
 #/*!
 #    \file CMakeLists.txt
 #    \author zafaco GmbH <info@zafaco.de>
+#    \author alladin-IT GmbH <berec@alladin.at>
 #    \date Last update: 2019-11-13
 #
 #    Copyright (C) 2016 - 2019 zafaco GmbH

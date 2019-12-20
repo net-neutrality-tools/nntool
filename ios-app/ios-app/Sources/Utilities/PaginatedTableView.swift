@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+// https://github.com/salmaanahmed/PaginatedTableView
+//
 // Changes made by alladin-IT GmbH:
 // - add more proxied delegate methods
 // - remove print statement

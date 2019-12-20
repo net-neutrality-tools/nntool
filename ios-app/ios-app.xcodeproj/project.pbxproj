@@ -105,8 +105,6 @@
 		E0CC269722E8AAB0005DEED0 /* GroupSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0CC269622E8AAB0005DEED0 /* GroupSectionHeaderView.xib */; };
 		E0CC269A22E8C4E1005DEED0 /* HistoryListHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0CC269922E8C4E1005DEED0 /* HistoryListHeaderView.xib */; };
 		E0CC269D22E8CEE6005DEED0 /* HistoryItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC269C22E8CEE6005DEED0 /* HistoryItemCell.swift */; };
-		E0E4B98A234A0FC900D696D8 /* MapFilterTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E4B989234A0FC900D696D8 /* MapFilterTableViewController.swift */; };
-		E0E4B98C234A103200D696D8 /* MapSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E4B98B234A103200D696D8 /* MapSettingsTableViewController.swift */; };
 		E0E9BB10226F57DA00146699 /* SpeedMeasurementPhase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E9BB0F226F57DA00146699 /* SpeedMeasurementPhase.swift */; };
 		E0EA84E72282C1B000EB73BF /* SpeedHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84E62282C1B000EB73BF /* SpeedHelper.swift */; };
 /* End PBXBuildFile section */
@@ -281,8 +279,6 @@
 		E0CC269622E8AAB0005DEED0 /* GroupSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GroupSectionHeaderView.xib; sourceTree = "<group>"; };
 		E0CC269922E8C4E1005DEED0 /* HistoryListHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HistoryListHeaderView.xib; sourceTree = "<group>"; };
 		E0CC269C22E8CEE6005DEED0 /* HistoryItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryItemCell.swift; sourceTree = "<group>"; };
-		E0E4B989234A0FC900D696D8 /* MapFilterTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapFilterTableViewController.swift; sourceTree = "<group>"; };
-		E0E4B98B234A103200D696D8 /* MapSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapSettingsTableViewController.swift; sourceTree = "<group>"; };
 		E0E9BB0F226F57DA00146699 /* SpeedMeasurementPhase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedMeasurementPhase.swift; sourceTree = "<group>"; };
 		E0EA84E62282C1B000EB73BF /* SpeedHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedHelper.swift; sourceTree = "<group>"; };
 		FAC9DAE7413ECAE8092FFC80 /* Pods_All_Speed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_Speed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -482,8 +478,6 @@
 			isa = PBXGroup;
 			children = (
 				E0AF3DE822413B7C00FDBFD1 /* MapViewController.swift */,
-				E0E4B989234A0FC900D696D8 /* MapFilterTableViewController.swift */,
-				E0E4B98B234A103200D696D8 /* MapSettingsTableViewController.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -1216,14 +1210,12 @@
 				E0AF3DF522413C2B00FDBFD1 /* StatisticsViewController.swift in Sources */,
 				E0B9A36D224B9603002AB640 /* TermsAndConditionsView.swift in Sources */,
 				E00F48D1225F764400EAD0C0 /* IASProgram.swift in Sources */,
-				E0E4B98A234A0FC900D696D8 /* MapFilterTableViewController.swift in Sources */,
 				E00F4AF32264B7C700EAD0C0 /* Config.swift in Sources */,
 				E00F4AFF2266234200EAD0C0 /* IASProgramDelegate.swift in Sources */,
 				E0B9A353224A906E002AB640 /* CircularButton.swift in Sources */,
 				E0B9A361224AB850002AB640 /* SpeedMeasurementBasicResultView.swift in Sources */,
 				E0B9A34E224A8938002AB640 /* SpeedMeasurementGaugeView.swift in Sources */,
 				E0B9A36F224B96EF002AB640 /* UIView+InsertContentView.swift in Sources */,
-				E0E4B98C234A103200D696D8 /* MapSettingsTableViewController.swift in Sources */,
 				E0AF3DFD2241520A00FDBFD1 /* TermsAndConditionsViewController.swift in Sources */,
 				E0B9A341224A5F85002AB640 /* GaugeProtocol.swift in Sources */,
 				E0AF3DF322413C1100FDBFD1 /* InfoTableViewController.swift in Sources */,
