@@ -1,0 +1,144 @@
+PODS:
+  - ActionKit (2.5.3)
+  - Alamofire (4.8.2)
+  - BartyCrouch (4.0.2)
+  - BlueSocket (1.0.52)
+  - CocoaAsyncSocket (7.6.3)
+  - CocoaLumberjack (3.6.0):
+    - CocoaLumberjack/Core (= 3.6.0)
+  - CocoaLumberjack/Core (3.6.0)
+  - CodableJSON (1.1.4)
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
+  - GoogleMaps (3.6.0):
+    - GoogleMaps/Maps (= 3.6.0)
+  - GoogleMaps/Base (3.6.0)
+  - GoogleMaps/Maps (3.6.0):
+    - GoogleMaps/Base
+  - MeasurementAgentKit (0.0.1):
+    - CocoaAsyncSocket (~> 7.6.3)
+    - nntool-shared-swift (~> 0.0.1)
+    - ReachabilitySwift (~> 5.0.0)
+    - Siesta (~> 1.4.3)
+  - nntool-shared-swift (0.0.1):
+    - CodableJSON (~> 1.1.4)
+    - Repeat (~> 0.5.7)
+    - SwiftLint (~> 0.31.0)
+    - XCGLogger (~> 7.0.0)
+  - ObjcExceptionBridging (1.0.1):
+    - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
+  - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
+  - PocketSocket (1.0.1):
+    - PocketSocket/Client (= 1.0.1)
+    - PocketSocket/Core (= 1.0.1)
+    - PocketSocket/Server (= 1.0.1)
+  - PocketSocket/Client (1.0.1):
+    - PocketSocket/Core
+  - PocketSocket/Core (1.0.1)
+  - PocketSocket/Server (1.0.1):
+    - PocketSocket/Client
+  - QoSKit (0.0.1):
+    - Alamofire (~> 4.8.2)
+    - BlueSocket (~> 1.0.52)
+    - CocoaAsyncSocket (~> 7.6.3)
+    - nntool-shared-swift (~> 0.0.1)
+    - WKWebViewWithURLProtocol (~> 0.1.0)
+  - R.swift (5.1.0):
+    - R.swift.Library (~> 5.1.0)
+  - R.swift.Library (5.1.0)
+  - ReachabilitySwift (5.0.0)
+  - Repeat (0.5.8)
+  - Siesta (1.4.3):
+    - Siesta/Core (= 1.4.3)
+  - Siesta/Core (1.4.3)
+  - SwiftGen (6.1.0)
+  - SwiftLint (0.31.0)
+  - WebBrowser (0.1.5)
+  - WKWebViewWithURLProtocol (0.1.0)
+  - XCGLogger (7.0.0):
+    - XCGLogger/Core (= 7.0.0)
+  - XCGLogger/Core (7.0.0):
+    - ObjcExceptionBridging
+
+DEPENDENCIES:
+  - ActionKit (~> 2.5.3)
+  - BartyCrouch (~> 4.0.2)
+  - CocoaLumberjack (>= 3.4.2)
+  - FMDB (>= 2.7.2)
+  - GoogleMaps (~> 3.6.0)
+  - MeasurementAgentKit (from `../measurement-agent-swift`)
+  - nntool-shared-swift (from `../nntool-shared-swift`)
+  - PocketSocket (from `https://github.com/net-neutrality-tools/PocketSocket`)
+  - QoSKit (from `../qos-client-swift`)
+  - R.swift (~> 5.1.0)
+  - SwiftGen (~> 6.1.0)
+  - WebBrowser (~> 0.1.5)
+
+SPEC REPOS:
+  trunk:
+    - ActionKit
+    - Alamofire
+    - BartyCrouch
+    - BlueSocket
+    - CocoaAsyncSocket
+    - CocoaLumberjack
+    - CodableJSON
+    - FMDB
+    - GoogleMaps
+    - ObjcExceptionBridging
+    - R.swift
+    - R.swift.Library
+    - ReachabilitySwift
+    - Repeat
+    - Siesta
+    - SwiftGen
+    - SwiftLint
+    - WebBrowser
+    - WKWebViewWithURLProtocol
+    - XCGLogger
+
+EXTERNAL SOURCES:
+  MeasurementAgentKit:
+    :path: "../measurement-agent-swift"
+  nntool-shared-swift:
+    :path: "../nntool-shared-swift"
+  PocketSocket:
+    :git: https://github.com/net-neutrality-tools/PocketSocket
+  QoSKit:
+    :path: "../qos-client-swift"
+
+CHECKOUT OPTIONS:
+  PocketSocket:
+    :commit: 629b86dde91f738dd8f87d395d76f1d6a169afc5
+    :git: https://github.com/net-neutrality-tools/PocketSocket
+
+SPEC CHECKSUMS:
+  ActionKit: c1b6427fd36a0fe2223555679bcc5dea437af5b3
+  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
+  BartyCrouch: 3f3501276901326bf4150341ad801467da972e43
+  BlueSocket: 1acd943acb07b55905291d608649fcfbf8cbd57d
+  CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
+  CocoaLumberjack: 78b0c238666f4f58db069738ec176f4519557516
+  CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  GoogleMaps: 82f8fe307193bb4de6ef6bf9e88f1d624b718f9d
+  MeasurementAgentKit: 52a4a7b95481d0a440fe5e77f08bae547d6ed331
+  nntool-shared-swift: 0492a43aa3f5567fb2381eb51660297a2823107d
+  ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
+  PocketSocket: ea973e14ebcea9e11a77e692f4da2a0e05dc8481
+  QoSKit: 97d3e1bc7b92bc1ec7c56b3d87585b4280b27bee
+  R.swift: 8cbc4fc69b740305b6a17c8a8ed968eb788962d9
+  R.swift.Library: fa85ce1e0d0b7e818cd9e080df910ba54d2776cc
+  ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
+  Repeat: 8e65710d09da68f06ed79e865b091ffdcc8d0279
+  Siesta: 83795fdf6a43232d1d2909e1a3dfb92ab5916d26
+  SwiftGen: f872ca75cbd17bf7103c17f13dcfa0d9a15667b0
+  SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
+  WebBrowser: 0248873c77f54e2ac504ece7c2bc8eeb710b5a4f
+  WKWebViewWithURLProtocol: f7f2b367c40680105794a068ed2bb2cd5922c27c
+  XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
+
+PODFILE CHECKSUM: d7b9c5949c382e24a580b994248eaf880ce272a4
+
+COCOAPODS: 1.8.4

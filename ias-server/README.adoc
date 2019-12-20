@@ -1,0 +1,144 @@
+== IAS server module
+
+=== Building
+
+==== Prerequisites
+
+Linux (any Version)
+
+- make
+- cmake
+- g++
+- liblog4cpp5-dev
+- libssl-dev
+- libtool
+- automake
+- lcov
+
+For a Debian based Linux run the following command as root:
+
+[source,bash]
+----
+apt install build-essential make cmake automake g++ libtool liblog4cpp5-dev libssl-dev lcov git
+----
+
+==== Build
+
+With fullfilled prerequisites perform the following steps:
+
+1. Compile ias-server
+
+[source,bash]
+----
+cd <nntool_eu_directory>/ias-server
+mkdir build
+cd build
+cmake .. # add -DCMAKE_BUILD_TYPE="DEBUG" for debug build
+make
+----
+
+2. Create dir `/etc/ias-server/`
+3. Copy trace.ini to `/etc/ias-server/`
+4. Customize and copy `config.json` to `/etc/ias-server/`
+5. Create dir `/var/log/ias-server/`
+
+==== Unit Tests
+
+To execute the included unit tests execute the following commands:
+
+[source,bash]
+----
+cd <nntool_eu_directory>/ias-server
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE="DEBUG"
+make
+./ias_server_test
+----
+
+To generate the code coverage reports run the following commands after running the unit tests:
+
+[source,bash]
+----
+lcov --capture --directory . --output-file coverage.info
+lcov --remove coverage.info '/usr/*' --output-file coverage.info
+lcov --remove coverage.info '*external/*' --output-file coverage.info
+lcov --remove coverage.info '*ias-libnntool/*' --output-file coverage.info
+genhtml coverage.info --branch-coverage --output-directory ./coverage_report/
+lcov --list coverage.info
+----
+
+The HTML code coverage report will be generated into directory `ias-server/build/coverage_report`.
+
+=== Execution
+Run `build/ias-server`. Add the `-d` option for daemon mode.
+
+For the usage of TLS-Secured connections, perform the following steps:
+
+1. Create dir `/var/opt/ias-server/certs/{my_fqdn}/`
+2. Deploy Certificate with filename `{my_fqdn}.crt` to the folder created in step 1.
+3. Deploy Private Key with filename `{my_fqdn}.key` to the folder created in step 1.
+4. State the TLS ports to be used in `config.json`
+5. Restart `ias-server`
+
+The usage of a TLS-secured connection is mandatory for the Load Balancing API.
+
+=== Docker container
+
+[source,bash]
+----
+cd <nntool_eu_directory>
+DOCKER_BUILDKIT=1 docker build -t nntool.eu/ias-server -f ias-server.Dockerfile .
+docker run --rm -it -p 20080:80 -p 20443:443 -p 28080:8080 -p 28443:8443 -p 44301:44301 nntool.eu/ias-server
+----
+
+== IAS turnserver module
+
+To perform port blocking measurements, the *coturn TURN server (https://github.com/coturn/coturn)* has to be deployed on the measurement peer.
+
+==== Prerequisites
+
+Linux (any Version)
+
+- coturn
+
+For a Debian based Linux run the following command as root:
+
+[source,bash]
+----
+apt install coturn
+----
+
+The current version 4.5.0.7 was verified for port blocking measurements.
+
+==== Build
+
+With fullfilled prerequisites perform the following steps:
+
+1. Customize `ias-turnserver` for credentials, realm, ports and ip bindings according to the Code-Documentation. Please note, that the stated credentials and realmname must match the configured values in the ias-module.
+2. Add execute-permission to `ias-turnserver`
+3. Copy `ias-turnserver` to `/etc/init.d/`
+4. Run `update-rc.d ias-turnserver defaults`
+5. To enable startup on boot, run `update-rc.d ias-turnserver enable`
+
+=== Execution
+
+Use `service ias-turnserver {start|stop|status} for starting, stopping, status information.
+
+=== License
+
+ias-server is released under the AGPLv3 <https://www.gnu.org/licenses/agpl-3.0.txt>
+
+Copyright (C) 2016-2019 zafaco GmbH
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3 
+as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.

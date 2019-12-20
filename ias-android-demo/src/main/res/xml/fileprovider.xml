@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <files-path name="files" path="/" />
+
+    <!--Uncomment below to share the entire application specific directory -->
+    <!--<external-path name="all_dirs" path="."/>-->
+</paths>

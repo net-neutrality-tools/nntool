@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string translatable="false" name="default_agent_group_name">default-agent-group-name</string>
+    <string translatable="false" name="default_controller_host">controller-de-01.net-neutrality.tools</string>
+    <string translatable="false" name="default_controller_host_ipv4">controller-de-01-ipv4.net-neutrality.tools</string>
+    <string translatable="false" name="default_controller_host_ipv6">controller-de-01-ipv6.net-neutrality.tools</string>
+    <string translatable="false" name="default_controller_path_prefix">/</string>
+    <integer translatable="false" name="default_controller_port">443</integer>
+    <bool translatable="false" name="default_controller_connection_is_encrypted">true</bool>
+</resources>

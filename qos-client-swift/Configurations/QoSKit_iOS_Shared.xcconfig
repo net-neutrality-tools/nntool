@@ -1,0 +1,3 @@
+// iOS
+SWIFT_INCLUDE_PATHS[sdk=iphoneos*] = $(SRCROOT)/Modules/QoSKitPrivate/iphoneos
+SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*] = $(SRCROOT)/Modules/QoSKitPrivate/iphonesimulator

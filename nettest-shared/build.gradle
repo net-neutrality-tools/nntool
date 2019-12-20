@@ -1,0 +1,38 @@
+apply from: "${project.rootDir}/gradle/java7.gradle"
+
+dependencies {
+	implementation group: 'javax.validation', name: 'validation-api', version: javax_validation_version
+	
+	// Joda Time (since Java 8 time API is not available on Android)
+	implementation group: 'joda-time', name: 'joda-time', version: joda_time_version
+	
+	// for old qos stuff
+	implementation group: 'org.json', name: 'json', version: org_json_version
+
+	// Jackson
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: jackson_version
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jackson_version
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: jackson_version
+	
+	// Gson
+	implementation group: 'com.google.code.gson', name: 'gson', version: gson_version
+	implementation group: 'com.fatboyindustrial.gson-jodatime-serialisers', name: 'gson-jodatime-serialisers', version: gson_jodatime_serialisers_version
+	
+	// Swagger annotations
+	implementation group: 'io.swagger', name: 'swagger-annotations', version: swagger_version
+
+	// Dnsjava
+	implementation group: 'dnsjava', name: 'dnsjava', version: dnsjava_version
+
+	// Google Guava (an old version, only used for "InetAddresses.toAddrString" and "BaseEncoding.base64().encode")
+	// Maybe we can get rid of this dependency easily.
+	implementation group: 'com.google.guava', name: 'guava', version: guava_version 
+
+	// Logging
+	implementation group: 'org.slf4j', name: 'slf4j-api', version: slf4j_simple_version
+
+	////
+	
+	testImplementation group: 'junit', name: 'junit', version: junit_version
+	//testImplementation "org.mockito:mockito-core:2.21.0"
+}

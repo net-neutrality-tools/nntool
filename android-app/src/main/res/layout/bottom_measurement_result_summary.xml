@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingBottom="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/theme_app_bg"
+    android:orientation="horizontal"
+    android:gravity="center">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <at.alladin.nettest.nntool.android.app.view.AlladinTextView
+            style="@style/Nettest.Measurement.Speed.Result.Overview.Icon"
+            android:id="@+id/bottom_measurement_result_summary_ping_icon"
+            android:text="@string/ifont_ping"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <TextView
+            style="@style/Nettest.Measurement.Speed.Result.Overview.Speed.Text"
+            android:text=""
+            android:id="@+id/bottom_measurement_result_summary_ping_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <TextView
+            style="@style/Nettest.Measurement.Speed.Result.Overview.Unit.Text"
+            android:text="@string/bottom_measurement_result_summary_view_ping_unit"
+            android:id="@+id/bottom_measurement_result_summary_ping_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <at.alladin.nettest.nntool.android.app.view.AlladinTextView
+            style="@style/Nettest.Measurement.Speed.Result.Overview.Icon"
+            android:id="@+id/bottom_measurement_result_summary_download_icon"
+            android:text="@string/ifont_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            style="@style/Nettest.Measurement.Speed.Result.Overview.Speed.Text"
+            android:text=""
+            android:id="@+id/bottom_measurement_result_summary_download_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            style="@style/Nettest.Measurement.Speed.Result.Overview.Unit.Text"
+            android:text="@string/bottom_measurement_result_summary_view_download_unit"
+            android:id="@+id/bottom_measurement_result_summary_download_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <at.alladin.nettest.nntool.android.app.view.AlladinTextView
+            style="@style/Nettest.Measurement.Speed.Result.Overview.Icon"
+            android:id="@+id/bottom_measurement_result_summary_upload_icon"
+            android:text="@string/ifont_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            style="@style/Nettest.Measurement.Speed.Result.Overview.Speed.Text"
+            android:text=""
+            android:id="@+id/bottom_measurement_result_summary_upload_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            style="@style/Nettest.Measurement.Speed.Result.Overview.Unit.Text"
+            android:text="@string/bottom_measurement_result_summary_view_upload_unit"
+            android:id="@+id/bottom_measurement_result_summary_upload_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>

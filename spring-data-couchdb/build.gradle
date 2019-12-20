@@ -1,0 +1,14 @@
+apply from: "${project.rootDir}/gradle/java8.gradle"
+
+dependencies {
+	implementation project(path: ':couchdb-client', configuration: 'default')
+
+	implementation group: 'org.springframework.data', name: 'spring-data-commons', version: spring_data_commons_version
+	implementation group: 'org.springframework', name: 'spring-context', version: spring_framework_version
+	implementation group: 'org.springframework', name: 'spring-tx', version: spring_framework_version
+
+	////
+
+    testImplementation group: 'org.springframework', name: 'spring-test', version: spring_framework_version
+    testImplementation group: 'junit', name: 'junit', version: junit_version
+}

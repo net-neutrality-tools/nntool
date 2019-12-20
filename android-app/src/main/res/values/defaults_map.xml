@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer translateable="false" name="default_map_start_zoom_level">5</integer>
+    <integer translateable="false" name="default_map_max_zoom_for_point_map">13</integer>
+    <string translatable="false" name="default_map_start_center_lat">48.576816</string>
+    <string translatable="false" name="default_map_start_center_lon">7.752895</string>
+
+    <bool translatable="false" name="default_map_service_settings_override">false</bool>
+    <string translatable="false" name="default_map_service_host">https://map-de-01.net-neutrality.tools</string>
+    <string translatable="false" name="default_map_service_path_prefix"></string>
+    <integer translatable="false" name="default_map_service_port">8084</integer>
+    <bool translatable="false" name="default_map_service_connection_is_encrypted">true</bool>
+</resources>

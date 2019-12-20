@@ -1,0 +1,1211 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		53BD18F682BE646F2DFBC336 /* Pods_All_MeasurementAgentKitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C682F72910A176E058DDC7C1 /* Pods_All_MeasurementAgentKitTests.framework */; };
+		5FF324BB37BAC3DF4012226C /* Pods_All_MeasurementAgentKit_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DFE748A7D3CD3A25F24E12E /* Pods_All_MeasurementAgentKit_iOS.framework */; };
+		B141590D22B2B4EB00DD5C96 /* SystemInformationCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B141590C22B2B4EB00DD5C96 /* SystemInformationCollector.swift */; };
+		B141591622B2C0EF00DD5C96 /* InformationCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B141591522B2C0EF00DD5C96 /* InformationCollector.swift */; };
+		B141591922B2C11900DD5C96 /* CpuUsageInformationCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B141591822B2C11900DD5C96 /* CpuUsageInformationCollector.swift */; };
+		B141591B22B2C46E00DD5C96 /* MemoryUsageInformationCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B141591A22B2C46E00DD5C96 /* MemoryUsageInformationCollector.swift */; };
+		B141591D22B2E20D00DD5C96 /* GpsLocationInformationCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B141591C22B2E20D00DD5C96 /* GpsLocationInformationCollector.swift */; };
+		B141591F22B79A3400DD5C96 /* BaseInformationCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B141591E22B79A3400DD5C96 /* BaseInformationCollector.swift */; };
+		B180E1202284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B180E11F2284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift */; };
+		B1C649602285FD40007506A6 /* MeasurementAgentLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C6495F2285FD40007506A6 /* MeasurementAgentLog.swift */; };
+		B1C64964228C17DE007506A6 /* SubMeasurementResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C64963228C17DE007506A6 /* SubMeasurementResult.swift */; };
+		B1C64966228C1834007506A6 /* IasMeasurementResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C64965228C1834007506A6 /* IasMeasurementResult.swift */; };
+		B1C64968228C1844007506A6 /* QoSMeasurementResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C64967228C1844007506A6 /* QoSMeasurementResult.swift */; };
+		B1C6496A228C36BB007506A6 /* RttInfoDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C64969228C36BB007506A6 /* RttInfoDto.swift */; };
+		B1C6496C228C3941007506A6 /* ConnectionInfoDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C6496B228C3941007506A6 /* ConnectionInfoDto.swift */; };
+		B1C6496E228C3AC1007506A6 /* WebSocketInfoDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C6496D228C3AC1007506A6 /* WebSocketInfoDto.swift */; };
+		B1C64970228C3B79007506A6 /* SpeedMeasurementRawDataItemDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C6496F228C3B79007506A6 /* SpeedMeasurementRawDataItemDto.swift */; };
+		E00F48C7225F340000EAD0C0 /* RegistrationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48C6225F340000EAD0C0 /* RegistrationRequest.swift */; };
+		E00F48C9225F3BDF00EAD0C0 /* MeasurementTypeDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48C8225F3BDF00EAD0C0 /* MeasurementTypeDto.swift */; };
+		E00F48CC225F72B300EAD0C0 /* ProgramProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48CB225F72B300EAD0C0 /* ProgramProtocol.swift */; };
+		E00F48CE225F735500EAD0C0 /* ProgramDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F48CD225F735500EAD0C0 /* ProgramDelegate.swift */; };
+		E00F4AEF2264B41C00EAD0C0 /* MeasurementAgentConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AEE2264B41C00EAD0C0 /* MeasurementAgentConfiguration.swift */; };
+		E00F4AF12264B51300EAD0C0 /* MeasurementRunnerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AF02264B51300EAD0C0 /* MeasurementRunnerDelegate.swift */; };
+		E00F4AF52265DC3E00EAD0C0 /* ProgramConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AF42265DC3E00EAD0C0 /* ProgramConfiguration.swift */; };
+		E00F4AF72265F24200EAD0C0 /* MeasurementAgentBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AF62265F24200EAD0C0 /* MeasurementAgentBuilder.swift */; };
+		E00F4AFB22660B2B00EAD0C0 /* MeasurementRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AFA22660B2B00EAD0C0 /* MeasurementRunner.swift */; };
+		E00F4AFD2266218400EAD0C0 /* AnyProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4AFC2266218400EAD0C0 /* AnyProgram.swift */; };
+		E00F4B0522676BD100EAD0C0 /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00F4B0422676BCF00EAD0C0 /* Program.swift */; };
+		E01DEE832253B5AC00983B1C /* MeasurementResultResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01DEE822253B5AC00983B1C /* MeasurementResultResponse.swift */; };
+		E021C71E230AE0040090729F /* LocalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E021C71D230AE0040090729F /* LocalSettings.swift */; };
+		E021C720230AEB4F0090729F /* MeasurementAgentSettingsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E021C71F230AEB4F0090729F /* MeasurementAgentSettingsHelper.swift */; };
+		E029274722D630D3001FCAEC /* NetworkInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029274622D630D3001FCAEC /* NetworkInfo.swift */; };
+		E029274A22D78CE2001FCAEC /* ApiRequestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029274922D78CE2001FCAEC /* ApiRequestHelper.swift */; };
+		E029274C22D78EAD001FCAEC /* BundleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029274B22D78EAD001FCAEC /* BundleHelper.swift */; };
+		E0312FC82354B58400260398 /* MapService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0312FC72354B58400260398 /* MapService.swift */; };
+		E0312FCB2369B7BB00260398 /* MapMarkerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0312FCA2369B7BB00260398 /* MapMarkerRequest.swift */; };
+		E0312FCE2369B85F00260398 /* MapCoordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0312FCD2369B85F00260398 /* MapCoordinate.swift */; };
+		E0312FD02369B8F600260398 /* MapMarkerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0312FCF2369B8F600260398 /* MapMarkerResponse.swift */; };
+		E0312FD22369B90900260398 /* MapMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0312FD12369B90900260398 /* MapMarker.swift */; };
+		E044DE0722D4896B00BB70CE /* CpuUsageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0622D4896B00BB70CE /* CpuUsageInfo.swift */; };
+		E044DE0922D489D700BB70CE /* MemoryUsageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0822D489D700BB70CE /* MemoryUsageInfo.swift */; };
+		E044DE0B22D48BB400BB70CE /* LocationTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE0A22D48BB400BB70CE /* LocationTracker.swift */; };
+		E044DE1222D4FC7600BB70CE /* IPConnectivityInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE1122D4FC7600BB70CE /* IPConnectivityInfo.swift */; };
+		E044DE1422D5067D00BB70CE /* InterfaceTrafficInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E044DE1322D5067D00BB70CE /* InterfaceTrafficInfo.swift */; };
+		E08D4BBB22E702BF00FA3E3C /* SpeedMeasurementPeerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08D4BBA22E702BF00FA3E3C /* SpeedMeasurementPeerResponse.swift */; };
+		E0AE257A22F898E200D42310 /* FullMeasurementResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AE257922F898E100D42310 /* FullMeasurementResponse.swift */; };
+		E0AE257C22F89B1200D42310 /* FullSubMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AE257B22F89B1200D42310 /* FullSubMeasurement.swift */; };
+		E0AE257E22F89B5600D42310 /* FullQoSMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AE257D22F89B5600D42310 /* FullQoSMeasurement.swift */; };
+		E0AE258122F89C4B00D42310 /* EvaluatedQoSResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AE258022F89C4B00D42310 /* EvaluatedQoSResult.swift */; };
+		E0AE258322F89DD600D42310 /* QoSResultOutcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AE258222F89DD600D42310 /* QoSResultOutcome.swift */; };
+		E0AE258522F89E4D00D42310 /* QoSMeasurementType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AE258422F89E4D00D42310 /* QoSMeasurementType.swift */; };
+		E0AE258722F89F4800D42310 /* QoSTypeDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AE258622F89F4800D42310 /* QoSTypeDescription.swift */; };
+		E0AE258922F8A05700D42310 /* FullSubMeasurementWrapperDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AE258822F8A05700D42310 /* FullSubMeasurementWrapperDto.swift */; };
+		E0AE258B22F8A0AA00D42310 /* FullIASMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0AE258A22F8A0AA00D42310 /* FullIASMeasurement.swift */; };
+		E0B9A3B6224D3EAB002AB640 /* MeasurementAgentKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0B9A3AC224D3EAB002AB640 /* MeasurementAgentKit.framework */; };
+		E0B9A3BB224D3EAB002AB640 /* MeasurementAgentKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3BA224D3EAB002AB640 /* MeasurementAgentKitTests.swift */; };
+		E0B9A3BD224D3EAB002AB640 /* MeasurementAgentKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E0B9A3AF224D3EAB002AB640 /* MeasurementAgentKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E0B9A3CB224D4113002AB640 /* MeasurementAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3CA224D4113002AB640 /* MeasurementAgent.swift */; };
+		E0B9A3D0224D428D002AB640 /* LmapReportDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3CF224D428D002AB640 /* LmapReportDto.swift */; };
+		E0B9A3D2224D4426002AB640 /* ApiRequestInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3D1224D4426002AB640 /* ApiRequestInfo.swift */; };
+		E0B9A3D4224D4661002AB640 /* MeasurementAgentTypeDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3D3224D4661002AB640 /* MeasurementAgentTypeDto.swift */; };
+		E0B9A3D6224D46FC002AB640 /* GeoLocationDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3D5224D46FC002AB640 /* GeoLocationDto.swift */; };
+		E0B9A3D8224D4872002AB640 /* TimeBasedResultDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3D7224D4872002AB640 /* TimeBasedResultDto.swift */; };
+		E0B9A3DA224D4B65002AB640 /* SignalDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3D9224D4B65002AB640 /* SignalDto.swift */; };
+		E0B9A3DC224D4CF8002AB640 /* CellLocationDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3DB224D4CF8002AB640 /* CellLocationDto.swift */; };
+		E0B9A3DE224D4E79002AB640 /* MeasurementResultNetworkPointInTimeDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3DD224D4E79002AB640 /* MeasurementResultNetworkPointInTimeDto.swift */; };
+		E0B9A3E0224D4FC8002AB640 /* PointInTimeValueDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3DF224D4FC8002AB640 /* PointInTimeValueDto.swift */; };
+		E0B9A3E2224D50E1002AB640 /* LmapResultDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3E1224D50E1002AB640 /* LmapResultDto.swift */; };
+		E0B9A3E4224D52CE002AB640 /* LmapOptionDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3E3224D52CE002AB640 /* LmapOptionDto.swift */; };
+		E0B9A3E6224D544B002AB640 /* MeasurementTypeParametersDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3E5224D544B002AB640 /* MeasurementTypeParametersDto.swift */; };
+		E0B9A3E8224D5497002AB640 /* LmapConflictDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3E7224D5497002AB640 /* LmapConflictDto.swift */; };
+		E0B9A3EB224D5780002AB640 /* LmapControlDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3EA224D5780002AB640 /* LmapControlDto.swift */; };
+		E0B9A3ED224D5900002AB640 /* LmapCapabilityDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3EC224D5900002AB640 /* LmapCapabilityDto.swift */; };
+		E0B9A3EF224D59A3002AB640 /* LmapCapabilityTaskDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3EE224D59A3002AB640 /* LmapCapabilityTaskDto.swift */; };
+		E0B9A3F1224D5A93002AB640 /* LmapFunctionDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3F0224D5A92002AB640 /* LmapFunctionDto.swift */; };
+		E0B9A3F3224D5B28002AB640 /* LmapAgentDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3F2224D5B28002AB640 /* LmapAgentDto.swift */; };
+		E0B9A3F5224D5C4D002AB640 /* LmapTaskDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3F4224D5C4D002AB640 /* LmapTaskDto.swift */; };
+		E0B9A3F7224D5D5E002AB640 /* LmapScheduleDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3F6224D5D5E002AB640 /* LmapScheduleDto.swift */; };
+		E0B9A3F9224D5F5C002AB640 /* LmapStopDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3F8224D5F5C002AB640 /* LmapStopDto.swift */; };
+		E0B9A3FB224D5FA9002AB640 /* ExecutionModeDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3FA224D5FA9002AB640 /* ExecutionModeDto.swift */; };
+		E0B9A3FD224D602C002AB640 /* LmapStateDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3FC224D602C002AB640 /* LmapStateDto.swift */; };
+		E0B9A3FF224D60B0002AB640 /* LmapActionDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A3FE224D60B0002AB640 /* LmapActionDto.swift */; };
+		E0B9A401224D6313002AB640 /* LmapSuppressionDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A400224D6313002AB640 /* LmapSuppressionDto.swift */; };
+		E0B9A403224D6426002AB640 /* SuppressionStateDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A402224D6426002AB640 /* SuppressionStateDto.swift */; };
+		E0B9A405224D648D002AB640 /* LmapEventDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A404224D648D002AB640 /* LmapEventDto.swift */; };
+		E0B9A40A224E634D002AB640 /* ControlService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A409224E634D002AB640 /* ControlService.swift */; };
+		E0B9A40C224E6373002AB640 /* CollectorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A40B224E6373002AB640 /* CollectorService.swift */; };
+		E0B9A40E224E638B002AB640 /* ResultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A40D224E638B002AB640 /* ResultService.swift */; };
+		E0B9A410224E645B002AB640 /* RestApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A40F224E645B002AB640 /* RestApiService.swift */; };
+		E0B9A413224E65BF002AB640 /* IpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A412224E65BF002AB640 /* IpResponse.swift */; };
+		E0B9A416224E66B7002AB640 /* RegistrationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A415224E66B7002AB640 /* RegistrationResponse.swift */; };
+		E0B9A418224E66FB002AB640 /* SettingsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A417224E66FB002AB640 /* SettingsResponse.swift */; };
+		E0B9A41A224E67E4002AB640 /* ApiBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A419224E67E4002AB640 /* ApiBase.swift */; };
+		E0B9A41C224E6860002AB640 /* ApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A41B224E6860002AB640 /* ApiResponse.swift */; };
+		E0B9A41E224E6910002AB640 /* VersionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A41D224E6910002AB640 /* VersionResponse.swift */; };
+		E0B9A421224EB2ED002AB640 /* VersionResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B9A420224EB2ED002AB640 /* VersionResponseTests.swift */; };
+		E0C451F922CA35B200FA4B44 /* NetworkInformationCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C451F822CA35B200FA4B44 /* NetworkInformationCollector.swift */; };
+		E0C4522B22CA6B6300FA4B44 /* DTO+DebugExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C4522A22CA6B6300FA4B44 /* DTO+DebugExtensions.swift */; };
+		E0CC268D22E87597005DEED0 /* DetailMeasurementResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC268C22E87597005DEED0 /* DetailMeasurementResponse.swift */; };
+		E0CC268F22E8763A005DEED0 /* DetailMeasurementGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC268E22E8763A005DEED0 /* DetailMeasurementGroup.swift */; };
+		E0CC269122E876D0005DEED0 /* DetailMeasurementGroupItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC269022E876D0005DEED0 /* DetailMeasurementGroupItem.swift */; };
+		E0CC269F22E8D39D005DEED0 /* ApiPagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC269E22E8D39D005DEED0 /* ApiPagination.swift */; };
+		E0CC26A122E8D4EA005DEED0 /* BriefMeasurementResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CC26A022E8D4EA005DEED0 /* BriefMeasurementResponse.swift */; };
+		E0CE899A2253D57F009C1E25 /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CE89992253D57F009C1E25 /* ApiError.swift */; };
+		E0CE89A22253FC31009C1E25 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0CE89A12253FC31009C1E25 /* ApiRequest.swift */; };
+		E0DA6EE222F229B90060F421 /* DisassociateResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0DA6EE122F229B90060F421 /* DisassociateResponse.swift */; };
+		E0EA84E022806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84DF22806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift */; };
+		E0EA84E222807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EA84E122807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift */; };
+		E0F3773E22E9A73100550948 /* BriefSubMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F3773D22E9A73100550948 /* BriefSubMeasurement.swift */; };
+		E0F3774022E9A78C00550948 /* BriefQoSMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F3773F22E9A78C00550948 /* BriefQoSMeasurement.swift */; };
+		E0F3774222E9A82F00550948 /* BriefIASMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F3774122E9A82F00550948 /* BriefIASMeasurement.swift */; };
+		E0F3774622E9AB2C00550948 /* BriefSubMeasurementWrapperDto.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F3774522E9AB2C00550948 /* BriefSubMeasurementWrapperDto.swift */; };
+		E0F3774822E9C2D600550948 /* BriefDeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F3774722E9C2D600550948 /* BriefDeviceInfo.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E0B9A3B7224D3EAB002AB640 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E0B9A3A3224D3EAB002AB640 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E0B9A3AB224D3EAB002AB640;
+			remoteInfo = MeasurementAgentKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		51D6510FCEF3307D19B9CAF1 /* Pods-All-MeasurementAgentKitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-MeasurementAgentKitTests.debug.xcconfig"; path = "Target Support Files/Pods-All-MeasurementAgentKitTests/Pods-All-MeasurementAgentKitTests.debug.xcconfig"; sourceTree = "<group>"; };
+		56B22020D9F21525F333997C /* Pods-All-MeasurementAgentKit_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-MeasurementAgentKit_iOS.release.xcconfig"; path = "Target Support Files/Pods-All-MeasurementAgentKit_iOS/Pods-All-MeasurementAgentKit_iOS.release.xcconfig"; sourceTree = "<group>"; };
+		5DFE748A7D3CD3A25F24E12E /* Pods_All_MeasurementAgentKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_MeasurementAgentKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6C785EEC28EAFE68CB3B6981 /* Pods-All-MeasurementAgentKit_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-MeasurementAgentKit_iOS.debug.xcconfig"; path = "Target Support Files/Pods-All-MeasurementAgentKit_iOS/Pods-All-MeasurementAgentKit_iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		B141590C22B2B4EB00DD5C96 /* SystemInformationCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemInformationCollector.swift; sourceTree = "<group>"; };
+		B141591522B2C0EF00DD5C96 /* InformationCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationCollector.swift; sourceTree = "<group>"; };
+		B141591822B2C11900DD5C96 /* CpuUsageInformationCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CpuUsageInformationCollector.swift; sourceTree = "<group>"; };
+		B141591A22B2C46E00DD5C96 /* MemoryUsageInformationCollector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryUsageInformationCollector.swift; sourceTree = "<group>"; };
+		B141591C22B2E20D00DD5C96 /* GpsLocationInformationCollector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GpsLocationInformationCollector.swift; sourceTree = "<group>"; };
+		B141591E22B79A3400DD5C96 /* BaseInformationCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseInformationCollector.swift; sourceTree = "<group>"; };
+		B180E11F2284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IasMeasurementTypeParametersDto.swift; sourceTree = "<group>"; };
+		B1C6495F2285FD40007506A6 /* MeasurementAgentLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementAgentLog.swift; sourceTree = "<group>"; };
+		B1C64963228C17DE007506A6 /* SubMeasurementResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubMeasurementResult.swift; sourceTree = "<group>"; };
+		B1C64965228C1834007506A6 /* IasMeasurementResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IasMeasurementResult.swift; sourceTree = "<group>"; };
+		B1C64967228C1844007506A6 /* QoSMeasurementResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSMeasurementResult.swift; sourceTree = "<group>"; };
+		B1C64969228C36BB007506A6 /* RttInfoDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RttInfoDto.swift; sourceTree = "<group>"; };
+		B1C6496B228C3941007506A6 /* ConnectionInfoDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionInfoDto.swift; sourceTree = "<group>"; };
+		B1C6496D228C3AC1007506A6 /* WebSocketInfoDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketInfoDto.swift; sourceTree = "<group>"; };
+		B1C6496F228C3B79007506A6 /* SpeedMeasurementRawDataItemDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeedMeasurementRawDataItemDto.swift; sourceTree = "<group>"; };
+		C682F72910A176E058DDC7C1 /* Pods_All_MeasurementAgentKitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_MeasurementAgentKitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E00F48C6225F340000EAD0C0 /* RegistrationRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationRequest.swift; sourceTree = "<group>"; };
+		E00F48C8225F3BDF00EAD0C0 /* MeasurementTypeDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementTypeDto.swift; sourceTree = "<group>"; };
+		E00F48CB225F72B300EAD0C0 /* ProgramProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramProtocol.swift; sourceTree = "<group>"; };
+		E00F48CD225F735500EAD0C0 /* ProgramDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramDelegate.swift; sourceTree = "<group>"; };
+		E00F4AEE2264B41C00EAD0C0 /* MeasurementAgentConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementAgentConfiguration.swift; sourceTree = "<group>"; };
+		E00F4AF02264B51300EAD0C0 /* MeasurementRunnerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementRunnerDelegate.swift; sourceTree = "<group>"; };
+		E00F4AF42265DC3E00EAD0C0 /* ProgramConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramConfiguration.swift; sourceTree = "<group>"; };
+		E00F4AF62265F24200EAD0C0 /* MeasurementAgentBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementAgentBuilder.swift; sourceTree = "<group>"; };
+		E00F4AFA22660B2B00EAD0C0 /* MeasurementRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementRunner.swift; sourceTree = "<group>"; };
+		E00F4AFC2266218400EAD0C0 /* AnyProgram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyProgram.swift; sourceTree = "<group>"; };
+		E00F4B0422676BCF00EAD0C0 /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
+		E01DEE822253B5AC00983B1C /* MeasurementResultResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasurementResultResponse.swift; sourceTree = "<group>"; };
+		E021C71D230AE0040090729F /* LocalSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSettings.swift; sourceTree = "<group>"; };
+		E021C71F230AEB4F0090729F /* MeasurementAgentSettingsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementAgentSettingsHelper.swift; sourceTree = "<group>"; };
+		E029274622D630D3001FCAEC /* NetworkInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkInfo.swift; sourceTree = "<group>"; };
+		E029274922D78CE2001FCAEC /* ApiRequestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequestHelper.swift; sourceTree = "<group>"; };
+		E029274B22D78EAD001FCAEC /* BundleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleHelper.swift; sourceTree = "<group>"; };
+		E0312FC72354B58400260398 /* MapService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapService.swift; sourceTree = "<group>"; };
+		E0312FCA2369B7BB00260398 /* MapMarkerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMarkerRequest.swift; sourceTree = "<group>"; };
+		E0312FCD2369B85F00260398 /* MapCoordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCoordinate.swift; sourceTree = "<group>"; };
+		E0312FCF2369B8F600260398 /* MapMarkerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMarkerResponse.swift; sourceTree = "<group>"; };
+		E0312FD12369B90900260398 /* MapMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMarker.swift; sourceTree = "<group>"; };
+		E044DE0622D4896B00BB70CE /* CpuUsageInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CpuUsageInfo.swift; sourceTree = "<group>"; };
+		E044DE0822D489D700BB70CE /* MemoryUsageInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryUsageInfo.swift; sourceTree = "<group>"; };
+		E044DE0A22D48BB400BB70CE /* LocationTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTracker.swift; sourceTree = "<group>"; };
+		E044DE1122D4FC7600BB70CE /* IPConnectivityInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPConnectivityInfo.swift; sourceTree = "<group>"; };
+		E044DE1322D5067D00BB70CE /* InterfaceTrafficInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceTrafficInfo.swift; sourceTree = "<group>"; };
+		E0692792225CA1F600E028CA /* MeasurementAgentKit.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MeasurementAgentKit.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		E08D4BBA22E702BF00FA3E3C /* SpeedMeasurementPeerResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeedMeasurementPeerResponse.swift; sourceTree = "<group>"; };
+		E0AE257922F898E100D42310 /* FullMeasurementResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FullMeasurementResponse.swift; path = MeasurementAgentKit/Sources/DTO/Result/Full/FullMeasurementResponse.swift; sourceTree = SOURCE_ROOT; };
+		E0AE257B22F89B1200D42310 /* FullSubMeasurement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullSubMeasurement.swift; sourceTree = "<group>"; };
+		E0AE257D22F89B5600D42310 /* FullQoSMeasurement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullQoSMeasurement.swift; sourceTree = "<group>"; };
+		E0AE258022F89C4B00D42310 /* EvaluatedQoSResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvaluatedQoSResult.swift; sourceTree = "<group>"; };
+		E0AE258222F89DD600D42310 /* QoSResultOutcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSResultOutcome.swift; sourceTree = "<group>"; };
+		E0AE258422F89E4D00D42310 /* QoSMeasurementType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSMeasurementType.swift; sourceTree = "<group>"; };
+		E0AE258622F89F4800D42310 /* QoSTypeDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QoSTypeDescription.swift; sourceTree = "<group>"; };
+		E0AE258822F8A05700D42310 /* FullSubMeasurementWrapperDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullSubMeasurementWrapperDto.swift; sourceTree = "<group>"; };
+		E0AE258A22F8A0AA00D42310 /* FullIASMeasurement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullIASMeasurement.swift; sourceTree = "<group>"; };
+		E0B9A3AC224D3EAB002AB640 /* MeasurementAgentKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MeasurementAgentKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0B9A3AF224D3EAB002AB640 /* MeasurementAgentKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeasurementAgentKit.h; sourceTree = "<group>"; };
+		E0B9A3B0224D3EAB002AB640 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E0B9A3B5224D3EAB002AB640 /* MeasurementAgentKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MeasurementAgentKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0B9A3BA224D3EAB002AB640 /* MeasurementAgentKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementAgentKitTests.swift; sourceTree = "<group>"; };
+		E0B9A3BC224D3EAB002AB640 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E0B9A3CA224D4113002AB640 /* MeasurementAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementAgent.swift; sourceTree = "<group>"; };
+		E0B9A3CF224D428D002AB640 /* LmapReportDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LmapReportDto.swift; sourceTree = "<group>"; };
+		E0B9A3D1224D4426002AB640 /* ApiRequestInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequestInfo.swift; sourceTree = "<group>"; };
+		E0B9A3D3224D4661002AB640 /* MeasurementAgentTypeDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementAgentTypeDto.swift; sourceTree = "<group>"; };
+		E0B9A3D5224D46FC002AB640 /* GeoLocationDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoLocationDto.swift; sourceTree = "<group>"; };
+		E0B9A3D7224D4872002AB640 /* TimeBasedResultDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeBasedResultDto.swift; sourceTree = "<group>"; };
+		E0B9A3D9224D4B65002AB640 /* SignalDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignalDto.swift; sourceTree = "<group>"; };
+		E0B9A3DB224D4CF8002AB640 /* CellLocationDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellLocationDto.swift; sourceTree = "<group>"; };
+		E0B9A3DD224D4E79002AB640 /* MeasurementResultNetworkPointInTimeDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementResultNetworkPointInTimeDto.swift; sourceTree = "<group>"; };
+		E0B9A3DF224D4FC8002AB640 /* PointInTimeValueDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointInTimeValueDto.swift; sourceTree = "<group>"; };
+		E0B9A3E1224D50E1002AB640 /* LmapResultDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LmapResultDto.swift; sourceTree = "<group>"; };
+		E0B9A3E3224D52CE002AB640 /* LmapOptionDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LmapOptionDto.swift; sourceTree = "<group>"; };
+		E0B9A3E5224D544B002AB640 /* MeasurementTypeParametersDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementTypeParametersDto.swift; sourceTree = "<group>"; };
+		E0B9A3E7224D5497002AB640 /* LmapConflictDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LmapConflictDto.swift; sourceTree = "<group>"; };
+		E0B9A3EA224D5780002AB640 /* LmapControlDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LmapControlDto.swift; sourceTree = "<group>"; };
+		E0B9A3EC224D5900002AB640 /* LmapCapabilityDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LmapCapabilityDto.swift; sourceTree = "<group>"; };
+		E0B9A3EE224D59A3002AB640 /* LmapCapabilityTaskDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LmapCapabilityTaskDto.swift; sourceTree = "<group>"; };
+		E0B9A3F0224D5A92002AB640 /* LmapFunctionDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LmapFunctionDto.swift; sourceTree = "<group>"; };
+		E0B9A3F2224D5B28002AB640 /* LmapAgentDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LmapAgentDto.swift; sourceTree = "<group>"; };
+		E0B9A3F4224D5C4D002AB640 /* LmapTaskDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LmapTaskDto.swift; sourceTree = "<group>"; };
+		E0B9A3F6224D5D5E002AB640 /* LmapScheduleDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LmapScheduleDto.swift; sourceTree = "<group>"; };
+		E0B9A3F8224D5F5C002AB640 /* LmapStopDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LmapStopDto.swift; sourceTree = "<group>"; };
+		E0B9A3FA224D5FA9002AB640 /* ExecutionModeDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExecutionModeDto.swift; sourceTree = "<group>"; };
+		E0B9A3FC224D602C002AB640 /* LmapStateDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LmapStateDto.swift; sourceTree = "<group>"; };
+		E0B9A3FE224D60B0002AB640 /* LmapActionDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LmapActionDto.swift; sourceTree = "<group>"; };
+		E0B9A400224D6313002AB640 /* LmapSuppressionDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LmapSuppressionDto.swift; sourceTree = "<group>"; };
+		E0B9A402224D6426002AB640 /* SuppressionStateDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuppressionStateDto.swift; sourceTree = "<group>"; };
+		E0B9A404224D648D002AB640 /* LmapEventDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LmapEventDto.swift; sourceTree = "<group>"; };
+		E0B9A409224E634D002AB640 /* ControlService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlService.swift; sourceTree = "<group>"; };
+		E0B9A40B224E6373002AB640 /* CollectorService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectorService.swift; sourceTree = "<group>"; };
+		E0B9A40D224E638B002AB640 /* ResultService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultService.swift; sourceTree = "<group>"; };
+		E0B9A40F224E645B002AB640 /* RestApiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestApiService.swift; sourceTree = "<group>"; };
+		E0B9A412224E65BF002AB640 /* IpResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IpResponse.swift; sourceTree = "<group>"; };
+		E0B9A415224E66B7002AB640 /* RegistrationResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegistrationResponse.swift; sourceTree = "<group>"; };
+		E0B9A417224E66FB002AB640 /* SettingsResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsResponse.swift; sourceTree = "<group>"; };
+		E0B9A419224E67E4002AB640 /* ApiBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiBase.swift; sourceTree = "<group>"; };
+		E0B9A41B224E6860002AB640 /* ApiResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiResponse.swift; sourceTree = "<group>"; };
+		E0B9A41D224E6910002AB640 /* VersionResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersionResponse.swift; sourceTree = "<group>"; };
+		E0B9A420224EB2ED002AB640 /* VersionResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionResponseTests.swift; sourceTree = "<group>"; };
+		E0C451F822CA35B200FA4B44 /* NetworkInformationCollector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkInformationCollector.swift; sourceTree = "<group>"; };
+		E0C4522A22CA6B6300FA4B44 /* DTO+DebugExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DTO+DebugExtensions.swift"; sourceTree = "<group>"; };
+		E0CC268C22E87597005DEED0 /* DetailMeasurementResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailMeasurementResponse.swift; sourceTree = "<group>"; };
+		E0CC268E22E8763A005DEED0 /* DetailMeasurementGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailMeasurementGroup.swift; sourceTree = "<group>"; };
+		E0CC269022E876D0005DEED0 /* DetailMeasurementGroupItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailMeasurementGroupItem.swift; sourceTree = "<group>"; };
+		E0CC269E22E8D39D005DEED0 /* ApiPagination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiPagination.swift; sourceTree = "<group>"; };
+		E0CC26A022E8D4EA005DEED0 /* BriefMeasurementResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BriefMeasurementResponse.swift; sourceTree = "<group>"; };
+		E0CE89992253D57F009C1E25 /* ApiError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
+		E0CE89A12253FC31009C1E25 /* ApiRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
+		E0DA6EE122F229B90060F421 /* DisassociateResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisassociateResponse.swift; sourceTree = "<group>"; };
+		E0EA84DF22806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSMeasurementTypeParametersDto.swift; sourceTree = "<group>"; };
+		E0EA84E122807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementTypeParametersWrapperDto.swift; sourceTree = "<group>"; };
+		E0F3773D22E9A73100550948 /* BriefSubMeasurement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BriefSubMeasurement.swift; sourceTree = "<group>"; };
+		E0F3773F22E9A78C00550948 /* BriefQoSMeasurement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BriefQoSMeasurement.swift; sourceTree = "<group>"; };
+		E0F3774122E9A82F00550948 /* BriefIASMeasurement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BriefIASMeasurement.swift; sourceTree = "<group>"; };
+		E0F3774522E9AB2C00550948 /* BriefSubMeasurementWrapperDto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BriefSubMeasurementWrapperDto.swift; sourceTree = "<group>"; };
+		E0F3774722E9C2D600550948 /* BriefDeviceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BriefDeviceInfo.swift; sourceTree = "<group>"; };
+		F5899225AFC5FD7CB8A7B061 /* Pods-All-MeasurementAgentKitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-MeasurementAgentKitTests.release.xcconfig"; path = "Target Support Files/Pods-All-MeasurementAgentKitTests/Pods-All-MeasurementAgentKitTests.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E0B9A3A9224D3EAB002AB640 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FF324BB37BAC3DF4012226C /* Pods_All_MeasurementAgentKit_iOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E0B9A3B2224D3EAB002AB640 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0B9A3B6224D3EAB002AB640 /* MeasurementAgentKit.framework in Frameworks */,
+				53BD18F682BE646F2DFBC336 /* Pods_All_MeasurementAgentKitTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		540B20136FE25F0390CEBBC5 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				51D6510FCEF3307D19B9CAF1 /* Pods-All-MeasurementAgentKitTests.debug.xcconfig */,
+				F5899225AFC5FD7CB8A7B061 /* Pods-All-MeasurementAgentKitTests.release.xcconfig */,
+				6C785EEC28EAFE68CB3B6981 /* Pods-All-MeasurementAgentKit_iOS.debug.xcconfig */,
+				56B22020D9F21525F333997C /* Pods-All-MeasurementAgentKit_iOS.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		8E6C7383A629C418502D976F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C682F72910A176E058DDC7C1 /* Pods_All_MeasurementAgentKitTests.framework */,
+				5DFE748A7D3CD3A25F24E12E /* Pods_All_MeasurementAgentKit_iOS.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B141590B22B2B4D100DD5C96 /* SystemInformation */ = {
+			isa = PBXGroup;
+			children = (
+				E044DE0522D488EF00BB70CE /* Helper */,
+				B141591722B2C10200DD5C96 /* Collectors */,
+				B141590C22B2B4EB00DD5C96 /* SystemInformationCollector.swift */,
+				B141591522B2C0EF00DD5C96 /* InformationCollector.swift */,
+			);
+			path = SystemInformation;
+			sourceTree = "<group>";
+		};
+		B141591722B2C10200DD5C96 /* Collectors */ = {
+			isa = PBXGroup;
+			children = (
+				B141591822B2C11900DD5C96 /* CpuUsageInformationCollector.swift */,
+				E0C451F822CA35B200FA4B44 /* NetworkInformationCollector.swift */,
+				B141591A22B2C46E00DD5C96 /* MemoryUsageInformationCollector.swift */,
+				B141591C22B2E20D00DD5C96 /* GpsLocationInformationCollector.swift */,
+				B141591E22B79A3400DD5C96 /* BaseInformationCollector.swift */,
+			);
+			path = Collectors;
+			sourceTree = "<group>";
+		};
+		E00F48CA225F71E400EAD0C0 /* Program */ = {
+			isa = PBXGroup;
+			children = (
+				E00F48CB225F72B300EAD0C0 /* ProgramProtocol.swift */,
+				E00F48CD225F735500EAD0C0 /* ProgramDelegate.swift */,
+				E00F4AF42265DC3E00EAD0C0 /* ProgramConfiguration.swift */,
+				E00F4AFC2266218400EAD0C0 /* AnyProgram.swift */,
+				E00F4B0422676BCF00EAD0C0 /* Program.swift */,
+			);
+			path = Program;
+			sourceTree = "<group>";
+		};
+		E01DEE812253B58A00983B1C /* Collector */ = {
+			isa = PBXGroup;
+			children = (
+				E01DEE822253B5AC00983B1C /* MeasurementResultResponse.swift */,
+			);
+			path = Collector;
+			sourceTree = "<group>";
+		};
+		E0312FC92369B7A600260398 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				E0312FCA2369B7BB00260398 /* MapMarkerRequest.swift */,
+				E0312FCD2369B85F00260398 /* MapCoordinate.swift */,
+				E0312FCF2369B8F600260398 /* MapMarkerResponse.swift */,
+				E0312FD12369B90900260398 /* MapMarker.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		E044DE0522D488EF00BB70CE /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				E044DE0622D4896B00BB70CE /* CpuUsageInfo.swift */,
+				E044DE0822D489D700BB70CE /* MemoryUsageInfo.swift */,
+				E044DE0A22D48BB400BB70CE /* LocationTracker.swift */,
+				E044DE1122D4FC7600BB70CE /* IPConnectivityInfo.swift */,
+				E044DE1322D5067D00BB70CE /* InterfaceTrafficInfo.swift */,
+				E029274622D630D3001FCAEC /* NetworkInfo.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		E0AE257822F898C100D42310 /* Full */ = {
+			isa = PBXGroup;
+			children = (
+				E0AE257F22F89C3B00D42310 /* QoS */,
+				E0AE257922F898E100D42310 /* FullMeasurementResponse.swift */,
+				E0AE257B22F89B1200D42310 /* FullSubMeasurement.swift */,
+				E0AE257D22F89B5600D42310 /* FullQoSMeasurement.swift */,
+				E0AE258A22F8A0AA00D42310 /* FullIASMeasurement.swift */,
+				E0AE258822F8A05700D42310 /* FullSubMeasurementWrapperDto.swift */,
+			);
+			path = Full;
+			sourceTree = "<group>";
+		};
+		E0AE257F22F89C3B00D42310 /* QoS */ = {
+			isa = PBXGroup;
+			children = (
+				E0AE258022F89C4B00D42310 /* EvaluatedQoSResult.swift */,
+				E0AE258222F89DD600D42310 /* QoSResultOutcome.swift */,
+				E0AE258422F89E4D00D42310 /* QoSMeasurementType.swift */,
+				E0AE258622F89F4800D42310 /* QoSTypeDescription.swift */,
+			);
+			path = QoS;
+			sourceTree = "<group>";
+		};
+		E0B9A3A2224D3EAB002AB640 = {
+			isa = PBXGroup;
+			children = (
+				E0692792225CA1F600E028CA /* MeasurementAgentKit.podspec */,
+				E0B9A3AE224D3EAB002AB640 /* MeasurementAgentKit */,
+				E0B9A3B9224D3EAB002AB640 /* MeasurementAgentKitTests */,
+				E0B9A3AD224D3EAB002AB640 /* Products */,
+				540B20136FE25F0390CEBBC5 /* Pods */,
+				8E6C7383A629C418502D976F /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		E0B9A3AD224D3EAB002AB640 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A3AC224D3EAB002AB640 /* MeasurementAgentKit.framework */,
+				E0B9A3B5224D3EAB002AB640 /* MeasurementAgentKitTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E0B9A3AE224D3EAB002AB640 /* MeasurementAgentKit */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A3AF224D3EAB002AB640 /* MeasurementAgentKit.h */,
+				E0B9A3C7224D407C002AB640 /* Configuration */,
+				E0B9A3C6224D4076002AB640 /* Sources */,
+			);
+			path = MeasurementAgentKit;
+			sourceTree = "<group>";
+		};
+		E0B9A3B9224D3EAB002AB640 /* MeasurementAgentKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A41F224EB2D8002AB640 /* DTO */,
+				E0B9A3BA224D3EAB002AB640 /* MeasurementAgentKitTests.swift */,
+				E0B9A3BC224D3EAB002AB640 /* Info.plist */,
+			);
+			path = MeasurementAgentKitTests;
+			sourceTree = "<group>";
+		};
+		E0B9A3C6224D4076002AB640 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				B141590B22B2B4D100DD5C96 /* SystemInformation */,
+				B1C6495F2285FD40007506A6 /* MeasurementAgentLog.swift */,
+				E00F48CA225F71E400EAD0C0 /* Program */,
+				E0B9A3CA224D4113002AB640 /* MeasurementAgent.swift */,
+				E00F4AF62265F24200EAD0C0 /* MeasurementAgentBuilder.swift */,
+				E00F4AEE2264B41C00EAD0C0 /* MeasurementAgentConfiguration.swift */,
+				E00F4AFA22660B2B00EAD0C0 /* MeasurementRunner.swift */,
+				E00F4AF02264B51300EAD0C0 /* MeasurementRunnerDelegate.swift */,
+				E029274922D78CE2001FCAEC /* ApiRequestHelper.swift */,
+				E029274B22D78EAD001FCAEC /* BundleHelper.swift */,
+				E021C71D230AE0040090729F /* LocalSettings.swift */,
+				E021C71F230AEB4F0090729F /* MeasurementAgentSettingsHelper.swift */,
+				E0B9A408224E6321002AB640 /* Servers */,
+				E0B9A3E9224D574A002AB640 /* DTO */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		E0B9A3C7224D407C002AB640 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A3B0224D3EAB002AB640 /* Info.plist */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
+		E0B9A3CC224D4131002AB640 /* Lmap */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A3CE224D4142002AB640 /* Control */,
+				E0B9A3CD224D413B002AB640 /* Report */,
+			);
+			path = Lmap;
+			sourceTree = "<group>";
+		};
+		E0B9A3CD224D413B002AB640 /* Report */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A3CF224D428D002AB640 /* LmapReportDto.swift */,
+				E0B9A3E1224D50E1002AB640 /* LmapResultDto.swift */,
+				E0B9A3E7224D5497002AB640 /* LmapConflictDto.swift */,
+			);
+			path = Report;
+			sourceTree = "<group>";
+		};
+		E0B9A3CE224D4142002AB640 /* Control */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A3EA224D5780002AB640 /* LmapControlDto.swift */,
+				E0B9A3EC224D5900002AB640 /* LmapCapabilityDto.swift */,
+				E0B9A3EE224D59A3002AB640 /* LmapCapabilityTaskDto.swift */,
+				E0B9A3F0224D5A92002AB640 /* LmapFunctionDto.swift */,
+				E0B9A3F8224D5F5C002AB640 /* LmapStopDto.swift */,
+				E0B9A404224D648D002AB640 /* LmapEventDto.swift */,
+				E0B9A400224D6313002AB640 /* LmapSuppressionDto.swift */,
+				E0B9A3FE224D60B0002AB640 /* LmapActionDto.swift */,
+				E0B9A3FC224D602C002AB640 /* LmapStateDto.swift */,
+				E0B9A3FA224D5FA9002AB640 /* ExecutionModeDto.swift */,
+				E0B9A3F6224D5D5E002AB640 /* LmapScheduleDto.swift */,
+				E0B9A3F4224D5C4D002AB640 /* LmapTaskDto.swift */,
+				E0B9A3F2224D5B28002AB640 /* LmapAgentDto.swift */,
+				E0B9A402224D6426002AB640 /* SuppressionStateDto.swift */,
+				E0B9A3E3224D52CE002AB640 /* LmapOptionDto.swift */,
+			);
+			path = Control;
+			sourceTree = "<group>";
+		};
+		E0B9A3E9224D574A002AB640 /* DTO */ = {
+			isa = PBXGroup;
+			children = (
+				E0312FC92369B7A600260398 /* Map */,
+				E0B9A414224E65CA002AB640 /* Shared */,
+				E0B9A411224E65AA002AB640 /* Controller */,
+				E01DEE812253B58A00983B1C /* Collector */,
+				E0CC268B22E8755C005DEED0 /* Result */,
+				E0B9A3CC224D4131002AB640 /* Lmap */,
+				E0B9A3D5224D46FC002AB640 /* GeoLocationDto.swift */,
+				E0B9A41D224E6910002AB640 /* VersionResponse.swift */,
+				E0B9A3D3224D4661002AB640 /* MeasurementAgentTypeDto.swift */,
+				E0B9A3D7224D4872002AB640 /* TimeBasedResultDto.swift */,
+				E0B9A3D9224D4B65002AB640 /* SignalDto.swift */,
+				E0B9A3DB224D4CF8002AB640 /* CellLocationDto.swift */,
+				E0B9A3DD224D4E79002AB640 /* MeasurementResultNetworkPointInTimeDto.swift */,
+				E0B9A3DF224D4FC8002AB640 /* PointInTimeValueDto.swift */,
+				E0B9A3E5224D544B002AB640 /* MeasurementTypeParametersDto.swift */,
+				B1C64963228C17DE007506A6 /* SubMeasurementResult.swift */,
+				B1C64965228C1834007506A6 /* IasMeasurementResult.swift */,
+				B1C64969228C36BB007506A6 /* RttInfoDto.swift */,
+				B1C6496B228C3941007506A6 /* ConnectionInfoDto.swift */,
+				B1C6496D228C3AC1007506A6 /* WebSocketInfoDto.swift */,
+				B1C6496F228C3B79007506A6 /* SpeedMeasurementRawDataItemDto.swift */,
+				B1C64967228C1844007506A6 /* QoSMeasurementResult.swift */,
+				E0EA84E122807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift */,
+				E0EA84DF22806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift */,
+				B180E11F2284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift */,
+				E00F48C8225F3BDF00EAD0C0 /* MeasurementTypeDto.swift */,
+				E0C4522A22CA6B6300FA4B44 /* DTO+DebugExtensions.swift */,
+			);
+			path = DTO;
+			sourceTree = "<group>";
+		};
+		E0B9A408224E6321002AB640 /* Servers */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A409224E634D002AB640 /* ControlService.swift */,
+				E0B9A40B224E6373002AB640 /* CollectorService.swift */,
+				E0312FC72354B58400260398 /* MapService.swift */,
+				E0B9A40D224E638B002AB640 /* ResultService.swift */,
+				E0B9A40F224E645B002AB640 /* RestApiService.swift */,
+			);
+			path = Servers;
+			sourceTree = "<group>";
+		};
+		E0B9A411224E65AA002AB640 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A412224E65BF002AB640 /* IpResponse.swift */,
+				E08D4BBA22E702BF00FA3E3C /* SpeedMeasurementPeerResponse.swift */,
+				E0B9A417224E66FB002AB640 /* SettingsResponse.swift */,
+				E0B9A415224E66B7002AB640 /* RegistrationResponse.swift */,
+				E00F48C6225F340000EAD0C0 /* RegistrationRequest.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		E0B9A414224E65CA002AB640 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A3D1224D4426002AB640 /* ApiRequestInfo.swift */,
+				E0B9A419224E67E4002AB640 /* ApiBase.swift */,
+				E0CE89992253D57F009C1E25 /* ApiError.swift */,
+				E0B9A41B224E6860002AB640 /* ApiResponse.swift */,
+				E0CC269E22E8D39D005DEED0 /* ApiPagination.swift */,
+				E0CE89A12253FC31009C1E25 /* ApiRequest.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		E0B9A41F224EB2D8002AB640 /* DTO */ = {
+			isa = PBXGroup;
+			children = (
+				E0B9A420224EB2ED002AB640 /* VersionResponseTests.swift */,
+			);
+			path = DTO;
+			sourceTree = "<group>";
+		};
+		E0CC268B22E8755C005DEED0 /* Result */ = {
+			isa = PBXGroup;
+			children = (
+				E0AE257822F898C100D42310 /* Full */,
+				E0F3774422E9AA3700550948 /* Detail */,
+				E0F3774322E9AA2B00550948 /* Brief */,
+				E0DA6EE122F229B90060F421 /* DisassociateResponse.swift */,
+			);
+			path = Result;
+			sourceTree = "<group>";
+		};
+		E0F3774322E9AA2B00550948 /* Brief */ = {
+			isa = PBXGroup;
+			children = (
+				E0F3774522E9AB2C00550948 /* BriefSubMeasurementWrapperDto.swift */,
+				E0CC26A022E8D4EA005DEED0 /* BriefMeasurementResponse.swift */,
+				E0F3773D22E9A73100550948 /* BriefSubMeasurement.swift */,
+				E0F3774722E9C2D600550948 /* BriefDeviceInfo.swift */,
+				E0F3773F22E9A78C00550948 /* BriefQoSMeasurement.swift */,
+				E0F3774122E9A82F00550948 /* BriefIASMeasurement.swift */,
+			);
+			path = Brief;
+			sourceTree = "<group>";
+		};
+		E0F3774422E9AA3700550948 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				E0CC268C22E87597005DEED0 /* DetailMeasurementResponse.swift */,
+				E0CC268E22E8763A005DEED0 /* DetailMeasurementGroup.swift */,
+				E0CC269022E876D0005DEED0 /* DetailMeasurementGroupItem.swift */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		E0B9A3A7224D3EAB002AB640 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0B9A3BD224D3EAB002AB640 /* MeasurementAgentKit.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		E0B9A3AB224D3EAB002AB640 /* MeasurementAgentKit_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E0B9A3C0224D3EAB002AB640 /* Build configuration list for PBXNativeTarget "MeasurementAgentKit_iOS" */;
+			buildPhases = (
+				207B797518BDD82F0C5F52C6 /* [CP] Check Pods Manifest.lock */,
+				E0EA84E3228081BC00EB73BF /* Run swiftlint autocorrect */,
+				E0B9A3A7224D3EAB002AB640 /* Headers */,
+				E0B9A3A8224D3EAB002AB640 /* Sources */,
+				E0B9A3A9224D3EAB002AB640 /* Frameworks */,
+				E0B9A3AA224D3EAB002AB640 /* Resources */,
+				E0B9A406224D6FBB002AB640 /* Run swiftlint */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MeasurementAgentKit_iOS;
+			productName = MeasurementAgentKit;
+			productReference = E0B9A3AC224D3EAB002AB640 /* MeasurementAgentKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		E0B9A3B4224D3EAB002AB640 /* MeasurementAgentKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E0B9A3C3224D3EAB002AB640 /* Build configuration list for PBXNativeTarget "MeasurementAgentKitTests" */;
+			buildPhases = (
+				FE18DDF2A848D645E637DAA0 /* [CP] Check Pods Manifest.lock */,
+				E0B9A3B1224D3EAB002AB640 /* Sources */,
+				E0B9A3B2224D3EAB002AB640 /* Frameworks */,
+				E0B9A3B3224D3EAB002AB640 /* Resources */,
+				4A1B91F8A7D4513A0F698C91 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E0B9A3B8224D3EAB002AB640 /* PBXTargetDependency */,
+			);
+			name = MeasurementAgentKitTests;
+			productName = MeasurementAgentKitTests;
+			productReference = E0B9A3B5224D3EAB002AB640 /* MeasurementAgentKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E0B9A3A3224D3EAB002AB640 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1000;
+				LastUpgradeCheck = 1000;
+				ORGANIZATIONNAME = "alladin-IT GmbH";
+				TargetAttributes = {
+					E0B9A3AB224D3EAB002AB640 = {
+						CreatedOnToolsVersion = 10.0;
+						LastSwiftMigration = 1020;
+					};
+					E0B9A3B4224D3EAB002AB640 = {
+						CreatedOnToolsVersion = 10.0;
+						LastSwiftMigration = 1020;
+					};
+				};
+			};
+			buildConfigurationList = E0B9A3A6224D3EAB002AB640 /* Build configuration list for PBXProject "MeasurementAgentKit" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E0B9A3A2224D3EAB002AB640;
+			productRefGroup = E0B9A3AD224D3EAB002AB640 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E0B9A3AB224D3EAB002AB640 /* MeasurementAgentKit_iOS */,
+				E0B9A3B4224D3EAB002AB640 /* MeasurementAgentKitTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E0B9A3AA224D3EAB002AB640 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E0B9A3B3224D3EAB002AB640 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		207B797518BDD82F0C5F52C6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-All-MeasurementAgentKit_iOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4A1B91F8A7D4513A0F698C91 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-All-MeasurementAgentKitTests/Pods-All-MeasurementAgentKitTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-All-MeasurementAgentKitTests/Pods-All-MeasurementAgentKitTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-All-MeasurementAgentKitTests/Pods-All-MeasurementAgentKitTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E0B9A406224D6FBB002AB640 /* Run swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run swiftlint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which ${PODS_ROOT}/SwiftLint/swiftlint >/dev/null; then\n  ${PODS_ROOT}/SwiftLint/swiftlint\nelse\n  echo \"warning: SwiftLint is not installed, run pod install.\"\nfi\n";
+		};
+		E0EA84E3228081BC00EB73BF /* Run swiftlint autocorrect */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run swiftlint autocorrect";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#if which ${PODS_ROOT}/SwiftLint/swiftlint >/dev/null; then\n#  ${PODS_ROOT}/SwiftLint/swiftlint autocorrect\n#else\n#  echo \"warning: SwiftLint is not installed, run pod install.\"\n#fi\n";
+		};
+		FE18DDF2A848D645E637DAA0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-All-MeasurementAgentKitTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E0B9A3A8224D3EAB002AB640 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0AE258722F89F4800D42310 /* QoSTypeDescription.swift in Sources */,
+				B141591D22B2E20D00DD5C96 /* GpsLocationInformationCollector.swift in Sources */,
+				E00F4B0522676BD100EAD0C0 /* Program.swift in Sources */,
+				B1C64968228C1844007506A6 /* QoSMeasurementResult.swift in Sources */,
+				E0B9A3F3224D5B28002AB640 /* LmapAgentDto.swift in Sources */,
+				E0F3773E22E9A73100550948 /* BriefSubMeasurement.swift in Sources */,
+				E00F4AFD2266218400EAD0C0 /* AnyProgram.swift in Sources */,
+				E0B9A41E224E6910002AB640 /* VersionResponse.swift in Sources */,
+				B1C6496C228C3941007506A6 /* ConnectionInfoDto.swift in Sources */,
+				E0B9A3DE224D4E79002AB640 /* MeasurementResultNetworkPointInTimeDto.swift in Sources */,
+				E029274A22D78CE2001FCAEC /* ApiRequestHelper.swift in Sources */,
+				E00F4AEF2264B41C00EAD0C0 /* MeasurementAgentConfiguration.swift in Sources */,
+				E00F4AFB22660B2B00EAD0C0 /* MeasurementRunner.swift in Sources */,
+				E0312FC82354B58400260398 /* MapService.swift in Sources */,
+				E0AE257A22F898E200D42310 /* FullMeasurementResponse.swift in Sources */,
+				E0B9A3DC224D4CF8002AB640 /* CellLocationDto.swift in Sources */,
+				E0CC269122E876D0005DEED0 /* DetailMeasurementGroupItem.swift in Sources */,
+				B180E1202284BB53000CF9E2 /* IasMeasurementTypeParametersDto.swift in Sources */,
+				B141591B22B2C46E00DD5C96 /* MemoryUsageInformationCollector.swift in Sources */,
+				E044DE1422D5067D00BB70CE /* InterfaceTrafficInfo.swift in Sources */,
+				E0B9A3F9224D5F5C002AB640 /* LmapStopDto.swift in Sources */,
+				E0B9A41C224E6860002AB640 /* ApiResponse.swift in Sources */,
+				E0CC26A122E8D4EA005DEED0 /* BriefMeasurementResponse.swift in Sources */,
+				E0F3774622E9AB2C00550948 /* BriefSubMeasurementWrapperDto.swift in Sources */,
+				E0AE258522F89E4D00D42310 /* QoSMeasurementType.swift in Sources */,
+				E00F48CC225F72B300EAD0C0 /* ProgramProtocol.swift in Sources */,
+				E044DE0922D489D700BB70CE /* MemoryUsageInfo.swift in Sources */,
+				E0B9A3D6224D46FC002AB640 /* GeoLocationDto.swift in Sources */,
+				B1C64970228C3B79007506A6 /* SpeedMeasurementRawDataItemDto.swift in Sources */,
+				E0B9A3D8224D4872002AB640 /* TimeBasedResultDto.swift in Sources */,
+				E0B9A3E4224D52CE002AB640 /* LmapOptionDto.swift in Sources */,
+				E0B9A3F1224D5A93002AB640 /* LmapFunctionDto.swift in Sources */,
+				E0B9A3ED224D5900002AB640 /* LmapCapabilityDto.swift in Sources */,
+				E021C720230AEB4F0090729F /* MeasurementAgentSettingsHelper.swift in Sources */,
+				E0B9A40C224E6373002AB640 /* CollectorService.swift in Sources */,
+				E0B9A3F5224D5C4D002AB640 /* LmapTaskDto.swift in Sources */,
+				E0CC268F22E8763A005DEED0 /* DetailMeasurementGroup.swift in Sources */,
+				E0CE899A2253D57F009C1E25 /* ApiError.swift in Sources */,
+				E0AE258922F8A05700D42310 /* FullSubMeasurementWrapperDto.swift in Sources */,
+				B1C649602285FD40007506A6 /* MeasurementAgentLog.swift in Sources */,
+				E0B9A3EF224D59A3002AB640 /* LmapCapabilityTaskDto.swift in Sources */,
+				E0DA6EE222F229B90060F421 /* DisassociateResponse.swift in Sources */,
+				E0B9A3EB224D5780002AB640 /* LmapControlDto.swift in Sources */,
+				E0B9A3CB224D4113002AB640 /* MeasurementAgent.swift in Sources */,
+				E01DEE832253B5AC00983B1C /* MeasurementResultResponse.swift in Sources */,
+				E0EA84E022806DC400EB73BF /* QoSMeasurementTypeParametersDto.swift in Sources */,
+				E0AE258122F89C4B00D42310 /* EvaluatedQoSResult.swift in Sources */,
+				E0B9A3DA224D4B65002AB640 /* SignalDto.swift in Sources */,
+				B1C6496A228C36BB007506A6 /* RttInfoDto.swift in Sources */,
+				E0AE257C22F89B1200D42310 /* FullSubMeasurement.swift in Sources */,
+				B1C64964228C17DE007506A6 /* SubMeasurementResult.swift in Sources */,
+				E0F3774822E9C2D600550948 /* BriefDeviceInfo.swift in Sources */,
+				E0C4522B22CA6B6300FA4B44 /* DTO+DebugExtensions.swift in Sources */,
+				E00F4AF72265F24200EAD0C0 /* MeasurementAgentBuilder.swift in Sources */,
+				E0B9A413224E65BF002AB640 /* IpResponse.swift in Sources */,
+				E0B9A403224D6426002AB640 /* SuppressionStateDto.swift in Sources */,
+				E0B9A41A224E67E4002AB640 /* ApiBase.swift in Sources */,
+				E0B9A3E0224D4FC8002AB640 /* PointInTimeValueDto.swift in Sources */,
+				E00F48CE225F735500EAD0C0 /* ProgramDelegate.swift in Sources */,
+				E0B9A3FD224D602C002AB640 /* LmapStateDto.swift in Sources */,
+				E0B9A416224E66B7002AB640 /* RegistrationResponse.swift in Sources */,
+				E0AE257E22F89B5600D42310 /* FullQoSMeasurement.swift in Sources */,
+				E0CE89A22253FC31009C1E25 /* ApiRequest.swift in Sources */,
+				E0B9A3F7224D5D5E002AB640 /* LmapScheduleDto.swift in Sources */,
+				B141590D22B2B4EB00DD5C96 /* SystemInformationCollector.swift in Sources */,
+				E0B9A3E2224D50E1002AB640 /* LmapResultDto.swift in Sources */,
+				E0312FCB2369B7BB00260398 /* MapMarkerRequest.swift in Sources */,
+				E0B9A3E8224D5497002AB640 /* LmapConflictDto.swift in Sources */,
+				E0B9A3FB224D5FA9002AB640 /* ExecutionModeDto.swift in Sources */,
+				E0C451F922CA35B200FA4B44 /* NetworkInformationCollector.swift in Sources */,
+				E044DE0B22D48BB400BB70CE /* LocationTracker.swift in Sources */,
+				E0B9A3FF224D60B0002AB640 /* LmapActionDto.swift in Sources */,
+				E0B9A401224D6313002AB640 /* LmapSuppressionDto.swift in Sources */,
+				E0312FD22369B90900260398 /* MapMarker.swift in Sources */,
+				E0B9A410224E645B002AB640 /* RestApiService.swift in Sources */,
+				E0EA84E222807DFF00EB73BF /* MeasurementTypeParametersWrapperDto.swift in Sources */,
+				E029274C22D78EAD001FCAEC /* BundleHelper.swift in Sources */,
+				E00F48C9225F3BDF00EAD0C0 /* MeasurementTypeDto.swift in Sources */,
+				E029274722D630D3001FCAEC /* NetworkInfo.swift in Sources */,
+				E0B9A40E224E638B002AB640 /* ResultService.swift in Sources */,
+				E0B9A3D0224D428D002AB640 /* LmapReportDto.swift in Sources */,
+				E0B9A405224D648D002AB640 /* LmapEventDto.swift in Sources */,
+				B1C6496E228C3AC1007506A6 /* WebSocketInfoDto.swift in Sources */,
+				B141591622B2C0EF00DD5C96 /* InformationCollector.swift in Sources */,
+				E00F4AF52265DC3E00EAD0C0 /* ProgramConfiguration.swift in Sources */,
+				E0F3774222E9A82F00550948 /* BriefIASMeasurement.swift in Sources */,
+				E00F4AF12264B51300EAD0C0 /* MeasurementRunnerDelegate.swift in Sources */,
+				E021C71E230AE0040090729F /* LocalSettings.swift in Sources */,
+				E044DE0722D4896B00BB70CE /* CpuUsageInfo.swift in Sources */,
+				B141591F22B79A3400DD5C96 /* BaseInformationCollector.swift in Sources */,
+				E0B9A3E6224D544B002AB640 /* MeasurementTypeParametersDto.swift in Sources */,
+				B141591922B2C11900DD5C96 /* CpuUsageInformationCollector.swift in Sources */,
+				E0B9A418224E66FB002AB640 /* SettingsResponse.swift in Sources */,
+				E0312FCE2369B85F00260398 /* MapCoordinate.swift in Sources */,
+				E0B9A40A224E634D002AB640 /* ControlService.swift in Sources */,
+				E0CC268D22E87597005DEED0 /* DetailMeasurementResponse.swift in Sources */,
+				E00F48C7225F340000EAD0C0 /* RegistrationRequest.swift in Sources */,
+				E0CC269F22E8D39D005DEED0 /* ApiPagination.swift in Sources */,
+				E0312FD02369B8F600260398 /* MapMarkerResponse.swift in Sources */,
+				E08D4BBB22E702BF00FA3E3C /* SpeedMeasurementPeerResponse.swift in Sources */,
+				E0F3774022E9A78C00550948 /* BriefQoSMeasurement.swift in Sources */,
+				B1C64966228C1834007506A6 /* IasMeasurementResult.swift in Sources */,
+				E044DE1222D4FC7600BB70CE /* IPConnectivityInfo.swift in Sources */,
+				E0B9A3D4224D4661002AB640 /* MeasurementAgentTypeDto.swift in Sources */,
+				E0AE258B22F8A0AA00D42310 /* FullIASMeasurement.swift in Sources */,
+				E0B9A3D2224D4426002AB640 /* ApiRequestInfo.swift in Sources */,
+				E0AE258322F89DD600D42310 /* QoSResultOutcome.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E0B9A3B1224D3EAB002AB640 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E0B9A3BB224D3EAB002AB640 /* MeasurementAgentKitTests.swift in Sources */,
+				E0B9A421224EB2ED002AB640 /* VersionResponseTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E0B9A3B8224D3EAB002AB640 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E0B9A3AB224D3EAB002AB640 /* MeasurementAgentKit_iOS */;
+			targetProxy = E0B9A3B7224D3EAB002AB640 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		E0B9A3BE224D3EAB002AB640 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		E0B9A3BF224D3EAB002AB640 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		E0B9A3C1224D3EAB002AB640 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6C785EEC28EAFE68CB3B6981 /* Pods-All-MeasurementAgentKit_iOS.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = MeasurementAgentKit/Configuration/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = at.alladin.nettest.berec.MeasurementAgentKit;
+				PRODUCT_NAME = MeasurementAgentKit;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E0B9A3C2224D3EAB002AB640 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 56B22020D9F21525F333997C /* Pods-All-MeasurementAgentKit_iOS.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Manual;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = MeasurementAgentKit/Configuration/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = at.alladin.nettest.berec.MeasurementAgentKit;
+				PRODUCT_NAME = MeasurementAgentKit;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		E0B9A3C4224D3EAB002AB640 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51D6510FCEF3307D19B9CAF1 /* Pods-All-MeasurementAgentKitTests.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = MeasurementAgentKitTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = at.alladin.nettest.berec.MeasurementAgentKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E0B9A3C5224D3EAB002AB640 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F5899225AFC5FD7CB8A7B061 /* Pods-All-MeasurementAgentKitTests.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = MeasurementAgentKitTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = at.alladin.nettest.berec.MeasurementAgentKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E0B9A3A6224D3EAB002AB640 /* Build configuration list for PBXProject "MeasurementAgentKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E0B9A3BE224D3EAB002AB640 /* Debug */,
+				E0B9A3BF224D3EAB002AB640 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E0B9A3C0224D3EAB002AB640 /* Build configuration list for PBXNativeTarget "MeasurementAgentKit_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E0B9A3C1224D3EAB002AB640 /* Debug */,
+				E0B9A3C2224D3EAB002AB640 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E0B9A3C3224D3EAB002AB640 /* Build configuration list for PBXNativeTarget "MeasurementAgentKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E0B9A3C4224D3EAB002AB640 /* Debug */,
+				E0B9A3C5224D3EAB002AB640 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E0B9A3A3224D3EAB002AB640 /* Project object */;
+}

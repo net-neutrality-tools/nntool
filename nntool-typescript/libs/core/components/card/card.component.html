@@ -1,0 +1,8 @@
+<div class="content--column home clickable" [routerLink]="['/nettest']">
+  <!-- TODO: routerLink -->
+  <header class="column-header">
+    <div [class]="'icon ' + icon" aria-hidden="true"></div>
+    <h3 [innerHTML]="headerTranslationKey | translate"></h3>
+  </header>
+  <p [innerHTML]="contentTranslationKey | translate"></p>
+</div>

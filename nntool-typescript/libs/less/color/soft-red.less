@@ -1,0 +1,148 @@
+/*******************************************************************************
+ * Copyright 2019 alladin-IT GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
+
+ @import '../_variables.less';
+
+// TEXT COLOR LIGHTNESS
+.smart-text-color (@a) when (lightness(@a) >=50%) {
+    // Its a light color return a dark output
+    color: @pitch-black;
+}
+.smart-text-color (@a) when (lightness(@a) < 50%) {
+    // Its a dark color return a light output
+    color: @white;
+}
+
+// ==========================================================================
+// Layout
+// ==========================================================================
+a {
+    color:@red;
+}
+input, select, textarea {
+    border:solid 1px @red;
+}
+
+// ==========================================================================
+// Menu
+// ==========================================================================
+.menu-container {
+    background: @red;
+    .smart-text-color(@red);
+}
+.menu-container a {
+    .smart-text-color(@red);
+}
+.navbar-nav-item-text:after {
+    border-top: 1px @white solid;
+}
+.language-select {
+    background: @red;
+    .smart-text-color(@red);
+}
+.navbar-nav-item.active,
+.navbar-nav-item:hover,
+.navbar-nav-item:focus,
+.navbar-nav-item:active {
+    color:@pitch-black;
+}
+
+// ==========================================================================
+// Content sections
+// ==========================================================================
+#section-features   {
+    background-color: @red;
+    .smart-text-color(@red);
+}
+#section-intro .icon,
+#section-arguments .icon,
+#section-technical .icon    {
+    color:@red;
+}
+#section-features a    {
+    color:@white;
+}
+#section-features select,
+#section-features input,
+#section-features textarea {
+    background:@white;
+    .smart-text-color(@white);
+}
+
+// ==========================================================================
+// Content elements
+// ==========================================================================
+.button {
+    border:solid 1px @red;
+    color:@red;
+}
+.button:hover, .button:active, .button:focus     {
+    background:@red;
+    .smart-text-color(@red);
+}
+#section-features .button, #section-features .button.inverse:hover, #section-features .button.inverse:active, #section-features .button.inverse:focus   {
+    background-color: @red;
+    border:solid 1px @white;
+    .smart-text-color(@red);
+}
+#section-features .button.inverse, #section-features .button:hover, #section-features .button:active, #section-features .button:focus     {
+    background:@white;
+    color:@red;
+}
+.stacktable.large-only th,
+.no-stack th {
+    border-bottom:solid 1px @red;
+}
+.progress-fill {
+    background-color: @red;
+}
+/* Radio switches */
+.switch {
+    background: @grey;
+}
+.switch-selection {
+    background: @green;
+}
+
+// ==========================================================================
+// Nettest
+// ==========================================================================
+.nettest-gauge-arc-outer {
+    background-color: @red;
+}
+.nettest-gauge-arc-inner {
+    background-color: @pitch-black;
+}
+.nettest-gauge-arc-background {
+    background-color: @grey;
+}
+.btn__nettest-state    {
+    color: @white;
+    background-color: @red;
+}
+.btn__nettest-state.inprogress {
+    background-color: @pitch-black;
+}
+.btn__nettest-state.complete {
+    background-color: @red;
+}
+.warning-area {
+    background:@white;
+    color:@red;
+}
+.warning-solution {
+    color:@pitch-black;
+}

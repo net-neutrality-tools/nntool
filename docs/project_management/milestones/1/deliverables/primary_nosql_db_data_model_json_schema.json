@@ -1,0 +1,3421 @@
+{
+    "GeoLocation": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:GeoLocation", 
+        "properties": {
+            "altitude": {
+                "type": "number", 
+                "description": "Geographic location altitude."
+            }, 
+            "time": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "type": "array", 
+                "description": "Time and date the geographic location information was captured (UTC)."
+            }, 
+            "longitude": {
+                "type": "number", 
+                "description": "Geographic location longitude."
+            }, 
+            "provider": {
+                "type": "string", 
+                "description": "Geographic location provider."
+            }, 
+            "latitude": {
+                "type": "number", 
+                "description": "Geographic location latitude."
+            }, 
+            "speed": {
+                "type": "number", 
+                "description": "Movement speed."
+            }, 
+            "heading": {
+                "type": "number", 
+                "description": "Movement heading."
+            }, 
+            "relative_time_ns": {
+                "type": "integer", 
+                "description": "Relative time in nanoseconds (to measurement begin)."
+            }, 
+            "accuracy": {
+                "type": "number", 
+                "description": "Geographic location accuracy."
+            }
+        }
+    }, 
+    "ConnectionInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:ConnectionInfo", 
+        "properties": {
+            "encryption_info": {
+                "type": "string", 
+                "description": "Cryptographic protocol and cipher suite used for encrypted communication, if available. E.g. TLSv1.2 (TLS_RSA_WITH_AES_128_GCM_SHA256)."
+            }, 
+            "web_socket_info_download": {
+                "properties": {
+                    "frame_count_including_slow_start": {
+                        "type": "integer", 
+                        "description": "Number of frames sent over the WebSocket protocol during measurement including slow-start phase."
+                    }, 
+                    "overhead_per_frame_including_slow_start": {
+                        "type": "integer", 
+                        "description": "The overhead sent during the communication via the WebSocket protocol including slow-start phase."
+                    }, 
+                    "overhead": {
+                        "type": "integer", 
+                        "description": "The overhead sent during the communication via the WebSocket protocol excluding slow-start phase."
+                    }, 
+                    "frame_size": {
+                        "type": "integer", 
+                        "description": "Size of a transmitted frame over the WebSocket protocol."
+                    }, 
+                    "overhead_per_frame": {
+                        "type": "integer", 
+                        "description": "The overhead a single frame produces on average."
+                    }, 
+                    "frame_count": {
+                        "type": "integer", 
+                        "description": "Number of frames sent over the WebSocket protocol during measurement excluding slow-start phase."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:WebSocketInfo", 
+                "description": "This class contains additional information gathered from the WebSocket protocol during the download measurement."
+            }, 
+            "client_interface_total_traffic": {
+                "properties": {
+                    "bytes_tx": {
+                        "type": "integer", 
+                        "description": "Bytes transmitted."
+                    }, 
+                    "bytes_rx": {
+                        "type": "integer", 
+                        "description": "Bytes received."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Traffic", 
+                "description": "Contains information about total bytes transferred during the speed measurement, as reported by the client's interface, if available. Only used for displaying to the client."
+            }, 
+            "encrypted": {
+                "type": "boolean", 
+                "description": "Indicates if the communication with the measurement server will be encrypted."
+            }, 
+            "client_interface_upload_measurement_traffic": {
+                "type": "object", 
+                "description": "Contains information about bytes transferred during the upload measurement, as reported by the client's interface, if available. Only used for displaying to the client.", 
+                "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Traffic"
+            }, 
+            "client_interface_download_measurement_traffic": {
+                "type": "object", 
+                "description": "Contains information about bytes transferred during the download measurement, as reported by the client's interface, if available. Only used for displaying to the client.", 
+                "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Traffic"
+            }, 
+            "server_mss": {
+                "type": "integer", 
+                "description": "Maximum Segment Size (MSS) value from the server-side."
+            }, 
+            "address": {
+                "type": "string", 
+                "description": "The address of the measurement server."
+            }, 
+            "tcp_opt_wscale_requested": {
+                "type": "boolean", 
+                "description": "Flag if the TCP window scale options are requested."
+            }, 
+            "num_streams_info": {
+                "properties": {
+                    "requested_num_streams_download": {
+                        "type": "integer", 
+                        "description": "The requested number of streams for the download measurement."
+                    }, 
+                    "requested_num_streams_upload": {
+                        "type": "integer", 
+                        "description": "The requested number of streams for the upload measurement."
+                    }, 
+                    "actual_num_streams_upload": {
+                        "type": "integer", 
+                        "description": "The actual number of streams used by the upload measurement."
+                    }, 
+                    "actual_num_streams_download": {
+                        "type": "integer", 
+                        "description": "The actual number of streams used by the download measurement."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:NumStreamsInfo", 
+                "description": "Contains information about requested number of streams and the actual number of streams used during the speed measurement."
+            }, 
+            "server_mtu": {
+                "type": "integer", 
+                "description": "Maximum Transmission Unit (MTU) value from the server-side."
+            }, 
+            "tcp_opt_sack_requested": {
+                "type": "boolean", 
+                "description": "Flag if TCP SACK (Selective Acknowledgement) is enabled/requested."
+            }, 
+            "port": {
+                "type": "integer", 
+                "description": "Port used for the communication."
+            }, 
+            "web_socket_info_upload": {
+                "type": "object", 
+                "description": "This class contains additional information gathered from the WebSocket protocol during the upload measurement.", 
+                "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:WebSocketInfo"
+            }
+        }
+    }, 
+    "MeasurementServerInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MeasurementServerInfo", 
+        "properties": {
+            "city": {
+                "type": "string", 
+                "description": "The city the measurement server is located in."
+            }, 
+            "geo_location": {
+                "properties": {
+                    "altitude": {
+                        "type": "number", 
+                        "description": "Geographic location altitude."
+                    }, 
+                    "time": {
+                        "items": {
+                            "type": "integer"
+                        }, 
+                        "type": "array", 
+                        "description": "Time and date the geographic location information was captured (UTC)."
+                    }, 
+                    "longitude": {
+                        "type": "number", 
+                        "description": "Geographic location longitude."
+                    }, 
+                    "provider": {
+                        "type": "string", 
+                        "description": "Geographic location provider."
+                    }, 
+                    "latitude": {
+                        "type": "number", 
+                        "description": "Geographic location latitude."
+                    }, 
+                    "speed": {
+                        "type": "number", 
+                        "description": "Movement speed."
+                    }, 
+                    "heading": {
+                        "type": "number", 
+                        "description": "Movement heading."
+                    }, 
+                    "relative_time_ns": {
+                        "type": "integer", 
+                        "description": "Relative time in nanoseconds (to measurement begin)."
+                    }, 
+                    "accuracy": {
+                        "type": "number", 
+                        "description": "Geographic location accuracy."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:GeoLocation", 
+                "description": "The geographic location of the measurement server."
+            }, 
+            "country": {
+                "type": "string", 
+                "description": "The country the measurement server is located in."
+            }
+        }
+    }, 
+    "Provider": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Provider", 
+        "properties": {
+            "mcc_mnc_mappings": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:ProviderMccMncMapping", 
+                    "properties": {
+                        "condition_valid_from": {
+                            "items": {
+                                "type": "integer"
+                            }, 
+                            "type": "array", 
+                            "description": "Optional condition used to set the date this MCC/MNC mapping is valid from."
+                        }, 
+                        "condition_valid_to": {
+                            "items": {
+                                "type": "integer"
+                            }, 
+                            "type": "array", 
+                            "description": "Optional condition used to set the date this MCC/MNC mapping is valid to."
+                        }, 
+                        "sim_mcc_mnc": {
+                            "properties": {
+                                "mnc": {
+                                    "type": "integer", 
+                                    "description": "The mobile network code."
+                                }, 
+                                "mcc": {
+                                    "type": "integer", 
+                                    "description": "The mobile country code."
+                                }
+                            }, 
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MccMnc", 
+                            "description": "The MCC/MNC of the SIM."
+                        }, 
+                        "network_mcc_mnc": {
+                            "type": "object", 
+                            "description": "The MCC/MNC of the network.", 
+                            "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MccMnc"
+                        }
+                    }
+                }, 
+                "type": "array", 
+                "description": "Contains a list of all valid/possible MCC/MNC mappings for this provider."
+            }, 
+            "asn_mappings": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:ProviderAsnMapping", 
+                    "properties": {
+                        "condition_rdns_suffix": {
+                            "type": "string", 
+                            "description": "The reverse DNS suffix, an optional condition for an ASN mapping (e.g.: .com)."
+                        }, 
+                        "asn": {
+                            "type": "integer", 
+                            "description": "The Autonomous System Number (ASN)."
+                        }
+                    }
+                }, 
+                "type": "array", 
+                "description": "Contains a list of all valid/possible ASN mappings for this provider."
+            }, 
+            "name": {
+                "type": "string", 
+                "description": "The name of the provider."
+            }, 
+            "short_name": {
+                "type": "string", 
+                "description": "The short name (or shortcut) of the provider."
+            }, 
+            "id": {
+                "type": "integer", 
+                "description": "A ID which serves as primary key."
+            }
+        }
+    }, 
+    "SpeedMeasurementRawData": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SpeedMeasurementRawData", 
+        "properties": {
+            "download": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SpeedMeasurementRawDataItem", 
+                    "properties": {
+                        "stream_id": {
+                            "type": "integer", 
+                            "description": "The stream id (numeric value starting from 0)."
+                        }, 
+                        "bytes": {
+                            "type": "integer", 
+                            "description": "Bytes transmitted or received since start of the speed measurement."
+                        }, 
+                        "relative_time_ns": {
+                            "type": "integer", 
+                            "description": "Relative time since start of the speed measurement."
+                        }
+                    }
+                }, 
+                "type": "array", 
+                "description": "Contains a list of all captured byte transfers during the download speed measurement."
+            }, 
+            "upload": {
+                "items": {
+                    "type": "object", 
+                    "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SpeedMeasurementRawDataItem"
+                }, 
+                "type": "array", 
+                "description": "Contains a list of all captured byte transfers during the upload speed measurement."
+            }
+        }
+    }, 
+    "SpeedMeasurement": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SpeedMeasurement", 
+        "properties": {
+            "throughput_avg_download_bps": {
+                "type": "integer", 
+                "description": "The calculated (average) download throughput in bits per second."
+            }, 
+            "throughput_avg_download_log": {
+                "type": "number", 
+                "description": "Common logarithm of the (average) download throughput."
+            }, 
+            "duration_upload_ns": {
+                "type": "integer", 
+                "description": "Duration of the upload measurement."
+            }, 
+            "bytes_download": {
+                "type": "integer", 
+                "description": "Bytes received during the speed measurement (Download) without slow-start phase."
+            }, 
+            "relative_start_time_download_ns": {
+                "type": "integer", 
+                "description": "Relative start time of the download measurement in nanoseconds."
+            }, 
+            "lmap_result": {
+                "properties": {
+                    "task": {
+                        "type": "string", 
+                        "description": "The name of the Task that produced the result. References RFC 8194: lmap-report.result.task"
+                    }, 
+                    "event_time": {
+                        "items": {
+                            "type": "integer"
+                        }, 
+                        "type": "array", 
+                        "description": "The date and time of the event that triggered the Schedule of the Action that produced the reported result values. The date and time does not include any added randomization. References RFC 8194: lmap-report.result.event"
+                    }, 
+                    "tags": {
+                        "items": {
+                            "type": "string"
+                        }, 
+                        "type": "array", 
+                        "description": "Collection of all LMAP specific tags. This is the joined set of tags defined for the Task object, the Schedule object, and the Action object. References RFC 8194: lmap-report.result.tag"
+                    }, 
+                    "status_code": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "The status code returned by the execution of this SubMeasurement/Action. References RFC 8194: lmap-report.result.status"
+                    }, 
+                    "schedule": {
+                        "type": "string", 
+                        "description": "The name of the Schedule that produced the result. References RFC 8194: lmap-report.result.schedule"
+                    }, 
+                    "action": {
+                        "type": "string", 
+                        "description": "The name of the Action in the Schedule that produced the result. References RFC 8194: lmap-report.result.action"
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SubMeasurementLmapResult", 
+                "description": "This class holds LMAP specific result values (see LMAP report result model, RFC 8194)"
+            }, 
+            "status_info": {
+                "properties": {
+                    "status": {
+                        "enum": [
+                            "STARTED", 
+                            "FINISHED", 
+                            "FAILED", 
+                            "ABORTED"
+                        ], 
+                        "type": "string", 
+                        "description": "The status of a measurement."
+                    }, 
+                    "reason": {
+                        "enum": [
+                            "UNABLE_TO_CONNECT", 
+                            "CONNECTION_LOST", 
+                            "NETWORK_CATEGORY_CHANGED", 
+                            "APP_BACKGROUNDED", 
+                            "USER_ABORTED"
+                        ], 
+                        "type": "string", 
+                        "description": "The reason why a measurement failed."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MeasurementStatusInfo", 
+                "description": "Describes the status of a measurement."
+            }, 
+            "relative_start_time_rtt_ns": {
+                "type": "integer", 
+                "description": "Relative start time of the RTT measurement in nanoseconds."
+            }, 
+            "requested_duration_download_ns": {
+                "type": "integer", 
+                "description": "The nominal measurement duration of the download measurement."
+            }, 
+            "rtt_info": {
+                "properties": {
+                    "rtts": {
+                        "items": {
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Rtt", 
+                            "properties": {
+                                "rtt_ns": {
+                                    "type": "integer", 
+                                    "description": "Round trip time recorded in nanoseconds."
+                                }, 
+                                "relative_time_ns": {
+                                    "type": "integer", 
+                                    "description": "Relative time in nanoseconds (to test begin)."
+                                }
+                            }
+                        }, 
+                        "type": "array", 
+                        "description": "List of all measured RTTs."
+                    }, 
+                    "num_received": {
+                        "type": "integer", 
+                        "description": "The actual number of received RTT packets."
+                    }, 
+                    "median_log": {
+                        "type": "number", 
+                        "description": "Common logarithm of the median RTT."
+                    }, 
+                    "num_sent": {
+                        "type": "integer", 
+                        "description": "The actual number of sent RTT packets."
+                    }, 
+                    "max_log": {
+                        "type": "number", 
+                        "description": "Common logarithm of the maximum (worst) RTT."
+                    }, 
+                    "requested_num_packets": {
+                        "type": "integer", 
+                        "description": "The number of RTT packets to send, as instructed by the server."
+                    }, 
+                    "average_ns": {
+                        "type": "integer", 
+                        "description": "Average RTT value in nanoseconds."
+                    }, 
+                    "standard_deviation_ns": {
+                        "type": "integer", 
+                        "description": "Calculated RTT standard deviation in nanoseconds."
+                    }, 
+                    "min_log": {
+                        "type": "number", 
+                        "description": "Common logarithm of the minimum (best) RTT."
+                    }, 
+                    "num_missing": {
+                        "type": "integer", 
+                        "description": "The actual number of missing RTT packets."
+                    }, 
+                    "packet_size": {
+                        "type": "integer", 
+                        "description": "The actual size of RTT packets."
+                    }, 
+                    "min_ns": {
+                        "type": "integer", 
+                        "description": "Minimum (best) RTT value in nanoseconds."
+                    }, 
+                    "max_ns": {
+                        "type": "integer", 
+                        "description": "Maximum (worst) RTT value in nanoseconds."
+                    }, 
+                    "variance": {
+                        "type": "integer", 
+                        "description": "Calculated RTT variance."
+                    }, 
+                    "num_error": {
+                        "type": "integer", 
+                        "description": "The actual number of failed RTT packets."
+                    }, 
+                    "median_ns": {
+                        "type": "integer", 
+                        "description": "Median RTT value in nanoseconds."
+                    }, 
+                    "average_log": {
+                        "type": "number", 
+                        "description": "Common logarithm of the average RTT."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:RttInfo", 
+                "description": "Bytes transferred during the speed measurement (Upload)"
+            }, 
+            "duration_rtt_ns": {
+                "type": "integer", 
+                "description": "Duration of the RTT measurement."
+            }, 
+            "version_library": {
+                "type": "string", 
+                "description": "The library version this measurement used, if available."
+            }, 
+            "throughput_avg_upload_log": {
+                "type": "number", 
+                "description": "Common logarithm of the average upload throughput."
+            }, 
+            "connection_info": {
+                "properties": {
+                    "encryption_info": {
+                        "type": "string", 
+                        "description": "Cryptographic protocol and cipher suite used for encrypted communication, if available. E.g. TLSv1.2 (TLS_RSA_WITH_AES_128_GCM_SHA256)."
+                    }, 
+                    "web_socket_info_download": {
+                        "properties": {
+                            "frame_count_including_slow_start": {
+                                "type": "integer", 
+                                "description": "Number of frames sent over the WebSocket protocol during measurement including slow-start phase."
+                            }, 
+                            "overhead_per_frame_including_slow_start": {
+                                "type": "integer", 
+                                "description": "The overhead sent during the communication via the WebSocket protocol including slow-start phase."
+                            }, 
+                            "overhead": {
+                                "type": "integer", 
+                                "description": "The overhead sent during the communication via the WebSocket protocol excluding slow-start phase."
+                            }, 
+                            "frame_size": {
+                                "type": "integer", 
+                                "description": "Size of a transmitted frame over the WebSocket protocol."
+                            }, 
+                            "overhead_per_frame": {
+                                "type": "integer", 
+                                "description": "The overhead a single frame produces on average."
+                            }, 
+                            "frame_count": {
+                                "type": "integer", 
+                                "description": "Number of frames sent over the WebSocket protocol during measurement excluding slow-start phase."
+                            }
+                        }, 
+                        "type": "object", 
+                        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:WebSocketInfo", 
+                        "description": "This class contains additional information gathered from the WebSocket protocol during the download measurement."
+                    }, 
+                    "client_interface_total_traffic": {
+                        "properties": {
+                            "bytes_tx": {
+                                "type": "integer", 
+                                "description": "Bytes transmitted."
+                            }, 
+                            "bytes_rx": {
+                                "type": "integer", 
+                                "description": "Bytes received."
+                            }
+                        }, 
+                        "type": "object", 
+                        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Traffic", 
+                        "description": "Contains information about total bytes transferred during the speed measurement, as reported by the client's interface, if available. Only used for displaying to the client."
+                    }, 
+                    "encrypted": {
+                        "type": "boolean", 
+                        "description": "Indicates if the communication with the measurement server will be encrypted."
+                    }, 
+                    "client_interface_upload_measurement_traffic": {
+                        "type": "object", 
+                        "description": "Contains information about bytes transferred during the upload measurement, as reported by the client's interface, if available. Only used for displaying to the client.", 
+                        "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Traffic"
+                    }, 
+                    "client_interface_download_measurement_traffic": {
+                        "type": "object", 
+                        "description": "Contains information about bytes transferred during the download measurement, as reported by the client's interface, if available. Only used for displaying to the client.", 
+                        "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Traffic"
+                    }, 
+                    "server_mss": {
+                        "type": "integer", 
+                        "description": "Maximum Segment Size (MSS) value from the server-side."
+                    }, 
+                    "address": {
+                        "type": "string", 
+                        "description": "The address of the measurement server."
+                    }, 
+                    "tcp_opt_wscale_requested": {
+                        "type": "boolean", 
+                        "description": "Flag if the TCP window scale options are requested."
+                    }, 
+                    "num_streams_info": {
+                        "properties": {
+                            "requested_num_streams_download": {
+                                "type": "integer", 
+                                "description": "The requested number of streams for the download measurement."
+                            }, 
+                            "requested_num_streams_upload": {
+                                "type": "integer", 
+                                "description": "The requested number of streams for the upload measurement."
+                            }, 
+                            "actual_num_streams_upload": {
+                                "type": "integer", 
+                                "description": "The actual number of streams used by the upload measurement."
+                            }, 
+                            "actual_num_streams_download": {
+                                "type": "integer", 
+                                "description": "The actual number of streams used by the download measurement."
+                            }
+                        }, 
+                        "type": "object", 
+                        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:NumStreamsInfo", 
+                        "description": "Contains information about requested number of streams and the actual number of streams used during the speed measurement."
+                    }, 
+                    "server_mtu": {
+                        "type": "integer", 
+                        "description": "Maximum Transmission Unit (MTU) value from the server-side."
+                    }, 
+                    "tcp_opt_sack_requested": {
+                        "type": "boolean", 
+                        "description": "Flag if TCP SACK (Selective Acknowledgement) is enabled/requested."
+                    }, 
+                    "port": {
+                        "type": "integer", 
+                        "description": "Port used for the communication."
+                    }, 
+                    "web_socket_info_upload": {
+                        "type": "object", 
+                        "description": "This class contains additional information gathered from the WebSocket protocol during the upload measurement.", 
+                        "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:WebSocketInfo"
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:ConnectionInfo", 
+                "description": "Contains information about the connection(s) used for the speed measurement."
+            }, 
+            "requested_duration_upload_ns": {
+                "type": "integer", 
+                "description": "The nominal measurement duration of the upload measurement."
+            }, 
+            "throughput_avg_upload_bps": {
+                "type": "integer", 
+                "description": "The calculated (average) upload throughput in bits per second."
+            }, 
+            "requested_duration_upload_slow_start_ns": {
+                "type": "integer", 
+                "description": "The nominal duration for the upload slow-start phase."
+            }, 
+            "implausible": {
+                "type": "boolean", 
+                "description": "Flag to mark a measurement as implausible."
+            }, 
+            "duration_download_ns": {
+                "type": "integer", 
+                "description": "Duration of the download measurement."
+            }, 
+            "bytes_upload_including_slow_start": {
+                "type": "integer", 
+                "description": "Bytes transferred during the speed measurement (Upload) with slow-start phase."
+            }, 
+            "requested_duration_download_slow_start_ns": {
+                "type": "integer", 
+                "description": "The nominal duration for the download slow-start phase."
+            }, 
+            "speed_raw_data": {
+                "properties": {
+                    "download": {
+                        "items": {
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SpeedMeasurementRawDataItem", 
+                            "properties": {
+                                "stream_id": {
+                                    "type": "integer", 
+                                    "description": "The stream id (numeric value starting from 0)."
+                                }, 
+                                "bytes": {
+                                    "type": "integer", 
+                                    "description": "Bytes transmitted or received since start of the speed measurement."
+                                }, 
+                                "relative_time_ns": {
+                                    "type": "integer", 
+                                    "description": "Relative time since start of the speed measurement."
+                                }
+                            }
+                        }, 
+                        "type": "array", 
+                        "description": "Contains a list of all captured byte transfers during the download speed measurement."
+                    }, 
+                    "upload": {
+                        "items": {
+                            "type": "object", 
+                            "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SpeedMeasurementRawDataItem"
+                        }, 
+                        "type": "array", 
+                        "description": "Contains a list of all captured byte transfers during the upload speed measurement."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SpeedMeasurementRawData", 
+                "description": "Stores the raw data (amount of bytes in time) values for download and upload."
+            }, 
+            "bytes_download_including_slow_start": {
+                "type": "integer", 
+                "description": "Bytes received during the speed measurement (Download) with slow-start phase."
+            }, 
+            "token": {
+                "type": "string", 
+                "description": "Measurement token generated by the collector."
+            }, 
+            "bytes_upload": {
+                "type": "integer", 
+                "description": "Bytes transferred during the speed measurement (Upload)."
+            }, 
+            "time": {
+                "properties": {
+                    "relative_end_time_ns": {
+                        "type": "integer", 
+                        "description": "End time in nanoseconds relative to the end time of the overall measurement object."
+                    }, 
+                    "duration_ns": {
+                        "type": "integer", 
+                        "description": "Duration of a measurement."
+                    }, 
+                    "start_time": {
+                        "items": {
+                            "type": "integer"
+                        }, 
+                        "type": "array", 
+                        "description": "Start Date and time for this (sub-) measurement. Date and time is always stored as UTC. Before showing date and time to the user it's converted to the users time zone by the client."
+                    }, 
+                    "end_time": {
+                        "items": {
+                            "type": "integer"
+                        }, 
+                        "type": "array", 
+                        "description": "End Date and time for this (sub-) measurement. Date and time is always stored as UTC. Before showing date and time to the user it's converted to the users time zone by the client."
+                    }, 
+                    "relative_start_time_ns": {
+                        "type": "integer", 
+                        "description": "Start time in nanoseconds relative to the start time of the overall measurement object."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SubMeasurementTime", 
+                "description": "This class extends the MeasurementTime class with relative time stamps."
+            }, 
+            "version_protocol": {
+                "type": "string", 
+                "description": "The protocol version this measurement used, if available."
+            }, 
+            "relative_start_time_upload_ns": {
+                "type": "integer", 
+                "description": "Relative start time of the upload measurement in nanoseconds."
+            }
+        }
+    }, 
+    "QoSResult": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:QoSResult", 
+        "properties": {
+            "failure_count": {
+                "type": "integer", 
+                "description": "The count of negative evalutations (failures)."
+            }, 
+            "results": {
+                "additionalProperties": {
+                    "type": "any"
+                }, 
+                "type": "object", 
+                "description": "Stores the result key-value pairs gathered from the QoS measurement execution."
+            }, 
+            "objective_id": {
+                "type": "integer", 
+                "description": "A reference to the QoS objective ID."
+            }, 
+            "success_count": {
+                "type": "integer", 
+                "description": "The count of positive evalutations (successes)."
+            }, 
+            "implausible": {
+                "type": "boolean", 
+                "description": "Flag to mark this QoS measurement as implausible"
+            }, 
+            "type": {
+                "enum": [
+                    "TCP", 
+                    "UDP", 
+                    "DNS", 
+                    "NON_TRANSPARENT_PROXY", 
+                    "HTTP_PROXY", 
+                    "VOIP", 
+                    "TRACEROUTE", 
+                    "WEBSITE", 
+                    "SIP", 
+                    "MKIT_DASH", 
+                    "MKIT_WEB_CONNECTIVITY"
+                ], 
+                "type": "string", 
+                "description": "The type of the given QoSResult (e.g. TCP, UDP)."
+            }
+        }
+    }, 
+    "QoSMeasurementObjective": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:QoSMeasurementObjective", 
+        "properties": {
+            "translation_keys": {
+                "properties": {
+                    "description": {
+                        "type": "string", 
+                        "description": "Translation key name for the description of this QoS objective."
+                    }, 
+                    "summary": {
+                        "type": "string", 
+                        "description": "Translation key name for the summary of this QoS objective."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:QoSMeasurementObjective:QoSTranslationKeys", 
+                "description": "Stores the translation keys for QoS objectives."
+            }, 
+            "parameters": {
+                "additionalProperties": {
+                    "type": "any"
+                }, 
+                "type": "object", 
+                "description": "A map of QoS objective parameters (e.g. timeout, TCP port, web page URL) "
+            }, 
+            "enabled": {
+                "type": "boolean", 
+                "description": "Flag if this QoS measurement objective is enabled."
+            }, 
+            "measurement_server_uuid": {
+                "type": "string", 
+                "description": "UUID of the measurement server that is used in the execution of this objective or null if the objective doesn't require a server."
+            }, 
+            "concurrency_group": {
+                "type": "integer", 
+                "description": "Objectives are ordered based on the concurrency group. Objectives that have the same concurrency group will be executed in parallel. Concurrency groups will be executed after each other in sorted order."
+            }, 
+            "evaluations": {
+                "items": {
+                    "additionalProperties": {
+                        "type": "string"
+                    }, 
+                    "type": "object"
+                }, 
+                "type": "array", 
+                "description": "A list of custom evaluations for this QoS objective. Evaluations are used to present human readable results to the end user."
+            }, 
+            "type": {
+                "enum": [
+                    "TCP", 
+                    "UDP", 
+                    "DNS", 
+                    "NON_TRANSPARENT_PROXY", 
+                    "HTTP_PROXY", 
+                    "VOIP", 
+                    "TRACEROUTE", 
+                    "WEBSITE", 
+                    "SIP", 
+                    "MKIT_DASH", 
+                    "MKIT_WEB_CONNECTIVITY"
+                ], 
+                "type": "string", 
+                "description": "Enum that holds the names of the available QoS measurement objectives."
+            }, 
+            "id": {
+                "type": "string", 
+                "description": "An ID which serves as primary key."
+            }
+        }
+    }, 
+    "NetworkMobileInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:NetworkMobileInfo", 
+        "properties": {
+            "network_operator_mcc_mnc": {
+                "properties": {
+                    "mnc": {
+                        "type": "integer", 
+                        "description": "The mobile network code."
+                    }, 
+                    "mcc": {
+                        "type": "integer", 
+                        "description": "The mobile country code."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MccMnc", 
+                "description": "The MCC/MNC of the network operator, if available."
+            }, 
+            "network_operator_name": {
+                "type": "string", 
+                "description": "The network operator name, if available."
+            }, 
+            "sim_operator_mcc_mnc": {
+                "type": "object", 
+                "description": "The MCC/MNC of the SIM operator, if available.", 
+                "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MccMnc"
+            }, 
+            "roaming": {
+                "type": "boolean", 
+                "description": "Indicates if this is a roaming connection, if available (null = unknown)."
+            }, 
+            "roaming_type": {
+                "enum": [
+                    "NO_ROAMING", 
+                    "NATIONAL", 
+                    "INTERNATIONAL"
+                ], 
+                "type": "string", 
+                "description": "The roaming type, if available."
+            }, 
+            "sim_country": {
+                "type": "string", 
+                "description": "The SIM operator country code (e.g. \"AT\"), if available."
+            }, 
+            "network_country": {
+                "type": "string", 
+                "description": "The network operator country code (e.g. \"AT\"), if available."
+            }, 
+            "sim_operator_name": {
+                "type": "string", 
+                "description": "SIM operator name, if available."
+            }
+        }
+    }, 
+    "NumStreamsInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:NumStreamsInfo", 
+        "properties": {
+            "requested_num_streams_download": {
+                "type": "integer", 
+                "description": "The requested number of streams for the download measurement."
+            }, 
+            "requested_num_streams_upload": {
+                "type": "integer", 
+                "description": "The requested number of streams for the upload measurement."
+            }, 
+            "actual_num_streams_upload": {
+                "type": "integer", 
+                "description": "The actual number of streams used by the upload measurement."
+            }, 
+            "actual_num_streams_download": {
+                "type": "integer", 
+                "description": "The actual number of streams used by the download measurement."
+            }
+        }
+    }, 
+    "MeasurementServerType": {
+        "enum": [
+            "SPEED", 
+            "QOS"
+        ]
+    }, 
+    "OperatingSystemInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:OperatingSystemInfo", 
+        "properties": {
+            "cpu_usage": {
+                "properties": {
+                    "raw_values": {
+                        "items": {
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:StatisticalTimeSeriesData:PointInRelativeTimeValue<java:lang:Double>", 
+                            "properties": {
+                                "value": {
+                                    "type": "number", 
+                                    "description": "The value recorded at this point in time."
+                                }, 
+                                "relative_time_ns": {
+                                    "type": "integer", 
+                                    "description": "The relative time in nanoseconds to the measurement start."
+                                }
+                            }
+                        }, 
+                        "type": "array", 
+                        "description": "The raw values with relative time and value which are used to calculate the statistics."
+                    }, 
+                    "min": {
+                        "type": "number", 
+                        "description": "Minimum value of data from rawValues."
+                    }, 
+                    "max": {
+                        "type": "number", 
+                        "description": "Maximum value of data from rawValues."
+                    }, 
+                    "average": {
+                        "type": "integer", 
+                        "description": "Average of data from rawValues."
+                    }, 
+                    "median": {
+                        "type": "integer", 
+                        "description": "Median of data from rawValues."
+                    }, 
+                    "standard_deviation": {
+                        "type": "integer", 
+                        "description": "Calculated standard deviation."
+                    }, 
+                    "variance": {
+                        "type": "number", 
+                        "description": "Variance of data from rawValues."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:StatisticalTimeSeriesData<java:lang:Double>", 
+                "description": "CPU usage during the test, if available."
+            }, 
+            "version": {
+                "type": "string", 
+                "description": "Operating system version."
+            }, 
+            "name": {
+                "type": "string", 
+                "description": "Operating system name (e.g. Android or iOS)."
+            }, 
+            "api_level": {
+                "type": "string", 
+                "description": "API level of operating system or SDK (e.g. Android API level or Swift SDK version)."
+            }, 
+            "mem_usage": {
+                "type": "object", 
+                "description": "Memory usage during the test, if available.", 
+                "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:StatisticalTimeSeriesData<java:lang:Double>"
+            }
+        }
+    }, 
+    "SubMeasurement": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SubMeasurement", 
+        "properties": {
+            "version_library": {
+                "type": "string", 
+                "description": "The library version this measurement used, if available."
+            }, 
+            "token": {
+                "type": "string", 
+                "description": "Measurement token generated by the collector."
+            }, 
+            "time": {
+                "properties": {
+                    "relative_end_time_ns": {
+                        "type": "integer", 
+                        "description": "End time in nanoseconds relative to the end time of the overall measurement object."
+                    }, 
+                    "duration_ns": {
+                        "type": "integer", 
+                        "description": "Duration of a measurement."
+                    }, 
+                    "start_time": {
+                        "items": {
+                            "type": "integer"
+                        }, 
+                        "type": "array", 
+                        "description": "Start Date and time for this (sub-) measurement. Date and time is always stored as UTC. Before showing date and time to the user it's converted to the users time zone by the client."
+                    }, 
+                    "end_time": {
+                        "items": {
+                            "type": "integer"
+                        }, 
+                        "type": "array", 
+                        "description": "End Date and time for this (sub-) measurement. Date and time is always stored as UTC. Before showing date and time to the user it's converted to the users time zone by the client."
+                    }, 
+                    "relative_start_time_ns": {
+                        "type": "integer", 
+                        "description": "Start time in nanoseconds relative to the start time of the overall measurement object."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SubMeasurementTime", 
+                "description": "This class extends the MeasurementTime class with relative time stamps."
+            }, 
+            "implausible": {
+                "type": "boolean", 
+                "description": "Flag to mark a measurement as implausible."
+            }, 
+            "lmap_result": {
+                "properties": {
+                    "task": {
+                        "type": "string", 
+                        "description": "The name of the Task that produced the result. References RFC 8194: lmap-report.result.task"
+                    }, 
+                    "event_time": {
+                        "items": {
+                            "type": "integer"
+                        }, 
+                        "type": "array", 
+                        "description": "The date and time of the event that triggered the Schedule of the Action that produced the reported result values. The date and time does not include any added randomization. References RFC 8194: lmap-report.result.event"
+                    }, 
+                    "tags": {
+                        "items": {
+                            "type": "string"
+                        }, 
+                        "type": "array", 
+                        "description": "Collection of all LMAP specific tags. This is the joined set of tags defined for the Task object, the Schedule object, and the Action object. References RFC 8194: lmap-report.result.tag"
+                    }, 
+                    "status_code": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "The status code returned by the execution of this SubMeasurement/Action. References RFC 8194: lmap-report.result.status"
+                    }, 
+                    "schedule": {
+                        "type": "string", 
+                        "description": "The name of the Schedule that produced the result. References RFC 8194: lmap-report.result.schedule"
+                    }, 
+                    "action": {
+                        "type": "string", 
+                        "description": "The name of the Action in the Schedule that produced the result. References RFC 8194: lmap-report.result.action"
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SubMeasurementLmapResult", 
+                "description": "This class holds LMAP specific result values (see LMAP report result model, RFC 8194)"
+            }, 
+            "status_info": {
+                "properties": {
+                    "status": {
+                        "enum": [
+                            "STARTED", 
+                            "FINISHED", 
+                            "FAILED", 
+                            "ABORTED"
+                        ], 
+                        "type": "string", 
+                        "description": "The status of a measurement."
+                    }, 
+                    "reason": {
+                        "enum": [
+                            "UNABLE_TO_CONNECT", 
+                            "CONNECTION_LOST", 
+                            "NETWORK_CATEGORY_CHANGED", 
+                            "APP_BACKGROUNDED", 
+                            "USER_ABORTED"
+                        ], 
+                        "type": "string", 
+                        "description": "The reason why a measurement failed."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MeasurementStatusInfo", 
+                "description": "Describes the status of a measurement."
+            }, 
+            "version_protocol": {
+                "type": "string", 
+                "description": "The protocol version this measurement used, if available."
+            }
+        }
+    }, 
+    "ProviderMccMncMapping": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:ProviderMccMncMapping", 
+        "properties": {
+            "condition_valid_from": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "type": "array", 
+                "description": "Optional condition used to set the date this MCC/MNC mapping is valid from."
+            }, 
+            "condition_valid_to": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "type": "array", 
+                "description": "Optional condition used to set the date this MCC/MNC mapping is valid to."
+            }, 
+            "sim_mcc_mnc": {
+                "properties": {
+                    "mnc": {
+                        "type": "integer", 
+                        "description": "The mobile network code."
+                    }, 
+                    "mcc": {
+                        "type": "integer", 
+                        "description": "The mobile country code."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MccMnc", 
+                "description": "The MCC/MNC of the SIM."
+            }, 
+            "network_mcc_mnc": {
+                "type": "object", 
+                "description": "The MCC/MNC of the network.", 
+                "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MccMnc"
+            }
+        }
+    }, 
+    "MccMnc": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MccMnc", 
+        "properties": {
+            "mnc": {
+                "type": "integer", 
+                "description": "The mobile network code."
+            }, 
+            "mcc": {
+                "type": "integer", 
+                "description": "The mobile country code."
+            }
+        }
+    }, 
+    "SignalInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SignalInfo", 
+        "properties": {
+            "signals": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Signal", 
+                    "properties": {
+                        "lte_rssnr_db": {
+                            "type": "integer", 
+                            "description": "The LTE reference signal signal-to-noise ratio, in dB (If available)."
+                        }, 
+                        "lte_rsrp_dbm": {
+                            "type": "integer", 
+                            "description": "The LTE reference signal received power, in dBm (If available)."
+                        }, 
+                        "lte_cqi": {
+                            "type": "integer", 
+                            "description": "The LTE channel quality indicator (If available)."
+                        }, 
+                        "lte_rsrp_db": {
+                            "type": "integer", 
+                            "description": "The LTE reference signal received quality, in dB (If available)."
+                        }, 
+                        "wifi_bssid": {
+                            "type": "string", 
+                            "description": "BSSID of the network (If available)."
+                        }, 
+                        "network_type_id": {
+                            "type": "integer", 
+                            "description": "Network type id as it gets returned by the Android API."
+                        }, 
+                        "wifi_rssi_dbm": {
+                            "type": "integer", 
+                            "description": "The received signal strength indicator of the current 802.11 network, in dBm (If available)."
+                        }, 
+                        "signal_strength_2g3g_dbm": {
+                            "type": "integer", 
+                            "description": "The received signal strength of 2G or 3G connections, in dBm (If available)."
+                        }, 
+                        "time": {
+                            "items": {
+                                "type": "integer"
+                            }, 
+                            "type": "array", 
+                            "description": "Time and date the signal information was captured (UTC)."
+                        }, 
+                        "wifi_link_speed_bps": {
+                            "type": "integer", 
+                            "description": "The current WiFi link speed, in bits per second (If available)."
+                        }, 
+                        "wifi_ssid": {
+                            "type": "string", 
+                            "description": "SSID of the network (If available)."
+                        }, 
+                        "relative_time_ns": {
+                            "type": "integer", 
+                            "description": "Relative time in nanoseconds (to test begin)."
+                        }
+                    }
+                }, 
+                "type": "array", 
+                "description": "List of captured signal information."
+            }
+        }
+    }, 
+    "EmbeddedNetworkType": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:EmbeddedNetworkType", 
+        "properties": {
+            "category": {
+                "enum": [
+                    "MOBILE", 
+                    "WIFI", 
+                    "LAN", 
+                    "UNKNOWN"
+                ], 
+                "type": "string", 
+                "description": "Contains the different network categories."
+            }, 
+            "name": {
+                "type": "string", 
+                "description": "Network type name."
+            }, 
+            "group_name": {
+                "type": "string", 
+                "description": "Network group name (e.g. 2G, 3G, LAN)."
+            }
+        }
+    }, 
+    "Traffic": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Traffic", 
+        "properties": {
+            "bytes_tx": {
+                "type": "integer", 
+                "description": "Bytes transmitted."
+            }, 
+            "bytes_rx": {
+                "type": "integer", 
+                "description": "Bytes received."
+            }
+        }
+    }, 
+    "Device": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Device", 
+        "properties": {
+            "full_name": {
+                "type": "string", 
+                "description": "The device name that is commonly known to users (e.g. Google Pixel)."
+            }, 
+            "id": {
+                "type": "integer", 
+                "description": "A ID which serves as primary key."
+            }, 
+            "code_name": {
+                "type": "string", 
+                "description": "Device code name."
+            }
+        }
+    }, 
+    "SpeedMeasurementRawDataItem": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SpeedMeasurementRawDataItem", 
+        "properties": {
+            "stream_id": {
+                "type": "integer", 
+                "description": "The stream id (numeric value starting from 0)."
+            }, 
+            "bytes": {
+                "type": "integer", 
+                "description": "Bytes transmitted or received since start of the speed measurement."
+            }, 
+            "relative_time_ns": {
+                "type": "integer", 
+                "description": "Relative time since start of the speed measurement."
+            }
+        }
+    }, 
+    "Translation": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Translation", 
+        "properties": {
+            "translations": {
+                "additionalProperties": {
+                    "type": "string"
+                }, 
+                "type": "object", 
+                "description": "Key/value pairs containing translations for a specific language."
+            }, 
+            "language": {
+                "type": "string", 
+                "description": "The language code."
+            }
+        }
+    }, 
+    "MeasurementServer": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MeasurementServer", 
+        "properties": {
+            "info": {
+                "properties": {
+                    "city": {
+                        "type": "string", 
+                        "description": "The city the measurement server is located in."
+                    }, 
+                    "geo_location": {
+                        "properties": {
+                            "altitude": {
+                                "type": "number", 
+                                "description": "Geographic location altitude."
+                            }, 
+                            "time": {
+                                "items": {
+                                    "type": "integer"
+                                }, 
+                                "type": "array", 
+                                "description": "Time and date the geographic location information was captured (UTC)."
+                            }, 
+                            "longitude": {
+                                "type": "number", 
+                                "description": "Geographic location longitude."
+                            }, 
+                            "provider": {
+                                "type": "string", 
+                                "description": "Geographic location provider."
+                            }, 
+                            "latitude": {
+                                "type": "number", 
+                                "description": "Geographic location latitude."
+                            }, 
+                            "speed": {
+                                "type": "number", 
+                                "description": "Movement speed."
+                            }, 
+                            "heading": {
+                                "type": "number", 
+                                "description": "Movement heading."
+                            }, 
+                            "relative_time_ns": {
+                                "type": "integer", 
+                                "description": "Relative time in nanoseconds (to measurement begin)."
+                            }, 
+                            "accuracy": {
+                                "type": "number", 
+                                "description": "Geographic location accuracy."
+                            }
+                        }, 
+                        "type": "object", 
+                        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:GeoLocation", 
+                        "description": "The geographic location of the measurement server."
+                    }, 
+                    "country": {
+                        "type": "string", 
+                        "description": "The country the measurement server is located in."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MeasurementServerInfo", 
+                "description": "Contains additional detail information about a measurement server."
+            }, 
+            "uuid": {
+                "type": "string", 
+                "description": "A UUID which serves as primary key."
+            }, 
+            "port_tls": {
+                "type": "integer", 
+                "description": "Port used for encrypted communication."
+            }, 
+            "address_ipv6": {
+                "type": "string", 
+                "description": "The measurement server's IPv6 address or name."
+            }, 
+            "enabled": {
+                "type": "boolean", 
+                "description": "Flag that indicates if this measurement server is enabled."
+            }, 
+            "secret_key": {
+                "type": "string", 
+                "description": "The measurement server's secret key used to generate measurement tokens."
+            }, 
+            "type": {
+                "enum": [
+                    "SPEED", 
+                    "QOS"
+                ], 
+                "type": "string", 
+                "description": "Measurement server type."
+            }, 
+            "port": {
+                "type": "integer", 
+                "description": "Port used for non-encrypted communication."
+            }, 
+            "address_ipv4": {
+                "type": "string", 
+                "description": "The measurement server's IPv4 address or name."
+            }, 
+            "name": {
+                "type": "string", 
+                "description": "Name (label) of this measurement server."
+            }
+        }
+    }, 
+    "MeasurementAgentType": {
+        "enum": [
+            "MOBILE", 
+            "BROWSER", 
+            "DESKTOP"
+        ]
+    }, 
+    "CellLocationInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:CellLocationInfo", 
+        "properties": {
+            "cell_locations": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:CellLocation", 
+                    "properties": {
+                        "cell_id": {
+                            "type": "integer", 
+                            "description": "Contains the cell-ID, if available."
+                        }, 
+                        "area_code": {
+                            "type": "integer", 
+                            "description": "Contains the area code (e.g. location area code (GSM), tracking area code (LTE)), if available."
+                        }, 
+                        "longitude": {
+                            "type": "number", 
+                            "description": "Geographic location longitude of this cell."
+                        }, 
+                        "latitude": {
+                            "type": "number", 
+                            "description": "Geographic location latitude of this cell."
+                        }, 
+                        "time": {
+                            "items": {
+                                "type": "integer"
+                            }, 
+                            "type": "array", 
+                            "description": "Time and date the cell location information was captured (UTC)."
+                        }, 
+                        "primary_scrambling_code": {
+                            "type": "integer", 
+                            "description": "Contains the primary scrambling code, if available."
+                        }, 
+                        "relative_time_ns": {
+                            "type": "integer", 
+                            "description": "Relative time in nanoseconds (to test begin)."
+                        }, 
+                        "arfcn": {
+                            "type": "integer", 
+                            "description": "Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN), if available."
+                        }
+                    }
+                }, 
+                "type": "array", 
+                "description": "List of captured cell information."
+            }
+        }
+    }, 
+    "Settings": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Settings", 
+        "properties": {
+            "measurements": {
+                "additionalProperties": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Settings:SubMeasurementSettings"
+                }, 
+                "type": "object", 
+                "description": "This map contains settings per measurement type."
+            }, 
+            "uuid": {
+                "type": "string", 
+                "description": "A UUID which serves as primary key."
+            }, 
+            "urls": {
+                "properties": {
+                    "website": {
+                        "type": "string", 
+                        "description": "Base URL of the web site of the form \"[protocol]://[domain]:[port]/[path]\"."
+                    }, 
+                    "collector_service": {
+                        "type": "string", 
+                        "description": "Base URL of the collector service of the form \"[protocol]://[domain]:[port]/[path]\". This domain name should have A and AAAA records."
+                    }, 
+                    "map_service": {
+                        "type": "string", 
+                        "description": "Base URL of the map service of the form \"[protocol]://[domain]:[port]/[path]\"."
+                    }, 
+                    "statistic_service": {
+                        "type": "string", 
+                        "description": "Base URL of the statistic service of the form \"[protocol]://[domain]:[port]/[path]\"."
+                    }, 
+                    "controller_service_ipv4": {
+                        "type": "string", 
+                        "description": "IPv4-only base URL of the controller service. This domain name must only have an A record."
+                    }, 
+                    "controller_service_ipv6": {
+                        "type": "string", 
+                        "description": "IPv6-only base URL of the controller service. This domain name must only have an AAAA record."
+                    }, 
+                    "controller_service": {
+                        "type": "string", 
+                        "description": "Base URL of the controller service of the form \"[protocol]://[domain]:[port]/[path]\". This domain name should have A and AAAA records."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Settings:Urls", 
+                "description": "Contains the base URLs for the various services accessed by the client."
+            }
+        }
+    }, 
+    "MeasurementTime": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MeasurementTime", 
+        "properties": {
+            "duration_ns": {
+                "type": "integer", 
+                "description": "Duration of a measurement."
+            }, 
+            "start_time": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "type": "array", 
+                "description": "Start Date and time for this (sub-) measurement. Date and time is always stored as UTC. Before showing date and time to the user it's converted to the users time zone by the client."
+            }, 
+            "end_time": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "type": "array", 
+                "description": "End Date and time for this (sub-) measurement. Date and time is always stored as UTC. Before showing date and time to the user it's converted to the users time zone by the client."
+            }
+        }
+    }, 
+    "Signal": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Signal", 
+        "properties": {
+            "lte_rssnr_db": {
+                "type": "integer", 
+                "description": "The LTE reference signal signal-to-noise ratio, in dB (If available)."
+            }, 
+            "lte_rsrp_dbm": {
+                "type": "integer", 
+                "description": "The LTE reference signal received power, in dBm (If available)."
+            }, 
+            "lte_cqi": {
+                "type": "integer", 
+                "description": "The LTE channel quality indicator (If available)."
+            }, 
+            "lte_rsrp_db": {
+                "type": "integer", 
+                "description": "The LTE reference signal received quality, in dB (If available)."
+            }, 
+            "wifi_bssid": {
+                "type": "string", 
+                "description": "BSSID of the network (If available)."
+            }, 
+            "network_type_id": {
+                "type": "integer", 
+                "description": "Network type id as it gets returned by the Android API."
+            }, 
+            "wifi_rssi_dbm": {
+                "type": "integer", 
+                "description": "The received signal strength indicator of the current 802.11 network, in dBm (If available)."
+            }, 
+            "signal_strength_2g3g_dbm": {
+                "type": "integer", 
+                "description": "The received signal strength of 2G or 3G connections, in dBm (If available)."
+            }, 
+            "time": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "type": "array", 
+                "description": "Time and date the signal information was captured (UTC)."
+            }, 
+            "wifi_link_speed_bps": {
+                "type": "integer", 
+                "description": "The current WiFi link speed, in bits per second (If available)."
+            }, 
+            "wifi_ssid": {
+                "type": "string", 
+                "description": "SSID of the network (If available)."
+            }, 
+            "relative_time_ns": {
+                "type": "integer", 
+                "description": "Relative time in nanoseconds (to test begin)."
+            }
+        }
+    }, 
+    "ProviderAsnMapping": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:ProviderAsnMapping", 
+        "properties": {
+            "condition_rdns_suffix": {
+                "type": "string", 
+                "description": "The reverse DNS suffix, an optional condition for an ASN mapping (e.g.: .com)."
+            }, 
+            "asn": {
+                "type": "integer", 
+                "description": "The Autonomous System Number (ASN)."
+            }
+        }
+    }, 
+    "SubMeasurementTime": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SubMeasurementTime", 
+        "properties": {
+            "relative_end_time_ns": {
+                "type": "integer", 
+                "description": "End time in nanoseconds relative to the end time of the overall measurement object."
+            }, 
+            "duration_ns": {
+                "type": "integer", 
+                "description": "Duration of a measurement."
+            }, 
+            "start_time": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "type": "array", 
+                "description": "Start Date and time for this (sub-) measurement. Date and time is always stored as UTC. Before showing date and time to the user it's converted to the users time zone by the client."
+            }, 
+            "end_time": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "type": "array", 
+                "description": "End Date and time for this (sub-) measurement. Date and time is always stored as UTC. Before showing date and time to the user it's converted to the users time zone by the client."
+            }, 
+            "relative_start_time_ns": {
+                "type": "integer", 
+                "description": "Start time in nanoseconds relative to the start time of the overall measurement object."
+            }
+        }
+    }, 
+    "NetworkInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:NetworkInfo", 
+        "properties": {
+            "network_points_in_time": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:NetworkPointInTime", 
+                    "properties": {
+                        "network_mobile_info": {
+                            "properties": {
+                                "network_operator_mcc_mnc": {
+                                    "properties": {
+                                        "mnc": {
+                                            "type": "integer", 
+                                            "description": "The mobile network code."
+                                        }, 
+                                        "mcc": {
+                                            "type": "integer", 
+                                            "description": "The mobile country code."
+                                        }
+                                    }, 
+                                    "type": "object", 
+                                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MccMnc", 
+                                    "description": "The MCC/MNC of the network operator, if available."
+                                }, 
+                                "network_operator_name": {
+                                    "type": "string", 
+                                    "description": "The network operator name, if available."
+                                }, 
+                                "sim_operator_mcc_mnc": {
+                                    "type": "object", 
+                                    "description": "The MCC/MNC of the SIM operator, if available.", 
+                                    "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MccMnc"
+                                }, 
+                                "roaming": {
+                                    "type": "boolean", 
+                                    "description": "Indicates if this is a roaming connection, if available (null = unknown)."
+                                }, 
+                                "roaming_type": {
+                                    "enum": [
+                                        "NO_ROAMING", 
+                                        "NATIONAL", 
+                                        "INTERNATIONAL"
+                                    ], 
+                                    "type": "string", 
+                                    "description": "The roaming type, if available."
+                                }, 
+                                "sim_country": {
+                                    "type": "string", 
+                                    "description": "The SIM operator country code (e.g. \"AT\"), if available."
+                                }, 
+                                "network_country": {
+                                    "type": "string", 
+                                    "description": "The network operator country code (e.g. \"AT\"), if available."
+                                }, 
+                                "sim_operator_name": {
+                                    "type": "string", 
+                                    "description": "SIM operator name, if available."
+                                }
+                            }, 
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:NetworkMobileInfo", 
+                            "description": "Contains mobile network information, if available."
+                        }, 
+                        "client_public_ip_country_code": {
+                            "type": "string", 
+                            "description": "Country of the client which is gathered by Geo-IP lookup."
+                        }, 
+                        "client_public_ip": {
+                            "type": "string", 
+                            "description": "Public IP address of the client."
+                        }, 
+                        "network_wifi_info": {
+                            "properties": {
+                                "initial_ssid": {
+                                    "type": "string", 
+                                    "description": "Initial SSID of the network."
+                                }, 
+                                "initial_bssid": {
+                                    "type": "string", 
+                                    "description": "Initial BSSID of the network."
+                                }
+                            }, 
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:NetworkWifiInfo", 
+                            "description": "Contains WIFI information, if available."
+                        }, 
+                        "provider_info": {
+                            "properties": {
+                                "country_code_asn": {
+                                    "type": "string", 
+                                    "description": "Country code derived from the AS (e.g. \"AT\")."
+                                }, 
+                                "public_ip_as_name": {
+                                    "type": "string", 
+                                    "description": "Name of ASN."
+                                }, 
+                                "provider": {
+                                    "properties": {
+                                        "name": {
+                                            "type": "string", 
+                                            "description": "The name of the provider."
+                                        }, 
+                                        "short_name": {
+                                            "type": "string", 
+                                            "description": "The short name (or shortcut) of the provider."
+                                        }
+                                    }, 
+                                    "type": "object", 
+                                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:EmbeddedProvider", 
+                                    "description": "Contains information about a provider."
+                                }, 
+                                "public_ip_asn": {
+                                    "type": "integer", 
+                                    "description": "ASN for the public IP address."
+                                }
+                            }, 
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:ProviderInfo", 
+                            "description": "Contains provider related information captured during the test."
+                        }, 
+                        "public_ip_rdns": {
+                            "type": "string", 
+                            "description": "Reverse DNS for the public IP address."
+                        }, 
+                        "time": {
+                            "items": {
+                                "type": "integer"
+                            }, 
+                            "type": "array", 
+                            "description": "Time and date the signal information was captured (UTC)."
+                        }, 
+                        "network_type": {
+                            "properties": {
+                                "category": {
+                                    "enum": [
+                                        "MOBILE", 
+                                        "WIFI", 
+                                        "LAN", 
+                                        "UNKNOWN"
+                                    ], 
+                                    "type": "string", 
+                                    "description": "Contains the different network categories."
+                                }, 
+                                "name": {
+                                    "type": "string", 
+                                    "description": "Network type name."
+                                }, 
+                                "group_name": {
+                                    "type": "string", 
+                                    "description": "Network group name (e.g. 2G, 3G, LAN)."
+                                }
+                            }, 
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:EmbeddedNetworkType", 
+                            "description": "Contains information about the network type."
+                        }, 
+                        "relative_time_ns": {
+                            "type": "integer", 
+                            "description": "Relative time in nanoseconds (to test begin)."
+                        }
+                    }
+                }, 
+                "type": "array", 
+                "description": "Contains all relevant network information of a single point in time."
+            }, 
+            "signal_info": {
+                "properties": {
+                    "signals": {
+                        "items": {
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Signal", 
+                            "properties": {
+                                "lte_rssnr_db": {
+                                    "type": "integer", 
+                                    "description": "The LTE reference signal signal-to-noise ratio, in dB (If available)."
+                                }, 
+                                "lte_rsrp_dbm": {
+                                    "type": "integer", 
+                                    "description": "The LTE reference signal received power, in dBm (If available)."
+                                }, 
+                                "lte_cqi": {
+                                    "type": "integer", 
+                                    "description": "The LTE channel quality indicator (If available)."
+                                }, 
+                                "lte_rsrp_db": {
+                                    "type": "integer", 
+                                    "description": "The LTE reference signal received quality, in dB (If available)."
+                                }, 
+                                "wifi_bssid": {
+                                    "type": "string", 
+                                    "description": "BSSID of the network (If available)."
+                                }, 
+                                "network_type_id": {
+                                    "type": "integer", 
+                                    "description": "Network type id as it gets returned by the Android API."
+                                }, 
+                                "wifi_rssi_dbm": {
+                                    "type": "integer", 
+                                    "description": "The received signal strength indicator of the current 802.11 network, in dBm (If available)."
+                                }, 
+                                "signal_strength_2g3g_dbm": {
+                                    "type": "integer", 
+                                    "description": "The received signal strength of 2G or 3G connections, in dBm (If available)."
+                                }, 
+                                "time": {
+                                    "items": {
+                                        "type": "integer"
+                                    }, 
+                                    "type": "array", 
+                                    "description": "Time and date the signal information was captured (UTC)."
+                                }, 
+                                "wifi_link_speed_bps": {
+                                    "type": "integer", 
+                                    "description": "The current WiFi link speed, in bits per second (If available)."
+                                }, 
+                                "wifi_ssid": {
+                                    "type": "string", 
+                                    "description": "SSID of the network (If available)."
+                                }, 
+                                "relative_time_ns": {
+                                    "type": "integer", 
+                                    "description": "Relative time in nanoseconds (to test begin)."
+                                }
+                            }
+                        }, 
+                        "type": "array", 
+                        "description": "List of captured signal information."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SignalInfo", 
+                "description": "Contains signal information captured during the test."
+            }, 
+            "cell_location_info": {
+                "properties": {
+                    "cell_locations": {
+                        "items": {
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:CellLocation", 
+                            "properties": {
+                                "cell_id": {
+                                    "type": "integer", 
+                                    "description": "Contains the cell-ID, if available."
+                                }, 
+                                "area_code": {
+                                    "type": "integer", 
+                                    "description": "Contains the area code (e.g. location area code (GSM), tracking area code (LTE)), if available."
+                                }, 
+                                "longitude": {
+                                    "type": "number", 
+                                    "description": "Geographic location longitude of this cell."
+                                }, 
+                                "latitude": {
+                                    "type": "number", 
+                                    "description": "Geographic location latitude of this cell."
+                                }, 
+                                "time": {
+                                    "items": {
+                                        "type": "integer"
+                                    }, 
+                                    "type": "array", 
+                                    "description": "Time and date the cell location information was captured (UTC)."
+                                }, 
+                                "primary_scrambling_code": {
+                                    "type": "integer", 
+                                    "description": "Contains the primary scrambling code, if available."
+                                }, 
+                                "relative_time_ns": {
+                                    "type": "integer", 
+                                    "description": "Relative time in nanoseconds (to test begin)."
+                                }, 
+                                "arfcn": {
+                                    "type": "integer", 
+                                    "description": "Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN), if available."
+                                }
+                            }
+                        }, 
+                        "type": "array", 
+                        "description": "List of captured cell information."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:CellLocationInfo", 
+                "description": "Contains cell location information captured during the test."
+            }
+        }
+    }, 
+    "NetworkWifiInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:NetworkWifiInfo", 
+        "properties": {
+            "initial_ssid": {
+                "type": "string", 
+                "description": "Initial SSID of the network."
+            }, 
+            "initial_bssid": {
+                "type": "string", 
+                "description": "Initial BSSID of the network."
+            }
+        }
+    }, 
+    "RttInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:RttInfo", 
+        "properties": {
+            "rtts": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Rtt", 
+                    "properties": {
+                        "rtt_ns": {
+                            "type": "integer", 
+                            "description": "Round trip time recorded in nanoseconds."
+                        }, 
+                        "relative_time_ns": {
+                            "type": "integer", 
+                            "description": "Relative time in nanoseconds (to test begin)."
+                        }
+                    }
+                }, 
+                "type": "array", 
+                "description": "List of all measured RTTs."
+            }, 
+            "num_received": {
+                "type": "integer", 
+                "description": "The actual number of received RTT packets."
+            }, 
+            "median_log": {
+                "type": "number", 
+                "description": "Common logarithm of the median RTT."
+            }, 
+            "num_sent": {
+                "type": "integer", 
+                "description": "The actual number of sent RTT packets."
+            }, 
+            "max_log": {
+                "type": "number", 
+                "description": "Common logarithm of the maximum (worst) RTT."
+            }, 
+            "requested_num_packets": {
+                "type": "integer", 
+                "description": "The number of RTT packets to send, as instructed by the server."
+            }, 
+            "average_ns": {
+                "type": "integer", 
+                "description": "Average RTT value in nanoseconds."
+            }, 
+            "standard_deviation_ns": {
+                "type": "integer", 
+                "description": "Calculated RTT standard deviation in nanoseconds."
+            }, 
+            "min_log": {
+                "type": "number", 
+                "description": "Common logarithm of the minimum (best) RTT."
+            }, 
+            "num_missing": {
+                "type": "integer", 
+                "description": "The actual number of missing RTT packets."
+            }, 
+            "packet_size": {
+                "type": "integer", 
+                "description": "The actual size of RTT packets."
+            }, 
+            "min_ns": {
+                "type": "integer", 
+                "description": "Minimum (best) RTT value in nanoseconds."
+            }, 
+            "max_ns": {
+                "type": "integer", 
+                "description": "Maximum (worst) RTT value in nanoseconds."
+            }, 
+            "variance": {
+                "type": "integer", 
+                "description": "Calculated RTT variance."
+            }, 
+            "num_error": {
+                "type": "integer", 
+                "description": "The actual number of failed RTT packets."
+            }, 
+            "median_ns": {
+                "type": "integer", 
+                "description": "Median RTT value in nanoseconds."
+            }, 
+            "average_log": {
+                "type": "number", 
+                "description": "Common logarithm of the average RTT."
+            }
+        }
+    }, 
+    "QoSMeasurement": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:QoSMeasurement", 
+        "properties": {
+            "version_library": {
+                "type": "string", 
+                "description": "The library version this measurement used, if available."
+            }, 
+            "results": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:QoSResult", 
+                    "properties": {
+                        "failure_count": {
+                            "type": "integer", 
+                            "description": "The count of negative evalutations (failures)."
+                        }, 
+                        "results": {
+                            "additionalProperties": {
+                                "type": "any"
+                            }, 
+                            "type": "object", 
+                            "description": "Stores the result key-value pairs gathered from the QoS measurement execution."
+                        }, 
+                        "objective_id": {
+                            "type": "integer", 
+                            "description": "A reference to the QoS objective ID."
+                        }, 
+                        "success_count": {
+                            "type": "integer", 
+                            "description": "The count of positive evalutations (successes)."
+                        }, 
+                        "implausible": {
+                            "type": "boolean", 
+                            "description": "Flag to mark this QoS measurement as implausible"
+                        }, 
+                        "type": {
+                            "enum": [
+                                "TCP", 
+                                "UDP", 
+                                "DNS", 
+                                "NON_TRANSPARENT_PROXY", 
+                                "HTTP_PROXY", 
+                                "VOIP", 
+                                "TRACEROUTE", 
+                                "WEBSITE", 
+                                "SIP", 
+                                "MKIT_DASH", 
+                                "MKIT_WEB_CONNECTIVITY"
+                            ], 
+                            "type": "string", 
+                            "description": "The type of the given QoSResult (e.g. TCP, UDP)."
+                        }
+                    }
+                }, 
+                "type": "array", 
+                "description": "Provides detailed information on all QoS results."
+            }, 
+            "token": {
+                "type": "string", 
+                "description": "Measurement token generated by the collector."
+            }, 
+            "time": {
+                "properties": {
+                    "relative_end_time_ns": {
+                        "type": "integer", 
+                        "description": "End time in nanoseconds relative to the end time of the overall measurement object."
+                    }, 
+                    "duration_ns": {
+                        "type": "integer", 
+                        "description": "Duration of a measurement."
+                    }, 
+                    "start_time": {
+                        "items": {
+                            "type": "integer"
+                        }, 
+                        "type": "array", 
+                        "description": "Start Date and time for this (sub-) measurement. Date and time is always stored as UTC. Before showing date and time to the user it's converted to the users time zone by the client."
+                    }, 
+                    "end_time": {
+                        "items": {
+                            "type": "integer"
+                        }, 
+                        "type": "array", 
+                        "description": "End Date and time for this (sub-) measurement. Date and time is always stored as UTC. Before showing date and time to the user it's converted to the users time zone by the client."
+                    }, 
+                    "relative_start_time_ns": {
+                        "type": "integer", 
+                        "description": "Start time in nanoseconds relative to the start time of the overall measurement object."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SubMeasurementTime", 
+                "description": "This class extends the MeasurementTime class with relative time stamps."
+            }, 
+            "implausible": {
+                "type": "boolean", 
+                "description": "Flag to mark a measurement as implausible."
+            }, 
+            "lmap_result": {
+                "properties": {
+                    "task": {
+                        "type": "string", 
+                        "description": "The name of the Task that produced the result. References RFC 8194: lmap-report.result.task"
+                    }, 
+                    "event_time": {
+                        "items": {
+                            "type": "integer"
+                        }, 
+                        "type": "array", 
+                        "description": "The date and time of the event that triggered the Schedule of the Action that produced the reported result values. The date and time does not include any added randomization. References RFC 8194: lmap-report.result.event"
+                    }, 
+                    "tags": {
+                        "items": {
+                            "type": "string"
+                        }, 
+                        "type": "array", 
+                        "description": "Collection of all LMAP specific tags. This is the joined set of tags defined for the Task object, the Schedule object, and the Action object. References RFC 8194: lmap-report.result.tag"
+                    }, 
+                    "status_code": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "The status code returned by the execution of this SubMeasurement/Action. References RFC 8194: lmap-report.result.status"
+                    }, 
+                    "schedule": {
+                        "type": "string", 
+                        "description": "The name of the Schedule that produced the result. References RFC 8194: lmap-report.result.schedule"
+                    }, 
+                    "action": {
+                        "type": "string", 
+                        "description": "The name of the Action in the Schedule that produced the result. References RFC 8194: lmap-report.result.action"
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SubMeasurementLmapResult", 
+                "description": "This class holds LMAP specific result values (see LMAP report result model, RFC 8194)"
+            }, 
+            "status_info": {
+                "properties": {
+                    "status": {
+                        "enum": [
+                            "STARTED", 
+                            "FINISHED", 
+                            "FAILED", 
+                            "ABORTED"
+                        ], 
+                        "type": "string", 
+                        "description": "The status of a measurement."
+                    }, 
+                    "reason": {
+                        "enum": [
+                            "UNABLE_TO_CONNECT", 
+                            "CONNECTION_LOST", 
+                            "NETWORK_CATEGORY_CHANGED", 
+                            "APP_BACKGROUNDED", 
+                            "USER_ABORTED"
+                        ], 
+                        "type": "string", 
+                        "description": "The reason why a measurement failed."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MeasurementStatusInfo", 
+                "description": "Describes the status of a measurement."
+            }, 
+            "version_protocol": {
+                "type": "string", 
+                "description": "The protocol version this measurement used, if available."
+            }
+        }
+    }, 
+    "EmbeddedProvider": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:EmbeddedProvider", 
+        "properties": {
+            "name": {
+                "type": "string", 
+                "description": "The name of the provider."
+            }, 
+            "short_name": {
+                "type": "string", 
+                "description": "The short name (or shortcut) of the provider."
+            }
+        }
+    }, 
+    "MeasurementStatusInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MeasurementStatusInfo", 
+        "properties": {
+            "status": {
+                "enum": [
+                    "STARTED", 
+                    "FINISHED", 
+                    "FAILED", 
+                    "ABORTED"
+                ], 
+                "type": "string", 
+                "description": "The status of a measurement."
+            }, 
+            "reason": {
+                "enum": [
+                    "UNABLE_TO_CONNECT", 
+                    "CONNECTION_LOST", 
+                    "NETWORK_CATEGORY_CHANGED", 
+                    "APP_BACKGROUNDED", 
+                    "USER_ABORTED"
+                ], 
+                "type": "string", 
+                "description": "The reason why a measurement failed."
+            }
+        }
+    }, 
+    "MeasurementAgentInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MeasurementAgentInfo", 
+        "properties": {
+            "uuid": {
+                "type": "string", 
+                "description": "The agent UUID."
+            }, 
+            "language": {
+                "type": "string", 
+                "description": "The agent's language."
+            }, 
+            "app_version_name": {
+                "type": "string", 
+                "description": "Application version name (e.g. 1.0.0)."
+            }, 
+            "app_git_revision": {
+                "type": "string", 
+                "description": "Git revision name."
+            }, 
+            "app_version_code": {
+                "type": "integer", 
+                "description": "Application version code number (e.g. 10)."
+            }, 
+            "timezone": {
+                "type": "string", 
+                "description": "The agent's time zone."
+            }, 
+            "type": {
+                "enum": [
+                    "MOBILE", 
+                    "BROWSER", 
+                    "DESKTOP"
+                ], 
+                "type": "string", 
+                "description": "The type of agent."
+            }
+        }
+    }, 
+    "StatisticalTimeSeriesData": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:StatisticalTimeSeriesData", 
+        "properties": {
+            "raw_values": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:StatisticalTimeSeriesData:PointInRelativeTimeValue<java:lang:Object>", 
+                    "properties": {
+                        "value": {
+                            "type": "any", 
+                            "description": "The value recorded at this point in time."
+                        }, 
+                        "relative_time_ns": {
+                            "type": "integer", 
+                            "description": "The relative time in nanoseconds to the measurement start."
+                        }
+                    }
+                }, 
+                "type": "array", 
+                "description": "The raw values with relative time and value which are used to calculate the statistics."
+            }, 
+            "min": {
+                "type": "number", 
+                "description": "Minimum value of data from rawValues."
+            }, 
+            "max": {
+                "type": "number", 
+                "description": "Maximum value of data from rawValues."
+            }, 
+            "average": {
+                "type": "integer", 
+                "description": "Average of data from rawValues."
+            }, 
+            "median": {
+                "type": "integer", 
+                "description": "Median of data from rawValues."
+            }, 
+            "standard_deviation": {
+                "type": "integer", 
+                "description": "Calculated standard deviation."
+            }, 
+            "variance": {
+                "type": "number", 
+                "description": "Variance of data from rawValues."
+            }
+        }
+    }, 
+    "NetworkTypeCategory": {
+        "enum": [
+            "MOBILE", 
+            "WIFI", 
+            "LAN", 
+            "UNKNOWN"
+        ]
+    }, 
+    "SubMeasurementLmapResult": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SubMeasurementLmapResult", 
+        "properties": {
+            "task": {
+                "type": "string", 
+                "description": "The name of the Task that produced the result. References RFC 8194: lmap-report.result.task"
+            }, 
+            "event_time": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "type": "array", 
+                "description": "The date and time of the event that triggered the Schedule of the Action that produced the reported result values. The date and time does not include any added randomization. References RFC 8194: lmap-report.result.event"
+            }, 
+            "tags": {
+                "items": {
+                    "type": "string"
+                }, 
+                "type": "array", 
+                "description": "Collection of all LMAP specific tags. This is the joined set of tags defined for the Task object, the Schedule object, and the Action object. References RFC 8194: lmap-report.result.tag"
+            }, 
+            "status_code": {
+                "required": true, 
+                "type": "integer", 
+                "description": "The status code returned by the execution of this SubMeasurement/Action. References RFC 8194: lmap-report.result.status"
+            }, 
+            "schedule": {
+                "type": "string", 
+                "description": "The name of the Schedule that produced the result. References RFC 8194: lmap-report.result.schedule"
+            }, 
+            "action": {
+                "type": "string", 
+                "description": "The name of the Action in the Schedule that produced the result. References RFC 8194: lmap-report.result.action"
+            }
+        }
+    }, 
+    "DeviceInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:DeviceInfo", 
+        "properties": {
+            "full_name": {
+                "type": "string", 
+                "description": "The device name that is commonly known to users (e.g. Google Pixel)."
+            }, 
+            "model": {
+                "type": "string", 
+                "description": "Detailed device designation."
+            }, 
+            "code_name": {
+                "type": "string", 
+                "description": "Device code name."
+            }, 
+            "os_info": {
+                "properties": {
+                    "cpu_usage": {
+                        "properties": {
+                            "raw_values": {
+                                "items": {
+                                    "type": "object", 
+                                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:StatisticalTimeSeriesData:PointInRelativeTimeValue<java:lang:Double>", 
+                                    "properties": {
+                                        "value": {
+                                            "type": "number", 
+                                            "description": "The value recorded at this point in time."
+                                        }, 
+                                        "relative_time_ns": {
+                                            "type": "integer", 
+                                            "description": "The relative time in nanoseconds to the measurement start."
+                                        }
+                                    }
+                                }, 
+                                "type": "array", 
+                                "description": "The raw values with relative time and value which are used to calculate the statistics."
+                            }, 
+                            "min": {
+                                "type": "number", 
+                                "description": "Minimum value of data from rawValues."
+                            }, 
+                            "max": {
+                                "type": "number", 
+                                "description": "Maximum value of data from rawValues."
+                            }, 
+                            "average": {
+                                "type": "integer", 
+                                "description": "Average of data from rawValues."
+                            }, 
+                            "median": {
+                                "type": "integer", 
+                                "description": "Median of data from rawValues."
+                            }, 
+                            "standard_deviation": {
+                                "type": "integer", 
+                                "description": "Calculated standard deviation."
+                            }, 
+                            "variance": {
+                                "type": "number", 
+                                "description": "Variance of data from rawValues."
+                            }
+                        }, 
+                        "type": "object", 
+                        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:StatisticalTimeSeriesData<java:lang:Double>", 
+                        "description": "CPU usage during the test, if available."
+                    }, 
+                    "version": {
+                        "type": "string", 
+                        "description": "Operating system version."
+                    }, 
+                    "name": {
+                        "type": "string", 
+                        "description": "Operating system name (e.g. Android or iOS)."
+                    }, 
+                    "api_level": {
+                        "type": "string", 
+                        "description": "API level of operating system or SDK (e.g. Android API level or Swift SDK version)."
+                    }, 
+                    "mem_usage": {
+                        "type": "object", 
+                        "description": "Memory usage during the test, if available.", 
+                        "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:StatisticalTimeSeriesData<java:lang:Double>"
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:OperatingSystemInfo", 
+                "description": "Contains information about the client's OS."
+            }
+        }
+    }, 
+    "RoamingType": {
+        "enum": [
+            "NO_ROAMING", 
+            "NATIONAL", 
+            "INTERNATIONAL"
+        ]
+    }, 
+    "Rtt": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Rtt", 
+        "properties": {
+            "rtt_ns": {
+                "type": "integer", 
+                "description": "Round trip time recorded in nanoseconds."
+            }, 
+            "relative_time_ns": {
+                "type": "integer", 
+                "description": "Relative time in nanoseconds (to test begin)."
+            }
+        }
+    }, 
+    "ProviderInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:ProviderInfo", 
+        "properties": {
+            "country_code_asn": {
+                "type": "string", 
+                "description": "Country code derived from the AS (e.g. \"AT\")."
+            }, 
+            "public_ip_as_name": {
+                "type": "string", 
+                "description": "Name of ASN."
+            }, 
+            "provider": {
+                "properties": {
+                    "name": {
+                        "type": "string", 
+                        "description": "The name of the provider."
+                    }, 
+                    "short_name": {
+                        "type": "string", 
+                        "description": "The short name (or shortcut) of the provider."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:EmbeddedProvider", 
+                "description": "Contains information about a provider."
+            }, 
+            "public_ip_asn": {
+                "type": "integer", 
+                "description": "ASN for the public IP address."
+            }
+        }
+    }, 
+    "CellLocation": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:CellLocation", 
+        "properties": {
+            "cell_id": {
+                "type": "integer", 
+                "description": "Contains the cell-ID, if available."
+            }, 
+            "area_code": {
+                "type": "integer", 
+                "description": "Contains the area code (e.g. location area code (GSM), tracking area code (LTE)), if available."
+            }, 
+            "longitude": {
+                "type": "number", 
+                "description": "Geographic location longitude of this cell."
+            }, 
+            "latitude": {
+                "type": "number", 
+                "description": "Geographic location latitude of this cell."
+            }, 
+            "time": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "type": "array", 
+                "description": "Time and date the cell location information was captured (UTC)."
+            }, 
+            "primary_scrambling_code": {
+                "type": "integer", 
+                "description": "Contains the primary scrambling code, if available."
+            }, 
+            "relative_time_ns": {
+                "type": "integer", 
+                "description": "Relative time in nanoseconds (to test begin)."
+            }, 
+            "arfcn": {
+                "type": "integer", 
+                "description": "Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN), if available."
+            }
+        }
+    }, 
+    "Measurement": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Measurement", 
+        "properties": {
+            "geo_location_info": {
+                "properties": {
+                    "geo_locations": {
+                        "items": {
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:GeoLocation", 
+                            "properties": {
+                                "altitude": {
+                                    "type": "number", 
+                                    "description": "Geographic location altitude."
+                                }, 
+                                "time": {
+                                    "items": {
+                                        "type": "integer"
+                                    }, 
+                                    "type": "array", 
+                                    "description": "Time and date the geographic location information was captured (UTC)."
+                                }, 
+                                "longitude": {
+                                    "type": "number", 
+                                    "description": "Geographic location longitude."
+                                }, 
+                                "provider": {
+                                    "type": "string", 
+                                    "description": "Geographic location provider."
+                                }, 
+                                "latitude": {
+                                    "type": "number", 
+                                    "description": "Geographic location latitude."
+                                }, 
+                                "speed": {
+                                    "type": "number", 
+                                    "description": "Movement speed."
+                                }, 
+                                "heading": {
+                                    "type": "number", 
+                                    "description": "Movement heading."
+                                }, 
+                                "relative_time_ns": {
+                                    "type": "integer", 
+                                    "description": "Relative time in nanoseconds (to measurement begin)."
+                                }, 
+                                "accuracy": {
+                                    "type": "number", 
+                                    "description": "Geographic location accuracy."
+                                }
+                            }
+                        }, 
+                        "type": "array", 
+                        "description": "List of all captured geographic locations."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:GeoLocationInfo", 
+                "description": "Contains information about all geographic locations captured during the test."
+            }, 
+            "uuid": {
+                "type": "string", 
+                "description": "The unique identifier (UUIDv4) of the measurement."
+            }, 
+            "measurements": {
+                "additionalProperties": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SubMeasurement", 
+                    "properties": {
+                        "version_library": {
+                            "type": "string", 
+                            "description": "The library version this measurement used, if available."
+                        }, 
+                        "token": {
+                            "type": "string", 
+                            "description": "Measurement token generated by the collector."
+                        }, 
+                        "time": {
+                            "properties": {
+                                "relative_end_time_ns": {
+                                    "type": "integer", 
+                                    "description": "End time in nanoseconds relative to the end time of the overall measurement object."
+                                }, 
+                                "duration_ns": {
+                                    "type": "integer", 
+                                    "description": "Duration of a measurement."
+                                }, 
+                                "start_time": {
+                                    "items": {
+                                        "type": "integer"
+                                    }, 
+                                    "type": "array", 
+                                    "description": "Start Date and time for this (sub-) measurement. Date and time is always stored as UTC. Before showing date and time to the user it's converted to the users time zone by the client."
+                                }, 
+                                "end_time": {
+                                    "items": {
+                                        "type": "integer"
+                                    }, 
+                                    "type": "array", 
+                                    "description": "End Date and time for this (sub-) measurement. Date and time is always stored as UTC. Before showing date and time to the user it's converted to the users time zone by the client."
+                                }, 
+                                "relative_start_time_ns": {
+                                    "type": "integer", 
+                                    "description": "Start time in nanoseconds relative to the start time of the overall measurement object."
+                                }
+                            }, 
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SubMeasurementTime", 
+                            "description": "This class extends the MeasurementTime class with relative time stamps."
+                        }, 
+                        "implausible": {
+                            "type": "boolean", 
+                            "description": "Flag to mark a measurement as implausible."
+                        }, 
+                        "lmap_result": {
+                            "properties": {
+                                "task": {
+                                    "type": "string", 
+                                    "description": "The name of the Task that produced the result. References RFC 8194: lmap-report.result.task"
+                                }, 
+                                "event_time": {
+                                    "items": {
+                                        "type": "integer"
+                                    }, 
+                                    "type": "array", 
+                                    "description": "The date and time of the event that triggered the Schedule of the Action that produced the reported result values. The date and time does not include any added randomization. References RFC 8194: lmap-report.result.event"
+                                }, 
+                                "tags": {
+                                    "items": {
+                                        "type": "string"
+                                    }, 
+                                    "type": "array", 
+                                    "description": "Collection of all LMAP specific tags. This is the joined set of tags defined for the Task object, the Schedule object, and the Action object. References RFC 8194: lmap-report.result.tag"
+                                }, 
+                                "status_code": {
+                                    "required": true, 
+                                    "type": "integer", 
+                                    "description": "The status code returned by the execution of this SubMeasurement/Action. References RFC 8194: lmap-report.result.status"
+                                }, 
+                                "schedule": {
+                                    "type": "string", 
+                                    "description": "The name of the Schedule that produced the result. References RFC 8194: lmap-report.result.schedule"
+                                }, 
+                                "action": {
+                                    "type": "string", 
+                                    "description": "The name of the Action in the Schedule that produced the result. References RFC 8194: lmap-report.result.action"
+                                }
+                            }, 
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SubMeasurementLmapResult", 
+                            "description": "This class holds LMAP specific result values (see LMAP report result model, RFC 8194)"
+                        }, 
+                        "status_info": {
+                            "properties": {
+                                "status": {
+                                    "enum": [
+                                        "STARTED", 
+                                        "FINISHED", 
+                                        "FAILED", 
+                                        "ABORTED"
+                                    ], 
+                                    "type": "string", 
+                                    "description": "The status of a measurement."
+                                }, 
+                                "reason": {
+                                    "enum": [
+                                        "UNABLE_TO_CONNECT", 
+                                        "CONNECTION_LOST", 
+                                        "NETWORK_CATEGORY_CHANGED", 
+                                        "APP_BACKGROUNDED", 
+                                        "USER_ABORTED"
+                                    ], 
+                                    "type": "string", 
+                                    "description": "The reason why a measurement failed."
+                                }
+                            }, 
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MeasurementStatusInfo", 
+                            "description": "Describes the status of a measurement."
+                        }, 
+                        "version_protocol": {
+                            "type": "string", 
+                            "description": "The protocol version this measurement used, if available."
+                        }
+                    }
+                }, 
+                "type": "object", 
+                "description": "Can contains the result of a Speed and/or QoS measurement."
+            }, 
+            "client_info": {
+                "properties": {
+                    "uuid": {
+                        "type": "string", 
+                        "description": "The agent UUID."
+                    }, 
+                    "language": {
+                        "type": "string", 
+                        "description": "The agent's language."
+                    }, 
+                    "app_version_name": {
+                        "type": "string", 
+                        "description": "Application version name (e.g. 1.0.0)."
+                    }, 
+                    "app_git_revision": {
+                        "type": "string", 
+                        "description": "Git revision name."
+                    }, 
+                    "app_version_code": {
+                        "type": "integer", 
+                        "description": "Application version code number (e.g. 10)."
+                    }, 
+                    "timezone": {
+                        "type": "string", 
+                        "description": "The agent's time zone."
+                    }, 
+                    "type": {
+                        "enum": [
+                            "MOBILE", 
+                            "BROWSER", 
+                            "DESKTOP"
+                        ], 
+                        "type": "string", 
+                        "description": "The type of agent."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MeasurementAgentInfo", 
+                "description": "Contains information about the measurement client."
+            }, 
+            "source": {
+                "type": "string", 
+                "description": "Measurement source. Can be either own system or imported from open-data."
+            }, 
+            "device_info": {
+                "properties": {
+                    "full_name": {
+                        "type": "string", 
+                        "description": "The device name that is commonly known to users (e.g. Google Pixel)."
+                    }, 
+                    "model": {
+                        "type": "string", 
+                        "description": "Detailed device designation."
+                    }, 
+                    "code_name": {
+                        "type": "string", 
+                        "description": "Device code name."
+                    }, 
+                    "os_info": {
+                        "properties": {
+                            "cpu_usage": {
+                                "properties": {
+                                    "raw_values": {
+                                        "items": {
+                                            "type": "object", 
+                                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:StatisticalTimeSeriesData:PointInRelativeTimeValue<java:lang:Double>", 
+                                            "properties": {
+                                                "value": {
+                                                    "type": "number", 
+                                                    "description": "The value recorded at this point in time."
+                                                }, 
+                                                "relative_time_ns": {
+                                                    "type": "integer", 
+                                                    "description": "The relative time in nanoseconds to the measurement start."
+                                                }
+                                            }
+                                        }, 
+                                        "type": "array", 
+                                        "description": "The raw values with relative time and value which are used to calculate the statistics."
+                                    }, 
+                                    "min": {
+                                        "type": "number", 
+                                        "description": "Minimum value of data from rawValues."
+                                    }, 
+                                    "max": {
+                                        "type": "number", 
+                                        "description": "Maximum value of data from rawValues."
+                                    }, 
+                                    "average": {
+                                        "type": "integer", 
+                                        "description": "Average of data from rawValues."
+                                    }, 
+                                    "median": {
+                                        "type": "integer", 
+                                        "description": "Median of data from rawValues."
+                                    }, 
+                                    "standard_deviation": {
+                                        "type": "integer", 
+                                        "description": "Calculated standard deviation."
+                                    }, 
+                                    "variance": {
+                                        "type": "number", 
+                                        "description": "Variance of data from rawValues."
+                                    }
+                                }, 
+                                "type": "object", 
+                                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:StatisticalTimeSeriesData<java:lang:Double>", 
+                                "description": "CPU usage during the test, if available."
+                            }, 
+                            "version": {
+                                "type": "string", 
+                                "description": "Operating system version."
+                            }, 
+                            "name": {
+                                "type": "string", 
+                                "description": "Operating system name (e.g. Android or iOS)."
+                            }, 
+                            "api_level": {
+                                "type": "string", 
+                                "description": "API level of operating system or SDK (e.g. Android API level or Swift SDK version)."
+                            }, 
+                            "mem_usage": {
+                                "type": "object", 
+                                "description": "Memory usage during the test, if available.", 
+                                "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:StatisticalTimeSeriesData<java:lang:Double>"
+                            }
+                        }, 
+                        "type": "object", 
+                        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:OperatingSystemInfo", 
+                        "description": "Contains information about the client's OS."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:DeviceInfo", 
+                "description": "Contains information about the device the measurement software is running on."
+            }, 
+            "tag": {
+                "type": "string", 
+                "description": "A tag provided by the client."
+            }, 
+            "time": {
+                "properties": {
+                    "duration_ns": {
+                        "type": "integer", 
+                        "description": "Duration of a measurement."
+                    }, 
+                    "start_time": {
+                        "items": {
+                            "type": "integer"
+                        }, 
+                        "type": "array", 
+                        "description": "Start Date and time for this (sub-) measurement. Date and time is always stored as UTC. Before showing date and time to the user it's converted to the users time zone by the client."
+                    }, 
+                    "end_time": {
+                        "items": {
+                            "type": "integer"
+                        }, 
+                        "type": "array", 
+                        "description": "End Date and time for this (sub-) measurement. Date and time is always stored as UTC. Before showing date and time to the user it's converted to the users time zone by the client."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MeasurementTime", 
+                "description": "Start and end time stamps and the duration of a (sub) measurement."
+            }, 
+            "network_info": {
+                "properties": {
+                    "network_points_in_time": {
+                        "items": {
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:NetworkPointInTime", 
+                            "properties": {
+                                "network_mobile_info": {
+                                    "properties": {
+                                        "network_operator_mcc_mnc": {
+                                            "properties": {
+                                                "mnc": {
+                                                    "type": "integer", 
+                                                    "description": "The mobile network code."
+                                                }, 
+                                                "mcc": {
+                                                    "type": "integer", 
+                                                    "description": "The mobile country code."
+                                                }
+                                            }, 
+                                            "type": "object", 
+                                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MccMnc", 
+                                            "description": "The MCC/MNC of the network operator, if available."
+                                        }, 
+                                        "network_operator_name": {
+                                            "type": "string", 
+                                            "description": "The network operator name, if available."
+                                        }, 
+                                        "sim_operator_mcc_mnc": {
+                                            "type": "object", 
+                                            "description": "The MCC/MNC of the SIM operator, if available.", 
+                                            "$ref": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MccMnc"
+                                        }, 
+                                        "roaming": {
+                                            "type": "boolean", 
+                                            "description": "Indicates if this is a roaming connection, if available (null = unknown)."
+                                        }, 
+                                        "roaming_type": {
+                                            "enum": [
+                                                "NO_ROAMING", 
+                                                "NATIONAL", 
+                                                "INTERNATIONAL"
+                                            ], 
+                                            "type": "string", 
+                                            "description": "The roaming type, if available."
+                                        }, 
+                                        "sim_country": {
+                                            "type": "string", 
+                                            "description": "The SIM operator country code (e.g. \"AT\"), if available."
+                                        }, 
+                                        "network_country": {
+                                            "type": "string", 
+                                            "description": "The network operator country code (e.g. \"AT\"), if available."
+                                        }, 
+                                        "sim_operator_name": {
+                                            "type": "string", 
+                                            "description": "SIM operator name, if available."
+                                        }
+                                    }, 
+                                    "type": "object", 
+                                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:NetworkMobileInfo", 
+                                    "description": "Contains mobile network information, if available."
+                                }, 
+                                "client_public_ip_country_code": {
+                                    "type": "string", 
+                                    "description": "Country of the client which is gathered by Geo-IP lookup."
+                                }, 
+                                "client_public_ip": {
+                                    "type": "string", 
+                                    "description": "Public IP address of the client."
+                                }, 
+                                "network_wifi_info": {
+                                    "properties": {
+                                        "initial_ssid": {
+                                            "type": "string", 
+                                            "description": "Initial SSID of the network."
+                                        }, 
+                                        "initial_bssid": {
+                                            "type": "string", 
+                                            "description": "Initial BSSID of the network."
+                                        }
+                                    }, 
+                                    "type": "object", 
+                                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:NetworkWifiInfo", 
+                                    "description": "Contains WIFI information, if available."
+                                }, 
+                                "provider_info": {
+                                    "properties": {
+                                        "country_code_asn": {
+                                            "type": "string", 
+                                            "description": "Country code derived from the AS (e.g. \"AT\")."
+                                        }, 
+                                        "public_ip_as_name": {
+                                            "type": "string", 
+                                            "description": "Name of ASN."
+                                        }, 
+                                        "provider": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string", 
+                                                    "description": "The name of the provider."
+                                                }, 
+                                                "short_name": {
+                                                    "type": "string", 
+                                                    "description": "The short name (or shortcut) of the provider."
+                                                }
+                                            }, 
+                                            "type": "object", 
+                                            "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:EmbeddedProvider", 
+                                            "description": "Contains information about a provider."
+                                        }, 
+                                        "public_ip_asn": {
+                                            "type": "integer", 
+                                            "description": "ASN for the public IP address."
+                                        }
+                                    }, 
+                                    "type": "object", 
+                                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:ProviderInfo", 
+                                    "description": "Contains provider related information captured during the test."
+                                }, 
+                                "public_ip_rdns": {
+                                    "type": "string", 
+                                    "description": "Reverse DNS for the public IP address."
+                                }, 
+                                "time": {
+                                    "items": {
+                                        "type": "integer"
+                                    }, 
+                                    "type": "array", 
+                                    "description": "Time and date the signal information was captured (UTC)."
+                                }, 
+                                "network_type": {
+                                    "properties": {
+                                        "category": {
+                                            "enum": [
+                                                "MOBILE", 
+                                                "WIFI", 
+                                                "LAN", 
+                                                "UNKNOWN"
+                                            ], 
+                                            "type": "string", 
+                                            "description": "Contains the different network categories."
+                                        }, 
+                                        "name": {
+                                            "type": "string", 
+                                            "description": "Network type name."
+                                        }, 
+                                        "group_name": {
+                                            "type": "string", 
+                                            "description": "Network group name (e.g. 2G, 3G, LAN)."
+                                        }
+                                    }, 
+                                    "type": "object", 
+                                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:EmbeddedNetworkType", 
+                                    "description": "Contains information about the network type."
+                                }, 
+                                "relative_time_ns": {
+                                    "type": "integer", 
+                                    "description": "Relative time in nanoseconds (to test begin)."
+                                }
+                            }
+                        }, 
+                        "type": "array", 
+                        "description": "Contains all relevant network information of a single point in time."
+                    }, 
+                    "signal_info": {
+                        "properties": {
+                            "signals": {
+                                "items": {
+                                    "type": "object", 
+                                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:Signal", 
+                                    "properties": {
+                                        "lte_rssnr_db": {
+                                            "type": "integer", 
+                                            "description": "The LTE reference signal signal-to-noise ratio, in dB (If available)."
+                                        }, 
+                                        "lte_rsrp_dbm": {
+                                            "type": "integer", 
+                                            "description": "The LTE reference signal received power, in dBm (If available)."
+                                        }, 
+                                        "lte_cqi": {
+                                            "type": "integer", 
+                                            "description": "The LTE channel quality indicator (If available)."
+                                        }, 
+                                        "lte_rsrp_db": {
+                                            "type": "integer", 
+                                            "description": "The LTE reference signal received quality, in dB (If available)."
+                                        }, 
+                                        "wifi_bssid": {
+                                            "type": "string", 
+                                            "description": "BSSID of the network (If available)."
+                                        }, 
+                                        "network_type_id": {
+                                            "type": "integer", 
+                                            "description": "Network type id as it gets returned by the Android API."
+                                        }, 
+                                        "wifi_rssi_dbm": {
+                                            "type": "integer", 
+                                            "description": "The received signal strength indicator of the current 802.11 network, in dBm (If available)."
+                                        }, 
+                                        "signal_strength_2g3g_dbm": {
+                                            "type": "integer", 
+                                            "description": "The received signal strength of 2G or 3G connections, in dBm (If available)."
+                                        }, 
+                                        "time": {
+                                            "items": {
+                                                "type": "integer"
+                                            }, 
+                                            "type": "array", 
+                                            "description": "Time and date the signal information was captured (UTC)."
+                                        }, 
+                                        "wifi_link_speed_bps": {
+                                            "type": "integer", 
+                                            "description": "The current WiFi link speed, in bits per second (If available)."
+                                        }, 
+                                        "wifi_ssid": {
+                                            "type": "string", 
+                                            "description": "SSID of the network (If available)."
+                                        }, 
+                                        "relative_time_ns": {
+                                            "type": "integer", 
+                                            "description": "Relative time in nanoseconds (to test begin)."
+                                        }
+                                    }
+                                }, 
+                                "type": "array", 
+                                "description": "List of captured signal information."
+                            }
+                        }, 
+                        "type": "object", 
+                        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:SignalInfo", 
+                        "description": "Contains signal information captured during the test."
+                    }, 
+                    "cell_location_info": {
+                        "properties": {
+                            "cell_locations": {
+                                "items": {
+                                    "type": "object", 
+                                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:CellLocation", 
+                                    "properties": {
+                                        "cell_id": {
+                                            "type": "integer", 
+                                            "description": "Contains the cell-ID, if available."
+                                        }, 
+                                        "area_code": {
+                                            "type": "integer", 
+                                            "description": "Contains the area code (e.g. location area code (GSM), tracking area code (LTE)), if available."
+                                        }, 
+                                        "longitude": {
+                                            "type": "number", 
+                                            "description": "Geographic location longitude of this cell."
+                                        }, 
+                                        "latitude": {
+                                            "type": "number", 
+                                            "description": "Geographic location latitude of this cell."
+                                        }, 
+                                        "time": {
+                                            "items": {
+                                                "type": "integer"
+                                            }, 
+                                            "type": "array", 
+                                            "description": "Time and date the cell location information was captured (UTC)."
+                                        }, 
+                                        "primary_scrambling_code": {
+                                            "type": "integer", 
+                                            "description": "Contains the primary scrambling code, if available."
+                                        }, 
+                                        "relative_time_ns": {
+                                            "type": "integer", 
+                                            "description": "Relative time in nanoseconds (to test begin)."
+                                        }, 
+                                        "arfcn": {
+                                            "type": "integer", 
+                                            "description": "Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN), if available."
+                                        }
+                                    }
+                                }, 
+                                "type": "array", 
+                                "description": "List of captured cell information."
+                            }
+                        }, 
+                        "type": "object", 
+                        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:CellLocationInfo", 
+                        "description": "Contains cell location information captured during the test."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:NetworkInfo", 
+                "description": "Contains network related information gathered during the test."
+            }, 
+            "open_data_uuid": {
+                "type": "string", 
+                "description": "The open-data identifier (UUIDv4) of the measurement."
+            }
+        }
+    }, 
+    "NetworkType": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:NetworkType", 
+        "properties": {
+            "category": {
+                "enum": [
+                    "MOBILE", 
+                    "WIFI", 
+                    "LAN", 
+                    "UNKNOWN"
+                ], 
+                "type": "string", 
+                "description": "Contains the different network categories."
+            }, 
+            "id": {
+                "type": "integer", 
+                "description": "Network type id as it gets returned by the Android API (serves as primary key)."
+            }, 
+            "name": {
+                "type": "string", 
+                "description": "Network type name."
+            }, 
+            "group_name": {
+                "type": "string", 
+                "description": "Network group name (e.g. 2G, 3G, LAN)."
+            }
+        }
+    }, 
+    "MeasurementAgent": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:MeasurementAgent", 
+        "properties": {
+            "uuid": {
+                "type": "string", 
+                "description": "The agent UUID (also serves as primary key)."
+            }, 
+            "registration_time": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "type": "array", 
+                "description": "Time stamp in UTC when the agent was registered."
+            }, 
+            "tc_accepted_time": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "type": "array", 
+                "description": "Time stamp when the latest terms and conditions (see termsAndConditionsAcceptedVersion) were accepted by the agent."
+            }, 
+            "tc_accepted_version": {
+                "type": "integer", 
+                "description": "Version of the terms and conditions that was accepted by the agent."
+            }, 
+            "tc_accepted": {
+                "type": "boolean", 
+                "description": "Flag if the terms and conditions were accepted by the agent."
+            }, 
+            "group_name": {
+                "type": "string", 
+                "description": "The agent's group name/identifier."
+            }, 
+            "type": {
+                "enum": [
+                    "MOBILE", 
+                    "BROWSER", 
+                    "DESKTOP"
+                ], 
+                "type": "string", 
+                "description": "The type of agent."
+            }
+        }
+    }, 
+    "WebSocketInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:WebSocketInfo", 
+        "properties": {
+            "frame_count_including_slow_start": {
+                "type": "integer", 
+                "description": "Number of frames sent over the WebSocket protocol during measurement including slow-start phase."
+            }, 
+            "overhead_per_frame_including_slow_start": {
+                "type": "integer", 
+                "description": "The overhead sent during the communication via the WebSocket protocol including slow-start phase."
+            }, 
+            "overhead": {
+                "type": "integer", 
+                "description": "The overhead sent during the communication via the WebSocket protocol excluding slow-start phase."
+            }, 
+            "frame_size": {
+                "type": "integer", 
+                "description": "Size of a transmitted frame over the WebSocket protocol."
+            }, 
+            "overhead_per_frame": {
+                "type": "integer", 
+                "description": "The overhead a single frame produces on average."
+            }, 
+            "frame_count": {
+                "type": "integer", 
+                "description": "Number of frames sent over the WebSocket protocol during measurement excluding slow-start phase."
+            }
+        }
+    }, 
+    "GeoLocationInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:GeoLocationInfo", 
+        "properties": {
+            "geo_locations": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:server:domain:model:GeoLocation", 
+                    "properties": {
+                        "altitude": {
+                            "type": "number", 
+                            "description": "Geographic location altitude."
+                        }, 
+                        "time": {
+                            "items": {
+                                "type": "integer"
+                            }, 
+                            "type": "array", 
+                            "description": "Time and date the geographic location information was captured (UTC)."
+                        }, 
+                        "longitude": {
+                            "type": "number", 
+                            "description": "Geographic location longitude."
+                        }, 
+                        "provider": {
+                            "type": "string", 
+                            "description": "Geographic location provider."
+                        }, 
+                        "latitude": {
+                            "type": "number", 
+                            "description": "Geographic location latitude."
+                        }, 
+                        "speed": {
+                            "type": "number", 
+                            "description": "Movement speed."
+                        }, 
+                        "heading": {
+                            "type": "number", 
+                            "description": "Movement heading."
+                        }, 
+                        "relative_time_ns": {
+                            "type": "integer", 
+                            "description": "Relative time in nanoseconds (to measurement begin)."
+                        }, 
+                        "accuracy": {
+                            "type": "number", 
+                            "description": "Geographic location accuracy."
+                        }
+                    }
+                }, 
+                "type": "array", 
+                "description": "List of all captured geographic locations."
+            }
+        }
+    }
+}

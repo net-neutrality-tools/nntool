@@ -1,0 +1,22 @@
+<RelativeLayout android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        style="@style/Nettest.Title.GeoLocation.Text"
+        android:text="N 48°12.138' E 16°19.750'"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/text_title_geo_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        style="@style/Nettest.Title.GeoLocation.Accuracy.Text"
+        android:text="Location ± 15m"
+        android:id="@+id/text_title_geo_location_accuracy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

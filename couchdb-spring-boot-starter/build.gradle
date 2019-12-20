@@ -1,0 +1,5 @@
+apply from: "${project.rootDir}/gradle/java8.gradle"
+
+dependencies {
+	compile project(':couchdb-spring-boot-autoconfigure')
+}

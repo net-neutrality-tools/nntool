@@ -1,0 +1,28 @@
+apply from: "${project.rootDir}/gradle/java8.gradle"
+
+dependencies {
+	implementation project(path: ':nettest-shared-server', configuration: 'default')
+    
+    // javax.
+    //compile group: 'javax.transaction', name: 'javax.transaction-api'
+    
+    // Spring Framework
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: spring_boot_version
+    
+    // Postgresql connector
+	compile group: 'org.postgresql', name: 'postgresql', version: postgresql_version
+	
+	// JDBC connection pool, H2 DB
+	compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.8'
+	compile group: 'com.h2database', name: 'h2', version: '1.4.197'
+    
+    ////
+
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: spring_boot_version
+    testImplementation group: 'junit', name: 'junit', version: junit_version
+    testImplementation group: 'org.jmockit', name: 'jmockit', version: jmockit_version
+}
+
+test {
+    jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
+}

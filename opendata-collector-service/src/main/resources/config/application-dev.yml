@@ -1,0 +1,42 @@
+spring:
+  profiles:
+    active: dev
+
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: false
+
+  #datasource:
+  #  driver-class-name: org.postgresql.Driver
+  #  url: jdbc:postgresql://localhost:15432/nntool
+  #  username: nntool
+  #  password: nntool
+
+server:
+  port: 8086
+
+logging:
+  level:
+    at.alladin.nettest: DEBUG
+
+opendata-collector:
+  #elasticsearch:
+  #  host: localhost
+  #  port: 19200
+  #  scheme: http
+  #  index: nntool_portal
+  #  queryTimeout: 10s
+    
+  #opendata-import:
+  #  enabled: true
+  #  config:
+  #    batch-size: 20
+  #    batch-run-limit: 10
+  #    time-between-requests: 1000 #ms
+  #  sources:
+  #  - name: nntool
+  #    url: https://search-de-01.net-neutrality.tools/api/v1/measurements
+  #    cron: "0 50 2 * * *"
+  #    enabled: false

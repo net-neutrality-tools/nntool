@@ -1,0 +1,95 @@
+PODS:
+  - Alamofire (4.8.2)
+  - BlueSocket (1.0.52)
+  - CocoaAsyncSocket (7.6.3)
+  - CocoaLumberjack (3.6.0):
+    - CocoaLumberjack/Core (= 3.6.0)
+  - CocoaLumberjack/Core (3.6.0)
+  - CodableJSON (1.1.4)
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
+  - nntool-shared-swift (0.0.1):
+    - CodableJSON (~> 1.1.4)
+    - Repeat (~> 0.5.7)
+    - SwiftLint (~> 0.31.0)
+    - XCGLogger (~> 7.0.0)
+  - ObjcExceptionBridging (1.0.1):
+    - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
+  - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
+  - PocketSocket (1.0.1):
+    - PocketSocket/Client (= 1.0.1)
+    - PocketSocket/Core (= 1.0.1)
+    - PocketSocket/Server (= 1.0.1)
+  - PocketSocket/Client (1.0.1):
+    - PocketSocket/Core
+  - PocketSocket/Core (1.0.1)
+  - PocketSocket/Server (1.0.1):
+    - PocketSocket/Client
+  - QoSKit (0.0.1):
+    - Alamofire (~> 4.8.2)
+    - BlueSocket (~> 1.0.52)
+    - CocoaAsyncSocket (~> 7.6.3)
+    - nntool-shared-swift (~> 0.0.1)
+    - WKWebViewWithURLProtocol (~> 0.1.0)
+  - Repeat (0.5.8)
+  - SwiftLint (0.31.0)
+  - WKWebViewWithURLProtocol (0.1.0)
+  - XCGLogger (7.0.0):
+    - XCGLogger/Core (= 7.0.0)
+  - XCGLogger/Core (7.0.0):
+    - ObjcExceptionBridging
+
+DEPENDENCIES:
+  - CocoaLumberjack (>= 3.4.2)
+  - FMDB (>= 2.7.2)
+  - nntool-shared-swift (from `../nntool-shared-swift`)
+  - PocketSocket (from `https://github.com/net-neutrality-tools/PocketSocket`)
+  - QoSKit (from `../qos-client-swift`)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - BlueSocket
+    - CocoaAsyncSocket
+    - CocoaLumberjack
+    - CodableJSON
+    - FMDB
+    - ObjcExceptionBridging
+    - Repeat
+    - SwiftLint
+    - WKWebViewWithURLProtocol
+    - XCGLogger
+
+EXTERNAL SOURCES:
+  nntool-shared-swift:
+    :path: "../nntool-shared-swift"
+  PocketSocket:
+    :git: https://github.com/net-neutrality-tools/PocketSocket
+  QoSKit:
+    :path: "../qos-client-swift"
+
+CHECKOUT OPTIONS:
+  PocketSocket:
+    :commit: 629b86dde91f738dd8f87d395d76f1d6a169afc5
+    :git: https://github.com/net-neutrality-tools/PocketSocket
+
+SPEC CHECKSUMS:
+  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
+  BlueSocket: 1acd943acb07b55905291d608649fcfbf8cbd57d
+  CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
+  CocoaLumberjack: 78b0c238666f4f58db069738ec176f4519557516
+  CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  nntool-shared-swift: 0492a43aa3f5567fb2381eb51660297a2823107d
+  ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
+  PocketSocket: ea973e14ebcea9e11a77e692f4da2a0e05dc8481
+  QoSKit: 97d3e1bc7b92bc1ec7c56b3d87585b4280b27bee
+  Repeat: 8e65710d09da68f06ed79e865b091ffdcc8d0279
+  SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
+  WKWebViewWithURLProtocol: f7f2b367c40680105794a068ed2bb2cd5922c27c
+  XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
+
+PODFILE CHECKSUM: c8252072ad574d8589f5407cd20cec1b9b7bd245
+
+COCOAPODS: 1.8.4

@@ -1,0 +1,51 @@
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+# Workaround for problems with new Xcode build system (see https://www.ralfebert.de/ios/blog/cocoapods-clean-input-output-files/)
+install! 'cocoapods', :disable_input_output_paths => true
+
+platform :ios, '10.0'
+
+use_frameworks!
+inhibit_all_warnings!
+
+abstract_target 'All' do
+
+  target 'BEREC_nntool' do
+    pod 'nntool-shared-swift', :path => '../nntool-shared-swift'
+
+    pod 'MeasurementAgentKit', :path => '../measurement-agent-swift'
+    pod 'QoSKit', :path => '../qos-client-swift'
+
+    pod 'SwiftGen', '~> 6.1.0'
+    pod 'BartyCrouch', '~> 4.0.2'
+    pod 'R.swift', '~> 5.1.0'
+    
+    pod 'ActionKit', '~> 2.5.3'
+
+    pod 'WebBrowser', '~> 0.1.5'
+    pod 'GoogleMaps', '~> 3.6.0'
+  end
+
+  target 'Common' do
+    pod 'FMDB', '>= 2.7.2'
+    pod 'CocoaLumberjack', '>= 3.4.2'
+  end
+
+  target 'Speed' do
+    pod 'FMDB', '>= 2.7.2'
+    pod 'CocoaLumberjack', '>= 3.4.2'
+    pod 'PocketSocket', :git => 'https://github.com/net-neutrality-tools/PocketSocket'
+  end
+end
+
+post_install do |installer|
+    # Disable bitcode for QoSKit because Measurement-Kit doesn't work with bitcode.
+    installer.pods_project.targets.each do |target|
+        if target.name == 'QoSKit'
+            target.build_configurations.each do |config|
+                config.build_settings['ENABLE_BITCODE'] = 'NO'
+                config.build_settings['VALID_ARCHS'] = 'armv7s arm64'
+            end
+        end
+    end
+end

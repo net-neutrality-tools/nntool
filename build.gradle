@@ -1,0 +1,87 @@
+buildscript {
+	ext {
+		eclipse_project_prefix = 'nntool'
+	}
+  	repositories {
+        google()
+
+        mavenLocal()
+        mavenCentral()
+
+        maven { url 'http://repo.spring.io/plugins-release' }
+        maven { url 'http://repo.spring.io/milestone' }
+        maven { url 'https://plugins.gradle.org/m2/' }
+    }
+
+    dependencies {
+        classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: spring_boot_version
+
+        classpath 'com.bmuschko:gradle-clover-plugin:2.2.1'
+
+        // Unfortunatly, just adding a dependency to jib-gradle-plugin breaks the Android build.
+        // Therefore, we can only include it if we don't build Android modules.
+        if (gradle.ext.includeJibGradlePlugin) {
+        	classpath 'gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.4.0'
+        }
+    }
+}
+
+plugins {
+	id 'net.ltgt.apt' version '0.21'
+	id 'net.ltgt.apt-eclipse' version '0.21'
+	id 'net.ltgt.apt-idea' version '0.21'
+	
+	id 'com.adarshr.test-logger' version '1.6.0' // https://github.com/radarsh/gradle-test-logger-plugin
+}
+
+apply from: "${project.rootDir}/gradle/git_info.gradle"
+
+if (System.getProperty('include-code-coverage') != null) {
+	apply from: "${project.rootDir}/gradle/clover_aggregate.gradle"
+}
+
+// define a top-level clean task to delete top-level build directory and clover database
+task clean {
+    delete "${project.rootDir}/build"
+    delete "${project.rootDir}/.clover"
+}
+
+allprojects { p ->
+    group = 'at.alladin.nettest'
+    version = '1.0'
+
+    repositories {
+        google()
+
+        mavenCentral()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url 'https://nexus.pentaho.org/content/groups/omni/' }
+        maven { url 'http://maven.restlet.com' }
+    }
+
+    apply plugin: 'eclipse' 
+    eclipse.project.name = "${eclipse_project_prefix}-${p.name}"
+
+    apply plugin: 'net.ltgt.apt'
+    apply plugin: 'net.ltgt.apt-eclipse'
+    apply plugin: 'net.ltgt.apt-idea'
+
+    apply plugin: 'com.adarshr.test-logger'
+}
+
+subprojects { p ->
+	if (p.name.toLowerCase().contains('android')) {
+		return
+	}
+
+	if (System.getProperty('include-code-coverage') != null) {
+		apply from: "${project.rootDir}/gradle/clover.gradle"
+	}
+
+    // make root project clean task depend on (= execute) subproject clean tasks
+	rootProject.clean.dependsOn tasks.matching { it.name == "clean" }
+
+	clean.doLast {
+		delete ".clover"
+	}
+}

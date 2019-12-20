@@ -1,0 +1,24 @@
+<nntool-section-intro>
+  <nntool-section-header headerTranslationKey="RESULT.DETAIL.HEADER" icon="icon-watch" loadingIndicator="true">
+    <div class="section-content no-data">
+      <h2 *ngIf="!loading && (!response || response.groups.length === 0)">{{ 'RESULT_LIST.NO_DATA' | translate }}</h2>
+    </div>
+  </nntool-section-header>
+</nntool-section-intro>
+
+<nntool-grouped-result [response]="response" [loading]="loading"></nntool-grouped-result>
+
+<nntool-qos-result [qosMeasurementResult]="qosMeasurementResult"> </nntool-qos-result>
+
+<nntool-section-interactive>
+  <div class="section-interaction">
+    <a class="button column" (click)="exportAsCsv()">Export as detailed CSV</a>
+    <a class="button column" (click)="exportAsJson()">Export as detailed JSON</a>
+    <a class="button column" (click)="exportAsYaml()">Export as detailed YAML</a>
+  </div>
+  <div class="section-interaction">
+    <a class="button column" (click)="exportAsCsv(true)">Export as coarse CSV</a>
+    <a class="button column" (click)="exportAsJson(true)">Export as coarse JSON</a>
+    <a class="button column" (click)="exportAsYaml(true)">Export as coarse YAML</a>
+  </div>
+</nntool-section-interactive>

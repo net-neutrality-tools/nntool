@@ -1,0 +1,7 @@
+node_modules
+dist
+build
+ias.desktop.js
+index.html
+JSTool.js
+WebWorker.js
