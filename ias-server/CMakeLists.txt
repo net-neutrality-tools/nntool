@@ -1,21 +1,22 @@
-#/*
-# *********************************************************************************
-# *                                                                               *
-# *       ..--== zafaco GmbH ==--..                                               *
-# *                                                                               *
-# *       Website: http://www.zafaco.de                                           *
-# *                                                                               *
-# *       Copyright 2019                                                          *
-# *                                                                               *
-# *********************************************************************************
-# */
-
 #/*!
-# *      \author zafaco GmbH <info@zafaco.de>
-# *      \date Last update: 2019-05-03
-# *      \note Copyright (c) 2019 zafaco GmbH. All rights reserved.
-# */
-
+#    \file CMakeLists.txt
+#    \author zafaco GmbH <info@zafaco.de>
+#    \date Last update: 2019-12-18
+#
+#    Copyright (C) 2016 - 2019 zafaco GmbH
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License version 3
+#    as published by the Free Software Foundation.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#*/
 
 cmake_minimum_required(VERSION 3.6)
 
@@ -33,21 +34,8 @@ ENDIF (NOT THREADS_FOUND)
 
 # libnopoll
 
-include (ExternalProject)
-
-set(libnopoll_BUILD ${CMAKE_CURRENT_BINARY_DIR}/libnopoll/src/libnopoll-build)
-set(libnopoll_INCLUDE_DIR ${libnopoll_BUILD}/include)
-
-ExternalProject_Add(libnopoll
-	PREFIX libnopoll
-	URL ${CMAKE_CURRENT_SOURCE_DIR}/../libnopoll
-	#GIT_REPOSITORY https://github.com/ASPLes/nopoll
-	#GIT_TAG origin/master
-	BUILD_IN_SOURCE 1
-	CONFIGURE_COMMAND COMMAND <SOURCE_DIR>/autogen.sh --prefix=${libnopoll_BUILD}
-													  --includedir=${libnopoll_INCLUDE_DIR}
-													  --libdir=${libnopoll_BUILD}
-)
+include(libnopoll.cmake)
+include_directories(${libnopoll_INCLUDE_DIR})
 
 #---------------------------------------------------------------------------------
 

@@ -1,13 +1,13 @@
 Pod::Spec.new do |s|
     s.name = 'nntool-shared-swift'
     s.version = '0.0.1'
-    s.license = 'TODO: Apache v2'
+    s.license = 'Apache 2.0'
     s.summary = 'Shared Swift code for nntool project.'
     s.description = 'Shared Swift code for nntool project.'
-    s.homepage = 'https://alladin.at'
+    s.homepage = 'https://net-neutrality.tools'
     s.authors = { 'alladin-IT GmbH' => 'office@alladin.at' }
-    s.source = { :git => 'https://github.com/alladin-it/...', :tag => s.version }
-    s.documentation_url = 'https://github.com/alladin-it/...'
+    s.source = { :git => 'https://github.com/net-neutrality-tools/nntool', :tag => s.version }
+    s.documentation_url = 'https://net-neutrality.tools'
 
     s.ios.deployment_target = '10.0'
 

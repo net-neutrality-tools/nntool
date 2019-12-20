@@ -1,6 +1,5 @@
-// MeasurementAgentKit: RttInfoDto.swift, created on 15.05.19
 /*******************************************************************************
- * Copyright 2019 Benjamin Pucher (alladin-IT GmbH)
+ * Copyright 2019 alladin-IT GmbH
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

@@ -31,7 +31,7 @@ DEPENDENCIES:
   - WKWebViewWithURLProtocol (~> 0.1.0)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - BlueSocket
     - CocoaAsyncSocket
@@ -71,4 +71,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 57798d0bda2950ede8dc9ea4cca111d082c2ec7b
 
-COCOAPODS: 1.7.1
+COCOAPODS: 1.8.4
