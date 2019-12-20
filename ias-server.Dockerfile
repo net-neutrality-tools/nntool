@@ -1,7 +1,7 @@
 FROM debian:10
 
 RUN apt update && apt upgrade -y
-RUN apt install -y build-essential make cmake automake g++ libtool liblog4cpp5-dev libssl-dev
+RUN apt install -y build-essential make cmake automake g++ libtool liblog4cpp5-dev libssl-dev git
 RUN apt clean
 
 # libnopoll autogen.sh needs /usr/bin/sed, also grep
@@ -12,7 +12,6 @@ RUN ln -s /bin/grep /usr/bin/grep
 
 WORKDIR /nntool
 
-ADD libnopoll libnopoll
 ADD ias-libnntool ias-libnntool
 ADD ias-server ias-server
 

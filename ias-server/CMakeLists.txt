@@ -34,21 +34,8 @@ ENDIF (NOT THREADS_FOUND)
 
 # libnopoll
 
-include (ExternalProject)
-
-set(libnopoll_BUILD ${CMAKE_CURRENT_BINARY_DIR}/libnopoll/src/libnopoll-build)
-set(libnopoll_INCLUDE_DIR ${libnopoll_BUILD}/include)
-
-ExternalProject_Add(libnopoll
-	PREFIX libnopoll
-	URL ${CMAKE_CURRENT_SOURCE_DIR}/../libnopoll
-	#GIT_REPOSITORY https://github.com/ASPLes/nopoll
-	#GIT_TAG origin/master
-	BUILD_IN_SOURCE 1
-	CONFIGURE_COMMAND COMMAND <SOURCE_DIR>/autogen.sh --prefix=${libnopoll_BUILD}
-													  --includedir=${libnopoll_INCLUDE_DIR}
-													  --libdir=${libnopoll_BUILD}
-)
+include(libnopoll.cmake)
+include_directories(${libnopoll_INCLUDE_DIR})
 
 #---------------------------------------------------------------------------------
 

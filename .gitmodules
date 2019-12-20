@@ -1,6 +1,3 @@
 [submodule "PocketSocket"]
 	path = PocketSocket
 	url = https://github.com/net-neutrality-tools/PocketSocket
-[submodule "libnopoll"]
-	path = libnopoll
-	url = https://github.com/net-neutrality-tools/nopoll
