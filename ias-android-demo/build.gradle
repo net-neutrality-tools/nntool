@@ -1,0 +1,80 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.1'
+    }
+}
+
+apply plugin: 'com.android.application'
+
+android
+        {
+            signingConfigs {
+                config {
+                }
+            }
+
+            compileSdkVersion Integer.parseInt(android_compile_sdk_version)
+            buildToolsVersion android_build_tools_version
+
+            defaultConfig
+                    {
+                        applicationId "com.zafaco.DemoApplicationBerec"
+                        minSdkVersion Integer.parseInt(android_min_sdk_version)
+                        targetSdkVersion Integer.parseInt(android_target_sdk_version)
+                        versionCode 3
+                        versionName "1.0.2"
+                        multiDexEnabled true
+                    }
+
+            lintOptions
+                    {
+                        checkReleaseBuilds false
+                        abortOnError false
+                    }
+
+            buildTypes
+                    {
+                        debug
+                                {
+                                    minifyEnabled false
+                                    shrinkResources false
+                                    useProguard false
+                                    proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+                                }
+                        release
+                                {
+                                    minifyEnabled false
+                                    shrinkResources false
+                                    useProguard false
+                                    proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+                                }
+                    }
+
+            //Excluding the META-INF/DEPENDENCIES prevents a gradle error of "multiple META-INF/DEPENDENCIES
+            packagingOptions {
+                exclude 'META-INF/DEPENDENCIES'
+            }
+        }
+
+dependencies {
+    //api fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+
+    api project(':ias-android-common')
+    api project(':ias-android-speed')
+    api project(':qos-client-android')
+
+    api 'com.android.support:multidex:1.0.3'
+
+    api 'com.android.support:appcompat-v7:28.0.0'
+    api 'com.android.support:support-v4:28.0.0'
+    api 'com.android.support:preference-v7:28.0.0'
+    api 'com.google.android.gms:play-services-location:16.0.0'
+    api 'com.google.android.gms:play-services-maps:16.0.0'
+
+
+}

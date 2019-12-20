@@ -1,0 +1,50 @@
+buildscript {
+	repositories {
+		google()
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'com.android.tools.build:gradle:3.1.1'
+	}
+}
+
+apply plugin: 'com.android.library'
+
+android {
+	compileSdkVersion Integer.parseInt(android_compile_sdk_version)
+	buildToolsVersion android_build_tools_version
+
+	defaultConfig
+	{
+		minSdkVersion Integer.parseInt(android_min_sdk_version)
+		targetSdkVersion Integer.parseInt(android_target_sdk_version)
+		versionCode 1
+		versionName "1.0.0"
+	}
+
+	lintOptions
+	{
+		checkReleaseBuilds false
+		abortOnError false
+	}
+
+	buildTypes
+	{
+		debug
+		{
+			minifyEnabled false
+		}
+		release
+		{
+			minifyEnabled true
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+		}
+	}
+}
+
+dependencies {
+	api project(path: ':qos-client-java', configuration: 'default')
+
+	api group: 'org.openobservatory.measurement_kit', name: 'android-libs', version: mkit_android_libs_version
+
+}

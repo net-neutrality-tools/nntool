@@ -1,0 +1,187 @@
+= nntool.eu
+
+== Overview
+
+BEREC–the Body of European Regulators for Electronic Communications–assigned the contract for development, implementation and validation of the Net Neutrality (NN) Reference Measurement System in July 2018.
+
+The system enables the monitoring of the Quality of Service (QoS) and Quality of Experience (QoE) of Internet Access Services (IAS) as well as aspects of traffic management and serves as a reference for regulatory authorities (NRAs). This decision is another important milestone in the harmonization and standardization of broadband testing in Europe.
+
+The objective of the measurement tool is to provide a reference system for monitoring the QoS aspects of IAS, such as speed and delay, as well as aspects of traffic management such as the blocking and throttling of Internet-based applications.
+
+A specific objective is increased levels of harmonization of NN-related IAS measurement metrics and methodology.
+
+In the long term, the BEREC tool could be a platform enabling NRAs to share knowledge, experience and expertise, including providing a basis for further piloting and researching the area of measuring quality of internet access services.
+
+Visit https://net-neutrality.tools/ for more information.
+
+=== Milestones
+
+==== Milestone 1
+
+Deliverables for milestone 1 are located inside `docs/project_management/milestones/1/deliverables` directory.
+
+.Deliverables
+|===
+|Deliverable |Description |Files
+
+|Deliverable 1
+|The data models of the applicable measurement function-specific subtrees of the base LMAP control data model given in YANG, JSON Schema or as an OpenAPI specification
+|control_data_model_json_schema.json,
+controller_service_open_api_spec.yaml,
+controller_service_swagger_2.0_spec.json
+
+|Deliverable 2
+|The data models of the applicable measurement function-specific subtrees of the base LMAP report data model given in YANG, JSON Schema or as an OpenAPI specification 
+|report_data_model_json_schema.json,
+collector_service_open_api_spec.yaml,
+collector_service_swagger_2.0_spec.json
+
+|Deliverable 3
+|Example JSON configuration files for above models 
+|example_control_initiate_measurement.json,
+example_control_measurement_parameters.json,
+example_report_send_result_to_server.json,
+example_get_measurement_from_server.json
+
+|Deliverable 4
+|Specification of the Public REST API for retrieving results as Open data 
+|statistic_service_open_api_spec.yaml,
+statistic_service_swagger_2.0_spec.json
+
+|Deliverable 5
+|Specification of the storage structures (e.g. database ERM diagrams, JSON-Schema files for document-based storage) 
+|primary_db_data_model_json_schema.json,
+secondary_db_postgresql_schema.sql,
+secondary_db_postgresql_eer_diagram.svg,
+secondary_db_postgresql_eer_diagram.pdf
+
+|===
+
+.Content Description
+|===
+|File |Description
+
+|control_data_model_json_schema.json
+|Contains the control data model of the controller REST API as JSON Schema.
+
+|controller_service_open_api_spec.yaml
+|Contains the controller's entire REST API specification in OpenAPI 3.0 format. Converted from controller_service_swagger_2.0_spec.json.
+
+|report_data_model_json_schema.json
+|Contains the report data model of the collector REST API as JSON Schema.
+
+|collector_service_open_api_spec.yaml
+|Contains the collector's entire REST API specification in OpenAPI 3.0 format. Converted from collector_service_swagger_2.0_spec.json.
+
+|example_control_initiate_measurement.json
+|Example request body sent from the client to the server to initiate a measurement.
+
+|example_control_measurement_parameters.json
+|Example response body including measurement parameters sent by the server to the client as response to the initiation request.
+
+|example_report_send_result_to_server.json
+|Example request body sent from the client to the server to submit measurement results.
+
+|example_get_measurement_from_server.json
+|Example response body sent from the server to the client when accessing a measurement from the database. Open-Data export uses the same model but is anonymized.
+
+|statistic_service_open_api_spec.yaml
+|Contains the export and open-data REST API documentation as OpenAPI 3.0 specification.
+
+|primary_nosql_db_data_model_json_schema.json
+|Contains the data model used for the primary NoSQL database, which will be either a document or key/value store database.
+
+|secondary_db_postgresql_schema.sql
+|Contains the SQL schema (PostgreSQL specific) for the secondary database, which will be used to calculate statistics, heat maps, etc.
+
+|secondary_db_postgresql_eer_diagram.svg
+|Contains the EER diagram for the secondary database according to the SQL schema as SVG file.
+
+|secondary_db_postgresql_eer_diagram.pdf
+|Contains the EER diagram for the secondary database according to the SQL schema as PDF file.
+
+|===
+
+.Additional Files
+|===
+|File |Description
+
+|collector_service_swagger_2.0_spec.json
+|Collector service Swagger 2.0 API specification generated by springfox/swagger.
+
+|controller_service_swagger_2.0_spec.json
+|Controller service Swagger 2.0 API specification generated by springfox/swagger.
+
+|statistic_service_swagger_2.0_spec.json
+|Statistic service Swagger 2.0 API specification generated by springfox/swagger.
+
+|===
+
+.Diagrams (directly inside /docs directory)
+|===
+|File |Description
+
+|reference_system_architecture.pdf
+|This diagram shows the overall system architecture (servers, components, connections) of the reference system.
+
+|portal_architecture.pdf
+|This diagram shows the architecture of the portal including the open-data import mechanism.
+
+|measurement_sequence_diagram.pdf
+|This sequence diagram shows the workflow of a single IAS and QoS measurement from the initation to the result submission.
+
+|registration_sequence_diagram.pdf
+|This sequence diagram shows how clients are registered on the controller.
+
+|history_sequence_diagram.pdf
+|This sequence diagram shows the workflow when the client requests its own measurement history and a single result.
+
+|===
+
+== Structure
+
+=== Libraries
+
+- *nettest-shared*: Contains resources shared with servers, apps, etc.
+- *nettest-shared-server*: Contains shared resources for the backend.
+
+=== Server Components
+
+- *controller-service*: Server component that registers measurement agents and gives measurement parameters.
+- *collector-service*: Server component that receives and stores measurements.
+- *statistic-service*: Server component that is responsible for open-data export, generation of statistics and search.
+
+== Usage Guide
+
+=== controller-service
+
+The controller-service can be started as standalone Java application as well as deployed to a servlet container (e.g. Tomcat).
+
+- To start the controller on the command line run `./gradlew bootRun -p controller-service` inside the Git repository root directory (Starts the embedded server on port 8080).
+- To start the controller in an IDE run the main method of the class `at.alladin.nettest.service.controller.ControllerServiceApplication`
+
+Swagger-UI will then be available via `http://localhost:<port>/swagger-ui.html`.
+
+=== collector-service
+
+The collector-service can be started as standalone Java application as well as deployed to a servlet container (e.g. Tomcat).
+
+- To start the collector on the command line run `./gradlew bootRun -p collector-service` inside the Git repository root directory (Starts the embedded server on port 8081).
+- To start the collector in an IDE run the main method of the class `at.alladin.nettest.service.collector.CollectorServiceApplication`
+
+Swagger-UI will then be available via `http://localhost:<port>/swagger-ui.html`.
+
+=== statistic-service
+
+The statistic-service can be started as standalone Java application as well as deployed to a servlet container (e.g. Tomcat).
+
+- To start the collector on the command line run `./gradlew bootRun -p statistic-service` inside the Git repository root directory (Starts the embedded server on port 8083).
+- To start the collector in an IDE run the main method of the class `at.alladin.nettest.service.statistic.StatisticServiceApplication`
+
+Swagger-UI will then be available via `http://localhost:<port>/swagger-ui.html`.
+
+== Development
+
+For development with Eclipse make sure to run `./gradlew eclipse` task to generate eclipse project files to make annotation processing work.
+
+

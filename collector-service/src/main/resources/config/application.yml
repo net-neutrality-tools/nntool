@@ -1,0 +1,39 @@
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+spring:
+  application:
+    name: collector-service
+
+  jackson:
+    serialization:
+      indent-output: true
+      write-dates-as-timestamps: false
+
+server:
+  port: 8081
+
+# ===================================================================
+# Collector service specific properties
+# ===================================================================
+
+collector:
+  system-uuid: f0b6d3f1-40c8-4835-82df-747b28caa326
+  settings-uuid: "4e7567ef-175b-44f4-8436-8fd6d22dab48"
+  
+# ===================================================================
+# External services specific properties
+# =================================================================== 
+external-services:
+  device-imports:
+    - name: google-device-import
+      url: http://storage.googleapis.com/play_public/supported_devices.csv
+      cron: "0 50 2 * * *"
+      enabled: false
+    - name: ios-device-import
+      url: url.missing
+      cron: "0 50 1 * * *"
+      enabled: false

@@ -1,0 +1,53 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
+apply from: "${project.rootDir}/gradle/java8.gradle"
+
+// Apply war plugin to generate .war files instead of .jar files.
+// It will still be possible to run these .war files with java -jar file.war.
+apply plugin: 'war'
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+springBoot {
+  buildInfo {
+    properties {
+      additional = [
+        'git.version_string': gradle.ext.git_info.getGitVersionString(),
+        'git.branch': gradle.ext.git_info.getBranchName(),
+        'git.commit': gradle.ext.git_info.getCommitRef(),
+        'git.commit_count': gradle.ext.git_info.getCommitCount(),
+        'build_date': gradle.ext.git_info.getBuildDate()
+      ]
+    }
+  }
+}
+
+if (gradle.ext.includeJibGradlePlugin) {
+  apply plugin: 'com.google.cloud.tools.jib'
+
+  // Docker executable is not found automatically on macos...
+  if (DefaultNativePlatform.getCurrentOperatingSystem().isMacOsX()) {
+    jibDockerBuild {
+      dockerClient {
+        executable = '/usr/local/bin/docker'
+      }
+    }
+  }
+
+  jib {
+    to.image = "${gradle.ext.dockerRegistryName}/${project.name}:${version}"
+    to.tags = ['latest']
+    container {
+      ports = ['8080-8089']
+    }
+  }
+}
+
+defaultTasks 'bootRun'
+
+if (project.hasProperty('prod')) {
+    apply from: "${project.rootDir}/gradle/spring_profile_prod.gradle"
+} else {
+    apply from: "${project.rootDir}/gradle/spring_profile_dev.gradle"
+}

@@ -1,0 +1,23 @@
+<RelativeLayout android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp">
+
+    <ProgressBar
+        android:progress="60"
+        android:id="@+id/progress_qos_measurement_item"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progressDrawable="@drawable/rounded_corner_box"
+        android:layout_width="match_parent"
+        android:layout_height="35dp" />
+
+    <TextView
+        style="@style/Nettest.Measurement.Qos.Progress.Text"
+        android:text="Voice over IP"
+        android:layout_marginLeft="30dp"
+        android:layout_centerVertical="true"
+        android:id="@+id/text_qos_measurement_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

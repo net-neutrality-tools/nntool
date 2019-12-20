@@ -1,0 +1,128 @@
+{
+  "capabilities": {
+    "version": "berec measurment tool - version: ma_v1.0.0_c_v2.1.4",
+    "tag": [
+      "Tag 1",
+      "Other tag"
+    ],
+    "tasks": [
+      {
+        "name": "SPEED",
+        "version": "2.1.4"
+      },
+      {
+        "name": "QOS",
+        "version": "3.3"
+      }
+    ]
+  },
+  "agent": {
+    "agent-id": "add895c3-9a69-472b-ae38-045266df52fd",
+    "group-id": "berec_reference_system",
+    "last-started": "2011-02-06T22:42:14.000"
+  },
+  "tasks": [
+    {
+      "name": "SPEED",
+      "option": [
+        {
+          "name": "SPEED",
+          "measurement-parameters": {
+            "durations": {
+              "download_slow_start": 3,
+              "download": 10,
+              "upload_slow_start": 3,
+              "upload": 10
+            },
+            "flows": {
+              "download_slow_start": 3,
+              "download": 3,
+              "upload_slow_start": 3,
+              "upload": 3,
+              "rtt": 3
+            },
+            "rtt_count": 10,
+            "javascript_measurement_code_url": "measurement.berec.eu",
+            "measurement_server": {
+              "base_url": "berec.eu"
+            }
+          }
+        },
+        {
+          "name": "result_collector_base_url",
+          "value": "collector.berec.eu"
+        },
+        {
+          "name": "measurement_uuid",
+          "value": "25c50ecc-f0f3-456f-a6c5-e738496c0bf3"
+        }
+      ]
+    },
+    {
+      "name": "QOS",
+      "option": [
+        {
+          "name": "QOS",
+          "measurement-parameters": {
+            "objectives": {
+              "TCP": []
+            }
+          }
+        },
+        {
+          "name": "result_collector_base_url",
+          "value": "collector.berec.eu"
+        },
+        {
+          "name": "measurement_uuid",
+          "value": "25c50ecc-f0f3-456f-a6c5-e738496c0bf3"
+        }
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "immediate_speed_qos_measurement_schedule",
+      "start": "immediate_event",
+      "stop": {
+        "duration": 180000
+      },
+      "execution-mode": "SEQUENTIAL",
+      "tag": [
+        "Base",
+        "includes QoS"
+      ],
+      "action": [
+        {
+          "name": "speed_measurement_action",
+          "task": "SPEED"
+        },
+        {
+          "name": "qos_measurement_action",
+          "task": "QOS"
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "immediate_event",
+      "event-type": {
+        "type": "IMMEDIATE"
+      }
+    }
+  ],
+  "additional-request-info": {
+    "language": "en_US",
+    "timezone": "Europe/Vienna",
+    "client_type": "MOBILE",
+    "os_name": "Android",
+    "os_version": "8.1",
+    "api_level": "27",
+    "code_name": "bullhead",
+    "model": "MOTOG3",
+    "app_version_name": "1.0.0",
+    "app_version_code": 42,
+    "app_git_revision": "cba56293"
+  }
+}

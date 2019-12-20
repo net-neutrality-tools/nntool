@@ -1,0 +1,108 @@
+///////////////////////////
+// General
+///////////////////////////
+
+"general.units.bps" = "bps";
+"general.units.ms" = "ms";
+"general.not-available" = "n/a";
+
+///////////////////////////
+// Terms of service
+///////////////////////////
+
+"tos.popup.registering" = "Registering agent";
+
+"tos.error.registration.title" = "Registration error";
+"tos.error.registration.message" = "Agent could not be registered.";
+"tos.error.registration.retry" = "Retry";
+"tos.error.registration.close" = "Close App";
+
+///////////////////////////
+// Home screen
+///////////////////////////
+
+"home.no-measurement-task-enabled-alert.title" = "No Measurement enabled";
+"home.no-measurement-task-enabled-alert.message" = "The measurement is currently not possible because all available measurement programs and/or tasks are disabled.";
+"home.no-measurement-task-enabled-alert.open-settings" = "Open Settings";
+"home.no-measurement-task-enabled-alert.abort" = "Abort";
+
+"home.pre-measurement-alert.title" = "Pre Measurement Alert";
+"home.pre-measurement-alert.message" = "Traffic Warning";
+"home.pre-measurement-alert.continue" = "Continue";
+"home.pre-measurement-alert.abort" = "Abort";
+
+"home.device-info.cpu" = "CPU";
+"home.device-info.ram" = "RAM";
+"home.device-info.ipv4" = "IPv4";
+"home.device-info.ipv6" = "IPv6";
+
+"home.device-info.traffic-in" = "Traffic in";
+"home.device-info.traffic-out" = "Traffic out";
+
+"home.device-info.location" = "Location";
+
+///////////////////////////
+// Network
+///////////////////////////
+
+"network.unknown" = "Unknown";
+"network.no-connection" = "No connection";
+"network.wifi.technology.name" = "WiFi";
+"network.wifi.unknown" = "Unknown";
+
+///////////////////////////
+// Measurement
+///////////////////////////
+
+"measurement.speed.phase.init" = "Init";
+"measurement.speed.phase.rtt" = "Ping";
+"measurement.speed.phase.download" = "Download";
+"measurement.speed.phase.upload" = "Upload";
+
+"measurement.speed.phase.rtt.description" = "Ping phase description";
+"measurement.speed.phase.download.description" = "Download phase description";
+"measurement.speed.phase.upload.description" = "Upload phase description";
+
+"measurement.gauge.start" = "GO";
+"measurement.initiating" = "Initiating measurement";
+
+"measurement.abort-alert.title" = "Abort Measurement?";
+"measurement.abort-alert.message" = "Do you really want to abort the current measurement?";
+"measurement.abort-alert.continue" = "Continue";
+"measurement.abort-alert.abort" = "Abort Measurement";
+
+"measurement.failure-alert.title" = "Measurement Error";
+"measurement.failure-alert.message" = "An error occured during measurement. Do you want to retry?";
+"measurement.failure-alert.retry" = "Retry";
+"measurement.failure-alert.abort" = "Abort Measurement";
+
+///////////////////////////
+// History
+///////////////////////////
+
+"history.list.date-format" = "dd.MM.yyyy HH:mm";
+"history.list.disassociate-measurement" = "Delete";
+
+// QoS
+
+"history.qos.task" = "Task";
+
+"history.qos.group.details" = "Details";
+"history.qos.group.tasks" = "Tasks";
+
+"history.qos.detail.details" = "Details";
+"history.qos.detail.results" = "Results";
+"history.qos.detail.description" = "Description";
+
+///////////////////////////
+// Map
+///////////////////////////
+
+"map.marker.title" = "Measurement";
+
+///////////////////////////
+// Settings
+///////////////////////////
+
+"settings.measurement-type-selection.enable" = "ENABLE";
+"settings.measurement-type-selection.disable" = "DISABLE";

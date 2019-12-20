@@ -1,0 +1,11 @@
+# Add files here to ignore them from prettier formatting
+
+**/xplat/*/.xplatframework
+package.json
+package-lock.json
+dist
+.angulardoc.json
+.vscode/*
+**/*.adoc
+coverage/*
+dist/*

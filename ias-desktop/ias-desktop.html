@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>ias-desktop</title>
+        <script type='text/javascript' src='modules/ias.desktop.js'></script>
+        <script type='text/javascript' src='modules/Tool.js'></script>
+        <script type='text/javascript' src='ias-desktop.js'></script>
+    </head>
+
+    <body>
+        <script type="text/javascript">
+
+                /*!
+                    \file ias-desktop.html
+                    \author zafaco GmbH <info@zafaco.de>
+                    \date Last update: 2019-11-13
+
+                    Copyright (C) 2016 - 2019 zafaco GmbH
+
+                    This program is free software: you can redistribute it and/or modify
+                    it under the terms of the GNU Affero General Public License version 3 
+                    as published by the Free Software Foundation.
+
+                    This program is distributed in the hope that it will be useful,
+                    but WITHOUT ANY WARRANTY; without even the implied warranty of
+                    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+                    GNU Affero General Public License for more details.
+
+                    You should have received a copy of the GNU Affero General Public License
+                    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+                */
+               
+                var iasDesktop;
+                
+                const {webFrame} = require('electron');
+                const unhandled  = require('electron-unhandled');
+                
+                var path            = require('path');
+                var ipcRendererIas  = require('electron').ipcRenderer;
+                
+                unhandled({'logger':function(error)
+                {
+                    var log = 'ias-desktop: Unhandled exception: ' + error + ': ' + error.stack;
+                    console.log(log);
+                },
+                'showDialog':false});
+
+                ipcRendererIas.on('iasControl', function(event, cmd, data)
+                {
+                    switch(cmd)
+                    {
+                        case 'load':
+                        {
+                            load();
+                            break;
+                        }
+
+                        case 'start':
+                        {
+                            start(data);
+                            break;
+                        }
+
+                        case 'stop':
+                        {
+                            console.log("MM: stop received");
+                            stop();
+                            break;
+                        }
+                    }
+                });
+               
+                function load()
+                {
+                    location.reload();
+                }
+                
+                function start(iasParameters)
+                {
+                    delete iasDesktop;
+                    iasDesktop = null;
+                    iasDesktop = new IasDesktop();
+                    iasDesktop.measurementStart(iasParameters);
+                }
+
+                function stop()
+                {
+                    iasDesktop.measurementStop();
+                    iasDidStop();
+                }
+
+                
+                
+                
+                /*-------------------------ias-desktop callbacks------------------------*/
+                
+                function iasDidLoad()
+                {
+                    iasSendToUi('iasCallback', 'iasDidLoad');
+                }
+
+                function iasCallbackWithResponse(report)
+                {
+                    iasSendToUi('iasCallback', 'iasCallbackWithResponse', report);
+                }
+                
+                function iasDidCompleteWithResponse(report, error)
+                {
+                    iasSendToUi('iasCallback', 'iasDidCompleteWithResponse', report, error);
+                }
+
+                function iasDidStop()
+                {
+                    iasSendToUi('iasCallback', 'iasDidStop');
+                }
+
+                function iasSendtoMain(channel)
+                {
+                    ipcRendererIas.send(channel);
+                }
+                
+                function iasSendToUi(channel, cmd, report, error)
+                {
+                    ipcRendererIas.send(channel, cmd, report, error);
+                }
+        </script>
+    </body>
+</html>

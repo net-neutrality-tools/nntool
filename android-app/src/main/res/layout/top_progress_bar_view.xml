@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingBottom="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/theme_app_bg">
+
+    <LinearLayout
+        android:layout_alignParentLeft="true"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <at.alladin.nettest.nntool.android.app.view.AlladinTextView
+            style="@style/Nettest.TopProgressBar.Text.Left"
+            android:id="@+id/top_progress_bar_view_left_icon"
+            android:text="@string/ifont_hourglass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            style="@style/Nettest.TopProgressBar.Text.Left"
+            android:layout_marginLeft="3dp"
+            android:text="0%"
+            android:id="@+id/top_progress_bar_view_left_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            style="@style/Nettest.TopProgressBar.Text.Right"
+            android:layout_marginRight="3dp"
+            android:id="@+id/top_progress_bar_view_right_text"
+            android:text="0%"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <at.alladin.nettest.nntool.android.app.view.AlladinTextView
+            style="@style/Nettest.TopProgressBar.Text.Right"
+            android:id="@+id/top_progress_bar_view_right_icon"
+            android:text="@string/ifont_qos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>

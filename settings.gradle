@@ -1,0 +1,84 @@
+include 'nettest-shared'
+include 'nettest-shared-server'
+include 'nettest-shared-server-opendata'
+
+include 'couchdb-client'
+include 'spring-data-couchdb'
+include 'couchdb-spring-boot-starter'
+include 'couchdb-spring-boot-autoconfigure'
+
+include 'nettest-shared-server-storage-couchdb'
+include 'nettest-shared-server-storage-postgresql'
+
+include 'controller-service'
+include 'collector-service'
+include 'result-service'
+include 'search-service'
+include 'opendata-collector-service'
+
+include 'loadbalancing-service'
+include 'map-service'
+include 'statistic-service'
+
+include 'qos-service'
+
+include 'qos-client-java'
+
+////
+
+// include Android projects only if Android SDK is present
+def skipAndroid = false
+def skipMsg = ''
+def sdkDir = null
+
+def localProperties = new File("local.properties")
+if (localProperties.exists()) {
+    Properties properties = new Properties()
+    localProperties.withInputStream { instr ->
+        properties.load(instr)
+    }
+    sdkDir = properties.getProperty('sdk.dir')
+    println "Found 'sdk.dir' in local.properties: " + sdkDir
+}
+
+// skip if Android SDK could not be found
+if (System.env.ANDROID_HOME == null && sdkDir == null) {
+  	skipMsg = 'ANDROID_HOME environment variable and sdk.dir in local.properties are missing (either ANDROID_HOME or local.properties are is required)'
+  	skipAndroid = true
+}
+
+// skip when using eclipse
+if (System.getProperty('eclipse.application') != null) {
+  	skipMsg = 'Eclipse IDE is used'
+  	skipAndroid = true
+}
+
+// skip with -Dskip-android
+if (System.getProperty('skip-android') != null) {
+ 	skipMsg = '"skip-android" is set'
+ 	skipAndroid = true
+}
+
+gradle.ext.skipAndroid = skipAndroid
+gradle.ext.includeJibGradlePlugin = skipAndroid
+
+if (skipAndroid) {
+	println '*) Skipping Android projects because: ' + skipMsg
+	println '*) Including jib-gradle-plugin'
+
+  if (System.getProperty('docker-registry') != null) {
+    gradle.ext.dockerRegistryName = System.getProperty('docker-registry')
+  } else {
+    gradle.ext.dockerRegistryName = 'nntool.eu'
+  }
+} else {
+	println '*) Including Android apps'
+
+	include 'ias-android-common'
+	include 'ias-android-speed'
+	include 'qos-client-android'
+
+	include 'ias-android-demo'
+
+	include 'android-app'
+}

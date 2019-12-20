@@ -1,0 +1,42 @@
+<RelativeLayout android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp">
+
+    <TextView
+        style="@style/Nettest.MeasurementServerSelection.Title"
+        android:text="@string/measurement_server_selection_title"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/text_measruement_server_selection_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:padding="3dp"
+        android:background="@drawable/border_top_and_bottom"
+        android:id="@+id/measurement_server_selection_container"
+        android:layout_below="@+id/text_measruement_server_selection_title"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_centerHorizontal="true"
+            style="@style/Nettest.MeasurementServerSelection.Text"
+            android:text="@string/measurement_server_selection_default_server"
+            android:id="@+id/text_measurement_server_selection_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="5dp"
+            style="@style/Nettest.MeasurementServerSelection.Title"
+            android:text=">"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</RelativeLayout>

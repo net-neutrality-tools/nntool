@@ -1,0 +1,35 @@
+apply from: "${project.rootDir}/gradle/java7.gradle"
+
+dependencies {
+	implementation project(path: ':nettest-shared', configuration: 'default')
+
+    implementation group: 'net.sf.jopt-simple', name: 'jopt-simple', version: jopt_simple_version
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: httpclient_version
+    implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: retrofit_version
+	implementation group: 'com.squareup.retrofit2', name: 'converter-gson', version: retrofit_version
+    implementation group: 'com.j256.ormlite', name: 'ormlite-core', version: ormlite_version
+	implementation group: 'org.yaml', name: 'snakeyaml', version: snakeyaml_version
+
+	//implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+	testImplementation group: 'junit', name: 'junit', version: junit_version
+	testImplementation group: 'org.jmockit', name: 'jmockit', version: jmockit_version
+}
+
+def revisionPropertiesFile = file("${buildDir}/resources/main/revision.properties")
+
+processResources {
+	doLast {
+    	String revisionProperties = "git.describe=" + gradle.ext.getVersionNameFromGit() + "\n"
+    	revisionProperties = revisionProperties + "git.branch=" + gradle.ext.getBranchFromGit() + "\n"
+    	revisionProperties = revisionProperties + "git.dirty=false \n"
+    	revisionProperties = revisionProperties + "git.id=" + gradle.ext.getHashFromGit() + "\n"
+    	revisionProperties = revisionProperties + "git.revision=" + gradle.ext.getVersionCodeFromGit() + "\n"
+    	revisionProperties = revisionProperties + "build.time=" + System.currentTimeMillis() + "\n"
+    	revisionPropertiesFile.write(revisionProperties, 'UTF-8')
+	}
+}
+
+test {
+	jvmArgs "-javaagent:${classpath.find { it.name.contains("jmockit") }.absolutePath}"
+}

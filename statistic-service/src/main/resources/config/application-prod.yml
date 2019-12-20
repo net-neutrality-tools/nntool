@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: prod
+  
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+
+  #datasource:
+  #  type: com.zaxxer.hikari.HikariDataSource
+  #  url: 
+  #  username: 
+  #  password:
+
+server:
+  port: 8085
+  
+logging:
+  level:
+    ROOT: WARN
+    at.alladin.nettest: INFO

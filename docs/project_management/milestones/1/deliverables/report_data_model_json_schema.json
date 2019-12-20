@@ -1,0 +1,1806 @@
+{
+    "SubMeasurementResult": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:measurement:result:SubMeasurementResult", 
+        "properties": {
+            "relative_end_time_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "End time in nanoseconds relative to the end time of the overall measurement object."
+            }, 
+            "relative_start_time_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Start time in nanoseconds relative to the start time of the overall measurement object."
+            }, 
+            "reason": {
+                "required": true, 
+                "type": "string", 
+                "description": "The reason why a measurement failed.", 
+                "enum": [
+                    "UNABLE_TO_CONNECT", 
+                    "CONNECTION_LOST", 
+                    "NETWORK_CATEGORY_CHANGED", 
+                    "APP_BACKGROUNDED", 
+                    "USER_ABORTED"
+                ]
+            }, 
+            "status": {
+                "required": true, 
+                "type": "string", 
+                "description": "The status of a measurement.", 
+                "enum": [
+                    "STARTED", 
+                    "FINISHED", 
+                    "FAILED", 
+                    "ABORTED"
+                ]
+            }
+        }
+    }, 
+    "TrafficDto": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:TrafficDto", 
+        "properties": {
+            "bytes_tx": {
+                "type": "integer", 
+                "description": "Bytes transmitted."
+            }, 
+            "bytes_rx": {
+                "type": "integer", 
+                "description": "Bytes received."
+            }
+        }
+    }, 
+    "GeoLocationDto": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:GeoLocationDto", 
+        "properties": {
+            "altitude": {
+                "type": "number", 
+                "description": "Geographic location altitude."
+            }, 
+            "time": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "Time and date the geographic location information was captured (UTC)."
+            }, 
+            "longitude": {
+                "required": true, 
+                "type": "number", 
+                "description": "Geographic location longitude."
+            }, 
+            "provider": {
+                "type": "string", 
+                "description": "Geographic location provider."
+            }, 
+            "latitude": {
+                "required": true, 
+                "type": "number", 
+                "description": "Geographic location latitude."
+            }, 
+            "speed": {
+                "type": "number", 
+                "description": "Movement speed."
+            }, 
+            "heading": {
+                "type": "number", 
+                "description": "Movement heading."
+            }, 
+            "relative_time_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Relative time in nanoseconds (to measurement begin)."
+            }, 
+            "accuracy": {
+                "type": "number", 
+                "description": "Geographic location accuracy."
+            }
+        }
+    }, 
+    "ReasonDto": {
+        "enum": [
+            "UNABLE_TO_CONNECT", 
+            "CONNECTION_LOST", 
+            "NETWORK_CATEGORY_CHANGED", 
+            "APP_BACKGROUNDED", 
+            "USER_ABORTED"
+        ]
+    }, 
+    "MeasurementAgentTypeDto": {
+        "enum": [
+            "MOBILE", 
+            "BROWSER", 
+            "DESKTOP"
+        ]
+    }, 
+    "WebSocketInfoDto": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:WebSocketInfoDto", 
+        "properties": {
+            "frame_count_including_slow_start": {
+                "type": "integer", 
+                "description": "Number of frames sent over the WebSocket protocol during measurement including slow-start phase."
+            }, 
+            "overhead": {
+                "type": "integer", 
+                "description": "The overhead sent during the communication via the WebSocket protocol excluding slow-start phase."
+            }, 
+            "frame_size": {
+                "type": "integer", 
+                "description": "Size of a transmitted frame over the WebSocket protocol."
+            }, 
+            "overhead_per_frame": {
+                "type": "integer", 
+                "description": "The protocol overhead of a single WebSocket frame."
+            }, 
+            "overhead_including_slow_start": {
+                "type": "integer", 
+                "description": "The overhead sent during the communication via the WebSocket protocol including slow-start phase."
+            }, 
+            "frame_count": {
+                "type": "integer", 
+                "description": "Number of frames sent over the WebSocket protocol during measurement excluding slow-start phase."
+            }
+        }
+    }, 
+    "SpeedMeasurementResult": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:measurement:result:SpeedMeasurementResult", 
+        "properties": {
+            "status": {
+                "required": true, 
+                "type": "string", 
+                "description": "The status of a measurement.", 
+                "enum": [
+                    "STARTED", 
+                    "FINISHED", 
+                    "FAILED", 
+                    "ABORTED"
+                ]
+            }, 
+            "relative_start_time_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Start time in nanoseconds relative to the start time of the overall measurement object."
+            }, 
+            "bytes_upload_including_slow_start": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Bytes transferred during the speed measurement (Upload) with slow-start phase."
+            }, 
+            "relative_start_time_rtt_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Relative start time of the RTT measurement in nanoseconds."
+            }, 
+            "bytes_download_including_slow_start": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Bytes received during the speed measurement (Download) with slow-start phase."
+            }, 
+            "download_raw_data": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:SpeedMeasurementRawDataItemDto", 
+                    "properties": {
+                        "stream_id": {
+                            "required": true, 
+                            "type": "integer", 
+                            "description": "The stream id (numeric value starting from 0)."
+                        }, 
+                        "bytes": {
+                            "required": true, 
+                            "type": "integer", 
+                            "description": "Bytes transmitted or received since start of the speed measurement."
+                        }, 
+                        "relative_time_ns": {
+                            "required": true, 
+                            "type": "integer", 
+                            "description": "Relative time since start of the speed measurement."
+                        }
+                    }
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "Contains a list of all captured byte transfers during the download speed measurement on the measurement agent."
+            }, 
+            "duration_upload_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Duration of the upload measurement."
+            }, 
+            "bytes_download": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Bytes received during the speed measurement (Download)."
+            }, 
+            "rtt_info": {
+                "properties": {
+                    "rtts": {
+                        "items": {
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:RttDto", 
+                            "properties": {
+                                "rtt_ns": {
+                                    "required": true, 
+                                    "type": "integer", 
+                                    "description": "Round trip time recorded in nanoseconds."
+                                }, 
+                                "relative_time_ns": {
+                                    "required": true, 
+                                    "type": "integer", 
+                                    "description": "Relative time in nanoseconds (to test begin)."
+                                }
+                            }
+                        }, 
+                        "type": "array", 
+                        "description": "List of all measured RTTs."
+                    }, 
+                    "num_received": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "The actual number of received RTT packets."
+                    }, 
+                    "num_sent": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "The actual number of sent RTT packets."
+                    }, 
+                    "requested_num_packets": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "The number of RTT packets to send, as instructed by the server."
+                    }, 
+                    "num_missing": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "The actual number of missing RTT packets."
+                    }, 
+                    "packet_size": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "The actual size of RTT packets."
+                    }, 
+                    "num_error": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "The actual number of failed RTT packets."
+                    }
+                }, 
+                "required": true, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:RttInfoDto", 
+                "description": "Contains round trip time information measured during the measurement on the measurement agent."
+            }, 
+            "relative_end_time_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "End time in nanoseconds relative to the end time of the overall measurement object."
+            }, 
+            "connection_info": {
+                "properties": {
+                    "encryption_info": {
+                        "type": "string", 
+                        "description": "Cryptographic protocol and cipher suite used for encrypted communication, if available. E.g. TLSv1.2 (TLS_RSA_WITH_AES_128_GCM_SHA256)."
+                    }, 
+                    "tcp_opt_sack_requested": {
+                        "type": "boolean", 
+                        "description": "Flag if TCP SACK (Selective Acknowledgement) is enabled/requested."
+                    }, 
+                    "requested_num_streams_download": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "The requested number of streams for the download measurement."
+                    }, 
+                    "agent_interface_download_measurement_traffic": {
+                        "type": "object", 
+                        "description": "Contains information about bytes transferred during the download measurement, as reported by the measurement agent's interface, if available. Only used for displaying to the measurement agent.", 
+                        "$ref": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:TrafficDto"
+                    }, 
+                    "actual_num_streams_upload": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "The actual number of streams used by the upload measurement."
+                    }, 
+                    "actual_num_streams_download": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "The actual number of streams used by the download measurement."
+                    }, 
+                    "encrypted": {
+                        "required": true, 
+                        "type": "boolean", 
+                        "description": "Indicates if the communication with the measurement server will be encrypted."
+                    }, 
+                    "agent_interface_upload_measurement_traffic": {
+                        "type": "object", 
+                        "description": "Contains information about bytes transferred during the upload measurement, as reported by the measurement agent's interface, if available. Only used for displaying to the measurement agent.", 
+                        "$ref": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:TrafficDto"
+                    }, 
+                    "server_mss": {
+                        "type": "integer", 
+                        "description": "Maximum Segment Size (MSS) value from the server-side."
+                    }, 
+                    "address": {
+                        "required": true, 
+                        "type": "string", 
+                        "description": "The address of the measurement server."
+                    }, 
+                    "tcp_opt_wscale_requested": {
+                        "type": "boolean", 
+                        "description": "Flag if the TCP window scale options are requested."
+                    }, 
+                    "web_socket_info_download": {
+                        "properties": {
+                            "frame_count_including_slow_start": {
+                                "type": "integer", 
+                                "description": "Number of frames sent over the WebSocket protocol during measurement including slow-start phase."
+                            }, 
+                            "overhead": {
+                                "type": "integer", 
+                                "description": "The overhead sent during the communication via the WebSocket protocol excluding slow-start phase."
+                            }, 
+                            "frame_size": {
+                                "type": "integer", 
+                                "description": "Size of a transmitted frame over the WebSocket protocol."
+                            }, 
+                            "overhead_per_frame": {
+                                "type": "integer", 
+                                "description": "The protocol overhead of a single WebSocket frame."
+                            }, 
+                            "overhead_including_slow_start": {
+                                "type": "integer", 
+                                "description": "The overhead sent during the communication via the WebSocket protocol including slow-start phase."
+                            }, 
+                            "frame_count": {
+                                "type": "integer", 
+                                "description": "Number of frames sent over the WebSocket protocol during measurement excluding slow-start phase."
+                            }
+                        }, 
+                        "type": "object", 
+                        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:WebSocketInfoDto", 
+                        "description": "This class contains additional information gathered from the WebSocket protocol during the download measurement."
+                    }, 
+                    "server_mtu": {
+                        "type": "integer", 
+                        "description": "Maximum Transmission Unit (MTU) value from the server-side."
+                    }, 
+                    "agent_interface_total_traffic": {
+                        "properties": {
+                            "bytes_tx": {
+                                "type": "integer", 
+                                "description": "Bytes transmitted."
+                            }, 
+                            "bytes_rx": {
+                                "type": "integer", 
+                                "description": "Bytes received."
+                            }
+                        }, 
+                        "type": "object", 
+                        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:TrafficDto", 
+                        "description": "Contains information about total bytes transferred during the speed measurement, as reported by the measurement agent's interface, if available. Only used for displaying to the measurement agent."
+                    }, 
+                    "port": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "Port used for the communication."
+                    }, 
+                    "web_socket_info_upload": {
+                        "type": "object", 
+                        "description": "This class contains additional information gathered from the WebSocket protocol during the upload measurement.", 
+                        "$ref": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:WebSocketInfoDto"
+                    }, 
+                    "requested_num_streams_upload": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "The requested number of streams for the upload measurement."
+                    }
+                }, 
+                "required": true, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:ConnectionInfoDto", 
+                "description": "Contains information about the connection(s) used for the speed measurement."
+            }, 
+            "reason": {
+                "required": true, 
+                "type": "string", 
+                "description": "The reason why a measurement failed.", 
+                "enum": [
+                    "UNABLE_TO_CONNECT", 
+                    "CONNECTION_LOST", 
+                    "NETWORK_CATEGORY_CHANGED", 
+                    "APP_BACKGROUNDED", 
+                    "USER_ABORTED"
+                ]
+            }, 
+            "bytes_upload": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Bytes transferred during the speed measurement (Upload)."
+            }, 
+            "duration_rtt_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Duration of the RTT measurement."
+            }, 
+            "relative_start_time_download_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Relative start time of the download measurement in nanoseconds."
+            }, 
+            "upload_raw_data": {
+                "items": {
+                    "type": "object", 
+                    "$ref": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:SpeedMeasurementRawDataItemDto"
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "Contains a list of all captured byte transfers during the upload speed measurement on the measurement agent."
+            }, 
+            "duration_download_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Duration of the download measurement."
+            }, 
+            "relative_start_time_upload_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Relative start time of the upload measurement in nanoseconds."
+            }
+        }
+    }, 
+    "RttDto": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:RttDto", 
+        "properties": {
+            "rtt_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Round trip time recorded in nanoseconds."
+            }, 
+            "relative_time_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Relative time in nanoseconds (to test begin)."
+            }
+        }
+    }, 
+    "LmapConflictDto": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:lmap:report:LmapConflictDto", 
+        "properties": {
+            "task-name": {
+                "type": "string", 
+                "description": "The name of the Task executed by an Action within the Schedule that might have impacted the execution of the Task that has produced this result."
+            }, 
+            "action-name": {
+                "type": "string", 
+                "description": "The name of an Action within the Schedule that might have impacted the execution of the Task that has produced this result."
+            }, 
+            "schedule-name": {
+                "type": "string", 
+                "description": "The names of Tasks overlapping with the execution of the Task that has produced this result."
+            }
+        }
+    }, 
+    "TimeBasedResultDto": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:measurement:result:TimeBasedResultDto", 
+        "properties": {
+            "signals": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:SignalDto", 
+                    "properties": {
+                        "lte_rssnr_db": {
+                            "type": "integer", 
+                            "description": "The LTE reference signal signal-to-noise ratio, in dB (If available)."
+                        }, 
+                        "lte_rsrp_dbm": {
+                            "type": "integer", 
+                            "description": "The LTE reference signal received power, in dBm (If available)."
+                        }, 
+                        "lte_cqi": {
+                            "type": "integer", 
+                            "description": "The LTE channel quality indicator (If available)."
+                        }, 
+                        "lte_rsrp_db": {
+                            "type": "integer", 
+                            "description": "The LTE reference signal received quality, in dB (If available)."
+                        }, 
+                        "wifi_bssid": {
+                            "type": "string", 
+                            "description": "BSSID of the network (if available)."
+                        }, 
+                        "network_type_id": {
+                            "required": true, 
+                            "type": "integer", 
+                            "description": "Network type id as it gets returned by the Android API."
+                        }, 
+                        "wifi_rssi_dbm": {
+                            "type": "integer", 
+                            "description": "The received signal strength indicator of the current 802.11 network, in dBm (If available)."
+                        }, 
+                        "signal_strength_2g3g_dbm": {
+                            "type": "integer", 
+                            "description": "The received signal strength of 2G or 3G connections, in dBm (If available)."
+                        }, 
+                        "time": {
+                            "items": {
+                                "type": "integer"
+                            }, 
+                            "required": true, 
+                            "type": "array", 
+                            "description": "Time and date the signal information was captured (UTC)."
+                        }, 
+                        "wifi_link_speed_bps": {
+                            "type": "integer", 
+                            "description": "The current WiFi link speed, in bits per second (If available)."
+                        }, 
+                        "wifi_ssid": {
+                            "type": "string", 
+                            "description": "SSID of the network (if available)."
+                        }, 
+                        "relative_time_ns": {
+                            "required": true, 
+                            "type": "integer", 
+                            "description": "Relative time in nanoseconds (to test begin)."
+                        }
+                    }
+                }, 
+                "type": "array", 
+                "description": "List of captured signal information."
+            }, 
+            "cpu_usage": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:PointInTimeValueDto<java:lang:Double>", 
+                    "properties": {
+                        "value": {
+                            "required": true, 
+                            "type": "number", 
+                            "description": "The value recorded at this point in time."
+                        }, 
+                        "relative_time_ns": {
+                            "required": true, 
+                            "type": "integer", 
+                            "description": "The relative time in nanoseconds to the measurement start."
+                        }
+                    }
+                }, 
+                "type": "array", 
+                "description": "CPU usage during the test, if available."
+            }, 
+            "start_time": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "Start date and time for this measurement. Date and time is always stored as UTC."
+            }, 
+            "mem_usage": {
+                "items": {
+                    "type": "object", 
+                    "$ref": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:PointInTimeValueDto<java:lang:Double>"
+                }, 
+                "type": "array", 
+                "description": "Memory usage during the test, if available."
+            }, 
+            "network_points_in_time": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:measurement:result:MeasurementResultNetworkPointInTimeDto", 
+                    "properties": {
+                        "network_operator_mcc_mnc": {
+                            "type": "string", 
+                            "description": "The MCC/MNC of the network operator, if available."
+                        }, 
+                        "ssid": {
+                            "type": "string", 
+                            "description": "SSID of the network."
+                        }, 
+                        "bssid": {
+                            "type": "string", 
+                            "description": "BSSID of the network."
+                        }, 
+                        "network_operator_name": {
+                            "type": "string", 
+                            "description": "The network operator name, if available."
+                        }, 
+                        "network_type_id": {
+                            "required": true, 
+                            "type": "integer", 
+                            "description": "Network type id as it gets returned by the Android API."
+                        }, 
+                        "sim_operator_mcc_mnc": {
+                            "type": "string", 
+                            "description": "The MCC/MNC of the SIM operator, if available."
+                        }, 
+                        "relative_time_ns": {
+                            "required": true, 
+                            "type": "integer", 
+                            "description": "Relative time in nanoseconds (to test begin)."
+                        }, 
+                        "time": {
+                            "items": {
+                                "type": "integer"
+                            }, 
+                            "required": true, 
+                            "type": "array", 
+                            "description": "Time and date the signal information was captured (UTC)."
+                        }, 
+                        "sim_country": {
+                            "type": "string", 
+                            "description": "The SIM operator country code (e.g. \"AT\"), if available."
+                        }, 
+                        "network_country": {
+                            "type": "string", 
+                            "description": "The network operator country code (e.g. \"AT\"), if available."
+                        }, 
+                        "sim_operator_name": {
+                            "type": "string", 
+                            "description": "SIM operator name, if available."
+                        }
+                    }
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "Contains all relevant network information of a single point in time."
+            }, 
+            "duration_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Overall duration of this measurement."
+            }, 
+            "geo_locations": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:GeoLocationDto", 
+                    "properties": {
+                        "altitude": {
+                            "type": "number", 
+                            "description": "Geographic location altitude."
+                        }, 
+                        "time": {
+                            "items": {
+                                "type": "integer"
+                            }, 
+                            "required": true, 
+                            "type": "array", 
+                            "description": "Time and date the geographic location information was captured (UTC)."
+                        }, 
+                        "longitude": {
+                            "required": true, 
+                            "type": "number", 
+                            "description": "Geographic location longitude."
+                        }, 
+                        "provider": {
+                            "type": "string", 
+                            "description": "Geographic location provider."
+                        }, 
+                        "latitude": {
+                            "required": true, 
+                            "type": "number", 
+                            "description": "Geographic location latitude."
+                        }, 
+                        "speed": {
+                            "type": "number", 
+                            "description": "Movement speed."
+                        }, 
+                        "heading": {
+                            "type": "number", 
+                            "description": "Movement heading."
+                        }, 
+                        "relative_time_ns": {
+                            "required": true, 
+                            "type": "integer", 
+                            "description": "Relative time in nanoseconds (to measurement begin)."
+                        }, 
+                        "accuracy": {
+                            "type": "number", 
+                            "description": "Geographic location accuracy."
+                        }
+                    }
+                }, 
+                "type": "array", 
+                "description": "List of all captured geographic locations."
+            }, 
+            "end_time": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "End date and time for this measurement. Date and time is always stored as UTC."
+            }, 
+            "cell_locations": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:CellLocationDto", 
+                    "properties": {
+                        "cell_id": {
+                            "type": "integer", 
+                            "description": "Contains the cell-ID, if available."
+                        }, 
+                        "area_code": {
+                            "type": "integer", 
+                            "description": "Contains the area code (e.g. location area code (GSM), tracking area code (LTE)), if available."
+                        }, 
+                        "longitude": {
+                            "type": "number", 
+                            "description": "Geographic location longitude of this cell."
+                        }, 
+                        "latitude": {
+                            "type": "number", 
+                            "description": "Geographic location latitude of this cell."
+                        }, 
+                        "time": {
+                            "items": {
+                                "type": "integer"
+                            }, 
+                            "required": true, 
+                            "type": "array", 
+                            "description": "Time and date the cell location information was captured (UTC)."
+                        }, 
+                        "primary_scrambling_code": {
+                            "type": "integer", 
+                            "description": "Contains the primary scrambling code, if available."
+                        }, 
+                        "relative_time_ns": {
+                            "required": true, 
+                            "type": "integer", 
+                            "description": "Relative time in nanoseconds (to test begin)."
+                        }, 
+                        "arfcn": {
+                            "type": "integer", 
+                            "description": "Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN), if available."
+                        }
+                    }
+                }, 
+                "type": "array", 
+                "description": "List of captured cell information."
+            }
+        }
+    }, 
+    "ApiRequestInfo": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:ApiRequestInfo", 
+        "properties": {
+            "os_name": {
+                "required": true, 
+                "type": "string", 
+                "description": "Operating system name."
+            }, 
+            "language": {
+                "required": true, 
+                "type": "string", 
+                "description": "Language specified by the measurement agent."
+            }, 
+            "app_version_code": {
+                "type": "integer", 
+                "description": "Application version code number (e.g. 10)."
+            }, 
+            "app_version_name": {
+                "type": "string", 
+                "description": "Application version name (e.g. 1.0.0)."
+            }, 
+            "app_git_revision": {
+                "type": "string", 
+                "description": "Git revision name."
+            }, 
+            "agent_uuid": {
+                "type": "string", 
+                "description": "The agent's UUID. This value is ignored if the resource path already contains the agent's UUID."
+            }, 
+            "os_version": {
+                "required": true, 
+                "type": "string", 
+                "description": "Operating system version."
+            }, 
+            "geo_location": {
+                "properties": {
+                    "altitude": {
+                        "type": "number", 
+                        "description": "Geographic location altitude."
+                    }, 
+                    "time": {
+                        "items": {
+                            "type": "integer"
+                        }, 
+                        "required": true, 
+                        "type": "array", 
+                        "description": "Time and date the geographic location information was captured (UTC)."
+                    }, 
+                    "longitude": {
+                        "required": true, 
+                        "type": "number", 
+                        "description": "Geographic location longitude."
+                    }, 
+                    "provider": {
+                        "type": "string", 
+                        "description": "Geographic location provider."
+                    }, 
+                    "latitude": {
+                        "required": true, 
+                        "type": "number", 
+                        "description": "Geographic location latitude."
+                    }, 
+                    "speed": {
+                        "type": "number", 
+                        "description": "Movement speed."
+                    }, 
+                    "heading": {
+                        "type": "number", 
+                        "description": "Movement heading."
+                    }, 
+                    "relative_time_ns": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "Relative time in nanoseconds (to measurement begin)."
+                    }, 
+                    "accuracy": {
+                        "type": "number", 
+                        "description": "Geographic location accuracy."
+                    }
+                }, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:GeoLocationDto", 
+                "description": "The measurement agent device location at the time the request was sent or null if the measurement agent doesn't have location information."
+            }, 
+            "agent_type": {
+                "required": true, 
+                "type": "string", 
+                "description": "Type of agent.", 
+                "enum": [
+                    "MOBILE", 
+                    "BROWSER", 
+                    "DESKTOP"
+                ]
+            }, 
+            "code_name": {
+                "type": "string", 
+                "description": "Device code name."
+            }, 
+            "timezone": {
+                "type": "string", 
+                "description": "The measurement agent's time zone. Is only stored if a measurement is sent to the server."
+            }, 
+            "model": {
+                "type": "string", 
+                "description": "Detailed device designation."
+            }, 
+            "api_level": {
+                "type": "string", 
+                "description": "API level of operating system or SDK (e.g. Android API level or Swift SDK version)."
+            }
+        }
+    }, 
+    "RttInfoDto": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:RttInfoDto", 
+        "properties": {
+            "rtts": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:RttDto", 
+                    "properties": {
+                        "rtt_ns": {
+                            "required": true, 
+                            "type": "integer", 
+                            "description": "Round trip time recorded in nanoseconds."
+                        }, 
+                        "relative_time_ns": {
+                            "required": true, 
+                            "type": "integer", 
+                            "description": "Relative time in nanoseconds (to test begin)."
+                        }
+                    }
+                }, 
+                "type": "array", 
+                "description": "List of all measured RTTs."
+            }, 
+            "num_received": {
+                "required": true, 
+                "type": "integer", 
+                "description": "The actual number of received RTT packets."
+            }, 
+            "num_sent": {
+                "required": true, 
+                "type": "integer", 
+                "description": "The actual number of sent RTT packets."
+            }, 
+            "requested_num_packets": {
+                "required": true, 
+                "type": "integer", 
+                "description": "The number of RTT packets to send, as instructed by the server."
+            }, 
+            "num_missing": {
+                "required": true, 
+                "type": "integer", 
+                "description": "The actual number of missing RTT packets."
+            }, 
+            "packet_size": {
+                "required": true, 
+                "type": "integer", 
+                "description": "The actual size of RTT packets."
+            }, 
+            "num_error": {
+                "required": true, 
+                "type": "integer", 
+                "description": "The actual number of failed RTT packets."
+            }
+        }
+    }, 
+    "SpeedMeasurementRawDataItemDto": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:SpeedMeasurementRawDataItemDto", 
+        "properties": {
+            "stream_id": {
+                "required": true, 
+                "type": "integer", 
+                "description": "The stream id (numeric value starting from 0)."
+            }, 
+            "bytes": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Bytes transmitted or received since start of the speed measurement."
+            }, 
+            "relative_time_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Relative time since start of the speed measurement."
+            }
+        }
+    }, 
+    "QoSMeasurementResult": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:measurement:result:QoSMeasurementResult", 
+        "properties": {
+            "relative_end_time_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "End time in nanoseconds relative to the end time of the overall measurement object."
+            }, 
+            "relative_start_time_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Start time in nanoseconds relative to the start time of the overall measurement object."
+            }, 
+            "reason": {
+                "required": true, 
+                "type": "string", 
+                "description": "The reason why a measurement failed.", 
+                "enum": [
+                    "UNABLE_TO_CONNECT", 
+                    "CONNECTION_LOST", 
+                    "NETWORK_CATEGORY_CHANGED", 
+                    "APP_BACKGROUNDED", 
+                    "USER_ABORTED"
+                ]
+            }, 
+            "status": {
+                "required": true, 
+                "type": "string", 
+                "description": "The status of a measurement.", 
+                "enum": [
+                    "STARTED", 
+                    "FINISHED", 
+                    "FAILED", 
+                    "ABORTED"
+                ]
+            }, 
+            "results": {
+                "items": {
+                    "additionalProperties": {
+                        "type": "any"
+                    }, 
+                    "type": "object"
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "QoS measurement results."
+            }
+        }
+    }, 
+    "CellLocationDto": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:CellLocationDto", 
+        "properties": {
+            "cell_id": {
+                "type": "integer", 
+                "description": "Contains the cell-ID, if available."
+            }, 
+            "area_code": {
+                "type": "integer", 
+                "description": "Contains the area code (e.g. location area code (GSM), tracking area code (LTE)), if available."
+            }, 
+            "longitude": {
+                "type": "number", 
+                "description": "Geographic location longitude of this cell."
+            }, 
+            "latitude": {
+                "type": "number", 
+                "description": "Geographic location latitude of this cell."
+            }, 
+            "time": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "Time and date the cell location information was captured (UTC)."
+            }, 
+            "primary_scrambling_code": {
+                "type": "integer", 
+                "description": "Contains the primary scrambling code, if available."
+            }, 
+            "relative_time_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Relative time in nanoseconds (to test begin)."
+            }, 
+            "arfcn": {
+                "type": "integer", 
+                "description": "Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN), if available."
+            }
+        }
+    }, 
+    "SignalDto": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:SignalDto", 
+        "properties": {
+            "lte_rssnr_db": {
+                "type": "integer", 
+                "description": "The LTE reference signal signal-to-noise ratio, in dB (If available)."
+            }, 
+            "lte_rsrp_dbm": {
+                "type": "integer", 
+                "description": "The LTE reference signal received power, in dBm (If available)."
+            }, 
+            "lte_cqi": {
+                "type": "integer", 
+                "description": "The LTE channel quality indicator (If available)."
+            }, 
+            "lte_rsrp_db": {
+                "type": "integer", 
+                "description": "The LTE reference signal received quality, in dB (If available)."
+            }, 
+            "wifi_bssid": {
+                "type": "string", 
+                "description": "BSSID of the network (if available)."
+            }, 
+            "network_type_id": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Network type id as it gets returned by the Android API."
+            }, 
+            "wifi_rssi_dbm": {
+                "type": "integer", 
+                "description": "The received signal strength indicator of the current 802.11 network, in dBm (If available)."
+            }, 
+            "signal_strength_2g3g_dbm": {
+                "type": "integer", 
+                "description": "The received signal strength of 2G or 3G connections, in dBm (If available)."
+            }, 
+            "time": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "Time and date the signal information was captured (UTC)."
+            }, 
+            "wifi_link_speed_bps": {
+                "type": "integer", 
+                "description": "The current WiFi link speed, in bits per second (If available)."
+            }, 
+            "wifi_ssid": {
+                "type": "string", 
+                "description": "SSID of the network (if available)."
+            }, 
+            "relative_time_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "Relative time in nanoseconds (to test begin)."
+            }
+        }
+    }, 
+    "MeasurementResultResponse": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:measurement:result:MeasurementResultResponse", 
+        "properties": {
+            "uuid": {
+                "required": true, 
+                "type": "string", 
+                "description": "The UUIDv4 identifier of the measurement."
+            }, 
+            "open_data_uuid": {
+                "required": true, 
+                "type": "string", 
+                "description": "An UUIDv4 identifier that is used to find this measurement in an open-data context."
+            }
+        }
+    }, 
+    "LmapResultDto": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:lmap:report:LmapResultDto", 
+        "properties": {
+            "cycle-number": {
+                "type": "string", 
+                "description": "The optional cycle number is the time closest to the time reported in the event leaf that is a multiple of the cycle-interval of the event that triggered the execution of the Schedule.  The value is only present if the event that triggered the execution of the Schedule has a defined cycle-interval."
+            }, 
+            "status": {
+                "required": true, 
+                "type": "integer", 
+                "description": "The status code returned by the execution of this Action."
+            }, 
+            "task": {
+                "type": "string", 
+                "description": "The name of the Task that produced the result."
+            }, 
+            "end": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "type": "array", 
+                "description": "The date and time when the Task producing this result finished."
+            }, 
+            "option": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:lmap:common:LmapOptionDto", 
+                    "properties": {
+                        "measurement-parameters": {
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:measurement:initiation:MeasurementTypeParameters", 
+                            "description": "The additional measurement parameters of the option."
+                        }, 
+                        "id": {
+                            "type": "string", 
+                            "description": "An identifier uniquely identifying an option. This identifier is required by YANG to uniquely identify a name/value pair, but it otherwise has no semantic value."
+                        }, 
+                        "value": {
+                            "type": "string", 
+                            "description": "The value of the option."
+                        }, 
+                        "name": {
+                            "type": "string", 
+                            "description": "The name of the option."
+                        }
+                    }
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "The list of options there were in use when the measurement was performed.  This list must include both the Task-specific options as well as the Action-specific options."
+            }, 
+            "parameters": {
+                "type": "any", 
+                "description": "This container is a placeholder for runtime parameters defined in Task-specific data models augmenting the base LMAP report data model."
+            }, 
+            "schedule": {
+                "type": "string", 
+                "description": "The name of the Schedule that produced the result."
+            }, 
+            "results": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:measurement:result:SubMeasurementResult", 
+                    "properties": {
+                        "relative_end_time_ns": {
+                            "required": true, 
+                            "type": "integer", 
+                            "description": "End time in nanoseconds relative to the end time of the overall measurement object."
+                        }, 
+                        "relative_start_time_ns": {
+                            "required": true, 
+                            "type": "integer", 
+                            "description": "Start time in nanoseconds relative to the start time of the overall measurement object."
+                        }, 
+                        "reason": {
+                            "required": true, 
+                            "type": "string", 
+                            "description": "The reason why a measurement failed.", 
+                            "enum": [
+                                "UNABLE_TO_CONNECT", 
+                                "CONNECTION_LOST", 
+                                "NETWORK_CATEGORY_CHANGED", 
+                                "APP_BACKGROUNDED", 
+                                "USER_ABORTED"
+                            ]
+                        }, 
+                        "status": {
+                            "required": true, 
+                            "type": "string", 
+                            "description": "The status of a measurement.", 
+                            "enum": [
+                                "STARTED", 
+                                "FINISHED", 
+                                "FAILED", 
+                                "ABORTED"
+                            ]
+                        }
+                    }
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "A list of results. Replaces the table list from LMAP"
+            }, 
+            "start": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "The date and time when the Task producing this result started."
+            }, 
+            "tag": {
+                "items": {
+                    "type": "string"
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "A tag contains additional information that is passed with the result record to the Collector.  This is the joined set of tags defined for the Task object, the Schedule object, and the Action object. A tag can be used to carry the Measurement Cycle ID."
+            }, 
+            "action": {
+                "type": "string", 
+                "description": "The name of the Action in the Schedule that produced the result."
+            }, 
+            "event": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "type": "array", 
+                "description": "The date and time of the event that triggered the Schedule of the Action that produced the reported result values.  The date and time does not include any added randomization."
+            }, 
+            "conflict": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:lmap:report:LmapConflictDto", 
+                    "properties": {
+                        "task-name": {
+                            "type": "string", 
+                            "description": "The name of the Task executed by an Action within the Schedule that might have impacted the execution of the Task that has produced this result."
+                        }, 
+                        "action-name": {
+                            "type": "string", 
+                            "description": "The name of an Action within the Schedule that might have impacted the execution of the Task that has produced this result."
+                        }, 
+                        "schedule-name": {
+                            "type": "string", 
+                            "description": "The names of Tasks overlapping with the execution of the Task that has produced this result."
+                        }
+                    }
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "The names of Tasks overlapping with the execution of the Task that has produced this result."
+            }
+        }
+    }, 
+    "StatusDto": {
+        "enum": [
+            "STARTED", 
+            "FINISHED", 
+            "FAILED", 
+            "ABORTED"
+        ]
+    }, 
+    "LmapReportDto": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:lmap:report:LmapReportDto", 
+        "properties": {
+            "measurement-point": {
+                "type": "string", 
+                "description": "The measurement-point of the agent from which this report originates."
+            }, 
+            "group-id": {
+                "type": "string", 
+                "description": "The group-id of the agent from which this report originates."
+            }, 
+            "agent-id": {
+                "type": "string", 
+                "description": "The agent-id of the agent from which this report originates."
+            }, 
+            "time_based_result": {
+                "properties": {
+                    "signals": {
+                        "items": {
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:SignalDto", 
+                            "properties": {
+                                "lte_rssnr_db": {
+                                    "type": "integer", 
+                                    "description": "The LTE reference signal signal-to-noise ratio, in dB (If available)."
+                                }, 
+                                "lte_rsrp_dbm": {
+                                    "type": "integer", 
+                                    "description": "The LTE reference signal received power, in dBm (If available)."
+                                }, 
+                                "lte_cqi": {
+                                    "type": "integer", 
+                                    "description": "The LTE channel quality indicator (If available)."
+                                }, 
+                                "lte_rsrp_db": {
+                                    "type": "integer", 
+                                    "description": "The LTE reference signal received quality, in dB (If available)."
+                                }, 
+                                "wifi_bssid": {
+                                    "type": "string", 
+                                    "description": "BSSID of the network (if available)."
+                                }, 
+                                "network_type_id": {
+                                    "required": true, 
+                                    "type": "integer", 
+                                    "description": "Network type id as it gets returned by the Android API."
+                                }, 
+                                "wifi_rssi_dbm": {
+                                    "type": "integer", 
+                                    "description": "The received signal strength indicator of the current 802.11 network, in dBm (If available)."
+                                }, 
+                                "signal_strength_2g3g_dbm": {
+                                    "type": "integer", 
+                                    "description": "The received signal strength of 2G or 3G connections, in dBm (If available)."
+                                }, 
+                                "time": {
+                                    "items": {
+                                        "type": "integer"
+                                    }, 
+                                    "required": true, 
+                                    "type": "array", 
+                                    "description": "Time and date the signal information was captured (UTC)."
+                                }, 
+                                "wifi_link_speed_bps": {
+                                    "type": "integer", 
+                                    "description": "The current WiFi link speed, in bits per second (If available)."
+                                }, 
+                                "wifi_ssid": {
+                                    "type": "string", 
+                                    "description": "SSID of the network (if available)."
+                                }, 
+                                "relative_time_ns": {
+                                    "required": true, 
+                                    "type": "integer", 
+                                    "description": "Relative time in nanoseconds (to test begin)."
+                                }
+                            }
+                        }, 
+                        "type": "array", 
+                        "description": "List of captured signal information."
+                    }, 
+                    "cpu_usage": {
+                        "items": {
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:PointInTimeValueDto<java:lang:Double>", 
+                            "properties": {
+                                "value": {
+                                    "required": true, 
+                                    "type": "number", 
+                                    "description": "The value recorded at this point in time."
+                                }, 
+                                "relative_time_ns": {
+                                    "required": true, 
+                                    "type": "integer", 
+                                    "description": "The relative time in nanoseconds to the measurement start."
+                                }
+                            }
+                        }, 
+                        "type": "array", 
+                        "description": "CPU usage during the test, if available."
+                    }, 
+                    "start_time": {
+                        "items": {
+                            "type": "integer"
+                        }, 
+                        "required": true, 
+                        "type": "array", 
+                        "description": "Start date and time for this measurement. Date and time is always stored as UTC."
+                    }, 
+                    "mem_usage": {
+                        "items": {
+                            "type": "object", 
+                            "$ref": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:PointInTimeValueDto<java:lang:Double>"
+                        }, 
+                        "type": "array", 
+                        "description": "Memory usage during the test, if available."
+                    }, 
+                    "network_points_in_time": {
+                        "items": {
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:measurement:result:MeasurementResultNetworkPointInTimeDto", 
+                            "properties": {
+                                "network_operator_mcc_mnc": {
+                                    "type": "string", 
+                                    "description": "The MCC/MNC of the network operator, if available."
+                                }, 
+                                "ssid": {
+                                    "type": "string", 
+                                    "description": "SSID of the network."
+                                }, 
+                                "bssid": {
+                                    "type": "string", 
+                                    "description": "BSSID of the network."
+                                }, 
+                                "network_operator_name": {
+                                    "type": "string", 
+                                    "description": "The network operator name, if available."
+                                }, 
+                                "network_type_id": {
+                                    "required": true, 
+                                    "type": "integer", 
+                                    "description": "Network type id as it gets returned by the Android API."
+                                }, 
+                                "sim_operator_mcc_mnc": {
+                                    "type": "string", 
+                                    "description": "The MCC/MNC of the SIM operator, if available."
+                                }, 
+                                "relative_time_ns": {
+                                    "required": true, 
+                                    "type": "integer", 
+                                    "description": "Relative time in nanoseconds (to test begin)."
+                                }, 
+                                "time": {
+                                    "items": {
+                                        "type": "integer"
+                                    }, 
+                                    "required": true, 
+                                    "type": "array", 
+                                    "description": "Time and date the signal information was captured (UTC)."
+                                }, 
+                                "sim_country": {
+                                    "type": "string", 
+                                    "description": "The SIM operator country code (e.g. \"AT\"), if available."
+                                }, 
+                                "network_country": {
+                                    "type": "string", 
+                                    "description": "The network operator country code (e.g. \"AT\"), if available."
+                                }, 
+                                "sim_operator_name": {
+                                    "type": "string", 
+                                    "description": "SIM operator name, if available."
+                                }
+                            }
+                        }, 
+                        "required": true, 
+                        "type": "array", 
+                        "description": "Contains all relevant network information of a single point in time."
+                    }, 
+                    "duration_ns": {
+                        "required": true, 
+                        "type": "integer", 
+                        "description": "Overall duration of this measurement."
+                    }, 
+                    "geo_locations": {
+                        "items": {
+                            "type": "object", 
+                            "$ref": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:GeoLocationDto"
+                        }, 
+                        "type": "array", 
+                        "description": "List of all captured geographic locations."
+                    }, 
+                    "end_time": {
+                        "items": {
+                            "type": "integer"
+                        }, 
+                        "required": true, 
+                        "type": "array", 
+                        "description": "End date and time for this measurement. Date and time is always stored as UTC."
+                    }, 
+                    "cell_locations": {
+                        "items": {
+                            "type": "object", 
+                            "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:CellLocationDto", 
+                            "properties": {
+                                "cell_id": {
+                                    "type": "integer", 
+                                    "description": "Contains the cell-ID, if available."
+                                }, 
+                                "area_code": {
+                                    "type": "integer", 
+                                    "description": "Contains the area code (e.g. location area code (GSM), tracking area code (LTE)), if available."
+                                }, 
+                                "longitude": {
+                                    "type": "number", 
+                                    "description": "Geographic location longitude of this cell."
+                                }, 
+                                "latitude": {
+                                    "type": "number", 
+                                    "description": "Geographic location latitude of this cell."
+                                }, 
+                                "time": {
+                                    "items": {
+                                        "type": "integer"
+                                    }, 
+                                    "required": true, 
+                                    "type": "array", 
+                                    "description": "Time and date the cell location information was captured (UTC)."
+                                }, 
+                                "primary_scrambling_code": {
+                                    "type": "integer", 
+                                    "description": "Contains the primary scrambling code, if available."
+                                }, 
+                                "relative_time_ns": {
+                                    "required": true, 
+                                    "type": "integer", 
+                                    "description": "Relative time in nanoseconds (to test begin)."
+                                }, 
+                                "arfcn": {
+                                    "type": "integer", 
+                                    "description": "Contains the ARFCN (Absolute Radio Frequency Channel Number) (e.g. 16-bit GSM ARFCN or 18-bit LTE EARFCN), if available."
+                                }
+                            }
+                        }, 
+                        "type": "array", 
+                        "description": "List of captured cell information."
+                    }
+                }, 
+                "required": true, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:measurement:result:TimeBasedResultDto", 
+                "description": "This module defines a data model for reporting time based results from Measurement Agents."
+            }, 
+            "result": {
+                "items": {
+                    "type": "object", 
+                    "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:lmap:report:LmapResultDto<java:lang:Object>", 
+                    "properties": {
+                        "cycle-number": {
+                            "type": "string", 
+                            "description": "The optional cycle number is the time closest to the time reported in the event leaf that is a multiple of the cycle-interval of the event that triggered the execution of the Schedule.  The value is only present if the event that triggered the execution of the Schedule has a defined cycle-interval."
+                        }, 
+                        "status": {
+                            "required": true, 
+                            "type": "integer", 
+                            "description": "The status code returned by the execution of this Action."
+                        }, 
+                        "task": {
+                            "type": "string", 
+                            "description": "The name of the Task that produced the result."
+                        }, 
+                        "end": {
+                            "items": {
+                                "type": "integer"
+                            }, 
+                            "type": "array", 
+                            "description": "The date and time when the Task producing this result finished."
+                        }, 
+                        "option": {
+                            "items": {
+                                "type": "object", 
+                                "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:lmap:common:LmapOptionDto", 
+                                "properties": {
+                                    "measurement-parameters": {
+                                        "type": "object", 
+                                        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:measurement:initiation:MeasurementTypeParameters", 
+                                        "description": "The additional measurement parameters of the option."
+                                    }, 
+                                    "id": {
+                                        "type": "string", 
+                                        "description": "An identifier uniquely identifying an option. This identifier is required by YANG to uniquely identify a name/value pair, but it otherwise has no semantic value."
+                                    }, 
+                                    "value": {
+                                        "type": "string", 
+                                        "description": "The value of the option."
+                                    }, 
+                                    "name": {
+                                        "type": "string", 
+                                        "description": "The name of the option."
+                                    }
+                                }
+                            }, 
+                            "required": true, 
+                            "type": "array", 
+                            "description": "The list of options there were in use when the measurement was performed.  This list must include both the Task-specific options as well as the Action-specific options."
+                        }, 
+                        "parameters": {
+                            "type": "any", 
+                            "description": "This container is a placeholder for runtime parameters defined in Task-specific data models augmenting the base LMAP report data model."
+                        }, 
+                        "schedule": {
+                            "type": "string", 
+                            "description": "The name of the Schedule that produced the result."
+                        }, 
+                        "results": {
+                            "required": true, 
+                            "type": "array", 
+                            "description": "A list of results. Replaces the table list from LMAP"
+                        }, 
+                        "start": {
+                            "items": {
+                                "type": "integer"
+                            }, 
+                            "required": true, 
+                            "type": "array", 
+                            "description": "The date and time when the Task producing this result started."
+                        }, 
+                        "tag": {
+                            "items": {
+                                "type": "string"
+                            }, 
+                            "required": true, 
+                            "type": "array", 
+                            "description": "A tag contains additional information that is passed with the result record to the Collector.  This is the joined set of tags defined for the Task object, the Schedule object, and the Action object. A tag can be used to carry the Measurement Cycle ID."
+                        }, 
+                        "action": {
+                            "type": "string", 
+                            "description": "The name of the Action in the Schedule that produced the result."
+                        }, 
+                        "event": {
+                            "items": {
+                                "type": "integer"
+                            }, 
+                            "type": "array", 
+                            "description": "The date and time of the event that triggered the Schedule of the Action that produced the reported result values.  The date and time does not include any added randomization."
+                        }, 
+                        "conflict": {
+                            "items": {
+                                "type": "object", 
+                                "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:lmap:report:LmapConflictDto", 
+                                "properties": {
+                                    "task-name": {
+                                        "type": "string", 
+                                        "description": "The name of the Task executed by an Action within the Schedule that might have impacted the execution of the Task that has produced this result."
+                                    }, 
+                                    "action-name": {
+                                        "type": "string", 
+                                        "description": "The name of an Action within the Schedule that might have impacted the execution of the Task that has produced this result."
+                                    }, 
+                                    "schedule-name": {
+                                        "type": "string", 
+                                        "description": "The names of Tasks overlapping with the execution of the Task that has produced this result."
+                                    }
+                                }
+                            }, 
+                            "required": true, 
+                            "type": "array", 
+                            "description": "The names of Tasks overlapping with the execution of the Task that has produced this result."
+                        }
+                    }
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "The list of Tasks for which results are reported."
+            }, 
+            "additional_request_info": {
+                "properties": {
+                    "os_name": {
+                        "required": true, 
+                        "type": "string", 
+                        "description": "Operating system name."
+                    }, 
+                    "language": {
+                        "required": true, 
+                        "type": "string", 
+                        "description": "Language specified by the measurement agent."
+                    }, 
+                    "app_version_code": {
+                        "type": "integer", 
+                        "description": "Application version code number (e.g. 10)."
+                    }, 
+                    "app_version_name": {
+                        "type": "string", 
+                        "description": "Application version name (e.g. 1.0.0)."
+                    }, 
+                    "app_git_revision": {
+                        "type": "string", 
+                        "description": "Git revision name."
+                    }, 
+                    "agent_uuid": {
+                        "type": "string", 
+                        "description": "The agent's UUID. This value is ignored if the resource path already contains the agent's UUID."
+                    }, 
+                    "os_version": {
+                        "required": true, 
+                        "type": "string", 
+                        "description": "Operating system version."
+                    }, 
+                    "geo_location": {
+                        "properties": {
+                            "altitude": {
+                                "type": "number", 
+                                "description": "Geographic location altitude."
+                            }, 
+                            "time": {
+                                "items": {
+                                    "type": "integer"
+                                }, 
+                                "required": true, 
+                                "type": "array", 
+                                "description": "Time and date the geographic location information was captured (UTC)."
+                            }, 
+                            "longitude": {
+                                "required": true, 
+                                "type": "number", 
+                                "description": "Geographic location longitude."
+                            }, 
+                            "provider": {
+                                "type": "string", 
+                                "description": "Geographic location provider."
+                            }, 
+                            "latitude": {
+                                "required": true, 
+                                "type": "number", 
+                                "description": "Geographic location latitude."
+                            }, 
+                            "speed": {
+                                "type": "number", 
+                                "description": "Movement speed."
+                            }, 
+                            "heading": {
+                                "type": "number", 
+                                "description": "Movement heading."
+                            }, 
+                            "relative_time_ns": {
+                                "required": true, 
+                                "type": "integer", 
+                                "description": "Relative time in nanoseconds (to measurement begin)."
+                            }, 
+                            "accuracy": {
+                                "type": "number", 
+                                "description": "Geographic location accuracy."
+                            }
+                        }, 
+                        "type": "object", 
+                        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:GeoLocationDto", 
+                        "description": "The measurement agent device location at the time the request was sent or null if the measurement agent doesn't have location information."
+                    }, 
+                    "agent_type": {
+                        "required": true, 
+                        "type": "string", 
+                        "description": "Type of agent.", 
+                        "enum": [
+                            "MOBILE", 
+                            "BROWSER", 
+                            "DESKTOP"
+                        ]
+                    }, 
+                    "code_name": {
+                        "type": "string", 
+                        "description": "Device code name."
+                    }, 
+                    "timezone": {
+                        "type": "string", 
+                        "description": "The measurement agent's time zone. Is only stored if a measurement is sent to the server."
+                    }, 
+                    "model": {
+                        "type": "string", 
+                        "description": "Detailed device designation."
+                    }, 
+                    "api_level": {
+                        "type": "string", 
+                        "description": "API level of operating system or SDK (e.g. Android API level or Swift SDK version)."
+                    }
+                }, 
+                "required": true, 
+                "type": "object", 
+                "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:ApiRequestInfo", 
+                "description": "Additional information that is sent by client alongside the request. This contains most information from ClientInfo."
+            }, 
+            "date": {
+                "items": {
+                    "type": "integer"
+                }, 
+                "required": true, 
+                "type": "array", 
+                "description": "The date and time when this result report was sent to a Collector."
+            }
+        }
+    }, 
+    "QoSMeasurementType": {
+        "enum": [
+            "TCP", 
+            "UDP", 
+            "DNS", 
+            "NON_TRANSPARENT_PROXY", 
+            "HTTP_PROXY", 
+            "VOIP", 
+            "TRACEROUTE", 
+            "WEBSITE", 
+            "SIP", 
+            "MKIT_DASH", 
+            "MKIT_WEB_CONNECTIVITY"
+        ]
+    }, 
+    "PointInTimeValueDto": {
+        "id": "urn:jsonschema:at:alladin:nettest:shared:berec:collector:api:v1:dto:shared:PointInTimeValueDto", 
+        "properties": {
+            "value": {
+                "required": true, 
+                "type": "any", 
+                "description": "The value recorded at this point in time."
+            }, 
+            "relative_time_ns": {
+                "required": true, 
+                "type": "integer", 
+                "description": "The relative time in nanoseconds to the measurement start."
+            }
+        }
+    }
+}

@@ -1,0 +1,219 @@
+{
+  "client_info": {
+    "app_git_revision": "cba56293",
+    "app_version_code": 42,
+    "app_version_name": "1.0.0",
+    "language": "EN-UK",
+    "timezone": "UTC-6h",
+    "type": "MOBILE"
+  },
+  "device_info": {
+    "code_name": "bullhead",
+    "full_name": "Moto G (3rd Gen)",
+    "model": "MOTOG3",
+    "os_info": {
+      "api_level": "19",
+      "cpu_average": 46.76,
+      "cpu_max": 86.15,
+      "cpu_median": 39.98,
+      "cpu_min": 12.34,
+      "memory_average": 97.25,
+      "memory_max": 99.74,
+      "memory_median": 96.11,
+      "memory_min": 94.34,
+      "name": "Android",
+      "version": "6.0.1"
+    }
+  },
+  "duration_ns": 120000000020,
+  "end_time": "2011-02-06T22:44:21.000",
+  "geo_locations": [
+    {
+      "accuracy": 2.1,
+      "altitude": 184.3,
+      "heading": 0,
+      "latitude": 32.747895,
+      "longitude": -97.092505,
+      "provider": "accurate location provider",
+      "relative_time_ns": 14000000010,
+      "speed": 0,
+      "time": "2011-02-06T22:42:14.000"
+    },
+    {
+      "accuracy": 12.1,
+      "altitude": 184.7,
+      "heading": 0,
+      "latitude": 32.748071,
+      "longitude": -97.092108,
+      "provider": "accurate location provider",
+      "relative_time_ns": 38000000010,
+      "speed": 0,
+      "time": "2011-02-06T22:42:38.000"
+    }
+  ],
+  "measurements": {
+    "QOS": {
+      "duration_ns": 120000000020,
+      "end_time": "2011-02-06T22:44:21.000",
+      "implausible": false,
+      "reason": "UNABLE_TO_CONNECT",
+      "relative_end_time_ns": 117000000010,
+      "relative_start_time_ns": 46000000010,
+      "start_time": "2011-02-06T22:42:14.000",
+      "status": "FAILED",
+      "version_library": "1.0.1",
+      "version_protocol": "1.2"
+    },
+    "SPEED": {
+      "bytes_download": 423456363456,
+      "bytes_download_including_slow_start": 423456365756,
+      "bytes_upload": 87378347805,
+      "bytes_upload_including_slow_start": 87378368805,
+      "connection_info": {
+        "actual_num_streams_download": 2,
+        "actual_num_streams_upload": 2,
+        "address": "42.43.44.45",
+        "client_interface_download_measurement_traffic": {
+          "bytes_rx": 123123213,
+          "bytes_tx": 8989347893434
+        },
+        "client_interface_total_traffic": {
+          "bytes_rx": 467346731234,
+          "bytes_tx": 3672367823234
+        },
+        "client_interface_upload_measurement_traffic": {
+          "bytes_rx": 889893488998,
+          "bytes_tx": 12313
+        },
+        "encrpyted": false,
+        "port": 8080,
+        "requested_num_streams_download": 2,
+        "requested_num_streams_upload": 2,
+        "server_mss": 23352,
+        "server_mtu": 2423,
+        "tcp_opt_sack_requested": true,
+        "web_socket_info_download": {
+          "frame_count": 212,
+          "frame_count_including_slow_start": 243,
+          "frame_size": 24423,
+          "overhead": 1234,
+          "overhead_including_slow_start": 12,
+          "overhead_per_frame": 2
+        },
+        "web_socket_info_upload": {
+          "frame_count": 243,
+          "frame_count_including_slow_start": 263,
+          "frame_size": 25123,
+          "overhead": 623,
+          "overhead_including_slow_start": 21,
+          "overhead_per_frame": 1
+        }
+      },
+      "download_raw_data": [
+        {
+          "bytes": 1983,
+          "relative_time_ns": 19000000010,
+          "stream_id": 0
+        },
+        {
+          "bytes": 198743,
+          "relative_time_ns": 24000000010,
+          "stream_id": 1
+        },
+        {
+          "bytes": 19838484,
+          "relative_time_ns": 32000000010,
+          "stream_id": 0
+        }
+      ],
+      "duration_download_ns": 14000000010,
+      "duration_ns": 120000000020,
+      "duration_rtt_ns": 8000000010,
+      "duration_upload_ns": 14000000010,
+      "end_time": "2011-02-06T22:44:21.000",
+      "implausible": false,
+      "relative_end_time_ns": 46000000010,
+      "relative_start_time_download_ns": 18000000010,
+      "relative_start_time_ns": 1234,
+      "relative_start_time_rtt_ns": 4000000010,
+      "relative_start_time_upload_ns": 35000000010,
+      "requested_duration_download_ns": 15000000010,
+      "requested_duration_upload_ns": 15000000010,
+      "rtt_info": {
+        "average_log": 4.60205999133,
+        "average_ns": 40000,
+        "max_log": 4.6358153729,
+        "max_ns": 43233,
+        "median_log": 4.60208170551,
+        "median_ns": 40002,
+        "min_log": 4.50695127403,
+        "min_ns": 32133,
+        "standard_deviation_ns": 5,
+        "variance": 22
+      },
+      "start_time": "2011-02-06T22:42:14.000",
+      "status": "FINISHED",
+      "throughput_avg_download_bps": 543453452,
+      "throughput_avg_download_log": 8.73516235172,
+      "throughput_avg_upload_bps": 234234234,
+      "throughput_avg_upload_log": 8.36965036875,
+      "upload_raw_data": [
+        {
+          "bytes": 1983,
+          "relative_time_ns": 39000000010,
+          "stream_id": 0
+        },
+        {
+          "bytes": 198743,
+          "relative_time_ns": 42000000010,
+          "stream_id": 1
+        }
+      ],
+      "version_library": "1.0.1",
+      "version_protocol": "1.2"
+    }
+  },
+  "network_info": {
+    "network_point_in_time_info": [
+      {
+        "bssid": "45:87:66:45:32:aa",
+        "client_public_ip": "41.42.43",
+        "client_public_ip_country_code": "US",
+        "country_code_asn": "US",
+        "network_country": "US",
+        "network_type_category": "WIFI",
+        "network_type_group_name": "WLAN",
+        "network_type_id": 99,
+        "network_type_name": "WLAN",
+        "provider_name": "Efficient provider",
+        "provider_short_name": "Efficiency",
+        "public_ip_as_name": "Efficient-provider",
+        "public_ip_asn": 6834,
+        "public_ip_rdns": "254-23-12-233.static.provider",
+        "ssid": "Arlington Public WiFi"
+      }
+    ],
+    "signals": [
+      {
+        "network_type_id": 99,
+        "relative_time_ns": 24000000010,
+        "wifi_bssid": "45:87:66:45:32:aa",
+        "wifi_link_speed_bps": 25000000,
+        "wifi_rssi_dbm": -57,
+        "wifi_ssid": "Arlington Public WiFi"
+      },
+      {
+        "network_type_id": 99,
+        "relative_time_ns": 35000000010,
+        "wifi_bssid": "45:87:66:45:32:aa",
+        "wifi_link_speed_bps": 25000000,
+        "wifi_rssi_dbm": -52,
+        "wifi_ssid": "Arlington Public WiFi"
+      }
+    ]
+  },
+  "open_data_uuid": "1469aec2-1a18-41b2-841f-7e1efaeac093",
+  "source": "BEREC",
+  "start_time": "2011-02-06T22:42:14.000",
+  "uuid": "d2b027e2-fd1e-4121-a2c5-c652a5f33c04"
+}

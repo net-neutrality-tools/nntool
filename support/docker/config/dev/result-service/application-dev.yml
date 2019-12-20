@@ -1,0 +1,32 @@
+spring:
+  profiles:
+    active: dev
+
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: false
+
+  couchdb:
+    connection:
+      url: http://couchdb:5984
+    databases:
+      - name: measurement
+        create-if-not-exists: true
+        entities:
+          - Measurement
+          - MeasurementAgent
+      - name: settings
+        create-if-not-exists: true
+        entities:
+          - QoSMeasurementObjective
+          - Settings
+          - Translation
+
+server:
+  port: 8082
+
+logging:
+  level:
+    at.alladin.nettest: DEBUG

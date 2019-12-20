@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="root_preference_screen">
+    <Preference
+        android:key="setting_current_commit_hash"
+        android:title="@string/preference_current_commit_hash"
+        />
+    <PreferenceCategory
+        android:title="@string/preference_category_test_selection">
+        <SwitchPreferenceCompat
+            android:key="setting_nettest_execute_speed_test"
+            android:title="@string/preference_enable_speed_title"
+            android:summary="@string/preference_enable_speed_summary"
+            android:defaultValue="true"
+            />
+
+        <SwitchPreferenceCompat
+            android:key="setting_nettest_execute_qos_test"
+            android:title="@string/preference_enable_qos_title"
+            android:summary="@string/preference_enable_qos_summary"
+            android:defaultValue="true"
+            />
+
+        <PreferenceScreen
+            android:key="single_test_selection_screen"
+            android:title="@string/preference_single_test_selection_title"
+            android:summary="@string/preference_single_test_selection_summary"
+            >
+            <PreferenceCategory
+                android:key="selection_speed"
+                android:title="@string/preference_category_speed_test_selection"
+                android:icon="@drawable/ic_result_speed"
+                >
+
+                <SwitchPreferenceCompat
+                    android:key="setting_nettest_execute_ping_test"
+                    android:title="@string/preference_enable_ping_title"
+                    android:defaultValue="true"
+                    />
+
+                <SwitchPreferenceCompat
+                    android:key="setting_nettest_execute_download_test"
+                    android:title="@string/preference_enable_download_title"
+                    android:defaultValue="true"
+                    />
+
+                <SwitchPreferenceCompat
+                    android:key="setting_nettest_execute_upload_test"
+                    android:title="@string/preference_enable_upload_title"
+                    android:defaultValue="true"
+                    />
+
+            </PreferenceCategory>
+            <PreferenceCategory
+                android:key="selection_qos"
+                android:title="@string/preference_category_qos_test_selection"
+                android:icon="@drawable/ic_result_qos"
+                >
+
+            </PreferenceCategory>
+        </PreferenceScreen>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/preference_category_other_settings">
+
+        <SwitchPreferenceCompat
+            android:key="setting_ipv4_only"
+            android:title="@string/preference_ipv4_only_title"
+            android:summary="@string/preference_ipv4_only_summary"
+            android:defaultValue="false"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            android:key="settings_disassociate_user"
+            android:title="@string/preference_disassociate_user"
+            android:summary="@string/preference_disassociate_user_summary"
+            />
+    </PreferenceCategory>
+</PreferenceScreen>

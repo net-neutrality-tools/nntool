@@ -1,0 +1,12 @@
+def profiles = 'dev'
+
+processResources {
+	filesMatching('**/application.yml') {
+        //filter {
+        //    it.replace('#project.version#', version)
+        //}
+        filter {
+            it.replace('#spring.profiles.active#', profiles)
+        }
+    }
+}

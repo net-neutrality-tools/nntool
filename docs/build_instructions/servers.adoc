@@ -1,0 +1,84 @@
+= Servers
+:toc: left
+:toc-title: Table of Content
+
+== General
+
+All general servers can be built using the ./gradlew build command.
+The config/application-dev.yml and config/application-prod.yml files of the servers allow binding them to a desired port (the server.port setting).
+
+=== CouchDB setup
+
+Most servers need a functioning CouchDB to work. This is where the collector stores its results, the controller fetches current settings and stores user data. The easiest way to get a runnable CouchDB is to start one in a docker container. A useful command for that is `sudo docker run -it -p DESIRED_PORT:5984 couchdb:2`, where DESIRED_PORT is the port used to connect to the CouchDB. If the container should be cleaned up after stopping it, add `--rm` to the command above.
+
+The CouchDB can then be inspected from the webbrowser by connecting to `localhost:DESIRED_PORT/_utils`. Note that the CouchDB databases will be constructed on startup of one of the servers (starting a server will create the measurement and/or settings database depending on the server's needs).
+
+Note: While not tested, setting up the docker contained CouchDB under Windows should work exactly the same way by using the Windows Subsystem for Linux.
+
+The file `default_couchDB_data.json` contains the necessary data to fill the couchDB with default data. This needs an already existing `settings` database to fill with default configurations 
+(Note that the databases will be constructed on the first startup of a server which needs the settings database, e.g. the controller service).
+The `default_couchDB_data.json` file contains the body of a bulk update request to the couchDB, which adds the specific files to the database.
+Using a tool, like e.g. CURL or Postman, a POST request to the location of the couchDB to the `/settings/_bulk_docs` path (e.g. `http://localhost:5984/settings/_bulk_docs`) 
+adds all provided documents to the couchDB.
+The `default_couchDB_data.json` file can be used as is as the body of said POST request to the couchDB. 
+An exemplary curl command to be executed from the `docs\build_instructions` folder, if the couchdb is setup on localhost:5984 and the settings database has already been constructed (either manually or by starting the controller): 
+
+```
+curl -X POST \
+    http://localhost:5984/settings/_bulk_docs \
+  -H 'Content-Type: application/json' \
+  -H 'cache-control: no-cache' \
+  -d @default_couchDB_data.json
+```
+
+Additional configuration regarding the measurement database is located in the `default_couchdb_design_doc_measurement.json`.
+As this relates to a different database (the measurement database) another request needs to be made:
+
+```
+curl -X POST \
+  http://localhost:15984/measurement/_design/Measurement \
+  -H 'Content-Type: application/json' \
+  -H 'cache-control: no-cache' \
+  -d @default_couchdb_design_doc_measurement.json
+```
+
+
+==== CouchDB server integration
+
+Servers that need a CouchDB to work have a corresponding setting in their `src/main/resources/config/application-dev.yml` and `src/main/resources/config/application-prod.yml`.  Under couchdb.connection.url the path to the  used CouchDB needs be entered (e.g. http://localhost:5984).
+
+=== PostgreSQL
+
+The export data service extracts the measurement data from a PostgreSQL for performance reasons. To setup the PostgreSQL database, execute the secondary_db_postgresql_schema.sql, provided under docs/project_management/milestones/1/deliverables/.
+
+==== PostgreSQL server integration
+
+Servers that need a PostgreSQL to work have a corresponding setting in their `src/main/resources/config/application-dev.yml` and `src/main/resources/config/application-prod.yml`.  Under datasource.url the path to the  used PostgreSQL needs be entered (e.g. http://localhost:5432/db).
+
+=== Controller
+
+The controller uses both the measurement and the settings database. The settings database needs be setup correctly in order to build a running system. Default settings for the different aspects of the system are in the file: `default_couchDB_data` (see the general instructions for details). It can be added into the CouchDB's settings database, to make creating a working configuration easier.
+
+Note that the settings file to be used by the controller is set in the controller-services config.yml (under controller.settings_uuid).  If a settings file with a different uuid should be used by the controller, this setting needs to be updated (the current default setting matches the uuid from `default_base_settings`).
+
+=== Result service
+
+The result service uses both the measurement and the settings database. It needs the settings from the file: `default_couchDB_data` (see the general instructions for details).
+
+=== Collector
+
+The collector needs no specific setup, apart from the general CouchDB setup.
+
+=== Export
+
+The open data export service needs a functioning PostgreSQL database to work. The configuration which fields are exported is located in the config/application.yml under data-export.fields. In the `docs/project_management/milestones/1/deliverables/secondary_db_postgresql_schema.sql` file, sql statements to create the PostgreSQL database are given. After executing these statements, debug data for testing is available in the `default_postgresql_data.sql` file, which contains a few insert statements to test the PostgreSQL database with.
+
+== Additional servers
+
+=== IAS server
+
+*See /ias-server/README.adoc*
+
+=== IAS turnserver
+
+*See /ias-server/README.adoc*

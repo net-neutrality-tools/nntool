@@ -1,0 +1,1341 @@
+components:
+  schemas:
+    ApiError:
+      description: DTO that wraps server errors and/or exceptions. The Java stack-trace
+        is only added if the service runs in development mode.
+      properties:
+        error:
+          description: String representation of the status.
+          example: '''Internal Server Error'', ''Not Found'', ...'
+          type: string
+        exception:
+          description: Exception class name.
+          nullable: true
+          type: string
+        message:
+          description: The error or exception message.
+          example: java.lang.RuntimeException
+          type: string
+        path:
+          description: URI path/resource that caused the error.
+          type: string
+        status:
+          description: Status code for the error.
+          example: 400, 404, 500, ...
+          format: int32
+          type: integer
+        time:
+          description: Date and time at which the error occurred.
+          format: date-time
+          type: string
+        trace:
+          description: Exception stack tracewhich is only added if the service runs
+            in development mode.
+          nullable: true
+          type: string
+      required:
+      - error
+      - message
+      - path
+      - status
+      - time
+      title: ApiError
+      type: object
+    ApiRequestInfo:
+      description: Additional information that is sent by measurement agent alongside
+        the request.
+      properties:
+        agent_type:
+          description: Type of agent.
+          enum:
+          - MOBILE
+          - BROWSER
+          - DESKTOP
+          type: string
+        agent_uuid:
+          description: The agent's UUID. This value is ignored if the resource path
+            already contains the agent's UUID.
+          type: string
+        api_level:
+          description: API level of operating system or SDK (e.g. Android API level
+            or Swift SDK version).
+          nullable: true
+          type: string
+        app_git_revision:
+          description: Git revision name.
+          nullable: true
+          type: string
+        app_version_code:
+          description: Application version code number (e.g. 10).
+          format: int32
+          nullable: true
+          type: integer
+        app_version_name:
+          description: Application version name (e.g. 1.0.0).
+          type: string
+        code_name:
+          description: Device code name.
+          type: string
+        geo_location:
+          $ref: '#/components/schemas/GeoLocationDto'
+          description: The measurement agent device location at the time the request
+            was sent or null if the measurement agent doesn't have location information.
+          nullable: true
+        language:
+          description: Language specified by the measurement agent.
+          type: string
+        model:
+          description: Detailed device designation.
+          nullable: true
+          type: string
+        os_name:
+          description: Operating system name.
+          type: string
+        os_version:
+          description: Operating system version.
+          type: string
+        timezone:
+          description: The measurement agent's time zone. Is only stored if a measurement
+            is sent to the server.
+          nullable: true
+          type: string
+      required:
+      - agent_type
+      - agent_uuid
+      - app_version_name
+      - code_name
+      - language
+      - os_name
+      - os_version
+      title: ApiRequestInfo
+      type: object
+    ApiRequest_RegistrationRequest_:
+      description: Object that is used as wrapper for every request.
+      properties:
+        data:
+          $ref: '#/components/schemas/RegistrationRequest'
+          description: Actual data that is returned for the request/response.
+        request_info:
+          $ref: '#/components/schemas/ApiRequestInfo'
+          description: Additional information that is sent by measurement agent alongside
+            the request.
+          nullable: true
+      required:
+      - data
+      title: "ApiRequest\xABRegistrationRequest\xBB"
+      type: object
+    ApiResponse:
+      description: Object that is used as wrapper for every response.
+      properties:
+        data:
+          description: Actual data that is returned for the request/response.
+          type: object
+        errors:
+          description: Optional list of errors that occurred during request processing.
+          items:
+            $ref: '#/components/schemas/ApiError'
+          nullable: true
+          type: array
+      required:
+      - data
+      title: ApiResponse
+      type: object
+    ApiResponse_IpResponse_:
+      description: Object that is used as wrapper for every response.
+      properties:
+        data:
+          $ref: '#/components/schemas/IpResponse'
+          description: Actual data that is returned for the request/response.
+        errors:
+          description: Optional list of errors that occurred during request processing.
+          items:
+            $ref: '#/components/schemas/ApiError'
+          nullable: true
+          type: array
+      required:
+      - data
+      title: "ApiResponse\xABIpResponse\xBB"
+      type: object
+    ApiResponse_RegistrationResponse_:
+      description: Object that is used as wrapper for every response.
+      properties:
+        data:
+          $ref: '#/components/schemas/RegistrationResponse'
+          description: Actual data that is returned for the request/response.
+        errors:
+          description: Optional list of errors that occurred during request processing.
+          items:
+            $ref: '#/components/schemas/ApiError'
+          nullable: true
+          type: array
+      required:
+      - data
+      title: "ApiResponse\xABRegistrationResponse\xBB"
+      type: object
+    ApiResponse_SettingsResponse_:
+      description: Object that is used as wrapper for every response.
+      properties:
+        data:
+          $ref: '#/components/schemas/SettingsResponse'
+          description: Actual data that is returned for the request/response.
+        errors:
+          description: Optional list of errors that occurred during request processing.
+          items:
+            $ref: '#/components/schemas/ApiError'
+          nullable: true
+          type: array
+      required:
+      - data
+      title: "ApiResponse\xABSettingsResponse\xBB"
+      type: object
+    ApiResponse_VersionResponse_:
+      description: Object that is used as wrapper for every response.
+      properties:
+        data:
+          $ref: '#/components/schemas/VersionResponse'
+          description: Actual data that is returned for the request/response.
+        errors:
+          description: Optional list of errors that occurred during request processing.
+          items:
+            $ref: '#/components/schemas/ApiError'
+          nullable: true
+          type: array
+      required:
+      - data
+      title: "ApiResponse\xABVersionResponse\xBB"
+      type: object
+    GeoLocationDto:
+      description: GeoLocation object to be used on the measurement agent side and
+        inside DTOs.
+      properties:
+        accuracy:
+          description: Geographic location accuracy.
+          format: double
+          nullable: true
+          type: number
+        altitude:
+          description: Geographic location altitude.
+          format: double
+          nullable: true
+          type: number
+        heading:
+          description: Movement heading.
+          format: double
+          nullable: true
+          type: number
+        latitude:
+          description: Geographic location latitude.
+          format: double
+          type: number
+        longitude:
+          description: Geographic location longitude.
+          format: double
+          type: number
+        provider:
+          description: Geographic location provider.
+          nullable: true
+          type: string
+        relative_time_ns:
+          description: Relative time in nanoseconds (to measurement begin).
+          format: int64
+          type: integer
+        speed:
+          description: Movement speed.
+          format: double
+          nullable: true
+          type: number
+        time:
+          description: Time and date the geographic location information was captured
+            (UTC).
+          format: date-time
+          type: string
+      required:
+      - latitude
+      - longitude
+      - relative_time_ns
+      - time
+      title: GeoLocationDto
+      type: object
+    IpResponse:
+      description: Response object sent to the measurement agent after a successful
+        IP request.
+      properties:
+        ip_address:
+          description: The measurement agent's public IP address.
+          type: string
+        ip_version:
+          description: The measurement agent's public IP version (IPv4 or IPv6).
+          enum:
+          - IPv4
+          - IPv6
+          type: string
+      required:
+      - ip_address
+      - ip_version
+      title: IpResponse
+      type: object
+    LmapActionDto:
+      description: An Action describes a Task that is invoked by the Schedule. Multiple
+        Actions are invoked according to the execution-mode of the Schedule.
+      properties:
+        destination:
+          description: A set of Schedules receiving the output produced by this Action.
+            The output is stored temporarily since the Destination Schedules will
+            in general not be running when output is passed to them. The behavior
+            of an Action passing data to its own Schedule is implementation specific.
+          items:
+            type: string
+          type: array
+        failures:
+          description: Number of failed executions of this Action.
+          format: int32
+          type: integer
+        invocations:
+          description: Number of invocations of this Action. This counter does not
+            include suppressed invocations or invocations that were prevented due
+            to an overlap with a previous invocation of this Action.
+          format: int32
+          type: integer
+        last-completion:
+          description: The date and time of the last completion of this Action.
+          format: date-time
+          type: string
+        last-failed-completion:
+          description: The date and time of the last failed completion of this Action.
+          format: date-time
+          type: string
+        last-failed-message:
+          description: The status message produced by the last failed execution of
+            this Action.
+          type: string
+        last-failed-status:
+          description: The status code returned by the last failed execution of this
+            Action.
+          format: int32
+          type: integer
+        last-invocation:
+          description: The date and time of the last invocation of this Action.
+          format: date-time
+          type: string
+        last-message:
+          description: The status message produced by the last execution of this Action.
+          type: string
+        last-status:
+          description: The status code returned by the last execution of this Action
+            (with 0 indicating successful execution).
+          format: int32
+          type: integer
+        name:
+          description: The unique identifier for this Action.
+          type: string
+        option:
+          description: The list of Action-specific options that are appended to the
+            list of Task-specific options.
+          items:
+            $ref: '#/components/schemas/LmapOptionDto'
+          type: array
+        overlaps:
+          description: Number of executions prevented due to overlaps with a previous
+            invocation of this Action.
+          format: int32
+          type: integer
+        parameters:
+          description: This container is a placeholder for runtime parameters defined
+            in Task-specific data models augmenting the base LMAP report data model.
+          nullable: true
+          type: object
+        state:
+          description: 'The current state of the Action (One of: enabled, disabled,
+            running, suppressed).'
+          enum:
+          - ENABLED
+          - DISABLED
+          - RUNNING
+          - SUPPRESSED
+          type: string
+        storage:
+          description: The amount of secondary storage (e.g., allocated in a file
+            system) holding temporary data allocated to the Schedule in bytes.  This
+            object reports the amount of allocated physical storage and not the storage
+            used by logical data records.
+          format: int64
+          type: integer
+        suppression-tag:
+          description: A set of Suppression tags that are used to select Actions to
+            be suppressed.
+          items:
+            type: string
+          type: array
+        suppressions:
+          description: Number of suppressed executions of this Action.
+          format: int32
+          type: integer
+        tag:
+          description: A set of Action-specific tags that are reported together with
+            the measurement results to a Collector.
+          items:
+            type: string
+          type: array
+        task:
+          description: The Task invoked by this Action.
+          type: string
+      required:
+      - destination
+      - failures
+      - invocations
+      - last-completion
+      - last-failed-completion
+      - last-failed-message
+      - last-failed-status
+      - last-invocation
+      - last-message
+      - last-status
+      - name
+      - option
+      - overlaps
+      - state
+      - storage
+      - suppression-tag
+      - suppressions
+      - tag
+      - task
+      title: LmapActionDto
+      type: object
+    LmapAgentDto:
+      description: Configuration of parameters affecting the whole Measurement Agent.
+        Corresponds to the Agent in the LMAP standard
+      properties:
+        agent-id:
+          description: The agent-id identifies a Measurement Agent with a very low
+            probability of collision (i.e. a UUID v4). In certain deployments, the
+            agent-id may be considered sensitive, and hence this object is optional.
+          nullable: true
+          type: string
+        controller-timeout:
+          description: A timer is started after each successful contact with a Controller.
+            When the timer reaches the controller-timeout, an event (controller-lost)
+            is raised indicating that connectivity to the Controller has been lost.
+          format: int32
+          nullable: true
+          type: integer
+        group-id:
+          description: The group-id identifies a group of Measurement Agents. In certain
+            deployments, the group-id may be considered less sensitive than the agent-id.
+          nullable: true
+          type: string
+        last-started:
+          description: The date and time the Measurement Agent last started (i.e.
+            the date to the previous execution of the measurement agent before the
+            current one).
+          format: date-time
+          type: string
+        measurement-point:
+          description: The measurement point indicating where the Measurement Agent
+            is located on a path.
+          nullable: true
+          type: string
+        report-agent-id:
+          description: The 'report-agent-id' controls whether the 'agent-id' is reported
+            to Collectors. Set to true if anonymized results are desired.
+          nullable: true
+          type: boolean
+        report-group-id:
+          description: The 'report-group-id' controls whether the 'group-id' is reported
+            to Collectors.
+          nullable: true
+          type: boolean
+        report-measurement-point:
+          description: The 'report-measurement-point' controls whether the 'measurement-point'
+            is reported to Collectors.
+          nullable: true
+          type: boolean
+      required:
+      - last-started
+      title: LmapAgentDto
+      type: object
+    LmapCapabilityDto:
+      description: Agent capabilities including a list of supported Tasks.
+      properties:
+        tag:
+          description: An optional unordered set of tags that provide additional information
+            about the capabilities of the Measurement Agent.
+          items:
+            type: string
+          type: array
+        tasks:
+          description: A list of Tasks that the Measurement Agent supports.
+          items:
+            $ref: '#/components/schemas/LmapCapabilityTaskDto'
+          type: array
+        version:
+          description: A short description of the software implementing the Measurement
+            Agent. This should include the version number of the Measurement Agent
+            software.
+          type: string
+      required:
+      - tag
+      - tasks
+      - version
+      title: LmapCapabilityDto
+      type: object
+    LmapCapabilityTaskDto:
+      description: A list of Tasks that the Measurement Agent supports.
+      properties:
+        function:
+          description: A list of entries in a registry identifying functions.
+          items:
+            $ref: '#/components/schemas/LmapFunctionDto'
+          type: array
+        name:
+          description: The unique name of a Task capability. Refers to the LmapTaskDto.name
+            and needs be the exact same in order to match.
+          type: string
+        program:
+          description: The (local) program to invoke in order to execute the Task.
+            If this leaf is not set, then the system will try to identify a suitable
+            program based on the registry information present.
+          nullable: true
+          type: string
+        version:
+          description: A short description of the software implementing the Task.
+            This should include the version number of the Measurement Task software.
+          nullable: true
+          type: string
+      required:
+      - function
+      - name
+      title: LmapCapabilityTaskDto
+      type: object
+    LmapControlDto:
+      description: Configuration and control of a Measurement Agent.
+      properties:
+        additional-request-info:
+          $ref: '#/components/schemas/ApiRequestInfo'
+          description: Additional information that is sent by client alongside the
+            request. This contains most information from ClientInfo.
+        agent:
+          $ref: '#/components/schemas/LmapAgentDto'
+          description: Configuration of parameters affecting the whole Measurement
+            Agent.
+        capabilities:
+          $ref: '#/components/schemas/LmapCapabilityDto'
+          description: Agent capabilities including a list of supported Tasks.
+        events:
+          description: Configuration of LMAP events. Implementations may be forced
+            to delay acting upon the occurrence of events in the face of local constraints.
+            An Action triggered by an event therefore should not rely on the accuracy
+            provided by the scheduler implementation.
+          items:
+            $ref: '#/components/schemas/LmapEventDto'
+          type: array
+        schedules:
+          description: Configuration of LMAP Schedules. Schedules control which Tasks
+            are executed by the LMAP implementation.
+          items:
+            $ref: '#/components/schemas/LmapScheduleDto'
+          type: array
+        suppressions:
+          description: Suppression information to prevent Schedules or certain Actions
+            from starting.
+          items:
+            $ref: '#/components/schemas/LmapSuppressionDto'
+          type: array
+        tasks:
+          description: Configuration of LMAP Tasks.
+          items:
+            $ref: '#/components/schemas/LmapTaskDto'
+          type: array
+      required:
+      - additional-request-info
+      - agent
+      - capabilities
+      - events
+      - schedules
+      - suppressions
+      - tasks
+      title: LmapControlDto
+      type: object
+    LmapEventDto:
+      description: Implementations may be forced to delay acting upon the occurrence
+        of events in the face of local constraints. An Action triggered by an event
+        therefore should not rely on the accuracy provided by the scheduler implementation.
+      properties:
+        cycle-interval:
+          description: The optional cycle-interval defines the duration of the time
+            interval in seconds that is used to calculate cycle numbers. No cycle
+            number is calculated if the optional cycle-interval does not exist.
+          format: int32
+          nullable: true
+          type: integer
+        event-type:
+          $ref: '#/components/schemas/LmapEventTypeDto'
+          description: Different types of events are handled by different branches
+            of this choice. Note that this choice can be extended via augmentations.
+          nullable: true
+        name:
+          description: The unique name of an event source, used when referencing this
+            event.
+          type: string
+        random-spread:
+          description: This optional leaf adds a random spread to the computation
+            of the event's trigger time. The random spread is a uniformly distributed
+            random number taken from the interval [0:random-spread].
+          format: int32
+          nullable: true
+          type: integer
+      required:
+      - name
+      title: LmapEventDto
+      type: object
+    LmapEventTypeDto:
+      properties:
+        type:
+          description: Type identifier of the given event.
+          enum:
+          - IMMEDIATE
+          type: string
+      required:
+      - type
+      title: LmapEventTypeDto
+      type: object
+    LmapFunctionDto:
+      description: This grouping models a list of entries in a registry that identify
+        functions of a Task.
+      properties:
+        role:
+          description: A set of roles for the identified registry entry.
+          items:
+            type: string
+          type: array
+        uri:
+          description: The unique name of a Task.
+          type: string
+      required:
+      - role
+      - uri
+      title: LmapFunctionDto
+      type: object
+    LmapOptionDto:
+      description: Options may be used to identify the role of a Task or to pass a
+        Channel name to a Task.
+      properties:
+        id:
+          description: An identifier uniquely identifying an option. This identifier
+            is required by YANG to uniquely identify a name/value pair, but it otherwise
+            has no semantic value.
+          nullable: true
+          type: string
+        measurement-parameters:
+          $ref: '#/components/schemas/MeasurementTypeParameters'
+          description: The additional measurement parameters of the option.
+          nullable: true
+        name:
+          description: The name of the option.
+          nullable: true
+          type: string
+        value:
+          description: The value of the option.
+          nullable: true
+          type: string
+      title: LmapOptionDto
+      type: object
+    LmapScheduleDto:
+      description: Configuration of a particular Schedule.
+      properties:
+        action:
+          description: An Action describes a Task that is invoked by the Schedule.
+            Multiple Actions are invoked according to the execution-mode of the Schedule.
+          items:
+            $ref: '#/components/schemas/LmapActionDto'
+          type: array
+        execution-mode:
+          description: 'The execution mode of this Schedule determines in which order
+            the Actions of the Schedule are executed. Supported values are: sequential,
+            pipelined, parallel.'
+          enum:
+          - SEQUENTIAL
+          - PARALLEL
+          - PIPELINED
+          nullable: true
+          type: string
+        failures:
+          description: Number of failed executions of this Schedule. A failed execution
+            is an execution where at least one Action failed.
+          format: int32
+          type: integer
+        invocations:
+          description: Number of invocations of this Schedule. This counter does not
+            include suppressed invocations or invocations that were prevented due
+            to an overlap with a previous invocation of this Schedule.
+          format: int32
+          type: integer
+        last-invocation:
+          description: The date and time of the last invocation of this Schedule.
+          format: date-time
+          nullable: true
+          type: string
+        name:
+          description: The locally unique, administratively assigned name for this
+            Schedule.
+          type: string
+        overlaps:
+          description: Number of executions prevented due to overlaps with a previous
+            invocation of this Schedule.
+          format: int32
+          type: integer
+        start:
+          description: The event source controlling the start of the scheduled Actions.
+            Referencing the LmapEventDto.name of an Action.
+          type: string
+        state:
+          description: 'The current state of the Schedule (One of: enabled, disabled,
+            running, suppressed).'
+          enum:
+          - ENABLED
+          - DISABLED
+          - RUNNING
+          - SUPPRESSED
+          type: string
+        stop:
+          $ref: '#/components/schemas/LmapStopDto'
+          description: This choice contains optional leafs that control the graceful
+            forced termination of scheduled Actions. When the end has been reached,
+            the scheduled Actions should be forced to terminate the measurements.
+            This may involve being active some additional time in order to properly
+            finish the Action's activity (e.g., waiting for any messages that are
+            still outstanding). If set to a LmapStopDurationDto it will behave like
+            a typical timeout set for the execution of this schedule.
+          nullable: true
+        storage:
+          description: The amount of secondary storage (e.g., allocated in a file
+            system) holding temporary data allocated to the Schedule in bytes.  This
+            object reports the amount of allocated physical storage and not the storage
+            used by logical data records.
+          format: int64
+          type: integer
+        suppression-tag:
+          description: A set of Suppression tags that are used to select Schedules
+            to be suppressed.
+          items:
+            type: string
+          type: array
+        suppressions:
+          description: Number of suppressed executions of this Schedule.
+          format: int32
+          type: integer
+        tag:
+          description: A set of Schedule-specific tags that are reported together
+            with the measurement results to a Collector.
+          items:
+            type: string
+          type: array
+      required:
+      - action
+      - failures
+      - invocations
+      - name
+      - overlaps
+      - start
+      - state
+      - storage
+      - suppression-tag
+      - suppressions
+      - tag
+      title: LmapScheduleDto
+      type: object
+    LmapStopDto:
+      title: LmapStopDto
+      type: object
+    LmapSuppressionDto:
+      description: Suppression information to prevent Schedules or certain Actions
+        from starting.
+      properties:
+        end:
+          description: The event source controlling the end of the Suppression period.
+            If not present, Suppression continues indefinitely. Referencing the LmapEventDto.name
+            of an Action.
+          format: int32
+          nullable: true
+          type: integer
+        match:
+          description: A set of Suppression match patterns. The Suppression will apply
+            to all Schedules (and their Actions) that have a matching value in their
+            suppression-tags and to all Actions that have a matching value in their
+            suppression-tags.
+          items:
+            type: string
+          type: array
+        name:
+          description: The locally unique, administratively assigned name for this
+            Suppression.
+          type: string
+        start:
+          description: The event source controlling the start of the Suppression period.
+            Referencing the LmapEventDto.name of an Action.
+          format: int32
+          nullable: true
+          type: integer
+        state:
+          description: The current state of the Suppression.
+          enum:
+          - ENABLED
+          - DISABLED
+          - ACTIVE
+          type: string
+        stop-running:
+          description: If 'stop-running' is true, running Schedules and Actions matching
+            the Suppression will be terminated when Suppression is activated. If 'stop-running'
+            is false, running Schedules and Actions will not be affected if Suppression
+            is activated.
+          nullable: true
+          type: boolean
+      required:
+      - match
+      - name
+      - state
+      title: LmapSuppressionDto
+      type: object
+    LmapTaskDto:
+      description: Configuration of LMAP Tasks.
+      properties:
+        function:
+          description: A list of entries in a registry identifying functions.
+          items:
+            $ref: '#/components/schemas/LmapFunctionDto'
+          type: array
+        name:
+          description: The unique name of a Task.
+          type: string
+        option:
+          description: The list of Task-specific options.
+          items:
+            $ref: '#/components/schemas/LmapOptionDto'
+          type: array
+        program:
+          description: The (local) program to invoke in order to execute the Task.
+            If this leaf is not set, then the system will try to identify a suitable
+            program based on the registry information present.
+          nullable: true
+          type: string
+        tag:
+          description: A set of Task-specific tags that are reported together with
+            the measurement results to a Collector. A tag can be used, for example,
+            to carry the Measurement Cycle ID.
+          items:
+            type: string
+          type: array
+      required:
+      - function
+      - name
+      - option
+      - tag
+      title: LmapTaskDto
+      type: object
+    MeasurementTypeParameters:
+      description: Base class for sub measurement parameters that are sent to the
+        measurement agent. These can contain special measurement instructions (e.g.
+        stream count, duration, timeouts, ...).
+      title: MeasurementTypeParameters
+      type: object
+    RegistrationRequest:
+      description: Registration request DTO. It contains the fields needed to register
+        a new measurement agent.
+      properties:
+        group_name:
+          description: The measurement agent's group name/identifier.
+          nullable: true
+          type: string
+        terms_and_conditions_accepted:
+          description: Boolean whether the measurement agent has accepted the presented
+            terms and conditions.
+          type: boolean
+        terms_and_conditions_accepted_version:
+          description: The version of the presented terms and conditions that the
+            measurement agent agreed to (or declined).
+          format: int32
+          nullable: true
+          type: integer
+      required:
+      - terms_and_conditions_accepted
+      title: RegistrationRequest
+      type: object
+    RegistrationResponse:
+      description: Measurement agent registration response object which is returned
+        to the measurement agent after successful registration. For convenience this
+        response also contains the current settings.
+      properties:
+        agent_uuid:
+          description: The generated measurement agent UUID.
+          type: string
+        settings:
+          $ref: '#/components/schemas/SettingsResponse'
+          description: The settings response object sent to the measurement agent.
+          nullable: true
+      required:
+      - agent_uuid
+      title: RegistrationResponse
+      type: object
+    SettingsResponse:
+      description: The settings response object sent to the measurement agent.
+      properties:
+        qos_type_info:
+          additionalProperties:
+            $ref: '#/components/schemas/TranslatedQoSTypeInfo'
+          description: Map of QoS measurement types to translated type information.
+          nullable: true
+          type: object
+        urls:
+          $ref: '#/components/schemas/Urls'
+          description: Object that contains base URLs for controller, collector, map
+            and statistic services.
+        versions:
+          $ref: '#/components/schemas/VersionResponse'
+          description: Class for all kind of versions that the server reveals.
+      required:
+      - urls
+      - versions
+      title: SettingsResponse
+      type: object
+    TranslatedQoSTypeInfo:
+      description: Contains translated information for each available QoS measurement
+        type.
+      properties:
+        description:
+          description: The translated QoS type description.
+          type: string
+        name:
+          description: The translated QoS type name.
+          type: string
+      required:
+      - description
+      - name
+      title: TranslatedQoSTypeInfo
+      type: object
+    Urls:
+      description: Object that contains base URLs for controller, collector, map and
+        statistic services.
+      properties:
+        collector_service:
+          description: Base URL of the collector service of the form "[protocol]://[domain]:[port]/[path]".
+            This domain name should have A and AAAA records.
+          type: string
+        controller_service:
+          description: Base URL of the controller service of the form "[protocol]://[domain]:[port]/[path]".
+            This domain name should have A and AAAA records.
+          type: string
+        controller_service_ipv4:
+          description: IPv4-only base URL of the controller service. This domain name
+            must only have an A record.
+          type: string
+        controller_service_ipv6:
+          description: IPv6-only base URL of the controller service. This domain name
+            must only have an AAAA record.
+          type: string
+        map_service:
+          description: Base URL of the map service of the form "[protocol]://[domain]:[port]/[path]".
+          type: string
+        statistic_service:
+          description: Base URL of the statistic service of the form "[protocol]://[domain]:[port]/[path]".
+          type: string
+        website:
+          description: Base URL of the web site of the form "[protocol]://[domain]:[port]/[path]".
+          type: string
+      required:
+      - collector_service
+      - controller_service
+      - controller_service_ipv4
+      - controller_service_ipv6
+      - map_service
+      - statistic_service
+      - website
+      title: Urls
+      type: object
+    VersionResponse:
+      description: Class for all kind of versions that the server reveals.
+      properties:
+        collector_service_version:
+          description: Collector service version number.
+          nullable: true
+          type: string
+        controller_service_version:
+          description: Controller service version number.
+          nullable: true
+          type: string
+        map_service_version:
+          description: Map service version number.
+          nullable: true
+          type: string
+        statistic_service_version:
+          description: Statistic service version number.
+          nullable: true
+          type: string
+      title: VersionResponse
+      type: object
+info:
+  contact:
+    name: alladin-IT GmbH
+    url: https://alladin.at
+  description: Controller REST API documentation of nntool.eu project.
+  license:
+    name: Apache License 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://nntool.eu
+  title: Controller REST API
+  version: v1
+openapi: 3.0.0
+paths:
+  /api/v1/documentation/json-schemas/api:
+    get:
+      deprecated: false
+      description: This returns the JSON schema of the REST API DTO classes.
+      operationId: renderApiJsonSchemaUsingGET
+      responses:
+        '200':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                additionalProperties:
+                  type: object
+                type: object
+          description: OK
+      summary: Returns the json schema of the REST API DTO classes.
+      tags:
+      - documentation-resource
+  /api/v1/documentation/json-schemas/data-model:
+    get:
+      deprecated: false
+      description: This returns the JSON schema of the data model classes.
+      operationId: renderDataModelJsonSchemaUsingGET
+      responses:
+        '200':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                additionalProperties:
+                  type: object
+                type: object
+          description: OK
+      summary: Returns the json schema of the data model classes.
+      tags:
+      - documentation-resource
+  /api/v1/documentation/swagger-spec:
+    get:
+      deprecated: false
+      description: This request redirects the user to the OpenAPI specification at
+        /v2/api-docs?group=.
+      operationId: redirectToSwaggerSpecUsingGET
+      responses:
+        '301':
+          description: Moved Permanently
+      summary: Redirects to the OpenApi specification.
+      tags:
+      - documentation-resource
+  /api/v1/documentation/swagger-ui:
+    get:
+      deprecated: false
+      description: This request redirects the user to the swagger UI at /swagger-ui.html.
+      operationId: redirectToSwaggerUiUsingGET
+      responses:
+        '301':
+          description: Moved Permanently
+      summary: Redirects to the swagger UI.
+      tags:
+      - documentation-resource
+  /api/v1/ip:
+    get:
+      deprecated: false
+      description: Returns public IP address and version of requesting client.
+      operationId: getIpUsingGET
+      responses:
+        '200':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_IpResponse_'
+          description: OK
+      summary: Get client public IP address.
+      tags:
+      - ip-resource
+  /api/v1/measurement-agents:
+    post:
+      deprecated: false
+      description: This resource is used to register new measurement agents. Measurement
+        agents will be assigned a UUID. Terms and conditions must be accepted in the
+        request object.
+      operationId: registerClientUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiRequest_RegistrationRequest_'
+        description: Registration request
+      responses:
+        '201':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_RegistrationResponse_'
+          description: Created - New client created successfully. The response also
+            contains the current settings.
+        '400':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad Request - Occurs if the request is malformed or if the
+            terms and conditions aren't accepted by the client.
+        '500':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal Server Error
+      summary: Registers a new measurement agent.
+      tags:
+      - measurement-agent-resource
+  /api/v1/measurement-agents/{agentUuid}/settings:
+    get:
+      deprecated: false
+      description: This resource is used to get the current settings for this measurement
+        agent from the server.
+      operationId: getSettingsUsingGET
+      parameters:
+      - description: The measurement agent's UUID
+        in: path
+        name: agentUuid
+        required: true
+        schema:
+          type: string
+      - description: The agent's UUID. This value is ignored if the resource path
+          already contains the agent's UUID.
+        in: query
+        name: requestInfo.agentId
+        required: true
+        schema:
+          type: string
+      - description: Type of agent.
+        in: query
+        name: requestInfo.agentType
+        required: true
+        schema:
+          enum:
+          - MOBILE
+          - BROWSER
+          - DESKTOP
+          type: string
+      - description: API level of operating system or SDK (e.g. Android API level
+          or Swift SDK version).
+        in: query
+        name: requestInfo.apiLevel
+        required: false
+        schema:
+          type: string
+      - description: Git revision name.
+        in: query
+        name: requestInfo.appGitRevision
+        required: false
+        schema:
+          type: string
+      - description: Application version code number (e.g. 10).
+        in: query
+        name: requestInfo.appVersionCode
+        required: false
+        schema:
+          format: int32
+          type: integer
+      - description: Application version name (e.g. 1.0.0).
+        in: query
+        name: requestInfo.appVersionName
+        required: true
+        schema:
+          type: string
+      - description: Device code name.
+        in: query
+        name: requestInfo.codeName
+        required: true
+        schema:
+          type: string
+      - description: Geographic location accuracy.
+        in: query
+        name: requestInfo.geoLocation.accuracy
+        required: false
+        schema:
+          format: double
+          type: number
+      - description: Geographic location altitude.
+        in: query
+        name: requestInfo.geoLocation.altitude
+        required: false
+        schema:
+          format: double
+          type: number
+      - description: Movement heading.
+        in: query
+        name: requestInfo.geoLocation.heading
+        required: false
+        schema:
+          format: double
+          type: number
+      - description: Geographic location latitude.
+        in: query
+        name: requestInfo.geoLocation.latitude
+        required: true
+        schema:
+          format: double
+          type: number
+      - description: Geographic location longitude.
+        in: query
+        name: requestInfo.geoLocation.longitude
+        required: true
+        schema:
+          format: double
+          type: number
+      - description: Geographic location provider.
+        in: query
+        name: requestInfo.geoLocation.provider
+        required: false
+        schema:
+          type: string
+      - description: Relative time in nanoseconds (to measurement begin).
+        in: query
+        name: requestInfo.geoLocation.relativeTimeNs
+        required: true
+        schema:
+          format: int64
+          type: integer
+      - description: Movement speed.
+        in: query
+        name: requestInfo.geoLocation.speed
+        required: false
+        schema:
+          format: double
+          type: number
+      - description: Time and date the geographic location information was captured
+          (UTC).
+        in: query
+        name: requestInfo.geoLocation.time
+        required: true
+        schema:
+          format: date-time
+          type: string
+      - description: Language specified by the measurement agent.
+        in: query
+        name: requestInfo.language
+        required: true
+        schema:
+          type: string
+      - description: Detailed device designation.
+        in: query
+        name: requestInfo.model
+        required: false
+        schema:
+          type: string
+      - description: Operating system name.
+        in: query
+        name: requestInfo.osName
+        required: true
+        schema:
+          type: string
+      - description: Operating system version.
+        in: query
+        name: requestInfo.osVersion
+        required: true
+        schema:
+          type: string
+      - description: The measurement agent's time zone. Is only stored if a measurement
+          is sent to the server.
+        in: query
+        name: requestInfo.timezone
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_SettingsResponse_'
+          description: OK
+        '400':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad Request
+        '404':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Not Found - If the agentUuid is not found on the server
+        '500':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal Server Error
+      summary: Retrieve the current settings.
+      tags:
+      - measurement-agent-resource
+  /api/v1/measurements:
+    post:
+      deprecated: false
+      description: This request will fetch the current measurement parameters and
+        configuration from the server.
+      operationId: requestMeasurementUsingPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LmapControlDto'
+        description: Initiation request
+      responses:
+        '201':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                type: object
+          description: Created - Measurement paramaters are provided.
+        '400':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Bad Request
+        '500':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: Internal Server Error
+      summary: Request a new measurement.
+      tags:
+      - measurement-initiation-resource
+  /api/v1/versions:
+    get:
+      deprecated: false
+      description: Returns the software version of the controller.
+      operationId: getVersionUsingGET
+      responses:
+        '200':
+          content:
+            application/json;charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ApiResponse_VersionResponse_'
+          description: OK
+      summary: Get the server version.
+      tags:
+      - version-resource
+servers:
+- url: //localhost:8080/
+tags:
+- description: Documentation Resource
+  name: documentation-resource
+- description: Ip Resource
+  name: ip-resource
+- description: Measurement Agent Resource
+  name: measurement-agent-resource
+- description: Measurement Initiation Resource
+  name: measurement-initiation-resource
+- description: Version Resource
+  name: version-resource

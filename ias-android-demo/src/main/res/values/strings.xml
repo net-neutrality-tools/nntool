@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Berec Demo</string>
+    <string name="project_name">Berec Demo</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="project_ping">0.0</string>
+    <string name="project_download">0.0</string>
+    <string name="project_upload">0.0</string>
+
+    <string name="project_statusname">Status:</string>
+    <string name="project_rttname">RTT:</string>
+    <string name="project_downloadname">Download:</string>
+    <string name="project_uploadname">Upload:</string>
+
+    <string name="project_status">-</string>
+    <string name="project_result">-</string>
+
+    <string name="name_msetting_low">low</string>
+    <string name="name_msetting_middle">default</string>
+    <string name="name_msetting_high">high</string>
+    <string name="name_msetting_veryhigh">very high</string>
+
+    <string name="name_msetting_auto">auto</string>
+    <string name="name_msetting_ipv4">ipv4</string>
+    <string name="name_msetting_ipv6">ipv6</string>
+    <string name="name_msetting_ssoff">off</string>
+    <string name="name_msetting_sson">on</string>
+    <string name="name_msetting_tlsoff">off</string>
+    <string name="name_msetting_tlson">on</string>
+
+    <string name="name_msetting_all">All</string>
+    <string name="name_msetting_rtt">RTT</string>
+    <string name="name_msetting_download">Download</string>
+    <string name="name_msetting_upload">Upload</string>
+    <string name="name_msetting_cancel">Cancel</string>
+</resources>

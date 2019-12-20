@@ -1,0 +1,54 @@
+spring:
+  profiles:
+    active: dev
+
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: false
+
+  couchdb:
+    connection:
+      url: http://localhost:5984
+      #url: http://localhost:15984
+      #username:
+      #password:
+    databases:
+      - name: measurement
+        create-if-not-exists: true
+        entities:
+          - Measurement
+          - MeasurementAgent
+      - name: settings
+        create-if-not-exists: true
+        entities:
+          - QoSMeasurementObjective
+          - Translation
+          - MeasurementServer
+          - Settings
+          - Device
+          - Provider
+          - Translation
+          - EmbeddedNetworkType
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:15432/nntool
+    username: nntool
+    password: nntool
+
+server:
+  port: 8081
+
+logging:
+  level:
+    at.alladin.nettest: DEBUG
+
+#collector:
+#  elasticsearch:
+#    host: localhost
+#    port: 19200
+#    scheme: http
+#    index: nntool
+#    queryTimeout: 10s

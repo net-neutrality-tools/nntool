@@ -1,0 +1,65 @@
+<nntool-section-intro>
+  <nntool-section-header headerTranslationKey="PORTAL.HOME.HEADER"> </nntool-section-header>
+  <nntool-section-content>
+    <p [innerHTML]="'HOME.DESCRIPTION' | translate"></p>
+  </nntool-section-content>
+</nntool-section-intro>
+
+<nntool-section-technical>
+  <div class="flex--columns">
+    <!-- TODO: fix card css
+      <nntool-card
+      headerTranslationKey="HOME.TILES.TEST.HEADER"
+      contentTranslationKey="HOME.TILES.TEST.DESCRIPTION"
+      icon="icon-watch"
+    >
+    </nntool-card>-->
+    <div class="content--column home clickable" [routerLink]="['/open-data-results']">
+      <header class="column-header">
+        <div class="icon icon-search" aria-hidden="true"></div>
+
+        <h3>{{ 'HOME.TILES.RESULT_LIST.HEADER' | translate }}</h3>
+      </header>
+      <p [innerHTML]="'HOME.TILES.RESULT_LIST.DESCRIPTION' | translate"></p>
+    </div>
+    <div class="content--column home clickable" [routerLink]="['/map']">
+      <header class="column-header">
+        <div class="icon icon-map" aria-hidden="true"></div>
+        <h3>{{ 'HOME.TILES.MAP.HEADER' | translate }}</h3>
+      </header>
+      <p [innerHTML]="'HOME.TILES.MAP.DESCRIPTION' | translate"></p>
+    </div>
+    <div class="content--column home clickable" [routerLink]="['/statistics']">
+      <header class="column-header">
+        <div class="icon icon-statistics" aria-hidden="true"></div>
+        <h3>{{ 'HOME.TILES.STATISTICS.HEADER' | translate }}</h3>
+      </header>
+      <p [innerHTML]="'HOME.TILES.STATISTICS.DESCRIPTION' | translate"></p>
+    </div>
+    <div class="content--column home clickable" [routerLink]="['/help']">
+      <header class="column-header">
+        <div class="icon icon-help" aria-hidden="true"></div>
+        <h3>{{ 'HOME.TILES.HELP.HEADER' | translate }}</h3>
+      </header>
+      <p [innerHTML]="'HOME.TILES.HELP.DESCRIPTION' | translate"></p>
+    </div>
+    <div class="content--column home clickable">
+      <header class="column-header">
+        <div class="icon icon-language" aria-hidden="true"></div>
+        <h3>{{ 'HOME.TILES.LANGUAGE_SELECT.HEADER' | translate }}</h3>
+      </header>
+      <div>
+        <p [innerHTML]="'HOME.TILES.LANGUAGE_SELECT.DESCRIPTION' | translate"></p>
+        <select #langSelect (change)="translateService.use(langSelect.value)">
+          <option
+            *ngFor="let lang of translateService.getLangs()"
+            [value]="lang"
+            [selected]="lang === translateService.currentLang"
+          >
+            {{ 'LANG.' + lang.toUpperCase() | translate }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+</nntool-section-technical>
