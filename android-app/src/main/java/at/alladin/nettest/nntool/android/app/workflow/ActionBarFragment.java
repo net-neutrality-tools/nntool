@@ -68,12 +68,7 @@ public abstract class ActionBarFragment extends Fragment {
         final Integer helpSectionStringId = getHelpSectionStringId();
         final Object[] helpArgs = getHelpSectionArgs();
         if (R.id.action_bar_show_help_action == item.getItemId()) {
-            getActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.main_fragment_layout, HelpFragment.newInstance(helpSectionStringId == null ?
-                            null : helpArgs == null ? getString(helpSectionStringId) : getString(helpSectionStringId, helpArgs)))
-                    .addToBackStack(null)
-                    .commit();
+            HelpFragment.showHelpFragment(getActivity(), helpSectionStringId, helpArgs);
             return true;
         }
         return super.onOptionsItemSelected(item);

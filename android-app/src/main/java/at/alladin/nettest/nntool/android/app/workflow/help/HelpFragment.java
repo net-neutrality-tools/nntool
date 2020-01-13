@@ -16,14 +16,9 @@
 
 package at.alladin.nettest.nntool.android.app.workflow.help;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import at.alladin.nettest.nntool.android.app.R;
 import at.alladin.nettest.nntool.android.app.workflow.WebViewFragment;
@@ -45,6 +40,23 @@ public class HelpFragment extends WebViewFragment {
     @Override
     protected String getWebviewUrl() {
         return getString(R.string.default_help_page_link) + (helpUrlSection == null ? "" : '#' + helpUrlSection);
+    }
+
+    /**
+     *
+     * @param activity
+     * @param helpSectionStringId may be null if default help is to be shown
+     * @param helpArgs may be null
+     */
+    public static void showHelpFragment(final FragmentActivity activity, final Integer helpSectionStringId, final Object[] helpArgs) {
+        if (activity != null) {
+            activity.getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_fragment_layout, HelpFragment.newInstance(helpSectionStringId == null ?
+                            null : helpArgs == null ? activity.getString(helpSectionStringId) : activity.getString(helpSectionStringId, helpArgs)))
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     public static HelpFragment newInstance() {
