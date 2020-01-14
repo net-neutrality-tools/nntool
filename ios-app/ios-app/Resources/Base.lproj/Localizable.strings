@@ -106,3 +106,15 @@
 
 "settings.measurement-type-selection.enable" = "ENABLE";
 "settings.measurement-type-selection.disable" = "DISABLE";
+
+"settings.delete-agent-alert.title" = "Delete current agent?";
+"settings.delete-agent-alert.message" = "Do you really wish to delete your agent? This will remove all measurements from your history and revoke your consent to the terms and conditions.";
+"settings.delete-agent-alert.confirm" = "Delete";
+"settings.delete-agent-alert.cancel" = "Cancel";
+
+"settings.delete-agent-error-alert.title" = "Deleting agent failed";
+"settings.delete-agent-error-alert.message" = "Deleting measurement agent failed. Would you like to cancel or rety?";
+"settings.delete-agent-error-alert.retry" = "Retry";
+"settings.delete-agent-error-alert.cancel" = "Cancel";
+
+"settings.popup.delete-agent" = "Deleting agent";
