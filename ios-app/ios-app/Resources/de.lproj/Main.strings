@@ -97,3 +97,12 @@
 
 /* Class = "UILabel"; text = "Map"; ObjectID = "w0G-lm-F8b"; */
 "w0G-lm-F8b.text" = "Map";
+
+/* Class = "UITableViewSection"; footerTitle = "Delete association with your measurements and revoke consent to terms and conditions."; ObjectID = "Ihj-cx-I3E"; */
+"Ihj-cx-I3E.footerTitle" = "";
+
+/* Class = "UITableViewSection"; headerTitle = "Agent"; ObjectID = "Ihj-cx-I3E"; */
+"Ihj-cx-I3E.headerTitle" = "";
+
+/* Class = "UILabel"; text = "Delete agent"; ObjectID = "a6e-Fz-ARg"; */
+"a6e-Fz-ARg.text" = "";

@@ -46,4 +46,65 @@ class SettingsTableViewController: UITableViewController {
             onChange?(sw.isOn)
         }
     }
+
+    private func presentDeleteAgentConfirmPopup() {
+       let alert = UIAlertController.createBasicAlert(
+            title: R.string.localizable.settingsDeleteAgentAlertTitle(),
+            message: R.string.localizable.settingsDeleteAgentAlertMessage(),
+            cancelActionTitle: R.string.localizable.settingsDeleteAgentAlertCancel(),
+            confirmActionTitle: R.string.localizable.settingsDeleteAgentAlertConfirm(),
+            confirmStyle: .destructive) { _ in
+
+            self.deleteAgent()
+        }
+
+        present(alert, animated: true, completion: nil)
+    }
+
+    private func deleteAgent() {
+        let progressAlert = UIAlertController.createLoadingAlert(title: R.string.localizable.settingsPopupDeleteAgent())
+        self.present(progressAlert, animated: true, completion: nil)
+
+        MEASUREMENT_AGENT.deleteAgent(success: {
+            DispatchQueue.main.async {
+                progressAlert.dismiss(animated: true) {
+                    let parent = self.parent
+                    self.navigationController?.popViewController(animated: false)
+                    parent?.tabBarController?.selectedIndex = 0
+                }
+            }
+        }, failure: {
+            logger.debug("disassociate failed")
+
+            DispatchQueue.main.async {
+                progressAlert.dismiss(animated: true) {
+                    self.presentDeleteAgentErrorPopup()
+                }
+            }
+        })
+    }
+
+    private func presentDeleteAgentErrorPopup() {
+        let alert = UIAlertController.createBasicAlert(
+            title: R.string.localizable.settingsDeleteAgentErrorAlertTitle(),
+            message: R.string.localizable.settingsDeleteAgentErrorAlertMessage(),
+            cancelActionTitle: R.string.localizable.settingsDeleteAgentErrorAlertCancel(),
+            confirmActionTitle: R.string.localizable.settingsDeleteAgentErrorAlertRetry(),
+            confirmStyle: .destructive) { _ in
+
+            self.deleteAgent()
+        }
+
+        present(alert, animated: true, completion: nil)
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.section == 2 else {
+            return
+        }
+
+        presentDeleteAgentConfirmPopup()
+
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 }

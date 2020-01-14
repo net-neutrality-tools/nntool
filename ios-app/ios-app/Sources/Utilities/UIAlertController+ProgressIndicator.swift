@@ -49,4 +49,20 @@ extension UIAlertController {
 
         activityIndicator.startAnimating()
     }
+
+    public class func createBasicAlert(title: String? = nil, message: String? = nil,
+                           cancelActionTitle: String? = nil, confirmActionTitle: String? = nil,
+                           cancelStyle: UIAlertAction.Style = .default, confirmStyle: UIAlertAction.Style = .default,
+                           cancelAction: ((UIAlertAction) -> Void)? = nil, confirmAction: ((UIAlertAction) -> Void)? = nil) -> UIAlertController {
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: cancelActionTitle, style: cancelStyle, handler: cancelAction))
+        alert.addAction(UIAlertAction(title: confirmActionTitle, style: confirmStyle, handler: confirmAction))
+        
+        return alert
+    }
 }
