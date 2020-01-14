@@ -21,7 +21,7 @@
 // Home screen
 ///////////////////////////
 
-"home.no-measurement-task-enabled-alert.title" = "No Measurement enabled";
+"home.no-measurement-task-enabled-alert.title" = "No measurement enabled";
 "home.no-measurement-task-enabled-alert.message" = "The measurement is currently not possible because all available measurement programs and/or tasks are disabled.";
 "home.no-measurement-task-enabled-alert.open-settings" = "Open Settings";
 "home.no-measurement-task-enabled-alert.abort" = "Abort";
@@ -113,7 +113,7 @@
 "settings.delete-agent-alert.cancel" = "Cancel";
 
 "settings.delete-agent-error-alert.title" = "Deleting agent failed";
-"settings.delete-agent-error-alert.message" = "Deleting measurement agent failed. Would you like to cancel or rety?";
+"settings.delete-agent-error-alert.message" = "Deleting measurement agent failed. Would you like to cancel or retry?";
 "settings.delete-agent-error-alert.retry" = "Retry";
 "settings.delete-agent-error-alert.cancel" = "Cancel";
 
