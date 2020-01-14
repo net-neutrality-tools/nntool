@@ -166,12 +166,7 @@ public class MapFragment extends SupportMapFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         final Integer helpSectionStringId = getHelpSectionStringId();
         if (R.id.action_bar_show_help_action == item.getItemId()) {
-            getActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.main_fragment_layout, HelpFragment.newInstance(helpSectionStringId == null ?
-                            null : getString(helpSectionStringId)))
-                    .addToBackStack(null)
-                    .commit();
+            HelpFragment.showHelpFragment(getActivity(), helpSectionStringId, null);
             return true;
         }
         return super.onOptionsItemSelected(item);
