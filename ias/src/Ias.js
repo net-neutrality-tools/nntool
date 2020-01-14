@@ -1,9 +1,9 @@
 /*!
     \file Ias.js
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-12-04
+    \date Last update: 2020-01-14
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -197,7 +197,12 @@ function Ias()
             deviceKPIs.web_workers_active = true;
         }
 
-        var cookieName = wsMeasurementParameters.wsTLD.split('.', 1);
+        var cookieName;
+
+        if (typeof wsMeasurementParameters.wsTLD !== 'undefined')
+        {
+            cookieName = wsMeasurementParameters.wsTLD.split('.', 1)[0];
+        }
 
         if (typeof wsMeasurementParameters.cookieId !== 'undefined')
         {
@@ -258,7 +263,7 @@ function Ias()
         peerKPIs.port = String(wsMeasurementParameters.wsTargetPort);
         peerKPIs.tls  = String(wsMeasurementParameters.wsWss);
 
-        if (!platform || (!performRttMeasurement && !performDownloadMeasurement && !performUploadMeasurement))
+        if (!platform || !wsMeasurementParameters.wsTLD || (!performRttMeasurement && !performDownloadMeasurement && !performUploadMeasurement))
         {
             var data                = {};
             data.cmd                = 'error';
