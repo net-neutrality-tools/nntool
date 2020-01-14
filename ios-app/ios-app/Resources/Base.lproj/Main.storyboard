@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -214,7 +214,7 @@
                                                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="NbX-rf-itI">
                                                                         <rect key="frame" x="29.5" y="76.5" width="46" height="26.5"/>
                                                                         <subviews>
-                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="v" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wNF-qb-b19">
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="v" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wNF-qb-b19">
                                                                                 <rect key="frame" x="0.0" y="3.5" width="20" height="20"/>
                                                                                 <fontDescription key="fontDescription" name="berec-icons" family="berec-icons" pointSize="20"/>
                                                                                 <nil key="textColor"/>
@@ -223,7 +223,7 @@
                                                                                     <fragment content="#bc-ignore!"/>
                                                                                 </attributedString>
                                                                             </label>
-                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10/10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRy-ie-fA5">
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="10/10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRy-ie-fA5">
                                                                                 <rect key="frame" x="20" y="7.5" width="26" height="12"/>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                                                 <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -1146,7 +1146,7 @@
                             </tableViewSection>
                             <tableViewSection id="BvO-99-h2l">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="uzl-r8-5g6" detailTextLabel="c1p-WA-pkG" style="IBUITableViewCellStyleSubtitle" id="wn9-q2-U6t">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="uzl-r8-5g6" detailTextLabel="c1p-WA-pkG" style="IBUITableViewCellStyleSubtitle" id="wn9-q2-U6t">
                                         <rect key="frame" x="0.0" y="342" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wn9-q2-U6t" id="edt-Fp-PP0">
@@ -1173,7 +1173,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" textLabel="RST-3a-XK6" detailTextLabel="l2U-Qw-air" style="IBUITableViewCellStyleSubtitle" id="sdp-mR-c85">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="RST-3a-XK6" detailTextLabel="l2U-Qw-air" style="IBUITableViewCellStyleSubtitle" id="sdp-mR-c85">
                                         <rect key="frame" x="0.0" y="386" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="sdp-mR-c85" id="9td-Ow-DaQ">
@@ -1548,7 +1548,7 @@
         <image name="tabbar_icon_statistics" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Fti-RK-jur"/>
+        <segue reference="h6a-A8-KCs"/>
         <segue reference="b35-qr-BZB"/>
     </inferredMetricsTieBreakers>
 </document>

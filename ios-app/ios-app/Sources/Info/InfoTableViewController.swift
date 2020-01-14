@@ -63,7 +63,7 @@ class InfoTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard indexPath.section == 1 else {
-            super.tableView(tableView, didSelectRowAt: indexPath)
+            //super.tableView(tableView, didSelectRowAt: indexPath)
             return
         }
 
@@ -86,7 +86,7 @@ class InfoTableViewController: UITableViewController {
 
         tableView.deselectRow(at: indexPath, animated: true)
     }
-
+    
     // Copying of uuid and/or version is disabled because the app freezes on 'UIPasteboard.general.string = ...'.
     /*override func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
         return indexPath.section == 2
