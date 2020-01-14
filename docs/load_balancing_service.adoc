@@ -1,0 +1,56 @@
+= Load balancing service
+
+
+== Load balancing service (measurement peer)
+
+TODO
+
+== Load balancing interface
+
+The load balancing interface (LBI) is responsible for the communication between the controller(s) and all registered and available measurement peers. The LBI's task is to periodically fetch the current load status of all measurement peers and to maintain an up-to-date database containing this information. An additional benefit of the LBI is the monitoring of health of all measurement peers.
+
+=== Load balancing interface API
+
+The LBI provides an API which is used to request necessary information about the load and health status of a measurement peer. The API can be accessed by concatenating the version prefix `/api/v1/measurement-servers` (current version: `v1`) and the request path:
+
+[cols="3,2,4,10",options=header]
+|===
+|Request path
+|HTTP Method
+|Response model
+|Desciption
+|`/load/{serverId}`
+|GET
+|ApiResponse<LoadApiReport>
+|Returns the health and load status of a specific measurement peer. The path parameter `{serverId}` needs to be set to the desired measurement peer's identifier.
+|`/free`
+|GET
+|ApiResponse<MeasurementServerDto> 
+|Returns an available (or "free" = low load) measurement peer. Additionally the query parameter `preferredId`, containing the identifier of the preferred measurement peer can be provided to indicate a personal measurement peer preference. Note that this does not guarantee the selection of the preferred measurement peer if the load and/or health status is not satisfactory.
+|===
+
+=== Load balancing interface configuration
+
+The LBI provides advanced configuration which can be set in the default configuration file: `application.yml` 
+
+The following options are available:
+
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Desciption
+|`enabled`
+|boolean
+|`false`
+|Enables (`true`) or disables (`false`) the LBI's basic functionality.
+|`delay`
+|integer
+|`15000`
+|Delay in ms between requests to the load balancing service(s)
+|`fails-allowed`
+|integer
+|`0`
+|The number of failed loadbalancing service requests to any measurement peer, until the measurement peer becomes unavailable.
+|===
