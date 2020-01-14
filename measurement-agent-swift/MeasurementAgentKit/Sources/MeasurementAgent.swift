@@ -155,6 +155,20 @@ public class MeasurementAgent {
 
         try? MeasurementAgentSettingsHelper.saveLocalSettings(self.settings)
     }
+    
+    public func deleteAgent(success: @escaping () -> Void, failure: @escaping () -> Void) {
+        resultService?.disassociateAgentMeasurements(onSuccess: { r in
+            self.settings.uuid = nil
+            self.settings.tcAcceptedVersion = nil
+            
+            try? MeasurementAgentSettingsHelper.saveLocalSettings(self.settings)
+            
+            success()
+        }, onFailure: { error in
+            logger.error(error)
+            failure()
+        })
+    }
 
     private func createServices(localSettings: LocalSettings) {
         if let controllerServiceBaseUrlV4 = localSettings.controllerServiceBaseUrlIpv4 {
