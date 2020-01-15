@@ -18,8 +18,8 @@
     "tiny-worker": "2.2.0",
     "electron-cookies": "heap/electron-cookies",
     "electron-unhandled": "2.2.0",
-    "network": "file:modules/node_checkin/network",
-    "ws": "file:modules/node_checkin/ws"
+    "network": "file:../ias-desktop/modules/node_checkin/network",
+    "ws": "file:../ias-desktop/modules/node_checkin/ws"
   },
   "build": {
     "appId": "com.company.nntool",
