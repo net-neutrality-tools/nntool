@@ -76,7 +76,9 @@ public interface StorageService {
 	
 	Map<Locale, Map<String, String>> getTranslations();
 	
-  List<MeasurementServerDto> getAllActiveSpeedMeasurementServers() throws StorageServiceException;
+	Map<String, Object> getAllSettings(String settingsUuid);
+	
+	List<MeasurementServerDto> getAllActiveSpeedMeasurementServers() throws StorageServiceException;
 	
 	MeasurementServerDto getSpeedMeasurementServerByPublicIdentifier(final String identifier);
 	

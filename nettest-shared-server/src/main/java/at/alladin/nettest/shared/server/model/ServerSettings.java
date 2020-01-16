@@ -88,7 +88,6 @@ public class ServerSettings {
 			return "SpeedThresholds [upload=" + upload + ", download=" + download + ", ping=" + ping + ", signal="
 					+ signal + "]";
 		}
-		
 	}
 	
 	public static class ColorThresholds {
@@ -128,7 +127,5 @@ public class ServerSettings {
 		public String toString() {
 			return "ColorThresholds [defaultColor=" + defaultColor + ", colorMap=" + colorMap + "]";
 		}
-		
 	}
-	
 }

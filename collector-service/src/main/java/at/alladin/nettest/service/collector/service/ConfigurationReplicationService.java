@@ -16,6 +16,7 @@
 
 package at.alladin.nettest.service.collector.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +25,7 @@ import java.util.Map;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
@@ -38,6 +40,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.service.collector.config.CollectorServiceProperties;
@@ -126,7 +129,7 @@ public class ConfigurationReplicationService {
 	private void replicateSettings() {
 		logger.info("Replicating settings.");
 		
-		/*final SettingsResponse settings = storageService.getSettings(collectorServiceProperties.getSettingsUuid());
+		final Map<String, Object> settings = storageService.getAllSettings(collectorServiceProperties.getSettingsUuid());
 
 		final String settingsJsonString;
 		try {
@@ -140,7 +143,7 @@ public class ConfigurationReplicationService {
 			final Map<String, Object> map = objectMapper.convertValue(settings, new TypeReference<Map<String, Object>>() {});
 			
 			final IndexRequest indexRequest = new IndexRequest(SETTINGS_INDEX)
-					.id("settings_" + collectorServiceProperties.getSystemUuid())
+					.id("settings_" + collectorServiceProperties.getSettingsUuid())
 					.source(map);
 			
 			try {
@@ -158,7 +161,7 @@ public class ConfigurationReplicationService {
 			} catch (Exception ex) {
 				logger.error("Could update settings in PostgreSQL.", ex);
 			}
-		}*/
+		}
 	}
 	
 	private void replicateTranslations() {

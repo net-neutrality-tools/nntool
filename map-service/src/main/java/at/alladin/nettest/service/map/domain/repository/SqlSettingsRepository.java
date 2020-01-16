@@ -45,80 +45,77 @@ import at.alladin.nettest.shared.server.model.ServerSettings;
 //@ConditionalOnBean(name = "jdbcTemplate") // TODO: check if SQL database is present
 public class SqlSettingsRepository {
 
+	private final Logger logger = LoggerFactory.getLogger(SqlSettingsRepository.class);
+	
+	/**
+	 * 
+	 */
+	private static final String GET_SETTINGS_SQL = "SELECT json AS json from settings LIMIT 1";
+	
+	/**
+	 * 
+	 */
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	
+	/**
+	 * 
+	 */
+	private ServerSettings cachedSettings;
+	
+	/**
+	 * 
+	 */
+	//private final Gson gson = GsonHelper.createDatabaseGsonBuilder().create(); // TODO: create bean and inject
+	private final Gson gson = GsonBasicHelper.getDateTimeGsonBuilder().create();
+	
+	/**
+	 * 
+	 */
+	private final ResultSetExtractor<ServerSettings> settingsExtractor = new ResultSetExtractor<ServerSettings>() {
 
-		private final Logger logger = LoggerFactory.getLogger(SqlSettingsRepository.class);
-		
-		/**
-		 * 
-		 */
-		private static final String GET_SETTINGS_SQL = "SELECT json AS json from settings LIMIT 1";
-		
-		/**
-		 * 
-		 */
-		@Autowired
-		private JdbcTemplate jdbcTemplate;
-		
-		/**
-		 * 
-		 */
-		private ServerSettings cachedSettings;
-		
-		/**
-		 * 
-		 */
-		//private final Gson gson = GsonHelper.createDatabaseGsonBuilder().create(); // TODO: create bean and inject
-		private final Gson gson = GsonBasicHelper.getDateTimeGsonBuilder().create();
-		
-		/**
-		 * 
-		 */
-		
-		private final ResultSetExtractor<ServerSettings> settingsExtractor = new ResultSetExtractor<ServerSettings>() {
-
-			@Override
-			public ServerSettings extractData(ResultSet rs) throws SQLException, DataAccessException {
-				if (rs.next()) {
-					return gson.fromJson(rs.getString("json"), ServerSettings.class);
-				}
-				
-				return null;
+		@Override
+		public ServerSettings extractData(ResultSet rs) throws SQLException, DataAccessException {
+			if (rs.next()) {
+				// TODO: unmarshall all settings
+				return gson.fromJson(rs.getString("json"), ServerSettings.class);
 			}
-		};
-		
-		
-		/**
-		 * 
-		 */
-		@PostConstruct
-		private void postConstruct() {
-			getSettings();
 			
-			logger.info("Loaded settings from SQL database: {}", cachedSettings);
-			
-			// TODO: use Spring caching instead of local variable caching?
-			// TODO: re-select settings from database every x seconds
+			return null;
 		}
+	};
+	
+	/**
+	 * 
+	 */
+	@PostConstruct
+	private void postConstruct() {
+		getSettings();
 		
-		/**
-		 * 
-		 * @return
-		 */
-		public ServerSettings getSettings() {
-			
-			if (cachedSettings != null) {
-				return cachedSettings;
-			}
-			
-			try {
-				final ServerSettings settings = jdbcTemplate.query(GET_SETTINGS_SQL, settingsExtractor);
-				cachedSettings = settings;
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				// TODO
-			}
-			
+		logger.info("Loaded settings from SQL database: {}", cachedSettings);
+		
+		// TODO: use Spring caching instead of local variable caching?
+		// TODO: re-select settings from database every x seconds
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public ServerSettings getSettings() {
+		
+		if (cachedSettings != null) {
 			return cachedSettings;
 		}
-
+		
+		try {
+			final ServerSettings settings = jdbcTemplate.query(GET_SETTINGS_SQL, settingsExtractor);
+			cachedSettings = settings;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			// TODO
+		}
+		
+		return cachedSettings;
+	}
 }

@@ -41,7 +41,6 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapSto
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.MeasurementServerDto;
-import at.alladin.nettest.shared.server.service.LoadBalancingService;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 
 @Service

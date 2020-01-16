@@ -19,6 +19,7 @@ package at.alladin.nettest.shared.server.storage.couchdb.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -97,6 +98,14 @@ public class Settings {
 	@Expose
 	private List<SpeedtestDetailGroup> speedtestDetailGroups = new ArrayList<>();
 	
+	/**
+	 * Speed thresholds.
+	 */
+	@Expose
+	@SerializedName("speed_thresholds")
+	@JsonProperty("speed_thresholds")
+	private SpeedThresholds speedThresholds = new SpeedThresholds();
+	
 	public String getId() {
 		return id;
 	}
@@ -151,6 +160,14 @@ public class Settings {
 	
 	public void setSpeedtestDetailGroups(List<SpeedtestDetailGroup> speedtestDetailGroups) {
 		this.speedtestDetailGroups = speedtestDetailGroups;
+	}
+	
+	public SpeedThresholds getSpeedThresholds() {
+		return speedThresholds;
+	}
+
+	public void setSpeedThresholds(SpeedThresholds speedThresholds) {
+		this.speedThresholds = speedThresholds;
 	}
 
 	/**
@@ -581,7 +598,6 @@ public class Settings {
 						'}';
 			}
 		}
-
 	}
 
 	/**
@@ -605,7 +621,107 @@ public class Settings {
 
 		public void setQosServerUuid(String qosServerUuid) {
 			this.qosServerUuid = qosServerUuid;
-		}
+		}	
+	}
+	
+	public static class SpeedThresholds {
 		
+		@Expose
+		@SerializedName("upload")
+		@JsonProperty("upload")
+		private ColorThresholds upload;
+		
+		@Expose
+		@SerializedName("download")
+		@JsonProperty("download")
+		private ColorThresholds download;
+		
+		@Expose
+		@SerializedName("ping")
+		@JsonProperty("ping")
+		private ColorThresholds ping;
+		
+		@Expose
+		@SerializedName("signal")
+		@JsonProperty("signal")
+		private ColorThresholds signal;
+
+		public ColorThresholds getUpload() {
+			return upload;
+		}
+
+		public void setUpload(ColorThresholds upload) {
+			this.upload = upload;
+		}
+
+		public ColorThresholds getDownload() {
+			return download;
+		}
+
+		public void setDownload(ColorThresholds download) {
+			this.download = download;
+		}
+
+		public ColorThresholds getPing() {
+			return ping;
+		}
+
+		public void setPing(ColorThresholds ping) {
+			this.ping = ping;
+		}
+
+		public ColorThresholds getSignal() {
+			return signal;
+		}
+
+		public void setSignal(ColorThresholds signal) {
+			this.signal = signal;
+		}
+
+		@Override
+		public String toString() {
+			return "SpeedThresholds [upload=" + upload + ", download=" + download + ", ping=" + ping + ", signal="
+					+ signal + "]";
+		}
+	}
+	
+	public static class ColorThresholds {
+
+		/**
+		 * Default color to be used when the achieved result is bigger than the highest entry in the colorMap
+		 */
+		@Expose
+		@SerializedName("default_color")
+		@JsonProperty("default_color")
+		private String defaultColor;
+		
+		/**
+		 * The smallest key higher than the achieved result equals the color to be used (use: colorMap.ceilingKey(YOUR_KEY) )
+		 */
+		@Expose
+		@SerializedName("color_map")
+		@JsonProperty("color_map")
+		private TreeMap<Long, String> colorMap;
+
+		public String getDefaultColor() {
+			return defaultColor;
+		}
+
+		public void setDefaultColor(String defaultColor) {
+			this.defaultColor = defaultColor;
+		}
+
+		public TreeMap<Long, String> getColorMap() {
+			return colorMap;
+		}
+
+		public void setColorMap(TreeMap<Long, String> colorMap) {
+			this.colorMap = colorMap;
+		}
+
+		@Override
+		public String toString() {
+			return "ColorThresholds [defaultColor=" + defaultColor + ", colorMap=" + colorMap + "]";
+		}	
 	}
 }
