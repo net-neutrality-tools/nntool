@@ -14,6 +14,7 @@ logging:
     org.springframework.web: TRACE
 
 search-service:
+  settings-uuid: "4e7567ef-175b-44f4-8436-8fd6d22dab48"
   elasticsearch:
     host: localhost
     port: 19200

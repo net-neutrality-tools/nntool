@@ -41,7 +41,6 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapSto
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
 import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.MeasurementServerDto;
-import at.alladin.nettest.shared.server.service.LoadBalancingService;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 
 @Service
@@ -55,7 +54,7 @@ public class MeasurementConfigurationService {
 	@Autowired
 	private ControllerServiceProperties controllerServiceProperties;
 
-    @Autowired
+    @Autowired(required = false)
     private LoadBalancingService loadBalancingService;
 
     public LmapControlDto getLmapControlDtoForCapabilities(final LmapCapabilityDto capabilities, boolean useIPv6) {
@@ -75,6 +74,7 @@ public class MeasurementConfigurationService {
 
 		if (loadBalancingService != null) {
 			MeasurementServerDto serverDto = loadBalancingService.getNextAvailableMeasurementServer(controllerServiceProperties.getSettingsUuid(), null);
+			logger.debug("Got measurement peer from load balancer: {}", serverDto);
 			if (serverDto != null && ret.getTasks() != null) {
 	            Integer port = null;
 	            boolean encryption = false;

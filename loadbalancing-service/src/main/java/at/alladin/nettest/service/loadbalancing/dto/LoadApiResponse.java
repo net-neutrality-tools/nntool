@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package at.alladin.nettest.service.loadbalancer.dto;
+package at.alladin.nettest.service.loadbalancing.dto;
 
 import java.util.Map;
 

@@ -28,6 +28,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ControllerServiceProperties {
 	
 	private String settingsUuid;
+	
+	private final LoadBalancing loadBalancing = new LoadBalancing();
 
 	public String getSettingsUuid() {
 		return settingsUuid;
@@ -37,4 +39,19 @@ public class ControllerServiceProperties {
 		this.settingsUuid = settingsUuid;
 	}
 	
+	public LoadBalancing getLoadBalancing() {
+		return loadBalancing;
+	}
+	
+	public static class LoadBalancing {
+		private boolean enabled;
+		
+		public boolean isEnabled() {
+			return enabled;
+		}
+		
+		public void setEnabled(boolean enabled) {
+			this.enabled = enabled;
+		}
+	}
 }
