@@ -46,6 +46,8 @@ import { LocationService } from '../core/services/location.service';
 import { PointInTimeValueAPI } from './models/measurements/point-in-time-value.api';
 import { WebSocketInfo } from '@nntool-typescript/core/models/lmap/models/lmap-report/lmap-result/extensions/web-socket-info.model';
 import { NumStreamsInfo } from '@nntool-typescript/core/models/lmap/models/lmap-report/lmap-result/extensions/num-streams-info.model';
+import { TracerouteTestState } from '@nntool-typescript/testing/tests-implementation/traceroute/traceroute-test-state';
+import { BasicTestState } from '@nntool-typescript/testing/enums/basic-test-state.enum';
 
 export { TestGuard } from './test.guard';
 
@@ -223,13 +225,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
   }
 
   public portBlockingTestFinished(portBlockingTestResult: PortBlockingTestState): void {
-    const qosMeasurementResult: QoSMeasurementResult = new QoSMeasurementResult();
-    qosMeasurementResult.deserialize_type = 'qos_result';
-    qosMeasurementResult.reason = null;
-    qosMeasurementResult.relative_end_time_ns = null;
-    qosMeasurementResult.relative_start_time_ns = null;
-    qosMeasurementResult.status = null;
-    qosMeasurementResult.results = [];
+    const qosMeasurementResult: QoSMeasurementResult = this.createBasicQoSResult();
 
     for (const port of portBlockingTestResult.types[0].ports) {
       qosMeasurementResult.results.push({
@@ -244,6 +240,52 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
     }
 
     this.testResults.push(qosMeasurementResult);
+  }
+
+  public tracerouteTestFinished(tracerouteTestResult: TracerouteTestState): void {
+
+    let qosResult: QoSMeasurementResult = undefined;
+    if (this.testResults.length > 0 && this.testResults[this.testResults.length - 1] instanceof QoSMeasurementResult) {
+      qosResult = this.testResults[this.testResults.length - 1] as QoSMeasurementResult;
+    } else {
+      qosResult = this.createBasicQoSResult();
+      this.testResults.push(qosResult);
+    }
+
+    let traceroute_result_details: Array<any> = new Array();
+    if (tracerouteTestResult.result && tracerouteTestResult.result.hops) {
+      for (const hop of tracerouteTestResult.result.hops) {
+        traceroute_result_details.push({
+          host: hop.ip,
+        })
+      }
+    }
+
+    qosResult.results.push({
+      traceroute_result_details: traceroute_result_details,
+      traceroute_result_status:  traceroute_result_details.length > 0 ? "OK" : "ERROR",
+      duration_ns: !tracerouteTestResult.result.startTimeNs ? undefined : !tracerouteTestResult.result.endTimeNs ? undefined : tracerouteTestResult.result.endTimeNs - tracerouteTestResult.result.startTimeNs,
+      test_type: "traceroute",
+      traceroute_objective_max_hops: tracerouteTestResult.result.max_hops,
+      traceroute_objective_timeout: tracerouteTestResult.result.timeout,
+      traceroute_objective_is_reverse: tracerouteTestResult.result.is_reverse,
+      qos_test_uid: tracerouteTestResult.result.qos_test_uid,
+      traceroute_objective_host: tracerouteTestResult.result.host,
+      traceroute_objective_port: tracerouteTestResult.result.port,
+      traceroute_result_hops: traceroute_result_details.length,
+    });
+
+  }
+
+  private createBasicQoSResult(): QoSMeasurementResult {
+    const qosMeasurementResult: QoSMeasurementResult = new QoSMeasurementResult();
+    qosMeasurementResult.deserialize_type = 'qos_result';
+    qosMeasurementResult.reason = null;
+    qosMeasurementResult.relative_end_time_ns = null;
+    qosMeasurementResult.relative_start_time_ns = null;
+    qosMeasurementResult.status = null;
+    qosMeasurementResult.results = [];
+    return qosMeasurementResult;
   }
 
   private requestMeasurement(): void {
