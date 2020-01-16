@@ -2,7 +2,7 @@
 
 ### Prerequisites ###
 * Android Studio >= 3
-* Linux (any Version)
+* Linux, macOS or Windows
 
 ### Build ###
 With fullfilled prerequisites perform the following steps:
