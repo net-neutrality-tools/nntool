@@ -15,7 +15,6 @@
  ******************************************************************************/
 
 import { UIState } from '../ui-state';
-import { BarUIShowableTestTypeEnum } from './enums/bar-ui-showable-test-type.enum';
 import { BarTestResult } from './bar-test-result';
 
 export class BarUIState extends UIState {

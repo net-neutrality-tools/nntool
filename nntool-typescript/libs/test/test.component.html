@@ -29,6 +29,15 @@
         (statusChange)="($event)"
       >
       </app-speed-test-gauge>
+      <app-traceroute-test-bar 
+        *ngIf="user.executeQosMeasurement"
+        #startableTest 
+        [config]="qosConfig"
+        (finished)="tracerouteTestFinished($event)" 
+        (errorMsgChange)="errorMsg = $event" 
+        (statusChange)="($event)"
+      >
+      </app-traceroute-test-bar>
       <app-port-blocking-test-bar
         *ngIf="user.executeQosMeasurement"
         #startableTest
@@ -38,15 +47,6 @@
         (statusChange)="($event)"
       >
       </app-port-blocking-test-bar>
-      <app-traceroute-test-bar
-        *ngIf="user.executeQosMeasurement"
-        #startableTest
-        [config]="qosConfig"
-        (finished)="tracerouteTestFinished($event)"
-        (errorMsgChange)="errorMsg = $event"
-        (statusChange)="($event)"
-      >
-      </app-traceroute-test-bar>
     </app-test-series>
     <div class="warning-area" *ngIf="!user.executePingMeasurement && !user.executeDownloadMeasurement && !user.executeUploadMeasurement && !user.executeQosMeasurement">  
       <h2 class="warning-title">{{'NETTEST.ERROR.NO_MEASUREMENT_SELECTED_TITLE' | translate }}</h2>
