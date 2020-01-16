@@ -29,7 +29,6 @@ import { RequestsService } from '@nntool-typescript/core/services/requests.servi
 export class TracerouteTestImplementation extends TestImplementation<TracerouteTestConfig, TracerouteTestState> {
 
     private $state: Subject<TracerouteTestState>;
-    private currentConfig: TracerouteTestConfig;
 
     private timeoutHolder: any;
     private progressUpdateHolder: any;
@@ -53,11 +52,7 @@ export class TracerouteTestImplementation extends TestImplementation<TracerouteT
             return;
         }
 
-        this.currentConfig = config;
-
-        console.warn(this.currentConfig);
-
-        for (const test of this.currentConfig.TRACEROUTE) {
+        for (const test of config.TRACEROUTE) {
             if (!test.is_reverse || !test.host) {
                 continue;
             }

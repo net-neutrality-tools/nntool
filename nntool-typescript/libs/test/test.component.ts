@@ -225,7 +225,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
   }
 
   public portBlockingTestFinished(portBlockingTestResult: PortBlockingTestState): void {
-    const qosMeasurementResult: QoSMeasurementResult = this.createBasicQoSResult();
+    const qosMeasurementResult: QoSMeasurementResult = this.getCurrentQoSResult();
 
     for (const port of portBlockingTestResult.types[0].ports) {
       qosMeasurementResult.results.push({
@@ -243,14 +243,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
   }
 
   public tracerouteTestFinished(tracerouteTestResult: TracerouteTestState): void {
-
-    let qosResult: QoSMeasurementResult = undefined;
-    if (this.testResults.length > 0 && this.testResults[this.testResults.length - 1] instanceof QoSMeasurementResult) {
-      qosResult = this.testResults[this.testResults.length - 1] as QoSMeasurementResult;
-    } else {
-      qosResult = this.createBasicQoSResult();
-      this.testResults.push(qosResult);
-    }
+    const qosResult: QoSMeasurementResult = this.getCurrentQoSResult();
 
     let traceroute_result_details: Array<any> = new Array();
     if (tracerouteTestResult.result && tracerouteTestResult.result.hops) {
@@ -274,18 +267,35 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
       traceroute_objective_port: tracerouteTestResult.result.port,
       traceroute_result_hops: traceroute_result_details.length,
     });
-
   }
 
-  private createBasicQoSResult(): QoSMeasurementResult {
-    const qosMeasurementResult: QoSMeasurementResult = new QoSMeasurementResult();
-    qosMeasurementResult.deserialize_type = 'qos_result';
-    qosMeasurementResult.reason = null;
-    qosMeasurementResult.relative_end_time_ns = null;
-    qosMeasurementResult.relative_start_time_ns = null;
-    qosMeasurementResult.status = null;
-    qosMeasurementResult.results = [];
-    return qosMeasurementResult;
+  /**
+   * Returns a QoSMeasurementResult to which any new results shall be appended to
+   * (either creates a new one or, if one was already created, returns the previously created one)
+   */
+  private getCurrentQoSResult(): QoSMeasurementResult {
+
+    let qosResult: QoSMeasurementResult = undefined;
+    if (this.testResults.length > 0) {
+      for (let singleTest of this.testResults) {
+        if (singleTest instanceof QoSMeasurementResult) {
+          qosResult = singleTest;
+        }
+      }
+    }
+     
+    if (!qosResult) {
+      qosResult = new QoSMeasurementResult();
+      qosResult.deserialize_type = 'qos_result';
+      qosResult.reason = null;
+      qosResult.relative_end_time_ns = null;
+      qosResult.relative_start_time_ns = null;
+      qosResult.status = null;
+      qosResult.results = [];
+      this.testResults.push(qosResult);
+    }
+  
+    return qosResult;
   }
 
   private requestMeasurement(): void {
