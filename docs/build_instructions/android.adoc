@@ -6,7 +6,8 @@ The android application module can be found in the `android-app` directory.
 
 == Prerequisites
 
-* Linux (any Version)
+* Android Studio >= 3
+* Linux, macOS or Windows
 
 When building from the android studio IDE, the following steps are recommended:
 
