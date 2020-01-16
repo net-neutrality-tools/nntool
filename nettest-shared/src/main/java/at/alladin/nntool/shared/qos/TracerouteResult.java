@@ -33,6 +33,10 @@ public class TracerouteResult extends AbstractResult {
 	@SerializedName("traceroute_objective_host")
 	private String url;
 	
+	@JsonProperty("traceroute_objective_is_reverse")
+	@SerializedName("traceroute_objective_is_reverse")
+	private Boolean isReverse;
+	
 	@JsonProperty("traceroute_result_status")
 	@SerializedName("traceroute_result_status")
 	private String status;
@@ -147,6 +151,14 @@ public class TracerouteResult extends AbstractResult {
 		this.hops = hops;
 	}
 	
+	public Boolean getIsReverse() {
+		return isReverse;
+	}
+
+	public void setIsReverse(Boolean isReverse) {
+		this.isReverse = isReverse;
+	}
+
 	public List<PathElement> getResultEntries() {
 		return resultEntries;
 	}
@@ -157,9 +169,9 @@ public class TracerouteResult extends AbstractResult {
 
 	@Override
 	public String toString() {
-		return "TracerouteResult [url=" + url + ", status=" + status
-				+ ", duration=" + duration + ", timeout=" + timeout
-				+ ", maxHops=" + maxHops + ", hops=" + hops
-				+ ", resultEntries=" + resultEntries + "]";
+		return "TracerouteResult [url=" + url + ", isReverse=" + isReverse + ", status=" + status + ", duration="
+				+ duration + ", timeout=" + timeout + ", maxHops=" + maxHops + ", hops=" + hops + ", resultEntries="
+				+ resultEntries + "]";
 	}
+
 }
