@@ -19,9 +19,12 @@ package at.alladin.nettest.service.controller.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -43,16 +46,22 @@ import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
  *
  */
 @Service
+@ConditionalOnProperty(name = "controller.load-balancing.enabled", havingValue = "true", matchIfMissing = false)
 public class LoadBalancingService {
 
-	private final static String QUERY_VAR_PREFERRED_ID = "preferredId";
-	
 	private final Logger logger = LoggerFactory.getLogger(LoadBalancingService.class);
+	
+	private final static String QUERY_VAR_PREFERRED_ID = "preferredId";
 	
 	@Autowired
 	private StorageService storageService;
 	
 	private LoadBalancingSettingsDto settings;
+	
+	@PostConstruct
+	private void postConstruct() {
+		logger.debug("Load balancing is enabled");
+	}
 	
 	/**
 	 * 
@@ -63,7 +72,7 @@ public class LoadBalancingService {
 	public MeasurementServerDto getNextAvailableMeasurementServer(final String settingsUuid, final String preferredId) {
 		LoadBalancingSettingsDto settings = fetchSettings(settingsUuid);
 		if (settings == null) {
-				return null;
+			return null;
 		}
 		
 		if (settings.getNextFreeUrl() == null) {
@@ -91,14 +100,12 @@ public class LoadBalancingService {
 				final ApiResponse<MeasurementServerDto> response = responseEntity.getBody();
 				return response != null ? response.getData() : null;
 			}
-		}
-		catch (final Exception e) {
+		} catch (final Exception e) {
 			logger.info("Error fetching info from load balancing service: [{}] {}", settings.getNextFreeUrl(), e.getLocalizedMessage());
 			//e.printStackTrace();
 		}
 
 		return null;
-
 	}
 	
 	private LoadBalancingSettingsDto fetchSettings(final String settingsUuid) {

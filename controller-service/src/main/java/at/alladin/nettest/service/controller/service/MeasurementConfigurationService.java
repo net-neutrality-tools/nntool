@@ -54,7 +54,7 @@ public class MeasurementConfigurationService {
 	@Autowired
 	private ControllerServiceProperties controllerServiceProperties;
 
-    @Autowired
+    @Autowired(required = false)
     private LoadBalancingService loadBalancingService;
 
     public LmapControlDto getLmapControlDtoForCapabilities(final LmapCapabilityDto capabilities, boolean useIPv6) {
