@@ -56,7 +56,7 @@ public class LoadBalancingService {
 	@Autowired
 	private StorageService storageService;
 	
-	private LoadBalancingSettingsDto settings;
+	//private LoadBalancingSettingsDto settings;
 	
 	@PostConstruct
 	private void postConstruct() {

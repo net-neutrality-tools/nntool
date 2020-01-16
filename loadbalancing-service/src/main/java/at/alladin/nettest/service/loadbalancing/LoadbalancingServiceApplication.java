@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package at.alladin.nettest.service.loadbalancer;
+package at.alladin.nettest.service.loadbalancing;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -24,7 +24,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import at.alladin.nettest.service.loadbalancer.config.LoadbalancerServiceProperties;
+import at.alladin.nettest.service.loadbalancing.config.LoadbalancerServiceProperties;
 import at.alladin.nettest.shared.server.config.spring.DevelopmentWebCorsConfiguration;
 import at.alladin.nettest.shared.server.config.spring.MessageSourceConfiguration;
 import at.alladin.nettest.shared.server.helper.spring.SpringApplicationHelper;
@@ -42,7 +42,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.config.EnableCouchDbStor
 	LoadbalancerServiceProperties.class
 })
 @ComponentScan({
-	"at.alladin.nettest.service.loadbalancer", 
+	"at.alladin.nettest.service.loadbalancing", 
 	"at.alladin.nettest.shared.server.web.api.v1",
 })
 @Import({
@@ -51,17 +51,17 @@ import at.alladin.nettest.shared.server.storage.couchdb.config.EnableCouchDbStor
 })
 @EnableCouchDbStorage
 @EnableScheduling
-public class LoadbalancerServiceApplication extends SpringBootServletInitializer {
+public class LoadbalancingServiceApplication extends SpringBootServletInitializer {
 
 	/**
 	 * 
 	 */
-	private static final String CONFIGURATION_DIRECTORY_NAME = "loadbalancer-service";
+	private static final String CONFIGURATION_DIRECTORY_NAME = "loadbalancing-service";
 	
 	/**
 	 * 
 	 */
-	private static final Class<?> APPLICATION_CLASS = LoadbalancerServiceApplication.class;
+	private static final Class<?> APPLICATION_CLASS = LoadbalancingServiceApplication.class;
 	
 	/*
 	 * (non-Javadoc)
