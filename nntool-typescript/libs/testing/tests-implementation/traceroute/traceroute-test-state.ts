@@ -14,9 +14,21 @@
  * limitations under the License.
  ******************************************************************************/
 
-import { BasicTestState } from '../enums/basic-test-state.enum';
+import { TestState } from '../test-state';
 
-export abstract class TestState {
-  public basicState: BasicTestState;
-  public progress?: number;
+export class TracerouteTestState extends TestState {
+    public result: {
+        qos_test_uid?: string,
+        port?: number,
+        host?: string,
+        startTimeNs?: number,
+        endTimeNs?: number,
+        timeout?: number,
+        max_hops?: number,
+        is_reverse?: boolean,
+        hops?: Array<{
+            id: string,
+            ip: string
+        }>,
+    };
 }

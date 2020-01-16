@@ -178,7 +178,12 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 			}
 			else if (TASK_TRACEROUTE.equals(taskId)) {
 				if (nnTestSettings != null && nnTestSettings.getTracerouteServiceClazz() != null) {
-					test = new TracerouteTask(this, taskDesc, threadCounter++);	
+					final Object isReverse = taskDesc.getParams().get("is_reverse");
+					if (isReverse instanceof Boolean && (boolean) isReverse) {
+						System.out.println("Reverse Traceroute not yet implemented. Skipping TracerouteTask: " + taskDesc);
+					} else {
+						test = new TracerouteTask(this, taskDesc, threadCounter++);
+					}
 				}
 				else {
 					System.out.println("No TracerouteService implementation: Skipping TracerouteTask: " + taskDesc);

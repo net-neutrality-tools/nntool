@@ -14,9 +14,9 @@
  * limitations under the License.
  ******************************************************************************/
 
-import { BasicTestState } from '../enums/basic-test-state.enum';
+import { TestConfig } from '../test-config';
 
-export abstract class TestState {
-  public basicState: BasicTestState;
-  public progress?: number;
+//…
+export class TracerouteTestConfig extends TestConfig {
+    [key: string]: any;
 }

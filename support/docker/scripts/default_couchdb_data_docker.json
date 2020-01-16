@@ -1186,7 +1186,7 @@
         "test.website": "The website rendering test downloads a reference web page (mobile Kepler page by ETSI), checks completeness, correct rendering and measures duration.",
         "test.sip": "This test uses the Session Initiation Protocol (SIP) to establish (set up) and simulate short calls to determine internet telephony key performance indicators.",
         "timeout": "Test was not completed. Timeout exceeded!",
-        "trace.testinfo": "Traceroute Test Parameters:\nHost: %PARAM traceroute_objective_host%\nMax. Hops: %PARAM traceroute_objective_max_hops%\n\nTraceroute Test Results:\nHops Needed: %PARAM traceroute_result_hops%\nTraceroute Result: %PARAM traceroute_result_status%\n\nFull Route:\n%EVAL result=String(nn.parseTraceroute(traceroute_result_details))%",
+        "trace.testinfo": "Traceroute Test Parameters:\nHost: %PARAM traceroute_objective_host%\nIs reverse traceroute? %EVAL result=(typeof traceroute_objective_is_reverse != \"undefined\" && traceroute_objective_is_reverse?\"Yes\":\"No\") %\nMax. Hops: %PARAM traceroute_objective_max_hops%\n\nTraceroute Test Results:\nHops Needed: %PARAM traceroute_result_hops%\nTraceroute Result: %PARAM traceroute_result_status%\n\nFull Route:\n%EVAL result=String(nn.parseTraceroute(traceroute_result_details))%",
         "traceroute.failure": "An error occured during traceroute test.",
         "traceroute.success": "Traceroute test was successful.",
         "udp.failure": "UDP-Test failed. Some packets were lost.",

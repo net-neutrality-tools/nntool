@@ -73,7 +73,12 @@ public interface LmapTaskMapper {
 			if (objective.getType() == null) {
 				continue;
 			}
-			final QoSMeasurementTypeDto dtoType = QoSMeasurementTypeDto.valueOf(objective.getType().toString());
+			final QoSMeasurementTypeDto dtoType;
+			try {
+				dtoType = QoSMeasurementTypeDto.valueOf(objective.getType().toString());
+			} catch (Exception ex) {
+				continue;
+			}
 			if (!ret.getObjectives().containsKey(dtoType)) {
 				ret.getObjectives().put(dtoType, new ArrayList<>());
 			}
