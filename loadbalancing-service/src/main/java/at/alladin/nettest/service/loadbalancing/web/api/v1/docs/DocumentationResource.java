@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package at.alladin.nettest.service.loadbalancer.web.api.v1.docs;
+package at.alladin.nettest.service.loadbalancing.web.api.v1.docs;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,12 +22,12 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import at.alladin.nettest.service.loadbalancer.dto.LoadApiAllServersReport;
-import at.alladin.nettest.service.loadbalancer.dto.LoadApiMem;
-import at.alladin.nettest.service.loadbalancer.dto.LoadApiRates;
-import at.alladin.nettest.service.loadbalancer.dto.LoadApiReport;
-import at.alladin.nettest.service.loadbalancer.dto.LoadApiRequest;
-import at.alladin.nettest.service.loadbalancer.dto.LoadApiResponse;
+import at.alladin.nettest.service.loadbalancing.dto.LoadApiAllServersReport;
+import at.alladin.nettest.service.loadbalancing.dto.LoadApiMem;
+import at.alladin.nettest.service.loadbalancing.dto.LoadApiRates;
+import at.alladin.nettest.service.loadbalancing.dto.LoadApiReport;
+import at.alladin.nettest.service.loadbalancing.dto.LoadApiRequest;
+import at.alladin.nettest.service.loadbalancing.dto.LoadApiResponse;
 import at.alladin.nettest.shared.server.web.api.v1.AbstractDocumentationResource;
 
 /**

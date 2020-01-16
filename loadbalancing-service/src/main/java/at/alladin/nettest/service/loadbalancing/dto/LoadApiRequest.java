@@ -14,9 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package at.alladin.nettest.service.loadbalancer.dto;
-
-import java.util.List;
+package at.alladin.nettest.service.loadbalancing.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -25,21 +23,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author lb@alladin.at
  *
  */
-public class LoadApiAllServersReport {
+public class LoadApiRequest {
 
-	@JsonProperty("report_list")
-	List<LoadApiReport> reportList;
+	@JsonProperty("cmd")
+	final String cmd = "load";
+	
+	@JsonProperty("secret")
+	String secret;
 
-	public List<LoadApiReport> getReportList() {
-		return reportList;
+	public String getSecret() {
+		return secret;
 	}
 
-	public void setReportList(List<LoadApiReport> reportList) {
-		this.reportList = reportList;
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
+
+	public String getCmd() {
+		return cmd;
 	}
 
 	@Override
 	public String toString() {
-		return "LoadApiAllServersReport [reportList=" + reportList + "]";
+		return "LoadApiRequest [cmd=" + cmd + ", secret=" + secret + "]";
 	}
 }

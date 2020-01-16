@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package at.alladin.nettest.service.loadbalancer.dto;
+package at.alladin.nettest.service.loadbalancing.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -23,28 +23,49 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author lb@alladin.at
  *
  */
-public class LoadApiRequest {
+public class LoadApiMem {
 
-	@JsonProperty("cmd")
-	final String cmd = "load";
+	@JsonProperty("buffers")
+	String buffers;
 	
-	@JsonProperty("secret")
-	String secret;
+	@JsonProperty("cached")	
+	String cached;
+	
+	@JsonProperty("free")
+	String free;
+	
+	@JsonProperty("total")
+	String total;
 
-	public String getSecret() {
-		return secret;
+	public String getBuffers() {
+		return buffers;
 	}
 
-	public void setSecret(String secret) {
-		this.secret = secret;
+	public void setBuffers(String buffers) {
+		this.buffers = buffers;
 	}
 
-	public String getCmd() {
-		return cmd;
+	public String getCached() {
+		return cached;
 	}
 
-	@Override
-	public String toString() {
-		return "LoadApiRequest [cmd=" + cmd + ", secret=" + secret + "]";
+	public void setCached(String cached) {
+		this.cached = cached;
+	}
+
+	public String getFree() {
+		return free;
+	}
+
+	public void setFree(String free) {
+		this.free = free;
+	}
+
+	public String getTotal() {
+		return total;
+	}
+
+	public void setTotal(String total) {
+		this.total = total;
 	}
 }

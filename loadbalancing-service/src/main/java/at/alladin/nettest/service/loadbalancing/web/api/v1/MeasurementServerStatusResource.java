@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package at.alladin.nettest.service.loadbalancer.web.api.v1;
+package at.alladin.nettest.service.loadbalancing.web.api.v1;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import at.alladin.nettest.service.loadbalancer.dto.LoadApiAllServersReport;
-import at.alladin.nettest.service.loadbalancer.dto.LoadApiReport;
-import at.alladin.nettest.service.loadbalancer.service.MeasurementServerLoadMonitorService;
-import at.alladin.nettest.service.loadbalancer.service.MeasurementServerLoadService;
+import at.alladin.nettest.service.loadbalancing.dto.LoadApiAllServersReport;
+import at.alladin.nettest.service.loadbalancing.dto.LoadApiReport;
+import at.alladin.nettest.service.loadbalancing.service.MeasurementServerLoadMonitorService;
+import at.alladin.nettest.service.loadbalancing.service.MeasurementServerLoadService;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.MeasurementServerDto;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;

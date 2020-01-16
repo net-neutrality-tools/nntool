@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package at.alladin.nettest.service.loadbalancer.service;
+package at.alladin.nettest.service.loadbalancing.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,10 +31,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 
-import at.alladin.nettest.service.loadbalancer.config.LoadbalancerServiceProperties;
-import at.alladin.nettest.service.loadbalancer.dto.LoadApiReport;
-import at.alladin.nettest.service.loadbalancer.dto.LoadApiResponse;
-import at.alladin.nettest.service.loadbalancer.service.MeasurementServerLoadService.LoadCallable;
+import at.alladin.nettest.service.loadbalancing.config.LoadbalancerServiceProperties;
+import at.alladin.nettest.service.loadbalancing.dto.LoadApiReport;
+import at.alladin.nettest.service.loadbalancing.dto.LoadApiResponse;
+import at.alladin.nettest.service.loadbalancing.service.MeasurementServerLoadService.LoadCallable;
 import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.MeasurementServerDto;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 

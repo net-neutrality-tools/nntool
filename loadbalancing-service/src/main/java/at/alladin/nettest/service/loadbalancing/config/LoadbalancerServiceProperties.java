@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package at.alladin.nettest.service.loadbalancer.config;
+package at.alladin.nettest.service.loadbalancing.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
