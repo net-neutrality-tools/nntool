@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package at.alladin.nettest.shared.server.service;
+package at.alladin.nettest.service.controller.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +50,9 @@ public class LoadBalancingService {
 	private final Logger logger = LoggerFactory.getLogger(LoadBalancingService.class);
 	
 	@Autowired
-	StorageService storageService;
+	private StorageService storageService;
 	
-	LoadBalancingSettingsDto settings;
+	private LoadBalancingSettingsDto settings;
 	
 	/**
 	 * 

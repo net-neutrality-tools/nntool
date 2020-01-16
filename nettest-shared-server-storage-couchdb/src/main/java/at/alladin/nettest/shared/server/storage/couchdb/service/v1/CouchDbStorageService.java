@@ -16,16 +16,6 @@
 
 package at.alladin.nettest.shared.server.storage.couchdb.service.v1;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
@@ -38,6 +28,18 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
@@ -62,7 +64,6 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasuremen
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.LoadBalancingSettingsDto;
 import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.MeasurementServerDto;
-import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nettest.shared.nntool.Helperfunctions;
 import at.alladin.nettest.shared.server.helper.IpAddressMatcher;
 import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
@@ -113,6 +114,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportMode
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.MeasurementAgentMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsResponseMapper;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.shared.qos.TcpResult;
 import at.alladin.nntool.shared.qos.TracerouteResult;
 import at.alladin.nntool.shared.qos.TracerouteResult.PathElement;
@@ -929,5 +931,20 @@ public class CouchDbStorageService implements StorageService {
 		});
 		
 		return translationMap;
+	}
+	
+	public Map<String, Object> getAllSettings(String settingsUuid) {
+		final Settings settings = settingsRepository.findByUuid(settingsUuid);
+		if (settings == null) {
+			return null;
+		}
+		
+		settings.setId(null);
+		settings.setRev(null);
+		
+		final ObjectMapper customMapper = objectMapper.copy();
+		customMapper.setSerializationInclusion(Include.NON_NULL);
+		
+		return (Map<String, Object>) customMapper.convertValue(settings, new TypeReference<Map<String, Object>>() {});
 	}
 }
