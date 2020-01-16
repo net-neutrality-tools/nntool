@@ -15,5 +15,6 @@
  ******************************************************************************/
 
 export enum BarUIShowableTestTypeEnum {
-  UDP = 'UDP'
+  UDP = 'UDP',
+  TRACEROUTE = 'TRACEROUTE'
 }
