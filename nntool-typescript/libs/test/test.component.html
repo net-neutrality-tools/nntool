@@ -29,6 +29,15 @@
         (statusChange)="($event)"
       >
       </app-speed-test-gauge>
+      <app-traceroute-test-bar 
+        *ngIf="user.executeQosMeasurement"
+        #startableTest 
+        [config]="qosConfig"
+        (finished)="tracerouteTestFinished($event)" 
+        (errorMsgChange)="errorMsg = $event" 
+        (statusChange)="($event)"
+      >
+      </app-traceroute-test-bar>
       <app-port-blocking-test-bar
         *ngIf="user.executeQosMeasurement"
         #startableTest
