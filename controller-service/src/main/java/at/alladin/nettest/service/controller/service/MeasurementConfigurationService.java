@@ -74,6 +74,7 @@ public class MeasurementConfigurationService {
 
 		if (loadBalancingService != null) {
 			MeasurementServerDto serverDto = loadBalancingService.getNextAvailableMeasurementServer(controllerServiceProperties.getSettingsUuid(), null);
+			logger.debug("Got measurement peer from load balancer: {}", serverDto);
 			if (serverDto != null && ret.getTasks() != null) {
 	            Integer port = null;
 	            boolean encryption = false;
