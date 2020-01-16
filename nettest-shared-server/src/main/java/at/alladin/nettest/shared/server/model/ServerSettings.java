@@ -16,18 +16,40 @@
 
 package at.alladin.nettest.shared.server.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import at.alladin.nettest.shared.server.service.SpeedtestDetailGroup;
+
 public class ServerSettings {
 
+	/**
+	 * The list defining the groups returned in the detail measurement response.
+	 */
+	@JsonPropertyDescription("The list defining the groups returned in the detail measurement response.")
+	@JsonProperty("speedtest_detail_groups")
+	@SerializedName("speedtest_detail_groups")
+	@Expose
+	private List<SpeedtestDetailGroup> speedtestDetailGroups = new ArrayList<>();
+	
 	@Expose
 	@SerializedName("speed_thresholds")
 	@JsonProperty("speed_thresholds")
 	private SpeedThresholds speedThresholds = new SpeedThresholds();
+	
+	public List<SpeedtestDetailGroup> getSpeedtestDetailGroups() {
+		return speedtestDetailGroups;
+	}
+	
+	public void setSpeedtestDetailGroups(List<SpeedtestDetailGroup> speedtestDetailGroups) {
+		this.speedtestDetailGroups = speedtestDetailGroups;
+	}
 	
 	public SpeedThresholds getSpeedThresholds() {
 		return speedThresholds;
