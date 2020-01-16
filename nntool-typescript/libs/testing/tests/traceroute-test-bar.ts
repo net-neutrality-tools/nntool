@@ -22,8 +22,8 @@ import { BarUIShowableTestTypeEnum } from '../tests-ui/bar/enums/bar-ui-showable
 import { ConfigService } from '../../core/services/config.service';
 import { WINDOW } from '../../core/services/window.service';
 import { TracerouteTestImplementation } from '../tests-implementation/traceroute/traceroute-test-implementation';
-import { SpeedTestConfig } from '../tests-implementation/speed/speed-test-config';
 import { TracerouteTestState } from '../tests-implementation/traceroute/traceroute-test-state';
+import { TracerouteTestConfig } from '../tests-implementation/traceroute/traceroute-test-config';
 
 @Component({
     // needs to be mentioned here, but also mentioned in gauge-ui.ts for reference
@@ -32,7 +32,7 @@ import { TracerouteTestState } from '../tests-implementation/traceroute/tracerou
 })
 export class TracerouteTestBarComponent extends BarUIComponent<
     TracerouteTestImplementation,
-    SpeedTestConfig,
+    TracerouteTestConfig,
     TracerouteTestState
 >  implements OnDestroy {
     // TODO: rethink DI in this use case, testImplementation should not be one instance, if there were more than one test at once
