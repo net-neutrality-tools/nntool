@@ -6,7 +6,7 @@
 
 spring:
   application:
-    name: result-service
+    name: loadbalancing-service
 
   jackson:
     serialization:
@@ -17,7 +17,7 @@ server:
   port: 8087
 
 # ===================================================================
-# Result service specific properties
+# Load balancer specific properties
 # ===================================================================
 
 loadbalancer:

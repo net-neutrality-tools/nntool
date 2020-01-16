@@ -36,16 +36,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.alladin.nettest.service.search.helper.CoarseResultHelper;
 import at.alladin.nettest.service.search.service.SearchService;
+import at.alladin.nettest.service.search.service.SettingsService;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiPagination;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.detail.DetailMeasurementResponse;
 import at.alladin.nettest.shared.server.helper.ResponseHelper;
 import at.alladin.nettest.shared.server.helper.swagger.ApiPageable;
+import at.alladin.nettest.shared.server.model.ServerSettings;
 import at.alladin.nettest.shared.server.service.GroupedMeasurementService;
 import at.alladin.nettest.shared.server.service.SpeedtestDetailGroup;
 import io.swagger.annotations.ApiParam;
@@ -68,10 +69,13 @@ public class MeasurementSearchResource {
 	private SearchService searchService;
 	
 	@Autowired
-	private ObjectMapper objectMapper;
+	private SettingsService settingsService;
 	
 	@Autowired
 	private GroupedMeasurementService groupedMeasurementService;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 	
 	/**
 	 * Retrieve a paginated and searched list of open-data measurements.
@@ -141,257 +145,9 @@ public class MeasurementSearchResource {
 		@io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = ApiResponse.class)
 	})
 	@GetMapping(value = "/{openDataUuid:[^\\\\.]+}/details", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<ApiResponse<DetailMeasurementResponse>> getMeasurementDetails(@ApiParam(value = "The open-data UUID", required = true) @PathVariable String openDataUuid, Locale locale) {
-		
-		// TODO: hardcoded until we have settings in Elasticsearch
-		final String groupSettings = "[\n" + 
-				"    {\n" + 
-				"      \"key\": \"group_overview\",\n" + 
-				"      \"icon\": \"b\",\n" + 
-				"      \"values\": [\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.throughputAvgDownloadBps\",\n" + 
-				"          \"unit\": \"RESULT_WIFI_LINK_SPEED_UNIT\",\n" + 
-				"          \"format\": \"DIV_1E6\",\n" + 
-				"          \"translation_key\": \"RESULT_DOWNLOAD\",\n" + 
-				"          \"share_text\": \"RESULT_SHARE_DOWNLOAD\",\n" + 
-				"          \"share_priority\": 1\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.throughputAvgUploadBps\",\n" + 
-				"          \"unit\": \"RESULT_WIFI_LINK_SPEED_UNIT\",\n" + 
-				"          \"format\": \"DIV_1E6\",\n" + 
-				"          \"translation_key\": \"RESULT_UPLOAD\",\n" + 
-				"          \"share_text\": \"RESULT_SHARE_UPLOAD\",\n" + 
-				"          \"share_priority\": 2\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.rttInfo.averageNs\",\n" + 
-				"          \"format\": \"DIV_1E6\",\n" + 
-				"          \"unit\": \"RESULT_MS_UNIT\",\n" + 
-				"          \"translation_key\": \"RESULT_PING\",\n" + 
-				"          \"share_text\": \"RESULT_SHARE_PING\",\n" + 
-				"          \"share_priority\": 3\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"openDataUuid\",\n" + 
-				"          \"translation_key\": \"key_open_test_uuid\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"systemUuid\",\n" + 
-				"          \"translation_key\": \"result.system_uuid\",\n" + 
-				"          \"share_text\": \"RESULT_SHARE_SYSTEM_UUID\",\n" + 
-				"          \"share_priority\": 5\n" + 
-				"        }\n" + 
-				"      ]\n" + 
-				"    },\n" + 
-				"    {\n" + 
-				"      \"key\": \"group_network\",\n" + 
-				"      \"icon\": \"d\",\n" + 
-				"      \"values\": [\n" + 
-				"        {\n" + 
-				"          \"key\": \"networkInfo.networkPointInTimeInfo.agentPublicIp\",\n" + 
-				"          \"translation_key\": \"key_client_public_ip\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"networkInfo.networkPointInTimeInfo.agentPrivateIp\",\n" + 
-				"          \"translation_key\": \"key_client_local_ip\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"networkInfo.networkPointInTimeInfo.agentPublicIpCountryCode\",\n" + 
-				"          \"translation_key\": \"key_country_geoip\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"networkInfo.networkPointInTimeInfo.networkTypeName\",\n" + 
-				"          \"translation_key\": \"RESULT_NETWORK_TYPE\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"networkInfo.networkPointInTimeInfo.networkTypeGroupName\",\n" + 
-				"          \"translation_key\": \"result.network.network_group_name\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"networkInfo.networkPointInTimeInfo.providerShortName\",\n" + 
-				"          \"translation_key\": \"key_provider\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"networkInfo.networkPointInTimeInfo.ssid\",\n" + 
-				"          \"translation_key\": \"key_wifi_ssid\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"networkInfo.networkPointInTimeInfo.bssid\",\n" + 
-				"          \"translation_key\": \"key_wifi_bssid\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"networkInfo.networkPointInTimeInfo.networkOperatorMccMnc\",\n" + 
-				"          \"translation_key\": \"result.network.provider_mcc_mnc\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"networkInfo.networkPointInTimeInfo.networkOperatorName\",\n" + 
-				"          \"translation_key\": \"key_network_operator_name\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"networkInfo.networkPointInTimeInfo.simOperatorName\",\n" + 
-				"          \"translation_key\": \"key_network_sim_operator_name\"\n" + 
-				"        }\n" + 
-				"      ]\n" + 
-				"    },\n" + 
-				"    {\n" + 
-				"      \"key\": \"group_device\",\n" + 
-				"      \"icon\": \"g\",\n" + 
-				"      \"values\": [\n" + 
-				"        {\n" + 
-				"          \"key\": \"deviceInfo.osInfo.name\",\n" + 
-				"          \"translation_key\": \"result.os\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"deviceInfo.osInfo.version\",\n" + 
-				"          \"translation_key\": \"key_os_version\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"deviceInfo.codeName\",\n" + 
-				"          \"translation_key\": \"result.device.codename\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"deviceInfo.model\",\n" + 
-				"          \"translation_key\": \"key_model\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"agentInfo.timezone\",\n" + 
-				"          \"translation_key\": \"key_timezone\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"geoLocationInfo.distanceMovedMetres\",\n" + 
-				"          \"translation_key\": \"result.moved_distance\",\n" + 
-				"          \"unit\": \"result.moved_distance.unit\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"agentInfo.appVersionName\",\n" + 
-				"          \"translation_key\": \"key_client_software_version\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"agentInfo.timezone\",\n" + 
-				"          \"translation_key\": \"key_timezone\"\n" + 
-				"        }\n" + 
-				"      ]\n" + 
-				"    },\n" + 
-				"    {\n" + 
-				"      \"key\": \"speed_parameter_group\",\n" + 
-				"      \"icon\": \"B\",\n" + 
-				"      \"values\": [\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.throughputAvgDownloadBps\",\n" + 
-				"          \"unit\": \"RESULT_WIFI_LINK_SPEED_UNIT\",\n" + 
-				"          \"format\": \"DIV_1E6\",\n" + 
-				"          \"translation_key\": \"RESULT_DOWNLOAD\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.bytesDownload\",\n" + 
-				"          \"format\": \"DIV_1E6\",\n" + 
-				"          \"unit\": \"RESULT_TOTAL_BYTES_UNIT\",\n" + 
-				"          \"translation_key\": \"key_speed_download_bytes\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.durationDownloadNs\",\n" + 
-				"          \"unit\": \"RESULT_DURATION_UNIT\",\n" + 
-				"          \"format\": \"DIV_1E9\",\n" + 
-				"          \"translation_key\": \"key_duration_dl\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.throughputAvgUploadBps\",\n" + 
-				"          \"unit\": \"RESULT_WIFI_LINK_SPEED_UNIT\",\n" + 
-				"          \"format\": \"DIV_1E6\",\n" + 
-				"          \"translation_key\": \"RESULT_UPLOAD\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.bytesUpload\",\n" + 
-				"          \"format\": \"DIV_1E6\",\n" + 
-				"          \"unit\": \"RESULT_TOTAL_BYTES_UNIT\",\n" + 
-				"          \"translation_key\": \"key_speed_upload_bytes\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.durationUploadNs\",\n" + 
-				"          \"unit\": \"RESULT_DURATION_UNIT\",\n" + 
-				"          \"format\": \"DIV_1E9\",\n" + 
-				"          \"translation_key\": \"key_duration_ul\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.rttInfo.averageNs\",\n" + 
-				"          \"format\": \"DIV_1E6\",\n" + 
-				"          \"unit\": \"RESULT_MS_UNIT\",\n" + 
-				"          \"translation_key\": \"key_ping_average\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.rttInfo.medianNs\",\n" + 
-				"          \"format\": \"DIV_1E6\",\n" + 
-				"          \"unit\": \"RESULT_MS_UNIT\",\n" + 
-				"          \"translation_key\": \"key_ping_median\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.rttInfo.minNs\",\n" + 
-				"          \"format\": \"DIV_1E6\",\n" + 
-				"          \"unit\": \"RESULT_MS_UNIT\",\n" + 
-				"          \"translation_key\": \"key_ping_min\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.rttInfo.maxNs\",\n" + 
-				"          \"format\": \"DIV_1E6\",\n" + 
-				"          \"unit\": \"RESULT_MS_UNIT\",\n" + 
-				"          \"translation_key\": \"key_ping_max\"\n" + 
-				"        }\n" + 
-				"      ]\n" + 
-				"    },\n" + 
-				"    {\n" + 
-				"      \"key\": \"group_connectivity\",\n" + 
-				"      \"icon\": \"q\",\n" + 
-				"      \"values\": [\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.connectionInfo.address\",\n" + 
-				"          \"translation_key\": \"key_server_address\",\n" + 
-				"          \"share_text\": \"RESULT_SHARE_MEASUREMENT_SERVER_ADDRESS\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.connectionInfo.ipAddress\",\n" + 
-				"          \"translation_key\": \"key_server_ip\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.connectionInfo.port\",\n" + 
-				"          \"translation_key\": \"key_port\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.connectionInfo.encrypted\",\n" + 
-				"          \"translation_key\": \"key_encryption\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.connectionInfo.agentInterfaceTotalTraffic.bytesRx\",\n" + 
-				"          \"translation_key\": \"result.connection.total_bytes_received\",\n" + 
-				"          \"unit\": \"RESULT_TOTAL_BYTES_UNIT\",\n" + 
-				"          \"format\": \"DIV_1E6\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.connectionInfo.agentInterfaceTotalTraffic.bytesTx\",\n" + 
-				"          \"translation_key\": \"result.connection.total_bytes_transmitted\",\n" + 
-				"          \"unit\": \"RESULT_TOTAL_BYTES_UNIT\",\n" + 
-				"          \"format\": \"DIV_1E6\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.connectionInfo.actualNumStreamsDownload\",\n" + 
-				"          \"translation_key\": \"key_num_threads\"\n" + 
-				"        },\n" + 
-				"        {\n" + 
-				"          \"key\": \"speed.connectionInfo.actualNumStreamsUpload\",\n" + 
-				"          \"translation_key\": \"key_num_threads_ul\"\n" + 
-				"        }\n" + 
-				"      ]\n" + 
-				"    }\n" + 
-				"  ]";
-		
-		List<SpeedtestDetailGroup> groupStructure = null;
-		
-		try {
-			groupStructure = objectMapper.readValue(groupSettings, new TypeReference<List<SpeedtestDetailGroup>>() {});
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
+	public ResponseEntity<ApiResponse<DetailMeasurementResponse>> getMeasurementDetails(@ApiParam(value = "The open-data UUID", required = true) @PathVariable String openDataUuid, Locale locale) {		
+		final ServerSettings settings = settingsService.getSettings();
+		List<SpeedtestDetailGroup> groupStructure = settings.getSpeedtestDetailGroups();
 		
 		final Map<String, Object> measurementAsMap = searchService.findOneByOpenDataUuid(openDataUuid);
 		if (measurementAsMap == null) {

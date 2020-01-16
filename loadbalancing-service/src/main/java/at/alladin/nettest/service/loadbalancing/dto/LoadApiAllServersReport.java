@@ -14,29 +14,32 @@
  * limitations under the License.
  ******************************************************************************/
 
-package at.alladin.nettest.service.loadbalancer.web.api.v1;
+package at.alladin.nettest.service.loadbalancing.dto;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
-import at.alladin.nettest.shared.berec.collector.api.v1.dto.version.VersionResponse;
-import at.alladin.nettest.shared.server.web.api.v1.AbstractVersionResource;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * This controller is used to provide version information.
- *
- * @author alladin-IT GmbH (bp@alladin.at)
+ * 
+ * @author lb@alladin.at
  *
  */
-@RestController
-@RequestMapping("/api/v1/versions")
-public class VersionResource extends AbstractVersionResource {
+public class LoadApiAllServersReport {
+
+	@JsonProperty("report_list")
+	List<LoadApiReport> reportList;
+
+	public List<LoadApiReport> getReportList() {
+		return reportList;
+	}
+
+	public void setReportList(List<LoadApiReport> reportList) {
+		this.reportList = reportList;
+	}
 
 	@Override
-	public VersionResponse getVersionResponse() {
-		final VersionResponse versionResponse = new VersionResponse();
-		versionResponse.setLoadbalancerServiceVersion(getVersionInformation());
-
-		return versionResponse;
+	public String toString() {
+		return "LoadApiAllServersReport [reportList=" + reportList + "]";
 	}
 }
