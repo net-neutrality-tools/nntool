@@ -24,6 +24,7 @@ import { BarUIState } from './bar-ui-state';
 import { BarUIShowableTestTypeEnum } from './enums/bar-ui-showable-test-type.enum';
 import { ConfigService } from '../../../core/services/config.service';
 import { WINDOW } from '../../../core/services/window.service';
+import { BarTestResult } from './bar-test-result';
 
 class Point {
   constructor(public x: number, public y: number) {}
@@ -84,7 +85,8 @@ export abstract class BarUIComponent<T extends TestImplementation<TC, TS>, TC ex
 
   private configureBarUI(config: any) {
     this.translations = {
-      UDP: 'UDP'
+      UDP: 'UDP',
+      TRACEROUTE: 'TRACEROUTE'
     };
 
     this.barColors = {
@@ -129,15 +131,13 @@ export abstract class BarUIComponent<T extends TestImplementation<TC, TS>, TC ex
     this.clear();
     if (state && state.types) {
       state.types.forEach(
-        (type: {
-          key: BarUIShowableTestTypeEnum;
-          ports: Array<{
-            number: number;
-            reachable: boolean;
-            finished: boolean;
-          }>;
-        }) => {
-          if (type.key === BarUIShowableTestTypeEnum.UDP) {
+        (type: BarTestResult) => {
+          if (type.progress) {
+            this.drawBar(1, this.barColors.baseColor);
+            this.drawBar(type.progress, this.barColors.valueColor);
+            this.drawBarName(this.translations[type.key], this.barColors.fontColor);
+          }
+          else if (type.key === BarUIShowableTestTypeEnum.UDP) {
             this.drawBar(1, this.barColors.baseColor);
             this.drawBar(this.calculateProgressOfTestType(type), this.barColors.valueColor);
             this.drawBarName(this.translations[type.key], this.barColors.fontColor);
@@ -211,14 +211,7 @@ export abstract class BarUIComponent<T extends TestImplementation<TC, TS>, TC ex
     return new Point(canvas.width / 2, canvas.height / 2);
   }
 
-  private calculateProgressOfTestType = (type: {
-    key: BarUIShowableTestTypeEnum;
-    ports: Array<{
-      number: number;
-      reachable: boolean;
-      finished: boolean;
-    }>;
-  }): number => {
+  private calculateProgressOfTestType = (type: BarTestResult): number => {
     const numberOfPortsToTest = type.ports.length;
     let numberOfTestedPorts = 0;
 

@@ -156,15 +156,18 @@ public class SystemApi {
 		for (int i = 0; i < traceRoute.length(); i++) {
 			final JSONObject e = traceRoute.getJSONObject(i);
 			sb.append(anonymizeIp(e.getString("host")));
-			sb.append("  time=");
-			try {
-				sb.append(DEFAULT_DECIMAL_FORMAT.format((float)e.getLong("time") / 1000000f));
-				sb.append("ms\n");
+			if (e.has("time")) {
+				sb.append("  time=");
+				try {
+					sb.append(DEFAULT_DECIMAL_FORMAT.format((float)e.getLong("time") / 1000000f));
+					sb.append("ms");
+				}
+				catch (Exception ex) {
+					sb.append(e.getLong("time"));
+					sb.append("ns");
+				}
 			}
-			catch (Exception ex) {
-				sb.append(e.getLong("time"));
-				sb.append("ns\n");
-			}
+			sb.append("\n");
 		}
 		
 		return sb.toString();
@@ -181,15 +184,18 @@ public class SystemApi {
 			if (ele instanceof Map) {
 				Map<String, Object> e = (Map<String, Object>) ele;
 				sb.append(anonymizeIp(String.valueOf(e.get("host"))));
-				sb.append("  time=");
-				try {
-					sb.append(DEFAULT_DECIMAL_FORMAT.format(Float.valueOf(String.valueOf(e.get("time"))) / 1000000f));
-					sb.append("ms\n");
+				if (e.containsKey("time")) {
+					sb.append("  time=");
+					try {
+						sb.append(DEFAULT_DECIMAL_FORMAT.format(Float.valueOf(String.valueOf(e.get("time"))) / 1000000f));
+						sb.append("ms");
+					}
+					catch (Exception ex) {
+						sb.append(e.get("time"));
+						sb.append("ns");
+					}
 				}
-				catch (Exception ex) {
-					sb.append(e.get("time"));
-					sb.append("ns\n");
-				}				
+				sb.append("\n");
 			}
 			else if (ele instanceof TracerouteResult.PathElement) {
 				TracerouteResult.PathElement e = (TracerouteResult.PathElement) ele;

@@ -68,8 +68,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
       wsWss: config.encryption ? 1 : 0,
       wsAuthToken: 'placeholderToken',
       wsAuthTimestamp: 'placeholderTimestamp',
-      performRouteToClientLookup: true,
-      routeToClientTargetPort: 8080,
+      performRouteToClientLookup: false,
       rtt: {
         performMeasurement: this.userService.user.executePingMeasurement
       },

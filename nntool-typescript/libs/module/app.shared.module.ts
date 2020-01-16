@@ -39,6 +39,8 @@ import { PagesModule } from '../pages/pages.module';
 import { SharedModule } from '../shared/shared.module';
 import { environment } from '@env/environment';
 import { LoopSettingsComponent } from '@nntool-typescript/testing/tests/loop-settings';
+import { TracerouteTestBarComponent } from '@nntool-typescript/testing/tests/traceroute-test-bar';
+import { TracerouteTestImplementation } from '@nntool-typescript/testing/tests-implementation/traceroute/traceroute-test-implementation';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -78,10 +80,11 @@ const MAIN_DECLARATIONS = [];
     ...TEST_DECLARATIONS,
     SpeedTestGaugeComponent,
     PortBlockingTestBarComponent,
+    TracerouteTestBarComponent,
     LoopSettingsComponent,
     TestSeriesComponent
   ],
-  providers: [...TEST_PROVIDERS, SpeedTestImplementation, PortBlockingTestImplementation],
+  providers: [...TEST_PROVIDERS, SpeedTestImplementation, PortBlockingTestImplementation, TracerouteTestImplementation],
   exports: [TranslateModule, BrowserModule, BrowserAnimationsModule, CoreModule]
 })
 export class AppSharedModule {}
