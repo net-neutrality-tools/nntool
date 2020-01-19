@@ -1,7 +1,7 @@
 /*!
     \file Ias.js
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2020-01-14
+    \date Last update: 2020-01-19
 
     Copyright (C) 2016 - 2020 zafaco GmbH
 
@@ -603,6 +603,18 @@ function Ias()
             return;
         }
 
+        if (typeof require !== 'undefined')
+        {
+            if (wsMeasurementParameters.wsTargets[0].indexOf('ipv6') !== -1)
+            {
+                wsMeasurementParameters.ndServerFamily = 6;
+            }
+            else if (wsMeasurementParameters.wsTargets[0].indexOf('ipv4') !== -1)
+            {
+                wsMeasurementParameters.ndServerFamily = 4;
+            }
+        }
+
         if (performRttMeasurement && !performedRttMeasurement)
         {
             setEndTimestamps();
@@ -696,17 +708,6 @@ function Ias()
             timestampKPIs.download_start = jsTool.getTimestamp() * 1000 * 1000;
         }
         wsMeasurementParameters.testCase = 'download';
-        if (typeof require !== 'undefined')
-        {
-            if (wsMeasurementParameters.wsTargets[0].indexOf('ipv6') !== -1)
-            {
-                wsMeasurementParameters.ndServerFamily = 6;
-            }
-            else if (wsMeasurementParameters.wsTargets[0].indexOf('ipv4') !== -1)
-            {
-                wsMeasurementParameters.ndServerFamily = 4;
-            }
-        }
         wsControl.measurementStart(JSON.stringify(wsMeasurementParameters));
     }
 
