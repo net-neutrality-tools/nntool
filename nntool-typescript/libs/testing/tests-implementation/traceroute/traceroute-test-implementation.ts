@@ -52,10 +52,14 @@ export class TracerouteTestImplementation extends TestImplementation<TracerouteT
             return;
         }
 
+        let foundValidTest: boolean = false;
+
         for (const test of config.TRACEROUTE) {
             if (!test.is_reverse || !test.host) {
                 continue;
             }
+
+            foundValidTest = true;
 
             if (!test.timeout) {
                 test.timeout = 10000;
@@ -100,6 +104,16 @@ export class TracerouteTestImplementation extends TestImplementation<TracerouteT
                 this.$state.next(state);
 
             });
+        }
+
+        if (!foundValidTest) {
+            let state = this.generateInitState();
+            state.basicState = BasicTestState.RUNNING;
+            this.$state.next(state);
+
+            state = this.generateInitState();
+            state.basicState = BasicTestState.ENDED;
+            this.$state.next(state);
         }
     };
 
