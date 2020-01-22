@@ -238,11 +238,13 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
         udp_objective_out_port: port.number
       });
     }
-
-    this.testResults.push(qosMeasurementResult);
+    
   }
 
   public tracerouteTestFinished(tracerouteTestResult: TracerouteTestState): void {
+    if (!tracerouteTestResult.result || !tracerouteTestResult.result.is_reverse) {
+      return;
+    }
     const qosResult: QoSMeasurementResult = this.getCurrentQoSResult();
 
     let traceroute_result_details: Array<any> = new Array();
@@ -267,6 +269,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
       traceroute_objective_port: tracerouteTestResult.result.port,
       traceroute_result_hops: traceroute_result_details.length,
     });
+    
   }
 
   /**
