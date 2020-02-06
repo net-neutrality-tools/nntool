@@ -36,6 +36,7 @@ public enum QoSMeasurementType {
     WEBSITE,
     ECHO_PROTOCOL,
     SIP,
+    AUDIO_STREAMING,
 
     MKIT_DASH,
     MKIT_WEB_CONNECTIVITY;
