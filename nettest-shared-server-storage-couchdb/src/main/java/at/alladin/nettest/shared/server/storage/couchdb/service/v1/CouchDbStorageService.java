@@ -114,6 +114,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportMode
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.MeasurementAgentMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsResponseMapper;
+import at.alladin.nntool.shared.qos.AudioStreamingResult;
 import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.shared.qos.TcpResult;
 import at.alladin.nntool.shared.qos.TracerouteResult;
@@ -913,6 +914,22 @@ public class CouchDbStorageService implements StorageService {
 					}
 					if (!portOutList.isEmpty()) {
 						blocked.setOutPorts(portOutList);
+					}
+				} else if (QoSMeasurementType.AUDIO_STREAMING.equals(qos.getType())) {
+					AudioStreamingResult result = objectMapper.convertValue(qos.getResults(), AudioStreamingResult.class);
+					
+					if (result.getStalls() != null && result.getStalls().size() > 0) {
+						result.setNumberOfStalls((long) result.getStalls().size());
+						long totalStallTime = 0;
+						for (Long stall : result.getStalls()) {
+							totalStallTime += stall;
+						}
+						result.setTotalStallTime(totalStallTime);
+						result.setAverageStallTime(totalStallTime / result.getStalls().size());
+					} else {
+						result.setAverageStallTime(0L);
+						result.setNumberOfStalls(0L);
+						result.setTotalStallTime(0L);
 					}
 				}
 			}

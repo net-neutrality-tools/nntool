@@ -94,6 +94,7 @@ public class ClientHolder
     public final static String TASK_WEBSITE = "website";
     public final static String TASK_TRACEROUTE = "traceroute";
     public final static String TASK_ECHO_PROTOCOL = "echo_protocol";
+    public final static String TASK_AUDIO_STREAMING = "audio_streaming";
 
     private List<TaskDesc> taskDescList;
 
