@@ -110,26 +110,130 @@ class NetworkInformationCollector: BaseInformationCollector {
     }
 
     private func fillCellularInformation(dto: MeasurementResultNetworkPointInTimeDto ) {
-        //networkPointInTime.networkCountry
-        //networkPointInTime.networkOperatorName
-        //networkPointInTime.networkOperatorMccMnc
+        var carrierData = [String: AnyObject]()
+        var simsActive = 0
+
+        var pSimCarrierName: String?
+        var pSimMobileCountryCode: String?
+        var pSimMobileNetworkCode: String?
+        var pSimCurrentRadioAccessTechnology: String?
+        var pSimIsoCountryCode: String?
 
         let telephonyNetworkInfo = CTTelephonyNetworkInfo()
 
-        let carrier = telephonyNetworkInfo.subscriberCellularProvider
+        //physical sim
+        let carrierInfo = telephonyNetworkInfo.subscriberCellularProvider!
 
-        dto.simCountry = carrier?.isoCountryCode
+        pSimCarrierName = carrierInfo.carrierName
+        pSimMobileCountryCode = carrierInfo.mobileCountryCode
+        pSimMobileNetworkCode = carrierInfo.mobileNetworkCode
+        pSimCurrentRadioAccessTechnology = telephonyNetworkInfo.currentRadioAccessTechnology
+        pSimIsoCountryCode = carrierInfo.isoCountryCode
 
-        if let mcc = carrier?.mobileCountryCode, let mnc = carrier?.mobileNetworkCode {
-            dto.simOperatorMccMnc = mcc + "-" + mnc
+        var pSim = [String: AnyObject]()
+
+        if pSimCarrierName == nil || pSimMobileCountryCode == nil || pSimMobileNetworkCode == nil
+        {
+            pSim["active"] = false as AnyObject
+        }
+        if pSimCarrierName != nil {
+            pSim["carrier"] = pSimCarrierName as AnyObject
+        }
+        if pSimMobileCountryCode != nil {
+            pSim["mcc"] = pSimMobileCountryCode as AnyObject
+            pSim["active"] = true as AnyObject
+            simsActive+=1
+        }
+        if pSimMobileNetworkCode != nil {
+            pSim["mnc"] = pSimMobileNetworkCode as AnyObject
+        }
+        if pSimCurrentRadioAccessTechnology != nil {
+            pSim["technology"] = pSimCurrentRadioAccessTechnology as AnyObject
+        }
+        if pSimIsoCountryCode != nil {
+            pSim["iso_country_code"] = pSimIsoCountryCode as AnyObject
         }
 
-        dto.simOperatorName = carrier?.carrierName
+        carrierData["sim_physical"] = pSim as AnyObject
 
-        if let currentRadioAccessTechnology = telephonyNetworkInfo.currentRadioAccessTechnology {
-            dto.networkTypeId = NetworkInfo.getCellularNetworkType(currentRadioAccessTechnology)
+        //service subscriber cellular providers
+        let aSimArray = NSMutableArray()
+        if #available(iOS 12.0, *) {
+            if telephonyNetworkInfo.serviceSubscriberCellularProviders!.count > 0 {
+                simsActive = 0
+            } else {
+                aSimArray.add(pSim)
+            }
+
+            for (key, carrierInfo) in telephonyNetworkInfo.serviceSubscriberCellularProviders! {
+                var aSimCarrierName: String?
+                var aSimMobileCountryCode: String?
+                var aSimMobileNetworkCode: String?
+                var aSimIsoCountryCode: String?
+
+                aSimCarrierName = carrierInfo.carrierName
+                aSimMobileCountryCode = carrierInfo.mobileCountryCode
+                aSimMobileNetworkCode = carrierInfo.mobileNetworkCode
+                aSimIsoCountryCode = carrierInfo.isoCountryCode
+
+                var aSim = [String: AnyObject]()
+
+                if aSimCarrierName == nil || aSimMobileCountryCode == nil || aSimMobileNetworkCode == nil {
+                    aSim["active"] = false as AnyObject
+                }
+                if aSimCarrierName != nil {
+                    aSim["carrier"] = aSimCarrierName as AnyObject
+                }
+                if aSimMobileCountryCode != nil {
+                    aSim["mcc"] = aSimMobileCountryCode as AnyObject
+                    aSim["active"] = true as AnyObject
+                    simsActive+=1
+                }
+                if aSimMobileNetworkCode != nil {
+                    aSim["mnc"] = aSimMobileNetworkCode as AnyObject
+                }
+                if telephonyNetworkInfo.serviceCurrentRadioAccessTechnology![key] != nil {
+                    aSim["technology"] = telephonyNetworkInfo.serviceCurrentRadioAccessTechnology![key] as AnyObject
+                }
+                if aSimIsoCountryCode != nil {
+                    aSim["iso_country_code"] = aSimIsoCountryCode as AnyObject
+                }
+
+                aSimArray.add(aSim)
+            }
+        } else {
+            aSimArray.add(pSim)
         }
 
-        // TODO: multi-sim support?
+        if simsActive == 0 {
+            NSLog("No (e)SIM Card active or no (e)SIM Card Slot present")
+        } else if simsActive > 1 {
+            NSLog("Multiple (e)SIM Cards active")
+        }
+
+        carrierData["sims_active"] = simsActive as AnyObject
+        carrierData["sims_available"] = aSimArray as AnyObject
+
+        var currentRadioAccessTechnology: String?
+
+        for carrier in aSimArray {
+            if let carrierDict = carrier as? [String: AnyObject] {
+                if carrierDict["active"] as? integer_t == 1 {
+                    if carrierDict["iso_country_code"] != nil {
+                        dto.simCountry = (carrierDict["iso_country_code"] as? String)!
+                    }
+                    if carrierDict["mcc"] != nil && carrierDict["mnc"] != nil {
+                        dto.simOperatorMccMnc = (carrierDict["mcc"] as? String)! + "-" + (carrierDict["mnc"] as? String)!
+                    }
+                    if carrierDict["carrier"] != nil {
+                        dto.simOperatorName = (carrierDict["carrier"] as? String)!
+                    }
+                    if carrierDict["technology"] != nil {
+                        dto.networkTypeId = NetworkInfo.getCellularNetworkType((carrierDict["technology"] as? String)!)
+                    }
+                    
+                }
+            }
+        }
     }
 }
