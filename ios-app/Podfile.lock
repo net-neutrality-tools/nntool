@@ -73,7 +73,7 @@ DEPENDENCIES:
   - QoSKit (from `../qos-client-swift`)
   - R.swift (~> 5.1.0)
   - SwiftGen (~> 6.1.0)
-  - WebBrowser (~> 0.1.5)
+  - WebBrowser (from `../WebBrowser`)
 
 SPEC REPOS:
   trunk:
@@ -94,7 +94,6 @@ SPEC REPOS:
     - Siesta
     - SwiftGen
     - SwiftLint
-    - WebBrowser
     - WKWebViewWithURLProtocol
     - XCGLogger
 
@@ -107,6 +106,8 @@ EXTERNAL SOURCES:
     :git: https://github.com/net-neutrality-tools/PocketSocket
   QoSKit:
     :path: "../qos-client-swift"
+  WebBrowser:
+    :path: "../WebBrowser"
 
 CHECKOUT OPTIONS:
   PocketSocket:
@@ -139,6 +140,6 @@ SPEC CHECKSUMS:
   WKWebViewWithURLProtocol: f7f2b367c40680105794a068ed2bb2cd5922c27c
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: d7b9c5949c382e24a580b994248eaf880ce272a4
+PODFILE CHECKSUM: e5c819c4900603941b26af7b48ce945a5e0e2c03
 
 COCOAPODS: 1.8.4
