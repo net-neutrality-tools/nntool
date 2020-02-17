@@ -7,7 +7,7 @@ if (gradle.ext.includeJibGradlePlugin) {
 
   // Docker executable is not found automatically on macos...
   if (DefaultNativePlatform.getCurrentOperatingSystem().isMacOsX()) {
-    jibDockerBuild {
+    jib {
       dockerClient {
         executable = '/usr/local/bin/docker'
       }

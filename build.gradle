@@ -21,7 +21,7 @@ buildscript {
         // Unfortunatly, just adding a dependency to jib-gradle-plugin breaks the Android build.
         // Therefore, we can only include it if we don't build Android modules.
         if (gradle.ext.includeJibGradlePlugin) {
-        	classpath 'gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:1.4.0'
+        	classpath 'gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:2.0.0'
         }
     }
 }
