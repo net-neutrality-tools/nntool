@@ -21,7 +21,7 @@ public class AudioStreamingServiceAndroidImpl implements AudioStreamingService {
         System.loadLibrary("qos-cpp");
     }
 
-    private native void nativeInit(String resourceUrl, long bufferDurationNs, long playbackDurationMs);     // Initialize native code, build pipeline, etc
+    private native void nativeInit(String resourceUrl, long bufferDurationNs, long playbackDurationNs);     // Initialize native code, build pipeline, etc
     private native void nativeFinalize(); // Destroy pipeline and shutdown native code
     private native String nativeStartTest();
 
@@ -52,7 +52,7 @@ public class AudioStreamingServiceAndroidImpl implements AudioStreamingService {
             //TODO: provide error result
             return null;
         }
-        nativeInit(this.targetUrl, this.bufferDurationNs, this.playbackDurationMs);
+        nativeInit(this.targetUrl, this.bufferDurationNs, this.playbackDurationNs);
         return new AudioStreamingResultAndroidImpl(nativeStartTest());
     }
 
@@ -67,8 +67,8 @@ public class AudioStreamingServiceAndroidImpl implements AudioStreamingService {
     }
 
     @Override
-    public void setTargetPlaybackDuration(long playbackDurationMs) {
-        this.playbackDurationMs = playbackDurationMs;
+    public void setTargetPlaybackDuration(long playbackDurationNs) {
+        this.playbackDurationNs = playbackDurationNs;
     }
 
     public final static class AudioStreamingResultAndroidImpl implements AudioStreamingService.AudioStreamingResult {

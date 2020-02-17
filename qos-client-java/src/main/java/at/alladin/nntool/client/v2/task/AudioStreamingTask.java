@@ -30,17 +30,17 @@ public class AudioStreamingTask extends AbstractQoSTask {
 
     public final static String PARAM_TIMEOUT = "timeout";
 
-    public final static String PARAM_BUFFER_DURATION = "param_buffer_duration";
+    public final static String PARAM_BUFFER_DURATION_NS = "buffer_duration_ns";
 
-    public final static String PARAM_TARGET_PLAYBACK_DURATION_MS = "param_target_playback_duration_ms";
+    public final static String PARAM_TARGET_PLAYBACK_DURATION_NS = "target_playback_duration_ns";
 
-    public final static String PARAM_TARGET_URL = "param_target_url";
+    public final static String PARAM_TARGET_URL = "url";
 
     public final static String RESULT_DETAILS = "audio_streaming_result";
 
     public final static String RESULT_AUDIO_START_TIME = "audio_start_time_ns";
 
-    public final static String RESULT_STALLS = "stalls";
+    public final static String RESULT_STALLS = "stalls_ns";
 
     public final static String RESULT_STATUS = "audio_streaming_status";
 
@@ -64,10 +64,10 @@ public class AudioStreamingTask extends AbstractQoSTask {
 
         targetUrl = (String) taskDesc.getParams().get(PARAM_TARGET_URL);
 
-        value = taskDesc.getParams().get(PARAM_BUFFER_DURATION);
+        value = taskDesc.getParams().get(PARAM_BUFFER_DURATION_NS);
         this.bufferDuration = value != null ? Long.valueOf((String) value) : DEFAULT_TARGET_BUFFER_DURATION_NS;
 
-        value = taskDesc.getParams().get(PARAM_TARGET_PLAYBACK_DURATION_MS);
+        value = taskDesc.getParams().get(PARAM_TARGET_PLAYBACK_DURATION_NS);
         this.playbackDurationMs = value != null ? Long.valueOf((String) value) : DEFAULT_TARGET_PLAYBACK_DURATION_MS;
 
     }
@@ -131,11 +131,11 @@ public class AudioStreamingTask extends AbstractQoSTask {
                     try {
                         if (jsonResult.has(RESULT_STALLS)) {
                             JSONArray stallArray = jsonResult.getJSONArray(RESULT_STALLS);
-                            final List<Long> stalls = new ArrayList<>();
+                            final List<Long> stallsNs = new ArrayList<>();
                             for (int i = 0; i < stallArray.length(); i++) {
-                                stalls.add(stallArray.getLong(i));
+                                stallsNs.add(stallArray.getLong(i));
                             }
-                            testResult.getResultMap().put(RESULT_STALLS, stalls);
+                            testResult.getResultMap().put(RESULT_STALLS, stallsNs);
                         }
                     } catch (JSONException ex) {
                         ex.printStackTrace();

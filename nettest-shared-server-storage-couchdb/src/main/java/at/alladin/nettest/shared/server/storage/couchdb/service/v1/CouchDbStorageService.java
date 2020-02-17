@@ -428,7 +428,7 @@ public class CouchDbStorageService implements StorageService {
 			qosInfo.setName(messageSource.getMessage(type.getNameKey(), null, Locale.ENGLISH)); // TODO: locale, translation part has to be moved to controller
 			qosInfo.setDescription(messageSource.getMessage(type.getDescriptionKey(), null, Locale.ENGLISH)); // TODO: locale, translation part has to be moved to controller
 			try {
-				ret.getQosTypeInfo().put(QoSMeasurementTypeDto.valueOf(type.getValue().toUpperCase()),  qosInfo);				
+				ret.getQosTypeInfo().put(QoSMeasurementTypeDto.valueOf(type.getValue().toUpperCase()), qosInfo);				
 			} catch (Exception ex) {
 				logger.error("Trying to map invalid enum w/value: " + type.getValue(), ex);
 			}
@@ -918,14 +918,14 @@ public class CouchDbStorageService implements StorageService {
 				} else if (QoSMeasurementType.AUDIO_STREAMING.equals(qos.getType())) {
 					AudioStreamingResult result = objectMapper.convertValue(qos.getResults(), AudioStreamingResult.class);
 					
-					if (result.getStalls() != null && result.getStalls().size() > 0) {
-						result.setNumberOfStalls((long) result.getStalls().size());
+					if (result.getStallsNs() != null && result.getStallsNs().size() > 0) {
+						result.setNumberOfStalls((long) result.getStallsNs().size());
 						long totalStallTime = 0;
-						for (Long stall : result.getStalls()) {
+						for (Long stall : result.getStallsNs()) {
 							totalStallTime += stall;
 						}
 						result.setTotalStallTime(totalStallTime);
-						result.setAverageStallTime(totalStallTime / result.getStalls().size());
+						result.setAverageStallTime(totalStallTime / result.getStallsNs().size());
 					} else {
 						result.setAverageStallTime(0L);
 						result.setNumberOfStalls(0L);

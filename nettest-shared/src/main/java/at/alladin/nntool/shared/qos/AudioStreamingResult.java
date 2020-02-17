@@ -16,7 +16,7 @@ public class AudioStreamingResult extends AbstractResult {
 	private Object audioStartTime;
 	
 	@JsonProperty("stalls_ns")
-	private List<Long> stalls;
+	private List<Long> stallsNs;
 	
 	@JsonProperty("average_stall_time")
 	private Object averageStallTime;
@@ -30,8 +30,11 @@ public class AudioStreamingResult extends AbstractResult {
 	@JsonProperty("audio_streaming_objective_target_url")
 	private String targetUrl;
 	
-	@JsonProperty("audio_streaming_objective_playback_duration_ms")
-	private Object playbackDurationMs;
+	@JsonProperty("audio_streaming_objective_buffer_duration_ns")
+	private String bufferDurationNs;
+	
+	@JsonProperty("audio_streaming_objective_playback_duration_ns")
+	private Object playbackDurationNs;
 
 	public Object getAudioStartTime() {
 		return audioStartTime;
@@ -41,12 +44,12 @@ public class AudioStreamingResult extends AbstractResult {
 		this.audioStartTime = audioStartTime;
 	}
 
-	public List<Long> getStalls() {
-		return stalls;
+	public List<Long> getStallsNs() {
+		return stallsNs;
 	}
 
-	public void setStalls(List<Long> stalls) {
-		this.stalls = stalls;
+	public void setStallsNs(List<Long> stallsNs) {
+		this.stallsNs = stallsNs;
 	}
 
 	public Object getAverageStallTime() {
@@ -80,13 +83,20 @@ public class AudioStreamingResult extends AbstractResult {
 	public void setTargetUrl(String targetUrl) {
 		this.targetUrl = targetUrl;
 	}
-
-	public Object getPlaybackDurationMs() {
-		return playbackDurationMs;
+	
+	public String getBufferDurationNs() {
+		return bufferDurationNs;
+	}
+	
+	public void setBufferDurationNs(String bufferDurationNs) {
+		this.bufferDurationNs = bufferDurationNs;
 	}
 
-	public void setPlaybackDurationMs(Object playbackDurationMs) {
-		this.playbackDurationMs = playbackDurationMs;
+	public Object getPlaybackDurationNs() {
+		return playbackDurationNs;
 	}
 
+	public void setPlaybackDurationNs(Object playbackDurationNs) {
+		this.playbackDurationNs = playbackDurationNs;
+	}
 }
