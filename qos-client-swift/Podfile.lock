@@ -3,7 +3,7 @@ PODS:
   - BlueSocket (1.0.52)
   - CocoaAsyncSocket (7.6.3)
   - CodableJSON (1.1.4)
-  - mkall (0.6.2)
+  - mkall (0.7.0)
   - Nimble (8.0.4)
   - nntool-shared-swift (0.0.1):
     - CodableJSON (~> 1.1.4)
@@ -26,7 +26,7 @@ DEPENDENCIES:
   - Alamofire (~> 4.8.2)
   - BlueSocket (~> 1.0.52)
   - CocoaAsyncSocket (~> 7.6.3)
-  - mkall (from `https://github.com/measurement-kit/mkall-ios.git`, tag `v0.6.2`)
+  - mkall (from `https://github.com/measurement-kit/mkall-ios.git`, tag `v0.7.0`)
   - Nimble (~> 8.0.4)
   - nntool-shared-swift (from `../nntool-shared-swift`)
   - qos-client-cpp (from `../qos-cpp`)
@@ -48,7 +48,7 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   mkall:
     :git: https://github.com/measurement-kit/mkall-ios.git
-    :tag: v0.6.2
+    :tag: v0.7.0
   nntool-shared-swift:
     :path: "../nntool-shared-swift"
   qos-client-cpp:
@@ -57,23 +57,23 @@ EXTERNAL SOURCES:
 CHECKOUT OPTIONS:
   mkall:
     :git: https://github.com/measurement-kit/mkall-ios.git
-    :tag: v0.6.2
+    :tag: v0.7.0
 
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   BlueSocket: 1acd943acb07b55905291d608649fcfbf8cbd57d
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
-  mkall: 95a9357950bdb90164651c1d08034327b8b9e019
+  mkall: 601441b8ca8f9d8dbad357acd3570173854b45f8
   Nimble: 18d5360282923225d62b09d781f63abc1a0111fc
   nntool-shared-swift: 0492a43aa3f5567fb2381eb51660297a2823107d
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
-  qos-client-cpp: 8fb238c3b17122601d1c4c48975a7d1f2ee0090b
+  qos-client-cpp: 25de2249179f5eb0f521723d1d5a5d61aa5ccfc0
   Repeat: 8e65710d09da68f06ed79e865b091ffdcc8d0279
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
   WKWebViewWithURLProtocol: f7f2b367c40680105794a068ed2bb2cd5922c27c
   XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
 
-PODFILE CHECKSUM: 6e982be4111ebd2a71b792d68956fe9a8565db5f
+PODFILE CHECKSUM: cd69edf4e5ba89da811e7b489842528988955f83
 
 COCOAPODS: 1.8.4
