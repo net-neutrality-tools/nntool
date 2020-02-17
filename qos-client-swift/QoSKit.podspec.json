@@ -28,6 +28,7 @@
         "BlueSocket": ["~> 1.0.52"],
         "CocoaAsyncSocket": ["~> 7.6.3"],
         "nntool-shared-swift": ["~> 0.0.1"],
+        "qos-client-cpp": ["~> 0.0.1"],
         "WKWebViewWithURLProtocol": ["~> 0.1.0"]
     },
     "libraries": [
