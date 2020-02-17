@@ -75,32 +75,50 @@ class AudioStreamingTask: QoSTask {
         try super.init(from: decoder)
     }
 
-    // TODO: handle timeout!
     override func taskMain() {
-        if let wrapper = AudioStreamingWrapper(
+        guard let wrapper = AudioStreamingWrapper(
             url: url,
             bufferDurationNs: bufferDurationNs,
             playbackDurationNs: playbackDuratioNs
-        ) {
+        ) else {
+            status = .error
+            return
+        }
+        
+        let semaphore = DispatchSemaphore(value: 0)
+        var resultString: String?
+        
+        DispatchQueue.global(qos: .background).async {
             self.progressTimer = Repeater.every(.milliseconds(100)) { _ in
                 self.progress.completedUnitCount += Int64((UInt64(self.progress.totalUnitCount) * NSEC_PER_MSEC * 100 / self.playbackDuratioNs))
             }
             self.progressTimer?.start()
             
-            let resultString: String = wrapper.start()
-            taskLogger.debug(resultString)
+            resultString = wrapper.start()
             
             self.progressTimer?.removeAllObservers(thenStop: true)
             self.progressTimer = nil
             
-            if let resultData = resultString.data(using: .utf8) {
-                audioStreamingResult = try? JSONDecoder().decode(AudioStreamingResult.self, from: resultData)
-            }
-            
-            //TODO: check for timeout! also during mkit test?
-            status = .ok
-        } else {
+            semaphore.signal()
+        }
+        
+        let semaphoneTimeout = DispatchTime.now() + DispatchTimeInterval.nanoseconds(Int(truncatingIfNeeded: timeoutNs))
+        if semaphore.wait(timeout: semaphoneTimeout) == .timedOut {
+            //wrapper.stop()
+            status = .timeout
+            return
+        }
+
+        guard
+            let resultData = resultString?.data(using: .utf8),
+            let audioStreamingResult = try? JSONDecoder().decode(AudioStreamingResult.self, from: resultData)
+        else {
             status = .error
+            return
+        }
+        
+        if status == .unknown {
+            status = .ok
         }
     }
 }
