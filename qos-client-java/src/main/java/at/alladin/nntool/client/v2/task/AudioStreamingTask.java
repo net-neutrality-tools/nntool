@@ -24,7 +24,7 @@ public class AudioStreamingTask extends AbstractQoSTask {
 
     public final static long DEFAULT_TIMEOUT = 30000000000L;
 
-    public final static long DEFAULT_TARGET_PLAYBACK_DURATION_MS = 12000L;
+    public final static long DEFAULT_TARGET_PLAYBACK_DURATION_NS = 12000L;
 
     public final static long DEFAULT_TARGET_BUFFER_DURATION_NS = 200000000L;
 
@@ -46,7 +46,7 @@ public class AudioStreamingTask extends AbstractQoSTask {
 
     public final static String RESULT_OBJECTIVE_URL = "audio_streaming_objective_target_url";
 
-    public final static String RESULT_OBJECTIVE_PLAYBACK_DURATION = "audio_streaming_objective_playback_duration_ms";
+    public final static String RESULT_OBJECTIVE_PLAYBACK_DURATION_NS = "audio_streaming_objective_playback_duration_ns";
 
     private final long timeout;
 
@@ -97,7 +97,7 @@ public class AudioStreamingTask extends AbstractQoSTask {
 
         try {
             onStart(testResult);
-            testResult.getResultMap().put(RESULT_OBJECTIVE_PLAYBACK_DURATION, this.playbackDurationNs);
+            testResult.getResultMap().put(RESULT_OBJECTIVE_PLAYBACK_DURATION_NS, this.playbackDurationNs);
             testResult.getResultMap().put(RESULT_OBJECTIVE_URL, this.targetUrl);
 
             final TestSettings settings = getQoSTest().getTestSettings();
