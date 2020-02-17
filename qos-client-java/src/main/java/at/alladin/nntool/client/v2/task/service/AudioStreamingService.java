@@ -27,6 +27,6 @@ public interface AudioStreamingService extends Callable<AudioStreamingService.Au
 
     void setBufferDuration(final long durationNs);
 
-    void setTargetPlaybackDuration(final long playbackDurationMs);
+    void setTargetPlaybackDuration(final long playbackDurationNs);
 
 }
