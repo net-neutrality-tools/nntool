@@ -16,7 +16,7 @@ buildscript {
     dependencies {
         classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: spring_boot_version
 
-        classpath 'com.bmuschko:gradle-clover-plugin:2.2.1'
+        classpath 'com.bmuschko:gradle-clover-plugin:2.2.4'
 
         // Unfortunatly, just adding a dependency to jib-gradle-plugin breaks the Android build.
         // Therefore, we can only include it if we don't build Android modules.
