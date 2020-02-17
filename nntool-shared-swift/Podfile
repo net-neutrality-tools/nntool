@@ -6,11 +6,11 @@ use_frameworks!
 inhibit_all_warnings!
 
 abstract_target 'All' do
-  pod 'SwiftLint', '~> 0.31.0'
+  pod 'SwiftLint', '~> 0.39.1'
 
-  pod 'CodableJSON', '~> 1.1.4'
-  pod 'XCGLogger', '~> 7.0.0'
-  pod 'Repeat', '~> 0.5.7'
+  pod 'CodableJSON', '~> 1.2.0'
+  pod 'XCGLogger', '~> 7.0.1'
+  pod 'Repeat', '~> 0.5.8'
 
   target 'nntool-shared-swift' do
     platform :ios, '10.0'
@@ -19,7 +19,7 @@ abstract_target 'All' do
   target 'nntool-shared-swiftTests' do
       platform :ios, '10.0'
 
-      pod 'Nimble', '~> 8.0.1'
+      pod 'Nimble', '~> 8.0.5'
   end
 end
 

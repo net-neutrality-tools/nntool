@@ -13,7 +13,7 @@ abstract_target 'All' do
 
   pod 'CocoaAsyncSocket', '~> 7.6.3'
   pod 'BlueSocket', '~> 1.0.52'
-  pod 'Alamofire', '~> 4.8.2'
+  pod 'Alamofire', '~> 5.0.0'
   pod 'mkall', :git => 'https://github.com/measurement-kit/mkall-ios.git', :tag => 'v0.7.0'
   pod 'WKWebViewWithURLProtocol', '~> 0.1.0'
 
@@ -22,7 +22,7 @@ abstract_target 'All' do
   end
 
   target 'QoSKitUnitTests' do
-    pod 'Nimble', '~> 8.0.4'
+    pod 'Nimble', '~> 8.0.5'
   end
 end
 
