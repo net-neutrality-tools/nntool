@@ -24,7 +24,7 @@
         "public_header_files": "Pods/mkall/mkall.framework/Headers/*.h"
     },
     "dependencies": {
-        "Alamofire": ["~> 4.8.2"],
+        "Alamofire": ["~> 5.0.0"],
         "BlueSocket": ["~> 1.0.52"],
         "CocoaAsyncSocket": ["~> 7.6.3"],
         "nntool-shared-swift": ["~> 0.0.1"],

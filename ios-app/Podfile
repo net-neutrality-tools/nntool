@@ -20,11 +20,11 @@ abstract_target 'All' do
     pod 'SwiftGen', '~> 6.1.0'
     pod 'BartyCrouch', '~> 4.0.2'
     pod 'R.swift', '~> 5.1.0'
-    
+
     pod 'ActionKit', '~> 2.5.3'
 
     pod 'WebBrowser', :path => '../WebBrowser'
-    pod 'GoogleMaps', '~> 3.6.0'
+    pod 'GoogleMaps', '~> 3.7.0'
   end
 
   target 'Common' do
