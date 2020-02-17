@@ -33,10 +33,10 @@ jint JniConnector::loadJVM(JavaVM *vm) {
     return JNI_VERSION_1_6;
 }
 
-void JniConnector::init(std::string url, long long int bufferDurationMs, long long int playbackDurationMs) {
+void JniConnector::init(std::string url, long long int bufferDurationNs, long long int playbackDurationNs) {
     this->url = url;
-    this->bufferDurationMs = bufferDurationMs;
-    this->playbackDurationMs = playbackDurationMs;
+    this->bufferDurationNs = bufferDurationNs;
+    this->playbackDurationNs = playbackDurationNs;
 }
 
 std::string JniConnector::startTest() {
@@ -45,11 +45,10 @@ std::string JniConnector::startTest() {
     test.setOnThreadDetachCallback(std::bind(&JniConnector::detachCurrentThread, this));
     test.setLogFunction(std::bind(&JniConnector::logMessage, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
     this->logMessage("DEBUG", "CONNECTOR", this->url);
-    this->logMessage("DEBUG", "CONNECTOR", std::to_string(this->bufferDurationMs));
-    this->logMessage("DEBUG", "CONNECTOR", std::to_string(this->playbackDurationMs));
+    this->logMessage("DEBUG", "CONNECTOR", std::to_string(this->bufferDurationNs));
+    this->logMessage("DEBUG", "CONNECTOR", std::to_string(this->playbackDurationNs));
 
-    test.initialize(this->url, this->bufferDurationMs, this->playbackDurationMs);
-//    test.initialize("http://ia803003.us.archive.org/28/items/sslamweb.blogspot.com_201308/Maher%20Zain%20-%20Hold%20My%20Hand%20-%20Official%20Lyrics%20Video.mp3", 20000, 20000);
+    test.initialize(this->url, this->bufferDurationNs, this->playbackDurationNs);
     return test.start();
 }
 

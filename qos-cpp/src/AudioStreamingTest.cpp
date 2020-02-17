@@ -1,7 +1,19 @@
-//
-// Created by fk on 1/28/20.
-// Heavily inspired by the gstreamer tutorials (see: https://gstreamer.freedesktop.org/documentation/tutorials/index.html?gi-language=c)
-//
+/***************************************************************************
+* Copyright 2020 alladin-IT GmbH
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*   http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+***************************************************************************/
+// Inspired by the gstreamer tutorials (see: https://gstreamer.freedesktop.org/documentation/tutorials/index.html?gi-language=c)
 
 #include "AudioStreamingTest.h"
 
@@ -13,7 +25,7 @@ std::string AudioStreamingTest::start() {
     g_free (data);
 
     std::string ret = "{ \"audio_start_time_ns\": " + std::to_string((startPlayTime - startCommandTime).count()) + ", ";
-    ret += "\"stalls\": [";
+    ret += "\"stalls_ns\": [";
     for (int i = 0; i < stallDurations.size(); i++) {
         ret += std::to_string(stallDurations[i]);
         if (i != stallDurations.size() -1) {
@@ -30,7 +42,6 @@ void AudioStreamingTest::stop() {
     if (!data)
         return;
     g_main_loop_quit (data->main_loop);
-
 }
 
 void AudioStreamingTest::runAudioStreamingTest(CustomData * data) {
@@ -43,9 +54,9 @@ void AudioStreamingTest::runAudioStreamingTest(CustomData * data) {
     data->context = g_main_context_new ();
     g_main_context_push_thread_default (data->context);
 
-    std::string pipelineConfig = "uridecodebin buffer-duration=" + std::to_string(this->bufferDurationNs) + " uri=" + this->targetUrl + " ! audioconvert ! volume mute=TRUE ! autoaudiosink";
+    std::string pipelineConfig = "uridecodebin buffer-duration=" + std::to_string((long long int)(this->bufferDurationNs / 1e6)) + " uri=" + this->targetUrl + " ! audioconvert ! volume mute=TRUE ! autoaudiosink";
 
-    if(this->logFunction) {
+    if (this->logFunction) {
         this->logFunction("DEBUG", TAG, pipelineConfig);
     }
 
@@ -56,7 +67,7 @@ void AudioStreamingTest::runAudioStreamingTest(CustomData * data) {
     if (error) {
         gchar *message =
                 g_strdup_printf ("Unable to build pipeline: %s", error->message);
-        //TODO: log error
+        this->logFunction("ERROR", TAG, message);
         g_clear_error (&error);
         g_free (message);
         return;
@@ -92,9 +103,9 @@ void AudioStreamingTest::runAudioStreamingTest(CustomData * data) {
 }
 
 void AudioStreamingTest::messageCallback(GstBus *bus, GstMessage *msg) {
-    if (this->logFunction) {
+    /*if (this->logFunction) {
         this->logFunction("DEBUG", TAG, "message received w/code: " + std::to_string(GST_MESSAGE_TYPE(msg)));
-    }
+    }*/
     switch (GST_MESSAGE_TYPE(msg)) {
         case GST_MESSAGE_ERROR: {
             GError *err;
@@ -153,7 +164,7 @@ void AudioStreamingTest::checkInitializationComplete(CustomData * data)
         gst_element_set_state (data->pipeline, GST_STATE_PLAYING);
         startCommandTime = std::chrono::steady_clock::now();
         futurePlaybackStop = std::async(std::launch::async, [&] {
-            std::this_thread::sleep_for(std::chrono::milliseconds(this->playbackDurationMs));
+            std::this_thread::sleep_for(std::chrono::nanoseconds(this->playbackDurationNs));
             if (this->logFunction) {
                 this->logFunction("DEBUG", TAG, "stopping playback");
             }

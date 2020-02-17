@@ -17,13 +17,13 @@ public:
         return instance;
     }
 
-    static void nativeInit(JNIEnv * env, jobject caller, jstring url, jlong bufferDurationMs, jlong playbackDurationMs) {
-        JniConnector::getInstance().init(std::string(env->GetStringUTFChars(url, NULL)), (long long int) bufferDurationMs, (long long int) playbackDurationMs);
+    static void nativeInit(JNIEnv * env, jobject caller, jstring url, jlong bufferDurationNs, jlong playbackDurationNs) {
+        JniConnector::getInstance().init(std::string(env->GetStringUTFChars(url, NULL)), (long long int) bufferDurationNs, (long long int) playbackDurationNs);
     }
     static jstring nativeStartTest(JNIEnv * env, jobject caller) {
         std::string result = JniConnector::getInstance().startTest();
         const char * t = result.c_str();
-        __android_log_write (ANDROID_LOG_ERROR, "tutorial-3",
+        __android_log_write (ANDROID_LOG_ERROR, "audio-streaming",
                              t);
         return env->NewStringUTF(result.c_str());
     }
@@ -50,12 +50,12 @@ private:
     void detachCurrentThread();
 
     std::string url;
-    long long int bufferDurationMs;
-    long long int playbackDurationMs;
+    long long int bufferDurationNs;
+    long long int playbackDurationNs;
 
     //std::function<void(std::string, std::string, std::string)> logFunction;
 
-    void init(std::string url, long long int bufferDurationMs, long long int playbackDurationMs);
+    void init(std::string url, long long int bufferDurationNs, long long int playbackDurationNs);
 
     std::string startTest();
 
