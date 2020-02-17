@@ -2,7 +2,7 @@ apply plugin: 'com.bmuschko.clover'
 apply plugin: 'java'
 
 dependencies {
-    clover 'org.openclover:clover:4.2.0'
+    clover 'org.openclover:clover:4.4.1'
 }
 
 // https://github.com/bmuschko/gradle-clover-plugin
