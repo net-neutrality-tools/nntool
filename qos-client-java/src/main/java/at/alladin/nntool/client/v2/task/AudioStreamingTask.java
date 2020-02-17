@@ -54,7 +54,7 @@ public class AudioStreamingTask extends AbstractQoSTask {
 
     private final long bufferDuration;
 
-    private final long playbackDurationMs;
+    private final long playbackDurationNs;
 
     public AudioStreamingTask(QualityOfServiceTest nnTest, TaskDesc taskDesc, int threadId) {
         super(nnTest, taskDesc, threadId, threadId);
@@ -68,7 +68,7 @@ public class AudioStreamingTask extends AbstractQoSTask {
         this.bufferDuration = value != null ? Long.valueOf((String) value) : DEFAULT_TARGET_BUFFER_DURATION_NS;
 
         value = taskDesc.getParams().get(PARAM_TARGET_PLAYBACK_DURATION_NS);
-        this.playbackDurationMs = value != null ? Long.valueOf((String) value) : DEFAULT_TARGET_PLAYBACK_DURATION_MS;
+        this.playbackDurationNs = value != null ? Long.valueOf((String) value) : DEFAULT_TARGET_PLAYBACK_DURATION_NS;
 
     }
 
@@ -97,14 +97,14 @@ public class AudioStreamingTask extends AbstractQoSTask {
 
         try {
             onStart(testResult);
-            testResult.getResultMap().put(RESULT_OBJECTIVE_PLAYBACK_DURATION, this.playbackDurationMs);
+            testResult.getResultMap().put(RESULT_OBJECTIVE_PLAYBACK_DURATION, this.playbackDurationNs);
             testResult.getResultMap().put(RESULT_OBJECTIVE_URL, this.targetUrl);
 
             final TestSettings settings = getQoSTest().getTestSettings();
 
             final AudioStreamingService audioStreamingService = settings.getAudioStreamingService();
             audioStreamingService.setBufferDuration(this.bufferDuration);
-            audioStreamingService.setTargetPlaybackDuration(this.playbackDurationMs);
+            audioStreamingService.setTargetPlaybackDuration(this.playbackDurationNs);
             audioStreamingService.setTargetUrl(this.targetUrl);
 
             AudioStreamingService.AudioStreamingResult result = null;

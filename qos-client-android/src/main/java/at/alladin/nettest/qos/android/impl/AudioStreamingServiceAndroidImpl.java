@@ -33,7 +33,7 @@ public class AudioStreamingServiceAndroidImpl implements AudioStreamingService {
 
     private long bufferDurationNs;
 
-    private long playbackDurationMs;
+    private long playbackDurationNs;
 
     public AudioStreamingServiceAndroidImpl(final Context context) {
         this.context = context;
