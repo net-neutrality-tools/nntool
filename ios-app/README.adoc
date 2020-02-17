@@ -8,6 +8,7 @@
 - CocoaPods
 - NativeScript = 5.x
 - macOS >= MacOS 10.14 (Mojave)
+- gstreamer binaries (install from https://gstreamer.freedesktop.org/documentation/installing/for-ios-development.html?gi-language=c, version used during development: https://gstreamer.freedesktop.org/data/pkg/ios/1.16.1/)
 
 === Build
 

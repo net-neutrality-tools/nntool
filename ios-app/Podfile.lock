@@ -4,9 +4,9 @@ PODS:
   - BartyCrouch (4.0.2)
   - BlueSocket (1.0.52)
   - CocoaAsyncSocket (7.6.3)
-  - CocoaLumberjack (3.6.0):
-    - CocoaLumberjack/Core (= 3.6.0)
-  - CocoaLumberjack/Core (3.6.0)
+  - CocoaLumberjack (3.6.1):
+    - CocoaLumberjack/Core (= 3.6.1)
+  - CocoaLumberjack/Core (3.6.1)
   - CodableJSON (1.1.4)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
@@ -38,11 +38,13 @@ PODS:
   - PocketSocket/Core (1.0.1)
   - PocketSocket/Server (1.0.1):
     - PocketSocket/Client
+  - qos-client-cpp (0.0.1)
   - QoSKit (0.0.1):
     - Alamofire (~> 4.8.2)
     - BlueSocket (~> 1.0.52)
     - CocoaAsyncSocket (~> 7.6.3)
     - nntool-shared-swift (~> 0.0.1)
+    - qos-client-cpp (~> 0.0.1)
     - WKWebViewWithURLProtocol (~> 0.1.0)
   - R.swift (5.1.0):
     - R.swift.Library (~> 5.1.0)
@@ -56,9 +58,9 @@ PODS:
   - SwiftLint (0.31.0)
   - WebBrowser (0.1.5)
   - WKWebViewWithURLProtocol (0.1.0)
-  - XCGLogger (7.0.0):
-    - XCGLogger/Core (= 7.0.0)
-  - XCGLogger/Core (7.0.0):
+  - XCGLogger (7.0.1):
+    - XCGLogger/Core (= 7.0.1)
+  - XCGLogger/Core (7.0.1):
     - ObjcExceptionBridging
 
 DEPENDENCIES:
@@ -70,6 +72,7 @@ DEPENDENCIES:
   - MeasurementAgentKit (from `../measurement-agent-swift`)
   - nntool-shared-swift (from `../nntool-shared-swift`)
   - PocketSocket (from `https://github.com/net-neutrality-tools/PocketSocket`)
+  - qos-client-cpp (from `../qos-cpp`)
   - QoSKit (from `../qos-client-swift`)
   - R.swift (~> 5.1.0)
   - SwiftGen (~> 6.1.0)
@@ -104,6 +107,8 @@ EXTERNAL SOURCES:
     :path: "../nntool-shared-swift"
   PocketSocket:
     :git: https://github.com/net-neutrality-tools/PocketSocket
+  qos-client-cpp:
+    :path: "../qos-cpp"
   QoSKit:
     :path: "../qos-client-swift"
   WebBrowser:
@@ -120,7 +125,7 @@ SPEC CHECKSUMS:
   BartyCrouch: 3f3501276901326bf4150341ad801467da972e43
   BlueSocket: 1acd943acb07b55905291d608649fcfbf8cbd57d
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
-  CocoaLumberjack: 78b0c238666f4f58db069738ec176f4519557516
+  CocoaLumberjack: b17ae15142558d08bbacf69775fa10c4abbebcc9
   CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GoogleMaps: 82f8fe307193bb4de6ef6bf9e88f1d624b718f9d
@@ -128,7 +133,8 @@ SPEC CHECKSUMS:
   nntool-shared-swift: 0492a43aa3f5567fb2381eb51660297a2823107d
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   PocketSocket: ea973e14ebcea9e11a77e692f4da2a0e05dc8481
-  QoSKit: 97d3e1bc7b92bc1ec7c56b3d87585b4280b27bee
+  qos-client-cpp: 25de2249179f5eb0f521723d1d5a5d61aa5ccfc0
+  QoSKit: 32d43de8ea55551eda437f6b7cdc857a5ac84460
   R.swift: 8cbc4fc69b740305b6a17c8a8ed968eb788962d9
   R.swift.Library: fa85ce1e0d0b7e818cd9e080df910ba54d2776cc
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
@@ -138,8 +144,8 @@ SPEC CHECKSUMS:
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
   WebBrowser: 0248873c77f54e2ac504ece7c2bc8eeb710b5a4f
   WKWebViewWithURLProtocol: f7f2b367c40680105794a068ed2bb2cd5922c27c
-  XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
+  XCGLogger: 1943831ef907df55108b0b18657953f868de973b
 
-PODFILE CHECKSUM: e5c819c4900603941b26af7b48ce945a5e0e2c03
+PODFILE CHECKSUM: 0e30c9189a330aab3cfa4ba0c6e5593bc1a9185c
 
 COCOAPODS: 1.8.4

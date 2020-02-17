@@ -9,6 +9,7 @@ inhibit_all_warnings!
 
 abstract_target 'All' do
   pod 'nntool-shared-swift', :path => '../nntool-shared-swift'
+  pod 'qos-client-cpp', :path => '../qos-cpp'
 
   pod 'CocoaAsyncSocket', '~> 7.6.3'
   pod 'BlueSocket', '~> 1.0.52'

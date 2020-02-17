@@ -27,6 +27,7 @@ public enum QoSMeasurementType: String, CaseIterable, Codable {
     case website = "WEBSITE"
     case sip = "SIP"
     case echoProtocol = "ECHO_PROTOCOL"
+    case audioStreaming = "AUDIO_STREAMING"
 
     case mkitDash = "MKIT_DASH"
     case mkitWebConnectivity = "MKIT_WEB_CONNECTIVITY"

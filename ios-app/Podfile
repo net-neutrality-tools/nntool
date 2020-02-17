@@ -12,6 +12,7 @@ abstract_target 'All' do
 
   target 'BEREC_nntool' do
     pod 'nntool-shared-swift', :path => '../nntool-shared-swift'
+    pod 'qos-client-cpp', :path => '../qos-cpp'
 
     pod 'MeasurementAgentKit', :path => '../measurement-agent-swift'
     pod 'QoSKit', :path => '../qos-client-swift'
