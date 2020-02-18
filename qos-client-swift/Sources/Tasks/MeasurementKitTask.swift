@@ -117,7 +117,6 @@ class MeasurementKitTask: QoSTask {
         }
     }
 
-    // TODO: handle timeout!
     override func taskMain() {
         guard let t = type else {
             taskLogger.debug("type nil")
@@ -137,62 +136,74 @@ class MeasurementKitTask: QoSTask {
             return
         }
 
-        while !task.done() {
-            guard !isCancelled else {
-                task.interrupt()
-                status = .error // TODO: add status for aborted state?
-                break
-            }
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        DispatchQueue.global(qos: .background).async {
+            while !task.done() {
+                guard !self.isCancelled else {
+                    task.interrupt()
+                    self.status = .error // TODO: add status for aborted state?
+                    break
+                }
 
-            guard let event = task.waitForNextEvent() else {
-                taskLogger.debug("no event")
-                status = .error
-                break
-            }
+                guard let event = task.waitForNextEvent() else {
+                    self.taskLogger.debug("no event")
+                    self.status = .error
+                    break
+                }
 
-            //taskLogger.debug(event)
+                //taskLogger.debug(event)
 
-            guard let eventObj = deserializeEvent(event) else {
-                taskLogger.debug("cannot deserialize event")
-                status = .error
-                break
-            }
+                guard let eventObj = self.deserializeEvent(event) else {
+                    self.taskLogger.debug("cannot deserialize event")
+                    self.status = .error
+                    break
+                }
 
-            guard let eventType = eventObj.type else {
-                taskLogger.debug("no/unknown event type")
-                continue
-            }
+                guard let eventType = eventObj.type else {
+                    self.taskLogger.debug("no/unknown event type")
+                    continue
+                }
 
-            switch eventType {
-            case .measurement:
-                if let jsonData = eventObj.value.jsonString?.data(using: .utf8) {
-                    do {
-                        taskResult = try JSONDecoder().decode(JSON.self, from: jsonData)
-                    } catch {
-                        taskLogger.error(error)
+                switch eventType {
+                case .measurement:
+                    if let jsonData = eventObj.value.jsonString?.data(using: .utf8) {
+                        do {
+                            self.taskResult = try JSONDecoder().decode(JSON.self, from: jsonData)
+                        } catch {
+                            self.taskLogger.error(error)
+                        }
                     }
-                }
 
-                if taskResult == nil {
-                    taskResult = JSON(eventObj.value.jsonString)
-                }
+                    if self.taskResult == nil {
+                        self.taskResult = JSON(eventObj.value.jsonString)
+                    }
 
-                status = .ok
-            case .progress:
-                if let p = eventObj.value.percentage {
-                    progress.completedUnitCount = Int64(p * 100)
+                    self.status = .ok
+                case .progress:
+                    if let p = eventObj.value.percentage {
+                        self.progress.completedUnitCount = Int64(p * 100)
+                    }
+                case .failureStartup, .failureReportCreate, .failureMeasurementSubmission:
+                    self.status = .error
+                case .statusEnd:
+                    self.downloadedKb = eventObj.value.downloadedKb
+                    self.uploadedKb = eventObj.value.uploadedKb
+                case .log:
+                    self.taskLogger.debug(eventObj.value.message)
+                default:
+                    //taskLogger.debug(eventType.rawValue)
+                    break
                 }
-            case .failureStartup, .failureReportCreate, .failureMeasurementSubmission:
-                status = .error
-            case .statusEnd:
-                downloadedKb = eventObj.value.downloadedKb
-                uploadedKb = eventObj.value.uploadedKb
-            case .log:
-                taskLogger.debug(eventObj.value.message)
-            default:
-                //taskLogger.debug(eventType.rawValue)
-                break
             }
+            
+            semaphore.signal()
+        }
+        
+        let semaphoneTimeout = DispatchTime.now() + DispatchTimeInterval.nanoseconds(Int(truncatingIfNeeded: timeoutNs))
+        if semaphore.wait(timeout: semaphoneTimeout) == .timedOut {
+            task.interrupt()
+            status = .timeout
         }
 
         postProcess()

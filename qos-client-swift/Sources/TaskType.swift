@@ -48,6 +48,9 @@ enum TaskType: String, Codable {
 
     ///
     case sip = "sip"
+    
+    ///
+    case audioStreaming = "audio_streaming"
 
     ///
     case mkitWebConnectivity = "mkit_web_connectivity"
@@ -79,6 +82,8 @@ enum TaskType: String, Codable {
             return VoipTask.self
         case .sip:
             return SipTask.self
+        case .audioStreaming:
+            return AudioStreamingTask.self
         case .mkitWebConnectivity:
             return MeasurementKitTask.self
         case .mkitDash:

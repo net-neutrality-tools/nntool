@@ -94,6 +94,12 @@ public enum QosMeasurementType {
     /**
      *
      */
+    @SerializedName("audio_streaming")
+    AUDIO_STREAMING("audio_streaming", "test.audio_streaming", "name.audio_streaming", AudioStreamingResult.class),
+
+    /**
+     *
+     */
     @SerializedName("mkit_web_connectivity")
     MKIT_WEB_CONNECTIVITY("mkit_web_connectivity", "test.mkit_web_connectivity", "name.mkit_web_connectivity", MkitWebConnectivityResult.class),
 
@@ -225,6 +231,8 @@ public enum QosMeasurementType {
                 return QoSMeasurementTypeDto.TRACEROUTE;
             case SIP:
                 return QoSMeasurementTypeDto.SIP;
+            case AUDIO_STREAMING:
+                return QoSMeasurementTypeDto.AUDIO_STREAMING;
             case MKIT_WEB_CONNECTIVITY:
                 return QoSMeasurementTypeDto.MKIT_WEB_CONNECTIVITY;
             case MKIT_DASH:
@@ -256,6 +264,8 @@ public enum QosMeasurementType {
                 return TRACEROUTE;
             case SIP:
                 return SIP;
+            case AUDIO_STREAMING:
+                return AUDIO_STREAMING;
             case MKIT_WEB_CONNECTIVITY:
                 return MKIT_WEB_CONNECTIVITY;
             case MKIT_DASH:

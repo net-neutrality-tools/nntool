@@ -114,6 +114,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapReportMode
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.LmapTaskMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.MeasurementAgentMapper;
 import at.alladin.nettest.shared.server.storage.couchdb.mapper.v1.SettingsResponseMapper;
+import at.alladin.nntool.shared.qos.AudioStreamingResult;
 import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.shared.qos.TcpResult;
 import at.alladin.nntool.shared.qos.TracerouteResult;
@@ -427,7 +428,7 @@ public class CouchDbStorageService implements StorageService {
 			qosInfo.setName(messageSource.getMessage(type.getNameKey(), null, Locale.ENGLISH)); // TODO: locale, translation part has to be moved to controller
 			qosInfo.setDescription(messageSource.getMessage(type.getDescriptionKey(), null, Locale.ENGLISH)); // TODO: locale, translation part has to be moved to controller
 			try {
-				ret.getQosTypeInfo().put(QoSMeasurementTypeDto.valueOf(type.getValue().toUpperCase()),  qosInfo);				
+				ret.getQosTypeInfo().put(QoSMeasurementTypeDto.valueOf(type.getValue().toUpperCase()), qosInfo);				
 			} catch (Exception ex) {
 				logger.error("Trying to map invalid enum w/value: " + type.getValue(), ex);
 			}
@@ -914,6 +915,26 @@ public class CouchDbStorageService implements StorageService {
 					if (!portOutList.isEmpty()) {
 						blocked.setOutPorts(portOutList);
 					}
+				} else if (QoSMeasurementType.AUDIO_STREAMING.equals(qos.getType())) {
+					AudioStreamingResult result = objectMapper.convertValue(qos.getResults(), AudioStreamingResult.class);
+					
+					if (result.getStallsNs() != null && result.getStallsNs().size() > 0) {
+						result.setNumberOfStalls((long) result.getStallsNs().size());
+						long totalStallTime = 0;
+						for (Long stall : result.getStallsNs()) {
+							totalStallTime += stall;
+						}
+						result.setTotalStallTime(totalStallTime);
+						result.setAverageStallTime(totalStallTime / result.getStallsNs().size());
+					} else {
+						result.setAverageStallTime(0L);
+						result.setNumberOfStalls(0L);
+						result.setTotalStallTime(0L);
+					}
+
+					qos.getResults().put(AudioStreamingResult.TOTAL_NUMBER_OF_STALLS, result.getNumberOfStalls());
+					qos.getResults().put(AudioStreamingResult.TOTAL_STALL_TIME, result.getTotalStallTime());
+					qos.getResults().put(AudioStreamingResult.AVG_STALL_TIME, result.getAverageStallTime());
 				}
 			}
 			

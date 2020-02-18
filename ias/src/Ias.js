@@ -263,7 +263,7 @@ function Ias()
         peerKPIs.port = String(wsMeasurementParameters.wsTargetPort);
         peerKPIs.tls  = String(wsMeasurementParameters.wsWss);
 
-        if (!platform || !wsMeasurementParameters.wsTLD || (!performRttMeasurement && !performDownloadMeasurement && !performUploadMeasurement))
+        if (!platform || !(wsMeasurementParameters.wsTLD || wsMeasurementParameters.wsTarget) || (!performRttMeasurement && !performDownloadMeasurement && !performUploadMeasurement))
         {
             var data                = {};
             data.cmd                = 'error';

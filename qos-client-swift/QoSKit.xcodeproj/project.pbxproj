@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B13EEE3523ECA3AF00663F42 /* AudioStreamingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13EEE3423ECA3AF00663F42 /* AudioStreamingTask.swift */; };
 		B180E11E22849CA4000CF9E2 /* QoSBidirectionalIpTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = B180E11D22849CA4000CF9E2 /* QoSBidirectionalIpTask.swift */; };
 		E029275122D79597001FCAEC /* TaskError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E029275022D79597001FCAEC /* TaskError.swift */; };
 		E02D191A1CF598A4002A02FE /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E02D19191CF598A4002A02FE /* libresolv.tbd */; };
@@ -33,6 +34,7 @@
 		E05D32FA21F7741F005E77F1 /* QoSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D32F921F7741F005E77F1 /* QoSLog.swift */; };
 		E05D331A21FA0255005E77F1 /* TaskType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E05D331921FA0255005E77F1 /* TaskType.swift */; };
 		E06951002110A6EB00CFA14B /* QoSKit.podspec.json in Resources */ = {isa = PBXBuildFile; fileRef = E06950FF2110A6EB00CFA14B /* QoSKit.podspec.json */; };
+		E08D312B23F5B453004EFCEA /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E02D19411CF5A38F002A02FE /* libresolv.tbd */; };
 		E08FC3552212DDC50018E747 /* SocketProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08FC3542212DDC50018E747 /* SocketProtocols.swift */; };
 		E0AAD03F1FE2BDFC0007ACE4 /* QoSKit.h in Headers */ = {isa = PBXBuildFile; fileRef = E0B1C8131CF4AFFD00F19282 /* QoSKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E0B950CE231EF85D0069F20A /* SipTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B950CC231EE71C0069F20A /* SipTask.swift */; };
@@ -72,6 +74,8 @@
 		0D9E8BEA8568731BB793D0E7 /* Pods-All-QoSKitUnitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-QoSKitUnitTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-All-QoSKitUnitTests/Pods-All-QoSKitUnitTests.debug.xcconfig"; sourceTree = "<group>"; };
 		114F7D4D1BAD1E3E433F65C3 /* Pods_All_QoSKit_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_QoSKit_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C8C283F3ADDF29FAC8A7F46 /* Pods-All-QoSKitUnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All-QoSKitUnitTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-All-QoSKitUnitTests/Pods-All-QoSKitUnitTests.release.xcconfig"; sourceTree = "<group>"; };
+		B1275C1E23ECBA4A00DD43B5 /* GStreamer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GStreamer.framework; path = ../../../../Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework; sourceTree = "<group>"; };
+		B13EEE3423ECA3AF00663F42 /* AudioStreamingTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioStreamingTask.swift; sourceTree = "<group>"; };
 		B180E11D22849CA4000CF9E2 /* QoSBidirectionalIpTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QoSBidirectionalIpTask.swift; sourceTree = "<group>"; };
 		E029275022D79597001FCAEC /* TaskError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskError.swift; sourceTree = "<group>"; };
 		E02D19191CF598A4002A02FE /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libresolv.tbd; sourceTree = DEVELOPER_DIR; };
@@ -152,6 +156,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E08D312B23F5B453004EFCEA /* libresolv.tbd in Frameworks */,
 				E05D32C421F0F77D005E77F1 /* QoSKit.framework in Frameworks */,
 				F94E822B8F7C493E828188B4 /* Pods_All_QoSKitUnitTests.framework in Frameworks */,
 			);
@@ -177,6 +182,7 @@
 		2BCE53BE0C8C1F8DF2447450 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B1275C1E23ECBA4A00DD43B5 /* GStreamer.framework */,
 				E0FC4C391D6C81A100D5D236 /* MobileCoreServices.framework */,
 				E0FC4C371D6C818900D5D236 /* Foundation.framework */,
 				E0FC4C351D6C817100D5D236 /* CoreLocation.framework */,
@@ -345,6 +351,7 @@
 				E0EA84C822804CE200EB73BF /* DnsTask.swift */,
 				E0B950CC231EE71C0069F20A /* SipTask.swift */,
 				E05487E4231C3C7400B47184 /* MeasurementKitTask.swift */,
+				B13EEE3423ECA3AF00663F42 /* AudioStreamingTask.swift */,
 				E05487E2231B06C400B47184 /* TracerouteTask.swift */,
 				E0C4526D22CCCAA800FA4B44 /* HttpProxyTask.swift */,
 				E0EA84C922804CE200EB73BF /* UdpPortTask.swift */,
@@ -439,7 +446,6 @@
 			buildConfigurationList = E0B1C7E41CF4ADBA00F19282 /* Build configuration list for PBXNativeTarget "QoSKit_iOS" */;
 			buildPhases = (
 				186B49F16AD90FF628A92413 /* [CP] Check Pods Manifest.lock */,
-				E0EA84E42280822000EB73BF /* Run swiftlint autocorrect */,
 				E0B1C7D91CF4ADBA00F19282 /* Sources */,
 				E0B1C7DA1CF4ADBA00F19282 /* Frameworks */,
 				E0B1C7DB1CF4ADBA00F19282 /* Headers */,
@@ -567,24 +573,6 @@
 			shellPath = /bin/sh;
 			shellScript = "if which ${PODS_ROOT}/SwiftLint/swiftlint >/dev/null; then\n  ${PODS_ROOT}/SwiftLint/swiftlint\nelse\n  echo \"warning: SwiftLint is not installed, run pod install.\"\nfi\n";
 		};
-		E0EA84E42280822000EB73BF /* Run swiftlint autocorrect */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Run swiftlint autocorrect";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#if which ${PODS_ROOT}/SwiftLint/swiftlint >/dev/null; then\n#  ${PODS_ROOT}/SwiftLint/swiftlint autocorrect\n#else\n#  echo \"warning: SwiftLint is not installed, run pod install.\"\n#fi\n";
-		};
 		FD1DB0593DD052929597DD34 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -602,6 +590,7 @@
 				"${BUILT_PRODUCTS_DIR}/XCGLogger/XCGLogger.framework",
 				"${PODS_ROOT}/mkall/mkall.framework",
 				"${BUILT_PRODUCTS_DIR}/nntool-shared-swift/nntool_shared_swift.framework",
+				"${BUILT_PRODUCTS_DIR}/qos-client-cpp/qos_client_cpp.framework",
 				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -616,6 +605,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XCGLogger.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/mkall.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nntool_shared_swift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/qos_client_cpp.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -670,6 +660,7 @@
 				E0EA84DD22804D0100EB73BF /* RequireControlConnection.swift in Sources */,
 				E0EB4D3B2343E7B70068BE34 /* ByteUtil.swift in Sources */,
 				E0C4526E22CCCAA800FA4B44 /* HttpProxyTask.swift in Sources */,
+				B13EEE3523ECA3AF00663F42 /* AudioStreamingTask.swift in Sources */,
 				E0EA84D522804CE200EB73BF /* TcpPortTask.swift in Sources */,
 				E0EA84D622804CE200EB73BF /* QoSTask.swift in Sources */,
 				E0EA84D722804CE200EB73BF /* EchoProtocolTask.swift in Sources */,
@@ -778,8 +769,6 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -817,8 +806,6 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
