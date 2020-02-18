@@ -111,11 +111,13 @@ class AudioStreamingTask: QoSTask {
 
         guard
             let resultData = resultString?.data(using: .utf8),
-            let audioStreamingResult = try? JSONDecoder().decode(AudioStreamingResult.self, from: resultData)
+            let audioResult = try? JSONDecoder().decode(AudioStreamingResult.self, from: resultData)
         else {
             status = .error
             return
         }
+        
+        audioStreamingResult = audioResult
         
         if status == .unknown {
             status = .ok
