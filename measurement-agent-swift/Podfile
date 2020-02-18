@@ -19,7 +19,7 @@ abstract_target 'All' do
   target 'MeasurementAgentKitTests' do
       platform :ios, '10.0'
 
-      pod 'Nimble', '~> 8.0.4'
+      pod 'Nimble', '~> 8.0.5'
   end
 end
 

@@ -38,6 +38,7 @@ public enum GeneralMeasurementTypeDto {
     TRACEROUTE,
     WEBSITE,
     SIP,
+    AUDIO_STREAMING,
 
     MKIT_DASH,
     MKIT_WEB_CONNECTIVITY;
