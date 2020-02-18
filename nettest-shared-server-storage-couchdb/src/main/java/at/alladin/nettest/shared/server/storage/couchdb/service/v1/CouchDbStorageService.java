@@ -931,6 +931,10 @@ public class CouchDbStorageService implements StorageService {
 						result.setNumberOfStalls(0L);
 						result.setTotalStallTime(0L);
 					}
+
+					qos.getResults().put(AudioStreamingResult.TOTAL_NUMBER_OF_STALLS, result.getNumberOfStalls());
+					qos.getResults().put(AudioStreamingResult.TOTAL_STALL_TIME, result.getTotalStallTime());
+					qos.getResults().put(AudioStreamingResult.AVG_STALL_TIME, result.getAverageStallTime());
 				}
 			}
 			

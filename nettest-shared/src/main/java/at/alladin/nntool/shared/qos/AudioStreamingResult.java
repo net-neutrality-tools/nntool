@@ -8,7 +8,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Felix Kendlbacher (alladin-IT GmbH)
  */
 public class AudioStreamingResult extends AbstractResult {
-	
+
+	public final static String TOTAL_NUMBER_OF_STALLS = "number_of_stalls";
+
+	public final static String TOTAL_STALL_TIME = "total_stall_time_ns";
+
+	public final static String AVG_STALL_TIME = "average_stall_time_ns";
+
 	/**
 	 * The time it took from start playing command to the actual start of the audio stream
 	 */
@@ -18,13 +24,13 @@ public class AudioStreamingResult extends AbstractResult {
 	@JsonProperty("stalls_ns")
 	private List<Long> stallsNs;
 	
-	@JsonProperty("average_stall_time")
+	@JsonProperty(AVG_STALL_TIME)
 	private Object averageStallTime;
 	
-	@JsonProperty("number_of_stalls")
+	@JsonProperty(TOTAL_NUMBER_OF_STALLS)
 	private Object numberOfStalls;
 	
-	@JsonProperty("total_stall_time")
+	@JsonProperty(TOTAL_STALL_TIME)
 	private Object totalStallTime;
 	
 	@JsonProperty("audio_streaming_objective_target_url")
