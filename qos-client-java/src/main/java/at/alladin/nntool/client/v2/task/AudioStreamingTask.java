@@ -141,7 +141,7 @@ public class AudioStreamingTask extends AbstractQoSTask {
                         ex.printStackTrace();
                     }
 
-                    testResult.getResultMap().put(RESULT_DETAILS, result.toString());
+                    //testResult.getResultMap().put(RESULT_DETAILS, result.toString());
                 }
             }
         }
