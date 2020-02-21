@@ -131,6 +131,13 @@ export class TestService {
 
         const deviceInfo: DeviceInfo = this.deviceService.getDeviceInfo();
 
+        //check if we are running in electron and overwrite device settings
+        if (typeof require !== 'undefined' && typeof process !== 'undefined')
+        {
+          deviceInfo.browser = 'Desktop';
+          deviceInfo.browser_version = require('electron').remote.app.getVersion();
+        }
+
         const requestInfo = this.requestInfoService.getRequestInfo();
         requestInfo.agent_uuid = context.user.uuid;
         requestInfo.code_name = deviceInfo.browser_version;
@@ -191,6 +198,13 @@ export class TestService {
     }
 
     const deviceInfo: DeviceInfo = this.deviceService.getDeviceInfo();
+
+    //check if we are running in electron and overwrite device settings
+    if (typeof require !== 'undefined' && typeof process !== 'undefined')
+    {
+      deviceInfo.browser = 'Desktop';
+      deviceInfo.browser_version = require('electron').remote.app.getVersion();
+    }
 
     const requestInfo = this.requestInfoService.getRequestInfo();
     requestInfo.agent_uuid = this.userService.user.uuid;

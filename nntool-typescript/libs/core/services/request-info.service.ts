@@ -39,6 +39,13 @@ export class RequestInfoService {
 
     const deviceInfo: DeviceInfo = this.deviceService.getDeviceInfo();
 
+    //check if we are running in electron and overwrite device settings
+    if (typeof require !== 'undefined' && typeof process !== 'undefined')
+    {
+      deviceInfo.browser = 'Desktop';
+      deviceInfo.browser_version = require('electron').remote.app.getVersion();
+    }
+
     const request_info = {
       agent_type: testSettings.agent_type,
       agent_id: this.userService.user.uuid, // TODO: check which uuid is which
