@@ -415,6 +415,15 @@
       "docType": "EmbeddedNetworkType"
     },
     {
+      "_id": "network_type_UNKNOWN",
+      "_rev": "2-c5e2c3c2fb336c5b186e8a3e516a3295",
+      "network_type_id": 95,
+      "name": "UNKNOWN",
+      "group_name": "UNKNOWN",
+      "category": "UNKNOWN",
+      "docType": "EmbeddedNetworkType"
+    },
+    {
       "docType": "Settings",
       "uuid": "4e7567ef-175b-44f4-8436-8fd6d22dab48",
       "urls": {
