@@ -58,10 +58,11 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
   @ViewChild(ServerSelectionComponent, { static: false }) public serverSelectionComponent: ServerSelectionComponent;
   public speedConfig: MeasurementSettings = undefined; // TODO: change to measurement configuration
   public qosConfig: MeasurementTypeParameters = undefined; // TODO: change to measurement configuration
+  public isElectron = typeof require !== 'undefined' && typeof process !== 'undefined';
 
   protected measurementControl: LmapControl = undefined;
 
-  private readonly webNetworkType: number = 98;
+  private readonly webNetworkType: number = 95;
   private readonly paramSpeed: string = 'parameters_speed';
   private readonly paramServerPort: string = 'server_port';
   private readonly paramServerAddress: string = 'server_addr_default';
@@ -393,12 +394,21 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
     if (this.network_info) {
       const npit_info = lmapReport.time_based_result.network_points_in_time[0];
 
-      if (this.network_info.dsk_lan_detected) {
-        // LAN
-        npit_info.network_type_id = 98;
-      } else {
-        // WLAN
-        npit_info.network_type_id = 99;
+      if (typeof this.network_info.dsk_lan_detected !== 'undefined')
+      {
+        if (this.network_info.dsk_lan_detected)
+        {
+          // LAN
+          npit_info.network_type_id = 98;
+        } else {
+          // WLAN
+          npit_info.network_type_id = 99;
+        }
+      }
+      else
+      {
+        // UNKNOWN
+        npit_info.network_type_id = 95;
       }
     }
 
