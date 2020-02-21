@@ -116,7 +116,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
     state.provider = null;
     state.location = null;
     state.device = null;
-    state.technology = 'BROWSER'; // TODO: desktop
+    state.technology = null;
 
     return state;
   };
