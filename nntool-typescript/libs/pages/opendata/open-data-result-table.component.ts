@@ -211,6 +211,7 @@ export class OpenDataResultTableComponent implements OnInit {
         query_string: 'computed_network_info.network_type_group_name:',
         options: [
           { label: undefined, value: undefined },
+          { label: 'UNKNOWN', value: 'UNKNOWN' },
           { label: 'LAN', value: 'LAN' },
           { label: 'WLAN', value: 'WLAN' },
           { label: '2G', value: '2G' },
