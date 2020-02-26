@@ -134,8 +134,9 @@ export class TestService {
         //check if we are running in electron and overwrite device settings
         if (typeof require !== 'undefined' && typeof process !== 'undefined')
         {
+          const win = window as any;
           deviceInfo.browser = 'Desktop';
-          deviceInfo.browser_version = require('electron').remote.app.getVersion();
+          deviceInfo.browser_version = win.require('electron').remote.app.getVersion();
         }
 
         const requestInfo = this.requestInfoService.getRequestInfo();
@@ -202,8 +203,9 @@ export class TestService {
     //check if we are running in electron and overwrite device settings
     if (typeof require !== 'undefined' && typeof process !== 'undefined')
     {
+      const win = window as any;
       deviceInfo.browser = 'Desktop';
-      deviceInfo.browser_version = require('electron').remote.app.getVersion();
+      deviceInfo.browser_version = win.require('electron').remote.app.getVersion();
     }
 
     const requestInfo = this.requestInfoService.getRequestInfo();
