@@ -58,6 +58,8 @@ module.exports = (config, options) => {
     ])
   );
 
+  config.externals = {fs: require('fs') };
+
   /*config.plugins.push(
     new webpack.BannerPlugin('----- nntool.eu -----')
   );*/

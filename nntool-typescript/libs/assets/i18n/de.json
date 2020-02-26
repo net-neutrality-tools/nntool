@@ -249,6 +249,7 @@
     "DOWNLOAD_TEXT": "Download all data as csv",
     "DETAIL_TEXT": "View All Data in Detail",
     "DELETE": "Delete from History / Anonymize",
+    "OS": "Betriebssystem",
     "DETAIL": {
       "HEADER": "Nettest Measurement Report in Detail",
       "KEY": {

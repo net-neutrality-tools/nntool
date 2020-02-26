@@ -40,14 +40,14 @@ export class HistoryComponent {
           return this.dateParseService.parseDateIntoFormat(new Date(Date.parse(row.start_time)));
         }
       },
-      'device_info.device_code_name': {
-        title: 'Device',
+      'device_info.device_code_name': (typeof require !== 'undefined' && typeof process !== 'undefined') ? {
+        title: 'Connection',
         filter: false,
         sort: false,
         valuePrepareFunction: (cell, row) => {
-          return row.device_info.device_code_name;
+          return row.network_type_name;
         }
-      },
+      }:{},
       'measurements.SPEED.rtt_average_ns': {
         // or median?
         title: 'Ping (ms)',
