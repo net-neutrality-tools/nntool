@@ -1,0 +1,13 @@
+[Unit]
+Description=berec nntool measurement peer service
+After=local-fs.target network.target
+
+[Service]
+User=root
+Restart=always
+ExecStart=/usr/local/bin/ias-server
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

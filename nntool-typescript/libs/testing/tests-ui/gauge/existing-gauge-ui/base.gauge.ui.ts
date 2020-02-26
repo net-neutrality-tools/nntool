@@ -242,7 +242,7 @@ export abstract class BaseMeasurementGauge {
       this.setServerView('-');
       return;
     }
-    state.technology = 'BROWSER';
+
     const noState: boolean = this.currentState == null;
     if (noState) {
       this.currentState = new GaugeUIState();
