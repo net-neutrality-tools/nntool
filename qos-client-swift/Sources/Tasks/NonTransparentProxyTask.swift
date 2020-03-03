@@ -76,7 +76,7 @@ class NonTransparentProxyTask: QoSControlConnectionTask {
         let socket = GCDAsyncSocket(delegate: self, delegateQueue: delegateQueue)
 
         do {
-            try socket.connect(toHost: controlConnectionParams.host, onPort: controlConnectionParams.port)
+            try socket.connect(toHost: controlConnectionParams.host, onPort: port)
         } catch {
             status = .error
             return
