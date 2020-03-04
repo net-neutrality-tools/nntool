@@ -70,7 +70,24 @@ lcov --list coverage.info
 
 The HTML code coverage report will be generated into directory `ias-server/build/coverage_report`.
 
+=== Recommended Settings
+
+To maximize available measurement peer resources per tcp connection, the following settings are recommended:
+
+[source,bash]
+----
+net.core.rmem_max = 8388608 
+net.core.rmem_default = 262144 
+net.core.wmem_max = 8388608 
+net.core.wmem_default = 262144
+net.ipv4.tcp_rmem = 4096 262144 8388608
+net.ipv4.tcp_wmem = 4096 262144 8388608
+----
+
+The parameters have to be added to `/etc/sysctl.conf` and activated via `sysctl -p`.
+
 === Execution
+
 Run `build/ias-server`. Add the `-d` option for daemon mode.
 
 For the usage of TLS-Secured connections, perform the following steps:
