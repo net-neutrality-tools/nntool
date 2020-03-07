@@ -1,9 +1,9 @@
 /*!
     \file iasclient.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-03-06
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -93,9 +93,6 @@ int main(int argc, char** argv)
 {
 	::DEBUG 			= false;
 	::RUNNING 			= true;
-	::UNREACHABLE 		= false;
-	::FORBIDDEN 		= false;
-	::OVERLOADED 		= false;
 
 	::RTT				= false;
 	::DOWNLOAD 			= false;
@@ -211,6 +208,15 @@ int main(int argc, char** argv)
  */
 void measurementStart(string measurementParameters)
 {
+    ::PERFORMED_RTT 		= false;
+    ::PERFORMED_DOWNLOAD 	= false;
+    ::PERFORMED_UPLOAD 		= false;
+    ::hasError 				= false;
+
+	::UNREACHABLE 			= false;
+	::FORBIDDEN 			= false;
+	::OVERLOADED 			= false;
+
 	::TCP_STARTUP	= 3000000;
 	conf.sProvider 	= "nntool";
 
