@@ -2,9 +2,9 @@
     \file android_connector.cpp
     \author zafaco GmbH <info@zafaco.de>
     \author alladin-IT GmbH <info@alladin.at>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-03-06
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
     Copyright (C) 2019 alladin-IT GmbH
 
     This program is free software: you can redistribute it and/or modify
@@ -607,11 +607,6 @@ void AndroidConnector::startMeasurement() {
         ::DOWNLOAD 			= speedTaskDesc.performDownload;
         ::UPLOAD 			= speedTaskDesc.performUpload;
 
-        ::PERFORMED_RTT = false;
-        ::PERFORMED_DOWNLOAD = false;
-        ::PERFORMED_UPLOAD = false;
-        ::hasError = false;
-
         json11::Json::object jRttParameters;
         json11::Json::object jDownloadParameters;
         json11::Json::object jUploadParameters;
@@ -633,7 +628,7 @@ void AndroidConnector::startMeasurement() {
 
         jMeasurementParameters["platform"] = "mobile";
         jMeasurementParameters["clientos"] = "android";
-        jMeasurementParameters["wsTLD"] = "net-neutrality.tools";
+        jMeasurementParameters["wsTLD"] = "";
         jMeasurementParameters["wsTargetPort"] = std::to_string(speedTaskDesc.speedServerPort);
         jMeasurementParameters["wsWss"] = speedTaskDesc.isEncrypted ? "1" : "0";
         jMeasurementParameters["wsAuthToken"] = "placeholderToken";
@@ -645,11 +640,9 @@ void AndroidConnector::startMeasurement() {
         if (speedTaskDesc.useIpv6) {
             TRC_INFO("Measuring with ipv6");
             jTargets.push_back(speedTaskDesc.measurementServerUrlV6);
-            measurementServerIp = CTool::getIpFromHostname( speedTaskDesc.measurementServerUrlV6, 6 );
         } else {
             TRC_INFO("Measuring with ipv4");
             jTargets.push_back(speedTaskDesc.measurementServerUrlV4);
-            measurementServerIp = CTool::getIpFromHostname( speedTaskDesc.measurementServerUrlV4, 4 );
         }
         jMeasurementParameters["wsTargets"] = json11::Json(jTargets);
 
