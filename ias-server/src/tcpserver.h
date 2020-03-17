@@ -51,7 +51,7 @@ class CTcpServer : public CBasisThread
 		
 		virtual ~CTcpServer();
 
-        CTcpServer(int nTargetPort, int nTargetPortTraceroute, bool nTlsSocket) : CTcpServer(nTargetPort, nTargetPortTraceroute, 0 , "::", nTlsSocket) {};
+        CTcpServer(int nTargetPort, int nTargetPortTraceroute, bool nTlsSocket) : CTcpServer(nTargetPort, nTargetPortTraceroute, 0 , "", nTlsSocket) {};
 
         CTcpServer(int nTargetPort, int nTargetPortTraceroute, int nIpType, string sIp, bool nTlsSocket);
 
