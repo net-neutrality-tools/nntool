@@ -1,7 +1,7 @@
 /*!
     \file iasserver.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2020-03-16
+    \date Last update: 2020-03-17
 
     Copyright (C) 2016 - 2020 zafaco GmbH
 
@@ -191,7 +191,7 @@ int main(int argc, char** argv)
         CTcpServer *tcpListener6 = new CTcpServer(mPort, mPortTraceroute, false);
         if (mPort != 0)
         {
-            if (tcpListener4->createThread() != 0)
+            if (tcpListener6->createThread() != 0)
             {
                 TRC_ERR("Error: Failure while creating TCP Listener Thread on target Port " + to_string(mPort));
                 return EXIT_FAILURE;
@@ -199,31 +199,31 @@ int main(int argc, char** argv)
         }
 
         CTcpServer *tcpTlsListener6 = new CTcpServer(mPortTls, mPortTraceroute, true);
-        if (mPort != 0)
+        if (mPortTls != 0)
         {
             if (tcpTlsListener6->createThread() != 0)
             {
-                TRC_ERR("Error: Failure while creating TCP TLS Listener Thread on target Port " + to_string(mPort));
+                TRC_ERR("Error: Failure while creating TCP TLS Listener Thread on target Port " + to_string(mPortTls));
                 return EXIT_FAILURE;
             }
         }
 
         CTcpServer *tcpTracerouteListener6 = new CTcpServer(mPortTraceroute, mPortTraceroute, false);
-        if (mPort != 0)
+        if (mPortTraceroute != 0)
         {
             if (tcpTracerouteListener6->createThread() != 0)
             {
-                TRC_ERR("Error: Failure while creating TCP Listener Thread on target Port " + to_string(mPort));
+                TRC_ERR("Error: Failure while creating TCP Listener Thread on target Port " + to_string(mPortTraceroute));
                 return EXIT_FAILURE;
             }
         }
 
         CTcpServer *tcpTracerouteTlsListener6 = new CTcpServer(mPortTracerouteTls, mPortTracerouteTls, true);
-        if (mPort != 0)
+        if (mPortTracerouteTls != 0)
         {
             if (tcpTracerouteTlsListener6->createThread() != 0)
             {
-                TRC_ERR("Error: Failure while creating TCP TLS Listener Thread on target Port " + to_string(mPort));
+                TRC_ERR("Error: Failure while creating TCP TLS Listener Thread on target Port " + to_string(mPortTracerouteTls));
                 return EXIT_FAILURE;
             }
         }

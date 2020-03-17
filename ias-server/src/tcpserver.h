@@ -1,7 +1,7 @@
 /*!
     \file tcpserver.h
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2020-03-16
+    \date Last update: 2020-03-17
 
     Copyright (C) 2016 - 2020 zafaco GmbH
 
@@ -53,7 +53,7 @@ class CTcpServer : public CBasisThread
 
         CTcpServer(int nTargetPort, int nTargetPortTraceroute, bool nTlsSocket) : CTcpServer(nTargetPort, nTargetPortTraceroute, 0 , "::", nTlsSocket) {};
 
-        CTcpServer(int nTargetPort, int nTargetPortTracerouteint, int nIpType, string sIp, bool nTlsSocket);
+        CTcpServer(int nTargetPort, int nTargetPortTraceroute, int nIpType, string sIp, bool nTlsSocket);
 
         int run() override;
 };
