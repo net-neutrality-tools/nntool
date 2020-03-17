@@ -1,9 +1,9 @@
 /*!
     \file connection.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-03-16
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -335,7 +335,11 @@ int CConnection::tcp6Socket(string &interface, string &sServer, int &nPort, int 
 
 //! TCP Server Sockets
 
-int CConnection::tcpSocketServer( int &nPort )
+int CConnection::tcpSocketServer( int &nPort ){
+	return tcpSocketServer( nPort,  "::" );
+}
+
+int CConnection::tcpSocketServer( int &nPort , string sIp)
 {	
 	int on = 1;
 	
@@ -352,6 +356,11 @@ int CConnection::tcpSocketServer( int &nPort )
 	sockinfo_in.sin_family 		= AF_INET;
 	sockinfo_in.sin_addr.s_addr = htonl(INADDR_ANY);
 	sockinfo_in.sin_port		= htons(nPort);
+
+	if (sIp.compare("") != 0)
+	{
+		sockinfo_in.sin_addr.s_addr = inet_addr(sIp.c_str());
+	}
 	
 	setsockopt(mSocket, SOL_SOCKET,SO_REUSEADDR,(const char *) &on, sizeof(on));
 	
@@ -367,7 +376,11 @@ int CConnection::tcpSocketServer( int &nPort )
 	return mSocket;
 }
 
-int CConnection::tcp6SocketServer( int &nPort )
+int CConnection::tcp6SocketServer( int &nPort ){
+	return tcp6SocketServer( nPort,  "::" );
+}
+
+int CConnection::tcp6SocketServer( int &nPort, string sIp )
 {
 	int on = 1;
 	int no = 0;
@@ -385,6 +398,11 @@ int CConnection::tcp6SocketServer( int &nPort )
 	sockinfo_in6.sin6_flowinfo 	= 0;
 	sockinfo_in6.sin6_family 	= AF_INET6;
 	sockinfo_in6.sin6_port		= htons(nPort);
+
+	if (sIp.compare("") != 0)
+	{
+		(void) inet_pton (AF_INET6, sIp.c_str(), sockinfo_in6.sin6_addr.s6_addr);
+	}
 		
 	setsockopt(mSocket, IPPROTO_IPV6, IPV6_V6ONLY, (char*)&no, sizeof(no));
 	

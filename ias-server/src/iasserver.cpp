@@ -1,9 +1,9 @@
 /*!
     \file iasserver.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-03-16
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -72,6 +72,12 @@ int main(int argc, char** argv)
     ::OVERLOADED            = false;
 
     long int opt;
+
+    //bind to all interfaces by default
+    string sIPv4            = "0.0.0.0";
+    string sIPv6            = "::";
+
+    bool genericSockets     = true;
 
     while ((opt = getopt(argc, argv, "dnhv")) != -1)
     {
@@ -156,53 +162,138 @@ int main(int argc, char** argv)
             mPortUdp= ::CONFIG["port_bindings"]["udp"].int_value();
         }
     }
-    
-    CTcpServer *tcpListener = new CTcpServer(mPort, mPortTraceroute, false);
-    if (mPort != 0)
+
+    if (::CONFIG["ip_bindings"]["v6"].string_value().compare("") != 0)
     {
-        if (tcpListener->createThread() != 0)
-        {
-            TRC_ERR("Error: Failure while creating TCP Listener Thread on target Port " + to_string(mPort));
-            return EXIT_FAILURE;
-        }
-    }
-    
-    CTcpServer *tcpTlsListener = new CTcpServer(mPortTls, mPortTraceroute, true);
-    if (mPortTls != 0)
-    {
-        if (tcpTlsListener->createThread() != 0)
-        {
-            TRC_ERR("Error: Failure while creating TCP TLS Listener Thread on target Port " + to_string(mPortTls));
-            return EXIT_FAILURE;
-        }
+        sIPv6 = ::CONFIG["ip_bindings"]["v6"].string_value();
+        genericSockets = false;
     }
 
-    CTcpServer *tcpTracerouteListener = new CTcpServer(mPortTraceroute, mPortTraceroute, false);
-    if (mPortTraceroute != 0)
+    if (::CONFIG["ip_bindings"]["v4"].string_value().compare("") != 0)
     {
-        if (tcpTracerouteListener->createThread() != 0)
-        {
-            TRC_ERR("Error: Failure while creating TCP Traceroute Listener Thread on target Port " + to_string(mPortTraceroute));
-            return EXIT_FAILURE;
-        }
+        sIPv4 = ::CONFIG["ip_bindings"]["v4"].string_value();
+        genericSockets = false;
     }
 
-    CTcpServer *tcpTracerouteTlsListener = new CTcpServer(mPortTracerouteTls, mPortTracerouteTls, true);
-    if (mPortTracerouteTls != 0)
+    CTcpServer *tcpListener4 = new CTcpServer(mPort, mPortTraceroute, 4, sIPv4, false);
+    CTcpServer *tcpListener6 = new CTcpServer(mPort, mPortTraceroute, 6, sIPv6, false);
+    CTcpServer *tcpTlsListener4 = new CTcpServer(mPortTls, mPortTraceroute, 4, sIPv4, true);
+    CTcpServer *tcpTlsListener6 = new CTcpServer(mPortTls, mPortTraceroute, 6, sIPv6, true);
+    CTcpServer *tcpTracerouteListener4 = new CTcpServer(mPortTraceroute, mPortTraceroute, 4, sIPv4, false);
+    CTcpServer *tcpTracerouteListener6 = new CTcpServer(mPortTraceroute, mPortTraceroute, 6, sIPv6, false);
+    CTcpServer *tcpTracerouteTlsListener4 = new CTcpServer(mPortTracerouteTls, mPortTracerouteTls, 4, sIPv4, true);
+    CTcpServer *tcpTracerouteTlsListener6 = new CTcpServer(mPortTracerouteTls, mPortTracerouteTls, 6, sIPv6, true);
+
+
+    //use a dual stack socket
+    if (genericSockets)
     {
-        if (tcpTracerouteTlsListener->createThread() != 0)
+        CTcpServer *tcpListener6 = new CTcpServer(mPort, mPortTraceroute, false);
+        if (mPort != 0)
         {
-            TRC_ERR("Error: Failure while creating TCP Traceroute TLS Listener Thread on target Port " + to_string(mPortTracerouteTls));
-            return EXIT_FAILURE;
+            if (tcpListener4->createThread() != 0)
+            {
+                TRC_ERR("Error: Failure while creating TCP Listener Thread on target Port " + to_string(mPort));
+                return EXIT_FAILURE;
+            }
+        }
+
+        CTcpServer *tcpTlsListener6 = new CTcpServer(mPortTls, mPortTraceroute, true);
+        if (mPort != 0)
+        {
+            if (tcpTlsListener6->createThread() != 0)
+            {
+                TRC_ERR("Error: Failure while creating TCP TLS Listener Thread on target Port " + to_string(mPort));
+                return EXIT_FAILURE;
+            }
+        }
+
+        CTcpServer *tcpTracerouteListener6 = new CTcpServer(mPortTraceroute, mPortTraceroute, false);
+        if (mPort != 0)
+        {
+            if (tcpTracerouteListener6->createThread() != 0)
+            {
+                TRC_ERR("Error: Failure while creating TCP Listener Thread on target Port " + to_string(mPort));
+                return EXIT_FAILURE;
+            }
+        }
+
+        CTcpServer *tcpTracerouteTlsListener6 = new CTcpServer(mPortTracerouteTls, mPortTracerouteTls, true);
+        if (mPort != 0)
+        {
+            if (tcpTracerouteTlsListener6->createThread() != 0)
+            {
+                TRC_ERR("Error: Failure while creating TCP TLS Listener Thread on target Port " + to_string(mPort));
+                return EXIT_FAILURE;
+            }
         }
     }
+    else
+    {
+        //use seperated sockets for each ip version family    
+        if (mPort != 0)
+        {
+            if (tcpListener4->createThread() != 0)
+            {
+                TRC_ERR("Error: Failure while creating TCP Listener IPv4 Thread on target Port " + to_string(mPort));
+                return EXIT_FAILURE;
+            }
+            if (tcpListener6->createThread() != 0)
+            {
+                TRC_ERR("Error: Failure while creating TCP Listener IPv6 Thread on target Port " + to_string(mPort));
+                return EXIT_FAILURE;
+            }
+        }
+        
+        if (mPortTls != 0)
+        {
+            if (tcpTlsListener4->createThread() != 0)
+            {
+                TRC_ERR("Error: Failure while creating TCP TLS IPv4 Listener Thread on target Port " + to_string(mPortTls));
+                return EXIT_FAILURE;
+            }
+            if (tcpTlsListener6->createThread() != 0)
+            {
+                TRC_ERR("Error: Failure while creating TCP TLS IPv6 Listener Thread on target Port " + to_string(mPortTls));
+                return EXIT_FAILURE;
+            }
+        }
+
+        if (mPortTraceroute != 0)
+        {
+            if (tcpTracerouteListener4->createThread() != 0)
+            {
+                TRC_ERR("Error: Failure while creating TCP Traceroute Listener IPv4 Thread on target Port " + to_string(mPortTraceroute));
+                return EXIT_FAILURE;
+            }
+            if (tcpTracerouteListener6->createThread() != 0)
+            {
+                TRC_ERR("Error: Failure while creating TCP Traceroute Listener IPv6 Thread on target Port " + to_string(mPortTraceroute));
+                return EXIT_FAILURE;
+            }
+        }
+    
+        if (mPortTracerouteTls != 0)
+        {
+            if (tcpTracerouteTlsListener4->createThread() != 0)
+            {
+                TRC_ERR("Error: Failure while creating TCP Traceroute TLS Listener IPv4 Thread on target Port " + to_string(mPortTracerouteTls));
+                return EXIT_FAILURE;
+            }
+            if (tcpTracerouteTlsListener6->createThread() != 0)
+            {
+                TRC_ERR("Error: Failure while creating TCP Traceroute TLS Listener IPv6 Thread on target Port " + to_string(mPortTracerouteTls));
+                return EXIT_FAILURE;
+            }
+        }
+    }   
 
     CUdpListener *pUdpListenerGeneric = new CUdpListener(mPortUdp, 0, "");
     CUdpListener *pUdpListenerIPv4 = new CUdpListener(mPortUdp, 0, "");
     if (mPortUdp != 0) 
     { 
         //check for ip bindings
-        if (::CONFIG["ip_bindings"]["v4"].string_value().compare("") == 0 && ::CONFIG["ip_bindings"]["v6"].string_value().compare("") == 0)
+        if (genericSockets)
         {
             //no bindings, use generic IP socket
             if (pUdpListenerGeneric->createThread() != 0) 
@@ -247,19 +338,27 @@ int main(int argc, char** argv)
         }
     }       
     
+    tcpListener4->waitForEnd();
+    tcpListener6->waitForEnd();
+    tcpTlsListener4->waitForEnd();
+    tcpTlsListener6->waitForEnd();
+    tcpTracerouteListener4->waitForEnd();
+    tcpTracerouteListener6->waitForEnd();
+    tcpTracerouteTlsListener4->waitForEnd();
+    tcpTracerouteTlsListener6->waitForEnd();
     pLoadMonitoring->waitForEnd();
-    tcpListener->waitForEnd();
-    tcpTlsListener->waitForEnd();
-    tcpTracerouteListener->waitForEnd();
-    tcpTracerouteTlsListener->waitForEnd();
     pUdpListenerGeneric->waitForEnd();
     pUdpListenerIPv4->waitForEnd();
-    
+
+    delete(tcpListener4);
+    delete(tcpListener6);
+    delete(tcpTlsListener4);
+    delete(tcpTlsListener6);
+    delete(tcpTracerouteListener4);
+    delete(tcpTracerouteListener6);
+    delete(tcpTracerouteTlsListener4);
+    delete(tcpTracerouteTlsListener6);
     delete(pLoadMonitoring);
-    delete(tcpListener);
-    delete(tcpTlsListener);
-    delete(tcpTracerouteListener);
-    delete(tcpTracerouteTlsListener);
     delete(pUdpListenerGeneric);
     delete(pUdpListenerIPv4);
     
