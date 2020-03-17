@@ -1,9 +1,9 @@
 /*!
     \file connection.h
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-03-16
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -74,9 +74,11 @@ class CConnection
 
 		//! TCP Server Sockets
 		int tcpSocketServer( int &nPort );
+		int tcpSocketServer( int &nPort , string sIp);
 		int tcp6SocketServer( int &nPort );
+		int tcp6SocketServer( int &nPort , string sIp);
 
-		//! Set Socket to non-blocking
+		//! Set Socket to non-blocking‚
 		void setBlocking();
 
 		//! Set Socket to non-blocking
