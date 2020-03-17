@@ -336,7 +336,7 @@ int CConnection::tcp6Socket(string &interface, string &sServer, int &nPort, int 
 //! TCP Server Sockets
 
 int CConnection::tcpSocketServer( int &nPort ){
-	return tcpSocketServer( nPort,  "::" );
+	return tcpSocketServer( nPort,  "" );
 }
 
 int CConnection::tcpSocketServer( int &nPort , string sIp)
@@ -377,7 +377,7 @@ int CConnection::tcpSocketServer( int &nPort , string sIp)
 }
 
 int CConnection::tcp6SocketServer( int &nPort ){
-	return tcp6SocketServer( nPort,  "::" );
+	return tcp6SocketServer( nPort,  "" );
 }
 
 int CConnection::tcp6SocketServer( int &nPort, string sIp )
