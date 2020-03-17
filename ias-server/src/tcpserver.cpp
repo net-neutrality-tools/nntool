@@ -1,9 +1,9 @@
 /*!
     \file tcpserver.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-03-16
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -39,12 +39,13 @@ CTcpServer::~CTcpServer()
 
 //! \brief
 //!	Standard Destructor
-CTcpServer::CTcpServer(int nTargetPort, int nTargetPortTraceroute, bool nTlsSocket)
+CTcpServer::CTcpServer(int nTargetPort, int nTargetPortTraceroute, int nIpType, string sIp, bool nTlsSocket)
 {
     mTargetPort				= nTargetPort;
     mTargetPortTraceroute 	= nTargetPortTraceroute;
     mTlsSocket  			= nTlsSocket;
-	
+	mIpType			    	= nIpType;
+    mIp                     = sIp;
     mConnection             = std::make_unique<CConnection>();
 }
 
@@ -53,6 +54,8 @@ CTcpServer::CTcpServer(int nTargetPort, int nTargetPortTraceroute, bool nTlsSock
 //! \return 0
 int CTcpServer::run()
 {
+
+    int nResponse = 0;
 	signal(SIGCLD, SIG_IGN);
 
     int on = 1;
@@ -60,7 +63,27 @@ int CTcpServer::run()
     struct sockaddr_in6 client;
     unsigned int clientlen = sizeof(client);
 
-    if ((mSock = mConnection->tcp6SocketServer(mTargetPort)) == 1)
+
+    switch(mIpType)
+    {
+    	case 0:
+    	{
+    		nResponse = mConnection->tcp6SocketServer(mTargetPort);
+    		break;
+    	}
+    	case 4:
+    	{
+    		nResponse = mConnection->tcpSocketServer(mTargetPort, mIp);
+    		break;
+    	}
+    	case 6:
+    	{
+    		nResponse = mConnection->tcp6SocketServer(mTargetPort, mIp);
+    		break;
+    	}
+    }
+
+    if (nResponse < 0)
     {
         TRC_CRIT("Socket creation failed - Could not establish connection on target Port " + to_string(mTargetPort));
         return EXIT_FAILURE;
@@ -79,7 +102,7 @@ int CTcpServer::run()
     tv_l.tv_usec = 0;
     setsockopt(mConnection->mSocket, SOL_SOCKET, SO_RCVTIMEO, (timeval *)&tv_l, sizeof(timeval));
     setsockopt(mConnection->mSocket, SOL_SOCKET, SO_SNDTIMEO, (timeval *)&tv_l, sizeof(timeval));
-
+    mSock = nResponse;
 	while (::RUNNING)
     {
         int nSocket = accept(mSock, (struct sockaddr *)&client, &clientlen);
