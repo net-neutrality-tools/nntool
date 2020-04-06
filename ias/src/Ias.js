@@ -1,7 +1,7 @@
 /*!
     \file Ias.js
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2020-01-19
+    \date Last update: 2020-04-06
 
     Copyright (C) 2016 - 2020 zafaco GmbH
 
@@ -629,7 +629,7 @@ function Ias()
         if (performRouteToClientLookup && !performedRouteToClientLookup && (performDownloadMeasurement || performUploadMeasurement))
         {
             var port = routeToClientUseHttps ? routeToClientTargetPortTls : routeToClientTargetPort;
-            jsTool.performRouteToClientLookup(wsMeasurementParameters.wsTargets[Math.floor(Math.random() * wsMeasurementParameters.wsTargets.length)] + '.' + wsMeasurementParameters.wsTLD, port, routeToClientUseHttps);
+            jsTool.performRouteToClientLookup(wsMeasurementParameters.wsTargets[Math.floor(Math.random() * wsMeasurementParameters.wsTargets.length)] + '.' + wsMeasurementParameters.wsTLD, port, routeToClientUseHttps, String(measurementParameters.wsAuthToken), String(measurementParameters.wsAuthTimestamp));
             performedRouteToClientLookup = true;
         }
 
