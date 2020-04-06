@@ -1,6 +1,6 @@
 == Authentication
 
-The mesaurement peers running ias-server allow the authentication of measurement requests. To enable authentication, provide the requested configuration within the `authentication` object in `config.json` of ias-server.
+The measurement peers running ias-server allow the authentication of measurement requests. To enable authentication, provide the requested configuration within the `authentication` object in `config.json` of ias-server.
 
 The following options are available:
 
@@ -20,7 +20,7 @@ The following options are available:
 |The shared secret between measurement peer and controller
 |`max_age`
 |int
-|120
+|`120`
 |The maximum validity of an authentication in seconds
 |===
 
@@ -29,4 +29,4 @@ If authentication is deactivated, the services provided by ias-server (rtt, down
 auth_timestamp = current UTC timestamp of the controller in us
 auth_token = sha1(auth_timestamp + shared_secret)
 ----
-The measurement agent forwards the parameters according to the respective APIs to the `ias*` modules. Upon request, `ias-server` tries to validate the provided authentication parmeters, while computing `sha1(auth_timestamp + shared_secret)` and comparing it with the provided `auth_token`. If the computed and the provided `auth_token` match, the maximum validity is checked using the `max_age` parameter as defined in `config.json`. To account for different timezone offsets, `auth_timestamp` must always be stated as a UTC Timestamp. If all steps are completed successful, the measurement continues. If the authentication is unsuccessful, an error is thrown and the connection is dropped.
+The measurement agent forwards the parameters according to the respective APIs to the `ias*` modules. Upon request, `ias-server` tries to validate the provided authentication parameters, while computing `sha1(auth_timestamp + shared_secret)` and comparing it with the provided `auth_token`. If the computed and the provided `auth_token` match, the maximum validity is checked using the `max_age` parameter as defined in `config.json`. To account for different timezone offsets, `auth_timestamp` must always be stated as a UTC Timestamp. If all steps are completed successful, the measurement continues. If the authentication is unsuccessful, an error is thrown and the connection is dropped.
