@@ -1,9 +1,9 @@
 /*!
     \file Speed.h
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-04-06
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -89,6 +89,9 @@ FOUNDATION_EXPORT const unsigned char SpeedVersionString[];
 
 @property (nonatomic, strong) NSMutableArray *downloadClasses;          /**< DL: class configuration */
 @property (nonatomic, strong) NSMutableArray *uploadClasses;            /**< UL: class configuration */
+
+@property (nonatomic, strong) NSString *authToken;                      /**< Authentication Token */
+@property (nonatomic, strong) NSString *authTimestamp;                  /**< Authentication Timestamp */
 
 /**************************** Public Delegate Functions Speed ****************************/
 
