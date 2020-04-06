@@ -48,6 +48,7 @@ class CTcpTracerouteHandler
         int tcpSocket;
         string clientIp;
         bool mTlsSocket;
+        string authentication_secret;
         std::unique_ptr<CConnection> mAcceptedConnection;
 
         //http additional header fields
