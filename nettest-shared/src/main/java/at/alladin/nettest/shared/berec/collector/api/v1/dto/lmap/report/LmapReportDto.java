@@ -54,6 +54,16 @@ public class LmapReportDto {
 	private LocalDateTime date;
 	
 	/**
+	* The date and time when this result report was sent to a Collector in agent's local time.
+	*/
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "The date and time when this result report was sent to a Collector in agent's local time.")
+	@JsonPropertyDescription("The date and time when this result report was sent to a Collector in agent's local time.")
+	@Expose
+	@SerializedName("local-time")
+	@JsonProperty(required = true, value = "local-time")
+	private LocalDateTime localTime;
+	
+	/**
 	 * The agent-id of the agent from which this report originates.
 	 */
 	@io.swagger.annotations.ApiModelProperty(value = "The agent-id of the agent from which this report originates.")
@@ -119,6 +129,14 @@ public class LmapReportDto {
 
 	public void setDate(LocalDateTime date) {
 		this.date = date;
+	}
+	
+	public LocalDateTime getLocalTime() {
+		return localTime;
+	}
+
+	public void setLocalTime(LocalDateTime localTime) {
+		this.localTime = localTime;
 	}
 
 	public String getAgentId() {
