@@ -108,6 +108,16 @@ public class FullMeasurementResponse extends BasicResponse {
 	private LocalDateTime startTime;
 	
 	/**
+	* Measurement date and time in agent's local time.
+	*/
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "Measurement date and time in agent's local time.")
+	@JsonPropertyDescription("Measurement date and time in agent's local time.")
+	@Expose
+	@SerializedName("local_time")
+	@JsonProperty(required = true, value = "local_time")
+	private LocalDateTime localTime;
+	
+	/**
 	 * End Date and time for this (sub-) measurement. Date and time is always stored as UTC.
 	 */
 	@io.swagger.annotations.ApiModelProperty(required = true, value = "End Date and time for this (sub-) measurement. Date and time is always stored as UTC.")
@@ -253,6 +263,14 @@ public class FullMeasurementResponse extends BasicResponse {
 
 	public LocalDateTime getEndTime() {
 		return endTime;
+	}
+
+	public LocalDateTime getLocalTime() {
+		return localTime;
+	}
+
+	public void setLocalTime(LocalDateTime localTime) {
+		this.localTime = localTime;
 	}
 
 	public void setEndTime(LocalDateTime endTime) {

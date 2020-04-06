@@ -136,7 +136,17 @@ public class Measurement {
 	@SerializedName("submit_time")
 	@JsonProperty("submit_time")
 	private LocalDateTime submitTime;
-	
+		
+	/**
+	* Date and time (in agent local time) when this measurement result was submitted to the collector.
+	*/
+
+	@JsonPropertyDescription("Date and time in agent's local time when this measurement result was submitted to the collector.")
+	@Expose
+	@SerializedName("local_time")
+	@JsonProperty("local_time")
+	private LocalDateTime localTime;
+
 	/**
 	 * @see MeasurementTime
 	 */
@@ -237,6 +247,14 @@ public class Measurement {
 	
 	public void setSubmitTime(LocalDateTime submitTime) {
 		this.submitTime = submitTime;
+	}
+		
+	public LocalDateTime getLocalTime() {
+		return localTime;
+	}
+	
+	public void setLocalTime(LocalDateTime localTime) {
+		this.localTime = localTime;
 	}
 	
 	public MeasurementTime getMeasurementTime() {
