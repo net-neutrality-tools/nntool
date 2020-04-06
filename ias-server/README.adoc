@@ -86,6 +86,14 @@ net.ipv4.tcp_wmem = 4096 262144 8388608
 
 The parameters have to be added to `/etc/sysctl.conf` and activated via `sysctl -p`.
 
+=== Load balancing
+
+* see /docs/load_balancing_service.adoc
+
+=== Authentication
+
+* see /docs/authentication.adoc
+
 === Execution
 
 Run `build/ias-server`. Add the `-d` option for daemon mode.
