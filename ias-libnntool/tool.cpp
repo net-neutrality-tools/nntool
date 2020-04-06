@@ -1,7 +1,7 @@
 /*!
     \file tool.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2020-03-31
+    \date Last update: 2020-04-06
 
     Copyright (C) 2016 - 2020 zafaco GmbH
 
@@ -698,4 +698,36 @@ string CTool::to_string_precision(double value, const int precision)
     std::ostringstream out;
     out << std::fixed << std::setprecision(precision) << value;
     return out.str();
+}
+
+bool CTool::check_authentication(bool enabled, long long authenticationMaxAge, string authenticationSecret, string authToken, string authTimestamp, string handler)
+{
+    if (!enabled)
+    {
+        TRC_WARN(handler + " handler: authentication deactivated");
+        return true;
+    }
+
+    long long currentTimestamp = CTool::get_timestamp();
+    long long requestedTimestamp = CTool::toLL(authTimestamp);
+
+    //check if authentication is older than the allowed maximum
+    if ( ((currentTimestamp - requestedTimestamp) > (authenticationMaxAge * 1e6)) || ((currentTimestamp - requestedTimestamp) < 0) )
+    {
+        TRC_WARN(handler + " handler: authentication failed: token expired: " + to_string((currentTimestamp - requestedTimestamp)));
+        return false;
+    }
+
+    string authTokenComputed = sha1(authTimestamp + authenticationSecret);
+    
+    TRC_DEBUG(handler + " handler: computed token:       \"" + authTokenComputed + "\"");
+    
+    if (authToken.compare(authTokenComputed) != 0)
+    {
+        TRC_WARN(handler + " handler: authentication failed: token mismatch");
+        return false;
+    }
+    
+    TRC_DEBUG(handler + " handler: authentication successful");
+    return true;
 }
