@@ -91,12 +91,10 @@ extension HistoryTableViewController: PaginatedTableViewDataSource {
 
         cell.technologyLabel?.text = item.networkTypeName ?? naString
 
-        if let startTime = item.startTime {
+        if let localTime = item.localTime {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = R.string.localizable.historyListDateFormat()
-            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-
-            cell.dateLabel?.text = dateFormatter.string(from: startTime)
+            cell.dateLabel?.text = dateFormatter.string(from: localTime)
         }
 
         if let iasResult = item.measurements?[MeasurementTypeDto.speed.rawValue]?.content as? BriefIASMeasurement {
