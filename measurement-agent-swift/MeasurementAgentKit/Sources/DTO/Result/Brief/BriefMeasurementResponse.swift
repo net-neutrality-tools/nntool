@@ -25,6 +25,9 @@ public class BriefMeasurementResponse: Codable {
 
     /// Overall start time in UTC.
     public var startTime: Date?
+    
+    /// Measurement date and time in agent's local time..
+    public var localTime: Date?
 
     /// Overall duration of all sub measurements.
     public var durationNs: UInt64?
@@ -52,6 +55,7 @@ public class BriefMeasurementResponse: Codable {
     enum CodingKeys: String, CodingKey {
         case uuid
         case startTime  = "start_time"
+        case localTime = "local_time"
         case durationNs = "duration_ns"
         case firstAccurateGeoLocation = "first_accurate_geo_location"
         case agentType = "type"

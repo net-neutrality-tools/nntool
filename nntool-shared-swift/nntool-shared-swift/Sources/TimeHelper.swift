@@ -33,4 +33,18 @@ public final class TimeHelper {
     public class func currentTimeMs() -> UInt64 {
         return UInt64(Date().timeIntervalSince1970 * 1000)
     }
+    /// Returns the current Date in UTC
+    public class func currentDateUTC() -> Date {
+        var currentTime = Date()
+        let timeZoneOffset = TimeZone.current.secondsFromGMT()
+        let dateInUTC = Date(timeIntervalSince1970: currentTime.timeIntervalSince1970 - Double(timeZoneOffset))
+        return dateInUTC
+    }
+    
+    public class func localToUTCDate(localDate: Date) -> Date {
+        let timeZoneOffset = TimeZone.current.secondsFromGMT()
+        let dateInUTC = Date(timeIntervalSince1970: localDate.timeIntervalSince1970 - Double(timeZoneOffset))
+        return dateInUTC
+    }
+
 }
