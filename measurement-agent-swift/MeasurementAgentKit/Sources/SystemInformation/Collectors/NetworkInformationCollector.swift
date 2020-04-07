@@ -17,6 +17,7 @@
 import Foundation
 import Reachability
 import CoreTelephony
+import nntool_shared_swift
 
 class NetworkInformationCollector: BaseInformationCollector {
 
@@ -51,7 +52,7 @@ class NetworkInformationCollector: BaseInformationCollector {
                 logger.debug("NO CONN!!! \(r.connection)")
             }
 
-            networkPointInTime.time = Date()
+            networkPointInTime.time = TimeHelper.currentDateUTC()
             networkPointInTime.relativeTimeNs = self.currentRelativeTimeNs()
 
             if let conn = self.connectivityService {
