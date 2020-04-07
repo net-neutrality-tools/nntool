@@ -57,7 +57,7 @@ class IASProgram: NSObject, ProgramProtocol {
     }
 
     // swiftlint:disable cyclomatic_complexity
-    func run(startTimeNs: UInt64) throws -> SubMeasurementResult {
+    func run(startTimeNs: UInt64, startTimeMs: UInt64) throws -> SubMeasurementResult {
         let relativeStartTimeNs = TimeHelper.currentTimeNs() - startTimeNs
 
         speed.speedDelegate = self
@@ -181,15 +181,15 @@ class IASProgram: NSObject, ProgramProtocol {
 
         if let timeInfo = r["time_info"] as? [AnyHashable: UInt64] {
             if let rttStart = timeInfo["rtt_start"] {
-                res.relativeStartTimeRttNs = rttStart - startTimeNs // TODO: startTimeNs is not in unix timestamp
+                res.relativeStartTimeRttNs = rttStart - startTimeMs * 1000000 // IAS timestamps reference 1970
             }
 
             if let dlStart = timeInfo["download_start"] {
-                res.relativeStartTimeDownloadNs = dlStart - startTimeNs // TODO: startTimeNs is not in unix timestamp
+                res.relativeStartTimeDownloadNs = dlStart - startTimeMs * 1000000 // IAS timestamps reference 1970
             }
 
             if let ulStart = timeInfo["upload_start"] {
-                res.relativeStartTimeUploadNs = ulStart - startTimeNs // TODO: startTimeNs is not in unix timestamp
+                res.relativeStartTimeUploadNs = ulStart - startTimeMs * 1000000 // IAS timestamps reference 1970
             }
         }
 
