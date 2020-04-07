@@ -171,7 +171,7 @@ public class MeasurementRunner {
 
             do {
                 // TODO: how to cancel measurement?
-                let result = try programInstance.run(startTimeNs: TimeHelper.currentTimeNs())
+                let result = try programInstance.run(startTimeNs: TimeHelper.currentTimeNs(), startTimeMs: TimeHelper.currentTimeMs())
                 //logger.debug(":: program \(taskName) returned result:")
                 //logger.debug(result)
                 //logger.debug(":: -------")
