@@ -38,7 +38,8 @@ class QoSProgram: ProgramProtocol {
 
     var qosTaskExecutor: QoSTaskExecutor?
 
-    func run(relativeStartTimeNs: UInt64) throws -> SubMeasurementResult {
+    func run(startTimeNs: UInt64) throws -> SubMeasurementResult {
+        let relativeStartTimeNs = TimeHelper.currentTimeNs() - startTimeNs
         let res = QoSMeasurementResult()
 
         guard let objtvs = objectives else {
@@ -55,7 +56,7 @@ class QoSProgram: ProgramProtocol {
 
         semaphore.wait()
 
-        let relativeEndTimeNs = TimeHelper.currentTimeNs() - relativeStartTimeNs
+        let relativeEndTimeNs = TimeHelper.currentTimeNs() - startTimeNs
 
         logger.debug("after wait")
 
