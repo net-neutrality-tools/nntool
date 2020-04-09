@@ -195,8 +195,8 @@ public class RtpUtil {
 				final long delta = Math.abs(calculateDelta(i, j, sampleRate));
 				final float jitter = prevJitter + ((float)delta - prevJitter) / 16f;
 				jitterMap.put(x, jitter);
-				maxDelta = Math.max(delta, maxDelta);;
-				skew += TimeUnit.NANOSECONDS.convert((long) (((float)(j.rtpPacket.getTimestamp() - i.rtpPacket.getTimestamp()) / (float)sampleRate) * 1000f), TimeUnit.MILLISECONDS) - tsDiff;
+				maxDelta = Math.max(delta, maxDelta);
+				skew += (long) ((((double)(j.rtpPacket.getTimestamp() - i.rtpPacket.getTimestamp()) / (double)sampleRate) * 1000f) * 1e6) - tsDiff;
 				maxJitter = Math.max((long)jitter, maxJitter);
 				meanJitter += jitter;
 			}
@@ -244,7 +244,7 @@ public class RtpUtil {
 
 	private static long calculateDelta(RtpControlData i, RtpControlData j, int sampleRate) {
 		final long msDiff = j.receivedNs - i.receivedNs;
-		final long tsDiff = TimeUnit.NANOSECONDS.convert((long) (((float)(j.rtpPacket.getTimestamp() - i.rtpPacket.getTimestamp()) / (float)sampleRate) * 1000f), TimeUnit.MILLISECONDS);
+		final long tsDiff = (long) ((((double)(j.rtpPacket.getTimestamp() - i.rtpPacket.getTimestamp()) / (double)sampleRate) * 1000f) * 1e6);
 		return msDiff - tsDiff;
 	}
 
