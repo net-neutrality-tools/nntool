@@ -55,7 +55,6 @@ extension UIViewController {
         webBrowserViewController.isShowURLInNavigationBarWhenLoading = false
         webBrowserViewController.isShowPageTitleInNavigationBar = true
         //webBrowserViewController.customApplicationActivities = ...
-        webBrowserViewController.userAgentString = "berec_nntool"
 
         webBrowserViewController.loadURLString(urlString)
 

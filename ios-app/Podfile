@@ -23,8 +23,8 @@ abstract_target 'All' do
 
     pod 'ActionKit', '~> 2.5.3'
 
-    pod 'WebBrowser', :path => '../WebBrowser'
-    pod 'GoogleMaps', '~> 3.7.0'
+    pod 'WebBrowser', '~> 0.1.5'
+    pod 'GoogleMaps', '~> 3.8.0'
   end
 
   target 'Common' do
