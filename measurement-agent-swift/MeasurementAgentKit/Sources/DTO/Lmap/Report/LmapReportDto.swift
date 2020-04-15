@@ -47,7 +47,7 @@ class LmapReportDto: Codable {
     ///
     enum CodingKeys: String, CodingKey {
         case date
-        case localTime = "local-time"
+        case localTime = "local_time"
         case agentId = "agent-id"
         case groupId = "group-id"
         case measurementPoint = "measurement-point"
