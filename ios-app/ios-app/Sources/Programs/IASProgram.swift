@@ -181,7 +181,7 @@ class IASProgram: NSObject, ProgramProtocol {
 
         if let timeInfo = r["time_info"] as? [AnyHashable: UInt64] {
             if let rttStart = timeInfo["rtt_start"] {
-                res.relativeStartTimeRttNs = rttStart - startTimeMs * 1000000 // IAS timestamps reference 1970
+                res.relativeStartTimeRttNs = rttStart - startTimeMs * NSEC_PER_MSEC // IAS timestamps reference 1970
             }
 
             if let dlStart = timeInfo["download_start"] {
