@@ -70,7 +70,7 @@ public class BriefMeasurementResponse {
 	@io.swagger.annotations.ApiModelProperty(required = true, value = "Measurement date and time in agent's local time.")
 	@JsonPropertyDescription("Measurement date and time in agent's local time.")
 	@Expose
-	@SerializedName("local-time")
+	@SerializedName("local_time")
 	@JsonProperty(required = true, value = "local_time")
 	private LocalDateTime localTime;
 	
