@@ -59,7 +59,7 @@ public class LmapReportDto {
 	@io.swagger.annotations.ApiModelProperty(required = true, value = "The date and time when this result report was sent to a Collector in agent's local time.")
 	@JsonPropertyDescription("The date and time when this result report was sent to a Collector in agent's local time.")
 	@Expose
-	@SerializedName("local-time")
+	@SerializedName("local_time")
 	@JsonProperty(required = true, value = "local-time")
 	private LocalDateTime localTime;
 	
