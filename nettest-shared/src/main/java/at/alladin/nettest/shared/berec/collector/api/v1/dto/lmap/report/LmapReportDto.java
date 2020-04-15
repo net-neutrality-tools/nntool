@@ -60,7 +60,7 @@ public class LmapReportDto {
 	@JsonPropertyDescription("The date and time when this result report was sent to a Collector in agent's local time.")
 	@Expose
 	@SerializedName("local_time")
-	@JsonProperty(required = true, value = "local-time")
+	@JsonProperty(required = true, value = "local_time")
 	private LocalDateTime localTime;
 	
 	/**
