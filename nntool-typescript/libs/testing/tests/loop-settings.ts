@@ -52,6 +52,10 @@ export class LoopSettingsComponent
 
   public showInvalidInputWarning: boolean = false;
 
+  public readonly maxAllowedRepetitions: number = 500;
+
+  public readonly maxTimeBetweenRepetitions: number = 1440;
+
   private timerInterval: any;
 
   public onOnlyReInit() {
@@ -73,9 +77,9 @@ export class LoopSettingsComponent
   public requestStart() {
     if (
       this.testImpl.loopModeConfig.numRepetitions <= 0 ||
-      this.testImpl.loopModeConfig.numRepetitions > 500 ||
+      this.testImpl.loopModeConfig.numRepetitions > this.maxAllowedRepetitions ||
       this.testImpl.loopModeConfig.timeBetweenRepetitions <= 0 ||
-      this.testImpl.loopModeConfig.timeBetweenRepetitions >= 1440
+      this.testImpl.loopModeConfig.timeBetweenRepetitions >= this.maxTimeBetweenRepetitions
     ) {
       this.showInvalidInputWarning = true;
       return;
