@@ -321,11 +321,11 @@ public class MarkerService {
         if (!Strings.isNullOrEmpty(tzString)) {
             dateFormat.setTimeZone(TimeZone.getTimeZone(tzString));
         }
-        markerResultList.add(generateMeasurementItem("MARKER_TIME", dateFormat.format(date)));
+        markerResultList.add(generateMeasurementItem(messageSource.getMessage("MARKER_TIME", null, locale), dateFormat.format(date)));
         ret.setTimestamp(date.getTime());
         
-    	markerResultList.add(generateMeasurementItem("MARKER_AGENT", "AGENT_" + rs.getString("agent_type")));
-        markerResultList.add(generateMeasurementItem("MARKER_OS", rs.getString("os_name")));
+    	markerResultList.add(generateMeasurementItem(messageSource.getMessage("MARKER_AGENT", null, locale), messageSource.getMessage("AGENT_" + rs.getString("agent_type"), null, locale)));
+        markerResultList.add(generateMeasurementItem(messageSource.getMessage("MARKER_OS", null, locale), rs.getString("os_name")));
 
         //get the first networkType for classification
         final String signalString = rs.getString("signals");
