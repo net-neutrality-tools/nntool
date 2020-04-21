@@ -718,7 +718,7 @@
       "translations": {
         "MARKER_TIME": "Time",
         "MARKER_AGENT": "Agent",
-        "MARKER_OS": "OS",
+        "MARKER_OS": "Operating System",
         "MARKER_DOWNLOAD": "Download",
         "MARKER_DOWNLOAD_UNIT": "mbps",
         "MARKER_UPLOAD": "Upload",
@@ -727,7 +727,7 @@
         "MARKER_PING_UNIT": "ms",
         "MARKER_SIGNAL": "Signal",
         "MARKER_SIGNAL_UNIT": "dBm",
-        "MARKER_NETWORK_TYPE": "Network Type",
+        "MARKER_NETWORK_TYPE": "Network type",
         "MARKER_PROVIDER": "Provider",
         "MARKER_WIFI_SSID": "WiFi SSID",
         "MARKER_MOBILE_NETWORK": "Mobile Network",

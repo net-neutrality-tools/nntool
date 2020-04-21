@@ -186,17 +186,33 @@ extension MapViewController: GMSMapViewDelegate {
         var l: UIStackView?
 
         if let m = marker.userData as? MapMarker, let results = m.results {
-            let markerHeight = CGFloat(results.count) * UIFont.smallSystemFontSize + 10
+            let markerHeight = CGFloat(results.count) * UIFont.smallSystemFontSize + 20
 
-            l = UIStackView(frame: CGRect(x: 0, y: 0, width: screenBounds.width * 0.75, height: markerHeight))
-            l?.axis = .vertical
-            l?.alignment = .center
+            l = UIStackView(frame: CGRect(x: 0, y: 0, width: screenBounds.width * 0.65, height: markerHeight))
+            l?.axis = .horizontal
+            l?.alignment = .fill
+            l?.distribution = .fillProportionally
+            l?.spacing = 5
 
-            let itemViews = results.map { i -> UIStackView in
+            let ll = UIStackView()
+            ll.axis = .vertical
+            ll.alignment = .leading
+            ll.distribution = .equalSpacing
+
+            let lr = UIStackView()
+            lr.axis = .vertical
+            lr.alignment = .leading
+            lr.distribution = .equalSpacing
+
+            results.forEach { i in
                 let titleLabel = UILabel()
                 titleLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
-                titleLabel.textAlignment = .right
-                titleLabel.text = i.title
+
+                if let t = i.title {
+                    titleLabel.text = "\(t):"
+                }
+
+                ll.addArrangedSubview(titleLabel)
 
                 var val = i.value ?? "-"
                 if let unit = i.unit, val != "-" {
@@ -205,21 +221,13 @@ extension MapViewController: GMSMapViewDelegate {
 
                 let valueLabel = UILabel()
                 valueLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
-                valueLabel.textAlignment = .left
                 valueLabel.text = val
 
-                let v = UIStackView(arrangedSubviews: [titleLabel, valueLabel])
-                v.axis = .horizontal
-                v.alignment = .fill
-                v.distribution = .fillEqually
-                v.spacing = 5
-
-                return v
+                lr.addArrangedSubview(valueLabel)
             }
 
-            itemViews.forEach { v in
-                l?.addArrangedSubview(v)
-            }
+            l?.addArrangedSubview(ll)
+            l?.addArrangedSubview(lr)
         }
 
         return l
