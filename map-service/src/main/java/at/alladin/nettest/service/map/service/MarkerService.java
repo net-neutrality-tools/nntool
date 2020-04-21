@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -317,7 +318,8 @@ public class MarkerService {
 
         final Date date = rs.getTimestamp("time");
         final String tzString = rs.getString("timezone");
-        final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, locale);
+        //final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, locale);
+        final DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         if (!Strings.isNullOrEmpty(tzString)) {
             dateFormat.setTimeZone(TimeZone.getTimeZone(tzString));
         }
