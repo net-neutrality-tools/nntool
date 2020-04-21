@@ -48,6 +48,7 @@ import { WebSocketInfo } from '@nntool-typescript/core/models/lmap/models/lmap-r
 import { NumStreamsInfo } from '@nntool-typescript/core/models/lmap/models/lmap-report/lmap-result/extensions/num-streams-info.model';
 import { TracerouteTestState } from '@nntool-typescript/testing/tests-implementation/traceroute/traceroute-test-state';
 import { BasicTestState } from '@nntool-typescript/testing/enums/basic-test-state.enum';
+import { isElectron } from '@nntool-typescript/utils';
 
 export { TestGuard } from './test.guard';
 
@@ -58,7 +59,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
   @ViewChild(ServerSelectionComponent, { static: false }) public serverSelectionComponent: ServerSelectionComponent;
   public speedConfig: MeasurementSettings = undefined; // TODO: change to measurement configuration
   public qosConfig: MeasurementTypeParameters = undefined; // TODO: change to measurement configuration
-  public isElectron = typeof require !== 'undefined' && typeof process !== 'undefined';
+  public runningInElectron = isElectron();
 
   protected measurementControl: LmapControl = undefined;
 

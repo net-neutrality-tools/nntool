@@ -20,6 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfigService } from '../config.service';
 import { UserInfo, UserService } from '../user.service';
 import { MeasurementAgentType } from '../../../test/models/api/request-info.api';
+import { isElectron } from '@nntool-typescript/utils';
 
 export interface AgentSettings {
   uuid?: string;
@@ -186,8 +187,7 @@ export class TestSettingsService {
     };
 
     //check if we are running in electron and overwrite agent settings
-    if (typeof require !== 'undefined' && typeof process !== 'undefined')
-    {
+    if (isElectron()) {
       this._testSettings.agent_type = MeasurementAgentType.DESKTOP;
     }
 
