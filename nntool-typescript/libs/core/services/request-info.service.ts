@@ -21,6 +21,7 @@ import { LocationService } from './location.service';
 import { TestSettingsService } from './test/test-settings.service';
 import { UserService } from './user.service';
 import { GeoLocation } from '../../test/models/api/request-info.api';
+import { isElectron } from '@nntool-typescript/utils';
 
 /**
  * Service to prepare the basic request info object, filled w/the correct client data
@@ -40,8 +41,7 @@ export class RequestInfoService {
     const deviceInfo: DeviceInfo = this.deviceService.getDeviceInfo();
 
     //check if we are running in electron and overwrite device settings
-    if (typeof require !== 'undefined' && typeof process !== 'undefined')
-    {
+    if (isElectron()) {
       const win = window as any;
       deviceInfo.browser = 'Desktop';
       deviceInfo.browser_version = win.require('electron').remote.app.getVersion();
