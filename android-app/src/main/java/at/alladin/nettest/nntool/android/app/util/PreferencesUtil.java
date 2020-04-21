@@ -18,12 +18,16 @@ package at.alladin.nettest.nntool.android.app.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.preference.PreferenceManager;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -36,6 +40,8 @@ import at.alladin.nntool.shared.qos.QosMeasurementType;
  * @author Lukasz Budryk (alladin-IT GmbH)
  */
 public class PreferencesUtil {
+
+    private final static String USER_AGENT_IDENTIFIER = "nntool/1.0";
 
     //the prefix to be applied to all single qos types (TCP, UDP, ...) for storage in the SharedPreferences
     public final static String SETTING_QOS_TYPE_PREFERENCE_PREFIX = "setting_qos_execute_";
@@ -199,4 +205,22 @@ public class PreferencesUtil {
     public static boolean isForceIpv4(final Context context) {
         return getDefaultPreferences(context).getBoolean(SETTINGS_IPV4_ONLY, false);
     }
+
+    /**
+     *
+     * @param context
+     * @return
+     */
+    public static String getUserAgentString(Context context) {
+        PackageInfo pInfo;
+        try {
+            pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return USER_AGENT_IDENTIFIER + " (Android; " + Locale.getDefault().toString() + "; API" + Build.VERSION.SDK_INT + ") BEREC_nntool/" + pInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 }
