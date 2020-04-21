@@ -41,7 +41,7 @@ public class PostgresqlMessageSource extends CachingAndReloadingMessageSource<Ma
 
 	private static final Logger logger = LoggerFactory.getLogger(PostgresqlMessageSource.class);
 	
-	private static final String TRANSLATION_SQL_QUERY = "SELECT json::text FROM translations WHERE language_code = ?";
+	private static final String TRANSLATION_SQL_QUERY = "SELECT json::text FROM translations WHERE language_code = ? LIMIT 1";
 	
 	private final JdbcTemplate jdbcTemplate;
 	
@@ -67,22 +67,25 @@ public class PostgresqlMessageSource extends CachingAndReloadingMessageSource<Ma
 	
 					@Override
 					public Map<String, String> extractData(ResultSet rs) throws SQLException, DataAccessException {
-						rs.next();
+						if (!rs.next()) {
+							logger.error("Translation for '{}' not found in PostgreSQL.", locale);
+							return null;
+						}
 						
 						final String jsonString = rs.getString(1);
 						try {
 							final Map<String, String> translationObject = objectMapper.readValue(jsonString, new TypeReference<Map<String, String>>() {});
 							return translationObject;
 						} catch (Exception e) {
-							logger.error("Could not parse translation from PostgreSQL.", e);
+							logger.error("Could not parse translation '{}' from PostgreSQL.", locale, e);
 						}
 						
 						return null;
 					}
 				}
 			);
-		} catch (Exception ex) {
-			// TODO: print
+		} catch (Exception e) {
+			logger.error("Could not load translation '{}' from PostgreSQL.", locale/*, e*/);
 		}
 		
 		return null;
