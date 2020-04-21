@@ -26,8 +26,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 
 /**
  * Basic fragment that enables easy setting of web view fragments
@@ -62,6 +65,14 @@ public abstract class WebViewFragment extends ActionBarFragment {
         };
 
         webview.getSettings().setJavaScriptEnabled(true);
+
+        //set user agent string
+        final WebSettings webSettings = webview.getSettings();
+        final String userAgent = PreferencesUtil.getUserAgentString(getActivity());
+        if (userAgent != null) {
+            webSettings.setUserAgentString(userAgent);
+        }
+
         webview.setWebViewClient(new WebViewClient()
         {
             @Override
