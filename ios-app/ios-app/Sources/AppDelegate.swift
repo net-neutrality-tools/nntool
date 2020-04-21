@@ -25,6 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         applyAppearance()
+        setDefaultUserAgent()
 
         if GOOGLE_MAPS_API_KEY != "" {
             GMSServices.provideAPIKey(GOOGLE_MAPS_API_KEY)
@@ -77,5 +78,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             logger.debug("reloading settings (newlyLaunched: \(isNewlyLaunched))")
             MEASUREMENT_AGENT.updateSettings()
         }
+    }
+
+    private func setDefaultUserAgent() {
+        if let info = Bundle.main.infoDictionary {
+
+            let bundleName = (info["CFBundleName"] as? String)?.replacingOccurrences(of: " ", with: "") ?? "n/a"
+            let bundleVersion = info["CFBundleShortVersionString"] as? String ?? "n/a"
+
+            let iosVersion = UIDevice.current.systemVersion
+
+            let lang = getPreferredLanguage()
+            var locale = Locale.canonicalLanguageIdentifier(from: lang)
+
+            if let countryCode = Locale.current.regionCode {
+                locale += "-\(countryCode)"
+            }
+
+            // set global user agent
+            let nntoolUserAgent = "nntool/1.0 (iOS; \(locale); \(iosVersion)) \(bundleName)/\(bundleVersion)"
+            UserDefaults.standard.register(defaults: ["UserAgent": nntoolUserAgent])
+            UserDefaults.standard.set(nntoolUserAgent, forKey: "AlamofireUserAgent")
+
+            logger.debug("Using global UserAgent: \(nntoolUserAgent)")
+        }
+    }
+
+    private func getPreferredLanguage() -> String {
+        let preferredLanguages = Locale.preferredLanguages
+
+        if preferredLanguages.count < 1 {
+            return "en"
+        }
+
+        let sep = preferredLanguages[0].components(separatedBy: "-")
+        var lang = sep[0] // becuase sometimes (ios9?) there's "en-US" instead of en
+
+        if sep.count > 1 && sep[1] == "Latn" { // add Latn if available, but don't add other country codes
+            lang += "-Latn"
+        }
+
+        return lang
     }
 }
