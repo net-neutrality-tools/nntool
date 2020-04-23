@@ -654,6 +654,10 @@
 	                "translation_key": "result.device.codename"
 	            },
 	            {
+	                "key": "agentInfo.appVersionName",
+	                "translation_key": "key_client_software_version"
+	            },
+	            {
 	                "key": "deviceInfo.model",
 	                "translation_key": "key_model"
 	            },
@@ -663,15 +667,18 @@
 	            },
 	            {
 	                "key": "geoLocations.latitude",
-	                "translation_key": "key_geo_latitude"
+	                "translation_key": "key_geo_latitude",
+	                "format": "TRUNCATE"
 	            },
 	            {
 	                "key": "geoLocations.longitude",
-	                "translation_key": "key_geo_longitude"
+	                "translation_key": "key_geo_longitude",
+	                "format": "TRUNCATE"
 	            },
 	            {
 	                "key": "geoLocations.altitude",
-	                "translation_key": "key_altitude"
+	                "translation_key": "key_altitude",
+	                "format": "TRUNCATE"
 	            },
 	            {
 	                "key": "geoLocations.heading",
@@ -679,7 +686,8 @@
 	            },
 	            {
 	                "key": "geoLocations.time",
-	                "translation_key": "key_geo_time"
+	                "translation_key": "key_geo_time",
+	                "format": "TIMESTAMP"
 	            },
 	            {
 	                "key": "geoLocations.provider",
@@ -693,10 +701,6 @@
 	                "key": "distanceMovedMetres",
 	                "translation_key": "result.moved_distance",
 	                "unit": "result.moved_distance.unit"
-	            },
-	            {
-	                "key": "agentInfo.appVersionName",
-	                "translation_key": "key_client_software_version"
 	            }
 	        ]
 	    },
