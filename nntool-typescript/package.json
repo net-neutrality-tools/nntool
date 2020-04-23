@@ -102,7 +102,7 @@
     "cpx": "^1.5.0",
     "dotenv": "8.0.0",
     "electron": "5.0.12",
-    "electron-builder": "^20.28.4",
+    "electron-builder": "^22.5.1",
     "electron-cookies": "heap/electron-cookies",
     "electron-installer-dmg": "~3.0.0",
     "electron-packager": "~14.0.4",
