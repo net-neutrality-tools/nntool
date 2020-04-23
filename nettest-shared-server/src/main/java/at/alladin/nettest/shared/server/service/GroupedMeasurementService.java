@@ -17,9 +17,11 @@
 package at.alladin.nettest.shared.server.service;
 
 import java.lang.reflect.Field;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -70,6 +72,11 @@ public class GroupedMeasurementService {
 	private static final String TRANSLATION_KEY_YES = "key_yes";
 	
 	private static final String TRANSLATION_KEY_NO = "key_no";
+	
+	private static final DateFormat originalDateFormat = new SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss");
+	
+	//the string is still enhanced w/the user's locale
+	private static final String newDateFormatString = "dd.MM.yyyy HH:mm";
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -124,7 +131,7 @@ public class GroupedMeasurementService {
 		}
 		
 		final Format format = new DecimalFormat("0.00", new DecimalFormatSymbols(locale));
-		//final JsonArray groupedResultsJson = groupJsonResult(gson.toJson(measurement, Measurement.class), groupStructure).getAsJsonArray("groups");
+		final Format dateFormat = new SimpleDateFormat(newDateFormatString, locale);
     	
     	//Fill in the corresponding Response with translated and formatted values
 		final DetailMeasurementResponse ret = new DetailMeasurementResponse();
@@ -208,7 +215,7 @@ public class GroupedMeasurementService {
 				
 				//default formatting
 				if(formatEnum != null){
-					val = formatResultValueString(val, formatEnum, format, locale);
+					val = formatResultValueString(val, formatEnum, format, dateFormat, locale);
 				}
 				if(unit != null) {
 					item.setUnit(messageSource.getMessage(unit, null, locale));
@@ -368,13 +375,15 @@ public class GroupedMeasurementService {
         return null;
     }
 	
-	private String formatResultValueString(final String value, final FormatEnum formatEnum, final Format format, final Locale locale) {
+	private String formatResultValueString(final String value, final FormatEnum formatEnum, final Format format, final Format dateFormat, final Locale locale) {
 		try {
 			switch (formatEnum) {
 			case TRANSLATE_BOOLEAN_VALUE:
 				return Boolean.valueOf(value) ? messageSource.getMessage(TRANSLATION_KEY_YES, null, locale) : messageSource.getMessage(TRANSLATION_KEY_NO, null, locale);
 			case TRANSLATE_VALUE:
 				return messageSource.getMessage("key_" + value, null, locale);
+			case TIMESTAMP:
+				return dateFormat.format(originalDateFormat.parse(value));				
 			default:
 				return format.format(Double.parseDouble(value) / formatEnum.getDivider());
 			}
