@@ -44,12 +44,12 @@
                           <tbody>
                             <tr *ngFor="let res of test.result_keys | keyvalue">
                               <td *ngIf="(res.value | uppercase) === 'OK'">
-                                <span class="icon icon-check" [title]="test.summary"></span>
+                                <span class="icon-check" [title]="test.summary"></span>
                               </td>
                               <td *ngIf="(res.value | uppercase) !== 'OK'">
-                                <span class="icon icon-close" [title]="test.summary"></span>
+                                <span class="icon-close" [title]="test.summary"></span>
                               </td>
-                              <td>{{ res.key }}</td>
+                              <td>{{ res.value }}</td>
                             </tr>
                           </tbody>
                         </table>
