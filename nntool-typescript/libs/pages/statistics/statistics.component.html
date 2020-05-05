@@ -14,7 +14,7 @@
         <!--<div class="icon icon-statistics"></div>-->
         <h2>Filters</h2>
       </header>
-      <dynamic-form [filterResponse]="filterResponse" (formChangeCallback)="onFormChangeCallback($event)">
+      <dynamic-form [translationPrefix]="'STATISTICS.GRAPH.LIST_FILTER'" [filterResponse]="filterResponse" (formChangeCallback)="onFormChangeCallback($event)">
       </dynamic-form>
     </fieldset>
   </nntool-section-content>

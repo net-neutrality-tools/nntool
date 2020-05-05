@@ -130,6 +130,8 @@
       "FILTER": "filter",
       "LIST_FILTER": {
         "HEADER": "Filters",
+        "PERIOD": "Duration",
+        "MEASUREMENTTYPE": "Technology",
         "COUNTRY": {
           "HEAD": "Country"
         },

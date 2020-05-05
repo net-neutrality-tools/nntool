@@ -211,7 +211,7 @@ public class SpeedtestDetailGroup {
 			TRANSLATE_VALUE(1d),
 			TRANSLATE_BOOLEAN_VALUE(1d),
 			TRUNCATE(1d),	//truncates the number of digits after a dot
-			TIMESTAMP(1d)	//formates the value into the correct timestring format
+			TIMESTAMP(1d)	//formats the value into the correct timestring format
 			;
 			
 			
