@@ -142,13 +142,14 @@ class IASProgram: NSObject, ProgramProtocol {
             res.rttInfo?.numReceived = rttInfo["num_received"] as? Int
             res.rttInfo?.numSent = rttInfo["num_sent"] as? Int
             res.rttInfo?.packetSize = rttInfo["packet_size"] as? Int
-            res.rttInfo?.requestedNumPackets = 10 // TODO
+
+            res.rttInfo?.requestedNumPackets = Int(res.rttInfo?.numError ?? 0) + Int(res.rttInfo?.numMissing ?? 0) + Int(res.rttInfo?.numReceived ?? 0)
 
             // TODO: these values should be calculated on the collector.
             res.rttInfo?.averageNs = rttInfo["average_ns"] as? UInt64
-            res.rttInfo?.maximumNs = rttInfo["maximum_ns"] as? UInt64
+            res.rttInfo?.maximumNs = rttInfo["max_ns"] as? UInt64
             res.rttInfo?.medianNs = rttInfo["median_ns"] as? UInt64
-            res.rttInfo?.minimumNs = rttInfo["minimum_ns"] as? UInt64
+            res.rttInfo?.minimumNs = rttInfo["min_ns"] as? UInt64
             res.rttInfo?.standardDeviationNs = rttInfo["standard_deviation_ns"] as? UInt64
             //
 
