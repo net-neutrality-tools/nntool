@@ -86,12 +86,12 @@ export class OpenDataResultTableComponent implements OnInit {
           }
         }
       },
-      'qos_advanced_evaluation.blocked_ports.total_count_blocked_ports': {
+      'qos_advanced_evaluation.total_count_blocked_ports': {
         title: 'Blocked Ports',
         filter: false,
         valuePrepareFunction: (cell, row) => {
-          if (row.qos_advanced_evaluation && row.qos_advanced_evaluation.blocked_ports && row.qos_advanced_evaluation.blocked_ports.total_count_blocked_ports) {
-            return (row.qos_advanced_evaluation.blocked_ports.total_count_blocked_ports);
+          if (row.qos_advanced_evaluation && row.qos_advanced_evaluation.total_count_blocked_ports) {
+            return (row.qos_advanced_evaluation.total_count_blocked_ports);
           } else {
             return 'n/a';
           }
@@ -293,12 +293,12 @@ export class OpenDataResultTableComponent implements OnInit {
       {
         filter_type: 'INPUT_NUMBER',
         key: 'ports_blocked_greater',
-        query_string: 'qos_advanced_evaluation.blocked_ports.total_count_blocked_ports:>='
+        query_string: 'qos_advanced_evaluation.total_count_blocked_ports:>='
       },
       {
         filter_type: 'INPUT_NUMBER',
         key: 'ports_blocked_smaller',
-        query_string: 'qos_advanced_evaluation.blocked_ports.total_count_blocked_ports:<='
+        query_string: 'qos_advanced_evaluation.total_count_blocked_ports:<='
       }
     );
 
