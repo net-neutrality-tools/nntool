@@ -89,7 +89,7 @@ public class TracerouteTask extends AbstractQoSTask {
   		testResult.getResultMap().put(RESULT_HOST, host);
   		testResult.getResultMap().put(RESULT_TIMEOUT, timeout);
   		testResult.getResultMap().put(RESULT_MAX_HOPS, maxHops);
-  		
+
 		try {
 			onStart(testResult);
 			final TracerouteService pingTool = getQoSTest().getTestSettings().getTracerouteServiceClazz().newInstance();
@@ -113,13 +113,14 @@ public class TracerouteTask extends AbstractQoSTask {
 	  			}
 	  		}
 	  		catch (TimeoutException e) {
+				testResult.getResultMap().put(RESULT_HOPS, pingDetailList.size());
 	  			testResult.getResultMap().put(RESULT_STATUS, "TIMEOUT");
 	  		}
 	  		finally {
 	  			if (pingDetailList != null) {
 		  			List<Map<String, Object>> resultArray = new ArrayList<>();
 		  			for (final HopDetail p : pingDetailList) {
-		  				resultArray.add(p.toMap());
+						resultArray.add(p.toMap());
 		  			}
 
 		  			testResult.getResultMap().put(RESULT_DETAILS, resultArray);

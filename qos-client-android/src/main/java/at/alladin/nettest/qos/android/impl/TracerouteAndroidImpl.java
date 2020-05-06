@@ -41,11 +41,11 @@ import at.alladin.nntool.util.tools.TracerouteService;
  *
  */
 public class TracerouteAndroidImpl implements TracerouteService {
-	
+
 	public static final class PingException extends IOException {
-		
+
 		/**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = 1L;
 
@@ -53,7 +53,7 @@ public class TracerouteAndroidImpl implements TracerouteService {
 			super(msg);
 		}
 	}
-	
+
 	public final static class PingDetailImpl implements HopDetail {
 		private final int transmitted;
 		private final int received;
@@ -62,19 +62,21 @@ public class TracerouteAndroidImpl implements TracerouteService {
 		private String fromIp;
 		private String fromIpFull;
 		private List<Long> measuredTimes;
-		
+		private long ts;
+
 		private final static Pattern PATTERN_PING_PACKET = Pattern.compile("([\\d]*) packets transmitted, ([\\d]*) received, ([+-]?([\\d]*) errors, )?([\\d]*)% packet loss, time ([\\d]*)ms");
         private final static Pattern PATTERN_FROM_IP = Pattern.compile("[fF]rom ([\\.\\-_\\d\\w\\s\\(\\)]*)(:|icmp)+(.*time=([\\d\\.]*))?");
         private final static Pattern PATTERN_IP = Pattern.compile("\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b");
         private final static Pattern PATTERN_IPV6 = Pattern.compile(" \\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\\s* ");
-		
-		public PingDetailImpl(String pingResult) {
-			System.out.println(pingResult);
 
-			measuredTimes = new ArrayList<>();
+		public PingDetailImpl(String pingResult, long ts) {
+			//System.out.println("PING RESULT: " + pingResult);
+
+			this.ts = ts;
+			this.measuredTimes = new ArrayList<>();
 
 			final Matcher pingPacket = PATTERN_PING_PACKET.matcher(pingResult);
-			
+
 			if (pingPacket.find()) {
 				transmitted = Integer.parseInt(pingPacket.group(1));
 				received = Integer.parseInt(pingPacket.group(2));
@@ -93,7 +95,7 @@ public class TracerouteAndroidImpl implements TracerouteService {
 				packetLoss = 0;
 				errors = 0;
 			}
-			
+
 			final Matcher fromIpMatcher = PATTERN_FROM_IP.matcher(pingResult);
 			if (fromIpMatcher.find())
             {
@@ -114,23 +116,27 @@ public class TracerouteAndroidImpl implements TracerouteService {
             {
                 fromIpFull = "*";
                 fromIp = "*";
-            }	
+            }
 		}
 
         void addTime(String ping) {
+			//System.err.println("ADD TIME: " + ping);
             final Matcher fromIpMatcher = PATTERN_FROM_IP.matcher(ping);
-            fromIpMatcher.find();
             if (fromIpMatcher.find()) {
                 do {
                     String time = fromIpMatcher.group(4);
-                    if (time != null)
-                    {
+                    if (time != null)  {
                         measuredTimes.add(TimeUnit.NANOSECONDS.convert((int) (Float.parseFloat(time) * 1000f), TimeUnit.MICROSECONDS));
                     }
                 } while (fromIpMatcher.find());
             }
+
+            if (measuredTimes.isEmpty()) {
+				measuredTimes.add(ts);
+			}
         }
 
+        @Override
 		public long getTime() {
 		    if(measuredTimes.isEmpty())
 		        return -1;
@@ -142,7 +148,7 @@ public class TracerouteAndroidImpl implements TracerouteService {
 			}
 			return time/i;
 		}
-		
+
 		public List<Long> getMeasuredTimes() {
 			return measuredTimes;
 		}
@@ -174,7 +180,7 @@ public class TracerouteAndroidImpl implements TracerouteService {
 					+ packetLoss + ", measuredTimes=" + measuredTimes.toString() + ", fromIp=" + fromIp
 					+ "]";
 		}
-		
+
 		public JSONObject toJson() {
 			JSONObject json = new JSONObject();
 			try {
@@ -196,18 +202,18 @@ public class TracerouteAndroidImpl implements TracerouteService {
         }
 
     }
-	
+
 	private String host;
 	private int maxHops;
 	private int pingsPerHop;
 	private AtomicBoolean isRunning = new AtomicBoolean(false);
 	private boolean hasMaxHopsExceeded = true;
 	private List<HopDetail> resultList;
-	
+
 	public TracerouteAndroidImpl() {
-		pingsPerHop = 5;
+		pingsPerHop = 1;
 	}
-	
+
 	public String getHost() {
 		return host;
 	}
@@ -239,17 +245,35 @@ public class TracerouteAndroidImpl implements TracerouteService {
 		}
 
         final Runtime runtime = Runtime.getRuntime();
-    	
+
+		List<TracerouteService.HopDetail> pingResultList = new ArrayList<TracerouteService.HopDetail>();
+
     	for (int i = 1; i <= maxHops; i++) {
             if (Thread.interrupted() || !isRunning.get()) {
 				throw new InterruptedException();
 			}
+
 			// ping  -c <count> -t <ttl>  -W <timeout> <host>
-            final Process mIpAddrProcess = runtime.exec("/system/bin/ping -n -c 1 -t " + i + " -W2 " + host);
+			final Long altTimeStart = System.nanoTime();
+			Process mIpAddrProcess = runtime.exec("/system/bin/ping -n -c 1 -t " + i + " -W2 " + host);
 			// result: From 4.5.6.7: icmp_seq=1 Time to live exceeded
-            final String proc = readFromProcess(mIpAddrProcess);
-            final PingDetailImpl pingDetail = new PingDetailImpl(proc);
-            resultList.add(pingDetail);
+			String proc = readFromProcess(mIpAddrProcess);
+			final PingDetailImpl pingDetail = new PingDetailImpl(proc, System.nanoTime() - altTimeStart);
+			resultList.add(pingDetail);
+
+
+			PingDetailImpl calculatedHopDetail = (PingDetailImpl) pingDetail;
+			if (calculatedHopDetail.getFromIp().equals("*")) {
+				calculatedHopDetail.addTime("");
+				pingResultList.add(calculatedHopDetail);
+			}
+			else {
+				mIpAddrProcess = runtime.exec("/system/bin/ping -n -i 0.2 -c " + (pingsPerHop) + " -W2 " + calculatedHopDetail.getFromIp());
+				proc = readFromProcess(mIpAddrProcess);
+				calculatedHopDetail.addTime(proc);
+				pingResultList.add(calculatedHopDetail);
+			}
+
             if (pingDetail.getReceived() > 0) {
             	hasMaxHopsExceeded = false;
             	break;
@@ -257,6 +281,7 @@ public class TracerouteAndroidImpl implements TracerouteService {
     	}
 
 		// Ping each hop again and use the time measured by the ping tool instead of manual measurement
+		/*
 		List<TracerouteService.HopDetail> pingResultList = new ArrayList<TracerouteService.HopDetail>();
 		for (HopDetail hopDetail : resultList) {
 			if (!isRunning.get()) {
@@ -268,15 +293,16 @@ public class TracerouteAndroidImpl implements TracerouteService {
 			}
 			else {
 				final Process mIpAddrProcess = runtime.exec("/system/bin/ping -n -i 0.2 -c " + (pingsPerHop + 1) + " -W2 " + calculatedHopDetail.getFromIp());
+				final Long altTimeStart = System.nanoTime();
 				final String proc = readFromProcess(mIpAddrProcess);
-				calculatedHopDetail.addTime(proc);
+				calculatedHopDetail.addTime(proc, (long)((System.nanoTime() - altTimeStart) / 1e6d));
 				pingResultList.add(calculatedHopDetail);
 			}
 		}
-    	    	
+		*/
 		return pingResultList;
 	}
-	
+
 
 	/**
 	 * stop the ping tool task
@@ -285,33 +311,37 @@ public class TracerouteAndroidImpl implements TracerouteService {
 	public boolean stop() {
 		return isRunning.getAndSet(false);
 	}
-	
+
 	public static String readFromProcess(Process proc) throws PingException {
 		BufferedReader brErr = null;
 		BufferedReader br = null;
 		StringBuilder sbErr = new StringBuilder();
 		StringBuilder sb = new StringBuilder();
-		
+
 		try {
 			brErr = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
         	String currInputLine = null;
-	        
+
         	while((currInputLine = brErr.readLine()) != null) {
         		sbErr.append(currInputLine);
         		sbErr.append("\n");
         	}
-			
+
+			//System.out.println("PING ERR: " + sbErr.toString());
+
         	if (sbErr.length() > 0) {
         		throw new PingException(sbErr.toString());
         	}
 
 			br = new BufferedReader(new InputStreamReader(proc.getInputStream()));
         	currInputLine = null;
-	        
+
         	while((currInputLine = br.readLine()) != null) {
         		sb.append(currInputLine);
         		sb.append("\n");
         	}
+
+			//System.out.println("PING VALUE: " + sb.toString());
 		}
 		catch (PingException e) {
 			throw e;
@@ -331,7 +361,7 @@ public class TracerouteAndroidImpl implements TracerouteService {
 				}
 			} catch (IOException e) { }
 		}
-		
+
 		return sb.toString();
 	}
 
