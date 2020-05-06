@@ -49,7 +49,7 @@
                               <td *ngIf="(res.value | uppercase) !== 'OK'">
                                 <span class="icon-close" [title]="test.summary"></span>
                               </td>
-                              <td>{{ res.value }}</td>
+                              <td>{{translationMap[res.key]}}</td>
                             </tr>
                           </tbody>
                         </table>
