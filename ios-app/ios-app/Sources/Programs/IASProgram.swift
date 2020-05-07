@@ -258,7 +258,9 @@ extension IASProgram: SpeedDelegate {
             switch cmd {
             case "info": handleCmdInfo(response)
             case "report": handleCmdReport(response)
-            case "finish": handleCmdFinish(response)
+            case "finish":
+                handleCmdReport(response)
+                handleCmdFinish(response)
             case "error":
                 logger.debug("MEASUREMENT ERROR -> aborting")
                 measurementFailed = true
