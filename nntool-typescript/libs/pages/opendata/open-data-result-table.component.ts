@@ -90,7 +90,7 @@ export class OpenDataResultTableComponent implements OnInit {
         title: 'Blocked Ports',
         filter: false,
         valuePrepareFunction: (cell, row) => {
-          if (row.qos_advanced_evaluation && row.qos_advanced_evaluation.total_count_blocked_ports) {
+          if (row.qos_advanced_evaluation && (row.qos_advanced_evaluation.total_count_blocked_ports || row.qos_advanced_evaluation.total_count_blocked_ports === 0)) {
             return (row.qos_advanced_evaluation.total_count_blocked_ports);
           } else {
             return 'n/a';
