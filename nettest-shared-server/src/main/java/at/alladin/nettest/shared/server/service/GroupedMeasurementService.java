@@ -107,7 +107,7 @@ public class GroupedMeasurementService {
 	 */
 	public DetailMeasurementResponse groupResult(final FullMeasurementResponse measurement, final List<SpeedtestDetailGroup> groupStructure, final Locale locale, 
 			final int geoAccuracyDetailLimit) {
-		return groupResult(measurement, groupStructure, locale, geoAccuracyDetailLimit, false);
+		return groupResult(measurement, groupStructure, locale, geoAccuracyDetailLimit, true);
 	}
 	
 	/**
