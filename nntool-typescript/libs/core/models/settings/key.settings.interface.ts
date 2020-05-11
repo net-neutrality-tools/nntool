@@ -15,5 +15,5 @@
  ******************************************************************************/
 
 export interface KeySettings {
-  google?: string;
+  bing?: string;
 }
