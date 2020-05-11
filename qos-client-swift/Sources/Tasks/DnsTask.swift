@@ -29,6 +29,7 @@ class DnsTask: QoSTask {
     private var dnsResolutionTimeNs: UInt64?
     private var rcodeStr: String?
     private var entries: [JSON]?
+    private var resultResolver: String?
 
     ///
     enum CodingKeys4: String, CodingKey {
@@ -62,6 +63,7 @@ class DnsTask: QoSTask {
         r["dns_result_status"] = JSON(rcodeStr)
         r["dns_result_entries_found"] = JSON(entries?.count)
         r["dns_result_entries"] = JSON(entries)
+        r["dns_result_resolver"] = JSON(resolver ?? resultResolver)
 
         return r
     }
@@ -100,6 +102,24 @@ class DnsTask: QoSTask {
             res.nsaddr_list.0.sin_family = sa_family_t(AF_INET) // TODO: support ipv6 name servers
             res.nsaddr_list.0.sin_port = in_port_t(53).bigEndian // TODO: support other dns server port
             res.nscount = 1
+        } else {
+            // read system resolver
+            var servers = [res_9_sockaddr_union](repeating: res_9_sockaddr_union(), count: 10)
+            let serversFound = res_9_getservers(&res, &servers, Int32(servers.count))
+            servers = servers[0..<Int(serversFound)].filter { $0.sin.sin_len > 0}
+            
+            if var firstServer = servers.first {
+                var buffer = [Int8](repeating: 0, count: Int(NI_MAXHOST))
+                let sinlen = socklen_t(firstServer.sin.sin_len)
+                
+                withUnsafePointer(to: &firstServer) {
+                    $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                        Darwin.getnameinfo($0, sinlen, &buffer, socklen_t(buffer.count), nil, 0, NI_NUMERICHOST)
+                    }
+                }
+                
+                resultResolver = String(cString: buffer)
+            }
         }
 
         if isCancelled {

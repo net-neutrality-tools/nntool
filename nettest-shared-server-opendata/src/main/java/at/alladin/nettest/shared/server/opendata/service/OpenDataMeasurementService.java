@@ -59,6 +59,7 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.ComputedNetwo
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.NetworkInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.NetworkPointInTimeInfoDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.SignalDto;
+import at.alladin.nettest.shared.nntool.Helperfunctions;
 import at.alladin.nettest.shared.server.config.ElasticSearchProperties;
 import at.alladin.nettest.shared.server.opendata.jdbc.IasMeasurementPreparedStatementSetter;
 import at.alladin.nettest.shared.server.opendata.jdbc.MeasurementPreparedStatementSetter;
@@ -204,6 +205,7 @@ public class OpenDataMeasurementService {
 		if (cnpit != null) {
 			cnpit.setAgentPrivateIp(null);
 			cnpit.setBssid(null);
+			cnpit.setAgentPublicIp(Helperfunctions.anonymizeIp(cnpit.getAgentPublicIp()));
 		}
 		
 		final NetworkInfoDto networkInfo = measurementDto.getNetworkInfo();
@@ -212,6 +214,7 @@ public class OpenDataMeasurementService {
 				for (NetworkPointInTimeInfoDto t : networkInfo.getNetworkPointInTimeInfo()) {
 					t.setAgentPrivateIp(null);
 					t.setBssid(null);
+					t.setAgentPublicIp(Helperfunctions.anonymizeIp(t.getAgentPublicIp()));
 				}
 			}
 			

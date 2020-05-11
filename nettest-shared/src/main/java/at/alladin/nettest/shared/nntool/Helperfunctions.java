@@ -370,6 +370,35 @@ public abstract class Helperfunctions {
             return null;
         }
     }
+
+    public static String anonymizeIp(String ip) { // TODO: can this also be a rdns name?
+		if (ip == null || ip.length() == 0) {
+			return "*";
+		}
+		
+		if ("*".equals(ip) || ip.contains("x")) { // If IP address contains 'x' is has already been anonymized on the agent.
+			return ip;
+		}
+		
+		try {
+			final InetAddress addr = InetAddress.getByName(ip);
+			
+			if (addr instanceof Inet4Address) {
+				return ip.substring(0, ip.lastIndexOf('.')) + ".x";
+			} else if (addr instanceof Inet6Address) {
+				if (ip.endsWith("::")) {
+					return ip + "x";
+				} else {
+					final String[] splitv6 = ip.split(":");
+					return splitv6[0] + ":" + splitv6[1] + ":" + splitv6[2] + ":" + splitv6[3] + "::x";
+				}
+			}
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+		
+		return "*";
+	}
     
     /**
      * 

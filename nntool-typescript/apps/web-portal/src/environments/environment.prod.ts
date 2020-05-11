@@ -43,7 +43,7 @@ export const environment = {
     statistic: 'https://statistic-de-01.net-neutrality.tools/api/v1/'
   },
   keys: {
-    google: ''
+    bing: ''
   },
   classificationColorStyle: 'background',
   colors: {
