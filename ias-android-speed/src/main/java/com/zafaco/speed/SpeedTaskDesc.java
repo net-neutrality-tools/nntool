@@ -2,9 +2,9 @@
     \file SpeedTaskDesc.java
     \author zafaco GmbH <info@zafaco.de>
     \author alladin-IT GmbH <info@alladin.at>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-05-12
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
     Copyright (C) 2019 alladin-IT GmbH
 
     This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,8 @@ public class SpeedTaskDesc implements Serializable {
 
     private int speedServerPort = 443;
 
+    private int speedServerPortRtt = 80;
+
     private int rttCount = 10;
 
     private int downloadStreams;
@@ -58,6 +60,14 @@ public class SpeedTaskDesc implements Serializable {
 
     public void setRttCount(int rttCount) {
         this.rttCount = rttCount;
+    }
+
+    public int getSpeedServerPortRtt() {
+        return speedServerPortRtt;
+    }
+
+    public void setSpeedServerPortRtt(int speedServerPortRtt) {
+        this.speedServerPortRtt = speedServerPortRtt;
     }
 
     public int getDownloadStreams() {
@@ -163,6 +173,7 @@ public class SpeedTaskDesc implements Serializable {
                 ", speedServerAddrV6='" + speedServerAddrV6 + '\'' +
                 ", speedServerPort=" + speedServerPort +
                 ", rttCount=" + rttCount +
+                ", speedServerPortRtt=" + speedServerPortRtt +
                 ", downloadStreams=" + downloadStreams +
                 ", uploadStreams=" + uploadStreams +
                 ", performDownload=" + performDownload +
