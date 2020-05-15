@@ -87,11 +87,6 @@
                     <td><div style="padding-left:40px;border-spacing:20px;">Upload: </div></td>
                     <td><div style="padding-left:20px;border-spacing:20px;" id="upload">-</div></td>
                 </tr>
-
-                <tr>
-                    <td><div style="padding-left:40px;border-spacing:20px;" id="udp_port_blocking_result">UDP Port Blocking: </div></td>
-                    <td><div style="padding-left:20px;border-spacing:20px;" id="udp_port_blocking">-</div></td>
-                </tr>
             </table>
 
             <div style="padding-left:50px;border-spacing:20px;"><pre id="kpis"></pre></div>
@@ -138,8 +133,6 @@
         {
             document.getElementById("header").innerHTML = "<h1 style=\"padding-left:50px;\">ias desktop 1.0.0</h1>";
             document.getElementById("udp_port_blocking_control").innerHTML = "";
-            document.getElementById("udp_port_blocking_result").innerHTML = "";
-            document.getElementById("udp_port_blocking").innerHTML = "";
         }
 
         function iasStart(testCase)
@@ -440,8 +433,8 @@
 
                 udpPortBlockingParameters.user         = 'berec';
                 udpPortBlockingParameters.password     = 'berec';
-                udpPortBlockingParameters.ports        = [123, 500, 4500, 5060, 7000];
-                udpPortBlockingParameters.timeout      = 5000;
+                udpPortBlockingParameters.ports        = [{"port":123, "packets":5}, {"port":500, "packets":1}, {"port":4500, "packets":1}, {"port":5060, "packets":1}, {"port":7000, "packets":1}];
+                udpPortBlockingParameters.timeout      = 1000;
 
                 /*-------------------------set parameters for demo implementation end------------------------*/
 
@@ -503,11 +496,6 @@
             document.getElementById('rtt').innerHTML = '-';
             document.getElementById('download').innerHTML = '-';
             document.getElementById('upload').innerHTML = '-';
-
-            if (typeof require === "undefined")
-            {
-                document.getElementById('udp_port_blocking').innerHTML = '-';
-            }
             document.getElementById('kpis').innerHTML = '';
         }
 
@@ -553,19 +541,6 @@
                     if (data.test_case === 'upload' && typeof data.upload_info !== 'undefined' && data.upload_info[data.upload_info.length-1].throughput_avg_bps !== 0)
                     {
                         outputToHtml((data.upload_info[data.upload_info.length-1].throughput_avg_bps / 1000 / 1000).toFixed(2), 'upload');
-                    }
-                    if (typeof require === "undefined")
-                    {
-                        if (data.test_case === 'udp_port_blocking' && data.udp_port_blocking.results.length !== 0)
-                        {
-                            var reachable = 0;
-                            data.udp_port_blocking.results.forEach(function(element)
-                            {
-                                if (element.reachable === true) reachable++;
-                            });
-
-                            outputToHtml('' + reachable + ' of ' + data.udp_port_blocking.results.length + ' reachable', 'udp_port_blocking');
-                        }
                     }
 
                     outputToHtml(JSON.stringify(orderKeys(data), null, 4), 'kpis');
