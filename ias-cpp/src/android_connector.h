@@ -2,9 +2,9 @@
     \file android_connector.h
     \author zafaco GmbH <info@zafaco.de>
     \author alladin-IT GmbH <info@alladin.at>
-    \date Last update: 2019-11-26
+    \date Last update: 2020-05-12
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
     Copyright (C) 2019 alladin-IT GmbH
 
     This program is free software: you can redistribute it and/or modify
@@ -160,6 +160,7 @@ class AndroidConnector {
             int downloadStreams;
             int uploadStreams;
             int speedServerPort;
+            int speedServerPortRtt;
             bool performDownload;
             bool performUpload;
             bool performRtt;
