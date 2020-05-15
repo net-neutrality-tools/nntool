@@ -1,9 +1,9 @@
 /*!
-    \file PortBlocking.js
+    \file UdpPortBlocking.js
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-05-15
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -23,17 +23,17 @@ var jsTool = new JSTool();
 
 
 
-/*-------------------------class PortBlocking------------------------*/
+/*-------------------------class UdpPortBlocking------------------------*/
 
 /**
- * @class PortBlocking
- * @description Port Blocking Measurement Class
+ * @class UdpPortBlocking
+ * @description UDP Port Blocking Measurement Class
  */
-function PortBlocking()
+function UdpPortBlocking()
 {
     //private variables
-    let portBlockingVersion         = '1.0.0';
-    let pbMeasurementParameters     = {};
+    let udpPortBlockingVersion      = '1.0.0';
+    let udpPbMeasurementParameters  = {};
     let portsToTest                 = [];
     let portsTested                 = [];
 
@@ -45,8 +45,8 @@ function PortBlocking()
     let globalKPIs                  = {};
     let clientKPIs                  = {};
     let deviceKPIs                  = {};
-    let portBlockingKPIs            = {};
-    portBlockingKPIs.results        = [];
+    let udpPortBlockingKPIs         = {};
+    udpPortBlockingKPIs.results     = [];
 
 
 
@@ -61,22 +61,22 @@ function PortBlocking()
      */
     this.measurementStart = function(measurementParameters)
     {
-        pbMeasurementParameters = measurementParameters;
-        portsToTest = pbMeasurementParameters.ports;
+        udpPbMeasurementParameters = measurementParameters;
+        portsToTest = udpPbMeasurementParameters.ports;
 
         globalKPIs.start_time               = jsTool.getFormattedDate();
-        globalKPIs.test_case                = 'port_blocking';
+        globalKPIs.test_case                = 'udp_port_blocking';
 
         clientKPIs.timezone                 = jsTool.getTimezone();
-        clientKPIs.type                     = pbMeasurementParameters.platform.toUpperCase();
-        clientKPIs.port_blocking_version    = portBlockingVersion;
+        clientKPIs.type                     = udpPbMeasurementParameters.platform.toUpperCase();
+        clientKPIs.udp_port_blocking_version= udpPortBlockingVersion;
 
-        deviceKPIs                          = JSON.parse(jsTool.getDeviceKPIs(pbMeasurementParameters.platform));
+        deviceKPIs                          = JSON.parse(jsTool.getDeviceKPIs(udpPbMeasurementParameters.platform));
 
-        portBlockingKPIs.peer       = pbMeasurementParameters.target;
-        portBlockingKPIs.user       = pbMeasurementParameters.user;
-        portBlockingKPIs.password   = pbMeasurementParameters.password;
-        portBlockingKPIs.timeout    = pbMeasurementParameters.timeout;
+        udpPortBlockingKPIs.peer       = udpPbMeasurementParameters.target;
+        udpPortBlockingKPIs.user       = udpPbMeasurementParameters.user;
+        udpPortBlockingKPIs.password   = udpPbMeasurementParameters.password;
+        udpPortBlockingKPIs.timeout    = udpPbMeasurementParameters.timeout;
 
         checkUdpPort(portsToTest.shift());
     }
@@ -96,12 +96,12 @@ function PortBlocking()
     {
         if (window.RTCIceGatherer !== undefined)
         {
-            let gathererOptions = {gatherPolicy : "all", iceServers : [{ urls: 'turn:' + pbMeasurementParameters.target + ':' + port, username: pbMeasurementParameters.user, credential: pbMeasurementParameters.password}]};
+            let gathererOptions = {gatherPolicy : "all", iceServers : [{ urls: 'turn:' + udpPbMeasurementParameters.target + ':' + port, username: udpPbMeasurementParameters.user, credential: udpPbMeasurementParameters.password}]};
             let iceGatherer = new RTCIceGatherer(gathererOptions);
 
             iceGatherer.onlocalcandidate = function (event)
             {
-                if (event.candidate.ip === pbMeasurementParameters.targetIpv4 || event.candidate.ip === pbMeasurementParameters.targetIpv6)
+                if (event.candidate.ip === udpPbMeasurementParameters.targetIpv4 || event.candidate.ip === udpPbMeasurementParameters.targetIpv6)
                 {
                     validCandidateReceived(event.candidate.ip, port);
                 }
@@ -118,17 +118,17 @@ function PortBlocking()
             clearTimeout(timeoutHandler[port]);
             delete timeoutHandlerActivePorts[port];
 
-            console.log('Connection unsuccessful to ' + pbMeasurementParameters.target + ':' + port);
+            console.log('Connection unsuccessful to ' + udpPbMeasurementParameters.target + ':' + port);
 
-            portBlockingKPIs.results.push({"port":port,"reachable":false,"timeout":true});
+            udpPortBlockingKPIs.results.push({"port":port,"reachable":false,"timeout":true});
 
             measurementStepCompleted();
-        }, pbMeasurementParameters.timeout);
+        }, udpPbMeasurementParameters.timeout);
     }
 
     async function handleRtcPeerConnection(port)
     {
-        let config = { iceServers: [{ urls: 'turn:' + pbMeasurementParameters.target + ':' + port, username: pbMeasurementParameters.user, credential: pbMeasurementParameters.password}] };
+        let config = { iceServers: [{ urls: 'turn:' + udpPbMeasurementParameters.target + ':' + port, username: udpPbMeasurementParameters.user, credential: udpPbMeasurementParameters.password}] };
 
         rtcPeerConnections[port] = new RTCPeerConnection(config);
 
@@ -140,7 +140,7 @@ function PortBlocking()
             if (event.candidate)
             {
                 let candidate = event.candidate.candidate;
-                if ((candidate.includes(pbMeasurementParameters.targetIpv4) || candidate.includes(pbMeasurementParameters.targetIpv6)) && candidate.includes('relay'))
+                if ((candidate.includes(udpPbMeasurementParameters.targetIpv4) || candidate.includes(udpPbMeasurementParameters.targetIpv6)) && candidate.includes('relay'))
                 {
                     validCandidateReceived(candidate, port);
                 }
@@ -151,6 +151,7 @@ function PortBlocking()
         {
             let offer = await rtcPeerConnections[port].createOffer();
             rtcPeerConnections[port].setLocalDescription(offer);
+            console.warn(JSON.stringify(offer));
             console.log('Offer Created');
         }
         catch(e)
@@ -164,24 +165,24 @@ function PortBlocking()
         clearTimeout(timeoutHandler[port]);
         delete timeoutHandlerActivePorts[port];
 
-        console.log('Connection successful to ' + pbMeasurementParameters.target + ':' + port);
+        console.log('Connection successful to ' + udpPbMeasurementParameters.target + ':' + port);
 
-        let ipVersion = candidate.includes(pbMeasurementParameters.targetIpv4) ? '4' : '6';
+        let ipVersion = candidate.includes(udpPbMeasurementParameters.targetIpv4) ? '4' : '6';
 
         let portMatched         = false;
         let ipVersionMatched    = false;
-        for (var i = 0; i < portBlockingKPIs.results.length; i++)
+        for (var i = 0; i < udpPortBlockingKPIs.results.length; i++)
         {
-            if (portBlockingKPIs.results[i].port === port)
+            if (udpPortBlockingKPIs.results[i].port === port)
             {
                 portMatched = true;
-                if (portBlockingKPIs.results[i].ip_version === ipVersion) ipVersionMatched = true;
+                if (udpPortBlockingKPIs.results[i].ip_version === ipVersion) ipVersionMatched = true;
             }
         }
 
         if (!portMatched || !ipVersionMatched)
         {
-           portsTested.push(port); portBlockingKPIs.results.push({"port":port,"reachable":true,"timeout":false,"ip_version":ipVersion});
+           portsTested.push(port); udpPortBlockingKPIs.results.push({"port":port,"reachable":true,"timeout":false,"ip_version":ipVersion});
         }
 
         measurementStepCompleted(portMatched);
@@ -211,9 +212,9 @@ function PortBlocking()
     {
         var kpis = {};
         kpis = jsTool.extend(globalKPIs);
-        if (!jsTool.isEmpty(clientKPIs))        kpis.client_info    = clientKPIs;
-        if (!jsTool.isEmpty(deviceKPIs))        kpis.device_info    = deviceKPIs;
-        if (!jsTool.isEmpty(portBlockingKPIs))  kpis.port_blocking  = portBlockingKPIs;
+        if (!jsTool.isEmpty(clientKPIs))            kpis.client_info        = clientKPIs;
+        if (!jsTool.isEmpty(deviceKPIs))            kpis.device_info        = deviceKPIs;
+        if (!jsTool.isEmpty(udpPortBlockingKPIs))   kpis.udp_port_blocking  = udpPortBlockingKPIs;
 
         return kpis;
     }
