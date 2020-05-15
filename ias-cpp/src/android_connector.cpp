@@ -2,7 +2,7 @@
     \file android_connector.cpp
     \author zafaco GmbH <info@zafaco.de>
     \author alladin-IT GmbH <info@alladin.at>
-    \date Last update: 2020-03-16
+    \date Last update: 2020-05-11
 
     Copyright (C) 2016 - 2020 zafaco GmbH
     Copyright (C) 2019 alladin-IT GmbH
@@ -144,6 +144,9 @@ void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
 
     toParseId = env->GetFieldID(clazz, "speedServerPort", "I");
     this->speedTaskDesc.speedServerPort = (int) env->GetIntField(speedTaskDesc, toParseId);
+
+    toParseId = env->GetFieldID(clazz, "speedServerPortRtt", "I");
+    this->speedTaskDesc.speedServerPortRtt = (int) env->GetIntField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "performDownload", "Z");
     this->speedTaskDesc.performDownload = env->GetBooleanField(speedTaskDesc, toParseId);
@@ -630,6 +633,7 @@ void AndroidConnector::startMeasurement() {
         jMeasurementParameters["clientos"] = "android";
         jMeasurementParameters["wsTLD"] = "";
         jMeasurementParameters["wsTargetPort"] = std::to_string(speedTaskDesc.speedServerPort);
+        jMeasurementParameters["wsTargetPortRtt"] = std::to_string(speedTaskDesc.speedServerPortRtt);
         jMeasurementParameters["wsWss"] = speedTaskDesc.isEncrypted ? "1" : "0";
         jMeasurementParameters["wsAuthToken"] = "placeholderToken";
         jMeasurementParameters["wsAuthTimestamp"] = "placeholderTimestamp";
