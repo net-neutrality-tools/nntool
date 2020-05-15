@@ -35,7 +35,7 @@ function UdpPortBlocking()
     let udpPortBlockingVersion      = '1.0.0';
     let udpPbMeasurementParameters  = {};
     let portsToTest                 = [];
-    let portsTested                 = [];
+    let timings                     = [];
 
     let rtcPeerConnections          = [];
     let timeoutHandler              = [];
@@ -62,7 +62,23 @@ function UdpPortBlocking()
     this.measurementStart = function(measurementParameters)
     {
         udpPbMeasurementParameters = measurementParameters;
-        portsToTest = udpPbMeasurementParameters.ports;
+
+        for (port of udpPbMeasurementParameters.ports)
+        {
+            if (typeof port.packets !== "undefined" && !isNaN(port.packets))
+            {
+                for (var i=0; i<port.packets; i++)
+                {
+                    //limit to a maximum of 20 probes per port, as tests can only be performed sequentially
+                    portsToTest.push(port.port);
+                    if (i>=19) break;
+                }
+            }
+            else
+            {
+                portsToTest.push(port.port);
+            }
+        }
 
         globalKPIs.start_time               = jsTool.getFormattedDate();
         globalKPIs.test_case                = 'udp_port_blocking';
@@ -94,6 +110,11 @@ function UdpPortBlocking()
      */
     function checkUdpPort(port)
     {
+        if (typeof timings[port] === "undefined")
+        {
+            timings[port] = [];
+        }
+        timings[port].push({"sent":jsTool.getTimestamp()});
         if (window.RTCIceGatherer !== undefined)
         {
             let gathererOptions = {gatherPolicy : "all", iceServers : [{ urls: 'turn:' + udpPbMeasurementParameters.target + ':' + port, username: udpPbMeasurementParameters.user, credential: udpPbMeasurementParameters.password}]};
@@ -120,7 +141,7 @@ function UdpPortBlocking()
 
             console.log('Connection unsuccessful to ' + udpPbMeasurementParameters.target + ':' + port);
 
-            udpPortBlockingKPIs.results.push({"port":port,"reachable":false,"timeout":true});
+            setResult(port, false);
 
             measurementStepCompleted();
         }, udpPbMeasurementParameters.timeout);
@@ -162,33 +183,79 @@ function UdpPortBlocking()
 
     function validCandidateReceived(candidate, port)
     {
+        timings[port][timings[port].length-1] = {"sent": timings[port][timings[port].length-1].sent, "received":jsTool.getTimestamp()};
+
         clearTimeout(timeoutHandler[port]);
         delete timeoutHandlerActivePorts[port];
 
         console.log('Connection successful to ' + udpPbMeasurementParameters.target + ':' + port);
+        setResult(port, true, candidate.includes(udpPbMeasurementParameters.targetIpv4) ? '4' : '6');
 
-        let ipVersion = candidate.includes(udpPbMeasurementParameters.targetIpv4) ? '4' : '6';
+        measurementStepCompleted();
+    }
 
-        let portMatched         = false;
-        let ipVersionMatched    = false;
+    function setResult(port, successful, ipVersion)
+    {
+        var delays = [];
+        var received = 0;
+        for (timing of timings[port])
+        {
+            if (!isNaN(timing.sent) && !isNaN(timing.received))
+            {
+                received++;
+                delays.push(timing.received*1e3 - timing.sent*1e3);
+            }
+        }
+
+        var delayAvg;
+        var delayStandardDeviation;
+        if (delays.length > 0)
+        {
+            var sum = 0.0;
+            for (delay of delays)
+            {
+                sum += delay;
+            }
+            delayAvg = sum / received;
+
+            sum = 0.0;
+            for (delay of delays)
+            {
+                sum += Math.pow((delay-delayAvg), 2);
+            }
+            delayStandardDeviation = Math.sqrt(sum/received);
+        }
+
+        var delayResult;
+        if (typeof delayAvg !== "undefined")
+        {
+            delayResult={};
+            delayResult.average_ns = parseInt(delayAvg*1e3);
+            delayResult.standard_deviation_ns = parseInt(delayStandardDeviation*1e3);
+        }
+
+
+        var matched = false;
         for (var i = 0; i < udpPortBlockingKPIs.results.length; i++)
         {
             if (udpPortBlockingKPIs.results[i].port === port)
             {
-                portMatched = true;
-                if (udpPortBlockingKPIs.results[i].ip_version === ipVersion) ipVersionMatched = true;
+                matched= true;
+                udpPortBlockingKPIs.results[i].packets.sent++;
+                successful ? udpPortBlockingKPIs.results[i].packets.received++ : udpPortBlockingKPIs.results[i].packets.lost++;
+                udpPortBlockingKPIs.results[i].delay=delayResult;
+                break;
             }
         }
 
-        if (!portMatched || !ipVersionMatched)
+        if (!matched)
         {
-           portsTested.push(port); udpPortBlockingKPIs.results.push({"port":port,"reachable":true,"timeout":false,"ip_version":ipVersion});
+            var packets = {"sent": 1, "received": successful ? 1:0, "lost": successful ? 0:1};
+            udpPortBlockingKPIs.results.push({"port":port,"packets": packets, "ip_version":ipVersion, "delay": delayResult});
         }
-
-        measurementStepCompleted(portMatched);
     }
 
-    function measurementStepCompleted(performNextStep, completed)
+    function measurementStepCompleted()
     {
         globalKPIs.cmd = 'report';
         reportToWeb();
