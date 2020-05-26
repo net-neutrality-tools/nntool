@@ -1,9 +1,9 @@
 /*!
     \file upload.h
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-05-26
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -36,10 +36,7 @@ class Upload : public CBasisThread
 		int mTls;
 		unsigned long long mLimit;
 		string mUploadString;
-		
-		string mServer;
-		string mServerName;
-		string mClient;
+	
 
 		CConfigManager *mConfig;
 		
@@ -53,6 +50,10 @@ class Upload : public CBasisThread
 		unsigned long long measurementTimeStart;
 		unsigned long long measurementTimeEnd;
 		unsigned long long measurementTimeDuration;
+
+		string mServer;
+		string mServerName;
+		string mClient;
 
 		int system_availability;
 		int service_availability;
