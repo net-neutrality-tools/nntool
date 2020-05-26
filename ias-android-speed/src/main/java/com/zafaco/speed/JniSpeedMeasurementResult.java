@@ -2,9 +2,9 @@
     \file JniSpeedMeasurementResult.java
     \author zafaco GmbH <info@zafaco.de>
     \author alladin-IT GmbH <info@alladin.at>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-05-26
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
     Copyright (C) 2019 alladin-IT GmbH
 
     This program is free software: you can redistribute it and/or modify
@@ -92,6 +92,9 @@ public class JniSpeedMeasurementResult {
     @Keep
     public void setMeasurementServerIp(String measurementServerIp) {
         this.measurementServerIp = measurementServerIp;
+
+        // @TODO only to set peer with something useful. It can probably be removed in a future refactor
+        this.rttUdpResult.setPeer(measurementServerIp);
     }
 
     public String getClientIp() {
