@@ -149,6 +149,8 @@ int Ping::run()
 			if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 ) ipv6validated = true;
 		#endif
 
+		int ipversion;
+
 		if (ipv6validated)
 		{
 			//Create a datagram/UDP socket
