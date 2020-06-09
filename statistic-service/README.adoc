@@ -1,0 +1,81 @@
+= Statistic service
+
+The statistic service provides an API which is used to retrieve statistical evaluations/results. The API can be accessed by concatenating the version prefix `/api/v1/` (current version: `v1`) and the request path:
+
+[cols="3,2,4,10",options=header]
+|===
+
+|Request path
+|HTTP Method
+|Request/response model
+|Desciption
+
+|`statistics/providers`
+|GET
+|Request: ProviderStatisticsRequestParams
+
+Response: ApiResponse<ApiPagination<ProviderStatisticDto>>
+|This resource is used to retrieve provider statistics filtered by the provided parameters.
+
+|`statistics/providers/filters`
+|GET
+|Request: ProviderStatisticsRequestParams
+
+Response: ApiResponse<ProviderFilterResponseDto>
+|This resource is used to retrieve the default list of filter elements for the providers statistics, if no request parameters are provided. Or rerieve an updated list of filter elements, if one or more selected filter parameters are provided.
+
+
+|===
+
+== Configuration overview
+
+The statistic service provides advanced configuration which can be set in the default configuration files: `application.yml` and `application-dev.yml`
+
+== Configuration file: `application-dev.yml`
+
+The following options are available in the configuration file `application-dev.yml`:
+
+=== Section `spring.datasource`
+
+In this section the connection to the PostgreSQL database can be configured:
+
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Desciption
+
+|`url`
+|string
+|`jdbc:postgresql://localhost:5432/db`
+|The PostgreSQL server URL
+
+|`username`
+|string
+|_see default config file_
+|The username registered in the DB
+
+|`password`
+|string
+|_see default config file_
+|The password for the user provided in `username`
+
+|===
+
+== Configuration file: `application.yml`
+
+The following options are available in the configuration file `application.yml`:
+
+=== Section `server`
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Desciption
+|`port`
+|integer
+|`8058`
+|The port this service will bind to.
+|===
