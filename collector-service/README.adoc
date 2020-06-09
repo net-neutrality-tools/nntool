@@ -1,0 +1,97 @@
+= Collector service
+
+The collector service provides an API which is used to submit (collect) measurement results. The API can be accessed by concatenating the version prefix `/api/v1/` (current version: `v1`) and the request path:
+
+[cols="3,2,4,4,10",options=header]
+|===
+|Request path
+|HTTP Method
+|Request model
+|Response model
+|Desciption
+|`/measurements`
+|POST
+|LmapReportDto
+|ApiResponse<MeasurementResultResponse>
+|This request is responsible for collecting, processing and saving measurement data (LmapReportDto).
+|===
+
+== Configuration overview
+
+The collector service provides advanced configuration which can be set in the default configuration files: `application.yml` and `application-dev.yml`
+
+== Configuration file: `application-dev.yml`
+
+The following options are available in the configuration file `application-dev.yml`:
+
+=== Section `spring.couchdb`
+
+In this section the connection to the _couchdb_ database can be configured:
+
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Desciption
+|`connection.url`
+|string
+|`http://localhost:5984`
+|The couchdb server address
+|`databases`
+|object[]
+|_see default config file_
+|Contains the configuration of all necessary databases for this service
+|`server.port`
+|integer
+|`8087`
+|The port this service will bind to.
+|===
+
+== Configuration file: `application.yml`
+
+The following options are available in the configuration file `application.yml`:
+
+=== Section `collector`
+
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Desciption
+|`system-uuid`
+|string (UUID)
+|`f0b6d3f1-40c8-4835-82df-747b28caa326`
+|The UUID of the current system provider
+|`settings-uuid`
+|string (UUID)
+|`4e7567ef-175b-44f4-8436-8fd6d22dab48`
+|The UUID of the relevant settings in the database
+|===
+
+=== Section `server`
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Desciption
+|`port`
+|integer
+|`8087`
+|The port this service will bind to.
+|===
+
+=== Section `external-services`
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Desciption
+|`device-imports`
+|object[]
+|_see default config file_
+|A list of resources, which will be used to import device information (name, short name, brand, etc.)
+|===
