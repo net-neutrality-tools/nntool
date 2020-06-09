@@ -16,8 +16,6 @@ jint JNICALL JNI_OnLoad(JavaVM* vm, void*) {
 
 
 jint JniConnector::loadJVM(JavaVM *vm) {
-    __android_log_print (ANDROID_LOG_ERROR, "tutorial-3",
-                              "connecting in class");
     JNIEnv *env = nullptr;
 
     javaVm = vm;
