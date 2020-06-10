@@ -1,4 +1,4 @@
-[[overview]]
+[[qos-overview]]
 = QoS database and settings documentation
 Lukasz Budryk, Florian Jung
 v1.5.0, 2017-08-22

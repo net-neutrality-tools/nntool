@@ -1,3 +1,4 @@
+[[statistic-service]]
 = Statistic service
 
 The statistic service provides an API which is used to retrieve statistical evaluations/results. The API can be accessed by concatenating the version prefix `/api/v1/` (current version: `v1`) and the request path:
@@ -8,7 +9,7 @@ The statistic service provides an API which is used to retrieve statistical eval
 |Request path
 |HTTP Method
 |Request/response model
-|Desciption
+|Description
 
 |`statistics/providers`
 |GET
@@ -44,7 +45,7 @@ In this section the connection to the PostgreSQL database can be configured:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 
 |`url`
 |string
@@ -73,7 +74,7 @@ The following options are available in the configuration file `application.yml`:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`port`
 |integer
 |`8058`

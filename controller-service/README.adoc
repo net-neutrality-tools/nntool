@@ -1,3 +1,4 @@
+[[controller-service]]
 = Controller service
 
 The controller service provides an API which is used to perform control-relevant tasks, which are:
@@ -16,7 +17,7 @@ The API can be accessed by concatenating the version prefix `/api/v1/` (current 
 |Request path
 |HTTP Method
 |Request/response model
-|Desciption
+|Description
 
 |`ip`
 |GET
@@ -73,7 +74,7 @@ In this section the connection to the _couchdb_ database can be configured:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`connection.url`
 |string
 |`http://localhost:5984`
@@ -95,7 +96,7 @@ The following options are available in the configuration file `application.yml`:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 
 |`settings-uuid`
 |string (UUID)
@@ -114,7 +115,7 @@ The following options are available in the configuration file `application.yml`:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`port`
 |integer
 |`8080`

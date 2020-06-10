@@ -1,0 +1,59 @@
+// inspired by https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-docs/build.gradle
+
+plugins {
+	id "org.asciidoctor.jvm.convert" version "3.2.0"
+	id "org.asciidoctor.jvm.pdf" version "3.2.0"
+}
+
+tasks.withType(org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask) {
+	baseDirFollowsSourceDir()
+    
+    sourceDir="src/asciidoc"
+    outputDir = file("build/")
+}
+
+def tmpAsciiDocPath = "$buildDir/../src/asciidoc/tmp"
+
+task copyDocumentation(type: Copy) {
+    from "$buildDir/../.."
+    exclude "**/docs/src/asciidoc/**"
+    include "**/*.adoc"
+    into tmpAsciiDocPath
+}
+
+asciidoctor {
+	sources {
+		include "*.singleadoc"
+	}
+    doLast {
+        delete "$tmpAsciiDocPath"
+    }
+    dependsOn {
+        copyDocumentation
+    }
+}
+
+asciidoctorPdf {
+	sources {
+		include "*.singleadoc"
+	}
+    doLast {
+        delete ("$tmpAsciiDocPath")
+    }
+    dependsOn {
+        copyDocumentation
+    }
+}
+
+task asciidoctorMultipage(type: org.asciidoctor.gradle.jvm.AsciidoctorTask) {
+	sources {
+		include "*.adoc"
+	}
+}
+
+build {
+    dependsOn copyDocumentation
+	dependsOn asciidoctor
+	dependsOn asciidoctorPdf
+	dependsOn asciidoctorMultipage
+}

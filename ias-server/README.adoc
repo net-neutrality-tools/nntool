@@ -1,8 +1,9 @@
-== IAS server module
+[[ias-server-build]]
+= IAS server module
 
-=== Building
+== Building
 
-==== Prerequisites
+=== Prerequisites
 
 Linux (any Version)
 
@@ -22,7 +23,7 @@ For a Debian based Linux run the following command as root:
 apt install build-essential make cmake automake g++ libtool liblog4cpp5-dev libssl-dev lcov git
 ----
 
-==== Build
+=== Build
 
 With fullfilled prerequisites perform the following steps:
 
@@ -37,12 +38,13 @@ cmake .. # add -DCMAKE_BUILD_TYPE="DEBUG" for debug build
 make
 ----
 
+[start=2]
 2. Create dir `/etc/ias-server/`
 3. Copy trace.ini to `/etc/ias-server/`
 4. Customize and copy `config.json` to `/etc/ias-server/`
 5. Create dir `/var/log/ias-server/`
 
-==== Unit Tests
+=== Unit Tests
 
 To execute the included unit tests execute the following commands:
 
@@ -70,7 +72,7 @@ lcov --list coverage.info
 
 The HTML code coverage report will be generated into directory `ias-server/build/coverage_report`.
 
-=== Recommended Settings
+== Recommended Settings
 
 To maximize available measurement peer resources per tcp connection, the following settings are recommended:
 
@@ -86,7 +88,7 @@ net.ipv4.tcp_wmem = 4096 262144 8388608
 
 The parameters have to be added to `/etc/sysctl.conf` and activated via `sysctl -p`.
 
-=== Execution
+== Execution
 
 Run `build/ias-server`. Add the `-d` option for daemon mode.
 
@@ -100,7 +102,7 @@ For the usage of TLS-Secured connections, perform the following steps:
 
 The usage of a TLS-secured connection is mandatory for the Load Balancing API.
 
-=== Docker container
+== Docker container
 
 [source,bash]
 ----
@@ -109,11 +111,11 @@ DOCKER_BUILDKIT=1 docker build -t nntool.eu/ias-server -f ias-server.Dockerfile 
 docker run --rm -it -p 20080:80 -p 20443:443 -p 28080:8080 -p 28443:8443 -p 44301:44301 nntool.eu/ias-server
 ----
 
-== IAS turnserver module
+= IAS turnserver module
 
 To perform port blocking measurements, the *coturn TURN server (https://github.com/coturn/coturn)* has to be deployed on the measurement peer.
 
-==== Prerequisites
+== Prerequisites
 
 Linux (any Version)
 
@@ -128,7 +130,7 @@ apt install coturn
 
 The current version 4.5.0.7 was verified for port blocking measurements.
 
-==== Build
+== Build
 
 With fullfilled prerequisites perform the following steps:
 
@@ -138,11 +140,11 @@ With fullfilled prerequisites perform the following steps:
 4. Run `update-rc.d ias-turnserver defaults`
 5. To enable startup on boot, run `update-rc.d ias-turnserver enable`
 
-=== Execution
+== Execution
 
 Use `service ias-turnserver {start|stop|status} for starting, stopping, status information.
 
-=== License
+= License
 
 ias-server is released under the AGPLv3 <https://www.gnu.org/licenses/agpl-3.0.txt>
 

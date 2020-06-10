@@ -1,3 +1,4 @@
+[[website-build]]
 = Website
 
 == Prerequisites
@@ -12,6 +13,10 @@ The following steps are needed to setup the development environment:
 - install dependencies using `npm install` (Note: a single `npm install` is sufficient, it is not necessary to use it again for every command)
 - build IAS module (automatically done when using `npm run ...` commands)
 - serve or build website
+
+The project supports a multitude of commands, which are specified in the `package.json` file under the `"scripts"` object. The first entry (the key) specifies the command to enter after `npm run`, the second entry (the value) specifies the commands which are then executed. E.g. `"build:ias": "cd ../ias/ && npm i && ./build.sh"` defines, that when a user inputs `npm run build:ias` the system changes into the ias directory, executes npm i and then runs the build.sh script.
+
+However, checking out the `package.json` file is purely optional. All commands needed to develop and deploy the suported websites are described in detail in this documentation.
 
 To start a development server on localhost:4200 from scratch, simply use the following lines:
 
@@ -61,10 +66,6 @@ Run `ng test` to execute the unit tests via https://karma-runner.github.io[Karma
 
 Run `ng e2e` to execute the end-to-end tests via http://www.protractortest.org/[Protractor].
 
-=== Electron desktop app
-
-TODO: add documentation for desktop app
-
 == Production
 
 In addition to being heavily optimized, the production website utilizes the configuration files from the `src/environments/environment.prod.ts` files. This allows to easily set debug options in the non-prod configurations without risk of deploying these settings. To build a production-ready nettest website use the following commands:
@@ -85,6 +86,15 @@ npm run build.web.portal -- --prod
 
 The optimized websites are located in the dist/apps/web-nntool or the dist/apps/web-portal folder, and may be copied using https://linux.die.net/man/1/scp[scp] or any other method of choice.
 
+To build the desktop app use:
+
+[sources, bash]
+----
+npm install
+npm run build.electron.nntool
+----
+
+The desktop app needs special consideration to provide functional applications for all supported platforms. A target platform can be specified with the corresponding subcommands `npm run build.electron.nntool.[linux|windows|mac]`. Building a valid Windows desktop app on Linux with wine has been tested and the resulting app is fully functional (simply follow the on-screen instructions). 
 
 == Configuration
 
