@@ -1,3 +1,4 @@
+[[collector-service]]
 = Collector service
 
 The collector service provides an API which is used to submit (collect) measurement results. The API can be accessed by concatenating the version prefix `/api/v1/` (current version: `v1`) and the request path:
@@ -8,7 +9,7 @@ The collector service provides an API which is used to submit (collect) measurem
 |HTTP Method
 |Request model
 |Response model
-|Desciption
+|Description
 |`/measurements`
 |POST
 |LmapReportDto
@@ -33,7 +34,7 @@ In this section the connection to the _couchdb_ database can be configured:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`connection.url`
 |string
 |`http://localhost:5984`
@@ -59,7 +60,7 @@ The following options are available in the configuration file `application.yml`:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`system-uuid`
 |string (UUID)
 |`f0b6d3f1-40c8-4835-82df-747b28caa326`
@@ -76,7 +77,7 @@ The following options are available in the configuration file `application.yml`:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`port`
 |integer
 |`8087`
@@ -89,7 +90,7 @@ The following options are available in the configuration file `application.yml`:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`device-imports`
 |object[]
 |_see default config file_

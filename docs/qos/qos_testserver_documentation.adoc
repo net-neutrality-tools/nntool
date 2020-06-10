@@ -1,13 +1,14 @@
-# QoS Testserver Documentation
+[[qos-server-documentation]]
+= QoS Testserver Documentation
 
 1.  Communication between server and client
 2.  QoS Testserver Protocol (= QTP)
 3.  Settings
 4.  Launching
 
-## 1. Communication between server and client
+== 1. Communication between server and client
 
-### 1.1 Overview
+=== 1.1 Overview
 
 Each client is communicating with the test server by using a simple protocol. This protocol is called QoS Testserver Protocol (QTP) 
 and consists of three parts. These parts have to be executed in the correct order. All parts are important and none must be omitted. They are:  
@@ -21,9 +22,9 @@ The rules for the QTP are:
 *   Each QTP command has to be in a single line
 *   A new line character must follow the command string. This marks the end of the command.
 
-## 2. QoS Testserver Protocol (QTP)
+== 2. QoS Testserver Protocol (QTP)
 
-### 2.1 Handshake
+=== 2.1 Handshake
 
 A client tries to open a connection on the port the test server is listening on (see 3. Settings). 
 If the connection can be established the server sends two lines of information: The first one is the greeting. 
@@ -32,20 +33,20 @@ This is the name and version number of the protocol this server uses. The second
 After receiving these two lines of code the client needs to send back the identity token (by using the **TOKEN string** command). 
 If the token is valid the server will send back an **OK** command followed by another **ACCEPT** command. The connection has been established.  
 
-### 2.2 Test requests
+=== 2.2 Test requests
 
 Tests are being requested by using a special test request command (see 2.4.2). The server's reaction is different for each test.
 Every command sent by the client gets a response. The only exception is the **QUIT** command (see 2.3. Close connection) where a connection is closed immediately.
 
-### 2.3 Close connection
+=== 2.3 Close connection
 
 By using the **QUIT** command the client can close a connection.
 
-### 2.4 Command overview
+=== 2.4 Command overview
 
 All commands can have appendices with a special functionality. See 2.4.3  
 
-#### 2.4.1 Server side responses
+==== 2.4.1 Server side responses
 
 *   **ACCEPT [?]** - by sending this command the server is telling the client which commands it will accept for the next request. 
 Example: _ACCEPT [TOKEN string]_ -> means that the server will only accept a _TOKEN_ command followed by a string (=this one is needed to complete the handshake and identify the client)
@@ -55,7 +56,7 @@ Example: _ACCEPT [TOKEN string]_ -> means that the server will only accept a _TO
     *   **ERR ILLARG** - illegal argument. This is returned if an argument could be parsed but is illegal (out of range, etc.).
     *   **ERR UNSUPP** - argument unsupported. This is returned if an argument could be parsed but is not valid because it's not supported (old protocol version, etc.).
 
-#### 2.4.2 Client side commands and possible responses
+==== 2.4.2 Client side commands and possible responses
 
 *   **TOKEN string** - sends a token (received from the control server) that is used to identify the client.  
     The response is: **OK** and an **ACCEPT** command
@@ -92,7 +93,7 @@ RETURNS: **RCV int int** - see 2.4.1 RCV
 *   **QUIT** - closes the connection.
     There is no response to this command.
 
-#### 2.4.3 Command appendices
+==== 2.4.3 Command appendices
 
 An appendix can be added to each command for extended functionality. Each appendix is added after a command, 
 but before the new-line character. An appendix must start with a plus (+) sign. Example: **TCPTEST OUT 80 +ID17**  
@@ -103,11 +104,11 @@ that command by adding the same appendix to the response.
 This is used for multi-threaded environments. 
 The example from above **TCPTEST OUT 80 +ID17** would produce a response that will look like this: **OK +ID17**
 
-## 3. Server Settings
+== 3. Server Settings
 
 The server settings can be set by using either predefined default values, command line parameters or a settings file.  
 
-### 3.1 Preset default values
+=== 3.1 Preset default values
 
 If neither a configuration file is available nor the command line parameters are set then the default values are used. They are:
 
@@ -123,7 +124,7 @@ If neither a configuration file is available nor the command line parameters are
 10.  _Command console:_ **disabled** (see: _3.2.11 'server.console'_)
 11.  _Log console:_ **disabled** (see: _3.2.11 'server.log.console'_)
 
-### 3.2 Settings file
+=== 3.2 Settings file
 
 If a settings file is available the parameters set inside have the highest priority. 
 The following parameters are available inside a configuration file:
@@ -150,7 +151,7 @@ An automatically generated suffix is added to the name (date + ".log" ending)_
 11.  Other log settings:
     *   **server.log.console** values: **true/false**, if true, all debug messages will be sent to the available console
 
-### 3.3 Command line parameter
+=== 3.3 Command line parameter
 
 By launching the test server the following command line parameters can be used.
 However, configuration via the settings file is the preferred method, because of its extended functionality:
@@ -166,7 +167,7 @@ if this parameter is not set to verbose, it is set to level 0 automatically.
 8.  _Secure flag:_ **-s**
 9.  _Main log file (for more log files use a config file - see 3.4):_ **-l**
 
-## 4. Launching
+== 4. Launching
 
 After building the qos-service (use ``./gradlew build``), move to the directory containing the jar (``qos-service-1.0.jar``)
 and execute ``java -jar qos-service-1.0.jar`` to start the server.

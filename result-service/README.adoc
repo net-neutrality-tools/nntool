@@ -1,3 +1,4 @@
+[[result-service]]
 = Result service
 
 The result service provides an API which is used to fetch measurement results. The API can be accessed by concatenating the version prefix `/api/v1/measurement-agents/` (current version: `v1`) and the request path:
@@ -8,7 +9,7 @@ The result service provides an API which is used to fetch measurement results. T
 |Request path
 |HTTP Method
 |Response model
-|Desciption
+|Description
 
 |`{agentUuid}/measurements`
 |GET
@@ -54,7 +55,7 @@ In this section the connection to the _couchdb_ database can be configured:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`connection.url`
 |string
 |`http://localhost:5984`
@@ -76,7 +77,7 @@ The following options are available in the configuration file `application.yml`:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`settings-uuid`
 |string (UUID)
 |`4e7567ef-175b-44f4-8436-8fd6d22dab48`
@@ -89,7 +90,7 @@ The following options are available in the configuration file `application.yml`:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`port`
 |integer
 |`8082`

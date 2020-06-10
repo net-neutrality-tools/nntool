@@ -1,8 +1,9 @@
-== IAS libnntool module
+[[ias-libnntool-build]]
+= IAS libnntool module
 
-=== Building
+== Building
 
-==== Prerequisites
+=== Prerequisites
 
 Linux (any Version)
 
@@ -21,7 +22,7 @@ For a Debian based Linux run the following command as root:
 apt install build-essential ninja cmake g++ liblog4cpp5-dev libssl-dev golang lcov
 ----
 
-==== Build
+=== Build
 
 With fullfilled prerequisites perform the following steps:
 
@@ -34,7 +35,7 @@ cmake .. -GNinja # add -DCMAKE_BUILD_TYPE="DEBUG" for debug build
 ninja
 ----
 
-==== Unit Tests
+=== Unit Tests
 
 To execute the included unit tests execute the following commands:
 
@@ -61,7 +62,7 @@ lcov --list coverage.info
 
 The HTML code coverage report will be generated into directory `ias-libnntool/build/coverage_report`.
 
-=== License
+== License
 
 ias-libnntool is released under the AGPLv3 <https://www.gnu.org/licenses/agpl-3.0.txt>
 

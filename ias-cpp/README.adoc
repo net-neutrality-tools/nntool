@@ -1,3 +1,4 @@
+[[ias-cpp-build]]
 == IAS C++ Client module
 
 === Building
