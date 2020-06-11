@@ -17,7 +17,9 @@ def tmpAsciiDocPath = "$buildDir/../src/asciidoc/tmp"
 task copyDocumentation(type: Copy) {
     from "$buildDir/../.."
     exclude "**/docs/src/asciidoc/**"
+    exclude "**/404.adoc", "**/tc.adoc", "**/help.adoc"
     include "**/*.adoc"
+    includeEmptyDirs = false
     into tmpAsciiDocPath
 }
 
