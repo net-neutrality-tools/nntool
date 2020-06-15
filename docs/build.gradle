@@ -7,16 +7,22 @@ plugins {
 
 tasks.withType(org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask) {
 	baseDirFollowsSourceDir()
-    
-    sourceDir="src/asciidoc"
-    outputDir = file("build/")
+
+    sourceDir = "src/asciidoc"
+    outputDir = file("$buildDir")
 }
 
 def tmpAsciiDocPath = "$buildDir/../src/asciidoc/tmp"
 
+task cleanDocumentation(type: Delete) {
+  delete tmpAsciiDocPath
+}
+
+clean.dependsOn cleanDocumentation
+
 task copyImagery(type: Copy) {
     from fileTree(dir: "$buildDir/../ias", includes: ["**/*.png"]).files
-    into ("$tmpAsciiDocPath/images")
+    into "$tmpAsciiDocPath/images"
 }
 
 task copyDocumentation(type: Copy) {
@@ -33,24 +39,12 @@ asciidoctor {
 	sources {
 		include "*.singleadoc"
 	}
-    doLast {
-        delete "$tmpAsciiDocPath"
-    }
-    dependsOn {
-        copyDocumentation
-    }
 }
 
 asciidoctorPdf {
 	sources {
 		include "*.singleadoc"
 	}
-    doLast {
-        delete ("$tmpAsciiDocPath")
-    }
-    dependsOn {
-        copyDocumentation
-    }
 }
 
 task asciidoctorMultipage(type: org.asciidoctor.gradle.jvm.AsciidoctorTask) {
@@ -59,9 +53,11 @@ task asciidoctorMultipage(type: org.asciidoctor.gradle.jvm.AsciidoctorTask) {
 	}
 }
 
+asciidoctor.dependsOn copyDocumentation
+asciidoctorPdf.dependsOn copyDocumentation
+
 build {
-    dependsOn copyDocumentation
 	dependsOn asciidoctor
 	dependsOn asciidoctorPdf
-	dependsOn asciidoctorMultipage
+	//dependsOn asciidoctorMultipage
 }
