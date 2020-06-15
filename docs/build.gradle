@@ -14,6 +14,11 @@ tasks.withType(org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask) {
 
 def tmpAsciiDocPath = "$buildDir/../src/asciidoc/tmp"
 
+task copyImagery(type: Copy) {
+    from fileTree(dir: "$buildDir/../ias", includes: ["**/*.png"]).files
+    into ("$tmpAsciiDocPath/images")
+}
+
 task copyDocumentation(type: Copy) {
     from "$buildDir/../.."
     exclude "**/docs/src/asciidoc/**"
@@ -21,6 +26,7 @@ task copyDocumentation(type: Copy) {
     include "**/*.adoc"
     includeEmptyDirs = false
     into tmpAsciiDocPath
+    dependsOn copyImagery
 }
 
 asciidoctor {

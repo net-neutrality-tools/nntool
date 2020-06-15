@@ -273,7 +273,7 @@ Fields:
 
 [[database-qos_test_objective-param]]
 === Field `param`
-Test parameters are basically json keys without `TESTTYPE` and `RESULTTYPE` (where `RESULTTYPE` must be objective). This means that for example a website test json key (as described in the section: <<qos-test-result-json>>) with the name: `website_objective_url` would be transformed to `url`. After a test has been executed by the client it adds the `TESTTYPE` and `RESULTTYPE` prefix to the parameters and send them back to the server. This procedure is needed to be able to differentiate between objectives (test parameters) and results (results during or after the test) because both are saved in the <<database-qos_test_result>> table in a single field: `results`. The following parameters (objectives) are supported (sorted by test type):
+Test parameters are basically json keys without `TESTTYPE` and `RESULTTYPE` (where `RESULTTYPE` must be objective). This means that for example a website test json key (as described in the section: <<qos-test-result-json>>) with the name: `website_objective_url` would be transformed to `url`. After a test has been executed by the client it adds the `TESTTYPE` and `RESULTTYPE` prefix to the parameters and send them back to the server. The following parameters (objectives) are supported (sorted by test type):
 
     * <<qos-test-result-json-website>>, example and available parameters:
 
@@ -590,7 +590,7 @@ The JS parser has an own TestScript library included to make some evaluations ea
 
     * A command is only valid if it is a single line of code (no new-line characters allowed)
 
-    * If used as objective or expected result parameter (see <<database>>) the TestScript command must be the only one parameter. Examples:
+    * If used as objective or expected result parameter the TestScript command must be the only one parameter. Examples:
         ** correct:
 
             {
