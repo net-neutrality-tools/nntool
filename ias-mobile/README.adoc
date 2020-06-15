@@ -1,12 +1,13 @@
-## Building ##
+[[ias-mobile-build]]
+= Building
 
-### Prerequisites ###
+== Prerequisites
 * XCode >= 10
 * cocoapods
 * NativeScript = 5.x
 * macOS (any Version)
 
-### Build ###
+== Build
 With fullfilled prerequisites perform the following steps:
 1. Run *npm i* to install dependencies
 2. Run *tns build ios*. If *tns build ios* fails, check if the following files have the executable bit set:
@@ -17,9 +18,9 @@ With fullfilled prerequisites perform the following steps:
 * ias-mobile/platforms/ios/internal/metadata-generator/bin/build-step-metadata-generator.py
 * ias-mobile/platforms/ios/internal/metadata-generator/bin/objc-metadata-generator
 
----------------
+'''
 
-## License ##
+= License
 
 ias-mobile is released under the AGPLv3 <https://www.gnu.org/licenses/agpl-3.0.txt>
 
