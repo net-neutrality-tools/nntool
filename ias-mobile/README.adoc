@@ -1,5 +1,5 @@
 [[ias-mobile-build]]
-= Building
+= IAS-mobile
 
 .License
 ----
@@ -20,13 +20,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ----
 
-== Prerequisites
+== Building
+
+=== Prerequisites
 * XCode >= 10
 * cocoapods
 * NativeScript = 5.x
 * macOS (any Version)
 
-== Build
+=== Build
 With fullfilled prerequisites perform the following steps:
 1. Run `npm i` to install dependencies
 2. Run `tns build ios`. If `tns build ios` fails, check if the following files have the executable bit set:
