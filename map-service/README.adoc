@@ -182,3 +182,17 @@ The following options are available in the configuration file `application.yml`:
 |If false, high values are considered better values for the colour classification algorithm. If true, low values are considered better values for the colour classification algorithm. The `reverseScale` option is currently only set to `true` for the round-trip-time (rtt) results, as lower rtt values are better. 
 
 |===
+
+
+=== Section `server`
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Description
+|`port`
+|integer
+|`8084`
+|The port this service will bind to.
+|===
