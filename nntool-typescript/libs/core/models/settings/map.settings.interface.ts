@@ -42,7 +42,7 @@ export interface MapOptions {
 export interface MapSettings {
   view: any;
   showLegend?: boolean;
-  options: MapOptions;
+  options?: MapOptions;
   filter_defaults?: {
     statistical_method?: any;
     map_options?: any;
