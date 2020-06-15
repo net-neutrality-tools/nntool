@@ -1,17 +1,17 @@
 [[nntool-user-guide]]
 = NNTool user guide
-
-:imagesdir: tmp
-:toc: macro
-:toclevels: 4
-
-<<<
-
-toc::[]
-
+nntool-eu project
 :docinfo: shared
-
-<<<
+:imagesdir: tmp
+:doctype: book
+//:idprefix:
+//:idseparator: -
+:toc: left
+:toclevels: 6
+:tabsize: 4
+:numbered:
+:sectanchors:
+:sectnums:
 
 include::documentation_overview.adoc[leveloffset=+1]
 
