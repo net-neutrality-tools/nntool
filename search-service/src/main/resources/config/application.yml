@@ -160,5 +160,3 @@ search-service:
             pointer: /computed_network_info/sim_operator_mcc_mnc
           - title: roaming
             pointer: /computed_network_info/roaming_type
-            
-            

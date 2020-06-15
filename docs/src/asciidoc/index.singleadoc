@@ -66,12 +66,13 @@ include::tmp/map-service/README.adoc[leveloffset=+2]
 
 include::tmp/result-service/README.adoc[leveloffset=+2]
 
+include::tmp/search-service/README.adoc[leveloffset=+2]
+
 include::tmp/statistic-service/README.adoc[leveloffset=+2]
 
 include::tmp/opendata-collector-service/README.adoc[leveloffset=+2]
 
 include::tmp/docs/qos/qos_config_documentation.adoc[leveloffset=+2]
-
 
 [[technical-specifications]]
 == Technical specifications
