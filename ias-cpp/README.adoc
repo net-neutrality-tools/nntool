@@ -75,7 +75,16 @@ The HTML code coverage report will be generated into directory `ias-cpp/build/co
 
 == Demo Parameters
 
-Modify *src/iasclient.cpp* according to Code-Documentation to edit measurement parameters before *Build*
+Supported parameters are:
+
+* `-r`, will execute a round-trip-time test if appended
+* `-d`, will execute a download test if appended
+* `-u`, will execute a upload test if appended
+* `-p [NUMBER]`, will measure against the specified port
+* `-n`, will print additional information during the measurement execution
+* `-h`, will print supported usage options
+
+Additional, *src/iasclient.cpp* may be modified according to Code-Documentation to edit measurement parameters before *Build*
 
 === Demo Execution
 

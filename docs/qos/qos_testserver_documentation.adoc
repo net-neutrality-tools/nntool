@@ -1,11 +1,12 @@
 [[qos-server-documentation]]
 = QoS Testserver Documentation
 
-1.  Communication between server and client
-2.  QoS Testserver Protocol (= QTP)
-3.  Settings
-4.  Launching
+1.  <<qos-server-communication, Communication between server and client>>
+2.  <<qos-server-protocol, QoS Testserver Protocol (= QTP)>>
+3.  <<qos-server-settings, Settings>>
+4.  <<qos-server-launching, Launching>>
 
+[[qos-server-communication]]
 == 1. Communication between server and client
 
 === 1.1 Overview
@@ -22,11 +23,12 @@ The rules for the QTP are:
 *   Each QTP command has to be in a single line
 *   A new line character must follow the command string. This marks the end of the command.
 
+[[qos-server-protocol]]
 == 2. QoS Testserver Protocol (QTP)
 
 === 2.1 Handshake
 
-A client tries to open a connection on the port the test server is listening on (see 3. Settings). 
+A client tries to open a connection on the port the test server is listening on (see <<qos-server-settings, 3. Settings>>). 
 If the connection can be established the server sends two lines of information: The first one is the greeting. 
 This is the name and version number of the protocol this server uses. The second one is an **ACCEPT** command (see 2.4.1).  
 
@@ -53,8 +55,8 @@ Example: _ACCEPT [TOKEN string]_ -> means that the server will only accept a _TO
 *   **OK** - each command that is received by the server, is valid and doesn't need a different reply from the server is confirmed with this command
 *   **RCV ? ?** - this is used after an UDP test to tell the client how many packets have been received (first INTEGER) and how many of them have been duplicates (second INTEGER)
 *   **ERR ?** - if an error occurs this message followed by the specific error is being returned. Possible errors are:
-    *   **ERR ILLARG** - illegal argument. This is returned if an argument could be parsed but is illegal (out of range, etc.).
-    *   **ERR UNSUPP** - argument unsupported. This is returned if an argument could be parsed but is not valid because it's not supported (old protocol version, etc.).
+    **   **ERR ILLARG** - illegal argument. This is returned if an argument could be parsed but is illegal (out of range, etc.).
+    **   **ERR UNSUPP** - argument unsupported. This is returned if an argument could be parsed but is not valid because it's not supported (old protocol version, etc.).
 
 ==== 2.4.2 Client side commands and possible responses
 
@@ -104,6 +106,7 @@ that command by adding the same appendix to the response.
 This is used for multi-threaded environments. 
 The example from above **TCPTEST OUT 80 +ID17** would produce a response that will look like this: **OK +ID17**
 
+[[qos-server-settings]]
 == 3. Server Settings
 
 The server settings can be set by using either predefined default values, command line parameters or a settings file.  
@@ -167,8 +170,8 @@ if this parameter is not set to verbose, it is set to level 0 automatically.
 8.  _Secure flag:_ **-s**
 9.  _Main log file (for more log files use a config file - see 3.4):_ **-l**
 
+[[qos-server-launching]]
 == 4. Launching
 
 After building the qos-service (use ``./gradlew build``), move to the directory containing the jar (``qos-service-1.0.jar``)
 and execute ``java -jar qos-service-1.0.jar`` to start the server.
- 
