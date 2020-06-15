@@ -39,6 +39,11 @@ task copyImagery(type: Copy) {
     into "$tmpAsciiDocPath/images"
 }
 
+task copyImageryHtml(type: Copy) {
+    from fileTree(dir: "$buildDir/../ias", includes: ["**/*.png"]).files
+    into "$buildDir/tmp/images"
+}
+
 task copyDocumentation(type: Copy) {
     from "$buildDir/../.."
     exclude "**/docs/src/asciidoc/**"
@@ -46,7 +51,7 @@ task copyDocumentation(type: Copy) {
     include "**/*.adoc"
     includeEmptyDirs = false
     into tmpAsciiDocPath
-    dependsOn copyImagery
+    dependsOn copyImagery, copyImageryHtml
 }
 
 asciidoctor {
