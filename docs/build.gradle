@@ -3,6 +3,20 @@
 plugins {
 	id "org.asciidoctor.jvm.convert" version "3.2.0"
 	id "org.asciidoctor.jvm.pdf" version "3.2.0"
+	id "org.asciidoctor.jvm.gems" version "3.2.0"
+}
+
+repositories {
+    ruby.gems()
+}
+
+dependencies {
+    asciidoctorGems 'rubygems:asciidoctor-diagram:2.0.2'
+	//asciidoctorGems 'rubygems:asciidoctor-mathematical:0.3.2'
+}
+
+asciidoctorj {
+	requires 'asciidoctor-diagram'
 }
 
 tasks.withType(org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask) {
@@ -15,7 +29,7 @@ tasks.withType(org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask) {
 def tmpAsciiDocPath = "$buildDir/../src/asciidoc/tmp"
 
 task cleanDocumentation(type: Delete) {
-  delete tmpAsciiDocPath
+	delete tmpAsciiDocPath
 }
 
 clean.dependsOn cleanDocumentation
@@ -52,6 +66,9 @@ task asciidoctorMultipage(type: org.asciidoctor.gradle.jvm.AsciidoctorTask) {
 		include "*.adoc"
 	}
 }
+
+asciidoctor.dependsOn asciidoctorGemsPrepare
+asciidoctorPdf.dependsOn asciidoctorGemsPrepare
 
 asciidoctor.dependsOn copyDocumentation
 asciidoctorPdf.dependsOn copyDocumentation
