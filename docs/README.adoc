@@ -1,0 +1,4 @@
+[[docs-instructions]]
+= Documentation Instructions
+
+A combined documentation can be constructed by calling `./gradlew asciidoctor` for the html documentation or `./gradlew asciidoctorPdf` for the pdf documentation from the project root folder. The resulting files will be placed in the `docs/build/` subfolder.

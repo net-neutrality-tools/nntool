@@ -24,6 +24,8 @@ include 'qos-service'
 
 include 'qos-client-java'
 
+include 'docs'
+
 ////
 
 // include Android projects only if Android SDK is present

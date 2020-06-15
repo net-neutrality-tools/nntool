@@ -16,6 +16,7 @@
 
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { environment } from '@env/environment'
 
 declare var window;
 
@@ -24,6 +25,8 @@ declare var window;
 })
 export class HomeComponent {
   public isElectron = typeof window !== 'undefined' && window.process && window.process.type;
+
+  public features = environment.features;
 
   constructor(public translateService: TranslateService) {}
 }

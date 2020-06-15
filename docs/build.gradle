@@ -1,0 +1,85 @@
+// inspired by https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-docs/build.gradle
+
+plugins {
+	id "org.asciidoctor.jvm.convert" version "3.2.0"
+	id "org.asciidoctor.jvm.pdf" version "3.2.0"
+	id "org.asciidoctor.jvm.gems" version "3.2.0"
+}
+
+repositories {
+    ruby.gems()
+}
+
+dependencies {
+    asciidoctorGems 'rubygems:asciidoctor-diagram:2.0.2'
+	//asciidoctorGems 'rubygems:asciidoctor-mathematical:0.3.2'
+}
+
+asciidoctorj {
+	requires 'asciidoctor-diagram'
+}
+
+tasks.withType(org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask) {
+	baseDirFollowsSourceDir()
+
+    sourceDir = "src/asciidoc"
+    outputDir = file("$buildDir")
+}
+
+def tmpAsciiDocPath = "$buildDir/../src/asciidoc/tmp"
+
+task cleanDocumentation(type: Delete) {
+	delete tmpAsciiDocPath
+}
+
+clean.dependsOn cleanDocumentation
+
+task copyImagery(type: Copy) {
+    from fileTree(dir: "$buildDir/../ias", includes: ["**/*.png"]).files
+    into "$tmpAsciiDocPath/images"
+}
+
+task copyImageryHtml(type: Copy) {
+    from fileTree(dir: "$buildDir/../ias", includes: ["**/*.png"]).files
+    into "$buildDir/tmp/images"
+}
+
+task copyDocumentation(type: Copy) {
+    from "$buildDir/../.."
+    exclude "**/docs/src/asciidoc/**"
+    exclude "**/404.adoc", "**/tc.adoc", "**/help.adoc"
+    include "**/*.adoc"
+    includeEmptyDirs = false
+    into tmpAsciiDocPath
+    dependsOn copyImagery, copyImageryHtml
+}
+
+asciidoctor {
+	sources {
+		include "*.singleadoc"
+	}
+}
+
+asciidoctorPdf {
+	sources {
+		include "*.singleadoc"
+	}
+}
+
+task asciidoctorMultipage(type: org.asciidoctor.gradle.jvm.AsciidoctorTask) {
+	sources {
+		include "*.adoc"
+	}
+}
+
+asciidoctor.dependsOn asciidoctorGemsPrepare
+asciidoctorPdf.dependsOn asciidoctorGemsPrepare
+
+asciidoctor.dependsOn copyDocumentation
+asciidoctorPdf.dependsOn copyDocumentation
+
+build {
+	dependsOn asciidoctor
+	dependsOn asciidoctorPdf
+	//dependsOn asciidoctorMultipage
+}

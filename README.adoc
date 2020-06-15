@@ -1,3 +1,4 @@
+[[nntool-overview]]
 = nntool.eu
 
 == Overview
@@ -13,6 +14,141 @@ A specific objective is increased levels of harmonization of NN-related IAS meas
 In the long term, the BEREC tool could be a platform enabling NRAs to share knowledge, experience and expertise, including providing a basis for further piloting and researching the area of measuring quality of internet access services.
 
 Visit https://net-neutrality.tools/ for more information.
+
+== Structure
+
+=== General Components
+
+- *docs*: Contains the non-component specific documentation, detailed build instructions and the logic to render a single, composite documentation file.
+- *gradle*: Contains https://gradle.org/[gradle] related configuration.
+- *support*: Contains the required configuration to run https://www.docker.com/[docker] with default configuration for the necessary databases.
+
+=== Libraries
+
+- *nettest-shared*: Contains resources shared with servers, apps, etc.
+- *nettest-shared-server*: Contains shared resources for the backend.
+- *couchdb-client*/*couchdb-spring-boot-autoconfigure*/*couchdb-spring-boot-starter*/*spring-data-couchdb*: Contains configuration and boilerplate code for the https://couchdb.apache.org/[couchDB] connection used by the server components.
+- *ias*: Contains the javascript internet access speed measurement code, used by the nntool website.
+- *ias-android-common*: Contains tools needed by the *android-demo-app* (which are not included in the general *android-app*).
+- *ias-android-speed*: Contains the java wrapper around the https://isocpp.org/[C++] based internet access speed library.
+- *ias-cpp*: Contains the https://isocpp.org/[C++] based internet access speed code.
+- *ias-desktop*: Contains the javascript internet access speed code as used by the desktop clients. Additional provides a demo html file with which the internet access speed code can be tested.
+- *ias-libnntool*: Contains utility functionality for the *ias-cpp* module.
+- *ias-mobile*: Contains the internet access speed measurement code for the *ios-app*.
+- *measurement-agent-swift*: Contains extended measurement functionality for the *ios-app*.
+- *nettest-shared-server-opendata*: Contains shared functionality for providing the measurement data to end users.
+- *nettest-shared-server-storage-couchdb*: Contains shared functionality for interacting with the https://couchdb.apache.org/[couchDB].
+- *nettest-shared-server-storage-postgresql*: Contains shared functionality for interacting with the https://www.postgresql.org/[PostgreSQL].
+- *nntool-shared-swift*: Contains utility functionality for the *ios-app*.
+- *qos-client-java*: Contains the java based Quality of Service measurement code.
+- *qos-client-android*: Contains the Quality of Service measurement code to be used in the *android-app*.
+- *qos-client-swift*: Contains the Quality of Service measurement code to be used in the *ios-app*.
+- *qos-cpp*: Contains the C++ based Quality of Service measurement code.
+
+=== Server Components
+
+- *controller-service*: Server component that registers measurement agents and gives measurement parameters.
+- *collector-service*: Server component that receives and stores measurements.
+- *statistic-service*: Server component that is responsible for open-data export, generation of statistics and search.
+- *ias-server*: Server component that is the remote counterpart for all internet access speed measurements.
+- *loadbalancing-service*: Server component that assigns each measurement request its *ias-server*. Manages the workloads for each *ias-server* instance, so that no measurements are limited on the server side.
+- *map-service*: Server component that provides image overlay tiles for the map display in the client components.
+- *opendata-collector-service*: Server component that receives and stores measurements, for use as opendata.
+- *qos-service*: Server component that is the remote counterpart for Quality of Service measurements.
+- *result-service*: Server component to fetch measurements results from.
+- *search-service*: Server component to provide https://www.elastic.co/elasticsearch/[Elasticsearch] based results.
+
+=== Client Components
+
+- *android-app*: Code for the android application.
+- *ios-app*: Code for the iOS application.
+- *nntool-typescript*: Code for all supported websites, i.e. the general nettest website, the portal website and the https://www.electronjs.org/[electron-based,] desktop apps.
+- *ias-android-demo*: Code for the demo android application, contains only a bare-bones user interface around the *ias-android-speed* library.
+- *ias-ios*: Code for the iOS speed measurement and the demo iOS application, contains only a bare-bones user interface around the *ias-mobile* library.
+
+== Usage Guide
+
+=== controller-service
+
+The controller-service can be started as standalone Java application as well as deployed to a servlet container (e.g. Tomcat).
+
+- To start the controller on the command line run `./gradlew bootRun -p controller-service` inside the Git repository root directory (Starts the embedded server on port 8080).
+- To start the controller in an IDE run the main method of the class `at.alladin.nettest.service.controller.ControllerServiceApplication`
+
+Swagger-UI will then be available via `http://localhost:<port>/swagger-ui.html`.
+
+=== collector-service
+
+The collector-service can be started as standalone Java application as well as deployed to a servlet container (e.g. Tomcat).
+
+- To start the collector on the command line run `./gradlew bootRun -p collector-service` inside the Git repository root directory (Starts the embedded server on port 8081).
+- To start the collector in an IDE run the main method of the class `at.alladin.nettest.service.collector.CollectorServiceApplication`
+
+Swagger-UI will then be available via `http://localhost:<port>/swagger-ui.html`.
+
+=== statistic-service
+
+The statistic-service can be started as standalone Java application as well as deployed to a servlet container (e.g. Tomcat).
+
+- To start the collector on the command line run `./gradlew bootRun -p statistic-service` inside the Git repository root directory (Starts the embedded server on port 8083).
+- To start the collector in an IDE run the main method of the class `at.alladin.nettest.service.statistic.StatisticServiceApplication`
+
+Swagger-UI will then be available via `http://localhost:<port>/swagger-ui.html`.
+
+=== loadbalancing-service
+
+The loadbalancing-service can be started as standalone Java application as well as deployed to a servlet container (e.g. Tomcat).
+
+- To start the collector on the command line run `./gradlew bootRun -p loadbalancing-service` inside the Git repository root directory (Starts the embedded server on port 8087).
+- To start the collector in an IDE run the main method of the class `at.alladin.nettest.service.loadbalancing.LoadbalancingServiceApplication`
+
+Swagger-UI will then be available via `http://localhost:<port>/swagger-ui.html`.
+
+=== map-service
+
+The map-service can be started as standalone Java application as well as deployed to a servlet container (e.g. Tomcat).
+
+- To start the collector on the command line run `./gradlew bootRun -p map-service` inside the Git repository root directory (Starts the embedded server on port 8084).
+- To start the collector in an IDE run the main method of the class `at.alladin.nettest.service.map.MapServiceApplication`
+
+Swagger-UI will then be available via `http://localhost:<port>/swagger-ui.html`.
+
+=== opendata-collector-service
+
+The opendata-collector-service can be started as standalone Java application as well as deployed to a servlet container (e.g. Tomcat).
+
+- To start the collector on the command line run `./gradlew bootRun -p opendata-collector-service` inside the Git repository root directory (Starts the embedded server on port 8086).
+- To start the collector in an IDE run the main method of the class `at.alladin.nettest.service.collector.opendata.OpendataCollectorServiceApplication`
+
+Swagger-UI will then be available via `http://localhost:<port>/swagger-ui.html`.
+
+=== qos-service
+
+The qos-service can be started as standalone Java application as well as deployed to a servlet container (e.g. Tomcat).
+
+- To start the collector in an IDE run the main method of the class `at.alladin.nntool.qos.testserver.TestServer`
+
+=== result-service
+
+The result-service can be started as standalone Java application as well as deployed to a servlet container (e.g. Tomcat).
+
+- To start the collector on the command line run `./gradlew bootRun -p result-service` inside the Git repository root directory (Starts the embedded server on port 8082).
+- To start the collector in an IDE run the main method of the class `at.alladin.nettest.service.result.ResultServiceApplication`
+
+Swagger-UI will then be available via `http://localhost:<port>/swagger-ui.html`.
+
+=== search-service
+
+The search-service can be started as standalone Java application as well as deployed to a servlet container (e.g. Tomcat).
+
+- To start the collector on the command line run `./gradlew bootRun -p search-service` inside the Git repository root directory (Starts the embedded server on port 8083).
+- To start the collector in an IDE run the main method of the class `at.alladin.nettest.service.search.SearchServiceApplication`
+
+Swagger-UI will then be available via `http://localhost:<port>/swagger-ui.html`.
+
+== Development
+
+For development with Eclipse make sure to run `./gradlew eclipse` task to generate eclipse project files to make annotation processing work.
 
 === Milestones
 
@@ -137,51 +273,3 @@ secondary_db_postgresql_eer_diagram.pdf
 |This sequence diagram shows the workflow when the client requests its own measurement history and a single result.
 
 |===
-
-== Structure
-
-=== Libraries
-
-- *nettest-shared*: Contains resources shared with servers, apps, etc.
-- *nettest-shared-server*: Contains shared resources for the backend.
-
-=== Server Components
-
-- *controller-service*: Server component that registers measurement agents and gives measurement parameters.
-- *collector-service*: Server component that receives and stores measurements.
-- *statistic-service*: Server component that is responsible for open-data export, generation of statistics and search.
-
-== Usage Guide
-
-=== controller-service
-
-The controller-service can be started as standalone Java application as well as deployed to a servlet container (e.g. Tomcat).
-
-- To start the controller on the command line run `./gradlew bootRun -p controller-service` inside the Git repository root directory (Starts the embedded server on port 8080).
-- To start the controller in an IDE run the main method of the class `at.alladin.nettest.service.controller.ControllerServiceApplication`
-
-Swagger-UI will then be available via `http://localhost:<port>/swagger-ui.html`.
-
-=== collector-service
-
-The collector-service can be started as standalone Java application as well as deployed to a servlet container (e.g. Tomcat).
-
-- To start the collector on the command line run `./gradlew bootRun -p collector-service` inside the Git repository root directory (Starts the embedded server on port 8081).
-- To start the collector in an IDE run the main method of the class `at.alladin.nettest.service.collector.CollectorServiceApplication`
-
-Swagger-UI will then be available via `http://localhost:<port>/swagger-ui.html`.
-
-=== statistic-service
-
-The statistic-service can be started as standalone Java application as well as deployed to a servlet container (e.g. Tomcat).
-
-- To start the collector on the command line run `./gradlew bootRun -p statistic-service` inside the Git repository root directory (Starts the embedded server on port 8083).
-- To start the collector in an IDE run the main method of the class `at.alladin.nettest.service.statistic.StatisticServiceApplication`
-
-Swagger-UI will then be available via `http://localhost:<port>/swagger-ui.html`.
-
-== Development
-
-For development with Eclipse make sure to run `./gradlew eclipse` task to generate eclipse project files to make annotation processing work.
-
-
