@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 === Build
 With fullfilled prerequisites perform the following steps:
+
 1. Build `ias`, see instructions in `ias/README.md`
 2. Build `ias-mobile`, see instructions in `ias-mobile/README.md`
 3. In directory `qos-client-swift` run `pod install` to install MeasurementKit 

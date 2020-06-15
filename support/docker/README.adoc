@@ -22,9 +22,7 @@ Then run the following commands to start docker-compose:
 
 (docker-compose ... -d = detach)
 
-Currently, it is necessary to run `./scripts/init.couchdb` after the first `docker-compose up` to insert the necessary configuration.
-
-https://docs.docker.com/compose/extends/#multiple-compose-files
+Currently, it is necessary to run `./scripts/init.couchdb` after the first `docker-compose up` to insert the necessary configuration. For additional details on using multiple docker-compose files see https://docs.docker.com/compose/extends/#multiple-compose-files
 
 == Running parts of the docker-compose file
 
