@@ -884,10 +884,8 @@ CISCO, http://www.cisco.com/c/en/us/support/docs/voice/voice-quality/5125-delay-
 [[citation-n2]]
 * Mockapetris, P., "DOMAIN NAMES - IMPLEMENTATION AND SPECIFICATION", https://www.ietf.org/rfc/rfc1035.txt[RFC 1035], November 1987
 
-:sectnums!:
 [[aenderungshistorie]]
-== Changelog
-
+.Changelog
 [options="header,autowidth"]
 |===
 |Version |Date |Comment
