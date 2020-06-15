@@ -1,7 +1,7 @@
 [[ias-technical-specification]]
 = Technical Specification - BEREC NNTool.eu
 :toc: left
-:toc-title: Table of Content
+:toc-title: Table of Contents
 
 == General
 BEREC – the Body of European Regulators for Electronic Communications – assigned the contract for development, implementation and validation of the Net Neutrality (NN) Reference Measurement System in July 2018.
@@ -230,7 +230,7 @@ Example for a blocked Port (Measurement Peer Port is closed)
 |7000
 |===
 
-==== Blocked ports - App
+//==== Blocked ports - App
 //ToDo
 
 == Author

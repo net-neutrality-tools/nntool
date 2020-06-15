@@ -20,6 +20,11 @@ project's 'docs/project_management/milestones/1/deliverables' folder.
 
 include::tmp/README.adoc[leveloffset=+1]
 
+[[technical-specifications]]
+== Technical specifications
+
+include::tmp/docs/ias/IAS_technical_specification.adoc[leveloffset=+2]
+
 [[build-instructions]]
 == Build Instructions
 
@@ -73,11 +78,6 @@ include::tmp/statistic-service/README.adoc[leveloffset=+2]
 include::tmp/opendata-collector-service/README.adoc[leveloffset=+2]
 
 include::tmp/docs/qos/qos_config_documentation.adoc[leveloffset=+2]
-
-[[technical-specifications]]
-== Technical specifications
-
-include::tmp/docs/ias/IAS_technical_specification.adoc[leveloffset=+2]
 
 == Post Scriptum
 
