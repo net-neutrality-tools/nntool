@@ -15,6 +15,9 @@ toc::[]
 
 include::documentation_overview.adoc[leveloffset=+1]
 
+All json/yaml/pdf files referenced in the nntool.eu section are located in the 
+project's 'docs/project_management/milestones/1/deliverables' folder.
+
 include::tmp/README.adoc[leveloffset=+1]
 
 [[build-instructions]]
