@@ -1,8 +1,28 @@
-== IAS C++ Client module
+[[ias-cpp-build]]
+= IAS C++ Client module
 
-=== Building
+.License
+----
+ias-cpp is released under the AGPLv3 <https://www.gnu.org/licenses/agpl-3.0.txt>
 
-==== Prerequisites
+Copyright (C) 2016-2019 zafaco GmbH
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3 
+as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+----
+
+== Building
+
+=== Prerequisites
 
 Linux (any Version)
 
@@ -12,7 +32,7 @@ Linux (any Version)
 - libssl-dev
 - lcov
 
-==== Build
+=== Build
 
 With fullfilled prerequisites perform the following steps:
 
@@ -25,7 +45,7 @@ cmake .. # add -DCMAKE_BUILD_TYPE="DEBUG" for debug build, add -GNinja for ninja
 make # or ninja
 ----
 
-==== Unit Tests
+=== Unit Tests
 
 To execute the included unit tests execute the following commands:
 
@@ -53,28 +73,19 @@ lcov --list coverage.info
 
 The HTML code coverage report will be generated into directory `ias-cpp/build/coverage_report`.
 
-=== Demo Parameters
+== Demo Parameters
 
-Modify *src/iasclient.cpp* according to Code-Documentation to edit measurement parameters before *Build*
+Supported parameters are:
 
-==== Demo Execution
+* `-r`, will execute a round-trip-time test if appended
+* `-d`, will execute a download test if appended
+* `-u`, will execute a upload test if appended
+* `-p [NUMBER]`, will measure against the specified port
+* `-n`, will print additional information during the measurement execution
+* `-h`, will print supported usage options
+
+Additional, *src/iasclient.cpp* may be modified according to Code-Documentation to edit measurement parameters before *Build*
+
+=== Demo Execution
 
 Run `build/ias-client`.
-
-=== License
-
-ias-cpp is released under the AGPLv3 <https://www.gnu.org/licenses/agpl-3.0.txt>
-
-Copyright (C) 2016-2019 zafaco GmbH
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3 
-as published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
