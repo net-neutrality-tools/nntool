@@ -228,15 +228,16 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
 
   public portBlockingTestFinished(portBlockingTestResult: PortBlockingTestState): void {
     const qosMeasurementResult: QoSMeasurementResult = this.getCurrentQoSResult();
-
     for (const port of portBlockingTestResult.types[0].ports) {
       qosMeasurementResult.results.push({
-        udp_result_out_num_packets: 1,
-        udp_objective_out_num_packets: 1,
+        udp_result_out_num_packets: port.packets.sent,
+        udp_result_out_rtt_avg_ns: port.delay ? port.delay.average_ns : null,
+        udp_result_out_delay_standard_deviation_ns: port.delay ? port.delay.standard_deviation_ns : null,
+        udp_objective_out_num_packets: port.packets.requested_packets,
         qos_test_uid: port.uid,
         test_type: 'udp',
-        udp_result_out_response_num_packets: port.reachable ? 1 : 0,
-        udp_result_out_packet_loss_rate: port.reachable ? 0 : 100,
+        udp_result_out_response_num_packets: port.packets.received,
+        udp_result_out_packet_loss_rate: port.packets.sent ? (port.packets.lost / port.packets.sent) * 100 : null,
         udp_objective_out_port: port.number
       });
     }
@@ -350,6 +351,14 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
               return option.name === 'parameters_qos' ? option['measurement-parameters']['objectives'] : config;
               /* tslint:enable:no-string-literal */
             }, {});
+            //remove udp measurements not intended for the website
+            for (let i = 0; i < this.qosConfig.UDP.length; i++) {
+              let elem = this.qosConfig.UDP[i];
+              if (elem.allowed_on_web !== undefined && elem.allowed_on_web !== null && !elem.allowed_on_web) {
+                this.qosConfig.UDP.splice(i--, 1);
+              }
+            }
+
             this.qosControl = task;
             break;
         }
