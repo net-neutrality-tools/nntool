@@ -152,7 +152,7 @@ create table measurements
 	device_codename varchar,
 	device_model varchar,
 	device_fullname varchar,
-	network_client_public_ip inet,
+	network_client_public_ip varchar,
 	provider_public_ip_asn integer,
 	provider_public_ip_rdns varchar,
 	provider_public_ip_as_name varchar,
