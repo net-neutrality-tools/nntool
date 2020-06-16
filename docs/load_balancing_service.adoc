@@ -1,5 +1,5 @@
+[[load-balancing-service]]
 = Load balancing service
-
 
 == Load balancing service (measurement peer)
 
@@ -12,7 +12,7 @@ The following options are available:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`enabled`
 |boolean
 |`true`
@@ -37,7 +37,7 @@ The following options are available:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`enabled`
 |boolean
 |`true`
@@ -100,7 +100,7 @@ The LBI provides an API which is used to request necessary information about the
 |Request path
 |HTTP Method
 |Response model
-|Desciption
+|Description
 |`/load/{serverId}`
 |GET
 |ApiResponse<LoadApiReport>
@@ -125,7 +125,7 @@ The following options are available:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`enabled`
 |boolean
 |`false`

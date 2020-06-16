@@ -16,10 +16,13 @@
 
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { environment } from '@env/environment'
 
 @Component({
   templateUrl: './portal-home.component.html'
 })
 export class PortalHomeComponent {
+  public features = environment.features;
+
   constructor(public translateService: TranslateService) {}
 }

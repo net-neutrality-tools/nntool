@@ -1,9 +1,9 @@
 /*!
     \file callback.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-26
+    \date Last update: 2020-05-26
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -246,12 +246,6 @@ void CCallback::rttUdpCallback(string cmd)
 
 		jMeasurementResultsTime["rtt_udp_start"] = to_string(tempMeasurement.ping.starttime * 1000);
 		
-		tempMeasurement.ping.client			= pingThread->mClient;
-		tempMeasurement.ping.server    		= pingThread->mServer;
-		tempMeasurement.ping.servername    	= pingThread->mServerName;
-		
-		tempMeasurement.ping.ipversion 		= pingThread->ipversion;
-		
 		tempMeasurement.ping.system_availability 	= pingThread->system_availability;
 
 		if( nMissing > 0 )
@@ -270,6 +264,8 @@ void CCallback::rttUdpCallback(string cmd)
 		tempMeasurement.ping.service_availability 	= pingThread->service_availability;
 		tempMeasurement.ping.error_code				= pingThread->error;
 		tempMeasurement.ping.error_description		= pingThread->error_description;
+
+		jMeasurementResultsPeer["ip"] = pingThread->mServer;
 
 		Json::array jRtts;
 
@@ -414,6 +410,8 @@ void CCallback::downloadCallback(string cmd)
 
 			jMeasurementResultsStreams.push_back(jMeasurementResultsStream);
 			streamId++;
+
+			jMeasurementResultsPeer["ip"] = (*itThread)->mServer;
 
 		//Unlock Mutex
 		pthread_mutex_unlock(&mutex1);
@@ -593,6 +591,8 @@ void CCallback::uploadCallback(string cmd)
 
 			jMeasurementResultsStreams.push_back(jMeasurementResultsStream);
 			streamId++;
+
+			jMeasurementResultsPeer["ip"] = (*itThread)->mServer;
 			
 		//Unlock Mutex
 		pthread_mutex_unlock(&mutex1);

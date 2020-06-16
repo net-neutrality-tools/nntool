@@ -1,0 +1,123 @@
+[[controller-service]]
+= Controller service
+
+The controller service provides an API which is used to perform control-relevant tasks, which are:
+
+ - register a measurement agent
+ - retrieve measurement settings
+ - request a measurement
+ - determine client's IP addresses
+
+ 
+The API can be accessed by concatenating the version prefix `/api/v1/` (current version: `v1`) and the request path:
+
+[cols="3,2,4,10",options=header]
+|===
+
+|Request path
+|HTTP Method
+|Request/response model
+|Description
+
+|`ip`
+|GET
+|Request: _none_
+
+Response: ApiResponse<IpResponse>
+|This resource is used to determine the actual IPs (IPv4 and IPv6) of a measurement agent
+
+
+|`measurement-agents`
+|POST
+|Request: ApiRequest<RegistrationRequest>
+
+Response: ApiResponse<RegistrationResponse>
+|This resource is used to register new measurement agents. Measurement agents will be assigned a UUID. Terms and conditions must be accepted in the request object.
+
+|`measurement-agents/{agentUuid}/settings`
+|POST
+|Request: _none_
+
+Response: ApiResponse<SettingsResponse>
+|This resource is used to retrieve the current settings for this measurement agent.
+
+|`measurements`
+|POST
+|Request: LmapControlDto
+
+Response: LmapControlDto
+|This resource is used to request a new measurement. It will return the current measurement parameters and configuration.
+
+|`speed-measurement-peers`
+|GET
+|Request: ApiRequest<SpeedMeasurementPeerRequest>
+
+Response: ApiResponse<SpeedMeasurementPeerResponse>
+|This resource is used to request a list of all available measurement peers.
+
+|===
+
+== Configuration overview
+
+The controller service provides advanced configuration which can be set in the default configuration files: `application.yml` and `application-dev.yml`
+
+== Configuration file: `application-dev.yml`
+
+The following options are available in the configuration file `application-dev.yml`:
+
+=== Section `spring.couchdb`
+
+In this section the connection to the _couchdb_ database can be configured:
+
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Description
+|`connection.url`
+|string
+|`http://localhost:5984`
+|The couchdb server address
+|`databases`
+|object[]
+|_see default config file_
+|Contains the configuration of all necessary databases for this service
+|===
+
+== Configuration file: `application.yml`
+
+The following options are available in the configuration file `application.yml`:
+
+=== Section `controller`
+
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Description
+
+|`settings-uuid`
+|string (UUID)
+|`4e7567ef-175b-44f4-8436-8fd6d22dab48`
+|The UUID of the relevant settings in the database
+
+|`load-balancing.enabled`
+|bool
+|`false`
+|Tells the service whether to use the built-in load-balancing service.
+|===
+
+=== Section `server`
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Description
+|`port`
+|integer
+|`8080`
+|The port this service will bind to.
+|===

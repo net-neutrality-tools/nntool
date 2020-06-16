@@ -2,7 +2,7 @@
     \file android_connector.cpp
     \author zafaco GmbH <info@zafaco.de>
     \author alladin-IT GmbH <info@alladin.at>
-    \date Last update: 2020-03-16
+    \date Last update: 2020-05-26
 
     Copyright (C) 2016 - 2020 zafaco GmbH
     Copyright (C) 2019 alladin-IT GmbH
@@ -144,6 +144,9 @@ void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
 
     toParseId = env->GetFieldID(clazz, "speedServerPort", "I");
     this->speedTaskDesc.speedServerPort = (int) env->GetIntField(speedTaskDesc, toParseId);
+
+    toParseId = env->GetFieldID(clazz, "speedServerPortRtt", "I");
+    this->speedTaskDesc.speedServerPortRtt = (int) env->GetIntField(speedTaskDesc, toParseId);
 
     toParseId = env->GetFieldID(clazz, "performDownload", "Z");
     this->speedTaskDesc.performDownload = env->GetBooleanField(speedTaskDesc, toParseId);
@@ -470,16 +473,22 @@ void AndroidConnector::callbackFinished (json11::Json::object& message) {
         env->CallVoidMethod(speedMeasurementResult, addMethod, timeObj);
     }
 
-    jmethodID setId = env->GetMethodID(speedMeasurementResultClazz, "setMeasurementServerIp", "(Ljava/lang/String;)V");
-    jstring str = env->NewStringUTF(this->measurementServerIp.c_str());
-    env->CallVoidMethod(speedMeasurementResult, setId, str);
-    env->DeleteLocalRef(str);
+    if (message["peer_info"].is_object()) {
+        Json const & peerEntry = message["peer_info"];
+
+        if (peerEntry["ip"].is_string()) {
+            jmethodID setId = env->GetMethodID(speedMeasurementResultClazz, "setMeasurementServerIp", "(Ljava/lang/String;)V");
+            jstring str = env->NewStringUTF(peerEntry["ip"].string_value().c_str());
+            env->CallVoidMethod(speedMeasurementResult, setId, str);
+            env->DeleteLocalRef(str);
+        }
+    }
 
     const jstring javaMsg = env->NewStringUTF(json11::Json(message).dump().c_str());
     env->CallVoidMethod(jniCaller, cppCallbackFinishedID, javaMsg, speedMeasurementResult);
 
     if (baseMeasurementState != nullptr) {
-        env->SetFloatField(baseMeasurementState, fieldProgress, 1);
+        env->SetFloatField(baseMeasurementState, fieldProgress, 1.0F);
         env->CallVoidMethod(baseMeasurementState, setMeasurementPhaseByStringValueID, env->NewStringUTF(getStringForMeasurementPhase(MeasurementPhase::END).c_str()));
     }
 
@@ -630,6 +639,7 @@ void AndroidConnector::startMeasurement() {
         jMeasurementParameters["clientos"] = "android";
         jMeasurementParameters["wsTLD"] = "";
         jMeasurementParameters["wsTargetPort"] = std::to_string(speedTaskDesc.speedServerPort);
+        jMeasurementParameters["wsTargetPortRtt"] = std::to_string(speedTaskDesc.speedServerPortRtt);
         jMeasurementParameters["wsWss"] = speedTaskDesc.isEncrypted ? "1" : "0";
         jMeasurementParameters["wsAuthToken"] = "placeholderToken";
         jMeasurementParameters["wsAuthTimestamp"] = "placeholderTimestamp";
