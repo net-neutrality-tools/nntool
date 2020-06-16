@@ -19,6 +19,8 @@ export class MeasurementTypeParameters {
 
   public download: any;
   public upload: any;
+
+  public UDP?: any;
 }
 
 export class LmapOption {

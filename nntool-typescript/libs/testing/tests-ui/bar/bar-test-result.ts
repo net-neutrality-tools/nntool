@@ -5,7 +5,11 @@ export class BarTestResult {
     progress?: number;
     ports ?: Array<{
         number: number;
-        reachable: boolean;
-        finished: boolean;
+        packets: {
+            requested_packets: number,
+            lost: number;
+            received: number;
+            sent: number
+        };
     }>;
 }
