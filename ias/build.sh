@@ -1,9 +1,9 @@
 #/*!
 #    \file build.sh
 #    \author zafaco GmbH <info@zafaco.de>
-#    \date Last update: 2019-12-18
+#    \date Last update: 2020-05-15
 #
-#    Copyright (C) 2016 - 2019 zafaco GmbH
+#    Copyright (C) 2016 - 2020 zafaco GmbH
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License version 3
@@ -89,7 +89,7 @@ cat plain/core/modules/Tool.js              >> plain/web/ias.web.js
 cat plain/core/Control.js                   >> plain/web/ias.web.js
 cat plain/core/Ias.js                       >> plain/web/ias.web.js
 cat plain/core/Worker.js                    >> plain/web/ias.web.js
-cat plain/core/PortBlocking.js              >> plain/web/ias.web.js
+cat plain/core/UdpPortBlocking.js           >> plain/web/ias.web.js
 
 if [ -z $1 ]; then
     uglifyjs -c drop_console=true -m --comments /^!/ plain/web/ias.web.js > uglified/web/ias.web.js
