@@ -1,5 +1,5 @@
 {
-  "FOOTER": "<div class=\"wrapper h-card\">\n            <div class=\"section-columns\">\n                <div class=\"column\">\n                    <header>\n                        <h2 class=\"p-org\">BEREC</h2>\n                    </header>\n                    <p>\n                        <span class=\"p-street-address\">Lorem</span><br/>\n                        <span class=\"p-postal-code\">0000</span> <span class=\"p-locality\">ipsum</span>, <span class=\"p-country-name\">dolor</span>\n                    </p>\n                    <p>\n                        <a class=\"u-url website\" href=\"\">nntool.eu</a>\n                    </p>\n                </div>\n                <div class=\"column\">\n                    <header>\n                        <h2>Contact</h2>\n                    </header>\n                    <p>\n                        <a class=\"p-tel\" href=\"\">+11 1 111 11 11</a><br />\n                        <a class=\"p-mail\" href=\"\">.@.</a>\n                    </p>\n                    <p>\n                                            </p>\n                </div>\n            </div>\n        </div>",
+  "FOOTER": "<div class=\"wrapper h-card\">\n            <div class=\"section-columns\">\n                <div class=\"column\">\n                    <header>\n                        <h2 class=\"p-org\">BEREC</h2>\n                    </header>\n                    <p>\n                        <span class=\"p-street-address\">Zigfrida Annas Meierovica boulevard № 14</span><br/>\n                        <span class=\"p-postal-code\">1050</span> <span class=\"p-locality\">Riga</span>, <span class=\"p-country-name\">Latvia</span>\n                    </p>\n                    <p>\n                        <a class=\"u-url website\" href=\"https://berec.europa.eu\">berec.europa.eu</a>\n                    </p>\n                </div>\n                <div class=\"column\">\n                    <header>\n                        <h2>Contact</h2>\n                    </header>\n                    <p>\n                        <a class=\"p-tel\" href=\"tel:+371-60007600\">+371 60007600</a><br />\n                        <a class=\"p-mail\" href=\"mailto:berec@berec.europa.eu\">berec(at)berec.europa.eu</a>\n                    </p>\n                    <p>\n                                            </p>\n                </div>\n            </div>\n        </div>",
   "WEBSITE": {
     "TITLE": "nntool.eu Website",
     "TITLE_ELECTRON": "nntool.eu desktop app",
@@ -46,9 +46,9 @@
     "HEADER_ELECTRON": "nntool.eu desktop app",
     "DESCRIPTION_BADGES": "<a href=\"\" class=\"app-store-badge en hide-text\">Download on the App Store</a><a href=\"\" class=\"google-play-badge en hide-text\">Get it on Google Play</a>",
     "MORE": "",
-    "HEADER_TEXT": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
-    "DESCRIPTION_HEADER": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.",
-    "DESCRIPTION": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.",
+    "HEADER_TEXT": "Designed for you to measure all about your internet access: quality, speed, availability and neutrality. 150+ measurement results are generated and processed objectively, securely and transparently.",
+    "DESCRIPTION_HEADER": "Designed for you to measure all about your internet access: quality, speed, availability and neutrality. 150+ measurement results are generated and processed objectively, securely and transparently.",
+    "DESCRIPTION": "Designed for you to measure all about your internet access: quality, speed, availability and neutrality. 150+ measurement results are generated and processed objectively, securely and transparently.",
     "DESCRIPTION_WEBSOCKET": "Test",
     "TILES": {
       "TEST": {
@@ -117,7 +117,7 @@
   },
   "STATISTICS": {
     "HEADER": "Statistics",
-    "DESCRIPTION": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.",
+    "DESCRIPTION": "Aggregated measurement results about all performed measurements with the nntool.eu measurement methodology",
     "GRAPH": {
       "NO_DATA": "Currently no data",
       "DOWNLOAD": "download",
@@ -199,7 +199,7 @@
   },
   "OPENDATA": {
     "HEADER": "Opendata",
-    "DESCRIPTION": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit..",
+    "DESCRIPTION": "Free download of open data measurement results, updated monthly.",
     "SELECT": "Please select",
     "LABEL": "Further results are available on a monthly basis",
     "FULL_DOWNLOAD_TEXT": "Full export Open Data",
@@ -357,7 +357,7 @@
     },
     "VIEW_RESULT": "View your measurement report",
     "INTRO": {
-      "MESSAGE": "WARNING! Todo",
+      "MESSAGE": "WARNING! Each execution of the nntool nettest requires some data volume. The faster the tested connection the bigger the volume of data transmitted. When starting the nntool nettest the user is aware of possible data consumption and confirms his sole responsibility.",
       "AGREE": "I agree with BERECs Privacy Policy and Terms of Use for nntool.",
       "HEADER": "Nettest Terms of Use"
     },

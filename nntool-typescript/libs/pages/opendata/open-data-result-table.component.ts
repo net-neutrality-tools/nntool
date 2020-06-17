@@ -47,10 +47,26 @@ export class OpenDataResultTableComponent implements OnInit {
           return this.dateParseService.parseDateIntoFormat(new Date(Date.parse(row.start_time)));
         }
       },
-      open_data_uuid: {
-        title: 'OpenDataUuid',
+      device: {
+        title: 'Device',
         filter: false,
-        sort: false // throws exception: Caused by: ElasticsearchException[Elasticsearch exception [type=illegal_argument_exception, reason=Fielddata is disabled on text fields by default. Set fielddata=true on [open_data_uuid] in order to load fielddata in memory ...
+        sort: false, // throws exception: Caused by: ElasticsearchException[Elasticsearch exception [type=illegal_argument_exception, reason=Fielddata is disabled on text fields by default. Set fielddata=true on [open_data_uuid] in order to load fielddata in memory ...
+        valuePrepareFunction: (cell, row) => {
+            let val = '';
+            if (row.device_info && row.device_info.model) {
+              val += row.device_info.model;
+            }
+            if (row.device_info && row.device_info.os_info && row.device_info.os_info.name) {
+              val += ", " + row.device_info.os_info.name;
+            }
+            if (row.agent_info && row.agent_info.type) {
+              val += " (" + row.agent_info.type.toLowerCase() + ")"
+            }
+            if (row.computed_network_info && row.computed_network_info.public_ip_as_name) {
+              val += ", " + row.computed_network_info.public_ip_as_name;
+            }
+            return (val);
+        }
       },
       'measurements.SPEED.rtt_info.average_ns': {
         // or median?
