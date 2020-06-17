@@ -357,7 +357,7 @@
     },
     "VIEW_RESULT": "View your measurement report",
     "INTRO": {
-      "MESSAGE": "WARNING! Each execution of the nntool nettest requires some data volume. The faster the tested connection the bigger the volume of data transmitted. When starting the nntool nettest the user is aware of possible data consumption and confirms his sole responsibility.",
+      "MESSAGE": "[DRAFT]\nWARNING! Each execution of the nntool nettest requires some data volume. The faster the tested connection the bigger the volume of data transmitted. When starting the nntool nettest the user is aware of possible data consumption and confirms his sole responsibility.",
       "AGREE": "I agree with BERECs Privacy Policy and Terms of Use for nntool.",
       "HEADER": "Nettest Terms of Use"
     },
