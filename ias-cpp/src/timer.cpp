@@ -1,9 +1,9 @@
 /*!
     \file timer.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-07-01
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -38,13 +38,15 @@ CTimer::~CTimer()
 
 //! \brief
 //!	Standard Destructor
-CTimer::CTimer( int nInstances, CCallback *pCallback )
+CTimer::CTimer( int nInstances, CCallback *pCallback, unsigned long long nInitialCallbackDelay)
 {
 	mInstances 				= nInstances;
 	mCallback				= pCallback;
 	unreachableSignaled		= false;
 	forbiddenSignaled 		= false;
 	overloadSignaled 		= false;
+
+	mInitialCallbackDelay	= nInitialCallbackDelay;
 
 	::TIMER_ACTIVE 			= true;
 	::TIMER_RUNNING 		= false;
@@ -123,8 +125,8 @@ int CTimer::run()
 			if( sync_counter == mInstances )
 			{
 				mCallback->callback("info", "starting measurement", 0, "");
-				//Wait for TCP Slow Start
-				usleep( TCP_STARTUP );
+				//Wait for inial callback delay
+				usleep( mInitialCallbackDelay );
 				mCallback->callback("info", "measurement started", 0, "");
 
 				//Start timer
