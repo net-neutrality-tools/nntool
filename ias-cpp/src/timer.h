@@ -1,9 +1,9 @@
 /*!
     \file timer.h
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-07-01
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -40,13 +40,15 @@ class CTimer : public CBasisThread
 		bool unreachableSignaled;
 		bool forbiddenSignaled;
 		bool overloadSignaled;
+
+        unsigned long long mInitialCallbackDelay;
 	
 	public:
 		CTimer();
 		
 		virtual ~CTimer();
 		
-		CTimer( int nInstances, CCallback *pCallback );
+		CTimer( int nInstances, CCallback *pCallback, unsigned long long nInitialCallbackDelay);
 		
 		int run();
 };

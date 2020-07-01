@@ -1,9 +1,9 @@
 /*!
     \file measurement.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-07-01
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -48,19 +48,23 @@ CMeasurement::CMeasurement( CConfigManager *pConfig, CConfigManager *pXml,  CCon
 	{
 		case 2:
 			conf.instances = 1;
+			mInitialCallbackDelay = 1000000;
 			break;
 		case 3:
 			conf.instances = pXml->readLong(conf.sProvider,"DL_STREAMS",4);
+			mInitialCallbackDelay = ::TCP_STARTUP;
 			break;
 		case 4:
 			conf.instances = pXml->readLong(conf.sProvider,"UL_STREAMS",4);
+			mInitialCallbackDelay = ::TCP_STARTUP;
 			break;
 		default:
 			conf.instances = 1;
+			mInitialCallbackDelay = 1000000;
 			break;
 	}
 	
-	mTimer = std::make_unique<CTimer>( conf.instances, mCallback );
+	mTimer = std::make_unique<CTimer>( conf.instances, mCallback, mInitialCallbackDelay );
 	
 	if( mTimer->createThread() != 0 )
 	{
