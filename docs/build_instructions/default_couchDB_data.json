@@ -147,6 +147,164 @@
       ]
     },
     {
+      "docType": "QoSMeasurementObjective",
+      "objective_id": 500,
+      "enabled": true,
+      "type": "MKIT_DASH",
+      "concurrency_group": 500,
+      "measurement_server_uuid": "mServer",
+      "translation_keys": {
+        "summary": "MKIT_DASH_summary",
+        "description": "MKIT_DASH_description"
+      },
+      "parameters": {
+        "timeout": "60000000000"
+      },
+      "evaluations": [
+        {
+          "operator": "eq",
+          "on_failure": "mkit.failure",
+          "on_success": "mkit.success",
+          "mkit_status": "OK"
+        },
+        {
+          "evaluate": "%EVAL result=(!JSON.parse(mkit_result).test_keys.hasOwnProperty('failure')) || (JSON.parse(mkit_result).test_keys.failure === null);%",
+          "on_failure": "dash.failure",
+          "on_success": "dash.success"
+        }
+      ]
+    },
+    {
+      "docType": "QoSMeasurementObjective",
+      "objective_id": 520,
+      "enabled": true,
+      "type": "MKIT_WEB_CONNECTIVITY",
+      "concurrency_group": 520,
+      "measurement_server_uuid": "mServer",
+      "translation_keys": {
+        "summary": "MKIT_WEB_CONNECTIVITY_summary",
+        "description": "MKIT_WEB_CONNECTIVITY_description"
+      },
+      "parameters": {
+        "input": [
+          "https://europa.eu/"
+        ],
+        "timeout": "10000000000"
+      },
+      "evaluations": [
+        {
+          "operator": "eq",
+          "on_failure": "mkit.failure",
+          "on_success": "mkit.success",
+          "mkit_status": "OK"
+        },
+        {
+          "evaluate": "%EVAL result=JSON.parse(mkit_result).test_keys.accessible;%",
+          "on_failure": "web_connectivity.failure",
+          "on_success": "web_connectivity.success"
+        }
+      ]
+    },
+    {
+      "docType": "QoSMeasurementObjective",
+      "objective_id": 521,
+      "enabled": true,
+      "type": "MKIT_WEB_CONNECTIVITY",
+      "concurrency_group": 520,
+      "measurement_server_uuid": "mServer",
+      "translation_keys": {
+        "summary": "MKIT_WEB_CONNECTIVITY_summary",
+        "description": "MKIT_WEB_CONNECTIVITY_description"
+      },
+      "parameters": {
+        "input": [
+          "https://berec.europa.eu/"
+        ],
+        "timeout": "10000000000"
+      },
+      "evaluations": [
+        {
+          "operator": "eq",
+          "on_failure": "mkit.failure",
+          "on_success": "mkit.success",
+          "mkit_status": "OK"
+        },
+        {
+          "evaluate": "%EVAL result=JSON.parse(mkit_result).test_keys.accessible;%",
+          "on_failure": "web_connectivity.failure",
+          "on_success": "web_connectivity.success"
+        }
+      ]
+    },
+    {
+      "docType": "QoSMeasurementObjective",
+      "objective_id": 600,
+      "enabled": true,
+      "type": "SIP",
+      "concurrency_group": 600,
+      "measurement_server_uuid": "mServer",
+      "translation_keys": {
+        "summary": "SIP_summary",
+        "description": "SIP_description"
+      },
+      "parameters": {
+        "port": "5060",
+        "call_duration": "1000000000",
+        "timeout": "2000000000",
+        "count": "5"
+      },
+      "evaluations": [
+        {
+          "operator": "eq",
+          "on_failure": "sip.failure",
+          "sip_result": "OK",
+          "on_success": "sip.success"
+        }
+      ]
+	},
+	{
+		"objective_id": 600,
+		"evaluations": [
+			{
+			"evaluate": "%EVAL if (nn.coalesce(voip_result_out_mean_jitter, 50000000) < 50000000) result=true; else result=false;%",
+			"on_failure": "voip.jitter.outgoing.failure",
+			"on_success": "voip.jitter.outgoing.success"
+			},
+			{
+			"evaluate": "%EVAL if (nn.coalesce(voip_result_in_mean_jitter, 50000000) < 50000000) result=true; else result=false;%",
+			"on_failure": "voip.jitter.incoming.failure",
+			"on_success": "voip.jitter.incoming.success"
+			},
+			{
+			"evaluate": "%EVAL if (nn.coalesce(voip_result_out_num_packets, 0) > 0) result=true; else result=false;%",
+			"on_failure": "voip.outgoing.packet.failure",
+			"on_success": "voip.outgoing.packet.success"
+			},
+			{
+			"evaluate": "%EVAL if (nn.coalesce(voip_result_in_num_packets, 0) > 0) result=true; else result=false;%",
+			"on_failure": "voip.incoming.packet.failure",
+			"on_success": "voip.incoming.packet.success"
+			},
+			{
+			"evaluate": "%EVAL if(voip_result_status=='TIMEOUT') result={type:  'failure', key: 'voip.timeout'}%"
+			}
+		],
+		"translation_keys": {
+			"summary": "test.desc.voip",
+			"description": "voip.testinfo"
+		},
+		"measurement_server_uuid": "qos_server",
+		"docType": "QoSMeasurementObjective",
+		"parameters": {
+			"call_duration": "2000000000",
+			"out_port": "7078",
+			"timeout": "6000000000"
+		},
+		"type": "VOIP",
+		"concurrency_group": 600,
+		"enabled": true
+	  },
+    {
       "_id": "network_type_GSM",
       "network_type_id": 1,
       "name": "GSM",
