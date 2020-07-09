@@ -22,6 +22,7 @@ import { SpringServerDataSource } from '../../core/services/table/spring-server.
 import { UserService } from '../../core/services/user.service';
 import { ResultApiService } from '../../core/services/result-api.service';
 import { DateParseService } from '@nntool-typescript/core/services/date-parse.service';
+import { isElectron } from '@nntool-typescript/utils';
 
 @Component({
   templateUrl: './history.component.html',
@@ -40,14 +41,14 @@ export class HistoryComponent {
           return this.dateParseService.parseDateIntoFormat(new Date(Date.parse(row.start_time)));
         }
       },
-      'device_info.device_code_name': {
-        title: 'Device',
+      'device_info.device_code_name': isElectron() ? {
+        title: 'Connection',
         filter: false,
         sort: false,
         valuePrepareFunction: (cell, row) => {
-          return row.device_info.device_code_name;
+          return row.network_type_name;
         }
-      },
+      }:{},
       'measurements.SPEED.rtt_average_ns': {
         // or median?
         title: 'Ping (ms)',

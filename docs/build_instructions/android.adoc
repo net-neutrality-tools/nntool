@@ -1,3 +1,4 @@
+[[android-build]]
 = Android App
 :toc: left
 :toc-title: Table of Content
@@ -6,12 +7,24 @@ The android application module can be found in the `android-app` directory.
 
 == Prerequisites
 
+* Android Studio >= 3
+* Linux, macOS (install cmake, ninja and go using Homebrew) or Windows
+* gstreamer binaries (see below for further info)
+
 When building from the android studio IDE, the following steps are recommended:
 
 * Open the settings menu (ctrl + alt + s)
 * Select: "Appearance and Behaviour" -> "System Settings" -> "Android Sdk"
 * Select the "Sdk Tools" tab
 * Make sure Cmake, NDK and LLDB are installed (have a checkmark next to them)
+
+Enabling gstreamer support for the alternative audio streaming test:
+
+* Go to https://gstreamer.freedesktop.org/download/#android
+* Download the tarball, containing the binaries for the supported architectures
+* Extract the tarball at a location of you choice
+* Write the extracted location into the gstAndroidRoot variable in the gradle.properties file
+(the root is the folder where the architectures sub-folders are located, i.e. the arm64, armv7, x86, x86_64 folders)
 
 The ninja build system and all prerequisites of the ias-cpp module are required.
 Execute `apt install ninja-build golang lcov libssl-dev`.

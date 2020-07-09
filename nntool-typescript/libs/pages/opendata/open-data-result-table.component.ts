@@ -47,10 +47,26 @@ export class OpenDataResultTableComponent implements OnInit {
           return this.dateParseService.parseDateIntoFormat(new Date(Date.parse(row.start_time)));
         }
       },
-      open_data_uuid: {
-        title: 'OpenDataUuid',
+      device: {
+        title: 'Device',
         filter: false,
-        sort: false // throws exception: Caused by: ElasticsearchException[Elasticsearch exception [type=illegal_argument_exception, reason=Fielddata is disabled on text fields by default. Set fielddata=true on [open_data_uuid] in order to load fielddata in memory ...
+        sort: false, // throws exception: Caused by: ElasticsearchException[Elasticsearch exception [type=illegal_argument_exception, reason=Fielddata is disabled on text fields by default. Set fielddata=true on [open_data_uuid] in order to load fielddata in memory ...
+        valuePrepareFunction: (cell, row) => {
+            let val = '';
+            if (row.device_info && row.device_info.model) {
+              val += row.device_info.model;
+            }
+            if (row.device_info && row.device_info.os_info && row.device_info.os_info.name) {
+              val += ", " + row.device_info.os_info.name;
+            }
+            if (row.agent_info && row.agent_info.type) {
+              val += " (" + row.agent_info.type.toLowerCase() + ")"
+            }
+            if (row.computed_network_info && row.computed_network_info.public_ip_as_name) {
+              val += ", " + row.computed_network_info.public_ip_as_name;
+            }
+            return (val);
+        }
       },
       'measurements.SPEED.rtt_info.average_ns': {
         // or median?
@@ -86,12 +102,12 @@ export class OpenDataResultTableComponent implements OnInit {
           }
         }
       },
-      'qos_advanced_evaluation.blocked_ports.total_count_blocked_ports': {
+      'qos_advanced_evaluation.total_count_blocked_ports': {
         title: 'Blocked Ports',
         filter: false,
         valuePrepareFunction: (cell, row) => {
-          if (row.qos_advanced_evaluation && row.qos_advanced_evaluation.blocked_ports && row.qos_advanced_evaluation.blocked_ports.total_count_blocked_ports) {
-            return (row.qos_advanced_evaluation.blocked_ports.total_count_blocked_ports);
+          if (row.qos_advanced_evaluation && (row.qos_advanced_evaluation.total_count_blocked_ports || row.qos_advanced_evaluation.total_count_blocked_ports === 0)) {
+            return (row.qos_advanced_evaluation.total_count_blocked_ports);
           } else {
             return 'n/a';
           }
@@ -211,6 +227,7 @@ export class OpenDataResultTableComponent implements OnInit {
         query_string: 'computed_network_info.network_type_group_name:',
         options: [
           { label: undefined, value: undefined },
+          { label: 'UNKNOWN', value: 'UNKNOWN' },
           { label: 'LAN', value: 'LAN' },
           { label: 'WLAN', value: 'WLAN' },
           { label: '2G', value: '2G' },
@@ -292,12 +309,12 @@ export class OpenDataResultTableComponent implements OnInit {
       {
         filter_type: 'INPUT_NUMBER',
         key: 'ports_blocked_greater',
-        query_string: 'qos_advanced_evaluation.blocked_ports.total_count_blocked_ports:>='
+        query_string: 'qos_advanced_evaluation.total_count_blocked_ports:>='
       },
       {
         filter_type: 'INPUT_NUMBER',
         key: 'ports_blocked_smaller',
-        query_string: 'qos_advanced_evaluation.blocked_ports.total_count_blocked_ports:<='
+        query_string: 'qos_advanced_evaluation.total_count_blocked_ports:<='
       }
     );
 

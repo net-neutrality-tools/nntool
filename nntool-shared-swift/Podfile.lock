@@ -1,25 +1,25 @@
 PODS:
-  - CodableJSON (1.1.4)
-  - Nimble (8.0.2)
+  - CodableJSON (1.2.0)
+  - Nimble (8.0.7)
   - ObjcExceptionBridging (1.0.1):
     - ObjcExceptionBridging/ObjcExceptionBridging (= 1.0.1)
   - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
-  - Repeat (0.5.7)
-  - SwiftLint (0.31.0)
-  - XCGLogger (7.0.0):
-    - XCGLogger/Core (= 7.0.0)
-  - XCGLogger/Core (7.0.0):
+  - Repeat (0.5.8)
+  - SwiftLint (0.39.2)
+  - XCGLogger (7.0.1):
+    - XCGLogger/Core (= 7.0.1)
+  - XCGLogger/Core (7.0.1):
     - ObjcExceptionBridging
 
 DEPENDENCIES:
-  - CodableJSON (~> 1.1.4)
-  - Nimble (~> 8.0.1)
-  - Repeat (~> 0.5.7)
-  - SwiftLint (~> 0.31.0)
-  - XCGLogger (~> 7.0.0)
+  - CodableJSON (~> 1.2.0)
+  - Nimble (~> 8.0.7)
+  - Repeat (~> 0.5.8)
+  - SwiftLint (~> 0.39.2)
+  - XCGLogger (~> 7.0.1)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - CodableJSON
     - Nimble
     - ObjcExceptionBridging
@@ -28,13 +28,13 @@ SPEC REPOS:
     - XCGLogger
 
 SPEC CHECKSUMS:
-  CodableJSON: 4914e03831490a4714b9e6d114218a18599cd39f
-  Nimble: 622629381bda1dd5678162f21f1368cec7cbba60
+  CodableJSON: 3e91bb0cead42e788d8fe64b8b07761c83ad7758
+  Nimble: a73af6ecd4c9106f434f3d55fc54570be3739e0b
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
-  Repeat: 73c5ee602aed8f3c7bf1aa12d4cd0d3dc3edea0a
-  SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
-  XCGLogger: 0434f15e3909cdc450bb63faf638b8792ab782ab
+  Repeat: 8e65710d09da68f06ed79e865b091ffdcc8d0279
+  SwiftLint: 22ccbbe3b8008684be5955693bab135e0ed6a447
+  XCGLogger: 1943831ef907df55108b0b18657953f868de973b
 
-PODFILE CHECKSUM: 3b0e410dbf600c1abf4034e50a55290bdd1157dd
+PODFILE CHECKSUM: 4ab549927ec3306cd135a568ff1e08d2173cdb45
 
-COCOAPODS: 1.7.3
+COCOAPODS: 1.9.1

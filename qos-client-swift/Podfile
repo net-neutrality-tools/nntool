@@ -9,11 +9,12 @@ inhibit_all_warnings!
 
 abstract_target 'All' do
   pod 'nntool-shared-swift', :path => '../nntool-shared-swift'
+  pod 'qos-client-cpp', :path => '../qos-cpp'
 
-  pod 'CocoaAsyncSocket', '~> 7.6.3'
+  pod 'CocoaAsyncSocket', '~> 7.6.4'
   pod 'BlueSocket', '~> 1.0.52'
-  pod 'Alamofire', '~> 4.8.2'
-  pod 'mkall', :git => 'https://github.com/measurement-kit/mkall-ios.git', :tag => 'v0.6.2'
+  pod 'Alamofire', '~> 5.1.0'
+  pod 'mkall', :git => 'https://github.com/measurement-kit/mkall-ios.git', :tag => 'v0.8.0'
   pod 'WKWebViewWithURLProtocol', '~> 0.1.0'
 
   target 'QoSKit_iOS' do
@@ -21,7 +22,7 @@ abstract_target 'All' do
   end
 
   target 'QoSKitUnitTests' do
-    pod 'Nimble', '~> 8.0.4'
+    pod 'Nimble', '~> 8.0.7'
   end
 end
 

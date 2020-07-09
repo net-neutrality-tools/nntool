@@ -33,6 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import at.alladin.nettest.qos.QoSMeasurementClientProgressListener;
+import at.alladin.nntool.client.v2.task.AudioStreamingTask;
 import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.client.v2.task.AbstractEchoProtocolTask;
 import at.alladin.nntool.client.v2.task.AbstractQoSTask;
@@ -75,6 +76,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
     public final static String TASK_TRACEROUTE = "traceroute";
     public final static String TASK_ECHO_PROTOCOL = "echo_protocol";
     public final static String TASK_SIP = "sip";
+    public final static String TASK_AUDIO_STREAMING = "audio_streaming";
     public final static String TASK_MKIT_WEB_CONNECTIVITY = "mkit_web_connectivity";
     public final static String TASK_MKIT_DASH = "mkit_dash";
 
@@ -178,7 +180,12 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 			}
 			else if (TASK_TRACEROUTE.equals(taskId)) {
 				if (nnTestSettings != null && nnTestSettings.getTracerouteServiceClazz() != null) {
-					test = new TracerouteTask(this, taskDesc, threadCounter++);	
+					final Object isReverse = taskDesc.getParams().get("is_reverse");
+					if (isReverse instanceof Boolean && (boolean) isReverse) {
+						System.out.println("Reverse Traceroute not yet implemented. Skipping TracerouteTask: " + taskDesc);
+					} else {
+						test = new TracerouteTask(this, taskDesc, threadCounter++);
+					}
 				}
 				else {
 					System.out.println("No TracerouteService implementation: Skipping TracerouteTask: " + taskDesc);
@@ -214,6 +221,9 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 			}
 			else if (TASK_SIP.equals(taskId)) {
 				test = new SipTask(this, taskDesc, threadCounter++);
+			}
+			else if (TASK_AUDIO_STREAMING.equals(taskId)) {
+				test = new AudioStreamingTask(this, taskDesc, threadCounter++);
 			}
 
 			if (test != null) {

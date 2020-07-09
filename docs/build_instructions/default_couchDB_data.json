@@ -147,6 +147,164 @@
       ]
     },
     {
+      "docType": "QoSMeasurementObjective",
+      "objective_id": 500,
+      "enabled": true,
+      "type": "MKIT_DASH",
+      "concurrency_group": 500,
+      "measurement_server_uuid": "mServer",
+      "translation_keys": {
+        "summary": "MKIT_DASH_summary",
+        "description": "MKIT_DASH_description"
+      },
+      "parameters": {
+        "timeout": "60000000000"
+      },
+      "evaluations": [
+        {
+          "operator": "eq",
+          "on_failure": "mkit.failure",
+          "on_success": "mkit.success",
+          "mkit_status": "OK"
+        },
+        {
+          "evaluate": "%EVAL result=(!JSON.parse(mkit_result).test_keys.hasOwnProperty('failure')) || (JSON.parse(mkit_result).test_keys.failure === null);%",
+          "on_failure": "dash.failure",
+          "on_success": "dash.success"
+        }
+      ]
+    },
+    {
+      "docType": "QoSMeasurementObjective",
+      "objective_id": 520,
+      "enabled": true,
+      "type": "MKIT_WEB_CONNECTIVITY",
+      "concurrency_group": 520,
+      "measurement_server_uuid": "mServer",
+      "translation_keys": {
+        "summary": "MKIT_WEB_CONNECTIVITY_summary",
+        "description": "MKIT_WEB_CONNECTIVITY_description"
+      },
+      "parameters": {
+        "input": [
+          "https://europa.eu/"
+        ],
+        "timeout": "10000000000"
+      },
+      "evaluations": [
+        {
+          "operator": "eq",
+          "on_failure": "mkit.failure",
+          "on_success": "mkit.success",
+          "mkit_status": "OK"
+        },
+        {
+          "evaluate": "%EVAL result=JSON.parse(mkit_result).test_keys.accessible;%",
+          "on_failure": "web_connectivity.failure",
+          "on_success": "web_connectivity.success"
+        }
+      ]
+    },
+    {
+      "docType": "QoSMeasurementObjective",
+      "objective_id": 521,
+      "enabled": true,
+      "type": "MKIT_WEB_CONNECTIVITY",
+      "concurrency_group": 520,
+      "measurement_server_uuid": "mServer",
+      "translation_keys": {
+        "summary": "MKIT_WEB_CONNECTIVITY_summary",
+        "description": "MKIT_WEB_CONNECTIVITY_description"
+      },
+      "parameters": {
+        "input": [
+          "https://berec.europa.eu/"
+        ],
+        "timeout": "10000000000"
+      },
+      "evaluations": [
+        {
+          "operator": "eq",
+          "on_failure": "mkit.failure",
+          "on_success": "mkit.success",
+          "mkit_status": "OK"
+        },
+        {
+          "evaluate": "%EVAL result=JSON.parse(mkit_result).test_keys.accessible;%",
+          "on_failure": "web_connectivity.failure",
+          "on_success": "web_connectivity.success"
+        }
+      ]
+    },
+    {
+      "docType": "QoSMeasurementObjective",
+      "objective_id": 600,
+      "enabled": true,
+      "type": "SIP",
+      "concurrency_group": 600,
+      "measurement_server_uuid": "mServer",
+      "translation_keys": {
+        "summary": "SIP_summary",
+        "description": "SIP_description"
+      },
+      "parameters": {
+        "port": "5060",
+        "call_duration": "1000000000",
+        "timeout": "2000000000",
+        "count": "5"
+      },
+      "evaluations": [
+        {
+          "operator": "eq",
+          "on_failure": "sip.failure",
+          "sip_result": "OK",
+          "on_success": "sip.success"
+        }
+      ]
+	},
+	{
+		"objective_id": 600,
+		"evaluations": [
+			{
+			"evaluate": "%EVAL if (nn.coalesce(voip_result_out_mean_jitter, 50000000) < 50000000) result=true; else result=false;%",
+			"on_failure": "voip.jitter.outgoing.failure",
+			"on_success": "voip.jitter.outgoing.success"
+			},
+			{
+			"evaluate": "%EVAL if (nn.coalesce(voip_result_in_mean_jitter, 50000000) < 50000000) result=true; else result=false;%",
+			"on_failure": "voip.jitter.incoming.failure",
+			"on_success": "voip.jitter.incoming.success"
+			},
+			{
+			"evaluate": "%EVAL if (nn.coalesce(voip_result_out_num_packets, 0) > 0) result=true; else result=false;%",
+			"on_failure": "voip.outgoing.packet.failure",
+			"on_success": "voip.outgoing.packet.success"
+			},
+			{
+			"evaluate": "%EVAL if (nn.coalesce(voip_result_in_num_packets, 0) > 0) result=true; else result=false;%",
+			"on_failure": "voip.incoming.packet.failure",
+			"on_success": "voip.incoming.packet.success"
+			},
+			{
+			"evaluate": "%EVAL if(voip_result_status=='TIMEOUT') result={type:  'failure', key: 'voip.timeout'}%"
+			}
+		],
+		"translation_keys": {
+			"summary": "test.desc.voip",
+			"description": "voip.testinfo"
+		},
+		"measurement_server_uuid": "qos_server",
+		"docType": "QoSMeasurementObjective",
+		"parameters": {
+			"call_duration": "2000000000",
+			"out_port": "7078",
+			"timeout": "6000000000"
+		},
+		"type": "VOIP",
+		"concurrency_group": 600,
+		"enabled": true
+	  },
+    {
       "_id": "network_type_GSM",
       "network_type_id": 1,
       "name": "GSM",
@@ -296,6 +454,15 @@
       "name": "CELLULAR_ANY",
       "group_name": "MOBILE",
       "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
+    },
+    {
+      "_id": "network_type_UNKNOWN",
+      "_rev": "2-c5e2c3c2fb336c5b186e8a3e516a3295",
+      "network_type_id": 95,
+      "name": "UNKNOWN",
+      "group_name": "UNKNOWN",
+      "category": "UNKNOWN",
       "docType": "EmbeddedNetworkType"
     },
     {
@@ -707,11 +874,32 @@
       "docType": "Translation",
       "language": "en",
       "translations": {
+        "MARKER_TIME": "Time",
+        "MARKER_AGENT": "Agent",
+        "MARKER_OS": "OS",
+        "MARKER_DOWNLOAD": "Download",
+        "MARKER_DOWNLOAD_UNIT": "mbps",
+        "MARKER_UPLOAD": "Upload",
+        "MARKER_UPLOAD_UNIT": "mbps",
+        "MARKER_PING": "Ping",
+        "MARKER_PING_UNIT": "ms",
+        "MARKER_SIGNAL": "Signal",
+        "MARKER_SIGNAL_UNIT": "dBm",
+        "MARKER_NETWORK_TYPE": "Network Type",
+        "MARKER_PROVIDER": "Provider",
+        "MARKER_WIFI_SSID": "WiFi SSID",
+        "MARKER_MOBILE_NETWORK": "Mobile Network",
+        "MARKER_HOME_NETWORK": "Home Network",
+        "MARKER_ROAMING": "Roaming",
+        "AGENT_MOBILE": "Mobile",
+        "AGENT_WEBSITE": "Website",
+        "AGENT_DESKTOP": "Desktop",
         "RESULT_DB_UNIT": "dB",
         "RESULT_DETAILS": "Test Result (click on hyperlinked values for advanced search)",
         "RESULT_DOWNLOAD": "Download",
         "RESULT_DOWNLOAD_UNIT": "Mbps",
         "RESULT_DURATION_UNIT": "s",
+        "RESULT_FREQUENCY_UNIT": "MHz",
         "RESULT_HOME_NETWORK": "Home Network",
         "RESULT_LTE_RSRP": "Signal (4G)",
         "RESULT_LTE_RSRP_UNIT": "dBm",
@@ -722,7 +910,7 @@
         "RESULT_OPERATOR_NAME": "Provider",
         "RESULT_PING": "Ping",
         "RESULT_PING_UNIT": "ms",
-        "RESULT_PING_UNIT_SQUARED": "ms²",
+        "RESULT_PING_UNIT_SQUARED": "msÂ²",
         "RESULT_PROVIDER": "Operator",
         "RESULT_ROAMING": "Roaming",
         "RESULT_SHARE_SUBJECT": "nntool result - {0}",
@@ -757,8 +945,8 @@
         "result.connection.total_bytes_transmitted": "Total bytes transmitted",
         "dash.failure": "Video streaming test failed",
         "dash.success": "Video streaming test succeeded",
-        "dash.old_testinfo": "%EVAL result = (typeof mkit_result !== 'undefined') ? ('Dash test detailed result: ' + String(nn.prettifyJson(mkit_result))) : 'No result available';%",
-        "dash.testinfo": "%EVAL result = (typeof mkit_result !== 'undefined') ? ('Video streaming possible with a bitrate of ' + String(JSON.parse(mkit_result).test_keys.simple.median_bitrate) + ' kbps. This equals a video resolution of ' + String(nn.getAchievableStreamingResolution(JSON.parse(mkit_result).test_keys.simple.median_bitrate)) + '.' ) : 'No result available';%",
+        "dash.old_testinfo": "%EVAL result = (typeof mkit_result !== 'undefined') ? ('Dash test detailed result: ' + String(nn.prettifyJson(JSON.stringify(mkit_result)))) : 'No result available';%",
+        "dash.testinfo": "%EVAL if(typeof mkit_result !== 'udefined') { r = mkit_result; if (typeof mkit_result === 'string') { r = JSON.parse(mkit_result); } if (r.test_keys && r.test_keys.simple) { result = 'Video streaming possible with a bitrate of ' + r.test_keys.simple.median_bitrate + ' kbps. This equals a video resolution of ' + String(nn.getAchievableStreamingResolution(r.test_keys.simple.median_bitrate)) + '.' } else { result = 'Test successful';}}  else { result = 'No result available'; }%",
         "dns.failure": "DNS request failed",
         "dns.success": "DNS request succeeded",
         "dns.testinfo": "DNS request for the domain: %PARAM dns_objective_host%\nRequested Record: %PARAM dns_objective_dns_record%\n\nTest Result:\nDNS Status: %PARAM dns_result_status%\nDNS Entries: %PARAM dns_result_entries%\nTest Duration: %PARAM duration_ns 1000000 0 f% ms",
@@ -767,7 +955,7 @@
         "dns.unknowndomain.success": "DNS-request for a non-existent domain succeeded. No entries have been returned.",
         "http.failure": "Received content differs from the original. Modification is likely.",
         "http.success": "Received content equals the original. No modification detected.",
-        "http.testinfo": "Target: '%PARAM http_objective_url%'\nRange: %PARAM http_objective_range%\nDuration: %PARAM duration_ns 1000000000 1 f% s\nLength: %PARAM http_result_length%\nStatus Code: %PARAM http_result_status%\nHash: %PARAM http_result_hash%\nHeader: \n%PARAM http_result_header%",
+        "http.testinfo": "Target: '%PARAM http_objective_url%'\nRange: %EVAL result =  (typeof http_objective_range !== 'undefined') ? http_objective_range : 'n/a';%\nDuration: %PARAM duration_ns 1000000000 1 f% s\nLength: %PARAM http_result_length%\nStatus Code: %PARAM http_result_status%\nHash: %PARAM http_result_hash%\nHeader: \n%PARAM http_result_header%",
         "key_altitude": "Altitude",
         "key_cell_id": "Cell-ID",
         "key_cell_id_multiple": "Multiple Cells",
@@ -790,14 +978,23 @@
         "key_duration": "Nominal Test Duration",
         "key_duration_dl": "Duration Download",
         "key_duration_ul": "Duration Upload",
+        "key_duration_rtt": "Duration Ping",
         "key_encryption": "Encryption",
         "key_encryption_false": "No",
         "key_encryption_true": "Yes",
         "key_geo_source_browser": "Browser",
         "key_geo_source_gps": "GPS",
         "key_geo_source_network": "Network",
+        "key_geo_latitude": "Latitude",
+        "key_geo_longitude": "Longitude",
+        "key_geo_accuracy": "Accuracy",
+        "key_geo_time": "Time",
+        "key_geo_source": "Source",
         "key_heading": "Heading",
         "key_location": "Location",
+        "key_mobile_frequency": "Mobile Frequency",
+        "key_wifi_frequency": "Wifi Frequency",
+        "key_frequency": "Frequency",
         "key_model": "Model",
         "key_motion": "Motion",
         "key_municipality": "Municipality",
@@ -861,6 +1058,18 @@
         "key_wifi_link_speed": "WiFi Link Speed",
         "key_wifi_ssid": "WiFi SSID",
         "key_zip_code": "ZIP",
+        "key_yes": "Yes",
+        "key_no": "No",
+        "key_cgn_detected": "CGN detected?",
+        "key_NOT_AVAILABLE": "No information available",
+        "key_NO_NAT": "No NAT detected",
+        "key_LOCAL_TO_LOCAL": "Local-to-local NAT detected",
+        "key_LOCAL_TO_PUBLIC": "Local-to-public NAT detected",
+        "key_PUBLIC_TO_PUBLIC": "Public-to-public NAT detected",
+        "key_PUBLIC_TO_LOCAL": "Public-to-local NAT detected",
+        "key_NO_ROAMING": "No roaming",
+        "key_NATIONAL": "National roaming",
+        "key_INTERNATIONAL": "International roaming",
         "mkit.failure": "Measurement not completed due to an error",
         "mkit.success": "Measurement completed successfully",
         "key_group_overview": "Overview",
@@ -883,6 +1092,7 @@
         "name.tcp": "TCP Ports",
         "TRACEROUTE_title": "Traceroute",
         "name.traceroute": "Traceroute",
+        "name.trace": "Traceroute",
         "UDP_title": "UDP Ports",
         "name.udp": "UDP Ports",
         "VOIP_title": "Voice over IP",
@@ -895,18 +1105,20 @@
         "name.echo": "Echo Protocol",
         "SIP_title": "SIP",
         "name.sip": "SIP",
-        "ECHO_PROTOCOL_description": "Linux Echo Service",
-        "MKIT_DASH_description": "Video Streaming description",
-        "DNS_description": "DNS description",
-        "HTTP_PROXY_description": "Unmodified Content description",
-        "NON_TRANSPARENT_PROXY_description": "Transparent Connection description",
-        "TCP_description": "TCP Ports description",
-        "TRACEROUTE_description": "Traceroute description",
-        "UDP_description": "UDP Ports description",
-        "VOIP_description": "Voice over IP description",
-        "MKIT_WEB_CONNECTIVITY_description": "Connectivity Status description",
-        "WEBSITE_description": "Webpage description",
-        "SIP_description": "",
+        "ECHO_PROTOCOL_description": "The client connects to a server that supports the Echo Protocol. Then the server sends back an identical copy of the data it received.",
+        "MKIT_DASH_description": "The Dash test analyzes the video streaming performance of the network connection.",
+        "DNS_description": "DNS is a fundamental internet service to translate domain names to IP addresses. Each DNS test checks if this service is available, if answers are correct and measures server response time.",
+        "HTTP_PROXY_description": "This test downloads a test web resource (e.g. image) and checks, if it was modified during transport.",
+        "NON_TRANSPARENT_PROXY_description": "This test checks if a request is modified by a proxy or other middlebox.",
+        "TCP_description": "TCP is the most common connection-oriented internet protocol. Typical services http for websites or smtp for e-mail.",
+        "TRACEROUTE_description": "Traceroute shows the route across IP based networks.",
+        "UDP_description": "UDP is an important connectionless internet protocol. Typical services real-time communication like VoIP or video streaming.",
+        "VOIP_description": "Voice over IP (VoIP) is a technology for the delivery of voice communication over IP based networks.",
+        "MKIT_WEB_CONNECTIVITY_description": "Check basic web-connectivity status.",
+        "WEBSITE_description": "The website rendering test downloads a reference web page (mobile Kepler page by ETSI), checks completeness, correct rendering and measures duration.",
+        "SIP_description": "This test uses the Session Initiation Protocol (SIP) to establish (set up) and simulate short calls to determine internet telephony key performance indicators.",
+        "AUDIO_STREAMING_description": "Analyze HTTP audio streaming performance.",
+        "AUDIO_STREAMING_title": "Audio streaming",
         "MKIT_DASH_icon": "ë",
         "DNS_icon": "á",
         "HTTP_PROXY_icon": "é",
@@ -919,20 +1131,26 @@
         "WEBSITE_icon": "è",
         "ECHO_PROTOCOL_icon": "û",
         "SIP_icon": "à",
+        "AUDIO_STREAMING_icon": "à",
+        "audio_streaming.failure": "Audio streaming test failed.",
+        "audio_streaming.success": "Audio streaming test succeeded.",
+        "audio_streaming.testinfo": "Number of stalls: %PARAM number_of_stalls 1 0 f%\nTotal stall time: %PARAM total_stall_time_ns 1000000 0 f% ms\nAverage stall time: %PARAM average_stall_time_ns 1000000 0 f% ms\n\nAudio start time: %PARAM audio_start_time_ns 1000000 0 f% ms (the time it took from start playing command to the actual start of the audio stream)",
+        "test.audio_streaming": "Analyze HTTP audio streaming performance.",
+        "name.audio_streaming": "Audio streaming",
         "ndt.failure": "Network diagnostics test was not successful",
         "ndt.success": "Network diagnostics test was successful",
         "ndt.testinfo": "%EVAL result = (typeof mkit_result !== 'undefined') ? ('Network diagnostics test detailed result: ' + String(nn.prettifyJson(mkit_result))) : 'No result available';%",
-        "ntp.failure": "Request to NST server was manipulated.",
-        "ntp.success": "Request to measurement server was not modified.",
+        "ntp.failure": "Request to QoS measurement peer was manipulated.",
+        "ntp.success": "Request to QoS measurement peer was not modified.",
         "ntp.testinfo": "Content '%PARAM nontransproxy_objective_request%' requested from measurement server.\nThe answer was: '%PARAM nontransproxy_result_response%'",
         "tcp.failure": "Test failed. Connection could not be established.",
         "tcp.failure.request": "Response '%PARAM tcp_result_out_response%' differs from request.",
         "tcp.in.testinfo": "TCP Incoming:\nAn incoming connection on port %PARAM tcp_objective_in_port% was attempted. Result: %PARAM tcp_result_in%.",
-        "tcp.out.testinfo": "TCP Outgoing:\nAn outgoing connection to NST server on port %PARAM tcp_objective_out_port% was attempted.",
+        "tcp.out.testinfo": "TCP Outgoing:\nAn outgoing connection to QoS measurement peer on port %PARAM tcp_objective_out_port% was attempted.",
         "tcp.success": "Test succeeded. Connection was established.",
         "test.dash": "The Dash test analyzes the video streaming performance of the network connection.",
         "test.desc.dash": "Test video streaming performance",
-        "test.desc.dns": "Target: %PARAM dns_objective_host% \nEntry: %PARAM dns_objective_dns_record%\nResolver: %PARAM dns_objective_resolver%",
+        "test.desc.dns": "Target: %PARAM dns_objective_host% \nEntry: %PARAM dns_objective_dns_record%\nResolver: %EVAL result = (typeof dns_objective_resolver !== 'undefined') ? dns_objective_resolver : 'n/a';%",
         "test.desc.http": "Target: %PARAM http_objective_url%",
         "test.desc.ndt": "Perform network diagnostics",
         "test.desc.ntp": "Port: %PARAM nontransproxy_objective_port%\nRequest: %PARAM nontransproxy_objective_request%",
@@ -955,8 +1173,8 @@
         "test.desc.tcp.out.993": "Secure E-mail Retrieval and Storage (IMAPS, TCP port 993 outgoing)",
         "test.desc.tcp.out.995": "Secure E-mail Retrieval (POP3S, TCP port 995 outgoing)",
         "test.desc.trace": "Traceroute Target: %PARAM traceroute_objective_host%",
-        "test.desc.udp.in": "UDP Incoming, Port: %PARAM udp_objective_in_port 1 1 f%, Number of Packets: %PARAM udp_objective_in_num_packets 1 1 f%",
-        "test.desc.udp.out": "UDP Outgoing, Port: %PARAM udp_objective_out_port 1 1 f%, Number of Packets: %PARAM udp_objective_out_num_packets 1 1 f%",
+        "test.desc.udp.in": "UDP Incoming, Port: %PARAM udp_objective_in_port 1 1 f%, Number of Packets: %PARAM udp_objective_in_num_packets 1 1 f%, Delay: %EVAL result = (typeof udp_objective_delay !== 'undefined') ? (udp_objective_delay / 1e6).toFixed(2) + ' ms' : '---';%",
+        "test.desc.udp.out": "UDP Outgoing, Port: %PARAM udp_objective_out_port 1 1 f%, Number of Packets: %PARAM udp_objective_out_num_packets 1 1 f% %EVAL result = (typeof udp_objective_delay !== 'undefined') ? ', Delay: ' + (udp_objective_delay / 1e6).toFixed(2) + ' ms' : '';%",
         "test.desc.udp.out.123": "Time Synchronisation (NTP, UDP port 123 outgoing)",
         "test.desc.udp.out.27005": "Online Games Streaming (UDP port 27005 outgoing)",
         "test.desc.udp.out.27015": "Online Games Streaming (UDP port 27015 outgoing)",
@@ -969,7 +1187,7 @@
         "test.desc.udp.out.7078": "Voice over IP (VoIP, UDP port 7078 outgoing)",
         "test.desc.udp.out.7082": "Voice over IP (VoIP, UDP port 7082 outgoing)",
         "test.desc.voip": "Simulated VoIP call. Duration: %PARAM voip_objective_call_duration 1000000 1 f% ms",
-        "test.desc.web_connectivity": "%EVAL result = (typeof mkit_result !== 'undefined') ? ('Test internet connectivity with target: ' + String(JSON.parse(mkit_result).input)) : 'Test internet connectivity';%",
+        "test.desc.web_connectivity": "%EVAL result = (typeof mkit_result !== 'undefined') ? 'Test internet connectivity with target: ' + mkit_result.input : 'Test internet connectivity';%",
         "test.desc.website": "Target: %PARAM website_objective_url%",
         "test.desc.sip": "Analysis of internet telephony key permformance indicators (dropped call ratio, call setup success ratio).",
         "test.description": "n/a",
@@ -985,13 +1203,16 @@
         "test.voip": "Voice over IP (VoIP) is a technology for the delivery of voice communication over IP based networks.",
         "test.website": "The website rendering test downloads a reference web page (mobile Kepler page by ETSI), checks completeness, correct rendering and measures duration.",
         "test.sip": "This test uses the Session Initiation Protocol (SIP) to establish (set up) and simulate short calls to determine internet telephony key performance indicators.",
+        "test.echo": "The client connects to a server that supports the Echo Protocol. Then the server sends back an identical copy of the data it received.",
+        "test.mkit_web_connectivity": "Check basic web-connectivity status.",
+        "test.mkit_dash": "The Dash test analyzes the video streaming performance of the network connection.",
         "timeout": "Test was not completed. Timeout exceeded!",
-        "trace.testinfo": "Traceroute Test Parameters:\nHost: %PARAM traceroute_objective_host%\nMax. Hops: %PARAM traceroute_objective_max_hops%\n\nTraceroute Test Results:\nHops Needed: %PARAM traceroute_result_hops%\nTraceroute Result: %PARAM traceroute_result_status%\n\nFull Route:\n%EVAL result=String(nn.parseTraceroute(traceroute_result_details))%",
+        "trace.testinfo": "Traceroute Test Parameters:\nHost: %PARAM traceroute_objective_host%\nIs reverse traceroute? %EVAL result=(typeof traceroute_objective_is_reverse != \"undefined\" && traceroute_objective_is_reverse?\"Yes\":\"No\") %\nMax. Hops: %PARAM traceroute_objective_max_hops%\n\nTraceroute Test Results:\nHops Needed: %PARAM traceroute_result_hops%\nTraceroute Result: %PARAM traceroute_result_status%\n\nFull Route:\n%EVAL result=String(nn.parseTraceroute(traceroute_result_details))%",
         "traceroute.failure": "An error occured during traceroute test.",
         "traceroute.success": "Traceroute test was successful.",
         "udp.failure": "UDP-Test failed. Some packets were lost.",
         "udp.in.testinfo": "UDP Incoming:\nNumber of Packets Requested: %PARAM udp_objective_in_num_packets 1 1%, Received by Client: %PARAM udp_result_in_num_packets%, Returned to Server: %PARAM udp_result_in_response_num_packets 1 1%.\nPacket Loss Ratio: %PARAM udp_result_in_packet_loss_rate 1 2 f%{PERCENT}",
-        "udp.out.testinfo": "UDP Outgoing:\nSending and receiving packets to NST server on port %PARAM udp_objective_out_port 1 1% attempted.\nNumber of Packets Sent: %PARAM udp_objective_out_num_packets 1 1%\nPackets Received by Server: %PARAM udp_result_out_num_packets 1 1%\nPackets Received in reverse by Client: %PARAM udp_result_out_response_num_packets 1 1%.\nPacket Loss Ratio: %PARAM udp_result_out_packet_loss_rate 1 2 f%{PERCENT}\nAverage delay: %PARAM udp_result_out_rtt_avg_ns 1000000 2 f% ms",
+        "udp.out.testinfo": "UDP Outgoing:\nSending and receiving packets to QoS measurement peer on port %PARAM udp_objective_out_port 1 1% attempted.\nNumber of Packets Sent: %PARAM udp_objective_out_num_packets 1 1%\nPackets Received by Server: %PARAM udp_result_out_num_packets 1 1%\nPackets Received in reverse by Client: %PARAM udp_result_out_response_num_packets 1 1%.\nPacket Loss Ratio: %PARAM udp_result_out_packet_loss_rate 1 2 f%{PERCENT}\nAverage delay: %EVAL if (typeof udp_result_out_rtt_avg_ns === 'undefined') result = '---'; else result = (udp_result_out_rtt_avg_ns / 1e6).toFixed(2) + ' ms';%\nDelay variation: %EVAL if (typeof udp_result_out_rtts_ns === 'undefined' || (typeof udp_result_status !== 'undefined' && (udp_result_status === 'TIMEOUT' || udp_result_status === 'ERROR'))) { if (typeof udp_result_out_delay_standard_deviation_ns !== 'undefined') {result = (udp_result_out_delay_standard_deviation_ns/1e6).toFixed(2) + ' ms';} else { result = '---'; }} else { total = 0; c = 0; for (var rtt in udp_result_out_rtts_ns) { c++; total += Math.abs(udp_result_out_rtts_ns[rtt] - udp_result_out_rtt_avg_ns) } variation = total/c/1e6; result = variation.toFixed(2) + ' ms'; }%",
         "udp.success": "UDP test succeeded. All packets were transferred.",
         "value_cell_id_multiple": "True",
         "value_roaming_international": "International",
@@ -1005,23 +1226,28 @@
         "voip.jitter.outgoing.success": "Outgoing mean jitter is acceptable for VoIP communication.",
         "voip.outgoing.packet.failure": "Outgoing communication is missing. No outgoing voice packet arrived at target.",
         "voip.outgoing.packet.success": "Sending voice packets is possible.",
-        "voip.testinfo": "Test Parameters\nSample Rate: %PARAM voip_objective_sample_rate 1 1%, Bits per Sample: %PARAM voip_objective_bits_per_sample 1 1%\nCall Duration: %PARAM voip_objective_call_duration 1000000 1 f% ms\nPacket Delay: %PARAM voip_objective_delay 1000000 1 f% ms\nPayload Type: %EVAL result=String(nn.getPayloadType(voip_objective_payload))%\nTarget Port: %PARAM voip_objective_out_port 1 1%\n\nTest Results\n\nIncoming Voice Stream:\nMax. Jitter: %PARAM voip_result_in_max_jitter 1000000 2 f% ms\nMean Jitter: %PARAM voip_result_in_mean_jitter 1000000 2 f% ms\nMax. Delta: %PARAM voip_result_in_max_delta 1000000 2 f% ms\nSkew: %PARAM voip_result_in_skew 1000000 2 f% ms\nPackets Received: %PARAM voip_result_in_num_packets 1 1%\nSequence Errors: %PARAM voip_result_in_sequence_error 1 1%\nShortest/Longest Sequence: %PARAM voip_result_in_short_seq 1 1% / %PARAM voip_result_in_long_seq 1 1%\n\nOutgoing Voice Stream:\nMax. Jitter: %PARAM voip_result_out_max_jitter 1000000 2 f% ms\nMean Jitter: %PARAM voip_result_out_mean_jitter 1000000 2 f% ms\nMax. Delta: %PARAM voip_result_out_max_delta 1000000 2 f% ms\nSkew: %PARAM voip_result_out_skew 1000000 2 f% ms\nPackets Received: %PARAM voip_result_out_num_packets 1 1%\nSequence Errors: %PARAM voip_result_out_sequence_error 1 1%\nShortest/Longest Sequence: %PARAM voip_result_out_short_seq 1 1% / %PARAM voip_result_out_long_seq 1 1%",
-        "voip.testinfo.long": "Test Parameters\nSample Rate: %PARAM voip_objective_sample_rate%, Bits per Sample: %PARAM voip_objective_bits_per_sample%\nCall Duration: %PARAM voip_objective_call_duration 1000000 1 f% ms\nPacket Delay: %PARAM voip_objective_delay 1000000 1 f% ms\nPayload Type: %EVAL result=String(nn.getPayloadType(voip_objective_payload))%\n\nTest Results\nIncoming Voice Stream:\nTarget Port: %PARAM voip_objective_in_port%\nMax. Jitter: %PARAM voip_result_in_max_jitter 1000000 2 f% ms\nMean Jitter: %PARAM voip_result_in_mean_jitter 1000000 2 f% ms\nMax. Delta: %PARAM voip_result_in_max_delta 1000000 2 f% ms\nSkew: %PARAM voip_result_in_skew 1000000 2 f% ms\nPackets Received: %PARAM voip_result_in_num_packets%\nSequence Errors: %PARAM voip_result_in_sequence_error%\nShortest/Longest Sequence: %PARAM voip_result_in_short_seq% / %PARAM voip_result_in_long_seq%\n\nOutgoing Voice Stream:\nTarget Port: %PARAM voip_objective_out_port%\nMax. Jitter: %PARAM voip_result_out_max_jitter 1000000 2 f% ms\nMean Jitter: %PARAM voip_result_out_mean_jitter 1000000 2 f% ms\nMax. Delta: %PARAM voip_result_out_max_delta 1000000 2 f% ms\nSkew: %PARAM voip_result_out_skew 1000000 2 f% ms\nPackets Received: %PARAM voip_result_out_num_packets%\nSequence Errors: %PARAM voip_result_out_sequence_error%\nShortest/Longest Sequence: %PARAM voip_result_out_short_seq% / %PARAM voip_result_out_long_seq%\n",
+        "voip.testinfo": "%$IF (voip_result_status!='ERROR' && voip_result_status!='TIMEOUT')% Test Parameters\nSample Rate: %PARAM voip_objective_sample_rate 1 1%, Bits per Sample: %PARAM voip_objective_bits_per_sample 1 1%\nCall Duration: %PARAM voip_objective_call_duration 1000000 1 f% ms\nPacket Delay: %PARAM voip_objective_delay 1000000 1 f% ms\nPayload Type: %EVAL result=String(nn.getPayloadType(voip_objective_payload))%\nTarget Port: %PARAM voip_objective_out_port 1 1%\n\nTest Results\n\nIncoming Voice Stream:\nMax. Jitter: %PARAM voip_result_in_max_jitter 1000000 2 f% ms\nMean Jitter: %PARAM voip_result_in_mean_jitter 1000000 2 f% ms\nMax. Delta: %PARAM voip_result_in_max_delta 1000000 2 f% ms\nSkew: %PARAM voip_result_in_skew 1000000 2 f% ms\nPackets Received: %PARAM voip_result_in_num_packets 1 1%\nSequence Errors: %PARAM voip_result_in_sequence_error 1 1%\nShortest/Longest Sequence: %PARAM voip_result_in_short_seq 1 1% / %PARAM voip_result_in_long_seq 1 1%\n\nOutgoing Voice Stream:\nMax. Jitter: %PARAM voip_result_out_max_jitter 1000000 2 f% ms\nMean Jitter: %PARAM voip_result_out_mean_jitter 1000000 2 f% ms\nMax. Delta: %PARAM voip_result_out_max_delta 1000000 2 f% ms\nSkew: %PARAM voip_result_out_skew 1000000 2 f% ms\nPackets Received: %PARAM voip_result_out_num_packets 1 1%\nSequence Errors: %PARAM voip_result_out_sequence_error 1 1%\nShortest/Longest Sequence: %PARAM voip_result_out_short_seq 1 1% / %PARAM voip_result_out_long_seq 1 1% %$ENDIF (voip_result_status!='ERROR' && voip_result_status!='TIMEOUT')% %$IF (voip_result_status=='ERROR' || voip_result_status=='TIMEOUT')%No results available due to errors.%$ENDIF (voip_result_status=='ERROR' || voip_result_status=='TIMEOUT')%",
+        "voip.testinfo.long": "%$IF (voip_result_status!='ERROR' && voip_result_status!='TIMEOUT')% Test Parameters\nSample Rate: %PARAM voip_objective_sample_rate 1 1%, Bits per Sample: %PARAM voip_objective_bits_per_sample 1 1%\nCall Duration: %PARAM voip_objective_call_duration 1000000 1 f% ms\nPacket Delay: %PARAM voip_objective_delay 1000000 1 f% ms\nPayload Type: %EVAL result=String(nn.getPayloadType(voip_objective_payload))%\nTarget Port: %PARAM voip_objective_out_port 1 1%\n\nTest Results\n\nIncoming Voice Stream:\nMax. Jitter: %PARAM voip_result_in_max_jitter 1000000 2 f% ms\nMean Jitter: %PARAM voip_result_in_mean_jitter 1000000 2 f% ms\nMax. Delta: %PARAM voip_result_in_max_delta 1000000 2 f% ms\nSkew: %PARAM voip_result_in_skew 1000000 2 f% ms\nPackets Received: %PARAM voip_result_in_num_packets 1 1%\nSequence Errors: %PARAM voip_result_in_sequence_error 1 1%\nShortest/Longest Sequence: %PARAM voip_result_in_short_seq 1 1% / %PARAM voip_result_in_long_seq 1 1%\n\nOutgoing Voice Stream:\nMax. Jitter: %PARAM voip_result_out_max_jitter 1000000 2 f% ms\nMean Jitter: %PARAM voip_result_out_mean_jitter 1000000 2 f% ms\nMax. Delta: %PARAM voip_result_out_max_delta 1000000 2 f% ms\nSkew: %PARAM voip_result_out_skew 1000000 2 f% ms\nPackets Received: %PARAM voip_result_out_num_packets 1 1%\nSequence Errors: %PARAM voip_result_out_sequence_error 1 1%\nShortest/Longest Sequence: %PARAM voip_result_out_short_seq 1 1% / %PARAM voip_result_out_long_seq 1 1% %$ENDIF (voip_result_status!='ERROR' && voip_result_status!='TIMEOUT')% %$IF (voip_result_status=='ERROR' || voip_result_status=='TIMEOUT')%No results available due to errors.%$ENDIF (voip_result_status=='ERROR' || voip_result_status=='TIMEOUT')%",
         "voip.timeout": "Test timeout exceeded. Test failed.",
         "web_connectivity.failure": "Target website not reachable",
         "web_connectivity.success": "Target website successfully reached",
-        "web_connectivity.testinfo": "%EVAL result = (typeof mkit_result !== 'undefined') ? ('Test internet connectivity with target: ' + String(nn.prettifyJson(mkit_result))) : 'No result available';%",
+        "web_connectivity.testinfo": "%EVAL result = (typeof mkit_result !== 'undefined') ? 'Test internet connectivity with target: ' + mkit_result.input : 'No result available';%",
         "website.200": "Webpage transferred successfully.",
         "website.error": "Error occured during test.",
         "website.long": "Transfer of %PARAM website_objective_url% took more than %PARAM website_objective_timeout 1000000000 0 f% s.\nDuration: %PARAM website_result_duration_ns 1000000000 1 f% s",
         "website.not_found": "Website not found.",
         "website.short": "Transfer of %PARAM website_objective_url% took less than %PARAM website_objective_timeout 1000000000 0 f% s.\nDuration: %PARAM website_result_duration_ns 1000000000 1 f% s",
-        "website.testinfo": "The transfer of %PARAM website_objective_url% took %PARAM duration_ns 1000000000 1 f% s.\n\nTransferred Data DL: %PARAM website_result_rx_bytes 1000 1 f% kB\nTransferred Data UL: %PARAM website_result_tx_bytes 1000 1 f% kB\nHTTP Status Code: %PARAM website_result_status%",
+        "website.testinfo": "The transfer of %PARAM website_objective_url% took %PARAM duration_ns 1000000000 1 f% s.\n\nTransferred Data DL: %EVAL result = (typeof website_result_rx_bytes !== 'undefined') ? String(website_result_rx_bytes / 1000) + ' kB' : 'n/a';%\nTransferred Data UL: %EVAL result = (typeof website_result_tx_bytes !== 'undefined') ? String(website_result_tx_bytes / 1000) + ' kB' : 'n/a';%\nHTTP Status Code: %PARAM website_result_status%",
         "sip.testinfo": "Total call attempts: %PARAM sip_objective_count 1 1%\nPort: %PARAM sip_objective_port 1 1%\nCall setup success ratio: %EVAL result=nn.formatRatio(sip_result_cssr)%{PERCENT}\nDropped call ratio:%EVAL result=nn.formatRatio(sip_result_dcr)%{PERCENT}",
         "sip.cssr.success": "All calls set up successfully.",
         "sip.cssr.failure": "Failed call attempts detected.",
         "sip.dcr.success": "No dropped calls.",
-        "sip.dcr.failuer": "Dropped calls detected."
+        "sip.dcr.failuer": "Dropped calls detected.",
+        "echo_protocol.success": "Echo protocol test succeeded.",
+        "echo_protocol.failure": "Echo protocol test failed.",
+        "echo_protocol.summary.tcp": "Echo Protocol (TCP)",
+        "echo_protocol.summary.udp": "Echo Protocol (UDP).",
+        "echo_protocol.description": "Port: %PARAM echo_protocol_objective_port 1 1%\nTransport protocol: %EVAL result = echo_protocol_objective_protocol.toUpperCase()%"
       }
     }
   ]

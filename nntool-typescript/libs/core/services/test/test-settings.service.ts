@@ -20,6 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfigService } from '../config.service';
 import { UserInfo, UserService } from '../user.service';
 import { MeasurementAgentType } from '../../../test/models/api/request-info.api';
+import { isElectron } from '@nntool-typescript/utils';
 
 export interface AgentSettings {
   uuid?: string;
@@ -164,7 +165,7 @@ export class TestSettingsService {
       // counter
       app_version_code: 0,
       // Protocol version
-      app_version_name: '0.3',
+      app_version_name: this.configService.getVersion(),
       // browser
       test_thread_type: 'SINGLE',
       test_pre_test_min_chunks: 5,
@@ -184,6 +185,12 @@ export class TestSettingsService {
         }
       }
     };
+
+    //check if we are running in electron and overwrite agent settings
+    if (isElectron()) {
+      this._testSettings.agent_type = MeasurementAgentType.DESKTOP;
+    }
+
     if (config.nettest) {
       this._testSettings.tag = config.nettest.tag;
 

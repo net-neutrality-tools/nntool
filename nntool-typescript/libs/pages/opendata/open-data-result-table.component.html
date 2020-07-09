@@ -5,7 +5,7 @@
 
 <nntool-section-features>
   <nntool-section-content>
-    <dynamic-form [hidden]="!showFilterFields" [filterResponse]="filterResponse" (formChangeCallback)="onFormChangeCallback($event)">
+    <dynamic-form [translationPrefix]="'OPENDATA'" [hidden]="!showFilterFields" [filterResponse]="filterResponse" (formChangeCallback)="onFormChangeCallback($event)">
     </dynamic-form>      
     <input [hidden]="showFilterFields" type="text" #fullTextSearchInput placeholder="{{ 'OPENDATA.FULL_TEXT_PLACEHOLDER' | translate}}"/>
     <br/>

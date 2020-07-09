@@ -27,6 +27,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.Map;
@@ -41,6 +42,7 @@ import at.alladin.nettest.nntool.android.app.util.AlertDialogUtil;
 import at.alladin.nettest.nntool.android.app.util.FunctionalityHelper;
 import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import at.alladin.nettest.nntool.android.app.workflow.WorkflowTarget;
+import at.alladin.nettest.nntool.android.app.workflow.help.HelpFragment;
 import at.alladin.nettest.nntool.android.app.workflow.main.WorkflowTitleParameter;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
@@ -87,6 +89,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onResume() {
         super.onResume();
+        setHasOptionsMenu(true);
         if (rootKey == null) {
             ((MainActivity)getActivity()).updateActionBar(getString(R.string.title_settings));
         } else {
@@ -178,6 +181,24 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     public void setRootKey(String rootKey) {
         this.rootKey = rootKey;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        final Integer helpSectionStringId = getHelpSectionStringId();
+        if (R.id.action_bar_show_help_action == item.getItemId()) {
+            HelpFragment.showHelpFragment(getActivity(), helpSectionStringId, null);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public Integer getTitleStringId() {
+        return R.string.title_settings;
+    }
+
+    public Integer getHelpSectionStringId() {
+        return R.string.help_link_settings_section;
     }
 
     private SwitchPreferenceCompat createQoSSwitchPreference(final Context context, final QoSMeasurementTypeDto type, final SettingsResponse.TranslatedQoSTypeInfo translationInfo) {

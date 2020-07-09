@@ -1,9 +1,9 @@
 /*!
     \file iasclient.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-05-11
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -93,9 +93,6 @@ int main(int argc, char** argv)
 {
 	::DEBUG 			= false;
 	::RUNNING 			= true;
-	::UNREACHABLE 		= false;
-	::FORBIDDEN 		= false;
-	::OVERLOADED 		= false;
 
 	::RTT				= false;
 	::DOWNLOAD 			= false;
@@ -103,9 +100,9 @@ int main(int argc, char** argv)
 
 	long int opt;
 	int tls = 0;
-	string tcp_target_port = "80";
+	string target_port = "80";
 
-	while ( ( opt = getopt( argc, argv, "rdut:nhv" ) ) != -1 )
+	while ( ( opt = getopt( argc, argv, "rdutp:nhv" ) ) != -1 )
 	{
 		switch (opt)
 		{
@@ -120,8 +117,10 @@ int main(int argc, char** argv)
 				break;
 			case 't':
 				tls = 1;
-				tcp_target_port = optarg;
-				if (optopt == 't')
+				break;
+			case 'p':
+				target_port = optarg;
+				if (optopt == 'p')
 				{
 	                show_usage(argv[0]);
                 	return EXIT_SUCCESS;
@@ -175,7 +174,8 @@ int main(int argc, char** argv)
 	jMeasurementParameters["platform"] = "desktop";
 	jMeasurementParameters["clientos"] = "linux";
 	jMeasurementParameters["wsTLD"] = "net-neutrality.tools";
-	jMeasurementParameters["wsTargetPort"] = tcp_target_port;
+	jMeasurementParameters["wsTargetPort"] = target_port;
+	jMeasurementParameters["wsTargetPortRtt"] = target_port;
 	jMeasurementParameters["wsWss"] = to_string(tls);
 	jMeasurementParameters["wsAuthToken"] = "placeholderToken";
 	jMeasurementParameters["wsAuthTimestamp"] = "placeholderTimestamp";
@@ -211,6 +211,15 @@ int main(int argc, char** argv)
  */
 void measurementStart(string measurementParameters)
 {
+    ::PERFORMED_RTT 		= false;
+    ::PERFORMED_DOWNLOAD 	= false;
+    ::PERFORMED_UPLOAD 		= false;
+    ::hasError 				= false;
+
+	::UNREACHABLE 			= false;
+	::FORBIDDEN 			= false;
+	::OVERLOADED 			= false;
+
 	::TCP_STARTUP	= 3000000;
 	conf.sProvider 	= "nntool";
 
@@ -231,6 +240,7 @@ void measurementStart(string measurementParameters)
     //wsTargets 		- ["peer-ias-de-01"]
     //wsTLD 			- "net-neutrality.tools"
     //wsTargetPort		- "80"
+	//wsTargetPortRtt   - "80"
     //wsWss 			- "0"
     //wsAuthToken 		- placeholderToken
     //wsAuthTimestamp	- placeholderTimestamp
@@ -259,6 +269,7 @@ void measurementStart(string measurementParameters)
 
 	pXml->writeString(conf.sProvider,"DL_PORT",jMeasurementParameters["wsTargetPort"].string_value());
 	pXml->writeString(conf.sProvider,"UL_PORT",jMeasurementParameters["wsTargetPort"].string_value());
+	pXml->writeString(conf.sProvider,"PING_PORT",jMeasurementParameters["wsTargetPortRtt"].string_value());
 
 	pXml->writeString(conf.sProvider,"TLS",jMeasurementParameters["wsWss"].string_value());
 	#ifdef __ANDROID__
@@ -387,7 +398,8 @@ void show_usage(char* argv0)
 	cout<< "  -r             - Perform RTT measurement       				" <<endl;
 	cout<< "  -d             - Perform Download measurement  				" <<endl;
 	cout<< "  -u             - Perform Upload measurement    				" <<endl;
-	cout<< "  -t port        - Enable TLS for TCP Connections on stated port" <<endl;
+	cout<< "  -p port        - Target Port to use    						" <<endl;
+	cout<< "  -t             - Enable TLS for TCP Connections               " <<endl;
 	cout<< "  -n             - Show debugging output	 	 				" <<endl;
 	cout<< "  -h             - Show Help                     				" <<endl;
 	cout<< "  -v             - Show Version                  				" <<endl;

@@ -1,0 +1,50 @@
+[[opendata-collector-service]]
+= Open data collector service
+
+This service is responsible for importing open data measurements from BEREC-compatible systems.
+These systems have to provide the search-service API, which is used to request new measurements.
+
+== Configuration
+
+The open data import is configured as follows:
+
+----
+opendata-collector:
+  opendata-import:
+    enabled: true
+    config:
+      batch-size: 20
+      batch-run-limit: 10
+      time-between-requests: 1000 #ms
+    sources:
+    - name: nntool
+      url: https://search-de-01.net-neutrality.tools/api/v1/measurements
+      cron: "0 50 2 * * *"
+      enabled: false
+----
+
+The `opendata-collector` configuration object contains a `opendata-import` object, which contains
+the relevant options for the open data import. The following table describes the basic configuration options:
+
+[cols="4,2,4,10",options=header]
+|===
+|Option                         |Type      |Default     |Description
+|`enabled`                      |boolean   |`false`     |Enables (`true`) or disables (`false`) the whole open data import (= all import sources).
+|`config.batch-size`            |integer   |`20`        |Defines how many measurements will be inserted at once (batch-processing).
+|`config.batch-run-limit`       |integer   |`10`        |Defines how many pages of (`config.batch-size`) measurements should be imported on each run.
+|`config.time-between-requests` |long      |`1000`      |Defines how much time (in milliseconds) should pass between two subsequent requests to the import sources.
+|===
+
+The maximum amount of measurements imported on each run is `config.batch-size` multiplied by `config.batch-run-limit`, which evaluates to 200 measurements using
+default settings.
+
+Additionally, an arbitrary number of import sources can be defined. The following table describes the configuration for the import sources:
+
+[cols="4,2,4,10",options=header]
+|===
+|Option         |Type      |Default     |Description
+|`name`         |string    |            |The name of this import source.
+|`url`          |string    |            |The URL of the target's search-service, including the path `/api/v1/measurements`.
+|`cron`         |string    |            |A cronjob like syntax, but with seconds, to define when this import source should be queried.
+|`enabled`      |boolean   |`false`     |Enables (`true`) or disables (`false`) this import source.
+|===

@@ -1,9 +1,9 @@
 /*!
     \file tcpserver.h
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-03-17
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -39,7 +39,9 @@ class CTcpServer : public CBasisThread
         int mTargetPort;
         int mTargetPortTraceroute;
         bool mTlsSocket;
-        
+        int mIpType;
+        string mIp;
+
         int mSock;
         
         std::unique_ptr<CConnection> mConnection;
@@ -49,7 +51,9 @@ class CTcpServer : public CBasisThread
 		
 		virtual ~CTcpServer();
 
-        CTcpServer(int nTargetPort, int nTargetPortTraceroute, bool nTlsSocket);
+        CTcpServer(int nTargetPort, int nTargetPortTraceroute, bool nTlsSocket) : CTcpServer(nTargetPort, nTargetPortTraceroute, 0 , "", nTlsSocket) {};
+
+        CTcpServer(int nTargetPort, int nTargetPortTraceroute, int nIpType, string sIp, bool nTlsSocket);
 
         int run() override;
 };

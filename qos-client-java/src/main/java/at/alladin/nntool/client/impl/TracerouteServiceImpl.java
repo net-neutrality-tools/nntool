@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2017-2019 alladin-IT GmbH
+ * Copyright 2017-2020 alladin-IT GmbH
  * Copyright 2016 SPECURE GmbH
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");

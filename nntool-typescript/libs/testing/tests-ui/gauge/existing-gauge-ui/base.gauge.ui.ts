@@ -242,7 +242,7 @@ export abstract class BaseMeasurementGauge {
       this.setServerView('-');
       return;
     }
-    state.technology = 'BROWSER';
+
     const noState: boolean = this.currentState == null;
     if (noState) {
       this.currentState = new GaugeUIState();
@@ -354,14 +354,14 @@ export abstract class BaseMeasurementGauge {
         this.setValueView('' + state.ping + ' ' + this.translations.DURATION_MS);
       }
     }
-    if (noState || (this.currentState.downMBit !== state.downMBit && state.gaugeUIState === GaugeUIStateEnum.DOWN)) {
+    if (noState || (this.currentState.downMBit !== state.downMBit && (state.gaugeUIState === GaugeUIStateEnum.DOWN || state.gaugeUIState === GaugeUIStateEnum.DOWN_OK))) {
       if (state.downMBit != null) {
         this.setDownloadView('' + state.downMBit + ' ' + this.translations.SPEED_MBPS);
         this.setValueView('' + state.downMBit + ' ' + this.translations.SPEED_MBPS);
         value = this.logSpeed(state.downBit);
       }
     }
-    if (noState || (this.currentState.upMBit !== state.upMBit && state.gaugeUIState === GaugeUIStateEnum.UP)) {
+    if (noState || (this.currentState.upMBit !== state.upMBit && (state.gaugeUIState === GaugeUIStateEnum.UP || state.gaugeUIState === GaugeUIStateEnum.UP_OK))) {
       if (state.upMBit != null) {
         this.setUploadView('' + state.upMBit + ' ' + this.translations.SPEED_MBPS);
         this.setValueView('' + state.upMBit + ' ' + this.translations.SPEED_MBPS);

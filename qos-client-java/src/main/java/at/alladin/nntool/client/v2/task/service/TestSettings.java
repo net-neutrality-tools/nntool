@@ -32,6 +32,7 @@ public class TestSettings {
 	private File cacheFolder;
 	private TrafficService trafficService;
 	private WebsiteTestService websiteTestService;
+	private AudioStreamingService audioStreamingService;
 	private Class<? extends TracerouteService> tracerouteServiceClazz;
 	private Class<? extends MkitService> mkitServiceClazz;
 	private final List<TestProgressListener> testProgressListenerList = new ArrayList<TestProgressListener>();
@@ -163,6 +164,14 @@ public class TestSettings {
 
 	public void setMkitServiceClazz(Class<? extends MkitService> mkitServiceClazz) {
 		this.mkitServiceClazz = mkitServiceClazz;
+	}
+
+	public AudioStreamingService getAudioStreamingService() {
+		return audioStreamingService;
+	}
+
+	public void setAudioStreamingService(AudioStreamingService audioStreamingService) {
+		this.audioStreamingService = audioStreamingService;
 	}
 
 	public List<TestProgressListener> getTestProgressListener() {

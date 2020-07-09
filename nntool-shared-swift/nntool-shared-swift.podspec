@@ -15,10 +15,10 @@ Pod::Spec.new do |s|
 
     s.source_files = 'nntool-shared-swift/Sources/**/*.swift'
 
-    s.dependency 'SwiftLint', '~> 0.31.0'
-    s.dependency 'XCGLogger', '~> 7.0.0'
-    s.dependency 'CodableJSON', '~> 1.1.4'
-    s.dependency 'Repeat', '~> 0.5.7'
+    s.dependency 'SwiftLint', '~> 0.39.1'
+    s.dependency 'XCGLogger', '~> 7.0.1'
+    s.dependency 'CodableJSON', '~> 1.2.0'
+    s.dependency 'Repeat', '~> 0.5.8'
 
-    #s.dependency 'Nimble', '~> 8.0.1'
+    #s.dependency 'Nimble', '~> 8.0.5'
 end

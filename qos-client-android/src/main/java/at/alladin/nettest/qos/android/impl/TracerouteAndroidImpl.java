@@ -1,13 +1,13 @@
 /*******************************************************************************
- * Copyright 2016-2019 alladin-IT GmbH
+ * Copyright 2016-2020 alladin-IT GmbH
  * Copyright 2016 SPECURE GmbH
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,16 +35,16 @@ import java.util.regex.Pattern;
 import at.alladin.nntool.util.tools.TracerouteService;
 
 /**
- * 
- * @author lb
+ *
+ * @author lb@alladin.at
  *
  */
 public class TracerouteAndroidImpl implements TracerouteService {
-	
+
 	public static final class PingException extends IOException {
-		
+
 		/**
-		 * 
+		 *
 		 */
 		private static final long serialVersionUID = 1L;
 
@@ -52,7 +52,7 @@ public class TracerouteAndroidImpl implements TracerouteService {
 			super(msg);
 		}
 	}
-	
+
 	public final static class PingDetailImpl implements HopDetail {
 		private final int transmitted;
 		private final int received;
@@ -60,17 +60,17 @@ public class TracerouteAndroidImpl implements TracerouteService {
 		private final int packetLoss;
 		private long time;
 		private final String fromIp;
-		
+
 		public final static Pattern PATTERN_PING_PACKET =  Pattern.compile("([\\d]*) packets transmitted, ([\\d]*) received, ([+-]?([\\d]*) errors, )?([\\d]*)% packet loss, time ([\\d]*)ms");
 		//public final static Pattern PATTERN_FROM_IP =  Pattern.compile("[fF]rom ([\\.:-_\\d\\w\\s\\(\\)]*):(.*time=([\\d\\.]*))?");
 		public final static Pattern PATTERN_FROM_IP =  Pattern.compile("[fF]rom ([\\.\\-_\\d\\w\\s\\(\\)]*)(:|icmp)+(.*time=([\\d\\.]*))?");
-		
+
 		public PingDetailImpl(String pingResult, final long durationNs) {
 			System.out.println(pingResult);
 
 			time = durationNs;;
 			final Matcher pingPacket = PATTERN_PING_PACKET.matcher(pingResult);
-			
+
 			if (pingPacket.find()) {
 				transmitted = Integer.parseInt(pingPacket.group(1));
 				received = Integer.parseInt(pingPacket.group(2));
@@ -89,7 +89,7 @@ public class TracerouteAndroidImpl implements TracerouteService {
 				packetLoss = 0;
 				errors = 0;
 			}
-			
+
 			final Matcher fromIpMatcher = PATTERN_FROM_IP.matcher(pingResult);
 			if (fromIpMatcher.find()) {
 				fromIp = fromIpMatcher.group(1);
@@ -101,9 +101,9 @@ public class TracerouteAndroidImpl implements TracerouteService {
 			else {
 				fromIp = "*";
 			}
-			
+
 		}
-		
+
 		public long getTime() {
 			return time;
 		}
@@ -139,7 +139,7 @@ public class TracerouteAndroidImpl implements TracerouteService {
 					+ packetLoss + ", time=" + (time / 1000000) + "ms, fromIp=" + fromIp
 					+ "]";
 		}
-		
+
 		public JSONObject toJson() {
 			JSONObject json = new JSONObject();
 			try {
@@ -160,17 +160,17 @@ public class TracerouteAndroidImpl implements TracerouteService {
 			return result;
 		}
 	}
-	
+
 	private String host;
 	private int maxHops;
 	private AtomicBoolean isRunning = new AtomicBoolean(false);
 	private boolean hasMaxHopsExceeded = true;
 	private List<HopDetail> resultList;
-	
+
 	public TracerouteAndroidImpl() {
-		
+
 	}
-	
+
 	public String getHost() {
 		return host;
 	}
@@ -193,26 +193,26 @@ public class TracerouteAndroidImpl implements TracerouteService {
 			resultList = new ArrayList<>();
 		}
 
-        final Runtime runtime = Runtime.getRuntime();
-    	
-    	for (int i = 1; i <= maxHops; i++) {
-    		if (Thread.interrupted() || !isRunning.get()) {
-    			throw new InterruptedException();
-    		}
-        	final long ts = System.nanoTime();
-            final Process mIpAddrProcess = runtime.exec("/system/bin/ping -c 1 -t " + i + " -W2 " + host);
-            final String proc = readFromProcess(mIpAddrProcess);
-            final PingDetailImpl pingDetail = new PingDetailImpl(proc, System.nanoTime() - ts);
-            resultList.add(pingDetail);
-            if (pingDetail.getReceived() > 0) {
-            	hasMaxHopsExceeded = false;
-            	break;
-            }
-    	}
-    	    	
-    	return resultList;
+		final Runtime runtime = Runtime.getRuntime();
+
+		for (int i = 1; i <= maxHops; i++) {
+			if (Thread.interrupted() || !isRunning.get()) {
+				throw new InterruptedException();
+			}
+			final long ts = System.nanoTime();
+			final Process mIpAddrProcess = runtime.exec("/system/bin/ping -c 1 -t " + i + " -W2 " + host);
+			final String proc = readFromProcess(mIpAddrProcess);
+			final PingDetailImpl pingDetail = new PingDetailImpl(proc, System.nanoTime() - ts);
+			resultList.add(pingDetail);
+			if (pingDetail.getReceived() > 0) {
+				hasMaxHopsExceeded = false;
+				break;
+			}
+		}
+
+		return resultList;
 	}
-	
+
 
 	/**
 	 * stop the ping tool task
@@ -221,33 +221,33 @@ public class TracerouteAndroidImpl implements TracerouteService {
 	public boolean stop() {
 		return isRunning.getAndSet(false);
 	}
-	
+
 	public static String readFromProcess(Process proc) throws PingException {
 		BufferedReader brErr = null;
 		BufferedReader br = null;
 		StringBuilder sbErr = new StringBuilder();
 		StringBuilder sb = new StringBuilder();
-		
+
 		try {
 			brErr = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
-        	String currInputLine = null;
-	        
-        	while((currInputLine = brErr.readLine()) != null) {
-        		sbErr.append(currInputLine);
-        		sbErr.append("\n");
-        	}
-			
-        	if (sbErr.length() > 0) {
-        		throw new PingException(sbErr.toString());
-        	}
+			String currInputLine = null;
+
+			while((currInputLine = brErr.readLine()) != null) {
+				sbErr.append(currInputLine);
+				sbErr.append("\n");
+			}
+
+			if (sbErr.length() > 0) {
+				throw new PingException(sbErr.toString());
+			}
 
 			br = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-        	currInputLine = null;
-	        
-        	while((currInputLine = br.readLine()) != null) {
-        		sb.append(currInputLine);
-        		sb.append("\n");
-        	}
+			currInputLine = null;
+
+			while((currInputLine = br.readLine()) != null) {
+				sb.append(currInputLine);
+				sb.append("\n");
+			}
 		}
 		catch (PingException e) {
 			throw e;
@@ -267,7 +267,7 @@ public class TracerouteAndroidImpl implements TracerouteService {
 				}
 			} catch (IOException e) { }
 		}
-		
+
 		return sb.toString();
 	}
 

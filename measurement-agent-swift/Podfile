@@ -8,9 +8,9 @@ inhibit_all_warnings!
 abstract_target 'All' do
   pod 'nntool-shared-swift', :path => '../nntool-shared-swift'
 
-  pod 'Siesta', '~> 1.4.3'
+  pod 'Siesta', '~> 1.5.0'
   pod 'ReachabilitySwift', '~> 5.0.0'
-  pod 'CocoaAsyncSocket', '~> 7.6.3'
+  pod 'CocoaAsyncSocket', '~> 7.6.4'
 
   target 'MeasurementAgentKit_iOS' do
     platform :ios, '10.0'
@@ -19,17 +19,7 @@ abstract_target 'All' do
   target 'MeasurementAgentKitTests' do
       platform :ios, '10.0'
 
-      pod 'Nimble', '~> 8.0.4'
-  end
-end
-
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    if ['Siesta'].include? "#{target}"
-      target.build_configurations.each do |config|
-        config.build_settings['SWIFT_VERSION'] = '4.2'
-      end
-    end
+      pod 'Nimble', '~> 8.0.7'
   end
 end
 

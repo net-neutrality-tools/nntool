@@ -1,9 +1,9 @@
 /*!
     \file tool.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-05-27
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -535,7 +535,7 @@ struct addrinfo* CTool::getIpsFromHostname( string sString, bool bReachable )
 	}
 	else
 	{
-		query.ai_flags = AI_V4MAPPED;
+		query.ai_flags = AI_ADDRCONFIG;
 	}
 	
 	if( ( error = getaddrinfo(sString.c_str(), NULL, &query, &ips) ) != 0 )
@@ -595,6 +595,7 @@ int CTool::randomData(vector<char> &vVector, int size)
 	// Provide seed for the random number generator.
 	srand(CTool::get_timestamp());
 	
+	vVector.clear();
 	for( int i = 0; i < size; i++ )
 		vVector.push_back( (char)randomData() );
 	

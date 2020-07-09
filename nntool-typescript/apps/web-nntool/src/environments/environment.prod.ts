@@ -43,7 +43,7 @@ export const environment = {
     statistic: 'https://statistic-de-01.net-neutrality.tools/api/v1/'
   },
   keys: {
-    google: ''
+    bing: ''
   },
   classificationColorStyle: 'background',
   colors: {
@@ -80,10 +80,7 @@ export const environment = {
       'at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerRequest'
   },
   map: {
-    showLegend: true,
     view: {
-      default_map: 'google',
-      map_provider: ['google', 'googleSatellite', 'googleTerrain', 'googleHybrid', 'osm'],
       position: [48.209, 16.37],
       zoom_initial: 12,
       zoom_min: 1,
@@ -94,18 +91,6 @@ export const environment = {
     },
     filter_defaults: {
       map_options: 'all/download'
-    },
-    options: {
-      statistical_method: [],
-      map_options: [],
-      period: [],
-      technology: [],
-      operator: [],
-      layer_type: [
-        { value: 'hybrid', name: 'MAP.SELECT.LAYER.HYBRID', unit: '', default: true },
-        { value: 'heatmap', name: 'MAP.SELECT.LAYER.HEATMAP', unit: '' },
-        { value: 'points', name: 'MAP.SELECT.LAYER.POINTS', unit: '' }
-      ]
     }
   },
   opendata: {

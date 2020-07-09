@@ -46,6 +46,9 @@ import { LocationService } from '../core/services/location.service';
 import { PointInTimeValueAPI } from './models/measurements/point-in-time-value.api';
 import { WebSocketInfo } from '@nntool-typescript/core/models/lmap/models/lmap-report/lmap-result/extensions/web-socket-info.model';
 import { NumStreamsInfo } from '@nntool-typescript/core/models/lmap/models/lmap-report/lmap-result/extensions/num-streams-info.model';
+import { TracerouteTestState } from '@nntool-typescript/testing/tests-implementation/traceroute/traceroute-test-state';
+import { BasicTestState } from '@nntool-typescript/testing/enums/basic-test-state.enum';
+import { isElectron } from '@nntool-typescript/utils';
 
 export { TestGuard } from './test.guard';
 
@@ -56,10 +59,11 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
   @ViewChild(ServerSelectionComponent, { static: false }) public serverSelectionComponent: ServerSelectionComponent;
   public speedConfig: MeasurementSettings = undefined; // TODO: change to measurement configuration
   public qosConfig: MeasurementTypeParameters = undefined; // TODO: change to measurement configuration
+  public runningInElectron = isElectron();
 
   protected measurementControl: LmapControl = undefined;
 
-  private readonly webNetworkType: number = 98;
+  private readonly webNetworkType: number = 95;
   private readonly paramSpeed: string = 'parameters_speed';
   private readonly paramServerPort: string = 'server_port';
   private readonly paramServerAddress: string = 'server_addr_default';
@@ -223,27 +227,81 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
   }
 
   public portBlockingTestFinished(portBlockingTestResult: PortBlockingTestState): void {
-    const qosMeasurementResult: QoSMeasurementResult = new QoSMeasurementResult();
-    qosMeasurementResult.deserialize_type = 'qos_result';
-    qosMeasurementResult.reason = null;
-    qosMeasurementResult.relative_end_time_ns = null;
-    qosMeasurementResult.relative_start_time_ns = null;
-    qosMeasurementResult.status = null;
-    qosMeasurementResult.results = [];
-
+    const qosMeasurementResult: QoSMeasurementResult = this.getCurrentQoSResult();
     for (const port of portBlockingTestResult.types[0].ports) {
       qosMeasurementResult.results.push({
-        udp_result_out_num_packets: 1,
-        udp_objective_out_num_packets: 1,
+        udp_result_out_num_packets: port.packets.sent,
+        udp_result_out_rtt_avg_ns: port.delay ? port.delay.average_ns : null,
+        udp_result_out_delay_standard_deviation_ns: port.delay ? port.delay.standard_deviation_ns : null,
+        udp_objective_out_num_packets: port.packets.requested_packets,
         qos_test_uid: port.uid,
         test_type: 'udp',
-        udp_result_out_response_num_packets: port.reachable ? 1 : 0,
-        udp_result_out_packet_loss_rate: port.reachable ? 0 : 100,
+        udp_result_out_response_num_packets: port.packets.received,
+        udp_result_out_packet_loss_rate: port.packets.sent ? (port.packets.lost / port.packets.sent) * 100 : null,
         udp_objective_out_port: port.number
       });
     }
+    
+  }
 
-    this.testResults.push(qosMeasurementResult);
+  public tracerouteTestFinished(tracerouteTestResult: TracerouteTestState): void {
+    if (!tracerouteTestResult.result || !tracerouteTestResult.result.is_reverse) {
+      return;
+    }
+    const qosResult: QoSMeasurementResult = this.getCurrentQoSResult();
+
+    let traceroute_result_details: Array<any> = new Array();
+    if (tracerouteTestResult.result && tracerouteTestResult.result.hops) {
+      for (const hop of tracerouteTestResult.result.hops) {
+        traceroute_result_details.push({
+          host: hop.ip,
+        })
+      }
+    }
+
+    qosResult.results.push({
+      traceroute_result_details: traceroute_result_details,
+      traceroute_result_status:  traceroute_result_details.length > 0 ? "OK" : "ERROR",
+      duration_ns: !tracerouteTestResult.result.startTimeNs ? undefined : !tracerouteTestResult.result.endTimeNs ? undefined : tracerouteTestResult.result.endTimeNs - tracerouteTestResult.result.startTimeNs,
+      test_type: "traceroute",
+      traceroute_objective_max_hops: tracerouteTestResult.result.max_hops,
+      traceroute_objective_timeout: tracerouteTestResult.result.timeout,
+      traceroute_objective_is_reverse: tracerouteTestResult.result.is_reverse,
+      qos_test_uid: tracerouteTestResult.result.qos_test_uid,
+      traceroute_objective_host: tracerouteTestResult.result.host,
+      traceroute_objective_port: tracerouteTestResult.result.port,
+      traceroute_result_hops: traceroute_result_details.length,
+    });
+    
+  }
+
+  /**
+   * Returns a QoSMeasurementResult to which any new results shall be appended to
+   * (either creates a new one or, if one was already created, returns the previously created one)
+   */
+  private getCurrentQoSResult(): QoSMeasurementResult {
+
+    let qosResult: QoSMeasurementResult = undefined;
+    if (this.testResults.length > 0) {
+      for (let singleTest of this.testResults) {
+        if (singleTest instanceof QoSMeasurementResult) {
+          qosResult = singleTest;
+        }
+      }
+    }
+     
+    if (!qosResult) {
+      qosResult = new QoSMeasurementResult();
+      qosResult.deserialize_type = 'qos_result';
+      qosResult.reason = null;
+      qosResult.relative_end_time_ns = null;
+      qosResult.relative_start_time_ns = null;
+      qosResult.status = null;
+      qosResult.results = [];
+      this.testResults.push(qosResult);
+    }
+  
+    return qosResult;
   }
 
   private requestMeasurement(): void {
@@ -293,6 +351,14 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
               return option.name === 'parameters_qos' ? option['measurement-parameters']['objectives'] : config;
               /* tslint:enable:no-string-literal */
             }, {});
+            //remove udp measurements not intended for the website
+            for (let i = 0; i < this.qosConfig.UDP.length; i++) {
+              let elem = this.qosConfig.UDP[i];
+              if (elem.allowed_on_web !== undefined && elem.allowed_on_web !== null && !elem.allowed_on_web) {
+                this.qosConfig.UDP.splice(i--, 1);
+              }
+            }
+
             this.qosControl = task;
             break;
         }
@@ -338,12 +404,21 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
     if (this.network_info) {
       const npit_info = lmapReport.time_based_result.network_points_in_time[0];
 
-      if (this.network_info.dsk_lan_detected) {
-        // LAN
-        npit_info.network_type_id = 98;
-      } else {
-        // WLAN
-        npit_info.network_type_id = 99;
+      if (typeof this.network_info.dsk_lan_detected !== 'undefined')
+      {
+        if (this.network_info.dsk_lan_detected)
+        {
+          // LAN
+          npit_info.network_type_id = 98;
+        } else {
+          // WLAN
+          npit_info.network_type_id = 99;
+        }
+      }
+      else
+      {
+        // UNKNOWN
+        npit_info.network_type_id = 95;
       }
     }
 

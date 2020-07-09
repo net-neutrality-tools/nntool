@@ -1,9 +1,9 @@
 /*!
     \file tcptraceroutehandler.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-01-14
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -209,7 +209,7 @@ void CTcpTracerouteHandler::send_response(string rOrigin, string rConnection, st
     response += "Date: " + CTool::get_timestamp_string() + "\r\n";
     response += keepAlive;
     response += noCache;
-    response += "access-control-allow-HTTP_ORIGIN: " + rOrigin + "\r\n\r\n";
+    response += "access-control-allow-origin: " + rOrigin + "\r\n\r\n";
     response += responseBody;
     
     mAcceptedConnection->send(response.c_str(), response.size(), 0);

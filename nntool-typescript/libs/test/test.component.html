@@ -29,6 +29,15 @@
         (statusChange)="($event)"
       >
       </app-speed-test-gauge>
+      <app-traceroute-test-bar 
+        *ngIf="user.executeQosMeasurement"
+        #startableTest 
+        [config]="qosConfig"
+        (finished)="tracerouteTestFinished($event)" 
+        (errorMsgChange)="errorMsg = $event" 
+        (statusChange)="($event)"
+      >
+      </app-traceroute-test-bar>
       <app-port-blocking-test-bar
         *ngIf="user.executeQosMeasurement"
         #startableTest
@@ -137,19 +146,21 @@
         </div>
         <div class="column">
           <header class="column-header">
-            <div class="icon icon-device" [title]="'RESULT.DEVICE' | translate"></div>
+            <div class="icon icon-settings"></div>
             <h3 id="nettest-device"></h3>
             <p>
-              <small>{{ 'RESULT.DEVICE' | translate }}</small>
+              <small>{{ 'RESULT.OS' | translate }}</small>
             </p>
           </header>
         </div>
         <div class="column">
           <header class="column-header">
-            <div class="icon icon-wifi" [title]="'RESULT.TECHNOLOGY' | translate"></div>
+            <div class="icon icon-wifi" *ngIf="runningInElectron" [title]="'RESULT.DETAIL.KEY.connection' | translate"></div>
+            <div class="icon icon-check" *ngIf="!runningInElectron"></div>
             <h3 id="nettest-technology"></h3>
             <p>
-              <small>{{ 'RESULT.TECHNOLOGY' | translate }}</small>
+              <small *ngIf="runningInElectron">{{ 'RESULT.DETAIL.KEY.connection' | translate }}</small>
+              <small *ngIf="!runningInElectron">{{ "Browser" }}</small>
             </p>
           </header>
         </div>

@@ -26,6 +26,7 @@ import { SpeedTestConfig } from './speed-test-config';
 import { SpeedTestState } from './speed-test-state';
 import { UserService } from '../../../core/services/user.service';
 import { IasService } from '@nntool-typescript/ias/ias.service';
+import { isElectron } from '@nntool-typescript/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -68,8 +69,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
       wsWss: config.encryption ? 1 : 0,
       wsAuthToken: 'placeholderToken',
       wsAuthTimestamp: 'placeholderTimestamp',
-      performRouteToClientLookup: true,
-      routeToClientTargetPort: 8080,
+      performRouteToClientLookup: false,
       rtt: {
         performMeasurement: this.userService.user.executePingMeasurement
       },
@@ -117,7 +117,7 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
     state.provider = null;
     state.location = null;
     state.device = null;
-    state.technology = 'BROWSER'; // TODO: desktop
+    state.technology = null;
 
     return state;
   };
@@ -137,7 +137,33 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
       }
 
       const currentState = JSON.parse(data);
-      state.device = currentState.device_info.browser_info.name.split(' ')[0];
+
+      state.device = currentState.device_info.os_info.name + ' ' + currentState.device_info.os_info.version;
+
+      //show os and connection on DESKTOP, browser and browser version on BROWSER
+      if (isElectron()) {
+        if (currentState.network_info) {
+          if (typeof currentState.network_info.dsk_lan_detected !== 'undefined') {
+            if (currentState.network_info.dsk_lan_detected) {
+              // LAN
+              state.technology = 'LAN';
+            } else {
+              // WLAN
+              state.technology = 'WLAN';
+            }
+          } else {
+            // UNKNOWN
+            state.technology = 'UNKNOWN';
+          }
+        }
+      } else {
+        state.technology = currentState.device_info.browser_info.name.split(' ')[0] + ' ' + currentState.device_info.browser_info.version;
+      }
+
+      if (typeof currentState.peer_info !== 'undefined' && typeof currentState.peer_info.url !== 'undefined') {
+        state.serverName = currentState.peer_info.url;
+      }
+
       switch (currentState.test_case) {
         case 'rtt':
           if (currentState.cmd === 'report') {

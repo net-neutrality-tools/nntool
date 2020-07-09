@@ -22,18 +22,22 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import at.alladin.nettest.qos.QoSMeasurementClient;
 import at.alladin.nettest.qos.QoSMeasurementClientControlListener;
 import at.alladin.nettest.qos.android.exception.NoClientProvidedException;
 import at.alladin.nettest.qos.android.exception.NoContextProvidedException;
+import at.alladin.nettest.qos.android.impl.AudioStreamingServiceAndroidImpl;
 import at.alladin.nettest.qos.android.impl.MkitServiceAndroidImpl;
 import at.alladin.nettest.qos.android.impl.TracerouteAndroidImpl;
 import at.alladin.nettest.qos.android.impl.TrafficServiceImpl;
 import at.alladin.nettest.qos.android.impl.WebsiteTestServiceImpl;
 import at.alladin.nettest.qos.android.util.HelperFunctions;
+import at.alladin.nntool.client.v2.task.AudioStreamingTask;
 import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.client.ClientHolder;
 import at.alladin.nntool.client.QualityOfServiceTest;
@@ -114,6 +118,7 @@ public class QoSMeasurementClientAndroid extends QoSMeasurementClient implements
             final TestSettings qosTestSettings = new TestSettings();
             qosTestSettings.setCacheFolder(context.getCacheDir());
             qosTestSettings.setWebsiteTestService(new WebsiteTestServiceImpl(context));
+            qosTestSettings.setAudioStreamingService(new AudioStreamingServiceAndroidImpl(context));
             qosTestSettings.setTrafficService(new TrafficServiceImpl());
             qosTestSettings.setTracerouteServiceClazz(TracerouteAndroidImpl.class);
             qosTestSettings.setMkitServiceClazz(MkitServiceAndroidImpl.class);

@@ -70,8 +70,8 @@ public abstract class CachingAndReloadingMessageSource<T> extends AbstractMessag
 			}
 		}
 		
-		// fallback to English
-		logger.debug("Translation of code '{}' not found for locale '{}', falling back to English", code, locale);
+		// fallback to FALLBACK_LOCALE
+		logger.debug("Translation of code '{}' not found for locale '{}', falling back to FALLBACK_LOCALE ('{}')", code, locale, FALLBACK_LOCALE);
 		
 		load(FALLBACK_LOCALE);
 		translationObject = translationMap.get(FALLBACK_LOCALE).translation;

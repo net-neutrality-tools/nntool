@@ -32,6 +32,8 @@ import at.alladin.nettest.shared.server.config.ElasticSearchProperties;
 @EnableConfigurationProperties(ExportProperties.class)
 public class SearchServiceProperties {
 	
+	private String settingsUuid;
+	
 	@NestedConfigurationProperty
 	private final ElasticSearchProperties elasticsearch = new ElasticSearchProperties();
 	
@@ -39,6 +41,14 @@ public class SearchServiceProperties {
 	private final ExportProperties export = new ExportProperties();
 	
 	private final Search search = new Search();
+	
+	public String getSettingsUuid() {
+		return settingsUuid;
+	}
+	
+	public void setSettingsUuid(String settingsUuid) {
+		this.settingsUuid = settingsUuid;
+	}
 	
 	public ElasticSearchProperties getElasticsearch() {
 		return elasticsearch;

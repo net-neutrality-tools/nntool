@@ -1,9 +1,9 @@
 /*!
     \file Tool.js
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-02-19
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -24,7 +24,7 @@ var network         = require('network');
 var os              = require('os');
 var async           = require('async');
 var exec            = require('child_process').exec;
-var os_functions    = require(__dirname + '/modules/' + process.platform + '.js');
+var os_functions    = require(require('electron').remote.app.getAppPath() + '/modules/' + process.platform + '.js');
 var ping            = require('ping');
 var dns             = require('dns');
 var fetch           = require('isomorphic-fetch');
@@ -100,6 +100,13 @@ Tool.prototype.getInterfaceConfiguration = function()
 
                 for (var index in interfaces)
                 {
+                    //check for link-local ipv4 addresses
+                    if (typeof interfaces[index].ipv4_address !== 'undefined' && interfaces[index].ipv4_address.includes('169.254.'))
+                    {
+                        interfaces.splice(index, 1);
+                        continue;
+                    } 
+
                     if (interfaces[index].ipv6Primary)
                     {
                         interfacePrimary = interfaces[index];

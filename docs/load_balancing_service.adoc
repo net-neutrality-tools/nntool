@@ -1,0 +1,145 @@
+[[load-balancing-service]]
+= Load balancing service
+
+== Load balancing service (measurement peer)
+
+The mesaurement peers provide an API to request their current workload in terms if cpu and memory load, rx and tx interface rates, as well as an indicator if the peer is in overload state. To enable load monitoring, provide the requested configuration within the `monitoring` object in `config.json` of ias-server.
+
+The following options are available:
+
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Description
+|`enabled`
+|boolean
+|`true`
+|Enables (`true`) or disables (`false`) load monitoring
+|`interface`
+|string
+|`eth1`
+|Interface which should be monitored for rx and tx rates
+|`bandwidth_bps`
+|object
+|`{"max":1000000000, "free":200000000}`
+|Maximum capacity in bits per second of monitored interface, and overload threshold of minimum free capacity in rx and tx directions  
+|===
+
+
+The load balancing API can be activated within the same configuration file using the `balancer` object.
+
+The following options are available:
+
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Description
+|`enabled`
+|boolean
+|`true`
+|Enables (`true`) or disables (`false`) the API
+|`port`
+|string
+|`44301`
+|Port to listen on
+|`secret`
+|string
+|`my_balancer_secret`
+|The shared secret between measurement peer and the requesting party
+|===
+
+The API is only reachable via TLS secured HTTP connections. Hence, a valid TLS certificate must be deployed according to the documentation provided in the ias-server module. To request peer load, an HTTPS POST request must be issued stating the following json-coded parameters, where `secret` must match the configured value.
+----
+{
+    "cmd": "load",
+    "secret": "my_balancer_secret"
+}
+----
+
+If successful, the API will provide the load with the following json-coded format:
+----
+{
+    "cpu_avg": {
+        "1": "0.000000",
+        "15": "0.050000",
+        "5": "0.010000"
+    },
+    "mem_bytes": {
+        "buffers": "1161805824",
+        "cached": "4106948608",
+        "free": "1918816256",
+        "total": "3764744192"
+    },
+    "overloaded": false,
+    "rx_rates": {
+        "bps": "1736",
+        "pps": "2"
+    },
+    "timestamp": "1579095901",
+    "timezone": "3600",
+    "tx_rates": {
+        "bps": "852",
+        "pps": "1"
+    }
+}
+----
+== Load balancing interface
+
+The load balancing interface (LBI) is responsible for the communication between the controller(s) and all registered and available measurement peers. The LBI's task is to periodically fetch the current load status of all measurement peers and to maintain an up-to-date database containing this information. An additional benefit of the LBI is the monitoring of health of all measurement peers.
+
+=== Load balancing interface API
+
+The LBI provides an API which is used to request necessary information about the load and health status of a measurement peer. The API can be accessed by concatenating the version prefix `/api/v1/measurement-servers` (current version: `v1`) and the request path:
+
+[cols="3,2,4,10",options=header]
+|===
+|Request path
+|HTTP Method
+|Response model
+|Description
+|`/load/{serverId}`
+|GET
+|ApiResponse<LoadApiReport>
+|Returns the health and load status of a specific measurement peer. The path parameter `{serverId}` needs to be set to the desired measurement peer's identifier.
+|`/free`
+|GET
+|ApiResponse<MeasurementServerDto> 
+|Returns an available (or "free" = low load) measurement peer. Additionally the query parameter `preferredId`, containing the identifier of the preferred measurement peer can be provided to indicate a personal measurement peer preference. 
+Note that this does not guarantee the selection of the preferred measurement peer if the load and/or health status is not satisfactory. 
+The server selection is _not_ influenced by the load of the servers. The first server marked as "not overloaded" is returned by this resource. 
+There also is no specific order to the list of servers maintained by the LBI.
+|===
+
+=== Load balancing interface configuration
+
+The LBI provides advanced configuration which can be set in the default configuration file: `application.yml` 
+
+The following options are available:
+
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Description
+|`enabled`
+|boolean
+|`false`
+|Enables (`true`) or disables (`false`) the LBI's basic functionality.
+|`delay`
+|integer
+|`15000`
+|Delay in ms between requests to the load balancing service(s)
+|`fails-allowed`
+|integer
+|`0`
+|The number of failed loadbalancing service requests to any measurement peer, until the measurement peer becomes unavailable.
+|===
+
+=== Load balancing interface server selection
+
+The resource `GET /free` is used to obtain a valid measurement server.

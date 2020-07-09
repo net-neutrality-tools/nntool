@@ -24,6 +24,7 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -76,6 +77,23 @@ public abstract class ElasticsearchConfiguration {
 				logger.debug("Creating {} index", index);
 	
 				final CreateIndexRequest createIndexRequest = new CreateIndexRequest(index);
+				
+				// Fix mapping for measurements.QOS.key_to_translation_map
+				createIndexRequest.mapping("{\n" + 
+						"      \"dynamic_templates\": [\n" + 
+						"        {\n" + 
+						"          \"strings\": {\n" + 
+						"            \"match_mapping_type\": \"string\",\n" + 
+						"            \"path_match\": \"measurements.QOS.key_to_translation_map.*\",\n" + 
+						"            \"mapping\": {\n" + 
+						"              \"type\": \"object\",\n" + 
+						"              \"index\": \"not_analyzed\",\n" + 
+						"              \"enabled\": false\n" +
+						"            }\n" + 
+						"          }\n" + 
+						"        }\n" + 
+						"      ]\n" + 
+						"    }", XContentType.JSON);
 				elasticsearchClient().indices().create(createIndexRequest, RequestOptions.DEFAULT);
 			}
 		} catch (Exception ex) {
