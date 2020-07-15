@@ -21,6 +21,7 @@ import { ConfigService } from './config.service';
 import { WebsiteSettings } from '../models/settings/settings.interface';
 import { FeatureSettings } from '../models/settings/features.settings.interface';
 import { environment } from '@env/environment';
+import { isElectron } from '@nntool-typescript/utils';
 
 @Injectable()
 export class Guard implements CanActivate, CanActivateChild {
@@ -41,6 +42,10 @@ export class Guard implements CanActivate, CanActivateChild {
   }
 
   get hiddenInApp(): boolean {
+    if (isElectron()) {
+      return false;
+    }
+
     const agent: string = window.navigator.userAgent;
     return agent && agent.toLowerCase().includes(environment.user_agent.toLowerCase());
   }
