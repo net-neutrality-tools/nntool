@@ -94,7 +94,9 @@ public class JniSpeedMeasurementResult {
         this.measurementServerIp = measurementServerIp;
 
         // @TODO only to set peer with something useful. It can probably be removed in a future refactor
-        this.rttUdpResult.setPeer(measurementServerIp);
+        if (this.rttUdpResult != null) {
+            this.rttUdpResult.setPeer(measurementServerIp);
+        }
     }
 
     public String getClientIp() {
