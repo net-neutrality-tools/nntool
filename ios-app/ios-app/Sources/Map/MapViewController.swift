@@ -130,28 +130,6 @@ class MapViewController: UIViewController {
 
         return layer
     }
-
-    private func buildMarkerSnippet(_ marker: MapMarker) -> String? {
-        let lines = marker.results?.map { item -> String in
-            var line = ""
-
-            if let title = item.title {
-                line += title
-            }
-
-            if let value = item.value {
-                line += ": " + value
-            }
-
-            if let unit = item.unit {
-                line += " " + unit
-            }
-
-            return line
-        }
-
-        return lines?.joined(separator: "\n")
-    }
 }
 
 extension MapViewController: GMSMapViewDelegate {
@@ -192,8 +170,7 @@ extension MapViewController: GMSMapViewDelegate {
             self.currentMarker?.userData = marker
             self.currentMarker?.appearAnimation = .pop
             self.currentMarker?.map = mapView
-            self.currentMarker?.title = R.string.localizable.mapMarkerTitle()
-            self.currentMarker?.snippet = self.buildMarkerSnippet(marker)
+            self.currentMarker?.userData = marker
 
             DispatchQueue.main.async {
                 self.mapView.selectedMarker = self.currentMarker
@@ -201,6 +178,59 @@ extension MapViewController: GMSMapViewDelegate {
         }, onFailure: { error in
             logger.error(error)
         })
+    }
+
+    func mapView(_ mapView: GMSMapView, markerInfoContents marker: GMSMarker) -> UIView? {
+        let screenBounds = UIScreen.main.bounds
+
+        var l: UIStackView?
+
+        if let m = marker.userData as? MapMarker, let results = m.results {
+            let markerHeight = CGFloat(results.count) * UIFont.smallSystemFontSize + 20
+
+            l = UIStackView(frame: CGRect(x: 0, y: 0, width: screenBounds.width * 0.65, height: markerHeight))
+            l?.axis = .horizontal
+            l?.alignment = .fill
+            l?.distribution = .fillProportionally
+            l?.spacing = 5
+
+            let ll = UIStackView()
+            ll.axis = .vertical
+            ll.alignment = .leading
+            ll.distribution = .equalSpacing
+
+            let lr = UIStackView()
+            lr.axis = .vertical
+            lr.alignment = .leading
+            lr.distribution = .equalSpacing
+
+            results.forEach { i in
+                let titleLabel = UILabel()
+                titleLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
+
+                if let t = i.title {
+                    titleLabel.text = "\(t):"
+                }
+
+                ll.addArrangedSubview(titleLabel)
+
+                var val = i.value ?? "-"
+                if let unit = i.unit, val != "-" {
+                    val += " \(unit)"
+                }
+
+                let valueLabel = UILabel()
+                valueLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
+                valueLabel.text = val
+
+                lr.addArrangedSubview(valueLabel)
+            }
+
+            l?.addArrangedSubview(ll)
+            l?.addArrangedSubview(lr)
+        }
+
+        return l
     }
 
     func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {

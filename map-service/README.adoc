@@ -1,0 +1,198 @@
+[[map-service]]
+= Map service
+
+The map service provides an API which is used to fetch image tiles to be used as overlay for a map provider. The API can be accessed by concatenating the version prefix `/api/v0/tiles/` (current version: `v0`) and the request path:
+
+[cols="3,2,4,4,10",options=header]
+|===
+
+|Request path
+|HTTP Method
+|Request model
+|Response model
+|Description
+
+|`markers`
+|POST
+|MapMarkerRequest
+|MapMarkerResponse
+|This request is used to retrieve the data to be displayed in a popupmarker at a given coordinate, and with optional filters. Returns a, possibly empty, list of markers to be displayed at the originally passed location.
+
+|`info`
+|GET or POST
+|_none_
+|MapInfoResponse
+|This request is used to retrieve the options the server supports to specify which measurements should be displayed on returned tiles
+
+|`points/{zoom}/{x}/{y}.png`
+|GET
+|_none_
+|a byte array to be interpreted as png image
+|This request is used to retrieve an image tile of measurements as points with the given 'zoom' level at the position described by 'x' and 'y'. Additional request parameters may be appended to filter the measurements that appear on the resulting image tile, they are listed in the MapTileParameters model.
+
+|`points`
+|POST
+|MapTileRequest
+|a byte array to be interpreted as png image
+|This request is functionally equivalent to `points/{zoom}/{x}/{y}.png`, but receives all parameters as request body. Supported options are listed in the MapTileParameters model.
+
+|`points`
+|GET
+|_none_
+|a byte array to be interpreted as png image
+|This request is functionally equivalent to `points/{zoom}/{x}/{y}.png`, but additional accepts the, required, parameters for 'zoom', 'x' and 'y' as request parameters in the form of: 'path=[ZOOM]/[X]/[Y]'. Supported options are listed in the MapTileParameters model.
+
+|`heatmap/{zoom}/{x}/{y}.png`
+|GET
+|_none_
+|a byte array to be interpreted as png image
+|This request is used to retrieve an image tile of measurements as heatmap with the given 'zoom' level at the position described by 'x' and 'y'. Additional request parameters may be appended to filter the measurements that appear on the resulting image tile, they are listed in the MapTileParameters model.
+
+|`heatmap`
+|POST
+|MapTileRequest
+|a byte array to be interpreted as png image
+|This request is functionally equivalent to `heatmap/{zoom}/{x}/{y}.png`, but receives all parameters as request body. Supported options are listed in the MapTileParameters model.
+
+|`heatmap`
+|GET
+|_none_
+|a byte array to be interpreted as png image
+|This request is functionally equivalent to `heatmap/{zoom}/{x}/{y}.png`, but additional accepts the, required, parameters for 'zoom', 'x' and 'y' as request parameters in the form of: 'path=[ZOOM]/[X]/[Y]'. Supported options are listed in the MapTileParameters model.
+
+|===
+
+== Configuration overview
+
+The result service provides advanced configuration which can be set in the default configuration files: `application.yml` and `application-dev.yml`
+
+== Configuration file: `application-dev.yml`
+
+The following options are available in the configuration file `application-dev.yml`:
+
+=== Section `spring.datasource`
+
+In this section the connection to the _PostgreSQL_ database can be configured:
+
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Description
+
+|`url`
+|string
+|`jdbc:postgresql://localhost:15432/nntool`
+|The postgresql server address
+
+|`username`
+|string
+|`DB_USER`
+|The user to provide for authenticating against the given URL
+
+|`password`
+|string
+|`DB_PASSWORD`
+|The password to provide for authenticating against the given URL
+
+|===
+
+== Configuration file: `application.yml`
+
+The following options are available in the configuration file `application.yml`:
+
+=== Section `map-cache`
+
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Description
+
+|`usePointTileCache`
+|boolean
+|`false`
+|Whether or not to cache tiles containing measurements as points (i.e. tiles obtained from one of the '/tiles/points' resources)
+
+|`useHeatmapTileCache`
+|boolean
+|`true`
+|Whether or not to cache tiles containing measurements as heatmap (i.e. tiles obtained from one of the '/tiles/heatmap' resources)
+
+|`cacheIgnoreZoomLevel`
+|integer
+|`17`
+|Specifies a zoom level, after which tiles are no longer cached (as zoomed out tiles are more computing intensive than zoomed in points, it is generally not necessary to cache tiles at very large zoom levels)
+
+|`cacheStaleSeconds`
+|integer
+|`7200`
+|Specifies the duration in seconds after which a cached image is considered stale
+
+|`cacheExpireSeconds`
+|integer
+|`2592000`
+|Specifies the duration in seconds after which a cached image is considered expired
+
+|===
+
+=== Section `map-settings`
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Description
+
+|`maxZoomLevel`
+|integer
+|`21`
+|The maximum zoom level that tiles will be rendered for, applies to the 'zoom' parameter.
+
+|`mapServiceOptions`
+|array
+| (see below for an exemplary array entry)
+|A list of filtering settings to be made available during requests.
+
+|`mapServiceOptions.groupKey`
+|string
+|`all`
+|The group this filter option belongs to. Groups can be arbitratily defined, but the default setting groups by the associated connection type (e.g. `wifi`). Produces a map option entry (see MapTileParameters), when combined with `mapServiceOptions.typeKey` as `mapServiceOptions.groupKey/mapServiceOptions.typeKey`.
+
+|`mapServiceOptions.typeKey`
+|string
+|`download`
+|The type this filter option filters for. Types can be arbitratily defined, but the default setting groups by the associated connection type (e.g. `upload`). Produces a map option entry (see MapTileParameters), when combined with `mapServiceOptions.groupKey` as `mapServiceOptions.groupKey/mapServiceOptions.typeKey`.
+
+|`mapServiceOptions.sqlValueColumn`
+|string
+|`ias.throughput_avg_download_bps`
+|The sql statment to be used in the `SELECT` part of the query for the given `groupKey/typeKey` pair. The resulting value is used to assign the colour to the resulting point or heatmap tile.
+
+|`mapServiceOptions.sqlFilter`
+|string
+|`ias.throughput_avg_upload_bps IS NOT NULL`
+|The sql statment to be used in the `WHERE` part of the query for the given `groupKey/typeKey` pair. Used to restrict which measurements are considered for display in the resulting point or heatmap tile.
+
+|`mapServiceOptions.reverseScale`
+|boolean
+|`false`
+|If false, high values are considered better values for the colour classification algorithm. If true, low values are considered better values for the colour classification algorithm. The `reverseScale` option is currently only set to `true` for the round-trip-time (rtt) results, as lower rtt values are better. 
+
+|===
+
+
+=== Section `server`
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Description
+|`port`
+|integer
+|`8084`
+|The port this service will bind to.
+|===

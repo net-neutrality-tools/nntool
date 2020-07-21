@@ -29,14 +29,14 @@ public protocol GCDAsyncSocketProtocol {
 
     func accept(onPort port: UInt16) throws
 
-    func write(_ data: Data, withTimeout timeout: Double, tag: Int)
+    func write(_ data: Data, withTimeout timeout: Double, tag: Int64)
 
-    func readData(to: Data, withTimeout timeout: Double, tag: Int)
+    func readData(to: Data, withTimeout timeout: Double, tag: Int64)
 
     func disconnect()
 
 }
 
-extension GCDAsyncSocket: GCDAsyncSocketProtocol {
+/*extension GCDAsyncSocket: GCDAsyncSocketProtocol {
 
-}
+}*/

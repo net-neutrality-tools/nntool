@@ -1,8 +1,28 @@
-== IAS server module
+[[ias-server-build]]
+= IAS server module
 
-=== Building
+.License
+----
+ias-server is released under the AGPLv3 <https://www.gnu.org/licenses/agpl-3.0.txt>
 
-==== Prerequisites
+Copyright (C) 2016-2019 zafaco GmbH
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License version 3 
+as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+----
+
+== Building
+
+=== Prerequisites
 
 Linux (any Version)
 
@@ -22,7 +42,7 @@ For a Debian based Linux run the following command as root:
 apt install build-essential make cmake automake g++ libtool liblog4cpp5-dev libssl-dev lcov git
 ----
 
-==== Build
+=== Build
 
 With fullfilled prerequisites perform the following steps:
 
@@ -37,12 +57,13 @@ cmake .. # add -DCMAKE_BUILD_TYPE="DEBUG" for debug build
 make
 ----
 
+[start=2]
 2. Create dir `/etc/ias-server/`
 3. Copy trace.ini to `/etc/ias-server/`
 4. Customize and copy `config.json` to `/etc/ias-server/`
 5. Create dir `/var/log/ias-server/`
 
-==== Unit Tests
+=== Unit Tests
 
 To execute the included unit tests execute the following commands:
 
@@ -121,7 +142,7 @@ docker run --rm -it -p 20080:80 -p 20443:443 -p 28080:8080 -p 28443:8443 -p 4430
 
 To perform port blocking measurements, the *coturn TURN server (https://github.com/coturn/coturn)* has to be deployed on the measurement peer.
 
-==== Prerequisites
+=== Prerequisites
 
 Linux (any Version)
 
@@ -136,7 +157,7 @@ apt install coturn
 
 The current version 4.5.0.7 was verified for port blocking measurements.
 
-==== Build
+=== Build
 
 With fullfilled prerequisites perform the following steps:
 
@@ -149,21 +170,3 @@ With fullfilled prerequisites perform the following steps:
 === Execution
 
 Use `service ias-turnserver {start|stop|status} for starting, stopping, status information.
-
-=== License
-
-ias-server is released under the AGPLv3 <https://www.gnu.org/licenses/agpl-3.0.txt>
-
-Copyright (C) 2016-2019 zafaco GmbH
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License version 3 
-as published by the Free Software Foundation.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
