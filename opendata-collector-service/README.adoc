@@ -1,4 +1,5 @@
-= Open data collector servie (opendata-collector-service)
+[[opendata-collector-service]]
+= Open data collector service
 
 This service is responsible for importing open data measurements from BEREC-compatible systems.
 These systems have to provide the search-service API, which is used to request new measurements.
@@ -27,7 +28,7 @@ the relevant options for the open data import. The following table describes the
 
 [cols="4,2,4,10",options=header]
 |===
-|Option                         |Type      |Default     |Desciption
+|Option                         |Type      |Default     |Description
 |`enabled`                      |boolean   |`false`     |Enables (`true`) or disables (`false`) the whole open data import (= all import sources).
 |`config.batch-size`            |integer   |`20`        |Defines how many measurements will be inserted at once (batch-processing).
 |`config.batch-run-limit`       |integer   |`10`        |Defines how many pages of (`config.batch-size`) measurements should be imported on each run.
@@ -40,9 +41,10 @@ default settings.
 Additionally, an arbitrary number of import sources can be defined. The following table describes the configuration for the import sources:
 
 [cols="4,2,4,10",options=header]
-|Option         |Type      |Default     |Desciption
+|===
+|Option         |Type      |Default     |Description
 |`name`         |string    |            |The name of this import source.
 |`url`          |string    |            |The URL of the target's search-service, including the path `/api/v1/measurements`.
 |`cron`         |string    |            |A cronjob like syntax, but with seconds, to define when this import source should be queried.
 |`enabled`      |boolean   |`false`     |Enables (`true`) or disables (`false`) this import source.
-
+|===

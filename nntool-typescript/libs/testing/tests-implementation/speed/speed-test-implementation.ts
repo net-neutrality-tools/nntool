@@ -26,6 +26,7 @@ import { SpeedTestConfig } from './speed-test-config';
 import { SpeedTestState } from './speed-test-state';
 import { UserService } from '../../../core/services/user.service';
 import { IasService } from '@nntool-typescript/ias/ias.service';
+import { isElectron } from '@nntool-typescript/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -140,38 +141,28 @@ export class SpeedTestImplementation extends TestImplementation<SpeedTestConfig,
       state.device = currentState.device_info.os_info.name + ' ' + currentState.device_info.os_info.version;
 
       //show os and connection on DESKTOP, browser and browser version on BROWSER
-      if (typeof require !== 'undefined' && typeof process !== 'undefined')
-      {
-        if (currentState.network_info)
-        {
-          if (typeof currentState.network_info.dsk_lan_detected !== 'undefined')
-          {
-            if (currentState.network_info.dsk_lan_detected)
-            {
+      if (isElectron()) {
+        if (currentState.network_info) {
+          if (typeof currentState.network_info.dsk_lan_detected !== 'undefined') {
+            if (currentState.network_info.dsk_lan_detected) {
               // LAN
               state.technology = 'LAN';
             } else {
               // WLAN
               state.technology = 'WLAN';
             }
-          }
-          else
-          {
+          } else {
             // UNKNOWN
             state.technology = 'UNKNOWN';
           }
         }
-      }
-      else
-      {
+      } else {
         state.technology = currentState.device_info.browser_info.name.split(' ')[0] + ' ' + currentState.device_info.browser_info.version;
       }
 
-      if (typeof currentState.peer_info !== 'undefined' && typeof currentState.peer_info.url !== 'undefined')
-      {
+      if (typeof currentState.peer_info !== 'undefined' && typeof currentState.peer_info.url !== 'undefined') {
         state.serverName = currentState.peer_info.url;
       }
-
 
       switch (currentState.test_case) {
         case 'rtt':

@@ -165,7 +165,7 @@ public class GeoLocationGatherer extends ListenableGatherer<GeoLocationChangeEve
         dto.setLongitude(location.getLongitude());
         dto.setProvider(location.getProvider());
         dto.setSpeed((double) location.getSpeed());
-        dto.setTime(new LocalDateTime(location.getTime(), DateTimeZone.UTC));
+        dto.setTime(new LocalDateTime(location.getTime()));
         return dto;
     }
 

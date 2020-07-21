@@ -1,10 +1,10 @@
 PODS:
-  - Alamofire (5.0.0)
+  - Alamofire (5.1.0)
   - BlueSocket (1.0.52)
   - CocoaAsyncSocket (7.6.4)
   - CodableJSON (1.2.0)
-  - mkall (0.7.0)
-  - Nimble (8.0.5)
+  - mkall (0.8.0)
+  - Nimble (8.0.7)
   - nntool-shared-swift (0.0.1):
     - CodableJSON (~> 1.2.0)
     - Repeat (~> 0.5.8)
@@ -15,7 +15,7 @@ PODS:
   - ObjcExceptionBridging/ObjcExceptionBridging (1.0.1)
   - qos-client-cpp (0.0.1)
   - Repeat (0.5.8)
-  - SwiftLint (0.39.1)
+  - SwiftLint (0.39.2)
   - WKWebViewWithURLProtocol (0.1.0)
   - XCGLogger (7.0.1):
     - XCGLogger/Core (= 7.0.1)
@@ -23,11 +23,11 @@ PODS:
     - ObjcExceptionBridging
 
 DEPENDENCIES:
-  - Alamofire (~> 5.0.0)
+  - Alamofire (~> 5.1.0)
   - BlueSocket (~> 1.0.52)
-  - CocoaAsyncSocket (~> 7.6.3)
-  - mkall (from `https://github.com/measurement-kit/mkall-ios.git`, tag `v0.7.0`)
-  - Nimble (~> 8.0.5)
+  - CocoaAsyncSocket (~> 7.6.4)
+  - mkall (from `https://github.com/measurement-kit/mkall-ios.git`, tag `v0.8.0`)
+  - Nimble (~> 8.0.7)
   - nntool-shared-swift (from `../nntool-shared-swift`)
   - qos-client-cpp (from `../qos-cpp`)
   - WKWebViewWithURLProtocol (~> 0.1.0)
@@ -48,7 +48,7 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   mkall:
     :git: https://github.com/measurement-kit/mkall-ios.git
-    :tag: v0.7.0
+    :tag: v0.8.0
   nntool-shared-swift:
     :path: "../nntool-shared-swift"
   qos-client-cpp:
@@ -57,23 +57,23 @@ EXTERNAL SOURCES:
 CHECKOUT OPTIONS:
   mkall:
     :git: https://github.com/measurement-kit/mkall-ios.git
-    :tag: v0.7.0
+    :tag: v0.8.0
 
 SPEC CHECKSUMS:
-  Alamofire: 58ff2bfb8daaacaa233d5c36e37b10a5248f59b1
+  Alamofire: 9d5c5f602928e512395b30950c5984eca840093c
   BlueSocket: 1acd943acb07b55905291d608649fcfbf8cbd57d
   CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   CodableJSON: 3e91bb0cead42e788d8fe64b8b07761c83ad7758
-  mkall: 601441b8ca8f9d8dbad357acd3570173854b45f8
-  Nimble: 4ab1aeb9b45553c75b9687196b0fa0713170a332
+  mkall: 54f5d8c00c447504ea042160f489da392149900e
+  Nimble: a73af6ecd4c9106f434f3d55fc54570be3739e0b
   nntool-shared-swift: c9a7bd0cb182da4e0008aa8b2a66cececbf4dba7
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
   qos-client-cpp: 25de2249179f5eb0f521723d1d5a5d61aa5ccfc0
   Repeat: 8e65710d09da68f06ed79e865b091ffdcc8d0279
-  SwiftLint: 55e96a4a4d537d4a3156859fc1c54bd24851a046
+  SwiftLint: 22ccbbe3b8008684be5955693bab135e0ed6a447
   WKWebViewWithURLProtocol: f7f2b367c40680105794a068ed2bb2cd5922c27c
   XCGLogger: 1943831ef907df55108b0b18657953f868de973b
 
-PODFILE CHECKSUM: 2df9780c454e1683a65aeb22d05802b5631bb9f5
+PODFILE CHECKSUM: 5c1cd40768168f1b3d3579e4ef7555209d32e8c6
 
 COCOAPODS: 1.8.4

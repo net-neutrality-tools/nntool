@@ -91,7 +91,7 @@ export class ConfigService {
   }
 
   public getBingKey(): string {
-    return this.config.keys ? this.config.keys.google : '';
+    return this.config.keys ? this.config.keys.bing : '';
   }
 
   public getMapViewSettings(): MapViewSettings {

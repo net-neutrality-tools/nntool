@@ -1,9 +1,9 @@
 PODS:
   - ActionKit (2.5.3)
-  - Alamofire (5.0.0)
+  - Alamofire (5.0.5)
   - BartyCrouch (4.0.2)
   - BlueSocket (1.0.52)
-  - CocoaAsyncSocket (7.6.3)
+  - CocoaAsyncSocket (7.6.4)
   - CocoaLumberjack (3.6.1):
     - CocoaLumberjack/Core (= 3.6.1)
   - CocoaLumberjack/Core (3.6.1)
@@ -11,10 +11,10 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
-  - GoogleMaps (3.7.0):
-    - GoogleMaps/Maps (= 3.7.0)
-  - GoogleMaps/Base (3.7.0)
-  - GoogleMaps/Maps (3.7.0):
+  - GoogleMaps (3.8.0):
+    - GoogleMaps/Maps (= 3.8.0)
+  - GoogleMaps/Base (3.8.0)
+  - GoogleMaps/Maps (3.8.0):
     - GoogleMaps/Base
   - MeasurementAgentKit (0.0.1):
     - CocoaAsyncSocket (~> 7.6.3)
@@ -55,7 +55,7 @@ PODS:
     - Siesta/Core (= 1.4.3)
   - Siesta/Core (1.4.3)
   - SwiftGen (6.1.0)
-  - SwiftLint (0.39.1)
+  - SwiftLint (0.39.2)
   - WebBrowser (0.1.5)
   - WKWebViewWithURLProtocol (0.1.0)
   - XCGLogger (7.0.1):
@@ -68,7 +68,7 @@ DEPENDENCIES:
   - BartyCrouch (~> 4.0.2)
   - CocoaLumberjack (>= 3.4.2)
   - FMDB (>= 2.7.2)
-  - GoogleMaps (~> 3.7.0)
+  - GoogleMaps (~> 3.8.0)
   - MeasurementAgentKit (from `../measurement-agent-swift`)
   - nntool-shared-swift (from `../nntool-shared-swift`)
   - PocketSocket (from `https://github.com/net-neutrality-tools/PocketSocket`)
@@ -76,7 +76,7 @@ DEPENDENCIES:
   - QoSKit (from `../qos-client-swift`)
   - R.swift (~> 5.1.0)
   - SwiftGen (~> 6.1.0)
-  - WebBrowser (from `../WebBrowser`)
+  - WebBrowser (~> 0.1.5)
 
 SPEC REPOS:
   trunk:
@@ -97,6 +97,7 @@ SPEC REPOS:
     - Siesta
     - SwiftGen
     - SwiftLint
+    - WebBrowser
     - WKWebViewWithURLProtocol
     - XCGLogger
 
@@ -111,8 +112,6 @@ EXTERNAL SOURCES:
     :path: "../qos-cpp"
   QoSKit:
     :path: "../qos-client-swift"
-  WebBrowser:
-    :path: "../WebBrowser"
 
 CHECKOUT OPTIONS:
   PocketSocket:
@@ -121,14 +120,14 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   ActionKit: c1b6427fd36a0fe2223555679bcc5dea437af5b3
-  Alamofire: 58ff2bfb8daaacaa233d5c36e37b10a5248f59b1
+  Alamofire: df2f8f826963b08b9a870791ad48e07a10090b2e
   BartyCrouch: 3f3501276901326bf4150341ad801467da972e43
   BlueSocket: 1acd943acb07b55905291d608649fcfbf8cbd57d
-  CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
+  CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   CocoaLumberjack: b17ae15142558d08bbacf69775fa10c4abbebcc9
   CodableJSON: 3e91bb0cead42e788d8fe64b8b07761c83ad7758
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  GoogleMaps: 55da829c68aa931f3ae982b9e341cc2f3d89c587
+  GoogleMaps: 7c8d66d70e4e8c300f43a7219d8fdaad7b325a9a
   MeasurementAgentKit: 52a4a7b95481d0a440fe5e77f08bae547d6ed331
   nntool-shared-swift: c9a7bd0cb182da4e0008aa8b2a66cececbf4dba7
   ObjcExceptionBridging: c30e00eb3700467e695faeea30e26e18bd445001
@@ -141,11 +140,11 @@ SPEC CHECKSUMS:
   Repeat: 8e65710d09da68f06ed79e865b091ffdcc8d0279
   Siesta: 83795fdf6a43232d1d2909e1a3dfb92ab5916d26
   SwiftGen: f872ca75cbd17bf7103c17f13dcfa0d9a15667b0
-  SwiftLint: 55e96a4a4d537d4a3156859fc1c54bd24851a046
+  SwiftLint: 22ccbbe3b8008684be5955693bab135e0ed6a447
   WebBrowser: 0248873c77f54e2ac504ece7c2bc8eeb710b5a4f
   WKWebViewWithURLProtocol: f7f2b367c40680105794a068ed2bb2cd5922c27c
   XCGLogger: 1943831ef907df55108b0b18657953f868de973b
 
-PODFILE CHECKSUM: 7bd243038800eb3d69646f101461d2117ed95f2e
+PODFILE CHECKSUM: 8a48f9d88a8fb2f96358bdb916ea4eb3457ef101
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.1

@@ -1,7 +1,7 @@
-[[overview]]
+[[qos-overview]]
 = QoS database and settings documentation
 Lukasz Budryk, Florian Jung
-v1.5.0, 2017-08-22
+v2.0.0, 2020-05-11
 :toc: left
 :toclevels: 3
 
@@ -267,13 +267,13 @@ Fields:
     * `type`, type: _qostest_ => the test type
     * `params`, type: _json_ => (see 3.1.1) test objectives.
     * `results`, type: _json_ => (see 3.1.3) expected test results.
-    * `concurrencyGroup`, type: _integer_ => (see 3.1.5) tests that belong to the same group are executed simultaneously. This is also the order of test execution.
-    * `description`, type: _text_ => (see 3.1.6) references the key of an text entry in the qos_test_desc table. This is the longer and more technical test summary.
-    * `summary`, type: _text_ => (see 3.1.7) references the key of an text entry in the qos_test_desc table. This is the short test summary.
+    * `concurrency_group`, type: _integer_ => (see 3.1.5) tests that belong to the same group are executed simultaneously. This is also the order of test execution.
+    * `description`, type: _text_ => (see 3.1.6) references the key of a text entry in the qos_test_desc table. This is the longer and more technical test summary.
+    * `summary`, type: _text_ => (see 3.1.7) references the key of a text entry in the qos_test_desc table. This is the short test summary.
 
 [[database-qos_test_objective-param]]
 === Field `param`
-Test parameters are basically json keys without `TESTTYPE` and `RESULTTYPE` (where `RESULTTYPE` must be objective). This means that for example a website test json key (as described in the section: <<qos-test-result-json>>) with the name: `website_objective_url` would be transformed to `url`. After a test has been executed by the client it adds the `TESTTYPE` and `RESULTTYPE` prefix to the parameters and send them back to the server. This procedure is needed to be able to differentiate between objectives (test parameters) and results (results during or after the test) because both are saved in the <<database-qos_test_result>> table in a single field: `results`. The following parameters (objectives) are supported (sorted by test type):
+Test parameters are basically json keys without `TESTTYPE` and `RESULTTYPE` (where `RESULTTYPE` must be: `objective`). This means that for example a website test json key (as described in the section: <<qos-test-result-json>>) with the name: `website_objective_url` would be transformed to `url`. After a test has been executed by the client it adds the `TESTTYPE` and `RESULTTYPE` prefix to the parameters and sends them back to the server. The following parameters (objectives) are supported (sorted by test type):
 
     * <<qos-test-result-json-website>>, example and available parameters:
 
@@ -390,10 +390,10 @@ It is possible to create incoming-only or outgoing-only tests. This means: eithe
 === Field `result`
 This field contains the expected test results (from now on: 'ETR') and the behaviour in case of failure and/or success.
 
-The reason that an 'ETR' is an array is the method of evaluation: an 'ETR' can have multiple conditions. To explain the functionality of ETRs imagine the following scenario:
+The reason that an 'ETR' is an array, is the method of evaluation: an 'ETR' can have multiple conditions. To explain the functionality of ETRs imagine the following scenario:
 
 [abstract]
-A non transparent proxy test is run on a random port between 1 and 25000. The request it will send is an erroneous HTTP request (`GET / HTTR 7.9`). After the test has finished we compare the result of the test to the request. If both are equal, then no proxy has changed the request, so no proxy has been detected. Which means that the test was successful in the QoS point of view. A second check is done to determine the port number classification (just a check if the random port was not above 1024). This has nothing to do with quality of service but will demonstrate the possibilities of the *NetTest QoS-Tests*. Here are the objectives:
+A non transparent proxy test is run on a random port between 1 and 25000. The request it will send is an erroneous HTTP request (`GET / HTTR 7.9`). After the test has finished we compare the result of the test to the request. If both are equal, then no proxy has changed the request, ergo no proxy has been detected. Which means that the test was successful in the QoS point of view. A second check is done to determine the port number classification (just a check if the random port was not above 1024). This has nothing to do with quality of service but will demonstrate the possibilities of the *NetTest QoS-Tests*. Here are the objectives:
 
 [source,json]
     {
@@ -488,7 +488,7 @@ The following example checks if a dns test returned some results. If it was true
 All other parameters are optional and can have keys as defined in the json specification (depending on the test)
 
 [[database-qos_test_objective-concurrency_group]]
-=== Field `concurrencyGroup`
+=== Field `concurrency_group`
 It defines the group the test belongs to. Tests that belong to the same group are executed simultaneously. The group order is ascending: 0..n (zero to n).
 
 [[database-qos_test_objective-test_desc]]
@@ -581,7 +581,7 @@ The JS parser has an own TestScript library included to make some evaluations ea
 
 === TestScript rules
 
-    * The interpreter doesn't work recursive: commands inside commands will not work.
+    * The interpreter doesn't work recursively: commands inside commands will not work.
     As said above, only one parameter can be accessed at a time. Some examples:
     ** correct: `%PARAM dns_objective_resolver%`
     ** correct: `%PARAM dns_result_entries[0] dns_result_priority%`
@@ -590,7 +590,7 @@ The JS parser has an own TestScript library included to make some evaluations ea
 
     * A command is only valid if it is a single line of code (no new-line characters allowed)
 
-    * If used as objective or expected result parameter (see <<database>>) the TestScript command must be the only one parameter. Examples:
+    * If used as objective or expected result parameter the TestScript command must be the only one parameter. Examples:
         ** correct:
 
             {
@@ -884,14 +884,17 @@ CISCO, http://www.cisco.com/c/en/us/support/docs/voice/voice-quality/5125-delay-
 [[citation-n2]]
 * Mockapetris, P., "DOMAIN NAMES - IMPLEMENTATION AND SPECIFICATION", https://www.ietf.org/rfc/rfc1035.txt[RFC 1035], November 1987
 
-:sectnums!:
 [[aenderungshistorie]]
-== Changelog
-
+.Changelog
 [options="header,autowidth"]
 |===
 |Version |Date |Comment
 
+|2.0.1 |2020-06-15 a|
+* Minor changes/fixes
+* Removed invalid references
+|2.0.0 |2020-05-11 a|
+* Major update
 |1.5.0 |2017-08-22 a|
 * Switching to couchDB
 |1.1.0 |2015-12-09 a|

@@ -48,6 +48,7 @@ import { WebSocketInfo } from '@nntool-typescript/core/models/lmap/models/lmap-r
 import { NumStreamsInfo } from '@nntool-typescript/core/models/lmap/models/lmap-report/lmap-result/extensions/num-streams-info.model';
 import { TracerouteTestState } from '@nntool-typescript/testing/tests-implementation/traceroute/traceroute-test-state';
 import { BasicTestState } from '@nntool-typescript/testing/enums/basic-test-state.enum';
+import { isElectron } from '@nntool-typescript/utils';
 
 export { TestGuard } from './test.guard';
 
@@ -58,7 +59,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
   @ViewChild(ServerSelectionComponent, { static: false }) public serverSelectionComponent: ServerSelectionComponent;
   public speedConfig: MeasurementSettings = undefined; // TODO: change to measurement configuration
   public qosConfig: MeasurementTypeParameters = undefined; // TODO: change to measurement configuration
-  public isElectron = typeof require !== 'undefined' && typeof process !== 'undefined';
+  public runningInElectron = isElectron();
 
   protected measurementControl: LmapControl = undefined;
 
@@ -227,15 +228,16 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
 
   public portBlockingTestFinished(portBlockingTestResult: PortBlockingTestState): void {
     const qosMeasurementResult: QoSMeasurementResult = this.getCurrentQoSResult();
-
     for (const port of portBlockingTestResult.types[0].ports) {
       qosMeasurementResult.results.push({
-        udp_result_out_num_packets: 1,
-        udp_objective_out_num_packets: 1,
+        udp_result_out_num_packets: port.packets.sent,
+        udp_result_out_rtt_avg_ns: port.delay ? port.delay.average_ns : null,
+        udp_result_out_delay_standard_deviation_ns: port.delay ? port.delay.standard_deviation_ns : null,
+        udp_objective_out_num_packets: port.packets.requested_packets,
         qos_test_uid: port.uid,
         test_type: 'udp',
-        udp_result_out_response_num_packets: port.reachable ? 1 : 0,
-        udp_result_out_packet_loss_rate: port.reachable ? 0 : 100,
+        udp_result_out_response_num_packets: port.packets.received,
+        udp_result_out_packet_loss_rate: port.packets.sent ? (port.packets.lost / port.packets.sent) * 100 : null,
         udp_objective_out_port: port.number
       });
     }
@@ -349,6 +351,14 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
               return option.name === 'parameters_qos' ? option['measurement-parameters']['objectives'] : config;
               /* tslint:enable:no-string-literal */
             }, {});
+            //remove udp measurements not intended for the website
+            for (let i = 0; i < this.qosConfig.UDP.length; i++) {
+              let elem = this.qosConfig.UDP[i];
+              if (elem.allowed_on_web !== undefined && elem.allowed_on_web !== null && !elem.allowed_on_web) {
+                this.qosConfig.UDP.splice(i--, 1);
+              }
+            }
+
             this.qosControl = task;
             break;
         }
