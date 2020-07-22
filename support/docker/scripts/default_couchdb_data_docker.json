@@ -248,7 +248,7 @@
         "description": "SIP_description"
       },
       "parameters": {
-        "port": "15060",
+        "port": "5060",
         "call_duration": "1000000000",
         "timeout": "2000000000",
         "count": "5"
@@ -261,7 +261,49 @@
           "on_success": "sip.success"
         }
       ]
-    },
+	},
+	{
+		"objective_id": 600,
+		"evaluations": [
+			{
+			"evaluate": "%EVAL if (nn.coalesce(voip_result_out_mean_jitter, 50000000) < 50000000) result=true; else result=false;%",
+			"on_failure": "voip.jitter.outgoing.failure",
+			"on_success": "voip.jitter.outgoing.success"
+			},
+			{
+			"evaluate": "%EVAL if (nn.coalesce(voip_result_in_mean_jitter, 50000000) < 50000000) result=true; else result=false;%",
+			"on_failure": "voip.jitter.incoming.failure",
+			"on_success": "voip.jitter.incoming.success"
+			},
+			{
+			"evaluate": "%EVAL if (nn.coalesce(voip_result_out_num_packets, 0) > 0) result=true; else result=false;%",
+			"on_failure": "voip.outgoing.packet.failure",
+			"on_success": "voip.outgoing.packet.success"
+			},
+			{
+			"evaluate": "%EVAL if (nn.coalesce(voip_result_in_num_packets, 0) > 0) result=true; else result=false;%",
+			"on_failure": "voip.incoming.packet.failure",
+			"on_success": "voip.incoming.packet.success"
+			},
+			{
+			"evaluate": "%EVAL if(voip_result_status=='TIMEOUT') result={type:  'failure', key: 'voip.timeout'}%"
+			}
+		],
+		"translation_keys": {
+			"summary": "test.desc.voip",
+			"description": "voip.testinfo"
+		},
+		"measurement_server_uuid": "qos_server",
+		"docType": "QoSMeasurementObjective",
+		"parameters": {
+			"call_duration": "2000000000",
+			"out_port": "7078",
+			"timeout": "6000000000"
+		},
+		"type": "VOIP",
+		"concurrency_group": 600,
+		"enabled": true
+	},
     {
       "_id": "network_type_GSM",
       "network_type_id": 1,
