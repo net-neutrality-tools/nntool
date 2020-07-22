@@ -31,6 +31,7 @@ export class PortBlockingTestState extends TestState {
         average_ns: number;
         standard_deviation_ns: number 
       };
+      delays?: number[];
       number: number;
       uid: string;
     }>;
