@@ -1,3 +1,4 @@
+[[website-build]]
 = Website
 
 == Prerequisites
@@ -9,9 +10,15 @@
 
 The following steps are needed to setup the development environment:
 
-- install dependencies using `npm install`
+- install dependencies using `npm install` (Note: a single `npm install` is sufficient, it is not necessary to use it again for every command)
 - build IAS module (automatically done when using `npm run ...` commands)
 - serve or build website
+
+The project supports a multitude of commands, which are specified in the `package.json` file under the `"scripts"` object. The first entry (the key) specifies the command to enter after `npm run`, the second entry (the value) specifies the commands which are then executed. E.g. `"build:ias": "cd ../ias/ && npm i && ./build.sh"` defines, that when a user inputs `npm run build:ias` the system changes into the ias directory, executes npm i and then runs the build.sh script.
+
+However, checking out the `package.json` file is purely optional. All commands needed to develop and deploy the suported websites are described in detail in this documentation.
+
+To start a development server on localhost:4200 from scratch, simply use the following lines:
 
 [source, bash]
 ----
@@ -19,11 +26,19 @@ npm install
 npm start # runs npm build:ias and ng serve
 ----
 
+Starting a development server for the portal website requires the following lines:
+
+[source, bash]
+----
+npm install
+npm run start.web.portal
+----
+
+A server started in this fashion is automatically in watch mode, i.e. changes made to the source code trigger a recompilation and reload of the website (Note: this only applies to changes made in the nntool-typescript folder itself, changes made in the dependent IAS module are not automatically reloaded).
+
 == Development
 
 The website is based on Angular 8 and is built using Angular CLI.
-
-TODO: add documentation for nx, xplat, etc.
 
 === Commands
 
@@ -51,7 +66,166 @@ Run `ng test` to execute the unit tests via https://karma-runner.github.io[Karma
 
 Run `ng e2e` to execute the end-to-end tests via http://www.protractortest.org/[Protractor].
 
-=== Electron desktop app
+== Production
 
-TODO: add documentation for desktop app
+In addition to being heavily optimized, the production website utilizes the configuration files from the `src/environments/environment.prod.ts` files. This allows to easily set debug options in the non-prod configurations without risk of deploying these settings. To build a production-ready nettest website use the following commands:
 
+[sources, bash]
+----
+npm install
+npm run build -- --prod
+----
+
+To build a production ready portal website use the following commands:
+
+[sources, bash]
+----
+npm install
+npm run build.web.portal -- --prod
+----
+
+The optimized websites are located in the dist/apps/web-nntool or the dist/apps/web-portal folder, and may be copied using https://linux.die.net/man/1/scp[scp] or any other method of choice.
+
+To build the desktop app use:
+
+[sources, bash]
+----
+npm install
+npm run build.electron.nntool
+----
+
+The desktop app needs special consideration to provide functional applications for all supported platforms. A target platform can be specified with the corresponding subcommands `npm run build.electron.nntool.[linux|windows|mac]`. Building a valid Windows desktop app on Linux with wine has been tested and the resulting app is fully functional (simply follow the on-screen instructions). 
+
+== Configuration
+
+The websites use the configuration files from the `src/environments/environment[.prod].ts` of the corresponding project (e.g. the configuration files for the portal website are located under `apps/web-portal/src/environments/`, while the configuration files for the nntool website are located under `apps/web-nntool/src/environments`). There are two separate configuration files for each project to enable easy debug configurations without the risk of deploying them to a live system. If the `-- --prod` flag is appended to an npm command, the `environments.prod.ts` file is used, otherwise the `environments.ts` file is used.
+
+The environment.ts files contain a single exported typescript/JSON object:
+
+[sources, typescript]
+----
+
+export const environment = {
+  production: true,     <1>
+  //////////
+  features: {   <2>
+    home: true,
+    tc: true,
+    nettest: true,
+    statistics: true,
+    map: true,
+    history: true,
+    testresults: true,
+    help: true,
+    opendata: true,
+    about: false,
+    footer: true,
+    settings: true,
+    docu: false
+  },
+  landing_page: 'home', <3>
+  user_agent: 'abc', <4>
+  languages: ['en', 'de'], <5>
+  servers: { <6>
+    control: 'https://controller-de-01.net-neutrality.tools/api/v1/',
+    result: 'https://result-de-01.net-neutrality.tools/api/v1/',
+    search: 'https://search-de-01.net-neutrality.tools/api/v1/',
+    map: 'https://map-de-01.net-neutrality.tools/api/v0/',
+    statistic: 'https://statistic-de-01.net-neutrality.tools/api/v1/'
+  },
+  keys: { <7>
+    bing: ''
+  },
+  colors: { <8>
+    groups: {
+      pink: ['#da7883', '#d16b74', '#a65056', '#8a3d43'],
+      orange: ['#ffce99', '#ffab65', '#ff8118', '#e67416'],
+      purple: ['#e097ff', '#bb8ed8', '#a34ed8', '#69328b'],
+      turquoise: ['#c8ebef', '#90bcbf', '#739c9e', '#64878a'],
+      green: ['#bfdb2d', '#a6bf27', '#8a9f21', '#71821b']
+    },
+    gauge: {
+      arc_background: '#EFEFEF',
+      arc_inner: '#921F56',
+      arc_outer: '#29348A',
+      fontName: 'arial',
+      font: '#FFFFFF'
+    }
+  },
+  nettest: { <9>
+    custom_tc: false,
+    tag: null,
+    tests: {
+      qos: false,
+      ndt: true,
+      rmbt: true
+    }
+  },
+  deserializeTypes: { <10>
+    registrationRequestDeserializeType:
+      'at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest',
+    settingsRequestDeserializeType:
+      'at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.settings.SettingsRequest',
+    speedMeasurementPeerRequestDeserializeType:
+      'at.alladin.nettest.shared.berec.collector.api.v1.dto.peer.SpeedMeasurementPeerRequest'
+  },
+  map: { <11>
+    showLegend: true,
+    view: {
+      position: [48.209, 16.37],
+      zoom_initial: 12,
+      zoom_min: 1,
+      zoom_max: 20,
+      hybrid: {
+        zoom_level: 15
+      }
+    },
+    filter_defaults: {
+      map_options: 'all/download'
+    }
+  },
+  opendata: { <12>
+    startDate: {
+      year: 2019,
+      month: 9
+    }
+  },
+  user: { <13>
+    allow_query_uuid: true,
+    allow_set_uuid: false,
+    shown: {
+      force_ip4: true,
+      invisible: false,
+      anonymous_mode: true,
+      no_anonymize_before_delete_user: false,
+      delete_user: true,
+      client_uuid: true,
+      measurement_selection: true,
+      measurement_selection_speed: true,
+      measurement_selection_qos: true
+    }
+  },
+  socialMediaSettings: { <14>
+    history: {
+      medias: ['FACEBOOK', 'TWITTER', 'MAIL', 'WHATSAPP']
+    }
+  }
+};
+
+----
+
+<1> True, if the environment configuration is intended for production use, false otherwise
+<2> A list of selectable features for the displayed website. Setting any of the available features (e.g. statistics, help) to `false` will remove them from the menus and will prevent direct navigation to the concerned subpage.
+NOTE: The portal website only supports a subset of the available features (e.g. nettests are currently hard-disabled on the portal website).
+<3> Defines the page to be shown if the user visits the base path
+<4> User agent string to be set if certain subpages are to be denied to certain user agents. If required, needs further changes in `libs/core/services/guard.service.ts`. Currently hard-disabled to prevent hard to find bugs for users without extensive knowledge of the system.
+<5> Array of languages to be displayed in the language select menu. Languages in the array for which no translation file is available will not be selected, the user will stay in the currently selected language (NOTE: translation files are located in `nntool-typescript/libs/assets/i18n`).
+<6> List of server urls to be used for the corresponding tasks (e.g. `search` points to the server providing the elastic search results)
+<7> A list of the used external keys. Currently contains only a single entry for the bing maps service, which is needed to display the map of measurements.
+<8> Colour definitions to be used in the website. The `gauge` subsection provides detailed colouring options for the gauge displayed during speed measurements.
+<9> Options about the execution of the speed test, e.g. allows for enabling of a custom terms and conditions message.
+<10> Internal configuration to send the correct type information with the JSON requests. This allows the json deserializer of the Java servers to pick the correct class to deserialize into.
+<11> Configurations for the map view. Defines the starting position and zoom level and the zoom-threshold at which to allow for point display in addition to the heatmap display.
+<12> Defines the earliest allowed date after which opendata measurements may be exported.
+<13> Contains options about what features users see on the settings subpage (e.g. whether or not users can select which stages of the speed test are executed during a measurement, or whether users can force usage of IPv4 during measurements).
+<14> Defines which social media share buttons should be displayed on the history screen.

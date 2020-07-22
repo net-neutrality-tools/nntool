@@ -39,10 +39,14 @@ class GpsLocationInformationCollector: BaseInformationCollector {
             geoLocation.accuracy = lastLocation.horizontalAccuracy
             //lastLocation.verticalAccuracy?
             geoLocation.altitude = lastLocation.altitude
-            geoLocation.heading = lastLocation.course
+            
+            if lastLocation.course >= 0 {
+                geoLocation.heading = lastLocation.course
+            }
+            
             geoLocation.latitude = lastLocation.coordinate.latitude
             geoLocation.longitude = lastLocation.coordinate.longitude
-            geoLocation.provider = "GPS"
+            //geoLocation.provider = nil
             geoLocation.speed = lastLocation.speed
 
             geoLocation.time = TimeHelper.localToUTCDate(localDate: lastLocation.timestamp)

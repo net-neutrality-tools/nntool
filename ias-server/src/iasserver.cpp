@@ -1,7 +1,7 @@
 /*!
     \file iasserver.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2020-03-17
+    \date Last update: 2020-05-11
 
     Copyright (C) 2016 - 2020 zafaco GmbH
 
@@ -38,11 +38,11 @@ bool RUNNING;
 bool OVERLOADED;
 Json CONFIG;
 
-int mPort               = 80;
-int mPortTls            = 443;
-int mPortTraceroute     = 8080;
-int mPortTracerouteTls  = 8443;
-int mPortUdp            = 80;
+int mPort               = 0;
+int mPortTls            = 0;
+int mPortTraceroute     = 0;
+int mPortTracerouteTls  = 0;
+int mPortUdp            = 0;
 
 pthread_mutex_t mutexLoad;
 
@@ -137,7 +137,13 @@ int main(int argc, char** argv)
 
     if (error.compare("") != 0)
     {
-        TRC_ERR("Configuration File not found, using defaults");
+        TRC_ERR("Configuration File error, using defaults");
+
+        mPort               = 80;
+        mPortTls            = 443;
+        mPortTraceroute     = 8080;
+        mPortTracerouteTls  = 8443;
+        mPortUdp            = 80;
     }
     else
     {

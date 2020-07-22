@@ -233,6 +233,12 @@ function createUiWindow() {
   uiWindow = new BrowserWindow(uiWindowSettings);
   uiWindow.center();
 
+  if (!debugMode) {
+    uiWindow.removeMenu();
+    //uiWindow.setMenu(null);
+    uiWindow.setMenuBarVisibility(false);
+  }
+
   const launchPath = getLaunchPath('index.html');
   console.log('launched electron with:', launchPath);
 

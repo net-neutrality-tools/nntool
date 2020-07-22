@@ -17,32 +17,17 @@
         complete: class="btn__nettest-state complete"
         -->
         <button class="btn__nettest-state" [ngClass]="{'inprogress': manualStartShouldBeDisabled}" id="nettest-state-the-second"
-            (click)="requestStart()" style="font-family: initial;">
+            (click)="requestStart()" [ngStyle]="{'font-family': 'initial', 'bottom': (showInvalidInputWarning ? 2 : 10) + 'vh'}">
             {{ 'NETTEST.GAUGE.GO' | translate}}
         </button>
 
         <ng-container *ngIf="showInvalidInputWarning">
-            <!-- Style this in css -->
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-
             <div class="warning-area" *ngIf="showInvalidInputWarning">
                 <h2 class="warning-title">{{'NETTEST.LOOP.INVALID_INPUT_HEADER' | translate }}</h2>
                 <p class="warning-solution" style="cursor: pointer" routerLink="/settings">
-                    {{'NETTEST.LOOP.INVALID_INPUT_DESCRIPTION' | translate }}</p>
+                    {{'NETTEST.LOOP.INVALID_INPUT_DESCRIPTION' | translate:{ maxAllowedRepetitions: maxAllowedRepetitions, maxTimeBetweenRepetitions: maxTimeBetweenRepetitions} }}</p>
             </div>
         </ng-container>
-
     </div>
 
     <div *ngIf="testImpl.curRepetitions >= 0 && testImpl.alreadyStarted">
@@ -56,7 +41,7 @@
             <div class="content--column">
                 <header class="column-header">
                     <h3 *ngIf="testImpl.curRepetitions < testImpl.loopModeConfig.numRepetitions">{{ 'NETTEST.LOOP.TIME_LEFT' | translate }}</h3>
-                    <h2 *ngIf="testImpl.curRepetitions < testImpl.loopModeConfig.numRepetitions">{{testImpl.timeLeftString}}</h2>
+                    <h2 *ngIf="testImpl.curRepetitions < testImpl.loopModeConfig.numRepetitions">{{ testImpl.timeLeftString }}</h2>
                     <h2 *ngIf="testImpl.curRepetitions === testImpl.loopModeConfig.numRepetitions">{{ 'NETTEST.LOOP.FINISHED' | translate }}</h2>
                 </header>
             </div>

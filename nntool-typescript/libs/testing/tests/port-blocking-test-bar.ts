@@ -55,16 +55,24 @@ export class PortBlockingTestBarComponent extends BarUIComponent<
         key: PortBlockingTestTypeEnum;
         ports: Array<{
           number: number;
-          reachable: boolean;
-          finished: boolean;
+          packets: {
+            requested_packets: number,
+            lost: number;
+            received: number;
+            sent: number
+          };
         }>;
       }) => {
         const mappedType: {
           key: BarUIShowableTestTypeEnum;
           ports: Array<{
             number: number;
-            reachable: boolean;
-            finished: boolean;
+            packets: {
+              requested_packets: number,
+              lost: number;
+              received: number;
+              sent: number
+            };
           }>;
         } = { key: undefined, ports: undefined };
         mappedType.key = BarUIShowableTestTypeEnum[PortBlockingTestTypeEnum[type.key]];

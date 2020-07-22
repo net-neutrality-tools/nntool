@@ -1,5 +1,5 @@
+[[load-balancing-service]]
 = Load balancing service
-
 
 == Load balancing service (measurement peer)
 
@@ -12,7 +12,7 @@ The following options are available:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`enabled`
 |boolean
 |`true`
@@ -37,7 +37,7 @@ The following options are available:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`enabled`
 |boolean
 |`true`
@@ -100,7 +100,7 @@ The LBI provides an API which is used to request necessary information about the
 |Request path
 |HTTP Method
 |Response model
-|Desciption
+|Description
 |`/load/{serverId}`
 |GET
 |ApiResponse<LoadApiReport>
@@ -108,7 +108,10 @@ The LBI provides an API which is used to request necessary information about the
 |`/free`
 |GET
 |ApiResponse<MeasurementServerDto> 
-|Returns an available (or "free" = low load) measurement peer. Additionally the query parameter `preferredId`, containing the identifier of the preferred measurement peer can be provided to indicate a personal measurement peer preference. Note that this does not guarantee the selection of the preferred measurement peer if the load and/or health status is not satisfactory.
+|Returns an available (or "free" = low load) measurement peer. Additionally the query parameter `preferredId`, containing the identifier of the preferred measurement peer can be provided to indicate a personal measurement peer preference. 
+Note that this does not guarantee the selection of the preferred measurement peer if the load and/or health status is not satisfactory. 
+The server selection is _not_ influenced by the load of the servers. The first server marked as "not overloaded" is returned by this resource. 
+There also is no specific order to the list of servers maintained by the LBI.
 |===
 
 === Load balancing interface configuration
@@ -122,7 +125,7 @@ The following options are available:
 |Option
 |Type
 |Default
-|Desciption
+|Description
 |`enabled`
 |boolean
 |`false`
@@ -136,3 +139,7 @@ The following options are available:
 |`0`
 |The number of failed loadbalancing service requests to any measurement peer, until the measurement peer becomes unavailable.
 |===
+
+=== Load balancing interface server selection
+
+The resource `GET /free` is used to obtain a valid measurement server.

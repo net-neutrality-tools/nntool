@@ -1,0 +1,68 @@
+[[search-service]]
+= Search service
+
+This service is responsible for searching in open-data measurement data und exporting that data into
+multiple export formats (CSV, JSON, YAML).
+
+== Requirements
+
+ElasticSearch 7.3 is used to execute the search queries. Please make sure to set up ElasticSearch
+and either import data or configure the collector and/or open-data-collector accordingly.
+
+== Configuration
+
+The search-service is configured as follows:
+
+[source,yaml]
+----
+search-service:
+  settings-uuid: "4e7567ef-175b-44f4-8436-8fd6d22dab48" # <1>
+  elasticsearch:
+    host: localhost # <2>
+    port: 19200 # <3>
+    scheme: http # <4>
+    index: nntool # <5>
+    queryTimeout: 10s # <6>
+  search:
+    maxPageSize: 100 # <7>
+  export:
+    maxPageSize: 100 # <8>
+    prefix:
+      global: export # <9>
+      singleResult: O # <10>
+      dateRange: by_date # <11>
+      searchResult: by_query # <12>
+    zip:
+      additionalFiles: # <13>
+        - title: LICENSE.txt # <14>
+          location: /etc/nntool/demo_LICENSE.txt # <15>
+    extensions:
+      csv:
+        fields: # <16>
+          - title: open_data_uuid # <17>
+            pointer: /open_data_uuid # <18>
+            includeInCoarse: true # <19>
+----
+<1> The uuid of the settings document used to configure this service. This is the same uuid that should be configured in the controller-service.
+<2> The hostname of the ElasticSearch database.
+<3> The port on which the ElasticSearch database listens.
+<4> The protocol/scheme use to connect the ElasicSearch (can be either http or https).
+<5> The index in which measurement data is stored inside the database.
+<6> The default query timeout.
+<7> The maximum number of elements returned for a single page.
+<8> The maximum number of elements exported for a single page.
+<9> The global prefix string which is prepended to all export filenames.
+<10> The prefix string which is prepended to single results.
+<11> The prefix string which is prepended to queries by date.
+<12> The prefix string which is prepended to queries by search request.
+<13> It is possible to include other arbitrary files into the export zip file.
+<14> The title of the file as it will be named inside the zip.
+<15> The location of the file to include. Can be a Spring resource string (e.g. classpath:file.txt).
+<16> Configuration for fields that are to be included into the CSV export.
+<17> Title of the field as it appears inside the CSV header.
+<18> A JSON-pointer to the field inside the FullMeasurementResponseDto class (objects are separated by single slashes).
+<19> Set this flag to true if this field should also be included in the coarse export.
+
+== API documentation
+
+Please refer to the Swagger UI (available at `/api/v1/documentation` when the search-service is started) and/or OpenAPI sepecifications for the API documentation.

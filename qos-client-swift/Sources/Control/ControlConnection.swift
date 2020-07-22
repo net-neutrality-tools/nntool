@@ -45,7 +45,7 @@ public class ControlConnection: NSObject {
     private let delegateQueue = DispatchQueue(label: "at.alladin.nettest.qos.control.delegate")
     private let commandQueue = DispatchQueue(label: "at.alladin.nettest.qos.control.command")
 
-    private var socket: GCDAsyncSocketProtocol
+    private var socket: /*GCDAsyncSocketProtocol*/GCDAsyncSocket
 
     private(set) var state: State = .disconnected
 
@@ -63,7 +63,7 @@ public class ControlConnection: NSObject {
     private let timeoutS: Double
     let token: String/*?*/ // TODO: make token optional
 
-    public init(host: String, port: UInt16, tls: Bool = true, timeoutS: Double, token: String, socket: GCDAsyncSocketProtocol = GCDAsyncSocket() /* testability */) {
+    public init(host: String, port: UInt16, tls: Bool = true, timeoutS: Double, token: String, socket: /*GCDAsyncSocketProtocol*/GCDAsyncSocket = GCDAsyncSocket() /* testability */) {
         // TODO: GCDAsyncSocketProtocol
 
         self.host = host

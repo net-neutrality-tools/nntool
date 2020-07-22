@@ -212,13 +212,20 @@ export abstract class BarUIComponent<T extends TestImplementation<TC, TS>, TC ex
   }
 
   private calculateProgressOfTestType = (type: BarTestResult): number => {
-    const numberOfPortsToTest = type.ports.length;
+    let numberOfPortsToTest = 0;
     let numberOfTestedPorts = 0;
+    type.ports.forEach((port: {
+      number: number;
+      packets: {
+        requested_packets: number,
+        lost: number;
+        received: number;
+        sent: number
+      };
+    }) => {
 
-    type.ports.forEach((port: { number: number; reachable: false; finished: false }) => {
-      if (port.finished) {
-        numberOfTestedPorts++;
-      }
+        numberOfTestedPorts += port.packets.sent + port.packets.received;
+        numberOfPortsToTest += port.packets.requested_packets;
     });
 
     return numberOfTestedPorts / numberOfPortsToTest;

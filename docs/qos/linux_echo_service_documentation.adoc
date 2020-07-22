@@ -1,6 +1,7 @@
-# Linux Echo Service Documentation
+[[linux-echo-setup]]
+= Linux Echo Service Documentation
 
-## Setup
+== Setup
 
 Xinetd is an implementation of the echo service protocol and available on all major linux distributions.
 To install xinetd on a Debian-based operating system run `apt install xinetd`.

@@ -21,9 +21,18 @@ export class PortBlockingTestState extends TestState {
   public types: Array<{
     key: PortBlockingTestTypeEnum;
     ports: Array<{
+      packets: {
+        requested_packets: number,
+        lost: number; 
+        received: number;
+        sent: number 
+      }; 
+      delay?: { 
+        average_ns: number;
+        standard_deviation_ns: number 
+      };
+      delays?: number[];
       number: number;
-      reachable: boolean;
-      finished: boolean;
       uid: string;
     }>;
   }>;
