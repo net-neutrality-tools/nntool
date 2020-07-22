@@ -18,6 +18,8 @@ import { MeasurementTypeParameters } from '../../core/models/lmap/models/shared/
 
 export class MeasurementSettings {
   public speedConfig: MeasurementTypeParameters;
+  public authToken?: string;
+  public authTimestamp?: string;
   public serverPort: string;
   public encryption: boolean;
   public serverAddress: string;

@@ -69,6 +69,9 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
   private readonly paramServerAddress: string = 'server_addr_default';
   private readonly paramCollector: string = 'result_collector_base_url';
   private readonly paramEncryption: string = 'encryption';
+  private readonly paramAuthToken: string = 'auth_token';
+  private readonly paramAuthTimestamp: string = 'auth_timestamp';
+
   private speedControl: LmapTask = undefined;
   private qosControl: LmapTask = undefined;
   private testResults: Array<SpeedMeasurementResult | QoSMeasurementResult> = [];
@@ -340,6 +343,12 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
                 }
                 case this.paramEncryption:
                   this.speedConfig.encryption = option.value === 'true';
+                  break;
+                case this.paramAuthToken:
+                  this.speedConfig.authToken = option.value;
+                  break;
+                case this.paramAuthTimestamp:
+                  this.speedConfig.authTimestamp = option.value;
                   break;
               }
             }
