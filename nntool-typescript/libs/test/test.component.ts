@@ -235,6 +235,7 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
       qosMeasurementResult.results.push({
         udp_result_out_num_packets: port.packets.sent,
         udp_result_out_rtt_avg_ns: port.delay ? port.delay.average_ns : null,
+        udp_result_out_rtts_ns: port.delays ? port.delays : null,
         udp_result_out_delay_standard_deviation_ns: port.delay ? port.delay.standard_deviation_ns : null,
         udp_objective_out_num_packets: port.packets.requested_packets,
         qos_test_uid: port.uid,

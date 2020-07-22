@@ -82,12 +82,13 @@ export class PortBlockingTestImplementation extends TestImplementation<PortBlock
         if (currentState.udp_port_blocking && currentState.udp_port_blocking.results) {
           currentState.udp_port_blocking.results.forEach((result: any) => {
             const testedPort = parseInt(result.port, 10);
-            state.types[0].ports.forEach((port: { number: number; packets: { requested_packets: number; lost: number; received: number; sent:number}; delay: {average_ns: number; standard_deviation_ns: number}; uid: string }) => {
+            state.types[0].ports.forEach((port: { number: number; packets: { requested_packets: number; lost: number; received: number; sent:number}; delay: {average_ns: number; standard_deviation_ns: number}; delays: number[]; uid: string }) => {
               if (port.number === testedPort) {
                 port.packets.lost = result.packets.lost;
                 port.packets.received = result.packets.received;
                 port.packets.sent = result.packets.sent;
                 port.delay = result.delay;
+                port.delays = result.delays;
               }
             });
           });

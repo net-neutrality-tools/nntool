@@ -49,7 +49,7 @@ class GpsLocationInformationCollector: BaseInformationCollector {
             //geoLocation.provider = nil
             geoLocation.speed = lastLocation.speed
 
-            geoLocation.time = lastLocation.timestamp
+            geoLocation.time = TimeHelper.localToUTCDate(localDate: lastLocation.timestamp)
             geoLocation.relativeTimeNs = self.currentRelativeTimeNs()
 
             logger.debug("GEOLOCATION: \(geoLocation.debugDescription)")
