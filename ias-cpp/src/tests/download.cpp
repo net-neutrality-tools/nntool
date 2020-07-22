@@ -99,7 +99,7 @@ int Download::run()
 
 			ips = CTool::getIpsFromHostname( mServerName, bReachable );
 
-			if (ips->ai_socktype != 1 && ips->ai_socktype != 2)
+			if (ips == nullptr || (ips->ai_socktype != 1 && ips->ai_socktype != 2))
 			{
 				//Error
 				::UNREACHABLE = true;

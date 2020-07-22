@@ -204,14 +204,15 @@ public class MeasurementService extends Service implements ServiceConnection {
         final String clientIpv4 = options.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE);
         final String clientIpv6 = options.getString(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE);
 
-
         final boolean forceIpv4 = PreferencesUtil.isForceIpv4(getApplicationContext()) && clientIpv4 != null;
 
         //if ipV6 is available, use it
+
+        /*
         if (clientIpv6 != null && !forceIpv4)  {
             Log.d(TAG, "Using IPv6...");
             speedTaskDesc.setUseIpV6(true);
-            speedTaskDesc.setClientIp(clientIpv6);
+            speedTaskDesc.setClientIp(speedTaskDesc.getSpeedServerAddrDefault());
             options.remove(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PRIVATE);
             options.remove(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV4_PUBLIC);
         } else {
@@ -220,11 +221,19 @@ public class MeasurementService extends Service implements ServiceConnection {
             options.remove(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PRIVATE);
             options.remove(EXTRAS_KEY_SPEED_TASK_CLIENT_IPV6_PUBLIC);
         }
+        */
 
         //fetch user settings to adapt provided taskDesc
         speedTaskDesc.setPerformRtt(PreferencesUtil.isPingEnabled(getApplicationContext()));
         speedTaskDesc.setPerformDownload(PreferencesUtil.isDownloadEnabled(getApplicationContext()));
         speedTaskDesc.setPerformUpload(PreferencesUtil.isUploadEnabled(getApplicationContext()));
+
+        /*
+        speedTaskDesc.setSpeedServerAddrV4("10.9.30.171");
+        speedTaskDesc.setSpeedServerAddrV6("10.9.30.171");
+        speedTaskDesc.setSpeedServerPort(80);
+        speedTaskDesc.setUseEncryption(false);
+        */
 
         jniSpeedMeasurementClient = new JniSpeedMeasurementClient(speedTaskDesc);
 

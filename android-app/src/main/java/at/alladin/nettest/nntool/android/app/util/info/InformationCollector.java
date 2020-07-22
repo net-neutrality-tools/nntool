@@ -211,6 +211,7 @@ public class InformationCollector
                         isMobileOperator = true;
                         break;
                     case WLAN:
+                    case LAN:
                         isMobileOperator = false;
                         break;
                     case UNKNOWN:

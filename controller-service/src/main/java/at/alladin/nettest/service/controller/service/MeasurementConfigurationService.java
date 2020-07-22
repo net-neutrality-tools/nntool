@@ -65,13 +65,6 @@ public class MeasurementConfigurationService {
 		ret.setEvents(getImmediateEventList());
 		ret.setSchedules(getLmapScheduleList(ret.getEvents().get(0).getName(), ret.getTasks()));
 		
-		try {
-			logger.debug("{}", new ObjectMapper().writeValueAsString(ret));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 		if (loadBalancingService != null) {
 			MeasurementServerDto serverDto = loadBalancingService.getNextAvailableMeasurementServer(controllerServiceProperties.getSettingsUuid(), null);
 			logger.debug("Got measurement peer from load balancer: {}", serverDto);
@@ -93,6 +86,18 @@ public class MeasurementConfigurationService {
 					if (task.getName() != null && task.getOptions() != null) {
 						final MeasurementTypeDto type = MeasurementTypeDto.valueOf(task.getName().toUpperCase());
 						if (type == MeasurementTypeDto.SPEED) {
+							if (serverDto.getAuthToken() != null && serverDto.getAuthTimestamp() != null) {
+								final LmapOptionDto authTokenOption = new LmapOptionDto();
+								authTokenOption.setName(LmapTaskDto.AUTH_TOKEN);
+								authTokenOption.setValue(serverDto.getAuthToken());
+								task.getOptions().add(authTokenOption);
+
+								final LmapOptionDto authTsOption = new LmapOptionDto();
+								authTsOption.setName(LmapTaskDto.AUTH_TIMESTAMP);
+								authTsOption.setValue(String.valueOf(serverDto.getAuthTimestamp()));
+								task.getOptions().add(authTsOption);
+							}
+
 							for (final LmapOptionDto option : task.getOptions()) {
 								switch(option.getName()) {
 								case LmapTaskDto.SERVER_ADDRESS:
@@ -102,7 +107,7 @@ public class MeasurementConfigurationService {
 									option.setValue(serverDto.getAddressIpv6());
 									break;
 								case LmapTaskDto.SERVER_ADDRESS_DEFAULT:
-									option.setValue(useIPv6 ? serverDto.getAddressIpv6() : serverDto.getAddressIpv4());
+									option.setValue(useIPv6 && serverDto.getAddressIpv6() != null ? serverDto.getAddressIpv6() : serverDto.getAddressIpv4());
 									break;
 								case LmapTaskDto.SERVER_PORT:
 									option.setValue(String.valueOf(port));
@@ -118,6 +123,13 @@ public class MeasurementConfigurationService {
 			}
 		}
 
+		try {
+			logger.debug("{}", new ObjectMapper().writeValueAsString(ret));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return ret;
 	}
 	
