@@ -39,6 +39,9 @@ class IASProgram: NSObject, ProgramProtocol {
     var serverAddress: String?
     var serverPort: String?
     var encryption = false
+    
+    var authToken: String?
+    var authTimestamp: String?
 
     private var currentPhase = SpeedMeasurementPhase.initialize
 
@@ -79,6 +82,11 @@ class IASProgram: NSObject, ProgramProtocol {
         }
 
         speed.wss = encryption ? 1 : 0
+
+        if authToken != nil && authTimestamp != nil {
+            speed.authToken = authToken
+            speed.authTimestamp = authTimestamp
+        }
 
         speed.platform = "mobile"
         speed.performRttMeasurement      = programConfiguration?.enabledTasks.contains("rtt") ?? true

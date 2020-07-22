@@ -64,6 +64,11 @@ let MEASUREMENT_AGENT =
                     p.encryption = Bool(encryptionStr) ?? false
                 }
             }
+                
+            if let authToken = taskDto.getOptionByName("auth_token"), let authTimestamp = taskDto.getOptionByName("auth_timestamp") {
+                p.authToken = authToken
+                p.authTimestamp = authTimestamp
+            }
 
             return p
         })
