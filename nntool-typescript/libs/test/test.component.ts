@@ -272,7 +272,6 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
       traceroute_objective_is_reverse: tracerouteTestResult.result.is_reverse,
       qos_test_uid: tracerouteTestResult.result.qos_test_uid,
       traceroute_objective_host: tracerouteTestResult.result.host,
-      traceroute_objective_port: tracerouteTestResult.result.port,
       traceroute_result_hops: traceroute_result_details.length,
     });
     
