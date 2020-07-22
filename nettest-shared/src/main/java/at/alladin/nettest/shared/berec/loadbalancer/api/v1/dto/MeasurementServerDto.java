@@ -140,6 +140,15 @@ public class MeasurementServerDto {
 	@JsonProperty("auth_timestamp")
 	private Long authTimestamp;
 
+	/**
+	 * The measurement servers traceroute URL
+	 */
+	@JsonPropertyDescription("The measurement servers traceroute URL")
+	@Expose
+	@SerializedName("traceroute_url")
+	@JsonProperty("traceroute_url")
+	private String tracerouteUrl;
+
 	public String getIdentifier() {
 		return identifier;
 	}
@@ -234,6 +243,14 @@ public class MeasurementServerDto {
 
 	public void setAuthToken(String authToken) {
 		this.authToken = authToken;
+	}
+	
+	public String getTracerouteUrl() {
+		return tracerouteUrl;
+	}
+
+	public void setTracerouteUrl(String tracerouteUrl) {
+		this.tracerouteUrl = tracerouteUrl;
 	}
 
 	@Override
