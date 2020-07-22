@@ -561,6 +561,7 @@ public class CouchDbStorageService implements StorageService {
 			dto.setName(p.getName());
 			dto.setPreferEncryption(p.isPreferEncryption());
 			dto.setSecretKey(p.getSecretKey());
+			dto.setTracerouteUrl(p.getTracerouteUrl());
 			if (p.getLoadApi() != null) {
 				dto.setLoadApiSecretKey(p.getLoadApi().getSecretKey());
 				dto.setLoadApiUrl(p.getLoadApi().getUrl());

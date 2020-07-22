@@ -182,6 +182,15 @@ public class MeasurementServer {
 	@SerializedName("load_api")
 	@JsonProperty("load_api")
 	private MeasurementServerLoadApi loadApi;
+	
+	/**
+	 * @see MeasurementServerLoadApi
+	 */
+	@JsonPropertyDescription("Measurement server traceroute URL")
+	@Expose
+	@SerializedName("traceroute_url")
+	@JsonProperty("traceroute_url")
+	private String tracerouteUrl;
 
 	public String getUuid() {
 		return uuid;
@@ -301,5 +310,13 @@ public class MeasurementServer {
 
 	public void setLoadApi(MeasurementServerLoadApi loadApi) {
 		this.loadApi = loadApi;
+	}
+
+	public String getTracerouteUrl() {
+		return tracerouteUrl;
+	}
+
+	public void setTracerouteUrl(String tracerouteUrl) {
+		this.tracerouteUrl = tracerouteUrl;
 	}
 }
