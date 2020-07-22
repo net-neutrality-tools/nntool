@@ -112,7 +112,34 @@ public class MeasurementServerDto {
 	@SerializedName("prefer_encryption")
 	@JsonProperty("prefer_encryption")	
 	private boolean preferEncryption;
-	
+
+	/**
+	 * The measurement server's secret key used to generate measurement tokens.
+	 */
+	@JsonPropertyDescription("The measurement server's secret key used to generate measurement tokens.")
+	@Expose
+	@SerializedName("secret_key")
+	@JsonProperty("secret_key")
+	private String secretKey;
+
+	/**
+	 * The measurement server's authentication token
+	 */
+	@JsonPropertyDescription("The measurement server's auth token.")
+	@Expose
+	@SerializedName("auth_token")
+	@JsonProperty("auth_token")
+	private String authToken;
+
+	/**
+	 * The measurement server's authentication secret
+	 */
+	@JsonPropertyDescription("The LB's auth timestamp in us.")
+	@Expose
+	@SerializedName("auth_timestamp")
+	@JsonProperty("auth_timestamp")
+	private Long authTimestamp;
+
 	public String getIdentifier() {
 		return identifier;
 	}
@@ -185,11 +212,45 @@ public class MeasurementServerDto {
 		this.preferEncryption = preferEncryption;
 	}
 
+	public Long getAuthTimestamp() {
+		return authTimestamp;
+	}
+
+	public void setAuthTimestamp(Long authTimestamp) {
+		this.authTimestamp = authTimestamp;
+	}
+
+	public String getSecretKey() {
+		return secretKey;
+	}
+
+	public void setSecretKey(String secretKey) {
+		this.secretKey = secretKey;
+	}
+
+	public String getAuthToken() {
+		return authToken;
+	}
+
+	public void setAuthToken(String authToken) {
+		this.authToken = authToken;
+	}
+
 	@Override
 	public String toString() {
-		return "MeasurementServerDto [identifier=" + identifier + ", name=" + name + ", loadApiUrl=" + loadApiUrl
-				+ ", loadApiSecretKey=" + loadApiSecretKey + ", port=" + port + ", portTls=" + portTls
-				+ ", addressIpv4=" + addressIpv4 + ", addressIpv6=" + addressIpv6 + ", preferEncryption="
-				+ preferEncryption + "]";
+		return "MeasurementServerDto{" +
+				"identifier='" + identifier + '\'' +
+				", name='" + name + '\'' +
+				", loadApiUrl='" + loadApiUrl + '\'' +
+				", loadApiSecretKey='" + loadApiSecretKey + '\'' +
+				", port=" + port +
+				", portTls=" + portTls +
+				", addressIpv4='" + addressIpv4 + '\'' +
+				", addressIpv6='" + addressIpv6 + '\'' +
+				", preferEncryption=" + preferEncryption +
+				", secretKey='" + secretKey + '\'' +
+				", authToken='" + authToken + '\'' +
+				", timestamp=" + authTimestamp +
+				'}';
 	}
 }

@@ -119,6 +119,8 @@ public class MeasurementInitiationResource {
 		
 		//measurementInitiationRequest.getAgent().getAgentId();
 		
+		
+		
 		return ResponseEntity.ok(lmapControlDto);
 	}
 }
