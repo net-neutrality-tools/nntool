@@ -19,13 +19,14 @@ import { TestState } from '../test-state';
 export class TracerouteTestState extends TestState {
     public result: {
         qos_test_uid?: string,
-        port?: number,
         host?: string,
         startTimeNs?: number,
         endTimeNs?: number,
         timeout?: number,
         max_hops?: number,
         is_reverse?: boolean,
+        auth_timestamp?: string,
+        auth_token?: string,
         hops?: Array<{
             id: string,
             ip: string
