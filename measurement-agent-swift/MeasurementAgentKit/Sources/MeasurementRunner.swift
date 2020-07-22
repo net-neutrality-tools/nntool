@@ -120,7 +120,7 @@ public class MeasurementRunner {
             return
         }
 
-        let startTime = Date()
+        let startTime = TimeHelper.currentDateUTC()
         let startTimeNs = TimeHelper.currentTimeNs()
 
         let informationCollector = SystemInformationCollector.defaultCollector(connectivityService: agent.newIPConnectivityInfo())
@@ -171,7 +171,7 @@ public class MeasurementRunner {
 
             do {
                 // TODO: how to cancel measurement?
-                let result = try programInstance.run(relativeStartTimeNs: TimeHelper.currentTimeNs() - startTimeNs)
+                let result = try programInstance.run(startTimeNs: TimeHelper.currentTimeNs(), startTimeMs: TimeHelper.currentTimeMs())
                 //logger.debug(":: program \(taskName) returned result:")
                 //logger.debug(result)
                 //logger.debug(":: -------")
@@ -202,7 +202,7 @@ public class MeasurementRunner {
     }
 
     private func submitMeasurementResult(tasks: [LmapTaskDto], taskResultDict: [MeasurementTypeDto: SubMeasurementResult], startTime: Date, startTimeNs: UInt64, timeBasedResult: TimeBasedResultDto) {
-        let endTime = Date()
+        let endTime = TimeHelper.currentDateUTC()
         let endTimeNs = TimeHelper.currentTimeNs()
 
         // TODO: measurement finished vs results submitted -> add additional state
@@ -214,7 +214,8 @@ public class MeasurementRunner {
         reportModel.agentId = agentUuid
         //reportModel.groupId = "" // TODO
         //reportModel.measurementPoint = "" // TODO
-        reportModel.date = Date()
+        reportModel.date = TimeHelper.currentDateUTC()
+        reportModel.localTime = Date()
 
         timeBasedResult.startTime = startTime
         timeBasedResult.endTime = endTime
