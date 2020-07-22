@@ -68,9 +68,20 @@ public class MeasurementConfigurationService {
 		ret.setTasks(getTaskListForCapabilities(capabilities, useIPv6));
 		ret.setEvents(getImmediateEventList());
 		ret.setSchedules(getLmapScheduleList(ret.getEvents().get(0).getName(), ret.getTasks()));
+
+		String preferredServerId = null;
+		for (LmapCapabilityTaskDto task : capabilities.getTasks()) {
+			switch(MeasurementTypeDto.valueOf(task.getTaskName().toUpperCase())) {
+				case SPEED:
+					preferredServerId = task.getSelectedMeasurementPeerIdentifier();
+					break;
+				default:
+					break;
+			}
+		};
 		
 		if (loadBalancingService != null) {
-			MeasurementServerDto serverDto = loadBalancingService.getNextAvailableMeasurementServer(controllerServiceProperties.getSettingsUuid(), null);
+			MeasurementServerDto serverDto = loadBalancingService.getNextAvailableMeasurementServer(controllerServiceProperties.getSettingsUuid(), preferredServerId);
 			logger.debug("Got measurement peer from load balancer: {}", serverDto);
 			if (serverDto != null && ret.getTasks() != null) {
 	            Integer port = null;
