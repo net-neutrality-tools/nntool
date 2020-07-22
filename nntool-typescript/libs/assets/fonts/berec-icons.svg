@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg">
-<metadata>Copyright (C) 2019 by original authors @ fontello.com</metadata>
+<metadata>Copyright (C) 2020 by original authors @ fontello.com</metadata>
 <defs>
 <font id="berec-icons" horiz-adv-x="1000" >
 <font-face font-family="berec-icons" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
@@ -56,6 +56,12 @@
 
 <glyph glyph-name="location" unicode="&#x78;" d="M500 266c-47 0-84 37-84 84s37 84 84 84 84-37 84-84-37-84-84-84z m0 150c-37 0-66-30-66-66 0-37 30-66 66-66 37 0 66 30 66 66 0 37-29 66-66 66z m9 351h-17v-271h17v271z m0-563h-17v-271h17v271z m-155 155h-271v-17h271v17z m563 0h-271v-17h271v17z m-372 291c132-19 236-123 255-256h18c-20 142-131 254-273 274v-18z m-345-256c19 133 123 237 256 256v18c-142-20-254-131-273-273h17z m256-344c-133 19-237 123-256 255h-18c20-142 131-254 273-273v18z m344 255c-19-132-123-236-255-255v-18c142 20 254 131 273 273h-18z" horiz-adv-x="1000" />
 
+<glyph glyph-name="share-android" unicode="&#xc0;" d="M808 150v0a108 108 0 0 1-92-52l-424 212a107 107 0 0 1 0 80l424 212a108 108 0 1 1 92 165v0a108 108 0 0 1-100-149l-424-212a108 108 0 1 1 0-112l424-212a108 108 0 1 1 100 68z m0 599h5a93 93 0 1 0-5 0z m-616-489a91 91 0 1 0 90 90 91 91 0 0 0-90-90z m616-309a90 90 0 1 0 0 181h5a91 91 0 0 0-5-181z" horiz-adv-x="1000" />
+
+<glyph glyph-name="share-ios" unicode="&#xc1;" d="M917-67h-834v417h18v-399h798v399h18z m-684 640c8 4 161 116 262 190l5 4 5-4c101-74 254-186 262-190l-9-16c-6 3-186 135-249 181v-558h-18v558c-63-46-243-178-249-181z" horiz-adv-x="1000" />
+
+<glyph glyph-name="language" unicode="&#xdf;" d="M500 749c220 0 399-179 399-399s-179-399-399-399c-57 0-112 11-163 35l-9 3-7-4c-53-28-115-34-158-34-9 0-16 0-24 1 23 20 49 56 67 115l2 10-6 7c-64 74-101 168-101 266 0 220 179 399 399 399m0 18c-230 0-417-187-417-417 0-107 40-204 106-277-36-121-104-133-104-133s33-7 78-7c49 0 112 7 167 36 52-23 110-37 170-37 230 0 417 187 417 417s-187 418-417 418l0 0z" horiz-adv-x="1000" />
+
 <glyph glyph-name="voip" unicode="&#xe0;" d="M192 387v-74h-18v28h-91v18h91v28h18z m721-32l0 0 0 0c-74 101-57 76-61 84l-16-9c3-6 6-8 52-71v0h-96v28h-18v-74h18v28h96c-46-63-49-64-52-71l16-8c4 7-13-18 61 83l4 5-4 5z m-521 71h-18v-152h18v152z m-150-15h-18v-122h18v122z m100 0h-18v-122h18v122z m-50 33h-18v-188h18v188z m150 30h-18v-248h18v248z m100 0h-18v-248h18v248z m-50 67h-18v-382h18v382z m100-115h-18v-152h18v152z m50-15h-18v-122h18v122z m100 0h-18v-122h18v122z m-50 33h-18v-188h18v188z" horiz-adv-x="1000" />
 
 <glyph glyph-name="dns" unicode="&#xe1;" d="M404 350l-4-5c-74-101-56-76-61-83l-15 8c3 7 6 8 52 71h-293v18h293v0c-46 63-49 65-52 71l15 9c5-8-13 17 61-84l0 0 0 0 4-5z m490 9h-285c-71 97-54 72-59 80l-15-9c3-6 12-17 58-80-46-63-55-73-58-80l15-8c5 7-12-18 59 79h285v18z" horiz-adv-x="1000" />
@@ -79,6 +85,8 @@
 <glyph glyph-name="filter" unicode="&#xf9;" d="M917 698h-834v-18h48l310-285v-408l118 75v333l310 285h48v18z m-373-293l-3-3v-331l-82-52v383l-301 278h685l-299-275z" horiz-adv-x="1000" />
 
 <glyph glyph-name="traceroute" unicode="&#xfa;" d="M917 549h-621l112-193h509v-18h-311l108-187h174v0c-46 63-49 64-52 70l16 9c4-7-13 18 61-83l0 0 0 0 4-5-4-6c-74-101-57-75-61-83l-16 9c3 6 6 8 52 71l-184 0-119 205h-188l-122 211h-192v18h834v-18z" horiz-adv-x="1000" />
+
+<glyph glyph-name="echo-protocol" unicode="&#xfb;" d="M917 549h-709c46-62 49-64 52-70l-16-9c-4 8 13-18-61 84l-4 4 4 6h0c75 101 57 76 61 83l16-9c-3-6-6-8-52-71h709z m-4-402h0c-75 101-57 76-62 83l-16-8c4-7 6-8 53-71h-709v-18h709c-47-63-49-65-53-71l16-9c5 8-13-18 62 84l4 5z m-821 495h-18v-584h18z" horiz-adv-x="1000" />
 </font>
 </defs>
 </svg>

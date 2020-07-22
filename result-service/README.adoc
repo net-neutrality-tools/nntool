@@ -1,0 +1,98 @@
+[[result-service]]
+= Result service
+
+The result service provides an API which is used to fetch measurement results. The API can be accessed by concatenating the version prefix `/api/v1/measurement-agents/` (current version: `v1`) and the request path:
+
+[cols="3,2,4,10",options=header]
+|===
+
+|Request path
+|HTTP Method
+|Response model
+|Description
+
+|`{agentUuid}/measurements`
+|GET
+|ApiResponse<ApiPagination<BriefMeasurementResponse>>
+|This request is used to retrieve a paginated list of measurement results made by a specific measurement agent (`agentUuid`)
+
+|`{agentUuid}/measurements/{uuid}`
+|GET
+|ApiResponse<FullMeasurementResponse>
+|This request is used to retrieve a single measurement result (`uuid`) made by a specific measurement agent (`agentUuid`)
+
+|`{agentUuid}/measurements/{uuid}/details`
+|GET
+|ApiResponse<DetailMeasurementResponse>
+|This request is used to retrieve a detailed single measurement result (`uuid`) made by a specific measurement agent (`agentUuid`)
+
+|`{agentUuid}/measurements`
+|DELETE
+|ApiResponse<DisassociateResponse>
+|This request is used to disassociate all measurement results of a specific measurement agent (`agentUuid`)
+
+|`{agentUuid}/measurements/{uuid}`
+|DELETE
+|ApiResponse<DisassociateResponse>
+|This request is used to disassociate a single measurement result (`uuid`) of a specific measurement agent (`agentUuid`)
+
+|===
+
+== Configuration overview
+
+The result service provides advanced configuration which can be set in the default configuration files: `application.yml` and `application-dev.yml`
+
+== Configuration file: `application-dev.yml`
+
+The following options are available in the configuration file `application-dev.yml`:
+
+=== Section `spring.couchdb`
+
+In this section the connection to the _couchdb_ database can be configured:
+
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Description
+|`connection.url`
+|string
+|`http://localhost:5984`
+|The couchdb server address
+|`databases`
+|object[]
+|_see default config file_
+|Contains the configuration of all necessary databases for this service
+|===
+
+== Configuration file: `application.yml`
+
+The following options are available in the configuration file `application.yml`:
+
+=== Section `result`
+
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Description
+|`settings-uuid`
+|string (UUID)
+|`4e7567ef-175b-44f4-8436-8fd6d22dab48`
+|The UUID of the relevant settings in the database
+|===
+
+=== Section `server`
+[cols="4,2,4,10",options=header]
+|===
+|Option
+|Type
+|Default
+|Description
+|`port`
+|integer
+|`8082`
+|The port this service will bind to.
+|===

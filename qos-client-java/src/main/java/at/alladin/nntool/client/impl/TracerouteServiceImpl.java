@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright 2016-2019 alladin-IT GmbH
- * Copyright 2020 zafaco GmbH
+ * Copyright 2017-2020 alladin-IT GmbH
  * Copyright 2016 SPECURE GmbH
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,9 +17,6 @@
 
 package at.alladin.nntool.client.impl;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,6 +28,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import at.alladin.nntool.util.tools.TracerouteService;
 
@@ -59,20 +58,17 @@ public class TracerouteServiceImpl implements TracerouteService {
 		private final int received;
 		private final int errors;
 		private final int packetLoss;
-		private String fromIp;
-		private String fromIpFull;
-		private List<Long> measuredTimes;
+		private long time;
+		private final String fromIp;
 		
-		private final static Pattern PATTERN_PING_PACKET = Pattern.compile("([\\d]*) packets transmitted, ([\\d]*) received, ([+-]?([\\d]*) errors, )?([\\d]*)% packet loss, time ([\\d]*)ms");
-        private final static Pattern PATTERN_FROM_IP = Pattern.compile("[fF]rom ([\\.\\-_\\d\\w\\s\\(\\)]*)(:|icmp)+(.*time=([\\d\\.]*))?");
-        private final static Pattern PATTERN_IP = Pattern.compile("\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b");
-        private final static Pattern PATTERN_IPV6 = Pattern.compile(" \\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\\s* ");
+		public final static Pattern PATTERN_PING_PACKET =  Pattern.compile("([\\d]*) packets transmitted, ([\\d]*) received, ([+-]?([\\d]*) errors, )?([\\d]*)% packet loss, time ([\\d]*)ms");
+		//public final static Pattern PATTERN_FROM_IP =  Pattern.compile("[fF]rom ([\\.:-_\\d\\w\\s\\(\\)]*):(.*time=([\\d\\.]*))?");
+		public final static Pattern PATTERN_FROM_IP =  Pattern.compile("[fF]rom ([\\.\\-_\\d\\w\\s\\(\\)]*)(:|icmp)+(.*time=([\\d\\.]*))?");
 		
-		public PingDetailImpl(String pingResult) {
+		public PingDetailImpl(String pingResult, final long durationNs) {
 			System.out.println(pingResult);
 
-			measuredTimes = new ArrayList<>();
-
+			time = durationNs;;
 			final Matcher pingPacket = PATTERN_PING_PACKET.matcher(pingResult);
 			
 			if (pingPacket.find()) {
@@ -95,56 +91,25 @@ public class TracerouteServiceImpl implements TracerouteService {
 			}
 			
 			final Matcher fromIpMatcher = PATTERN_FROM_IP.matcher(pingResult);
-			if (fromIpMatcher.find())
-            {
-                fromIpFull = fromIpMatcher.group(1);
-                final Matcher ipv4Matcher = PATTERN_IP.matcher(fromIpFull);
-                final Matcher ipv6Matcher = PATTERN_IPV6.matcher(fromIpFull);
-                if (ipv4Matcher.find())
-                {
-                    fromIp = ipv4Matcher.group();
-                } else if (ipv6Matcher.find())
-                {
-                    fromIp = ipv6Matcher.group();
-                } else
-                {
-                    fromIp = "*";
-                }
-            } else
-            {
-                fromIpFull = "*";
-                fromIp = "*";
-            }	
-		}
-
-        void addTime(String ping) {
-            final Matcher fromIpMatcher = PATTERN_FROM_IP.matcher(ping);
-            fromIpMatcher.find();
-            if (fromIpMatcher.find()) {
-                do {
-                    String time = fromIpMatcher.group(4);
-                    if (time != null)
-                    {
-                        measuredTimes.add(TimeUnit.NANOSECONDS.convert((int) (Float.parseFloat(time) * 1000f), TimeUnit.MICROSECONDS));
-                    }
-                } while (fromIpMatcher.find());
-            }
-        }
-
-		public long getTime() {
-		    if(measuredTimes.isEmpty())
-		        return -1;
-			Long time = 0L;
-			int i = 0;
-			for (Long measuredTime : measuredTimes) {
-				time += measuredTime;
-				i++;
+			if (fromIpMatcher.find()) {
+				fromIp = fromIpMatcher.group(1);
+				String time = fromIpMatcher.group(4);
+				if (time != null) {
+					this.time = TimeUnit.NANOSECONDS.convert((int)(Float.parseFloat(time) * 1000f), TimeUnit.MICROSECONDS);
+				}
 			}
-			return time/i;
+			else {
+				fromIp = "*";
+			}
+			
 		}
 		
-		public List<Long> getMeasuredTimes() {
-			return measuredTimes;
+		public long getTime() {
+			return time;
+		}
+
+		public void setTime(long time) {
+			this.time = time;
 		}
 
 		public int getTransmitted() {
@@ -171,7 +136,7 @@ public class TracerouteServiceImpl implements TracerouteService {
 		public String toString() {
 			return "PingDetail [transmitted=" + transmitted + ", received="
 					+ received + ", errors=" + errors + ", packetLoss="
-					+ packetLoss + ", measuredTimes=" + measuredTimes.toString() + ", fromIp=" + fromIp
+					+ packetLoss + ", time=" + (time / 1000000) + "ms, fromIp=" + fromIp
 					+ "]";
 		}
 		
@@ -179,7 +144,7 @@ public class TracerouteServiceImpl implements TracerouteService {
 			JSONObject json = new JSONObject();
 			try {
 				json.put("host", fromIp);
-				json.put("time", getTime());
+				json.put("time", time);
 				return json;
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -187,25 +152,23 @@ public class TracerouteServiceImpl implements TracerouteService {
 			}
 		}
 
-        public Map<String, Object> toMap() {
-            Map<String, Object> result = new HashMap<>();
-            result.put("host", fromIp);
-            result.put("time", getTime());
+		public Map<String, Object> toMap() {
+			Map<String, Object> result = new HashMap<>();
+			result.put("host", fromIp);
+			result.put("time", time);
 
-            return result;
-        }
-
-    }
+			return result;
+		}
+	}
 	
 	private String host;
 	private int maxHops;
-	private int pingsPerHop;
 	private AtomicBoolean isRunning = new AtomicBoolean(false);
 	private boolean hasMaxHopsExceeded = true;
 	private List<HopDetail> resultList;
 	
 	public TracerouteServiceImpl() {
-		pingsPerHop = 5;
+		
 	}
 	
 	public String getHost() {
@@ -224,57 +187,30 @@ public class TracerouteServiceImpl implements TracerouteService {
 		this.maxHops = maxHops;
 	}
 
-	public int getPingsPerHop() {
-		return pingsPerHop;
-	}
-
-	public void setPingsPerHop(int pingsPerHop) {
-		this.pingsPerHop = pingsPerHop;
-	}
-
 	public List<HopDetail> call() throws Exception {
 		isRunning.set(true);
 		if (resultList == null) {
-			resultList = new ArrayList<>();
+			resultList = new ArrayList<TracerouteService.HopDetail>();
 		}
 
         final Runtime runtime = Runtime.getRuntime();
     	
     	for (int i = 1; i <= maxHops; i++) {
-            if (Thread.interrupted() || !isRunning.get()) {
-				throw new InterruptedException();
-			}
-			// ping  -c <count> -t <ttl>  -W <timeout> <host>
+    		if (Thread.interrupted() || !isRunning.get()) {
+    			throw new InterruptedException();
+    		}
+        	final long ts = System.nanoTime();
             final Process mIpAddrProcess = runtime.exec("/bin/ping -c 1 -t " + i + " -W2 " + host);
-			// result: From 4.5.6.7: icmp_seq=1 Time to live exceeded
             final String proc = readFromProcess(mIpAddrProcess);
-            final PingDetailImpl pingDetail = new PingDetailImpl(proc);
+            final PingDetailImpl pingDetail = new PingDetailImpl(proc, System.nanoTime() - ts);
             resultList.add(pingDetail);
             if (pingDetail.getReceived() > 0) {
             	hasMaxHopsExceeded = false;
             	break;
             }
     	}
-
-		// Ping each hop again and use the time measured by the ping tool instead of manual measurement
-		List<TracerouteService.HopDetail> pingResultList = new ArrayList<TracerouteService.HopDetail>();
-		for (HopDetail hopDetail : resultList) {
-			if (!isRunning.get()) {
-				throw new InterruptedException();
-			}
-			PingDetailImpl calculatedHopDetail = (PingDetailImpl) hopDetail;
-			if (calculatedHopDetail.getFromIp().equals("*")) {
-				pingResultList.add(calculatedHopDetail);
-			}
-			else {
-				final Process mIpAddrProcess = runtime.exec("/system/bin/ping -n -i 0.2 -c " + (pingsPerHop + 1) + " -W2 " + calculatedHopDetail.getFromIp());
-				final String proc = readFromProcess(mIpAddrProcess);
-				calculatedHopDetail.addTime(proc);
-				pingResultList.add(calculatedHopDetail);
-			}
-		}
     	    	
-		return pingResultList;
+    	return resultList;
 	}
 	
 
