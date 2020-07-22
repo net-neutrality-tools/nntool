@@ -18,6 +18,7 @@ package at.alladin.nettest.service.controller.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +41,11 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapSch
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapStopDurationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.QoSMeasurementTypeParameters;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.MeasurementServerDto;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 
 @Service
 public class MeasurementConfigurationService {
@@ -81,11 +85,40 @@ public class MeasurementConfigurationService {
 	                port = serverDto.getPort();
 	                encryption = false;
 	            }
-				
+	            
 				for (final LmapTaskDto task : ret.getTasks()) {
 					if (task.getName() != null && task.getOptions() != null) {
 						final MeasurementTypeDto type = MeasurementTypeDto.valueOf(task.getName().toUpperCase());
-						if (type == MeasurementTypeDto.SPEED) {
+						if (type == MeasurementTypeDto.QOS) {
+		                    for (final LmapOptionDto option : task.getOptions()) {
+		                        if (option.getMeasurementParameters() != null) {
+		                            final QoSMeasurementTypeParameters qosParams = (QoSMeasurementTypeParameters) option.getMeasurementParameters();
+		                            for (final Map.Entry<QoSMeasurementTypeDto, List<Map<String, Object>>> e : qosParams.getObjectives().entrySet()) {
+		                            	for (final Map<String, Object> qosParamMap : e.getValue()) {
+			                                try {
+			                                    final QosMeasurementType qosType = QosMeasurementType.fromQosTypeDto(e.getKey());
+			                                    switch(qosType) {
+				                                    case TRACEROUTE:
+				                                    	final Boolean isReverse = Boolean.valueOf(String.valueOf(qosParamMap.get("is_reverse")));
+				                                    	if (isReverse) {
+				                                    		qosParamMap.put("auth_token", serverDto.getAuthToken());
+				                                    		qosParamMap.put("auth_timestamp", serverDto.getAuthTimestamp());
+				                                    		qosParamMap.put("host", serverDto.getTracerouteUrl());
+				                                    	}
+				                                    	break;
+				                                    default:
+				                                    	break;
+			                                    }
+			                                } catch (final Exception ex) {
+			                                    //unknown qos type
+			                                    ex.printStackTrace();
+			                                }
+		                            	}
+		                            }
+		                        }
+		                    }
+						}
+						else if (type == MeasurementTypeDto.SPEED) {
 							if (serverDto.getAuthToken() != null && serverDto.getAuthTimestamp() != null) {
 								final LmapOptionDto authTokenOption = new LmapOptionDto();
 								authTokenOption.setName(LmapTaskDto.AUTH_TOKEN);
