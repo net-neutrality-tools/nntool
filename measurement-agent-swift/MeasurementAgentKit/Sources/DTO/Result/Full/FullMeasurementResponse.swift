@@ -33,6 +33,9 @@ public class FullMeasurementResponse: Codable {
 
     /// Start Date and time for this (sub-) measurement. Date and time is always stored as UTC.
     public var startTime: Date?
+    
+    //// Measurement date and time in agent's local time.
+    public var localTime: Date?
 
     /// End Date and time for this (sub-) measurement. Date and time is always stored as UTC.
     public var endTime: Date?
