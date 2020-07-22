@@ -34,6 +34,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.LoadBalancingSettingsDto;
@@ -92,8 +93,13 @@ public class LoadBalancingService {
 		
 		final HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 		
+		final UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(settings.getNextFreeUrl());
+		if (preferredId != null) {
+			uriBuilder.queryParam(QUERY_VAR_PREFERRED_ID, preferredId);
+		}
+		
 		try {
-			ResponseEntity<ApiResponse<MeasurementServerDto>> responseEntity = restTemplate.exchange(settings.getNextFreeUrl(), 
+			ResponseEntity<ApiResponse<MeasurementServerDto>> responseEntity = restTemplate.exchange(uriBuilder.toUriString(),
 					HttpMethod.GET, httpEntity, new ParameterizedTypeReference<ApiResponse<MeasurementServerDto>>() { });
 			
 			if (responseEntity.getStatusCode() == HttpStatus.OK) {
