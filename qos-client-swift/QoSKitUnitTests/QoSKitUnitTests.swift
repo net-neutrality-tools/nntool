@@ -44,6 +44,20 @@ class QoSKitUnitTests: XCTestCase {
         runTaskAndLogResult(t)
     }
 
+    func testTracerouteReverse() {
+        let t = TracerouteTask.create(config: [
+            "qos_test_uid": "1",
+            "concurrency_group": 200,
+            "qostest": "TRACEROUTE",
+            "host": JSON("https://peer-ias-de-01.net-neutrality.tools:8443/"),
+            "is_reverse": JSON(true),
+            "max_hops": JSON(20),
+            "timeout": JSON(20 * NSEC_PER_SEC)
+        ])
+
+        runTaskAndLogResult(t)
+    }
+
     func testMeasurementKitWebConnectivity() {
         let t = MeasurementKitTask.create(config: [
             "qos_test_uid": JSON("1"),

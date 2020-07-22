@@ -26,7 +26,10 @@ class TracerouteTask: QoSTask {
 
     private var host: String
     private var maxHops: UInt8 = 64
-
+    private var isReverse = false
+    private var authToken: String?
+    private var authTimestamp: UInt64?
+    
     //
 
     private static let hopTimeoutS = 2
@@ -47,6 +50,9 @@ class TracerouteTask: QoSTask {
     enum CodingKeys4: String, CodingKey {
         case host
         case maxHops = "max_hops"
+        case isReverse = "is_reverse"
+        case authToken = "auth_token"
+        case authTimestamp = "auth_timestamp"
     }
 
     /*override var statusKey: String? {
@@ -62,7 +68,8 @@ class TracerouteTask: QoSTask {
 
         r["traceroute_objective_host"] = JSON(host)
         r["traceroute_objective_max_hops"] = JSON(maxHops)
-
+        r["traceroute_objective_is_reverse"] = JSON(isReverse)
+        
         if maxHopsExceeded {
             r["traceroute_result_status"] = JSON("MAX_HOPS_EXCEEDED")
         } else if timedOut {
@@ -90,14 +97,103 @@ class TracerouteTask: QoSTask {
             maxHops = serverMaxHops
         }
 
+        isReverse = container.decodeIfPresentWithStringFallback(Bool.self, forKey: .isReverse) ?? false
+        
+        authToken = try? container.decodeIfPresent(String.self, forKey: .authToken)
+        authTimestamp = try? container.decodeIfPresentWithStringFallback(UInt64.self, forKey: .authTimestamp)
+
         try super.init(from: decoder)
     }
 
     override func taskMain() {
         progress.totalUnitCount = Int64(maxHops)
 
-        let startedAt = TimeHelper.currentTimeNs()
+        if isReverse {
+            runReverseTraceroute()
+        } else {
+            runTraceroute()
+        }
+    }
 
+    func runReverseTraceroute() {
+        guard let url = URL(string: host) else {
+            status = .error
+            return
+        }
+
+        //let startedAt = TimeHelper.currentTimeNs()
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        let configuration = URLSessionConfiguration.ephemeral
+
+        configuration.allowsCellularAccess = true
+        configuration.timeoutIntervalForResource = TimeInterval(timeoutS)
+        configuration.timeoutIntervalForRequest = TimeInterval(timeoutS)
+
+        var additonalHeaderFields = [String: String]()
+
+        // Set user agent
+        if let userAgent = UserDefaults.standard.string(forKey: "UserAgent") {
+            additonalHeaderFields["User-Agent"] = userAgent
+        }
+
+        configuration.httpAdditionalHeaders = additonalHeaderFields
+
+        let urlSession = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        var tracerouteBody = [
+            "cmd": "traceroute",
+            "max_hops": maxHops
+            ] as [String : Any]
+        
+        if let tk = authToken, let ts = authTimestamp {
+            tracerouteBody["tk"] = tk
+            tracerouteBody["ts"] = "\(ts)"
+            //tracerouteBody["ts"] = ts
+        }
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: tracerouteBody)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue(host, forHTTPHeaderField: "Origin") // ias-server needs this to be set...
+        request.timeoutInterval = TimeInterval(timeoutS)
+
+        let dataTask = urlSession.dataTask(with: request) { (data, response, error) in
+            if error != nil {
+                self.status = .error
+            } else {
+                if let data = data {
+                    guard let reverseTracerouteResponse = try? JSONDecoder().decode(ReverseTracerouteResponse.self, from: data) else {
+                        self.status = .error
+                        semaphore.signal()
+                        return
+                    }
+                    
+                    self.hopDetails = reverseTracerouteResponse.hops.map {
+                        JSON([
+                            "host": JSON($0.ip)
+                        ])
+                    }
+                    
+                    self.status = .ok
+                }
+            }
+
+            semaphore.signal()
+        }
+
+        dataTask.resume()
+
+        if semaphore.wait(timeout: .now() + .nanoseconds(Int(timeoutNs))) == .timedOut {
+            status = .timeout
+        }
+    }
+    
+    func runTraceroute() {
+        let startedAt = TimeHelper.currentTimeNs()
+        
         var addr = sockaddr_in()
         addr.sin_family = sa_family_t(AF_INET)
 
@@ -196,8 +292,6 @@ class TracerouteTask: QoSTask {
         if hopResult == nil {
             hopDetails = nil
         }
-
-        progress.completedUnitCount = progress.totalUnitCount
     }
 
     func traceWithSendSock(_ sendSock: Int32, recvSock: Int32, ttl: Int, port: in_port_t, sockAddr: sockaddr_in, ipAddr: inout in_addr_t) -> JSON? {
@@ -342,5 +436,35 @@ class TracerouteTask: QoSTask {
         }
 
         return components.joined(separator: ".")
+    }
+}
+
+extension TracerouteTask: URLSessionTaskDelegate {
+
+    func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
+
+        // prevent redirects
+        completionHandler(nil)
+    }
+}
+
+class ReverseTracerouteResponse: Codable {
+
+    var hops: [HopDetail]
+
+    ///
+    enum CodingKeys: String, CodingKey {
+        case hops
+    }
+
+    class HopDetail: Codable {
+        var id: String
+        var ip: String
+
+        ///
+        enum CodingKeys: String, CodingKey {
+            case ip
+            case id
+        }
     }
 }
