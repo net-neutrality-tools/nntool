@@ -1,7 +1,7 @@
 /*!
     \file UdpPortBlocking.js
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2020-05-15
+    \date Last update: 2020-07-01
 
     Copyright (C) 2016 - 2020 zafaco GmbH
 
@@ -203,7 +203,7 @@ function UdpPortBlocking()
             if (!isNaN(timing.sent) && !isNaN(timing.received))
             {
                 received++;
-                delays.push(timing.received*1e3 - timing.sent*1e3);
+                delays.push(timing.received*1e6 - timing.sent*1e6);
             }
         }
 
@@ -230,8 +230,8 @@ function UdpPortBlocking()
         if (typeof delayAvg !== "undefined")
         {
             delayResult={};
-            delayResult.average_ns = parseInt(delayAvg*1e3);
-            delayResult.standard_deviation_ns = parseInt(delayStandardDeviation*1e3);
+            delayResult.average_ns = parseInt(delayAvg);
+            delayResult.standard_deviation_ns = parseInt(delayStandardDeviation);
         }
 
 
@@ -244,6 +244,7 @@ function UdpPortBlocking()
                 udpPortBlockingKPIs.results[i].packets.sent++;
                 successful ? udpPortBlockingKPIs.results[i].packets.received++ : udpPortBlockingKPIs.results[i].packets.lost++;
                 udpPortBlockingKPIs.results[i].delay=delayResult;
+                udpPortBlockingKPIs.results[i].delays=delays;
                 break;
             }
         }
@@ -251,7 +252,7 @@ function UdpPortBlocking()
         if (!matched)
         {
             var packets = {"sent": 1, "received": successful ? 1:0, "lost": successful ? 0:1};
-            udpPortBlockingKPIs.results.push({"port":port,"packets": packets, "ip_version":ipVersion, "delay": delayResult});
+            udpPortBlockingKPIs.results.push({"port":port,"packets": packets, "ip_version":ipVersion, "delay": delayResult, "delays": delays});
         }
     }
 

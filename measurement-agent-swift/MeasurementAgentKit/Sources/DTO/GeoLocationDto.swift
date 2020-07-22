@@ -20,31 +20,31 @@ import Foundation
 public class GeoLocationDto: Codable {
 
     /// Time and date the geographic location information was captured (UTC).
-    var time: Date?
+    public var time: Date?
 
     /// Geographic location accuracy.
-    var accuracy: Double?
+    public var accuracy: Double?
 
     /// Geographic location altitude.
-    var altitude: Double?
+    public var altitude: Double?
 
     /// Movement heading.
-    var heading: Double?
+    public var heading: Double?
 
     /// Movement speed.
-    var speed: Double?
+    public var speed: Double?
 
     /// Geographic location provider.
-    var provider: String?
+    public var provider: String?
 
     /// Geographic location latitude.
-    var latitude: Double?
+    public var latitude: Double?
 
     /// Geographic location longitude.
-    var longitude: Double?
+    public var longitude: Double?
 
     /// Relative time in nanoseconds (to measurement begin).
-    var relativeTimeNs: UInt64?
+    public var relativeTimeNs: UInt64?
 
     ///
     enum CodingKeys: String, CodingKey {
