@@ -57,8 +57,8 @@ class IASProgram: NSObject, ProgramProtocol {
     }
 
     // swiftlint:disable cyclomatic_complexity
-    func run(relativeStartTimeNs: UInt64) throws -> SubMeasurementResult {
-        self.relativeStartTimeNs = relativeStartTimeNs
+    func run(startTimeNs: UInt64, startTimeMs: UInt64) throws -> SubMeasurementResult {
+        let relativeStartTimeNs = TimeHelper.currentTimeNs() - startTimeNs
 
         speed.speedDelegate = self
 
@@ -108,7 +108,7 @@ class IASProgram: NSObject, ProgramProtocol {
             // TODO: mark measurement as timed out
         }
 
-        let relativeEndTimeNs = TimeHelper.currentTimeNs() - relativeStartTimeNs
+        let relativeEndTimeNs = TimeHelper.currentTimeNs() - startTimeNs
 
         let res = IasMeasurementResult()
 
@@ -142,13 +142,14 @@ class IASProgram: NSObject, ProgramProtocol {
             res.rttInfo?.numReceived = rttInfo["num_received"] as? Int
             res.rttInfo?.numSent = rttInfo["num_sent"] as? Int
             res.rttInfo?.packetSize = rttInfo["packet_size"] as? Int
-            res.rttInfo?.requestedNumPackets = 10 // TODO
+
+            res.rttInfo?.requestedNumPackets = Int(res.rttInfo?.numError ?? 0) + Int(res.rttInfo?.numMissing ?? 0) + Int(res.rttInfo?.numReceived ?? 0)
 
             // TODO: these values should be calculated on the collector.
             res.rttInfo?.averageNs = rttInfo["average_ns"] as? UInt64
-            res.rttInfo?.maximumNs = rttInfo["maximum_ns"] as? UInt64
+            res.rttInfo?.maximumNs = rttInfo["max_ns"] as? UInt64
             res.rttInfo?.medianNs = rttInfo["median_ns"] as? UInt64
-            res.rttInfo?.minimumNs = rttInfo["minimum_ns"] as? UInt64
+            res.rttInfo?.minimumNs = rttInfo["min_ns"] as? UInt64
             res.rttInfo?.standardDeviationNs = rttInfo["standard_deviation_ns"] as? UInt64
             //
 
@@ -181,15 +182,15 @@ class IASProgram: NSObject, ProgramProtocol {
 
         if let timeInfo = r["time_info"] as? [AnyHashable: UInt64] {
             if let rttStart = timeInfo["rtt_start"] {
-                res.relativeStartTimeRttNs = rttStart - relativeStartTimeNs
+                res.relativeStartTimeRttNs = rttStart - startTimeMs * NSEC_PER_MSEC // IAS timestamps reference 1970
             }
 
             if let dlStart = timeInfo["download_start"] {
-                res.relativeStartTimeDownloadNs = dlStart - relativeStartTimeNs
+                res.relativeStartTimeDownloadNs = dlStart - startTimeMs * 1000000 // IAS timestamps reference 1970
             }
 
             if let ulStart = timeInfo["upload_start"] {
-                res.relativeStartTimeUploadNs = ulStart - relativeStartTimeNs
+                res.relativeStartTimeUploadNs = ulStart - startTimeMs * 1000000 // IAS timestamps reference 1970
             }
         }
 
@@ -257,7 +258,9 @@ extension IASProgram: SpeedDelegate {
             switch cmd {
             case "info": handleCmdInfo(response)
             case "report": handleCmdReport(response)
-            case "finish": handleCmdFinish(response)
+            case "finish":
+                handleCmdReport(response)
+                handleCmdFinish(response)
             case "error":
                 logger.debug("MEASUREMENT ERROR -> aborting")
                 measurementFailed = true

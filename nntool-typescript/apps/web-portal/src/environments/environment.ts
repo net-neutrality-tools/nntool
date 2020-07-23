@@ -37,7 +37,7 @@ export const environment = {
     docu: false
   },
   landing_page: 'home',
-  user_agent: 'abc',
+  user_agent: 'nntool',
   languages: ['en', 'de'],
   servers: {
     //control: 'http://localhost:8080/api/v1/'
@@ -53,7 +53,7 @@ export const environment = {
     statistic: 'https://statistic-de-01.net-neutrality.tools/api/v1/'
   },
   keys: {
-    google: ''
+    bing: ''
   },
   classificationColorStyle: 'background',
   colors: {

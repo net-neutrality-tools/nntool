@@ -27,6 +27,7 @@ import { ConfigService } from '../../core/services/config.service';
 import { WINDOW } from '../../core/services/window.service';
 import { LoopSettingsImplementation } from '../tests-implementation/loop-settings/loop-settings-implementation';
 import { LoopSettingsTestState } from '../tests-implementation/loop-settings/loop-settings-test-state';
+import { Observable, timer, interval, Subscription } from 'rxjs';
 
 @Component({
   // needs to be mentioned here, but also mentioned in gauge-ui.ts for reference
@@ -42,6 +43,7 @@ export class LoopSettingsComponent
     testImplementation: LoopSettingsImplementation,
     configService: ConfigService,
     translateService: TranslateService,
+    private ngZone: NgZone,
     @Inject(WINDOW) window: Window
   ) {
     super(testImplementation, configService, translateService, window);
@@ -52,7 +54,12 @@ export class LoopSettingsComponent
 
   public showInvalidInputWarning: boolean = false;
 
+  public readonly maxAllowedRepetitions: number = 500;
+
+  public readonly maxTimeBetweenRepetitions: number = 1440;
+
   private timerInterval: any;
+  private timeLeft: number;
 
   public onOnlyReInit() {
     if (this.testImpl.curRepetitions > 0) {
@@ -73,9 +80,9 @@ export class LoopSettingsComponent
   public requestStart() {
     if (
       this.testImpl.loopModeConfig.numRepetitions <= 0 ||
-      this.testImpl.loopModeConfig.numRepetitions > 500 ||
+      this.testImpl.loopModeConfig.numRepetitions > this.maxAllowedRepetitions ||
       this.testImpl.loopModeConfig.timeBetweenRepetitions <= 0 ||
-      this.testImpl.loopModeConfig.timeBetweenRepetitions >= 1440
+      this.testImpl.loopModeConfig.timeBetweenRepetitions >= this.maxTimeBetweenRepetitions
     ) {
       this.showInvalidInputWarning = true;
       return;
@@ -112,26 +119,34 @@ export class LoopSettingsComponent
 
     console.log('START TIMER FOR NEXT TEST!');
 
-    let timeLeft = this.testImpl.loopModeConfig.timeBetweenRepetitions * 60;
+    this.timeLeft = this.testImpl.loopModeConfig.timeBetweenRepetitions * 60;
 
     if (this.testImpl.curRepetitions <= 0 && this.testImpl.loopModeConfig.startTime) {
-      const millisLeft = new Date(timeLeft = this.testImpl.loopModeConfig.startTime).getTime() - Date.now();
+      const millisLeft = new Date(this.timeLeft = this.testImpl.loopModeConfig.startTime).getTime() - Date.now();
       this.testImpl.loopModeConfig.startTime = null;
-      timeLeft = millisLeft / 1000;
+      this.timeLeft = millisLeft / 1000;
     }
 
-    this.testImpl.timeLeftString = this.toHHMMSS(timeLeft);
+    this.testImpl.timeLeftString = this.toHHMMSS(this.timeLeft);
     this.timerInterval = setInterval(() => {
-      if (timeLeft > 1) {
-        timeLeft--;
-      } else {
-        clearInterval(this.timerInterval);
-        timeLeft = 0;
-        this.requestStart();
-      }
-
-      this.testImpl.timeLeftString = this.toHHMMSS(timeLeft);
+      this.timerFired();
     }, 1000);
+  }
+
+  private timerFired() {
+    if (this.timeLeft > 1) {
+      this.timeLeft--;
+    } else {
+      clearInterval(this.timerInterval);
+      this.timeLeft = 0;
+      this.ngZone.run(() => {
+        this.requestStart();
+      });
+    }
+
+    this.ngZone.run(() => {
+      this.testImpl.timeLeftString = this.toHHMMSS(this.timeLeft);
+    });
   }
 
   private toHHMMSS(timeLeft): string {

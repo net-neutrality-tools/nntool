@@ -26,6 +26,10 @@ export class DynamicFormComponent implements OnInit, AfterViewInit {
     @Input()
     filterResponse: ProviderFilterResponse;
 
+    //the translation prefix is prepended to the filter translation keys coming from the server
+    @Input()
+    translationPrefix: string;
+
     dynamicForm: FormGroup;
 
     @Output()

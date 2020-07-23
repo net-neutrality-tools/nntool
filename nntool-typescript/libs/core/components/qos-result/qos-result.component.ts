@@ -32,6 +32,8 @@ export class QoSResultComponent implements OnChanges {
 
   qosGroups: QoSResultGroupHolder[];
 
+  translationMap: any;
+
   @Input() qosMeasurementResult: QoSMeasurementResult;
 
   constructor(private logger: NGXLogger) { }
@@ -40,6 +42,7 @@ export class QoSResultComponent implements OnChanges {
     if (changes.qosMeasurementResult && changes.qosMeasurementResult.currentValue) {
       const resultMap: Map<string, QoSResultGroupHolder> = new Map();
       this.qosGroups = new Array();
+      this.translationMap = changes.qosMeasurementResult.currentValue.key_to_translation_map;
       changes.qosMeasurementResult.currentValue.results.forEach(result => {
         if (!resultMap[result.type]) {
           const groupHolder = new QoSResultGroupHolder();

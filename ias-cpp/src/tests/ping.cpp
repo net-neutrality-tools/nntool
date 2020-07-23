@@ -1,9 +1,9 @@
 /*!
     \file ping.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-26
+    \date Last update: 2020-05-26
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -68,6 +68,9 @@ int Ping::run()
     int mSock;
 
     try {
+		bool ipv6validated 	= false;
+		bool bReachable		= true;
+
 		//Syslog Message
 		TRC_INFO( ("Starting Ping Thread with PID: " + CTool::toString(syscall(SYS_gettid))).c_str() );
 
@@ -102,36 +105,18 @@ int Ping::run()
 		bool ipv6 = false;
 		bool ipv4 = false;
 
-		bool ipv6validated = false;
-		
 		//Get Hostname and make DNS Request
 		TRC_DEBUG( ("Resolving Hostname for Measurement: "+mServerName).c_str() );
 
 		#if defined(NNTOOL) && defined(__ANDROID__)
-			if( CTool::validateIp(mClient) == 6)
-			{
-				mServer = CTool::getIpFromHostname( mServerName, 6 );
-			}
-			else
-			{
-				mServer = CTool::getIpFromHostname( mServerName, 4 );
-			}
-
-			if (mServer.compare("1.1.1.1") == 0)
-			{
-				//Error
-				::UNREACHABLE = true;
-				::hasError = true;
-				TRC_ERR("no connection to measurement peer");
-				return -1;
-			}
+			bReachable = false;
 		#endif
 
-		#if defined(NNTOOL) && !defined(__ANDROID__)
+		#if defined(NNTOOL)
 			struct addrinfo *ips;
 			memset(&ips, 0, sizeof ips);
 
-			ips = CTool::getIpsFromHostname( mServerName, true );
+			ips = CTool::getIpsFromHostname( mServerName, bReachable );
 
 			if (ips->ai_socktype != 1 && ips->ai_socktype != 2)
 			{
@@ -146,19 +131,25 @@ int Ping::run()
 			
 			getnameinfo(ips->ai_addr, ips->ai_addrlen, host, sizeof host, NULL, 0, NI_NUMERICHOST);
 			mServer = string(host);
+
+			::MEASUREMENT_DURATION = (int)mPingQuery * 1.5 * 1.1;
+		 	if (CTool::validateIp(mServer) == 6) ipv6validated = true; 
 		#endif
 
-		#ifdef NNTOOL
-		 	::MEASUREMENT_DURATION = (int)mPingQuery * 1.5 * 1.1;
-
-			TRC_DEBUG( ("Resolved Hostname for Measurement: "+mServer).c_str() );
-
-		 	if (CTool::validateIp(mServer) == 6) ipv6validated = true; 
+		#ifndef NNTOOL
+			//MYSQL_LOG("Measurement-DL-Hostname",mServerName);
+			if( CTool::validateIp(mClient) == 6)
+				mServer = CTool::getIpFromHostname( mServerName, 6 );
+			else
+				mServer = CTool::getIpFromHostname( mServerName, 4 );
+			//MYSQL_LOG("Measurement-DL-Server",mServer);
 		#endif
 
 		#ifndef NNTOOL
 			if( CTool::validateIp(mClient) == 6 && CTool::validateIp(mServer) == 6 ) ipv6validated = true;
 		#endif
+
+		int ipversion;
 
 		if (ipv6validated)
 		{
