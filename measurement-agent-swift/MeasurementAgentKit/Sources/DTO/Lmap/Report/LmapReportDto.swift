@@ -22,7 +22,10 @@ class LmapReportDto: Codable {
 
     /// The date and time when this result report was sent to a Collector.
     var date: Date?
-
+    
+    /// The date and time when this result report was sent to a Collector in local time.
+    var localTime: Date?
+    
     /// The agent-id of the agent from which this report originates.
     var agentId: String? // uuid
 
@@ -44,6 +47,7 @@ class LmapReportDto: Codable {
     ///
     enum CodingKeys: String, CodingKey {
         case date
+        case localTime = "local_time"
         case agentId = "agent-id"
         case groupId = "group-id"
         case measurementPoint = "measurement-point"

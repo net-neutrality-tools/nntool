@@ -22,7 +22,6 @@ import { TestImplementation } from '../test-implementation';
 import { PortBlockingTestConfig } from '../port-blocking/port-blocking-test-config';
 import { LoopSettingsTestState } from './loop-settings-test-state';
 
-declare var PortBlocking: any;
 
 @Injectable({
   providedIn: 'root'

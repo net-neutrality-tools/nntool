@@ -1,41 +1,8 @@
-== IAS module
+[[ias-build]]
+= IAS module
 
-=== Building
-
-==== Prerequisites
-
-- Node.js >= 8 (tested with v8.16.0 and 10.16.0)
-- npm >= 5
-- uglify-es >= 3
-- replace-in-file >= 4
-- Linux or macOS (any Version)
-
-==== Build
-
-With fullfilled prerequisites run `npm i && npm run build:ias`
-
-==== Unit Tests
-
-Run unit tests with `npm run test`. + 
-If you don't want to watch for changes run `npm run test -- -single-run` instead.
-
-=== UDP Port Blocking
-
-For the UDP port blocking module, a specified set of ports is tested against a defined test-service. The UDP ports 123, 500, 4500 and 5060 are activated on the publicly available measurement peer. The demo configuration features the stated ports as well as UDP port 7000 to show reachable as well as unreachable ports. For successful test execution, the expected IP v4 and/or v6 addresses of the defined test-service must be stated within the configuration (see *Demo Parameters*).
-
-=== Demo Parameters
-
-Modify *src/web_desktop/index.html* according to Code-Documentation to edit measurement parameters before *Build*
-
-==== Demo Execution
-
-Open *index.html* from `build/{plain|uglfied}/web/` in a Browser of your choice and choose a test case. The browser developer console should only be used for debugging purposes, as an active developer console can cause performance issues.
-
-To perform rtt, download, or upload measurements, the *ias-server* module has to be deployed on the measurement peer.
-To perform port blocking measurements, the *coturn TURN server (https://github.com/coturn/coturn)* has to be deployed on the measurement peer (for detailed instructions on how to setup the *coturn TURN server* reference the documentation in the `docs/build_instructions/servers.adoc` file).
-
-=== License
-
+.License
+----
 ias is released under the AGPLv3 <https://www.gnu.org/licenses/agpl-3.0.txt>
 
 Copyright (C) 2016-2019 zafaco GmbH
@@ -51,3 +18,38 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+----
+
+== Building
+
+=== Prerequisites
+
+- Node.js >= 8 (tested with v8.16.0 and 10.16.0)
+- npm >= 5
+- uglify-es >= 3
+- replace-in-file >= 4
+- Linux or macOS (any Version)
+
+=== Build
+
+With fullfilled prerequisites run `npm i && npm run build:ias`
+
+=== Unit Tests
+
+Run unit tests with `npm run test`. + 
+If you don't want to watch for changes run `npm run test -- -single-run` instead.
+
+== UDP Port Blocking
+
+For the UDP port blocking module, a specified set of ports is tested against a defined test-service. The UDP ports 123, 500, 4500 and 5060 are activated on the publicly available measurement peer. The demo configuration features the stated ports as well as UDP port 7000 to show reachable as well as unreachable ports. For successful test execution, the expected IP v4 and/or v6 addresses of the defined test-service must be stated within the configuration (see *Demo Parameters*).
+
+== Demo Parameters
+
+Modify src/web_desktop/index.html` according to Code-Documentation to edit measurement parameters before *Build*
+
+=== Demo Execution
+
+Open *index.html* from `build/{plain|uglfied}/web/` in a Browser of your choice and choose a test case. The browser developer console should only be used for debugging purposes, as an active developer console can cause performance issues.
+
+To perform rtt, download, or upload measurements, the *ias-server* module has to be deployed on the measurement peer.
+To perform port blocking measurements, the *coturn TURN server (https://github.com/coturn/coturn)* has to be deployed on the measurement peer (for detailed instructions on how to setup the *coturn TURN server* reference the documentation in the `docs/build_instructions/servers.adoc` file).

@@ -102,11 +102,6 @@ export interface WebsiteSettings {
   user: UserSettings;
 
   /**
-   * Which style element to use for classification colors
-   */
-  classificationColorStyle?: string;
-
-  /**
    * social media (share buttons/links) settings
    */
   socialMediaSettings?: SocialMediaSettings;

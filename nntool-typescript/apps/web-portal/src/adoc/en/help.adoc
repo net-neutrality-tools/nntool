@@ -6,6 +6,219 @@
 
 toc::[]
 
+== [DRAFT]
+
 == General Information
 
-TODO
+=== What should I keep in mind before I test?
+Each execution of the Nettest measurement requires some data volume. At a bandwidth of 2 Mbps, a single test generates a data volume of about 5 MB. The faster the tested connection the bigger the volume of data transmitted: With symmetrical 100 Mbps connections, the volume increases up to 250 MB.
+
+If your tariff-included data volume left might not be sufficient, please use a WiFi connection for mobile measurements. Otherwise high costs might occur.
+
+Please query your mobile provider’s customer website to check your tariff and your data volume left in the current billing period.
+
+=== Why should I test my connection?
+The nntool.eu Nettest measures your connection's current speed, availability, quality and neutrality. Compare your measurement results with those of others in your area using the map view. Collect enough information to decide, which internet service provider fits best to your service demands in your region.
+
+=== What is the nntool.eu Nettest?
+The nntool.eu Nettest is a measurement tool to test speed and quality of internet connections.
+
+It is an independent, crowd-sourced, open-source and open-data based solution:
+
+* Designed to measure availability, quality and neutrality of the internet
+* Generates and processes all results objectively, securely and transparently
+* Tests 150+ parameters: speed, QoS & QoE
+* Runs in Android, iOS, web browsers (WebSocket or Java)
+* Enables drive tests. Optional hardware-integration.
+* Displays results on a map with several filter options.
+* 100% compliant to BEREC (EU), ETSI/ITU-T standards and to TK-TVO (DE).
+* No license fees.
+
+=== What differentiates the nntool.eu Nettest from others?
+The Nettest offers:
+
+* The approval of several telecommunication regulatory authorities.
+* The best speedtest technology on the market and even more tests to check availability, quality and neutrality of internet connections.
+* Various statistical representations.
+* A map showing previous measurement results aggregated in a heatmap.
+* Open-data and open-source.
+
+=== What are the terms of use and privacy policy?
+Find our terms of use and privacy policy at https://nntool.net-neutrality.tools/tc
+
+== Technology
+=== What part of my internet access is tested?
+The nntool.eu Nettest measures the connection between your device (computer, mobile, tablet) and the measurement server. The measurement servers are located near to internet eXchange points (IXPs).
+
+=== How does a measurement work?
+The course of a Nettest measurement:
+
+* Device initiates measurement.
+* Control server directs device to a specific measurement server.
+* Device executes measurement.
+* Device sends results to control server.
+* Control server checks validity and stores results to NoSQL.
+* Export of results to relational GIS-DB for visualisation and reporting.
+
+=== What does open-data and open-source mean?
+The nntool.eu Nettest is based on open-source and open-data principles.
+
+Open-source principle means that the source code is published - for transparency and reliability issues. Any commercial use of the nntool.eu Nettest source code, which is published under the MAME license, is not allowed.
+
+The source code is available at https://github.com/net-neutrality-tools.
+
+== The Mobile Test-Apps
+=== What authorisations are needed?
+1. "Your location - approximate (network-based) location, precise (GPS) location"
++
+To retrieve your location and to locate test results on the map.
+
+2. "Storage - modify or delete the contents of your storage"
++
+For map caching.
+
+3. "Network communication - full network access, view network and WiFi connections"
++
+To establish a test connection and to test the network parameters of your internet connection.
+
+4. "Your accounts - read Google service configuration"
++
+To show Google maps.
+
+5. "System tools - prevent phone from sleeping"
++
+To avoid unwanted bias during measurement.
+
+=== How can I install the Android app?
+Get the nntool.eu Nettest Android app in Google Play Store.
+
+=== How can I install the iOS app?
+Get the nntool.eu Nettest iOS app in Apple App Store.
+
+=== Which Android versions are supported?
+Android 4.0.3 and above.
+
+=== Which iOS versions are supported?
+iOS 9 and above.
+
+=== Is there a tablet version of the nntool.eu Nettest?
+The current mobile version of nntool.eu Nettest runs on tablets and the android version is optimised for the landscape mode as well.
+
+== Test Results
+=== What does Mbps mean?
+The speed of a data connection is normally quoted in Megabits per second (Mbps), bites per second (bps) or in bytes/s. An internet connection can be described equally with a data rate of 8 Mbps, 8000 kbps or 1 MByte/s.
+
+The nntool.eu Nettest sets the conversion factor at 1000. 1024 is technically correct, but generally not used.
+
+=== What does each parameter/test result mean?
+Test more than 150 parameters with the nntool.eu Nettest:
+
+* Provider Information
+* Device Information
+* Speed Parameter
+* Test Specifications
+* Quality of Service
+* Quality of Experience
+
+=== Why can't I measure signal strength?
+It is possible that some devices display wrong or not updated mobile network signal strength. In this case, the result is not displayed.
+
+Signal strength and quality can only be obtained from Android devices.
+
+=== How do I know if my result is good or bad?
+The green/orange/red scale ("traffic-light"-system) visualises the speed test results.
+
+[cols="2"]
+|===
+|Green
+|10 Mbps or higher (down) and 2 Mbps or higher (up)
+
+|Orange
+|up to 10 Mbps (down) and up to 2 Mbps (up)
+
+|Red
+|up to 2 Mbps (down) and up to 1 Mbps (up)
+|===
+
+The green/orange/red scale is irrespective of the technology in question and refers solely to the measured data rate.
+
+=== Does BEREC guarantee a correct test result?
+Like any test or measurement, the results of the nntool.eu Nettest are subject to systematic and random measurement errors. However, the architecture and design of the nntool.eu Nettest ensures a highly valid test.
+
+=== What factors may influence the result?
+The following factors may cause significant influence:
+
+* type of internet connection (fixed/wireless access)
+* type of access technology (xDSL, optical fibre, cable-optical distribution system, etc.)
+* the number of users using the connection
+* capacity of the connection provided by your ISP
+* the device you are testing with
+* third-party software running during testing (specific AV and P2P software, video streaming, antivirus, etc.)
+* the operating system of the device and its configuration
+* quality and setup of your LAN router (NAT throughput, number and complexity of firewall rules, etc.)
+* quality and setup of your WiFi router (distance between router and your device, the number of users, the IEEE standard supported, etc.)
+
+If mobile services are used, these factors may influence the results:
+
+* the technology used (EDGE, UMTS, LTE)
+* distance from the base station and the number of users sharing the base station with you
+* the quality of service at your location (signal strength)
+* obstacles between the mobile terminal and base station (buildings, trees, etc.)
+* how fast you are moving (e.g. lower data transmission rates on the motorway or in the train)
+* the contractually agreed maximum bandwidth of your mobile internet access (e.g. speed throttling)
+
+=== How many tests are needed for a reliable result?
+Each test result depends on several factors of its specific measurement context. Increase the reliability of your results by running repeated tests at different times of the day and different locations. The more tests you run, the better.
+
+=== How often can I repeat the test?
+The nntool.eu Nettest is free of charge so test as often as you like. However, use the test reasonably since some data volume is transmitted during each test.
+
+=== Can I bring claims against my provider if I get poor results?
+No, a single measurement is just a snapshot.  If several test results show significant difference to your advertised bandwidth, this indicates that the connection should be analysed by a professional, using professional equipment.
+
+== Map View
+=== What exactly does the map show?
+The map displays results of measurements which have been performed within the selected period of time.
+
+You have many other settings to filter the data displayed:
+
+[cols="2"]
+|===
+|Type
+|Cellular - WiFi -  Browser - ALL
+
+|Parameter
+|Download, Upload, Ping and possibly Signal
+|===
+
+Additionally, select the way data is presented: single points, heatmap or automatically.
+
+The values shown in the map are quantiles. An 80-percent quantile means that 80 percent of the values are worse than the quantile and 20 percent better than the quantile.
+
+The map displays possible transmission rates in specific areas for specific operators using certain equipment.
+
+For interpretation, however, it must be noted that different circumstances may distort the map representation, for example:
+
+* too high or too low frequency of measurements of certain characteristics,
+* high frequency of measurements by devices whose throughput is lower than the available bandwidth,
+* high frequency of measurements in a particular place with particularly good or particularly bad reception conditions.
+
+=== What does the colour classification mean?
+The colour classification is based on a defined range of values selected by BEREC. The colour green represents fast measurement results, whereas red colour means low speed. Colour gradations mark results between those extremes.
+
+Individual test points are coloured according to the "traffic-light" scale.
+
+=== What is a median?
+The median is the value that lies exactly in the middle of all observed and ranked values.
+
+=== What is a percentile?
+A percentile is the value below which a percentage of data falls. For instance, the 20% percentile defines the point below which 20% of all test results fall.
+
+=== How accurate are the data points?
+The location will be determined by your device. The quality of localisation depends on the functions and settings of this device: via GPS, through the network (WiFi or mobile network) or via IP.
+
+The localisation by GPS is the most accurate. Localisation with accuracy of less than 2km are not shown on the map, points with accuracy less than 10 km are not listed under details.
+
+== Contact
+=== How can I contact the nntool.eu team?
+For questions and feedback contact us via berec@berec.europa.eu .

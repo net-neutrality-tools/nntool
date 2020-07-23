@@ -1,7 +1,7 @@
 /*!
     \file tool.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2020-03-31
+    \date Last update: 2020-05-27
 
     Copyright (C) 2016 - 2020 zafaco GmbH
 
@@ -535,7 +535,7 @@ struct addrinfo* CTool::getIpsFromHostname( string sString, bool bReachable )
 	}
 	else
 	{
-		query.ai_flags = AI_V4MAPPED;
+		query.ai_flags = AI_ADDRCONFIG;
 	}
 	
 	if( ( error = getaddrinfo(sString.c_str(), NULL, &query, &ips) ) != 0 )

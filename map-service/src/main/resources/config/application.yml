@@ -14,7 +14,6 @@ spring:
 map-cache:
   usePointTileCache: false
   useHeatmapTileCache: true
-  useShapeTileCache: true
   cacheIgnoreZoomLevel: 17
   cacheStaleSeconds: 7200 #3600 * 2
   cacheExpireSeconds: 2592000 #3600*24*30
@@ -97,8 +96,8 @@ map-settings:
       reverseScale: false
     - groupKey: "all"
       typeKey: "upload"
-      sqlValueColumn: "ias.throughput_avg_download_bps"
-      sqlFilter: "ias.throughput_avg_download_bps IS NOT NULL"
+      sqlValueColumn: "ias.throughput_avg_upload_bps"
+      sqlFilter: "ias.throughput_avg_upload_bps IS NOT NULL"
       overlayType: "shapes"
       reverseScale: false
     - groupKey: "all"
