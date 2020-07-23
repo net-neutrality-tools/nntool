@@ -68,6 +68,11 @@ export class BriefMeasurementResponseAPI {
   public start_time: string; // TODO: change back to Date
 
   /**
+   * Measurement date and time in agent's local time.
+   */
+  public local_time: string; // TODO: change back to Date
+
+  /**
    * Overall duration of all sub measurements.
    */
   public duration_ns: number;

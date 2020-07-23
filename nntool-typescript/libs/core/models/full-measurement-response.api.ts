@@ -27,6 +27,8 @@ export class FullMeasurementResponse {
 
   public end_time: string;
 
+  public local_time: string;
+
   public duration_ns: number;
 
   public measurements: SingleMeasurement;
