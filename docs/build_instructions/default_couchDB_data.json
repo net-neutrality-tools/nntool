@@ -563,246 +563,310 @@
           "qos_server_uuid": "qos_server"
         }
       },
-      "speedtest_detail_groups": [
+    "speedtest_detail_groups": [
+    {
+      "key": "group_overview",
+      "icon": "b",
+      "values": [
         {
-          "key": "group_overview",
-          "icon": "b",
-          "values": [
-            {
-              "key": "speed.throughputAvgDownloadBps",
-              "unit": "RESULT_WIFI_LINK_SPEED_UNIT",
-              "format": "DIV_1E6",
-              "translation_key": "RESULT_DOWNLOAD",
-              "share_text": "RESULT_SHARE_DOWNLOAD",
-              "share_priority": 1
-            },
-            {
-              "key": "speed.throughputAvgUploadBps",
-              "unit": "RESULT_WIFI_LINK_SPEED_UNIT",
-              "format": "DIV_1E6",
-              "translation_key": "RESULT_UPLOAD",
-              "share_text": "RESULT_SHARE_UPLOAD",
-              "share_priority": 2
-            },
-            {
-              "key": "speed.rttInfo.averageNs",
-              "format": "DIV_1E6",
-              "unit": "RESULT_MS_UNIT",
-              "translation_key": "RESULT_PING",
-              "share_text": "RESULT_SHARE_PING",
-              "share_priority": 3
-            },
-            {
-              "key": "openDataUuid",
-              "translation_key": "key_open_test_uuid"
-            },
-            {
-              "key": "systemUuid",
-              "translation_key": "result.system_uuid",
-              "share_text": "RESULT_SHARE_SYSTEM_UUID",
-              "share_priority": 5
-            }
-          ]
+          "key": "speed.throughputAvgDownloadBps",
+          "unit": "RESULT_WIFI_LINK_SPEED_UNIT",
+          "format": "DIV_1E6",
+          "translation_key": "RESULT_DOWNLOAD",
+          "share_text": "RESULT_SHARE_DOWNLOAD",
+          "share_priority": 1
         },
         {
-          "key": "group_network",
-          "icon": "d",
-          "values": [
-            {
-              "key": "networkInfo.networkPointInTimeInfo.agentPublicIp",
-              "translation_key": "key_client_public_ip"
-            },
-            {
-              "key": "networkInfo.networkPointInTimeInfo.agentPrivateIp",
-              "translation_key": "key_client_local_ip"
-            },
-            {
-              "key": "networkInfo.networkPointInTimeInfo.agentPublicIpCountryCode",
-              "translation_key": "key_country_geoip"
-            },
-            {
-              "key": "networkInfo.networkPointInTimeInfo.networkTypeName",
-              "translation_key": "RESULT_NETWORK_TYPE"
-            },
-            {
-              "key": "networkInfo.networkPointInTimeInfo.networkTypeGroupName",
-              "translation_key": "result.network.network_group_name"
-            },
-            {
-              "key": "networkInfo.networkPointInTimeInfo.providerShortName",
-              "translation_key": "key_provider"
-            },
-            {
-              "key": "networkInfo.networkPointInTimeInfo.ssid",
-              "translation_key": "key_wifi_ssid"
-            },
-            {
-              "key": "networkInfo.networkPointInTimeInfo.bssid",
-              "translation_key": "key_wifi_bssid"
-            },
-            {
-              "key": "networkInfo.networkPointInTimeInfo.networkOperatorMccMnc",
-              "translation_key": "result.network.provider_mcc_mnc"
-            },
-            {
-              "key": "networkInfo.networkPointInTimeInfo.networkOperatorName",
-              "translation_key": "key_network_operator_name"
-            },
-            {
-              "key": "networkInfo.networkPointInTimeInfo.simOperatorName",
-              "translation_key": "key_network_sim_operator_name"
-            }
-          ]
+          "key": "speed.throughputAvgUploadBps",
+          "unit": "RESULT_WIFI_LINK_SPEED_UNIT",
+          "format": "DIV_1E6",
+          "translation_key": "RESULT_UPLOAD",
+          "share_text": "RESULT_SHARE_UPLOAD",
+          "share_priority": 2
         },
         {
-          "key": "group_device",
-          "icon": "g",
-          "values": [
-            {
-              "key": "deviceInfo.osInfo.name",
-              "translation_key": "result.os"
-            },
-            {
-              "key": "deviceInfo.osInfo.version",
-              "translation_key": "key_os_version"
-            },
-            {
-              "key": "deviceInfo.codeName",
-              "translation_key": "result.device.codename"
-            },
-            {
-              "key": "deviceInfo.model",
-              "translation_key": "key_model"
-            },
-            {
-              "key": "agentInfo.timezone",
-              "translation_key": "key_timezone"
-            },
-            {
-              "key": "geoLocationInfo.distanceMovedMetres",
-              "translation_key": "result.moved_distance",
-              "unit": "result.moved_distance.unit"
-            },
-            {
-              "key": "agentInfo.appVersionName",
-              "translation_key": "key_client_software_version"
-            },
-            {
-              "key": "agentInfo.timezone",
-              "translation_key": "key_timezone"
-            }
-          ]
+          "key": "speed.rttInfo.averageNs",
+          "format": "DIV_1E6",
+          "unit": "RESULT_MS_UNIT",
+          "translation_key": "RESULT_PING",
+          "share_text": "RESULT_SHARE_PING",
+          "share_priority": 3
         },
         {
-          "key": "speed_parameter_group",
-          "icon": "B",
-          "values": [
-            {
-              "key": "speed.throughputAvgDownloadBps",
-              "unit": "RESULT_WIFI_LINK_SPEED_UNIT",
-              "format": "DIV_1E6",
-              "translation_key": "RESULT_DOWNLOAD"
-            },
-            {
-              "key": "speed.bytesDownload",
-              "format": "DIV_1E6",
-              "unit": "RESULT_TOTAL_BYTES_UNIT",
-              "translation_key": "key_speed_download_bytes"
-            },
-            {
-              "key": "speed.durationDownloadNs",
-              "unit": "RESULT_MS_UNIT",
-              "format": "DIV_1E6",
-              "translation_key": "key_duration_dl"
-            },
-            {
-              "key": "speed.throughputAvgUploadBps",
-              "unit": "RESULT_WIFI_LINK_SPEED_UNIT",
-              "format": "DIV_1E6",
-              "translation_key": "RESULT_UPLOAD"
-            },
-            {
-              "key": "speed.bytesUpload",
-              "format": "DIV_1E6",
-              "unit": "RESULT_TOTAL_BYTES_UNIT",
-              "translation_key": "key_speed_upload_bytes"
-            },
-            {
-              "key": "speed.durationUploadNs",
-              "unit": "RESULT_MS_UNIT",
-              "format": "DIV_1E6",
-              "translation_key": "key_duration_ul"
-            },
-            {
-              "key": "speed.rttInfo.averageNs",
-              "format": "DIV_1E6",
-              "unit": "RESULT_MS_UNIT",
-              "translation_key": "key_ping_average"
-            },
-            {
-              "key": "speed.rttInfo.medianNs",
-              "format": "DIV_1E6",
-              "unit": "RESULT_MS_UNIT",
-              "translation_key": "key_ping_median"
-            },
-            {
-              "key": "speed.rttInfo.minNs",
-              "format": "DIV_1E6",
-              "unit": "RESULT_MS_UNIT",
-              "translation_key": "key_ping_min"
-            },
-            {
-              "key": "speed.rttInfo.maxNs",
-              "format": "DIV_1E6",
-              "unit": "RESULT_MS_UNIT",
-              "translation_key": "key_ping_max"
-            }
-          ]
+          "key": "openDataUuid",
+          "translation_key": "key_open_test_uuid"
         },
         {
-          "key": "group_connectivity",
-          "icon": "q",
-          "values": [
-            {
-              "key": "speed.connectionInfo.address",
-              "translation_key": "key_server_address",
-              "share_text": "RESULT_SHARE_MEASUREMENT_SERVER_ADDRESS"
-            },
-            {
-              "key": "speed.connectionInfo.ipAddress",
-              "translation_key": "key_server_ip"
-            },
-            {
-              "key": "speed.connectionInfo.port",
-              "translation_key": "key_port"
-            },
-            {
-              "key": "speed.connectionInfo.encrypted",
-              "translation_key": "key_encryption"
-            },
-            {
-              "key": "speed.connectionInfo.agentInterfaceTotalTraffic.bytesRx",
-              "translation_key": "result.connection.total_bytes_received",
-              "unit": "RESULT_TOTAL_BYTES_UNIT",
-              "format": "DIV_1E6"
-            },
-            {
-              "key": "speed.connectionInfo.agentInterfaceTotalTraffic.bytesTx",
-              "translation_key": "result.connection.total_bytes_transmitted",
-              "unit": "RESULT_TOTAL_BYTES_UNIT",
-              "format": "DIV_1E6"
-            },
-            {
-              "key": "speed.connectionInfo.actualNumStreamsDownload",
-              "translation_key": "key_num_threads"
-            },
-            {
-              "key": "speed.connectionInfo.actualNumStreamsUpload",
-              "translation_key": "key_num_threads_ul"
-            }
-          ]
+          "key": "systemUuid",
+          "translation_key": "result.system_uuid",
+          "share_text": "RESULT_SHARE_SYSTEM_UUID",
+          "share_priority": 5
+        },
+        {
+          "key": "localTime",
+          "translation_key": "key_time"
         }
-      ],
+      ]
+    },
+    {
+      "key": "group_network",
+      "icon": "d",
+      "values": [
+        {
+          "key": "networkInfo.networkPointInTimeInfo.agentPublicIp",
+          "translation_key": "key_client_public_ip"
+        },
+        {
+          "key": "networkInfo.networkPointInTimeInfo.agentPrivateIp",
+          "translation_key": "key_client_local_ip"
+        },
+        {
+          "key": "networkInfo.networkPointInTimeInfo.agentPublicIpCountryCode",
+          "translation_key": "key_country_geoip"
+        },
+        {
+          "key": "networkInfo.networkPointInTimeInfo.networkTypeName",
+          "translation_key": "RESULT_NETWORK_TYPE"
+        },
+        {
+          "key": "networkInfo.networkPointInTimeInfo.networkTypeGroupName",
+          "translation_key": "result.network.network_group_name"
+        },
+        {
+          "key": "networkInfo.networkPointInTimeInfo.providerShortName",
+          "translation_key": "key_provider"
+        },
+        {
+          "key": "networkInfo.networkPointInTimeInfo.ssid",
+          "translation_key": "key_wifi_ssid"
+        },
+        {
+          "key": "networkInfo.networkPointInTimeInfo.bssid",
+          "translation_key": "key_wifi_bssid"
+        },
+        {
+          "key": "computedNetworkInfo.frequency",
+          "translation_key": "key_frequency",
+          "unit": "RESULT_FREQUENCY_UNIT"
+        },
+        {
+          "key": "networkInfo.networkPointInTimeInfo.networkOperatorMccMnc",
+          "translation_key": "result.network.provider_mcc_mnc"
+        },
+        {
+          "key": "networkInfo.networkPointInTimeInfo.networkOperatorName",
+          "translation_key": "key_network_operator_name"
+        },
+        {
+          "key": "networkInfo.networkPointInTimeInfo.simOperatorName",
+          "translation_key": "key_network_sim_operator_name"
+        },
+        {
+          "key": "computedNetworkInfo.roamingType",
+          "translation_key": "key_roaming",
+          "format": "TRANSLATE_VALUE"
+        },
+        {
+          "key": "computedNetworkInfo.natTypeInfo.natType",
+          "translation_key": "key_nat_type",
+          "format": "TRANSLATE_VALUE"
+        },
+        {
+          "key": "networkInfo.isCgnDetected",
+          "translation_key": "key_cgn_detected",
+          "format": "TRANSLATE_BOOLEAN_VALUE"
+        },
+        {
+          "key": "computedNetworkInfo.publicIpAsName",
+          "translation_key": "key_client_public_ip_as_name"
+        },
+        {
+          "key": "computedNetworkInfo.publicIpAsn",
+          "translation_key": "key_client_public_ip_as"
+        }
+      ]
+    },
+    {
+      "key": "group_device",
+      "icon": "g",
+      "values": [
+        {
+          "key": "deviceInfo.osInfo.name",
+          "translation_key": "result.os"
+        },
+        {
+          "key": "deviceInfo.osInfo.version",
+          "translation_key": "key_os_version"
+        },
+        {
+          "key": "deviceInfo.codeName",
+          "translation_key": "result.device.codename"
+        },
+        {
+          "key": "agentInfo.appVersionName",
+          "translation_key": "key_client_software_version"
+        },
+        {
+          "key": "deviceInfo.model",
+          "translation_key": "key_model"
+        },
+        {
+          "key": "agentInfo.timezone",
+          "translation_key": "key_timezone"
+        },
+        {
+          "key": "geoLocations.latitude",
+          "translation_key": "key_geo_latitude",
+          "format": "TRUNCATE"
+        },
+        {
+          "key": "geoLocations.longitude",
+          "translation_key": "key_geo_longitude",
+          "format": "TRUNCATE"
+        },
+        {
+          "key": "geoLocations.altitude",
+          "translation_key": "key_altitude",
+          "format": "TRUNCATE"
+        },
+        {
+          "key": "geoLocations.heading",
+          "translation_key": "key_heading"
+        },
+        {
+          "key": "geoLocations.provider",
+          "translation_key": "key_geo_source"
+        },
+        {
+          "key": "geoLocations.accuracy",
+          "translation_key": "key_geo_accuracy",
+          "unit": "result.moved_distance.unit"
+        },
+        {
+          "key": "distanceMovedMetres",
+          "translation_key": "result.moved_distance",
+          "unit": "result.moved_distance.unit"
+        }
+      ]
+    },
+    {
+      "key": "speed_parameter_group",
+      "icon": "B",
+      "values": [
+        {
+          "key": "speed.throughputAvgDownloadBps",
+          "unit": "RESULT_WIFI_LINK_SPEED_UNIT",
+          "format": "DIV_1E6",
+          "translation_key": "RESULT_DOWNLOAD"
+        },
+        {
+          "key": "speed.bytesDownload",
+          "format": "DIV_1E6",
+          "unit": "RESULT_TOTAL_BYTES_UNIT",
+          "translation_key": "key_speed_download_bytes"
+        },
+        {
+          "key": "speed.durationDownloadNs",
+          "unit": "RESULT_DURATION_UNIT",
+          "format": "DIV_1E9",
+          "translation_key": "key_duration_dl"
+        },
+        {
+          "key": "speed.throughputAvgUploadBps",
+          "unit": "RESULT_WIFI_LINK_SPEED_UNIT",
+          "format": "DIV_1E6",
+          "translation_key": "RESULT_UPLOAD"
+        },
+        {
+          "key": "speed.bytesUpload",
+          "format": "DIV_1E6",
+          "unit": "RESULT_TOTAL_BYTES_UNIT",
+          "translation_key": "key_speed_upload_bytes"
+        },
+        {
+          "key": "speed.durationUploadNs",
+          "unit": "RESULT_DURATION_UNIT",
+          "format": "DIV_1E9",
+          "translation_key": "key_duration_ul"
+        },
+        {
+          "key": "speed.rttInfo.averageNs",
+          "format": "DIV_1E6",
+          "unit": "RESULT_MS_UNIT",
+          "translation_key": "key_ping_average"
+        },
+        {
+          "key": "speed.rttInfo.medianNs",
+          "format": "DIV_1E6",
+          "unit": "RESULT_MS_UNIT",
+          "translation_key": "key_ping_median"
+        },
+        {
+          "key": "speed.rttInfo.minNs",
+          "format": "DIV_1E6",
+          "unit": "RESULT_MS_UNIT",
+          "translation_key": "key_ping_min"
+        },
+        {
+          "key": "speed.rttInfo.maxNs",
+          "format": "DIV_1E6",
+          "unit": "RESULT_MS_UNIT",
+          "translation_key": "key_ping_max"
+        },
+        {
+          "key": "speed.durationRttNs",
+          "unit": "RESULT_DURATION_UNIT",
+          "format": "DIV_1E9",
+          "translation_key": "key_duration_rtt"
+        }
+      ]
+    },
+    {
+      "key": "group_connectivity",
+      "icon": "q",
+      "values": [
+        {
+          "key": "speed.connectionInfo.address",
+          "translation_key": "key_server_address",
+          "share_text": "RESULT_SHARE_MEASUREMENT_SERVER_ADDRESS"
+        },
+        {
+          "key": "speed.connectionInfo.ipAddress",
+          "translation_key": "key_server_ip"
+        },
+        {
+          "key": "speed.connectionInfo.port",
+          "translation_key": "key_port"
+        },
+        {
+          "key": "speed.connectionInfo.encrypted",
+          "translation_key": "key_encryption",
+          "format": "TRANSLATE_BOOLEAN_VALUE"
+        },
+        {
+          "key": "speed.connectionInfo.agentInterfaceTotalTraffic.bytesRx",
+          "translation_key": "result.connection.total_bytes_received",
+          "unit": "RESULT_TOTAL_BYTES_UNIT",
+          "format": "DIV_1E6"
+        },
+        {
+          "key": "speed.connectionInfo.agentInterfaceTotalTraffic.bytesTx",
+          "translation_key": "result.connection.total_bytes_transmitted",
+          "unit": "RESULT_TOTAL_BYTES_UNIT",
+          "format": "DIV_1E6"
+        },
+        {
+          "key": "speed.connectionInfo.actualNumStreamsDownload",
+          "translation_key": "key_num_threads"
+        },
+        {
+          "key": "speed.connectionInfo.actualNumStreamsUpload",
+          "translation_key": "key_num_threads_ul"
+        }
+      ]
+    }
+  ],
+
       "speed_thresholds": {
         "ping": {
           "color_map": {
