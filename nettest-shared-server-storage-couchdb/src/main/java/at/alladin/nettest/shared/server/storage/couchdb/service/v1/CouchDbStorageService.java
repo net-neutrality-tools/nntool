@@ -21,6 +21,7 @@ import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -130,6 +131,9 @@ import at.alladin.nntool.shared.qos.UdpResult;
 public class CouchDbStorageService implements StorageService {
 	
 	private final Logger logger = LoggerFactory.getLogger(CouchDbStorageService.class);
+
+	//we do not have a settings uuid when saving a measurement, therefore it is hardcoded as of now
+	private final static List<String> OS_SUPPORTS_ROAMING_INFO = Arrays.asList("android");
 
 	@Autowired
 	private MeasurementRepository measurementRepository;
@@ -609,12 +613,20 @@ public class CouchDbStorageService implements StorageService {
 						computedNmi = nmi;
 					}
 
+					if (measurement.getDeviceInfo() != null && measurement.getDeviceInfo().getOsInfo() != null) {
+						final String osName = measurement.getDeviceInfo().getOsInfo().getName();
+						if (osName != null && !OS_SUPPORTS_ROAMING_INFO.contains(osName.toLowerCase())) {
+							nmi.setRoaming(false);
+							nmi.setRoamingType(RoamingType.NOT_AVAILABLE);
+						}
+					}
+
 					final MccMnc networkMccMnc = pit.getNetworkMobileInfo().getNetworkOperatorMccMnc();
 					final MccMnc simMccMnc = pit.getNetworkMobileInfo().getSimOperatorMccMnc();
 					if (networkMccMnc == null || simMccMnc == null 
 							|| nmi.getNetworkCountry() == null || nmi.getSimCountry() == null) {
 						nmi.setRoaming(false);
-						nmi.setRoamingType(RoamingType.NOT_AVAILABLE);
+						nmi.setRoamingType(RoamingType.UNKNOWN);
 					}
 					else {
 						nmi.setRoaming(!networkMccMnc.equals(simMccMnc));
