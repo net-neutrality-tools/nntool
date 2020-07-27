@@ -56,7 +56,7 @@ let MEASUREMENT_AGENT =
                 p.config = measurementConfig
             }
 
-            if let serverAddr = taskDto.getOptionByName(/*"server_addr"*/"server_addr_default"), let serverPort = taskDto.getOptionByName("server_port") {
+            if let serverAddr = taskDto.getOptionByName("server_addr_default"), let serverPort = taskDto.getOptionByName("server_port") {
                 p.serverAddress = serverAddr
                 p.serverPort = serverPort
 
@@ -64,7 +64,7 @@ let MEASUREMENT_AGENT =
                     p.encryption = Bool(encryptionStr) ?? false
                 }
             }
-                
+
             if let authToken = taskDto.getOptionByName("auth_token"), let authTimestamp = taskDto.getOptionByName("auth_timestamp") {
                 p.authToken = authToken
                 p.authTimestamp = authTimestamp
