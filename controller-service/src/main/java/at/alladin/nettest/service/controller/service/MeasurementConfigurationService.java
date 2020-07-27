@@ -18,6 +18,7 @@ package at.alladin.nettest.service.controller.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +41,11 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapSch
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapStopDurationDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapTaskDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.MeasurementTypeDto;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.initiation.QoSMeasurementTypeParameters;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.MeasurementServerDto;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 
 @Service
 public class MeasurementConfigurationService {
@@ -57,23 +61,27 @@ public class MeasurementConfigurationService {
     @Autowired(required = false)
     private LoadBalancingService loadBalancingService;
 
-    public LmapControlDto getLmapControlDtoForCapabilities(final LmapCapabilityDto capabilities, boolean useIPv6) {
+    public LmapControlDto getLmapControlDtoForCapabilities(final LmapCapabilityDto capabilities, boolean useIPv6, String browserName) {
 		final LmapControlDto ret = new LmapControlDto();
 		
 		ret.setCapabilities(capabilities);
-		ret.setTasks(getTaskListForCapabilities(capabilities, useIPv6));
+		ret.setTasks(getTaskListForCapabilities(capabilities, useIPv6, browserName));
 		ret.setEvents(getImmediateEventList());
 		ret.setSchedules(getLmapScheduleList(ret.getEvents().get(0).getName(), ret.getTasks()));
-		
-		try {
-			logger.debug("{}", new ObjectMapper().writeValueAsString(ret));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
+		String preferredServerId = null;
+		for (LmapCapabilityTaskDto task : capabilities.getTasks()) {
+			switch(MeasurementTypeDto.valueOf(task.getTaskName().toUpperCase())) {
+				case SPEED:
+					preferredServerId = task.getSelectedMeasurementPeerIdentifier();
+					break;
+				default:
+					break;
+			}
+		};
+		
 		if (loadBalancingService != null) {
-			MeasurementServerDto serverDto = loadBalancingService.getNextAvailableMeasurementServer(controllerServiceProperties.getSettingsUuid(), null);
+			MeasurementServerDto serverDto = loadBalancingService.getNextAvailableMeasurementServer(controllerServiceProperties.getSettingsUuid(), preferredServerId);
 			logger.debug("Got measurement peer from load balancer: {}", serverDto);
 			if (serverDto != null && ret.getTasks() != null) {
 	            Integer port = null;
@@ -88,11 +96,52 @@ public class MeasurementConfigurationService {
 	                port = serverDto.getPort();
 	                encryption = false;
 	            }
-				
+	            
 				for (final LmapTaskDto task : ret.getTasks()) {
 					if (task.getName() != null && task.getOptions() != null) {
 						final MeasurementTypeDto type = MeasurementTypeDto.valueOf(task.getName().toUpperCase());
-						if (type == MeasurementTypeDto.SPEED) {
+						if (type == MeasurementTypeDto.QOS) {
+		                    for (final LmapOptionDto option : task.getOptions()) {
+		                        if (option.getMeasurementParameters() != null) {
+		                            final QoSMeasurementTypeParameters qosParams = (QoSMeasurementTypeParameters) option.getMeasurementParameters();
+		                            for (final Map.Entry<QoSMeasurementTypeDto, List<Map<String, Object>>> e : qosParams.getObjectives().entrySet()) {
+		                            	for (final Map<String, Object> qosParamMap : e.getValue()) {
+			                                try {
+			                                    final QosMeasurementType qosType = QosMeasurementType.fromQosTypeDto(e.getKey());
+			                                    switch(qosType) {
+				                                    case TRACEROUTE:
+				                                    	final Boolean isReverse = Boolean.valueOf(String.valueOf(qosParamMap.get("is_reverse")));
+				                                    	if (isReverse) {
+				                                    		qosParamMap.put("auth_token", serverDto.getAuthToken());
+				                                    		qosParamMap.put("auth_timestamp", serverDto.getAuthTimestamp());
+				                                    		qosParamMap.put("host", serverDto.getTracerouteUrl());
+				                                    	}
+				                                    	break;
+				                                    default:
+				                                    	break;
+			                                    }
+			                                } catch (final Exception ex) {
+			                                    //unknown qos type
+			                                    ex.printStackTrace();
+			                                }
+		                            	}
+		                            }
+		                        }
+		                    }
+						}
+						else if (type == MeasurementTypeDto.SPEED) {
+							if (serverDto.getAuthToken() != null && serverDto.getAuthTimestamp() != null) {
+								final LmapOptionDto authTokenOption = new LmapOptionDto();
+								authTokenOption.setName(LmapTaskDto.AUTH_TOKEN);
+								authTokenOption.setValue(serverDto.getAuthToken());
+								task.getOptions().add(authTokenOption);
+
+								final LmapOptionDto authTsOption = new LmapOptionDto();
+								authTsOption.setName(LmapTaskDto.AUTH_TIMESTAMP);
+								authTsOption.setValue(String.valueOf(serverDto.getAuthTimestamp()));
+								task.getOptions().add(authTsOption);
+							}
+
 							for (final LmapOptionDto option : task.getOptions()) {
 								switch(option.getName()) {
 								case LmapTaskDto.SERVER_ADDRESS:
@@ -102,7 +151,7 @@ public class MeasurementConfigurationService {
 									option.setValue(serverDto.getAddressIpv6());
 									break;
 								case LmapTaskDto.SERVER_ADDRESS_DEFAULT:
-									option.setValue(useIPv6 ? serverDto.getAddressIpv6() : serverDto.getAddressIpv4());
+									option.setValue(useIPv6 && serverDto.getAddressIpv6() != null ? serverDto.getAddressIpv6() : serverDto.getAddressIpv4());
 									break;
 								case LmapTaskDto.SERVER_PORT:
 									option.setValue(String.valueOf(port));
@@ -118,6 +167,13 @@ public class MeasurementConfigurationService {
 			}
 		}
 
+		try {
+			logger.debug("{}", new ObjectMapper().writeValueAsString(ret));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return ret;
 	}
 	
@@ -127,7 +183,7 @@ public class MeasurementConfigurationService {
 	 * @param capabilities
 	 * @return
 	 */
-	private List<LmapTaskDto> getTaskListForCapabilities(final LmapCapabilityDto capabilities, boolean useIPv6) {
+	private List<LmapTaskDto> getTaskListForCapabilities(final LmapCapabilityDto capabilities, boolean useIPv6, String browserName) {
 		final List<LmapTaskDto> ret = new ArrayList<>();
 		
 		for (LmapCapabilityTaskDto capability : capabilities.getTasks()) {
@@ -138,7 +194,7 @@ public class MeasurementConfigurationService {
 				logger.error(String.format("Unknown measurement type of name %s requested. Ignoring.", capability.getTaskName()));
 				continue;
 			}
-			LmapTaskDto task = getMeasurementTaskConfiguration(type, capability, useIPv6);
+			LmapTaskDto task = getMeasurementTaskConfiguration(type, capability, useIPv6, browserName);
 			if (task != null) {
 				ret.add(task);
 			}
@@ -183,12 +239,12 @@ public class MeasurementConfigurationService {
 		return ret;
 	}
 	
-	private LmapTaskDto getMeasurementTaskConfiguration(final MeasurementTypeDto name, final LmapCapabilityTaskDto capability, boolean useIPv6) {
+	private LmapTaskDto getMeasurementTaskConfiguration(final MeasurementTypeDto name, final LmapCapabilityTaskDto capability, boolean useIPv6, String browserName) {
 		if (name == null || capability == null) {
 			return null;
 		}
 
-		final LmapTaskDto ret = storageService.getTaskDto(name, capability, controllerServiceProperties.getSettingsUuid(), useIPv6);
+		final LmapTaskDto ret = storageService.getTaskDto(name, capability, controllerServiceProperties.getSettingsUuid(), useIPv6, browserName);
 		final List<String> tagList = new ArrayList<String>();
 		//tagList.add(version);
 		

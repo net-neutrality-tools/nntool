@@ -38,6 +38,7 @@ import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurem
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.QoSMeasurementType;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings;
 import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings;
+import at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings.SpeedMeasurementClassConfiguration;
 import at.alladin.nntool.shared.qos.util.SipTaskHelper;
 
 @Mapper(componentModel = "spring")
@@ -45,25 +46,19 @@ public interface LmapTaskMapper {
 	
 	@Mappings({
 		@Mapping(target="options",
-				expression= "java( buildOptionQoSList(settings, measurementServer, qosObjectiveList, useIPv6) )"
+				expression= "java( buildOptionQoSList(settings, measurementServer, qosObjectiveList, useIPv6, browserName) )"
 				),
 		@Mapping(target="name", source="name")
 	})
-	LmapTaskDto map(Settings settings, MeasurementServer measurementServer, List<QoSMeasurementObjective> qosObjectiveList, String name, boolean useIPv6);
+	LmapTaskDto map(Settings settings, MeasurementServer measurementServer, List<QoSMeasurementObjective> qosObjectiveList, String name, boolean useIPv6, String browserName);
 	
 	@Mappings({
 		@Mapping(target="options",
-				expression= "java( buildOptionSpeedList(settings, measurementServer, useIPv6) )"
+				expression= "java( buildOptionSpeedList(settings, measurementServer, useIPv6, browserName) )"
 				),
 		@Mapping(target="name", source="name")
 	})
-	LmapTaskDto map(Settings settings, MeasurementServer measurementServer, String name, boolean useIPv6);
-	
-	@Mappings({
-//		@Mapping(target="uploadClassList", source="uploadClassList"),
-//		@Mapping(target="downloadClassList", source="downloadClassList")
-	})
-	SpeedMeasurementConfiguration map(SpeedMeasurementSettings speedSettings);
+	LmapTaskDto map(Settings settings, MeasurementServer measurementServer, String name, boolean useIPv6, String browserName);
 	
 	List<SpeedMeasurementClass> map(List<at.alladin.nettest.shared.server.storage.couchdb.domain.model.Settings.SpeedMeasurementSettings.SpeedMeasurementClass> speedMeasurementClass);
 	
@@ -92,13 +87,12 @@ public interface LmapTaskMapper {
 			if (QoSMeasurementType.SIP.equals(objective.getType())) {
 				SipTaskHelper.preProcess(objectiveMap);
 			}
-			
 		}
 		
 		return ret;
 	}
 	
-	default List<LmapOptionDto> buildOptionSpeedList(final Settings settings, final MeasurementServer measurementServer, boolean useIPv6) {
+	default List<LmapOptionDto> buildOptionSpeedList(final Settings settings, final MeasurementServer measurementServer, boolean useIPv6, String browserName) {
 		final List<LmapOptionDto> ret = new ArrayList<>();
 		
 		if (settings != null && settings.getUrls() != null && settings.getUrls().getCollectorService() != null) {
@@ -112,16 +106,53 @@ public interface LmapTaskMapper {
 			if (speedSettings != null) {
 				final LmapOptionDto paramDto = new LmapOptionDto();
 				final SpeedMeasurementTypeParameters parameters = new SpeedMeasurementTypeParameters();
-				parameters.setMeasurementConfiguration(map(speedSettings));
+				parameters.setMeasurementConfiguration(createSpeedMeasurementConfiguration(speedSettings, browserName));
 				paramDto.setMeasurementParameters(parameters);
 				paramDto.setName(LmapTaskDto.MEASUREMENT_PARAMETER_SPEED);
 				ret.add(paramDto);
 			}
 		}
+
 		return ret;
 	}
 	
-	default List<LmapOptionDto> buildOptionQoSList(final Settings settings, final MeasurementServer measurementServer, List<QoSMeasurementObjective> qosObjectiveList, boolean useIPv6) {
+	default SpeedMeasurementConfiguration createSpeedMeasurementConfiguration(SpeedMeasurementSettings speedSettings, String browserName) {
+		final SpeedMeasurementConfiguration conf = new SpeedMeasurementConfiguration();
+		
+		final Map<String, SpeedMeasurementClassConfiguration> confByUserAgent = speedSettings.getClassesByUserUserAgent();
+		if (confByUserAgent != null) {
+			SpeedMeasurementClassConfiguration browserConf = confByUserAgent.get(browserName);
+			if (browserConf != null && !browserConf.getDownloadClassList().isEmpty() && !browserConf.getUploadClassList().isEmpty()) {
+				conf.setDownloadClassList(map(browserConf.getDownloadClassList()));
+				conf.setUploadClassList(map(browserConf.getUploadClassList()));
+		
+				return conf;
+			}
+			
+			// if not found, try only browser without operating system
+			if (browserName.contains(".")) {
+				browserConf = confByUserAgent.get(browserName.split(".")[1]);
+				
+				if (browserConf != null && !browserConf.getDownloadClassList().isEmpty() && !browserConf.getUploadClassList().isEmpty()) {
+					conf.setDownloadClassList(map(browserConf.getDownloadClassList()));
+					conf.setUploadClassList(map(browserConf.getUploadClassList()));
+				
+					return conf;
+				}
+			}
+		}
+
+		// Fallback: if no config for browserName then return default config.
+		final SpeedMeasurementClassConfiguration defaultClasses = speedSettings.getDefaultClasses();
+		if (defaultClasses != null) {
+			conf.setDownloadClassList(map(speedSettings.getDefaultClasses().getDownloadClassList()));
+			conf.setUploadClassList(map(speedSettings.getDefaultClasses().getUploadClassList()));
+		}
+		
+		return conf;
+	}
+	
+	default List<LmapOptionDto> buildOptionQoSList(final Settings settings, final MeasurementServer measurementServer, List<QoSMeasurementObjective> qosObjectiveList, boolean useIPv6, String browserName) {
 		final List<LmapOptionDto> ret = new ArrayList<>();
 		
 		if (settings != null && settings.getUrls() != null && settings.getUrls().getCollectorService() != null) {

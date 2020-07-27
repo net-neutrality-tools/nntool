@@ -1,9 +1,9 @@
 /*!
     \file tool.h
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-04-06
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -25,6 +25,7 @@
 #include "typedef.h"
 #include "configmanager.h"
 #include "trace.h"
+#include "sha1.hpp"
 
 using namespace std;
 
@@ -118,6 +119,8 @@ class CTool
 		static void print_stacktrace();
 
 		static string to_string_precision(double value, const int precision);
+
+		static bool check_authentication(bool enabled, long long authenticationMaxAge, string authenticationSecret, string authToken, string authTimestamp, string handler);
 		
 		//Template Code-------------------------------------------------------
 		//! \brief

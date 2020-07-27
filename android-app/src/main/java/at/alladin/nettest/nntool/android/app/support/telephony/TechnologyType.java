@@ -25,5 +25,6 @@ public enum TechnologyType {
     TECH_4G,
     TECH_MOBILE_ANY,
     TECH_WLAN,
+    TECH_LAN,
     UNKNOWN
 }

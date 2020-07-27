@@ -28,6 +28,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
 
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -73,7 +76,7 @@ public class GroupedMeasurementService {
 	
 	private static final String TRANSLATION_KEY_NO = "key_no";
 	
-	private static final DateFormat originalDateFormat = new SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss");
+	private static final DateFormat originalDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	
 	//the string is still enhanced w/the user's locale
 	private static final String newDateFormatString = "dd.MM.yyyy HH:mm";
@@ -83,6 +86,11 @@ public class GroupedMeasurementService {
 
 	@Autowired
 	private MessageSource messageSource;
+	
+	@PostConstruct
+	public void init() {
+		originalDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+	}
 	
 	public DetailMeasurementResponse groupResult(final Map<String, Object> measurementAsMap, final List<SpeedtestDetailGroup> groupStructure, final Locale locale, 
 			final int geoAccuracyDetailLimit) {
@@ -131,7 +139,7 @@ public class GroupedMeasurementService {
 		}
 		
 		final Format format = new DecimalFormat("0.00", new DecimalFormatSymbols(locale));
-		final Format dateFormat = new SimpleDateFormat(newDateFormatString, locale);
+		final DateFormat dateFormat = new SimpleDateFormat(newDateFormatString, locale);
     	
     	//Fill in the corresponding Response with translated and formatted values
 		final DetailMeasurementResponse ret = new DetailMeasurementResponse();
@@ -171,71 +179,58 @@ public class GroupedMeasurementService {
 			responseGroup.setItems(new ArrayList<>());
 			
 			for (final SpeedtestDetailGroupEntry entry : groupDefinition.getValues()) {
-				final String key = entry.getKey();
-				final FormatEnum formatEnum = entry.getFormat();
-				final String unit = entry.getUnit();
-				
-				final String[] keyPath = entry.getKey().split("\\.");
-				if (keyPath.length == 0) {
-					continue;
-				}
-				
-				//if key starts with SPEED or QOS -> start w/different values
-				final Object value;
-				switch (keyPath[0].toLowerCase()) {
-				case SPEED_PREFIX:
-					if (subMeasurements != null) {
-						value = getObjectAt(Arrays.copyOfRange(keyPath, 1, keyPath.length), subMeasurements.get(MeasurementTypeDto.SPEED), FullSpeedMeasurement.class);
-						break;
+				try {
+					
+					final String key = entry.getKey();
+					final FormatEnum formatEnum = entry.getFormat();
+					final String formatKey = entry.getFormatKey();
+					final String unit = entry.getUnit();
+					
+					
+					String val = getValueAt(key, subMeasurements, measurement);
+					if (val == null) {
+						continue;
 					}
-				case QOS_PREFIX:
-					if (subMeasurements != null) {
-						value = getObjectAt(Arrays.copyOfRange(keyPath, 1, keyPath.length), subMeasurements.get(MeasurementTypeDto.QOS), FullQoSMeasurement.class);
-						break;
+					
+					//fill the item accordingly
+					final DetailMeasurementGroupItem item = new DetailMeasurementGroupItem();
+					
+					item.setTitle(messageSource.getMessage(entry.getTranslationKey(), null, locale));
+					
+					if (includeKeys) {
+						item.setKey(key);
 					}
-				default:
-					value = getObjectAt(keyPath, measurement, FullMeasurementResponse.class);
+					
+					String formatVal = null;
+					if (formatKey != null) {
+						formatVal = getValueAt(formatKey, subMeasurements, measurement);
+					}
+					//default formatting
+					if(formatEnum != null){
+						val = formatResultValueString(val, formatEnum, formatVal, format, dateFormat, locale);
+					}
+					if(unit != null) {
+						item.setUnit(messageSource.getMessage(unit, null, locale));
+					}
+					
+					if(item.getValue() == null){
+						item.setValue(val);
+					}
+					//provide the values for the share text
+					if (entry.getShareText() != null) {
+						final ShareText share = new ShareText();
+						share.setText(messageSource.getMessage(entry.getShareText(), 
+								new Object[] {item.getValue() + (item.getUnit() != null ? " " + item.getUnit() : "")},
+								locale));
+						share.setPriority(entry.getSharePriority() != null ? entry.getSharePriority() : Integer.MAX_VALUE);
+						shareTextQueue.add(share);
+					}
+					
+					//and add that item to the responseGroup
+					responseGroup.getItems().add(item);
+				} catch (final Exception ex) {
+					logger.info("Error during value parsing: {}", ex.getMessage());
 				}
-				
-				if (value == null) {
-					logger.debug("Unable to find object @ {}", key);
-					continue;
-				}
-				
-				String val = value.toString();
-				
-				//fill the item accordingly
-				final DetailMeasurementGroupItem item = new DetailMeasurementGroupItem();
-				
-				item.setTitle(messageSource.getMessage(entry.getTranslationKey(), null, locale));
-				
-				if (includeKeys) {
-					item.setKey(key);
-				}
-				
-				//default formatting
-				if(formatEnum != null){
-					val = formatResultValueString(val, formatEnum, format, dateFormat, locale);
-				}
-				if(unit != null) {
-					item.setUnit(messageSource.getMessage(unit, null, locale));
-				}
-				
-				if(item.getValue() == null){
-					item.setValue(val);
-				}
-				//provide the values for the share text
-				if (entry.getShareText() != null) {
-					final ShareText share = new ShareText();
-					share.setText(messageSource.getMessage(entry.getShareText(), 
-							new Object[] {item.getValue() + (item.getUnit() != null ? " " + item.getUnit() : "")},
-							locale));
-					share.setPriority(entry.getSharePriority() != null ? entry.getSharePriority() : Integer.MAX_VALUE);
-					shareTextQueue.add(share);
-				}
-				
-				//and add that item to the responseGroup
-				responseGroup.getItems().add(item);
 			}
 			//group specific exceptions land here
 			if ("device_information_group".equals(groupDefinition.getKey())) {
@@ -274,6 +269,36 @@ public class GroupedMeasurementService {
 		}
 		
 		return ret;
+	}
+	
+	private String getValueAt(final String key, final Map<MeasurementTypeDto, FullSubMeasurement> subMeasurements, final FullMeasurementResponse measurement) {
+		final String[] keyPath = key.split("\\.");
+		if (keyPath.length == 0) {
+			return null;
+		}
+		
+		//if key starts with SPEED or QOS -> start w/different values
+		final Object value;
+		switch (keyPath[0].toLowerCase()) {
+		case SPEED_PREFIX:
+			if (subMeasurements != null) {
+				value = getObjectAt(Arrays.copyOfRange(keyPath, 1, keyPath.length), subMeasurements.get(MeasurementTypeDto.SPEED), FullSpeedMeasurement.class);
+				break;
+			}
+		case QOS_PREFIX:
+			if (subMeasurements != null) {
+				value = getObjectAt(Arrays.copyOfRange(keyPath, 1, keyPath.length), subMeasurements.get(MeasurementTypeDto.QOS), FullQoSMeasurement.class);
+				break;
+			}
+		default:
+			value = getObjectAt(keyPath, measurement, FullMeasurementResponse.class);
+		}
+		
+		if (value == null) {
+			logger.debug("Unable to find object @ {}", key);
+			return null;
+		}
+		return value.toString();
 	}
 	
 	private Object getObjectAt (final String[] keyPath, final Object startingObject, final Class<?> startingClass) {
@@ -375,15 +400,27 @@ public class GroupedMeasurementService {
         return null;
     }
 	
-	private String formatResultValueString(final String value, final FormatEnum formatEnum, final Format format, final Format dateFormat, final Locale locale) {
+	private String formatResultValueString(final String value, final FormatEnum formatEnum, final String formatValue, final Format format, final DateFormat dateFormat, final Locale locale) {
 		try {
 			switch (formatEnum) {
 			case TRANSLATE_BOOLEAN_VALUE:
 				return Boolean.valueOf(value) ? messageSource.getMessage(TRANSLATION_KEY_YES, null, locale) : messageSource.getMessage(TRANSLATION_KEY_NO, null, locale);
 			case TRANSLATE_VALUE:
 				return messageSource.getMessage("key_" + value, null, locale);
+			case TIMESTAMP_WITH_TIMEZONE:
+				if (formatValue != null) {
+					try {
+						dateFormat.setTimeZone(TimeZone.getTimeZone(formatValue));
+						return dateFormat.format(originalDateFormat.parse(value));
+					} catch (final Exception ex) {
+						//nothing to parse -> fallthrough to base timestamp
+						logger.debug("Error formatting: {}", ex.getMessage());
+					} finally {
+						dateFormat.setTimeZone(TimeZone.getDefault());
+					}
+				}
 			case TIMESTAMP:
-				return dateFormat.format(originalDateFormat.parse(value));				
+				return dateFormat.format(originalDateFormat.parse(value));
 			default:
 				return format.format(Double.parseDouble(value) / formatEnum.getDivider());
 			}

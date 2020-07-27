@@ -320,7 +320,6 @@ public class CouchDbStorageServiceMockitTest {
 
 	@Test
 	public void getTaskDtoForSpeedTask_shouldProvideValidValuesForMapper() {
-
 		final Settings settings = new Settings();
 		settings.setMeasurements(new HashMap<>());
 		settings.getMeasurements().put(MeasurementTypeDto.SPEED, settings.new SpeedMeasurementSettings());
@@ -341,20 +340,21 @@ public class CouchDbStorageServiceMockitTest {
 			measurementServerRepository.findByPublicIdentifier("peer_id");
 			result = server;
 
-			lmapTaskMapper.map((Settings) any, (MeasurementServer) any, anyString, false);
+			lmapTaskMapper.map((Settings) any, (MeasurementServer) any, anyString, false, "");
 			result = new Delegate() {
-				public LmapTaskDto delegate(Settings settings, MeasurementServer server, String type, boolean useIPv6) {
+				public LmapTaskDto delegate(Settings settings, MeasurementServer server, String type, boolean useIPv6, String browserName) {
 					assertEquals("unexpected settings provided to mapper", SETTINGS_UUID, settings.getId());
 					assertEquals("unexpected server provided to mapper", "peer", server.getName());
 					assertEquals("unexpected server provided to mapper", "peer_id", server.getPublicIdentifier());
 					assertEquals("unexpected type provided to mapper", "SPEED", type);
 					assertEquals("unexpected useIPv6 value provided to mapper", false, useIPv6);
+					assertEquals("unexpected browserName value provided to mapper", "", browserName);
 					return new LmapTaskDto();
 				}
 			};
 		}};
 
-		assertNotNull("Invalid object returned", couchDbStorageService.getTaskDto(MeasurementTypeDto.SPEED, capability, SETTINGS_UUID, false));
+		assertNotNull("Invalid object returned", couchDbStorageService.getTaskDto(MeasurementTypeDto.SPEED, capability, SETTINGS_UUID, false, ""));
 	}
 
 	@Test(expected = StorageServiceException.class)

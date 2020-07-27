@@ -28,6 +28,7 @@ public enum CellType {
     MOBILE_LTE(TechnologyType.TECH_4G), /* MOBILE 4G */
     MOBILE_ANY(TechnologyType.TECH_MOBILE_ANY), /* unknown mobile */
     WLAN(TechnologyType.TECH_WLAN),  /* WLAN */
+    LAN(TechnologyType.TECH_LAN), /* LAN */
     UNKNOWN(TechnologyType.UNKNOWN); /* UNKNOWN */
 
     private final TechnologyType technologyType;
@@ -46,7 +47,7 @@ public enum CellType {
             return networkFamily.getCellType();
         }
 
-        return null;
+        return UNKNOWN;
     }
 
     private enum NetworkFamilyEnum {

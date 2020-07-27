@@ -40,9 +40,14 @@ public enum RoamingType {
 	 * International roaming.
 	 */
 	INTERNATIONAL,
-
+	
 	/**
-	 * Roaming type is not available (cannot be determined)
+	 * Roaming type is not supported by the platform (e.g. iOS)
 	 */
-	NOT_AVAILABLE
+	NOT_AVAILABLE,
+	
+	/**
+	 * The roaming type is supported by the platform (e.g. android), but could not be fetched
+	 */
+	UNKNOWN
 }

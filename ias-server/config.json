@@ -12,7 +12,8 @@
   },
   "authentication": {
     "enabled" : false,
-    "secret": "my_auth_secret"
+    "secret": "my_auth_secret",
+    "max_age": 120
   },
   "hostname": "my_hostname",
   "tcp_timeout": "25",

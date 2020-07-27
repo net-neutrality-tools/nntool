@@ -17,6 +17,7 @@
 package at.alladin.nettest.shared.server.storage.couchdb.domain.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -386,64 +387,102 @@ public class Settings {
 	@JsonClassDescription("Settings applicable only to conducted speed measurements.")
 	public class SpeedMeasurementSettings extends SubMeasurementSettings {
 
-		//TODO: this will be replaced by load balancing logic
 		/**
-		 * The uuid of the speed measurement server to be used during speed measurements.
+		 * The uuid of the default speed measurement server to be used during speed measurements if no other server is found.
 		 */
-		@JsonPropertyDescription("The uuid of the speed measurement server to be used during speed measurements.")
+		@JsonPropertyDescription("The uuid of the default speed measurement server to be used during speed measurements if no other server is found.")
 		@Expose
-		@SerializedName("speed_measurement_server_uuid")
-		@JsonProperty("speed_measurement_server_uuid")
-		private String speedMeasurementServerUuid;
+		@SerializedName("default_ias_measurement_server_uuid")
+		@JsonProperty("default_ias_measurement_server_uuid")
+		private String defaultSpeedMeasurementServerUuid;
+		
+		/**
+		 * The default speed measurement class configuration.
+		 */
+		@JsonPropertyDescription("The default speed measurement class configuration.")
+		@Expose
+		@SerializedName("default_classes")
+		@JsonProperty("default_classes")
+		private SpeedMeasurementClassConfiguration defaultClasses;
 
 		/**
-		 * Contains all measurement class configurations for the upload test.
+		 * Contains different measurement classes (download, upload) per operating system and user agent (browser). 
 		 */
-		@JsonPropertyDescription("Contains all measurement class configurations for the upload test.")
+		@JsonPropertyDescription("Contains different measurement classes (download, upload) per operating system and user agent (browser).")
 		@Expose
-		@SerializedName("upload")
-		@JsonProperty("upload")
-		private List<SpeedMeasurementClass> uploadClassList = new ArrayList<>();
-
-		/**
-		 * Contains all measurement class configurations for the download test.
-		 */
-		@JsonPropertyDescription("Contains all measurement class configurations for the download test.")
-		@Expose
-		@SerializedName("download")
-		@JsonProperty("download")
-		private List<SpeedMeasurementClass> downloadClassList = new ArrayList<>();
-
-		public List<SpeedMeasurementClass> getUploadClassList() {
-			return uploadClassList;
+		@SerializedName("classes_by_user_agent")
+		@JsonProperty("classes_by_user_agent")
+		private Map<String, SpeedMeasurementClassConfiguration> classesByUserUserAgent = new HashMap<>();
+		
+		public String getDefaultSpeedMeasurementServerUuid() {
+			return defaultSpeedMeasurementServerUuid;
 		}
-
-		public void setUploadClassList(List<SpeedMeasurementClass> uploadClassList) {
-			this.uploadClassList = uploadClassList;
+		
+		public void setDefaultSpeedMeasurementServerUuid(String defaultSpeedMeasurementServerUuid) {
+			this.defaultSpeedMeasurementServerUuid = defaultSpeedMeasurementServerUuid;
 		}
-
-		public List<SpeedMeasurementClass> getDownloadClassList() {
-			return downloadClassList;
+		
+		public SpeedMeasurementClassConfiguration getDefaultClasses() {
+			return defaultClasses;
 		}
-
-		public void setDownloadClassList(List<SpeedMeasurementClass> downloadClassList) {
-			this.downloadClassList = downloadClassList;
+		
+		public void setDefaultClasses(SpeedMeasurementClassConfiguration defaultClasses) {
+			this.defaultClasses = defaultClasses;
 		}
-
-		public String getSpeedMeasurementServerUuid() {
-			return speedMeasurementServerUuid;
+		
+		public Map<String, SpeedMeasurementClassConfiguration> getClassesByUserUserAgent() {
+			return classesByUserUserAgent;
 		}
-
-		public void setSpeedMeasurementServerUuid(String speedMeasurementServerUuid) {
-			this.speedMeasurementServerUuid = speedMeasurementServerUuid;
-		}
-
+		
 		@Override
 		public String toString() {
-			return "SpeedMeasurementSettings [speedMeasurementServerUuid=" + speedMeasurementServerUuid
-					+ ", uploadClassList=" + uploadClassList + ", downloadClassList=" + downloadClassList + "]";
+			return "SpeedMeasurementSettings [defaultClasses=" + defaultClasses + ", classesByUserUserAgent="
+					+ classesByUserUserAgent + "]";
 		}
 
+		public class SpeedMeasurementClassConfiguration {
+			
+			/**
+			 * Contains all measurement class configurations for the upload test.
+			 */
+			@JsonPropertyDescription("Contains all measurement class configurations for the upload test.")
+			@Expose
+			@SerializedName("upload")
+			@JsonProperty("upload")
+			private List<SpeedMeasurementClass> uploadClassList = new ArrayList<>();
+
+			/**
+			 * Contains all measurement class configurations for the download test.
+			 */
+			@JsonPropertyDescription("Contains all measurement class configurations for the download test.")
+			@Expose
+			@SerializedName("download")
+			@JsonProperty("download")
+			private List<SpeedMeasurementClass> downloadClassList = new ArrayList<>();
+
+			public List<SpeedMeasurementClass> getUploadClassList() {
+				return uploadClassList;
+			}
+
+			public void setUploadClassList(List<SpeedMeasurementClass> uploadClassList) {
+				this.uploadClassList = uploadClassList;
+			}
+
+			public List<SpeedMeasurementClass> getDownloadClassList() {
+				return downloadClassList;
+			}
+
+			public void setDownloadClassList(List<SpeedMeasurementClass> downloadClassList) {
+				this.downloadClassList = downloadClassList;
+			}
+
+			@Override
+			public String toString() {
+				return "SpeedMeasurementClassConfiguration [uploadClassList=" + uploadClassList + ", downloadClassList="
+						+ downloadClassList + "]";
+			}
+		}
+		
 		/**
 		 * Holds a single measurement class configuration.
 		 *
