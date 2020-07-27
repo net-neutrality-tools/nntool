@@ -61,11 +61,11 @@ public class MeasurementConfigurationService {
     @Autowired(required = false)
     private LoadBalancingService loadBalancingService;
 
-    public LmapControlDto getLmapControlDtoForCapabilities(final LmapCapabilityDto capabilities, boolean useIPv6) {
+    public LmapControlDto getLmapControlDtoForCapabilities(final LmapCapabilityDto capabilities, boolean useIPv6, String browserName) {
 		final LmapControlDto ret = new LmapControlDto();
 		
 		ret.setCapabilities(capabilities);
-		ret.setTasks(getTaskListForCapabilities(capabilities, useIPv6));
+		ret.setTasks(getTaskListForCapabilities(capabilities, useIPv6, browserName));
 		ret.setEvents(getImmediateEventList());
 		ret.setSchedules(getLmapScheduleList(ret.getEvents().get(0).getName(), ret.getTasks()));
 
@@ -183,7 +183,7 @@ public class MeasurementConfigurationService {
 	 * @param capabilities
 	 * @return
 	 */
-	private List<LmapTaskDto> getTaskListForCapabilities(final LmapCapabilityDto capabilities, boolean useIPv6) {
+	private List<LmapTaskDto> getTaskListForCapabilities(final LmapCapabilityDto capabilities, boolean useIPv6, String browserName) {
 		final List<LmapTaskDto> ret = new ArrayList<>();
 		
 		for (LmapCapabilityTaskDto capability : capabilities.getTasks()) {
@@ -194,7 +194,7 @@ public class MeasurementConfigurationService {
 				logger.error(String.format("Unknown measurement type of name %s requested. Ignoring.", capability.getTaskName()));
 				continue;
 			}
-			LmapTaskDto task = getMeasurementTaskConfiguration(type, capability, useIPv6);
+			LmapTaskDto task = getMeasurementTaskConfiguration(type, capability, useIPv6, browserName);
 			if (task != null) {
 				ret.add(task);
 			}
@@ -239,12 +239,12 @@ public class MeasurementConfigurationService {
 		return ret;
 	}
 	
-	private LmapTaskDto getMeasurementTaskConfiguration(final MeasurementTypeDto name, final LmapCapabilityTaskDto capability, boolean useIPv6) {
+	private LmapTaskDto getMeasurementTaskConfiguration(final MeasurementTypeDto name, final LmapCapabilityTaskDto capability, boolean useIPv6, String browserName) {
 		if (name == null || capability == null) {
 			return null;
 		}
 
-		final LmapTaskDto ret = storageService.getTaskDto(name, capability, controllerServiceProperties.getSettingsUuid(), useIPv6);
+		final LmapTaskDto ret = storageService.getTaskDto(name, capability, controllerServiceProperties.getSettingsUuid(), useIPv6, browserName);
 		final List<String> tagList = new ArrayList<String>();
 		//tagList.add(version);
 		

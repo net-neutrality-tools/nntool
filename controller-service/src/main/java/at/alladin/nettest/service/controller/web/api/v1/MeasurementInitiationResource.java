@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import at.alladin.nettest.service.controller.exception.GeneralBadRequestException;
 import at.alladin.nettest.service.controller.service.MeasurementConfigurationService;
 import at.alladin.nettest.service.controller.service.MeasurementDeviceInformationService;
+import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequestInfo;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiResponse;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapAgentDto;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.lmap.control.LmapCapabilityDto;
@@ -86,6 +88,7 @@ public class MeasurementInitiationResource {
 			HttpServletRequest request) throws UnknownHostException {
 		
 		final LmapAgentDto agentDto = measurementInitiationRequest.getAgent();
+		final ApiRequestInfo info = measurementInitiationRequest.getAdditionalRequestInfo();
 		
 		if (agentDto == null || agentDto.getAgentId() == null) {
 			//TODO: do we hide that in production?
@@ -105,21 +108,34 @@ public class MeasurementInitiationResource {
 			throw new GeneralBadRequestException("No capabilities provided");
 		}
 		
-		measurementDeviceInformationService.fillDeviceInformation(measurementInitiationRequest.getAdditionalRequestInfo(), request);
+		measurementDeviceInformationService.fillDeviceInformation(info, request);
 		
 		////
 		
 		boolean useIPv6 = IpAddressHelper.extractIpAddressFromHttpServletRequest(request) instanceof Inet6Address;
 		logger.info("Measurement initiation with (useIPv6 = {})", useIPv6);
+
+		// Check user agent for speed class mapping
+		String browserName = info.getModel();
+		String osName = info.getOsName();
+		String osBrowser = "";
+		if (StringUtils.hasLength(osName)) {
+			osName = osName.toLowerCase();
+			
+			osBrowser += osName;
+		}
 		
-		// TODO: load balancing
-		final LmapControlDto lmapControlDto = measurementConfigurationService.getLmapControlDtoForCapabilities(capabilityDto, useIPv6);
-		lmapControlDto.setAdditionalRequestInfo(measurementInitiationRequest.getAdditionalRequestInfo());
+		if (StringUtils.hasLength(browserName)) {
+			if (StringUtils.hasLength(osBrowser)) {
+				osBrowser += ".";
+			}
+			
+			osBrowser += browserName.toLowerCase();
+		}
+
+		final LmapControlDto lmapControlDto = measurementConfigurationService.getLmapControlDtoForCapabilities(capabilityDto, useIPv6, osBrowser);
+		lmapControlDto.setAdditionalRequestInfo(info);
 		lmapControlDto.setAgent(agentDto);
-		
-		//measurementInitiationRequest.getAgent().getAgentId();
-		
-		
 		
 		return ResponseEntity.ok(lmapControlDto);
 	}
