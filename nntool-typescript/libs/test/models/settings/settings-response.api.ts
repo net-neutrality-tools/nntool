@@ -60,6 +60,7 @@ export class Urls {
 export enum QoSMeasurementType {
   TCP = 'TCP',
   UDP = 'UDP',
+  UDP_TURN = 'UDP_TURN',
   DNS = 'DNS',
   NON_TRANSPARENT_PROXY = 'NON_TRANSPARENT_PROXY',
   HTTP_PROXY = 'HTTP_PROXY',

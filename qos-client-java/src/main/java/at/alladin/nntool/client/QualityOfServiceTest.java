@@ -67,6 +67,7 @@ import at.alladin.nntool.client.v2.task.service.TrafficService;
 public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 
     public final static String TASK_UDP = "udp";
+	public final static String TASK_UDP_TURN = "udp_turn";
     public final static String TASK_TCP = "tcp";
     public final static String TASK_DNS = "dns";
     public final static String TASK_VOIP = "voip";
@@ -180,12 +181,7 @@ public class QualityOfServiceTest implements Callable<QoSResultCollector> {
 			}
 			else if (TASK_TRACEROUTE.equals(taskId)) {
 				if (nnTestSettings != null && nnTestSettings.getTracerouteServiceClazz() != null) {
-					final Object isReverse = taskDesc.getParams().get("is_reverse");
-					if (isReverse instanceof Boolean && (boolean) isReverse) {
-						System.out.println("Reverse Traceroute not yet implemented. Skipping TracerouteTask: " + taskDesc);
-					} else {
-						test = new TracerouteTask(this, taskDesc, threadCounter++);
-					}
+					test = new TracerouteTask(this, taskDesc, threadCounter++);
 				}
 				else {
 					System.out.println("No TracerouteService implementation: Skipping TracerouteTask: " + taskDesc);

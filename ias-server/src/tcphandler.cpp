@@ -1,9 +1,9 @@
 /*!
     \file tcphandler.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-26
+    \date Last update: 2020-04-06
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -36,8 +36,6 @@ unsigned long long  tcpTimeout;
 string              sClientIp;
 
 string              authentication_secret;
-
-string              hostname;
 
 bool                rttRunning;
 bool                downloadRunning;
@@ -127,15 +125,6 @@ CTcpHandler::CTcpHandler(int nSocket, string nClientIp, bool nTlsSocket, sockadd
     else
     {
         authentication_secret   = "default_authentication_secret";
-    }
-
-    if (::CONFIG["hostname"].string_value().compare("") != 0)
-    {
-        hostname = ::CONFIG["hostname"].string_value();
-    }
-    else
-    {
-        hostname                = "default_hostname";
     }
 
     rttRunning                  = false;
@@ -327,8 +316,8 @@ int CTcpHandler::websocket_open_handler(noPollCtx *ctx, noPollConn *conn, noPoll
 						TRC_DEBUG("WebSocket handler: requested download frame size:      \"" + to_string(downloadFrameSize) + "\"");
 					}
                 
-                    protocolAllowed = checkAuth(authToken, authTimestamp, "WebSocket");
-                    
+                    protocolAllowed = CTool::check_authentication(::CONFIG["authentication"]["enabled"].bool_value(), ::CONFIG["authentication"]["max_age"].int_value(), authentication_secret, authToken, authTimestamp, "WebSocket");
+
                     break;
                 }
             }
@@ -452,7 +441,6 @@ int CTcpHandler::handle_http(Json::object http_header_values, noPollCtx *ctx, no
     string delimiter = ";";
     CTool::tokenize(cookie, cookies, delimiter);
 
-    bool auth = false;
     bool overloadCheck = false;
 
     if (cookies.size() > 1)
@@ -485,9 +473,7 @@ int CTcpHandler::handle_http(Json::object http_header_values, noPollCtx *ctx, no
         TRC_DEBUG("HTTP handler: requested token:                  \"" + authToken + "\"");
         TRC_DEBUG("HTTP handler: requested timestamp:              \"" + authTimestamp + "\"");
 
-        auth = checkAuth(authToken, authTimestamp, "HTTP");
-        
-        if (auth)
+        if (CTool::check_authentication(::CONFIG["authentication"]["enabled"].bool_value(), ::CONFIG["authentication"]["max_age"].int_value(), authentication_secret, authToken, authTimestamp, "HTTP"))
         {
             connectionIsValidHttp = true;
             nopoll_conn_set_http_on(conn, true);
@@ -550,7 +536,7 @@ int CTcpHandler::handle_http(Json::object http_header_values, noPollCtx *ctx, no
                 uploadThread.detach();
             }
         }
-        else if (!auth)
+        else
         {
             TRC_ERR("HTTP handler: requested protocol: \"HTTP " + http_header_values["http_method"].string_value() + "\" is not allowed or authorization failed");
 
@@ -1071,38 +1057,6 @@ unsigned long long CTcpHandler::formatCurrentTime(unsigned long long endTime, un
     return currentTime;
 }
 
-
-bool CTcpHandler::checkAuth(string authToken, string authTimestamp, string handler)
-{
-    if (!::CONFIG["authentication"]["enabled"].bool_value())
-    {
-        TRC_WARN(handler + " handler: authentication deactivated");
-        return true;
-    }
-
-    long long currentTimestamp = CTool::get_timestamp();
-    long long requestedTimestamp = CTool::toLL(authTimestamp);
-    
-    //check if authentication is older dan allow maximum
-    if ( ((currentTimestamp - requestedTimestamp) > (AUTHENTICATION_MAX_AGE * 1e6)) || ((currentTimestamp - requestedTimestamp) < 0) )
-    {
-        TRC_WARN("WebSocket handler: authentication failed: token expired: " + to_string((currentTimestamp - requestedTimestamp)));
-        return false;
-    }
-
-    string authTokenComputed = sha1(authTimestamp + authentication_secret);
-    
-    TRC_DEBUG("WebSocket handler: computed token:       \"" + authTokenComputed + "\"");
-    
-    if (authToken.compare(authTokenComputed) != 0)
-    {
-        TRC_WARN("WebSocket handler: authentication failed: token mismatch");
-        return false;
-    }
-    
-    TRC_DEBUG(handler + " handler: authentication successful");
-    return true;
-}
 
 void CTcpHandler::printTcpMetrics()
 {

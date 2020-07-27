@@ -30,6 +30,8 @@ public class SpeedTaskDesc implements Serializable {
 
     private String speedServerAddrV6;
 
+    private String speedServerAddrDefault;
+
     private int speedServerPort = 443;
 
     private int speedServerPortRtt = 80;
@@ -53,6 +55,10 @@ public class SpeedTaskDesc implements Serializable {
     private String clientIp;
 
     private String clientIpPublic;
+
+    private String authToken;
+
+    private long authTimestamp;
 
     public int getRttCount() {
         return rttCount;
@@ -164,6 +170,30 @@ public class SpeedTaskDesc implements Serializable {
 
     public void setClientIpPublic(String clientIpPublic) {
         this.clientIpPublic = clientIpPublic;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
+    public Long getAuthTimestamp() {
+        return authTimestamp;
+    }
+
+    public void setAuthTimestamp(long authTimestamp) {
+        this.authTimestamp = authTimestamp;
+    }
+
+    public String getSpeedServerAddrDefault() {
+        return speedServerAddrDefault;
+    }
+
+    public void setSpeedServerAddrDefault(String speedServerAddrDefault) {
+        this.speedServerAddrDefault = speedServerAddrDefault;
     }
 
     @Override

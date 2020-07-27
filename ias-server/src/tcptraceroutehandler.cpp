@@ -1,7 +1,7 @@
 /*!
     \file tcptraceroutehandler.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2020-01-14
+    \date Last update: 2020-04-06
 
     Copyright (C) 2016 - 2020 zafaco GmbH
 
@@ -44,6 +44,15 @@ CTcpTracerouteHandler::CTcpTracerouteHandler(int nSocket, string nClientIp, bool
     tcpSocket   = nSocket;
     clientIp    = nClientIp;
     mTlsSocket  = nTlsSocket;
+
+    if (::CONFIG["authentication"]["secret"].string_value().compare("") != 0)
+    {
+        authentication_secret   = ::CONFIG["authentication"]["secret"].string_value();
+    }
+    else
+    {
+        authentication_secret   = "default_authentication_secret";
+    }
 }
 
 int CTcpTracerouteHandler::handle_tcp_traceroute()
@@ -57,7 +66,7 @@ int CTcpTracerouteHandler::handle_tcp_traceroute()
 
         return -1;
     }
-    
+    /*
     std::unique_ptr<char[]> rbufferOwner = std::make_unique<char[]>(MAXBUFFER);
     char *rbuffer = rbufferOwner.get();
 
@@ -68,8 +77,46 @@ int CTcpTracerouteHandler::handle_tcp_traceroute()
     mAcceptedConnection->receive(rbuffer, MAXBUFFER, 0);
 
     request = string(rbuffer);
-    
+    */
     TRC_DEBUG("TCP traceroute handler: request received");
+
+    std::unique_ptr<char[]> rbufferOwner = std::make_unique<char[]>(5000);
+    char *rbuffer = rbufferOwner.get();
+
+    std::unique_ptr<char[]> rchunkOwner = std::make_unique<char[]>(50);
+    char *rchunk = rchunkOwner.get();
+
+    string request;
+
+    bzero(rbuffer, 5000);
+    
+    unsigned long long timeout = 2*1e6;
+    unsigned long long currentTime;
+    unsigned long long startTime = CTool::get_timestamp();
+   
+    int bytes_received = 0;
+    mAcceptedConnection->setNonBlocking();
+
+    //read socket non-blocking chunked for at most timeout seconds
+    while(1)
+    {
+        currentTime = CTool::get_timestamp();
+        bzero(rchunk, 20);
+
+        bytes_received = mAcceptedConnection->receive(rchunk, 20, 0);
+
+        strcat(rbuffer, rchunk);
+
+        //break if timeout is reached or no bytes are outstanding
+        if ((currentTime - startTime) >= timeout || (bytes_received < 0 && strlen(rbuffer) != 0) )  
+        {
+            break;
+        }
+
+        usleep(10);
+    }
+
+    request = string(rbuffer);
 
     string rHost            = get_value_from_string(request, HTTP_HOST);
     string rAccessMethod    = get_value_from_string(request, HTTP_ACCESS_METHOD);
@@ -106,8 +153,39 @@ int CTcpTracerouteHandler::handle_tcp_traceroute()
         &&  ((request.find(HTTP_CONTENT_LENGTH) != string::npos) || (request.find(get_lower_string(HTTP_CONTENT_LENGTH))    != string::npos))
         )
     {
-        TRC_DEBUG("TCP traceroute handler: valid Traceroute POST request received");
-        handle_traceroute_request(rOrigin, rConnection);
+        Json jRequest = Json::object{};
+
+        string error = "";
+
+        try 
+        {
+            std::size_t pos = request.find("\r\n\r\n");
+            request = request.substr(pos);
+
+            jRequest = Json::parse(request, error);
+        }
+        catch(exception e)
+        {
+            error = "1";
+        }
+
+        //parse parameters
+        if (error.compare("") != 0)
+        {
+            TRC_ERR("TCP load traceroute handler: JSON parameter parse failed");
+            handle_invalid_request();
+        }
+        
+        if (!CTool::check_authentication(::CONFIG["authentication"]["enabled"].bool_value(), ::CONFIG["authentication"]["max_age"].int_value(), authentication_secret, jRequest["tk"].string_value(), jRequest["ts"].string_value(), "Traceroute") || jRequest["cmd"].string_value().compare("traceroute") != 0)
+        {
+            TRC_ERR("TCP traceroute handler: requested cmd: \"" + jRequest["cmd"].string_value() + "\" is not allowed or authorization failed");
+            handle_invalid_request();
+        }
+        else
+        {
+            TRC_DEBUG("TCP traceroute handler: valid Traceroute POST request received");
+            handle_traceroute_request(rOrigin, rConnection);
+        }
     }
     else
     {

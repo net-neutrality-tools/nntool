@@ -16,10 +16,10 @@
 
 package at.alladin.nntool.shared.qos;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.gson.annotations.SerializedName;
 
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.shared.QoSMeasurementTypeDto;
 
@@ -42,7 +42,13 @@ public enum QosMeasurementType {
      */
     @SerializedName("udp")
     UDP("udp", "test.udp", "name.udp", UdpResult.class),
-    
+
+    /**
+     *
+     */
+    @SerializedName("udp_turn")
+    UDP_TURN("udp_turn", "test.udp_turn", "name.udp_turn", UdpTurnResult.class),
+
     /**
 	 * 
 	 */
@@ -217,6 +223,8 @@ public enum QosMeasurementType {
                 return QoSMeasurementTypeDto.TCP;
             case UDP:
                 return QoSMeasurementTypeDto.UDP;
+            case UDP_TURN:
+                return QoSMeasurementTypeDto.UDP_TURN;
             case VOIP:
                 return QoSMeasurementTypeDto.VOIP;
             case WEBSITE:
@@ -250,6 +258,8 @@ public enum QosMeasurementType {
                 return TCP;
             case UDP:
                 return UDP;
+            case UDP_TURN:
+                return UDP_TURN;
             case VOIP:
                 return VOIP;
             case WEBSITE:

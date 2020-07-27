@@ -476,81 +476,88 @@
       },
       "measurements": {
         "SPEED": {
-          "speed_measurement_server_uuid": "speed_server",
-          "upload": [
-            {
-              "default": true,
-              "streams": 4,
-              "frameSize": 2048,
-              "framesPerCall": 1,
-              "bounds": {
-                "upper": 0.01,
-                "lower": 1.05
-              }
-            },
-            {
-              "streams": 4,
-              "frameSize": 65535,
-              "framesPerCall": 1,
-              "bounds": {
-                "upper": 0.95,
-                "lower": 525
-              }
-            },
-            {
-              "streams": 4,
-              "frameSize": 65535,
-              "framesPerCall": 4,
-              "bounds": {
-                "upper": 475,
-                "lower": 1050
-              }
-            },
-            {
-              "streams": 8,
-              "frameSize": 65535,
-              "framesPerCall": 20,
-              "bounds": {
-                "upper": 950,
-                "lower": 9000
-              }
-            }
-          ],
-          "download": [
-            {
-              "default": true,
-              "streams": 4,
-              "frameSize": 2048,
-              "bounds": {
-                "upper": 0.01,
-                "lower": 1.05
-              }
-            },
-            {
-              "streams": 4,
-              "frameSize": 32768,
-              "bounds": {
-                "upper": 0.95,
-                "lower": 525
-              }
-            },
-            {
-              "streams": 4,
-              "frameSize": 524288,
-              "bounds": {
-                "upper": 475,
-                "lower": 1050
-              }
-            },
-            {
-              "streams": 8,
-              "frameSize": 524288,
-              "bounds": {
-                "upper": 950,
-                "lower": 9000
-              }
-            }
-          ]
+          "default_ias_measurement_server_uuid": "speed_server",
+	      "default_classes": {
+	        "upload": [
+	          {
+	            "default": true,
+	            "streams": 4,
+	            "frameSize": 2048,
+	            "framesPerCall": 1,
+	            "bounds": {
+	              "upper": 0.01,
+	              "lower": 1.05
+	            }
+	          },
+	          {
+	            "streams": 4,
+	            "frameSize": 65535,
+	            "framesPerCall": 1,
+	            "bounds": {
+	              "upper": 0.95,
+	              "lower": 525
+	            }
+	          },
+	          {
+	            "streams": 4,
+	            "frameSize": 65535,
+	            "framesPerCall": 4,
+	            "bounds": {
+	              "upper": 475,
+	              "lower": 1050
+	            }
+	          },
+	          {
+	            "streams": 8,
+	            "frameSize": 65535,
+	            "framesPerCall": 20,
+	            "bounds": {
+	              "upper": 950,
+	              "lower": 9000
+	            }
+	          }
+	        ],
+	        "download": [
+	          {
+	            "default": true,
+	            "streams": 4,
+	            "frameSize": 2048,
+	            "bounds": {
+	              "upper": 0.01,
+	              "lower": 1.05
+	            }
+	          },
+	          {
+	            "streams": 4,
+	            "frameSize": 32768,
+	            "bounds": {
+	              "upper": 0.95,
+	              "lower": 525
+	            }
+	          },
+	          {
+	            "streams": 4,
+	            "frameSize": 524288,
+	            "bounds": {
+	              "upper": 475,
+	              "lower": 1050
+	            }
+	          },
+	          {
+	            "streams": 8,
+	            "frameSize": 524288,
+	            "bounds": {
+	              "upper": 950,
+	              "lower": 9000
+	            }
+	          }
+	        ]
+	      },
+	      "classes_by_user_agent": {
+	        "chrome": {},
+	        "windows.chrome": {},
+	        "safari": {}
+	      }
         },
         "QOS": {
           "qos_server_uuid": "qos_server"
@@ -1061,7 +1068,7 @@
         "key_yes": "Yes",
         "key_no": "No",
         "key_cgn_detected": "CGN detected?",
-        "key_NOT_AVAILABLE": "No information available",
+        "key_UNKNOWN": "No information available",
         "key_NO_NAT": "No NAT detected",
         "key_LOCAL_TO_LOCAL": "Local-to-local NAT detected",
         "key_LOCAL_TO_PUBLIC": "Local-to-public NAT detected",
@@ -1070,6 +1077,7 @@
         "key_NO_ROAMING": "No roaming",
         "key_NATIONAL": "National roaming",
         "key_INTERNATIONAL": "International roaming",
+        "key_NOT_AVAILABLE": "Roaming information is not supported by the platform",
         "mkit.failure": "Measurement not completed due to an error",
         "mkit.success": "Measurement completed successfully",
         "key_group_overview": "Overview",

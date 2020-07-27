@@ -16,6 +16,9 @@
 
 package at.alladin.nettest.service.loadbalancing.service;
 
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -23,7 +26,10 @@ import java.util.concurrent.ForkJoinPool;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +85,7 @@ public class MeasurementServerLoadService {
 	}
 
 	public static class LoadCallable implements Callable<LoadApiResponse> {
-
+		
 		final MeasurementServerDto peer;
 		
 		public LoadCallable(final MeasurementServerDto peer) {
@@ -97,6 +103,8 @@ public class MeasurementServerLoadService {
 					return true;
 				}
 	        });
+			
+			turnOffSslChecking();
 			
 			final RestTemplate restTemplate = new RestTemplate();
 			
@@ -128,4 +136,26 @@ public class MeasurementServerLoadService {
 		
 	}
 
+    private static final TrustManager[] UNQUESTIONING_TRUST_MANAGER = new TrustManager[]{
+            new X509TrustManager() {
+                public X509Certificate[] getAcceptedIssuers(){
+                    return null;
+                }
+                public void checkClientTrusted( X509Certificate[] certs, String authType ){}
+                public void checkServerTrusted( X509Certificate[] certs, String authType ){}
+            }
+        };
+
+    public  static void turnOffSslChecking() throws NoSuchAlgorithmException, KeyManagementException {
+        // Install the all-trusting trust manager
+        final SSLContext sc = SSLContext.getInstance("SSL");
+        sc.init( null, UNQUESTIONING_TRUST_MANAGER, null );
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+    }
+
+    public static void turnOnSslChecking() throws KeyManagementException, NoSuchAlgorithmException {
+        // Return it to the initial state (discovered by reflection, now hardcoded)
+        SSLContext.getInstance("SSL").init( null, null, null );
+    }
+	
 }

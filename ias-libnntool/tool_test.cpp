@@ -1,9 +1,9 @@
 /*!
     \file tool_test.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-04-06
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -222,6 +222,17 @@ TEST_CASE("CTool")
         CHECK(m_data->avg==20);
         CHECK(m_data->min==10);
         CHECK(m_data->max==30);
+    }
+    SECTION("Authentication token validation")
+    {
+        long long time = CTool::get_timestamp();
+        string authentication_secret = "my_test_secret";
+        TRC_DEBUG(to_string(time) + authentication_secret);
+        std::string token = sha1(to_string(time) + authentication_secret);
+        TRC_DEBUG(token);
+        REQUIRE(CTool::check_authentication(true, 120, authentication_secret, token, to_string(time), "dummy_handler") == true);
+        REQUIRE(CTool::check_authentication(true, 120, authentication_secret, token, to_string(time + 1000000), "dummy_handler") == false);
+        REQUIRE(CTool::check_authentication(true, 120, authentication_secret, "not_our_token", to_string(time), "dummy_handler") == false);
     }
     
 }

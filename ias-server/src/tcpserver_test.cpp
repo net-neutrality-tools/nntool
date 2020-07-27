@@ -1,9 +1,9 @@
 /*!
     \file tcpserver_test.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-04-06
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -307,6 +307,7 @@ TEST_CASE("TCP Server")
         request += "Connection: keep-alive\r\n";
         request += "Content-Length: 100\r\n";
         request += "Host: localhost\r\n\r\n";
+        request += "{\"cmd\":\"traceroute\"}";
         err = mConnection->send(request.c_str(), strlen(request.c_str()), 0);
         // Should return the amount of sent characters
         CHECK(err == strlen(request.c_str()));
@@ -358,6 +359,7 @@ TEST_CASE("TCP Server")
         request += "Connection: keep-alive\r\n";
         request += "Content-Length: 0\r\n";
         request += "Host: localhost\r\n\r\n";
+        request += "{\"cmd\":\"traceroute\"}";
         err = mConnection->send(request.c_str(), strlen(request.c_str()), 0);
         // Should return the amount of sent characters
         CHECK(err == strlen(request.c_str()));

@@ -101,8 +101,10 @@ int main(int argc, char** argv)
 	long int opt;
 	int tls = 0;
 	string target_port = "80";
+	string auth_token = "";
+	string auth_timestamp = "";
 
-	while ( ( opt = getopt( argc, argv, "rdutp:nhv" ) ) != -1 )
+	while ( ( opt = getopt( argc, argv, "rdutp:nhva:m:" ) ) != -1 )
 	{
 		switch (opt)
 		{
@@ -136,6 +138,12 @@ int main(int argc, char** argv)
 				cout << "ias client" << endl;
 				cout << "Version: " << VERSION << endl;
 				return 0;
+			case 'a':
+				auth_token = optarg;
+				break;
+			case 'm':
+				auth_timestamp = optarg;
+				break;
 			case '?':
 			default:
 				printf("Error: Unknown Argument -%c\n", optopt);
@@ -177,8 +185,8 @@ int main(int argc, char** argv)
 	jMeasurementParameters["wsTargetPort"] = target_port;
 	jMeasurementParameters["wsTargetPortRtt"] = target_port;
 	jMeasurementParameters["wsWss"] = to_string(tls);
-	jMeasurementParameters["wsAuthToken"] = "placeholderToken";
-	jMeasurementParameters["wsAuthTimestamp"] = "placeholderTimestamp";
+	jMeasurementParameters["wsAuthToken"] = auth_token;
+	jMeasurementParameters["wsAuthTimestamp"] = auth_timestamp;
 
 	Json::array jTargets;
 	jTargets.push_back("peer-ias-de-01");
@@ -403,6 +411,8 @@ void show_usage(char* argv0)
 	cout<< "  -n             - Show debugging output	 	 				" <<endl;
 	cout<< "  -h             - Show Help                     				" <<endl;
 	cout<< "  -v             - Show Version                  				" <<endl;
+	cout<< "  -a token       - Auth token	                  				" <<endl;
+	cout<< "  -m timestamp   - Auth token timestamp            				" <<endl;
 	cout<< "                                                 				" <<endl;
 
     exit(EXIT_FAILURE);
