@@ -86,6 +86,7 @@ public class ClientHolder
     --------------------------------------*/
     
     public final static String TASK_UDP = "udp";
+    public final static String TASK_UDP_TURN = "udp_turn";
     public final static String TASK_TCP = "tcp";
     public final static String TASK_DNS = "dns";
     public final static String TASK_VOIP = "voip";

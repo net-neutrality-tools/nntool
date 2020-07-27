@@ -114,6 +114,14 @@ public class SpeedtestDetailGroup {
 		@Expose
 		private FormatEnum format;
 
+		/**
+		 * Defines an additional optional entry from the measurement result, which is needed for correct formatting (e.g. the timezone of the client)
+		 */
+		@JsonProperty("format_key")
+		@SerializedName("format_key")
+		@Expose
+		private String formatKey;
+
 		@JsonProperty
 		@SerializedName("value")
 		@Expose
@@ -170,6 +178,14 @@ public class SpeedtestDetailGroup {
 			this.format = format;
 		}
 
+				public String getFormatKey() {
+			return formatKey;
+		}
+
+		public void setFormatKey(String formatKey) {
+			this.formatKey = formatKey;
+		}
+
 		public String getValue() {
 			return value;
 		}
@@ -211,7 +227,8 @@ public class SpeedtestDetailGroup {
 			TRANSLATE_VALUE(1d),
 			TRANSLATE_BOOLEAN_VALUE(1d),
 			TRUNCATE(1d),	//truncates the number of digits after a dot
-			TIMESTAMP(1d)	//formats the value into the correct timestring format
+			TIMESTAMP(1d),	//formats the value into the correct timestring format (UTC)
+			TIMESTAMP_WITH_TIMEZONE(1d) //formats the value into the timestring format with regards to the client's timezone
 			;
 			
 			
@@ -225,5 +242,6 @@ public class SpeedtestDetailGroup {
 				return divider;
 			}
 		}
+
 	}
 }

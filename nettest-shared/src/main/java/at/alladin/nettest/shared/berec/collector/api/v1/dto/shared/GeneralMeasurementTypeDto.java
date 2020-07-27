@@ -31,6 +31,7 @@ public enum GeneralMeasurementTypeDto {
 	
 	TCP,
     UDP,
+    UDP_TURN,
     DNS,
     NON_TRANSPARENT_PROXY,
     HTTP_PROXY,

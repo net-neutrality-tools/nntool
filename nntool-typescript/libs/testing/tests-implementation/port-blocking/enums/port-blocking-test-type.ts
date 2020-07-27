@@ -15,5 +15,5 @@
  ******************************************************************************/
 
 export enum PortBlockingTestTypeEnum {
-  UDP = 'UDP'
+  UDP_TURN = 'UDP_TURN'
 }

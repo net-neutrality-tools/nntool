@@ -1,9 +1,9 @@
 /*!
     \file header.h
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-04-06
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -97,7 +97,6 @@ using namespace json11;
 
 #define MAX_PACKET_SIZE 1500
 #define MAXBUFFER 1580
-#define AUTHENTICATION_MAX_AGE 120
 
 
 #define TRC_DEBUG(s)  CTrace::getInstance().logDebug(s)

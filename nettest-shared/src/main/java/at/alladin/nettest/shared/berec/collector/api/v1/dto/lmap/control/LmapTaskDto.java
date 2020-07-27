@@ -59,6 +59,10 @@ public class LmapTaskDto {
 	public final static String SERVER_PORT = "server_port";
 	
 	public final static String ENCRYPTION = "encryption";
+
+	public final static String AUTH_TOKEN = "auth_token";
+
+	public final static String AUTH_TIMESTAMP = "auth_timestamp";
 	
 	public final static String RESULT_COLLECTOR_URL = "result_collector_base_url";
 

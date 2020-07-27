@@ -71,13 +71,15 @@ export class TracerouteTestImplementation extends TestImplementation<TracerouteT
 
             const tracerouteBody = {
                 cmd: "traceroute",
-                max_hops: test.max_hops
+                max_hops: test.max_hops,
+                ts: "" + test.auth_timestamp,
+                tk: test.auth_token
             };
 
             this.zone.runOutsideAngular(() => {
                 this.startTime = new Date().getTime();
                 this.requestsService
-                    .postJson(test.host + (test.port ? ":" + test.port : ""), tracerouteBody)
+                    .postJson(test.host, tracerouteBody)
                     .subscribe((res: any) => {
                         this.endTime = new Date().getTime();
                         clearTimeout(this.timeoutHolder);
@@ -127,9 +129,6 @@ export class TracerouteTestImplementation extends TestImplementation<TracerouteT
         
         const ret: TracerouteTestState = this.generateInitState();
         
-        if (config.port) {
-            ret.result.port = config.port;
-        }
         if (config.qos_test_uid) {
             ret.result.qos_test_uid = config.qos_test_uid;
         }

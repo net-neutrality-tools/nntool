@@ -31,13 +31,7 @@ declare var UdpPortBlocking: any;
 export class PortBlockingTestImplementation extends TestImplementation<PortBlockingTestConfig, PortBlockingTestState> {
   private static BASE_CONFIG: PortBlockingTestConfig = {
     platform: 'web',
-    target: 'peer-ias-de-01.net-neutrality.tools',
-    targetIpv4: '82.199.148.52',
-    targetIpv6: '2a01:4a0:f::11',
-    user: 'berec',
-    password: 'berec',
-    ports: [],
-    timeout: 5000
+    ports: []
   };
 
   private $state: Subject<PortBlockingTestState>;
@@ -51,11 +45,26 @@ export class PortBlockingTestImplementation extends TestImplementation<PortBlock
   public start = (config: PortBlockingTestConfig, $state: Subject<PortBlockingTestState>): void => {
     this.$state = $state;
 
+    if (!config.UDP_TURN || config.UDP_TURN.size == 0) {
+      const state = this.generateInitState(config);
+      state.basicState = BasicTestState.ENDED;
+      this.$state.next(state);
+      return;
+    }
+
     const extendedConfig = PortBlockingTestImplementation.BASE_CONFIG;
-    config.UDP.forEach(elem => {
+
+    extendedConfig.target = config.UDP_TURN[0].target;
+    extendedConfig.targetIpv4 = config.UDP_TURN[0].target_ipv4;
+    extendedConfig.targetIpv6 = config.UDP_TURN[0].target_ipv6;
+    extendedConfig.user = config.UDP_TURN[0].user;
+    extendedConfig.password = config.UDP_TURN[0].password;
+    extendedConfig.timeout = config.UDP_TURN[0].timeout / 1000_000;
+
+    config.UDP_TURN.forEach(elem => {
         extendedConfig.ports.push({
-          port: elem.out_port,
-          packets: elem.out_num_packets,
+          port: elem.port,
+          packets: elem.num_packets
         });
     });
 
@@ -101,34 +110,37 @@ export class PortBlockingTestImplementation extends TestImplementation<PortBlock
   };
 
   protected generateInitState = (config: PortBlockingTestConfig) => {
-    const portInformation: Array<{ port: number; uid: string; packets_requested: number }> = config.UDP.map((settings: any) => ({
-      port: parseInt(settings.out_port, 10),
-      uid: settings.qos_test_uid,
-      packets_requested: parseInt(settings.out_num_packets, 10) 
-    }));
-
     const state: PortBlockingTestState = new PortBlockingTestState();
 
     state.basicState = BasicTestState.INITIALIZED;
     state.types = [
       {
-        key: PortBlockingTestTypeEnum.UDP,
+        key: PortBlockingTestTypeEnum.UDP_TURN,
         ports: []
       }
     ];
 
-    portInformation.forEach((port: { port: number; uid: string; packets_requested: number }) => {
-      state.types[0].ports.push({
-        number: port.port,
-        packets: {
-          requested_packets: port.packets_requested,
-          lost: 0,
-          sent: 0,
-          received: 0
-        },
-        uid: port.uid
+    if (config.UDP_TURN) {
+      const portInformation: Array<{ port: number; uid: string; packets_requested: number }> = config.UDP_TURN.map((settings: any) => ({
+        port: parseInt(settings.port, 10),
+        uid: settings.qos_test_uid,
+        packets_requested: parseInt(settings.num_packets, 10) 
+      }));
+
+      portInformation.forEach((port: { port: number; uid: string; packets_requested: number }) => {
+        state.types[0].ports.push({
+          number: port.port,
+          packets: {
+            requested_packets: port.packets_requested,
+            lost: 0,
+            sent: 0,
+            received: 0
+          },
+          uid: port.uid
+        });
       });
-    });
+    }
+
     return state;
   };
 
