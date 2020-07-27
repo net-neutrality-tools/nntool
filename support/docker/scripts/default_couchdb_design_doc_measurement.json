@@ -3,7 +3,7 @@
   "views": {
     "by_agent_uuid": {
       "reduce": "_count",
-      "map": "function (doc) {\n  if (\n    doc.docType == \"Measurement\" &&\n    doc.agent_info.uuid != null && \n\t\tdoc.agent_info.uuid !== \"\"\n\t) {\n    emit([doc.agent_info.uuid, doc.time.start_time], null)\n\t}\n}\n"
+      "map": "function (doc) {\n  if (\n    doc.docType == \"Measurement\" &&\n    doc.agent_info.uuid != null && \n\t\tdoc.agent_info.uuid !== \"\"\n\t) {\n    emit([doc.agent_info.uuid, doc.local_time], null)\n\t}\n}\n"
     }
   },
   "language": "javascript"

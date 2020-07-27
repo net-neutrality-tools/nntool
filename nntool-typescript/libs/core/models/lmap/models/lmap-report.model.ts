@@ -25,6 +25,11 @@ export class LmapReport {
   public date: string; // TODO: change back to Date
 
   /**
+   * The date and time when this result report was sent to a Collector in agent's local time.
+   */
+  public local_time: string;
+
+  /**
    * The agent-id of the agent from which this report originates.
    */
   public 'agent-id'?: string;

@@ -21,3 +21,19 @@ export const isString = (arg: any) => {
 export const isObject = (arg: any) => {
   return arg && typeof arg === 'object';
 };
+
+declare global {
+  interface Date {
+    toLocalISOString: () => string;    
+  }
+};
+
+Date.prototype.toLocalISOString = function() {
+  return this.getFullYear() + '-'
+    + ("" + (this.getMonth() + 1)).padStart(2, '0') + '-'
+    + ("" + (this.getDate())).padStart(2, '0') + 'T'
+    + ("" + (this.getHours())).padStart(2, '0') + ':'
+    + ("" + (this.getMinutes())).padStart(2, '0') + ':'
+    + ("" + (this.getSeconds())).padStart(2, '0') + '.'
+    + ("" + (this.getMilliseconds())).padStart(3, '0') + 'Z';
+};

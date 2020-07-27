@@ -76,6 +76,7 @@ public interface LmapReportModelMapper {
 		@Mapping(target = "rev", ignore = true),
 		
 		@Mapping(source = "date", target = "submitTime"),
+		@Mapping(source = "localTime", target = "localTime"),
 		@Mapping(source = "agentId", target = "agentInfo.uuid"),
 		//@Mapping(source = "groupId", target = "groupId"),
 		//@Mapping(source = "measurementPoint", target = "measurementPoint"),

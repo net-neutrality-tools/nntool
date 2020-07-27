@@ -65,6 +65,16 @@ public class BriefMeasurementResponse {
 	private LocalDateTime startTime;
 
 	/**
+	* Measurement date and time in agent's local time.
+	*/
+	@io.swagger.annotations.ApiModelProperty(required = true, value = "Measurement date and time in agent's local time.")
+	@JsonPropertyDescription("Measurement date and time in agent's local time.")
+	@Expose
+	@SerializedName("local_time")
+	@JsonProperty(required = true, value = "local_time")
+	private LocalDateTime localTime;
+	
+	/**
 	 * Overall duration of all sub measurements.
 	 */
 	@io.swagger.annotations.ApiModelProperty(required = true, value = "Overall duration of all sub measurements.")
@@ -161,6 +171,14 @@ public class BriefMeasurementResponse {
 
 	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
+	}
+	
+	public LocalDateTime getLocalTime() {
+		return localTime;
+	}
+
+	public void setLocalTime(LocalDateTime localTime) {
+		this.localTime = localTime;
 	}
 
 	public Long getDurationNs() {
