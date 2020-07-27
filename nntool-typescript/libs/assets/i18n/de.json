@@ -354,7 +354,7 @@
       "1GBPS": "1Gbit/s"
     },
     "BAR": {
-      "UDP": "UDP"
+      "UDP_TURN": "UDP_TURN"
     },
     "LOOP": {
       "TITLE": "Looped measurements",
