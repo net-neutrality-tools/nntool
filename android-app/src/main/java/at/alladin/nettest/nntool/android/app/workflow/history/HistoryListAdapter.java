@@ -96,7 +96,12 @@ public class HistoryListAdapter extends ArrayAdapter<BriefMeasurementResponse> {
         }
 
         if (item.getStartTime() != null) {
-            viewHolder.date.setText(timeFormat != null ? item.getStartTime().toDateTime().toString(timeFormat) : item.getStartTime().toDateTime().toString());
+            if (item.getLocalTime() != null) {
+                viewHolder.date.setText(timeFormat != null ? item.getLocalTime().toDateTime().toString(timeFormat) : item.getLocalTime().toDateTime().toString());
+            }
+            else {
+                viewHolder.date.setText(timeFormat != null ? item.getStartTime().toDateTime().toString(timeFormat) : item.getStartTime().toDateTime().toString());
+            }
         }
 
         return convertView;

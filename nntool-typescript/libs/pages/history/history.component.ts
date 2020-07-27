@@ -38,7 +38,15 @@ export class HistoryComponent {
         filter: false,
         sort: false,
         valuePrepareFunction: (cell, row) => {
-          return this.dateParseService.parseDateIntoFormat(new Date(Date.parse(row.start_time)));
+          let d = undefined;
+
+          if (row.local_time) {
+            d = row.local_time;
+          } else {
+            d = row.start_time;
+          }
+
+          return this.dateParseService.parseDateIntoFormat(new Date(Date.parse(d)));
         }
       },
       'device_info.device_code_name': isElectron() ? {

@@ -427,6 +427,7 @@ public class MeasurementService extends Service implements ServiceConnection {
             }
             reportDto.getTimeBasedResult().setStartTime(startDateTime);
             reportDto.getTimeBasedResult().setEndTime(endDateTime);
+            reportDto.setLocalTime(LocalDateTime.now());
 
             final SendReportTask task = new SendReportTask(mainActivity,
                     reportDto,

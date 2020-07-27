@@ -46,6 +46,7 @@ public interface BriefMeasurementResponseMapper {
 	@Mappings({
 		@Mapping(target="firstAccurateGeoLocation", expression="java(parseFirstGeoLocation(measurement))"),
 		@Mapping(target="startTime", source="measurementTime.startTime"),
+		@Mapping(target="localTime", source="localTime"),
 		@Mapping(target="durationNs", source="measurementTime.durationNs"),
 		@Mapping(target="type", source="agentInfo.type"),
 		@Mapping(target="measurements", expression="java(parseMeasurementMap(measurement))"),

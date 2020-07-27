@@ -48,6 +48,7 @@ public interface FullMeasurementResponseMapper {
 
 	@Mappings({
 		@Mapping(source="measurementTime.startTime", target="startTime"),
+		@Mapping(source="localTime", target="localTime"),
 		@Mapping(source="measurementTime.durationNs", target="durationNs"),
 		@Mapping(source="measurementTime.endTime", target="endTime"),
 		@Mapping(source="geoLocationInfo.geoLocations", target="geoLocations"),

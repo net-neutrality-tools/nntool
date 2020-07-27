@@ -175,6 +175,7 @@ export class TestService {
         additional_request_info: undefined,
         'agent-id': undefined,
         date: undefined,
+        local_time: undefined,
         'group-id': undefined,
         'measurement-point': undefined,
         result: [

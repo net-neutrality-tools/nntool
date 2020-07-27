@@ -369,19 +369,26 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
       return;
     }
 
-    const endTimeStamp = new Date().toJSON().slice(0, -1);
+    const currentDateTime = new Date();
+
+    // JavaScript always converts the date to UTC if toJSON() or toISOString() functions
+    // are used. Therefore, we need to create our own ISO date string to get the local time
+    // without timezone information.
+    const currentLocalTimeISOStr = currentDateTime.toISOString().slice(0, -1);
+
     let scheduleName: string;
     if (this.measurementControl.schedules && this.measurementControl.schedules.length > 0) {
       scheduleName = this.measurementControl.schedules[0].name;
     }
     const lmapReport = new LmapReport();
-    lmapReport.date = endTimeStamp;
+    lmapReport.date = currentLocalTimeISOStr;
+    lmapReport.local_time = currentDateTime.toLocalISOString().slice(0, -1);
     lmapReport.result = [new LmapResult()];
     lmapReport.result[0].schedule = scheduleName;
     lmapReport.result[0].results = [];
     lmapReport.result[0].event = this.startTimeStamp;
     lmapReport.result[0].start = this.startTimeStamp;
-    lmapReport.result[0].end = endTimeStamp;
+    lmapReport.result[0].end = currentLocalTimeISOStr;
 
     this.testResults.forEach((subMeasurementResult: SpeedMeasurementResult | QoSMeasurementResult) => {
       lmapReport.result[0].results.push(subMeasurementResult);
@@ -390,9 +397,9 @@ export class NetTestComponent extends BaseNetTestComponent implements OnInit {
     lmapReport.time_based_result = new TimeBasedResultAPI();
     const networkPointInTime = new MeasurementResultNetworkPointInTimeAPI();
     networkPointInTime.network_type_id = this.webNetworkType;
-    networkPointInTime.time = endTimeStamp;
+    networkPointInTime.time = currentLocalTimeISOStr;
     lmapReport.time_based_result.start_time = this.startTimeStamp;
-    lmapReport.time_based_result.end_time = endTimeStamp;
+    lmapReport.time_based_result.end_time = currentLocalTimeISOStr;
     lmapReport.time_based_result.network_points_in_time = [];
     lmapReport.time_based_result.network_points_in_time.push(networkPointInTime);
 
