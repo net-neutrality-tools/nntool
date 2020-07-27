@@ -617,7 +617,7 @@ public class CouchDbStorageService implements StorageService {
 						final String osName = measurement.getDeviceInfo().getOsInfo().getName();
 						if (osName != null && !OS_SUPPORTS_ROAMING_INFO.contains(osName.toLowerCase())) {
 							nmi.setRoaming(false);
-							nmi.setRoamingType(RoamingType.NOT_AVAILABLE);
+							nmi.setRoamingType(RoamingType.UNSUPPORTED);
 						}
 					}
 
