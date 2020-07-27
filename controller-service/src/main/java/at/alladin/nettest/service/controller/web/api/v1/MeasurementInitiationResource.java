@@ -115,22 +115,25 @@ public class MeasurementInitiationResource {
 		boolean useIPv6 = IpAddressHelper.extractIpAddressFromHttpServletRequest(request) instanceof Inet6Address;
 		logger.info("Measurement initiation with (useIPv6 = {})", useIPv6);
 
-		// Check user agent for speed class mapping
-		String browserName = info.getModel();
-		String osName = info.getOsName();
 		String osBrowser = "";
-		if (StringUtils.hasLength(osName)) {
-			osName = osName.toLowerCase();
+		if (info != null) {
+			// Check user agent for speed class mapping
+			String browserName = info.getModel();
+			String osName = info.getOsName();
 			
-			osBrowser += osName;
-		}
-		
-		if (StringUtils.hasLength(browserName)) {
-			if (StringUtils.hasLength(osBrowser)) {
-				osBrowser += ".";
+			if (StringUtils.hasLength(osName)) {
+				osName = osName.toLowerCase();
+				
+				osBrowser += osName;
 			}
 			
-			osBrowser += browserName.toLowerCase();
+			if (StringUtils.hasLength(browserName)) {
+				if (StringUtils.hasLength(osBrowser)) {
+					osBrowser += ".";
+				}
+				
+				osBrowser += browserName.toLowerCase();
+			}
 		}
 
 		final LmapControlDto lmapControlDto = measurementConfigurationService.getLmapControlDtoForCapabilities(capabilityDto, useIPv6, osBrowser);
