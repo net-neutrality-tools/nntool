@@ -341,7 +341,7 @@ public class CouchDbStorageServiceMockitTest {
 			measurementServerRepository.findByPublicIdentifier("peer_id");
 			result = server;
 
-			lmapTaskMapper.map((Settings) any, (MeasurementServer) any, anyString, false);
+			lmapTaskMapper.map((Settings) any, (MeasurementServer) any, anyString, false, "");
 			result = new Delegate() {
 				public LmapTaskDto delegate(Settings settings, MeasurementServer server, String type, boolean useIPv6) {
 					assertEquals("unexpected settings provided to mapper", SETTINGS_UUID, settings.getId());
@@ -354,7 +354,7 @@ public class CouchDbStorageServiceMockitTest {
 			};
 		}};
 
-		assertNotNull("Invalid object returned", couchDbStorageService.getTaskDto(MeasurementTypeDto.SPEED, capability, SETTINGS_UUID, false));
+		assertNotNull("Invalid object returned", couchDbStorageService.getTaskDto(MeasurementTypeDto.SPEED, capability, SETTINGS_UUID, false, ""));
 	}
 
 	@Test(expected = StorageServiceException.class)
