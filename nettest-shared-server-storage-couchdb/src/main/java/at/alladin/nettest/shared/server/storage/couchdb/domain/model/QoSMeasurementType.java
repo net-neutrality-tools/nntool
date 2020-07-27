@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonClassDescription;
 public enum QoSMeasurementType {
     TCP,
     UDP,
+    UDP_TURN,
     DNS,
     NON_TRANSPARENT_PROXY,
     HTTP_PROXY,

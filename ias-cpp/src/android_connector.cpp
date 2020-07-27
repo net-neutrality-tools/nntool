@@ -119,18 +119,11 @@ void AndroidConnector::registerSharedObject(JNIEnv* env, jobject caller, jobject
 void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
     const jclass clazz = env->FindClass("com/zafaco/speed/SpeedTaskDesc");
 
-    jfieldID toParseId = env->GetFieldID(clazz, "speedServerAddrV4", "Ljava/lang/String;");
+    jfieldID toParseId = env->GetFieldID(clazz, "speedServerAddrDefault", "Ljava/lang/String;");
     jstring serverUrl = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
     if (serverUrl != nullptr) {
         const char * url = env->GetStringUTFChars(serverUrl, NULL);
-        this->speedTaskDesc.measurementServerUrlV4 = std::string(url);
-    }
-
-    toParseId = env->GetFieldID(clazz, "speedServerAddrV6", "Ljava/lang/String;");
-    serverUrl = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
-    if (serverUrl != nullptr) {
-        const char * urlv6 = env->GetStringUTFChars(serverUrl, NULL);
-        this->speedTaskDesc.measurementServerUrlV6 = std::string(urlv6);
+        this->speedTaskDesc.measurementServerUrl = std::string(url);
     }
 
     toParseId = env->GetFieldID(clazz, "rttCount", "I");
@@ -160,9 +153,6 @@ void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
     toParseId = env->GetFieldID(clazz, "useEncryption", "Z");
     this->speedTaskDesc.isEncrypted = env->GetBooleanField(speedTaskDesc, toParseId);
 
-    toParseId = env->GetFieldID(clazz, "useIpV6", "Z");
-    this->speedTaskDesc.useIpv6 = env->GetBooleanField(speedTaskDesc, toParseId);
-
     toParseId = env->GetFieldID(clazz, "clientIp", "Ljava/lang/String;");
     serverUrl = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
     if (serverUrl != nullptr) {
@@ -172,6 +162,18 @@ void AndroidConnector::setSpeedSettings(JNIEnv* env, jobject speedTaskDesc) {
         this->speedTaskDesc.clientIp = "0.0.0.0";
     }
 
+    toParseId = env->GetFieldID(clazz, "authToken", "Ljava/lang/String;");
+    jstring authToken = (jstring) env->GetObjectField(speedTaskDesc, toParseId);
+    if (authToken != nullptr) {
+        const char* authTokenString = env->GetStringUTFChars(authToken, NULL);
+        this->speedTaskDesc.authToken = std::string(authTokenString);
+    }
+    else {
+        this->speedTaskDesc.authToken = "";
+    }
+
+    toParseId = env->GetFieldID(clazz, "authTimestamp", "J");
+    this->speedTaskDesc.authTimestamp = env->GetLongField(speedTaskDesc, toParseId);
 }
 
 void AndroidConnector::unregisterSharedObject() {
@@ -641,12 +643,17 @@ void AndroidConnector::startMeasurement() {
         jMeasurementParameters["wsTargetPort"] = std::to_string(speedTaskDesc.speedServerPort);
         jMeasurementParameters["wsTargetPortRtt"] = std::to_string(speedTaskDesc.speedServerPortRtt);
         jMeasurementParameters["wsWss"] = speedTaskDesc.isEncrypted ? "1" : "0";
-        jMeasurementParameters["wsAuthToken"] = "placeholderToken";
-        jMeasurementParameters["wsAuthTimestamp"] = "placeholderTimestamp";
+        jMeasurementParameters["wsAuthToken"] = speedTaskDesc.authToken;
+        jMeasurementParameters["wsAuthTimestamp"] = std::to_string(speedTaskDesc.authTimestamp);
+
+        std::string ts = std::to_string(speedTaskDesc.authTimestamp);
+
+        TRC_INFO("TS: " + ts);
 
         jMeasurementParameters["clientIp"] = this->speedTaskDesc.clientIp;
 
         json11::Json::array jTargets;
+        /*
         if (speedTaskDesc.useIpv6) {
             TRC_INFO("Measuring with ipv6");
             jTargets.push_back(speedTaskDesc.measurementServerUrlV6);
@@ -654,6 +661,8 @@ void AndroidConnector::startMeasurement() {
             TRC_INFO("Measuring with ipv4");
             jTargets.push_back(speedTaskDesc.measurementServerUrlV4);
         }
+         */
+        jTargets.push_back(speedTaskDesc.measurementServerUrl);
         jMeasurementParameters["wsTargets"] = json11::Json(jTargets);
 
         json11::Json jMeasurementParametersJson = jMeasurementParameters;

@@ -85,7 +85,7 @@ export abstract class BarUIComponent<T extends TestImplementation<TC, TS>, TC ex
 
   private configureBarUI(config: any) {
     this.translations = {
-      UDP: 'UDP',
+      UDP_TURN: 'UDP_TURN',
       TRACEROUTE: 'TRACEROUTE'
     };
 
@@ -137,7 +137,7 @@ export abstract class BarUIComponent<T extends TestImplementation<TC, TS>, TC ex
             this.drawBar(type.progress, this.barColors.valueColor);
             this.drawBarName(this.translations[type.key], this.barColors.fontColor);
           }
-          else if (type.key === BarUIShowableTestTypeEnum.UDP) {
+          else if (type.key === BarUIShowableTestTypeEnum.UDP_TURN) {
             this.drawBar(1, this.barColors.baseColor);
             this.drawBar(this.calculateProgressOfTestType(type), this.barColors.valueColor);
             this.drawBarName(this.translations[type.key], this.barColors.fontColor);

@@ -21,6 +21,7 @@ import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -130,6 +131,9 @@ import at.alladin.nntool.shared.qos.UdpResult;
 public class CouchDbStorageService implements StorageService {
 	
 	private final Logger logger = LoggerFactory.getLogger(CouchDbStorageService.class);
+
+	//we do not have a settings uuid when saving a measurement, therefore it is hardcoded as of now
+	private final static List<String> OS_SUPPORTS_ROAMING_INFO = Arrays.asList("android");
 
 	@Autowired
 	private MeasurementRepository measurementRepository;
@@ -355,7 +359,7 @@ public class CouchDbStorageService implements StorageService {
 				final SpeedMeasurementSettings speedSettings = 
 						(SpeedMeasurementSettings) settings.getMeasurements().get(MeasurementTypeDto.SPEED);
 				if (speedSettings != null) {
-					dto.setDefaultMeasurementServerUuid(speedSettings.getSpeedMeasurementServerUuid());
+					dto.setDefaultMeasurementServerUuid(speedSettings.getDefaultSpeedMeasurementServerUuid());
 				}
 				if (settings.getUrls() != null) {
 					dto.setNextFreeUrl(settings.getUrls().getLoadBalancingServiceNextFree());
@@ -371,7 +375,7 @@ public class CouchDbStorageService implements StorageService {
 	}
 	
 	@Override
-	public LmapTaskDto getTaskDto(final MeasurementTypeDto type, final LmapCapabilityTaskDto capability, final String settingsUuid, final boolean useIPv6) {
+	public LmapTaskDto getTaskDto(final MeasurementTypeDto type, final LmapCapabilityTaskDto capability, final String settingsUuid, final boolean useIPv6, String browserName) {
 		try {
 			final Settings settings = settingsRepository.findByUuid(settingsUuid);
 			final Map<MeasurementTypeDto, SubMeasurementSettings> measurementSettings = settings.getMeasurements();
@@ -389,10 +393,10 @@ public class CouchDbStorageService implements StorageService {
 					}
 				}
 				if (server == null) {
-					server = measurementPeerRepository.findByUuid(speedSettings.getSpeedMeasurementServerUuid());
+					server = measurementPeerRepository.findByUuid(speedSettings.getDefaultSpeedMeasurementServerUuid());
 				}
-				//TODO: load balancing needs to select correct measurement server
-				final LmapTaskDto ret = lmapTaskMapper.map(settings, server, type.toString(), useIPv6);
+
+				final LmapTaskDto ret = lmapTaskMapper.map(settings, server, type.toString(), useIPv6, browserName);
 				return ret;
 			case QOS:
 				final List<QoSMeasurementObjective> qosObjectiveList = qosMeasurementObjectiveRepository.findAllByEnabled(true);
@@ -400,9 +404,9 @@ public class CouchDbStorageService implements StorageService {
 				if (measurementSettings != null && measurementSettings.containsKey(MeasurementTypeDto.QOS)) {
 					final QoSMeasurementSettings qosSettings = (QoSMeasurementSettings) measurementSettings.get(MeasurementTypeDto.QOS);
 					return lmapTaskMapper.map(settings, measurementPeerRepository.findByUuid(
-							qosSettings.getQosServerUuid()), qosObjectiveList, type.toString(), useIPv6);
+							qosSettings.getQosServerUuid()), qosObjectiveList, type.toString(), useIPv6, browserName);
 				} else {
-					return lmapTaskMapper.map(settings, null, qosObjectiveList, type.toString(), useIPv6);
+					return lmapTaskMapper.map(settings, null, qosObjectiveList, type.toString(), useIPv6, browserName);
 				}
 				
 			default:
@@ -560,6 +564,8 @@ public class CouchDbStorageService implements StorageService {
 			dto.setIdentifier(p.getPublicIdentifier());
 			dto.setName(p.getName());
 			dto.setPreferEncryption(p.isPreferEncryption());
+			dto.setSecretKey(p.getSecretKey());
+			dto.setTracerouteUrl(p.getTracerouteUrl());
 			if (p.getLoadApi() != null) {
 				dto.setLoadApiSecretKey(p.getLoadApi().getSecretKey());
 				dto.setLoadApiUrl(p.getLoadApi().getUrl());
@@ -607,12 +613,20 @@ public class CouchDbStorageService implements StorageService {
 						computedNmi = nmi;
 					}
 
+					if (measurement.getDeviceInfo() != null && measurement.getDeviceInfo().getOsInfo() != null) {
+						final String osName = measurement.getDeviceInfo().getOsInfo().getName();
+						if (osName != null && !OS_SUPPORTS_ROAMING_INFO.contains(osName.toLowerCase())) {
+							nmi.setRoaming(false);
+							nmi.setRoamingType(RoamingType.NOT_AVAILABLE);
+						}
+					}
+
 					final MccMnc networkMccMnc = pit.getNetworkMobileInfo().getNetworkOperatorMccMnc();
 					final MccMnc simMccMnc = pit.getNetworkMobileInfo().getSimOperatorMccMnc();
 					if (networkMccMnc == null || simMccMnc == null 
 							|| nmi.getNetworkCountry() == null || nmi.getSimCountry() == null) {
 						nmi.setRoaming(false);
-						nmi.setRoamingType(RoamingType.NOT_AVAILABLE);
+						nmi.setRoamingType(RoamingType.UNKNOWN);
 					}
 					else {
 						nmi.setRoaming(!networkMccMnc.equals(simMccMnc));

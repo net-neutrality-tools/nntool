@@ -154,8 +154,7 @@ class AndroidConnector {
 
         //the settings from the SpeedTaskDesc
         struct SpeedTaskDesc {
-            std::string measurementServerUrlV4;
-            std::string measurementServerUrlV6;
+            std::string measurementServerUrl;
             int rttCount;
             int downloadStreams;
             int uploadStreams;
@@ -165,8 +164,9 @@ class AndroidConnector {
             bool performUpload;
             bool performRtt;
             bool isEncrypted;
-            bool useIpv6;
             std::string clientIp;
+            std::string authToken;
+            long long authTimestamp;
         } speedTaskDesc;
 
         JavaVM *javaVM;

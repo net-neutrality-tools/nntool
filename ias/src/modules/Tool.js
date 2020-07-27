@@ -1,9 +1,9 @@
 /*!
     \file Tool.js
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-04-06
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -363,7 +363,7 @@ JSTool.prototype.extend = function ()
     return extended;
 };
 
-JSTool.prototype.performRouteToClientLookup = function(target, port, https)
+JSTool.prototype.performRouteToClientLookup = function(target, port, https, auth_token, auth_timestamp)
 {
     var protocol = https ? 'https://' : 'http://';
     var xhr = createCORSRequest('POST', protocol + target + ':' + port);
@@ -371,7 +371,7 @@ JSTool.prototype.performRouteToClientLookup = function(target, port, https)
     {
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.timeout = 5000;
-        xhr.send(JSON.stringify({cmd:'traceroute'}));
+        xhr.send(JSON.stringify({cmd:'traceroute', ts:auth_timestamp, tk:auth_token}));
     }
 };
 

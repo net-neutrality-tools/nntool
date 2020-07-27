@@ -43,7 +43,10 @@ public class LmapUtil {
     public enum LmapOption {
         SERVER_ADDR,
         SERVER_ADDR_IPV6,
+        SERVER_ADDR_DEFAULT,
         SERVER_PORT,
+        AUTH_TOKEN,
+        AUTH_TIMESTAMP,
         ENCRYPTION,
         RESULT_COLLECTOR_BASE_URL
     }
@@ -105,8 +108,11 @@ public class LmapUtil {
         String speedCollectorUrl = null;
         String speedServerAddrV4 = null;
         String speedServerAddrV6 = null;
+        String speedServerAddrDefault = null;
         Integer speedServerPort = null;
         Boolean speedEncryption = false;
+        String speedServerAuthToken = null;
+        Long speedServerAuthTimestamp = null;
         SpeedTaskDesc speedTaskDesc = null;
 
         try {
@@ -198,11 +204,20 @@ public class LmapUtil {
                                     case SERVER_ADDR_IPV6:
                                         speedServerAddrV6 = option.getValue();
                                         break;
+                                    case SERVER_ADDR_DEFAULT:
+                                        speedServerAddrDefault = option.getValue();
+                                        break;
                                     case ENCRYPTION:
                                         speedEncryption = Boolean.valueOf(option.getValue());
                                         break;
                                     case SERVER_PORT:
                                         speedServerPort = Integer.valueOf(option.getValue());
+                                        break;
+                                    case AUTH_TOKEN:
+                                        speedServerAuthToken = option.getValue();
+                                        break;
+                                    case AUTH_TIMESTAMP:
+                                        speedServerAuthTimestamp = Long.valueOf(option.getValue());
                                         break;
                                 }
                             } catch (Exception e) {
@@ -223,8 +238,13 @@ public class LmapUtil {
         if (speedTaskDesc != null) {
             speedTaskDesc.setSpeedServerAddrV4(speedServerAddrV4);
             speedTaskDesc.setSpeedServerAddrV6(speedServerAddrV6);
+            speedTaskDesc.setSpeedServerAddrDefault(speedServerAddrDefault);
             speedTaskDesc.setSpeedServerPort(speedServerPort);
             speedTaskDesc.setUseEncryption(speedEncryption);
+            speedTaskDesc.setAuthToken(speedServerAuthToken);
+            if (speedServerAuthTimestamp != null) {
+                speedTaskDesc.setAuthTimestamp(speedServerAuthTimestamp);
+            }
         }
         wrapper.setSpeedTaskDesc(speedTaskDesc);
 

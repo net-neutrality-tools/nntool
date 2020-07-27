@@ -1,9 +1,9 @@
 /*!
     \file Speed.m
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2019-11-13
+    \date Last update: 2020-04-06
 
-    Copyright (C) 2016 - 2019 zafaco GmbH
+    Copyright (C) 2016 - 2020 zafaco GmbH
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License version 3 
@@ -137,8 +137,6 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
     self.performGeolocationLookup                   = defaultPerformGeolocationLookup;
     self.routeToClientTargetPort                    = defaultRouteToClientTargetPort;
     
-    //self.indexUrl                                   = [NSURL URLWithString:defaultIndexUrl];
-    
     self.deviceKPIs                                 = [NSMutableDictionary new];
     self.locationKPIs                               = [NSMutableDictionary new];
     self.systemUsageKPIs                            = [NSMutableDictionary new];
@@ -158,6 +156,9 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
     
     self.downloadClasses                            = [NSMutableArray new];
     self.uploadClasses                              = [NSMutableArray new];
+    
+    self.authToken                                  = @"default_token";
+    self.authTimestamp                              = @"default_timestamp";
     
     NSMutableDictionary *versions = [NSMutableDictionary new];
     [versions setObject:[Speed version] forKey:@"speed"];
@@ -241,8 +242,8 @@ static const float tnsContextUnrefTimeout                   = 3.0f;
     [measurementParametersDict setObject:self.targetsPort                                               forKey:@"wsTargetPort"];
     [measurementParametersDict setObject:[NSNumber numberWithInteger:self.wss]                          forKey:@"wsWss"];
     
-    [measurementParametersDict setObject:@"placeholderToken"                                            forKey:@"wsAuthToken"];
-    [measurementParametersDict setObject:@"placeholderTimestamp"                                        forKey:@"wsAuthTimestamp"];
+    [measurementParametersDict setObject:self.authToken                                                 forKey:@"wsAuthToken"];
+    [measurementParametersDict setObject:self.authTimestamp                                             forKey:@"wsAuthTimestamp"];
     
     [measurementParametersDict setObject:[NSNumber numberWithBool:false]                                forKey:@"cookieId"];
     
@@ -649,7 +650,9 @@ void handler(JSContextRef ctx, JSValueRef error)
     routeToClientLookupUrl = [NSString stringWithFormat:@"http://%@:%li/", routeToClientLookupUrl, self.routeToClientTargetPort];
     self.routeToClientLookupUrl = [NSURL URLWithString:routeToClientLookupUrl];
     
-    NSDictionary *routeToClientRequestData = [NSDictionary dictionaryWithObject:@"traceroute" forKey:@"cmd"];
+    NSMutableDictionary *routeToClientRequestData = [NSMutableDictionary dictionaryWithObject:@"traceroute" forKey:@"cmd"];
+    [routeToClientRequestData setObject:self.authToken forKey:@"tk"];
+    [routeToClientRequestData setObject:self.authTimestamp forKey:@"ts"];
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:routeToClientRequestData options:kNilOptions error:nil];
     
     NSMutableDictionary *header = [NSMutableDictionary new];

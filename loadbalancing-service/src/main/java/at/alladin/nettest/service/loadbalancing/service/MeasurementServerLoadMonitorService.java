@@ -36,6 +36,7 @@ import at.alladin.nettest.service.loadbalancing.dto.LoadApiReport;
 import at.alladin.nettest.service.loadbalancing.dto.LoadApiResponse;
 import at.alladin.nettest.service.loadbalancing.service.MeasurementServerLoadService.LoadCallable;
 import at.alladin.nettest.shared.berec.loadbalancer.api.v1.dto.MeasurementServerDto;
+import at.alladin.nettest.shared.server.helper.TokenHelper;
 import at.alladin.nettest.shared.server.service.storage.v1.StorageService;
 
 /**
@@ -128,7 +129,12 @@ public class MeasurementServerLoadMonitorService {
 		
 		if (id != null) {
 			//valid measurement server found
-			return storageService.getSpeedMeasurementServerByPublicIdentifier(id);
+			final MeasurementServerDto serverDto = storageService.getSpeedMeasurementServerByPublicIdentifier(id);
+			serverDto.setAuthTimestamp((long)(System.currentTimeMillis()*1e3));
+			serverDto.setAuthToken(TokenHelper.generateToken(serverDto.getAuthTimestamp(), serverDto.getSecretKey()));
+			serverDto.setSecretKey(null);
+			serverDto.setLoadApiSecretKey(null);
+			return serverDto;
 		}
 		
 		return null;
