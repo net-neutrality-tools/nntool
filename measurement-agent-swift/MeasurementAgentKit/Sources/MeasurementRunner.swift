@@ -51,6 +51,8 @@ public class MeasurementRunner {
         controlDto.agent = LmapAgentDto()
         controlDto.agent?.agentId = agentUuid
 
+        controlDto.additionalRequestInfo = ApiRequestHelper.buildApiRequestInfo(agentUuid: agentUuid, geoLocation: nil)
+
         ////
 
         var preferredPeers = [MeasurementTypeDto: String]()

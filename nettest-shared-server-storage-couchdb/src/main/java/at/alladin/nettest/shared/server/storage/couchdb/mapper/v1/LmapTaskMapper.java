@@ -131,13 +131,16 @@ public interface LmapTaskMapper {
 			
 			// if not found, try only browser without operating system
 			if (browserName.contains(".")) {
-				browserConf = confByUserAgent.get(browserName.split(".")[1]);
+				final String[] components = browserName.split("\\.");
+				if (components.length == 2) {
+					browserConf = confByUserAgent.get(components[1]);
 				
-				if (browserConf != null && !browserConf.getDownloadClassList().isEmpty() && !browserConf.getUploadClassList().isEmpty()) {
-					conf.setDownloadClassList(map(browserConf.getDownloadClassList()));
-					conf.setUploadClassList(map(browserConf.getUploadClassList()));
+					if (browserConf != null && !browserConf.getDownloadClassList().isEmpty() && !browserConf.getUploadClassList().isEmpty()) {
+						conf.setDownloadClassList(map(browserConf.getDownloadClassList()));
+						conf.setUploadClassList(map(browserConf.getUploadClassList()));
 				
-					return conf;
+						return conf;
+					}
 				}
 			}
 		}
