@@ -8,5 +8,6 @@
 
     <!-- contains a list of QosMeasurementType values (tcp, udp, ...) that are to be ignored by the android app (in both the test selection and the test execution) -->
     <string-array name="functionality_unavailable_qos_types">
+        <item>udp_turn</item>
     </string-array>
 </resources>

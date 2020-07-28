@@ -44,7 +44,7 @@ public enum RoamingType {
 	/**
 	 * Roaming type is not supported by the platform (e.g. iOS)
 	 */
-	NOT_AVAILABLE,
+	UNSUPPORTED,
 	
 	/**
 	 * The roaming type is supported by the platform (e.g. android), but could not be fetched
