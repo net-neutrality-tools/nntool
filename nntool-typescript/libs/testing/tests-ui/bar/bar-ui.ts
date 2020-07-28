@@ -228,6 +228,6 @@ export abstract class BarUIComponent<T extends TestImplementation<TC, TS>, TC ex
         numberOfPortsToTest += port.packets.requested_packets;
     });
 
-    return Math.max(1, numberOfTestedPorts / numberOfPortsToTest);
+    return Math.min(1, numberOfTestedPorts / numberOfPortsToTest);
   };
 }
