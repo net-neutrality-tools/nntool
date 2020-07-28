@@ -91,11 +91,7 @@ public class MeasurementServerSelectionView extends RelativeLayout {
         if (defaultPeer == null) {
             defaultPeer = peerList.get(0);
         }
-        if (selectedIdentifier != null && selectedPeer == null) {
-            //we previously selected a measurement peer that is no longer available
-            //clear the input measurement peer
-            ((MainActivity) getContext()).setSelectedMeasurementPeerIdentifier(null);
-        }
+        ((MainActivity) getContext()).setSelectedMeasurementPeerIdentifier(selectedPeer != null ? selectedPeer.getIdentifier() : defaultPeer.getIdentifier());
         serverName.setText(selectedPeer != null ? selectedPeer.getName() : defaultPeer.getName());
     }
 
