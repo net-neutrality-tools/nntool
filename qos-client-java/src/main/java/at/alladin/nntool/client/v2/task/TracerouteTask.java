@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,32 +41,32 @@ import at.alladin.nntool.util.tools.TracerouteService;
 import at.alladin.nntool.util.tools.TracerouteService.HopDetail;
 
 /**
- * 
+ *
  * @author lb
  *
  */
 public class TracerouteTask extends AbstractQoSTask {
 
 	public final static long DEFAULT_TIMEOUT = 10000000000L;
-	
+
 	public final static int DEFAULT_MAX_HOPS = 30;
-	
+
 	private final String host;
 
 	private final String authToken;
 
-	private final Long authTimestamp;
-	
+	private final long authTimestamp;
+
 	private final long timeout;
 	
 	private final int maxHops;
 
 	private final boolean isReverse;
-	
+
 	public final static String PARAM_HOST = "host";
 	
 	public final static String PARAM_TIMEOUT = "timeout";
-	
+
 	public final static String PARAM_MAX_HOPS = "max_hops";
 
 	public final static String PARAM_IS_REVERSE = "is_reverse";
@@ -76,42 +76,43 @@ public class TracerouteTask extends AbstractQoSTask {
 	public final static String PARAM_AUTH_TIMESTAMP = "auth_timestamp";
 
 	public final static String RESULT_HOST = "traceroute_objective_host";
-	
+
 	public final static String RESULT_DETAILS = "traceroute_result_details";
-	
+
 	public final static String RESULT_TIMEOUT = "traceroute_objective_timeout";
 
 	public final static String RESULT_IS_REVERSE = "traceroute_objective_is_reverse";
-	
-	public final static String RESULT_STATUS = "traceroute_result_status";
-	
+
+    public final static String RESULT_STATUS = "traceroute_result_status";
+
 	public final static String RESULT_MAX_HOPS = "traceroute_objective_max_hops";
-	
+
 	public final static String RESULT_HOPS = "traceroute_result_hops";
 
 
-	/**
-	 * 
-	 * @param taskDesc
-	 */
-	public TracerouteTask(QualityOfServiceTest nnTest, TaskDesc taskDesc, int threadId) {
-		super(nnTest, taskDesc, threadId, threadId);
-		this.host =  (String)taskDesc.getParams().get(PARAM_HOST);
-		
-		String value = (String) taskDesc.getParams().get(PARAM_TIMEOUT);
-		this.timeout = value != null ? Long.valueOf(value) : DEFAULT_TIMEOUT;
-		
-		value = (String) taskDesc.getParams().get(PARAM_MAX_HOPS);
-		this.maxHops = value != null ? Integer.valueOf(value) : DEFAULT_MAX_HOPS;
+    /**
+     * @param taskDesc
+     */
+    public TracerouteTask(QualityOfServiceTest nnTest, TaskDesc taskDesc, int threadId)
+    {
+        super(nnTest, taskDesc, threadId, threadId);
+        this.host = (String) taskDesc.getParams().get(PARAM_HOST);
 
-		this.authToken = (String)taskDesc.getParams().get(PARAM_AUTH_TOKEN);
+        String value = (String) taskDesc.getParams().get(PARAM_TIMEOUT);
+        this.timeout = value != null ? Long.parseLong(value) : DEFAULT_TIMEOUT;
+
+        value = (String) taskDesc.getParams().get(PARAM_MAX_HOPS);
+        this.maxHops = value != null ? Integer.parseInt(value) : DEFAULT_MAX_HOPS;
+
+        this.authToken = (String) taskDesc.getParams().get(PARAM_AUTH_TOKEN);
+
+		value = (String) taskDesc.getParams().get(PARAM_AUTH_TIMESTAMP);
+		this.authTimestamp = value != null ? Long.parseLong(value) : Long.MIN_VALUE;
 
 		Object val = taskDesc.getParams().get(PARAM_IS_REVERSE);
-		this.isReverse = val != null ? Boolean.valueOf(String.valueOf(val)) : false;
+		this.isReverse = val != null && Boolean.parseBoolean(String.valueOf(val));
 
-		val = taskDesc.getParams().get(PARAM_AUTH_TIMESTAMP);
-		this.authTimestamp = val != null ? Long.valueOf(String.valueOf(val)) : Long.MIN_VALUE;
-	}
+    }
 
 	/**
 	 * 
@@ -119,10 +120,10 @@ public class TracerouteTask extends AbstractQoSTask {
 	public QoSTestResult call() throws Exception {
   		final QoSTestResult testResult = initQoSTestResult(QosMeasurementType.TRACEROUTE);
 
-  		testResult.getResultMap().put(RESULT_HOST, host);
-  		testResult.getResultMap().put(RESULT_TIMEOUT, timeout);
-  		testResult.getResultMap().put(RESULT_MAX_HOPS, maxHops);
-  		testResult.getResultMap().put(RESULT_IS_REVERSE, isReverse);
+        testResult.getResultMap().put(RESULT_HOST, host);
+        testResult.getResultMap().put(RESULT_TIMEOUT, timeout);
+        testResult.getResultMap().put(RESULT_MAX_HOPS, maxHops);
+        testResult.getResultMap().put(RESULT_IS_REVERSE, isReverse);
 
 		try {
 			onStart(testResult);
@@ -141,7 +142,7 @@ public class TracerouteTask extends AbstractQoSTask {
 		finally {
 			onEnd(testResult);
 		}
-		
+
         return testResult;
 	}
 
@@ -196,10 +197,10 @@ public class TracerouteTask extends AbstractQoSTask {
 						options.put("tk", authToken);
 						options.put("ts", String.valueOf(authTimestamp));
 
-						final String jsonPost = new ObjectMapper().writeValueAsString(options);
+                        final String jsonPost = new ObjectMapper().writeValueAsString(options);
 
-						final URL url = new URL(TracerouteTask.this.host);
-						final HttpURLConnection httpPost;
+                        final URL url = new URL(TracerouteTask.this.host);
+                        final HttpURLConnection httpPost;
 
 						final long start = System.nanoTime();
 						httpPost = (HttpURLConnection) url.openConnection();
