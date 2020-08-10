@@ -113,7 +113,13 @@ public enum QosMeasurementType {
      *
      */
     @SerializedName("mkit_dash")
-    MKIT_DASH("mkit_dash", "test.mkit_dash", "name.mkit_dash", MkitDashResult.class);
+    MKIT_DASH("mkit_dash", "test.mkit_dash", "name.mkit_dash", MkitDashResult.class),
+
+    /**
+     *
+     */
+    @SerializedName("unsupported")
+    UNSUPPORTED("unsupported", "test.unsupported", "name.unsupported", null);
 
     /**
      * 
@@ -246,7 +252,7 @@ public enum QosMeasurementType {
             case MKIT_DASH:
                 return QoSMeasurementTypeDto.MKIT_DASH;
             default:
-                return null;
+                return QoSMeasurementTypeDto.UNSUPPORTED;
         }
     }
 
@@ -281,7 +287,7 @@ public enum QosMeasurementType {
             case MKIT_DASH:
                 return MKIT_DASH;
             default:
-                return null;
+                return UNSUPPORTED;
         }
     }
 }
