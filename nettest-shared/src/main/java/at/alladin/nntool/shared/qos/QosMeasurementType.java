@@ -119,7 +119,7 @@ public enum QosMeasurementType {
      *
      */
     @SerializedName("unsupported")
-    UNSUPPORTED("unsupported", "test.unsupported", "name.unsupported", null);
+    UNSUPPORTED("unsupported", "test.unsupported", "name.unsupported", AbstractResult.class);
 
     /**
      * 
