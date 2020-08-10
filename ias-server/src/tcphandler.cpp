@@ -443,7 +443,7 @@ int CTcpHandler::handle_http(Json::object http_header_values, noPollCtx *ctx, no
 
     bool overloadCheck = false;
 
-    if (cookies.size() > 1)
+    if (cookies.size() >= 1)
     {
         delimiter               = "=";
         string authToken        = "";

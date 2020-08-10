@@ -274,7 +274,15 @@ int CHttp::requestToReferenceServer()
 	string send_init = "";
 	send_init += "" + mType + " /data.img HTTP/1.1\r\n";
 	send_init += "Host: " + mHostname + "\r\n";
-	send_init += "Cookie: overload=true; tk=" + mAuthenticationToken + "; ts=" + mAuthenticationTimestamp + "\r\n";
+
+	if (strcmp(mAuthenticationToken.c_str(), "") != 0 && strcmp(mAuthenticationTimestamp.c_str(), "") != 0)
+	{
+		send_init += "Cookie: overload=true; tk=" + mAuthenticationToken + "; ts=" + mAuthenticationTimestamp + ";\r\n";
+	}
+	else
+	{
+		send_init += "Cookie: overload=true;\r\n";
+	}
 	send_init += "Connection: keep-alive\r\n\r\n";
 		
 	//String to Server

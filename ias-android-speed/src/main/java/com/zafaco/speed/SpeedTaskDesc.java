@@ -38,9 +38,9 @@ public class SpeedTaskDesc implements Serializable {
 
     private int rttCount = 10;
 
-    private int downloadStreams;
+    private int downloadStreams = 4;
 
-    private int uploadStreams;
+    private int uploadStreams = 4;
 
     private boolean performDownload = true;
 
