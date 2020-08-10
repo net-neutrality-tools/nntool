@@ -385,8 +385,17 @@ JSTool.prototype.performRouteToClientLookup = function(target, port, https, time
     if (xhr)
     {
         xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.timeout = 5000;
-        xhr.send(JSON.stringify({cmd:'traceroute', ts:auth_timestamp, tk:auth_token}));
+        xhr.timeout = xhrTimeout;
+        var postParameter;
+        if (typeof auth_token !== 'undefined' && typeof auth_timestamp !== 'undefined')
+        {
+            postParameter = {cmd:'traceroute', ts:auth_timestamp, tk:auth_token};
+        }
+        else
+        {
+            postParameter = {cmd:'traceroute'};
+        }
+        xhr.send(JSON.stringify(postParameter));
     }
 };
 
