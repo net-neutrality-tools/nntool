@@ -19,9 +19,9 @@ package at.alladin.nntool.client.v2.task;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
-import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 
 /**
  *
@@ -50,7 +50,7 @@ public class EchoProtocolTcpTask extends AbstractEchoProtocolTask {
 		    	
 
 		    	if (this.testPort != null && this.testHost != null) {
-					try (Socket socket = getSocket(testHost, testPort, false, (int)(timeout/1000000))){
+					try (Socket socket = getSocket(this.testHost, this.testPort, false, (int)(timeout/1000000))){
 						socket.setSoTimeout((int)(timeout/1000000));
 						
 						final long startTime = System.nanoTime();
@@ -95,7 +95,7 @@ public class EchoProtocolTcpTask extends AbstractEchoProtocolTask {
 			}
 
 			if (this.testHost != null) {
-				result.getResultMap().put("echo_protocol_objective_host", this.testHost);
+				result.getResultMap().put(RESULT_HOST, this.testHost);
 			}
 
 			result.getResultMap().put(RESULT_TIMEOUT, timeout);

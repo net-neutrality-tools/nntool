@@ -17,6 +17,7 @@
 package at.alladin.nettest.shared.berec.collector.api.v1.dto.shared;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 
 /**
  * Enum that holds the names of the available QoS measurement objectives.
@@ -39,6 +40,9 @@ public enum QoSMeasurementTypeDto {
     ECHO_PROTOCOL,
     SIP,
     AUDIO_STREAMING,
+
+    @JsonEnumDefaultValue
+    UNSUPPORTED,
 
     MKIT_DASH,
     MKIT_WEB_CONNECTIVITY;

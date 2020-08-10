@@ -16,8 +16,8 @@
 
 package at.alladin.nntool.client.v2.task;
 
-import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 
 /**
  * @author Felix Kendlbacher (fk@alladin.at)
@@ -36,6 +36,8 @@ public abstract class AbstractEchoProtocolTask extends AbstractQoSTask {
 
     public final static String RESULT_PORT = "echo_protocol_objective_port";
 
+    public final static String RESULT_HOST = "echo_protocol_objective_host";
+
     protected final static String RESULT = "echo_protocol_result";
 
     protected final static String RESULT_TIMEOUT = "echo_protocol_objective_timeout";
@@ -50,7 +52,7 @@ public abstract class AbstractEchoProtocolTask extends AbstractQoSTask {
     public final static String PARAM_SERVER_PORT = "port";
 
     //the server to test against
-    public final static String PARAM_SERVER_ADDRESS = "echo_protocol_objective_server_addr";
+    public final static String PARAM_SERVER_ADDRESS = "host";
 
     protected final static long DEFAULT_TIMEOUT = 3000000000L;
 
