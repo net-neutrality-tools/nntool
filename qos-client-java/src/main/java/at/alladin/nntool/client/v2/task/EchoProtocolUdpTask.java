@@ -21,9 +21,9 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 
-import at.alladin.nntool.shared.qos.QosMeasurementType;
 import at.alladin.nntool.client.QualityOfServiceTest;
 import at.alladin.nntool.client.v2.task.result.QoSTestResult;
+import at.alladin.nntool.shared.qos.QosMeasurementType;
 
 /**
  * 
@@ -48,7 +48,7 @@ public class EchoProtocolUdpTask extends AbstractEchoProtocolTask {
 		try {
 			onStart(result);
 
-			if (testHost != null && testPort != null) {
+			if (this.testHost != null && this.testPort != null) {
 
 				try (final DatagramSocket socket = new DatagramSocket()) {
 					socket.connect(InetAddress.getByName(this.testHost), this.testPort);
@@ -96,7 +96,7 @@ public class EchoProtocolUdpTask extends AbstractEchoProtocolTask {
 			}
 
 			if (this.testHost != null) {
-				result.getResultMap().put("echo_protocol_objective_host", this.testHost);
+				result.getResultMap().put(RESULT_HOST, this.testHost);
 			}
 
 			result.getResultMap().put(RESULT_TIMEOUT, timeout);
