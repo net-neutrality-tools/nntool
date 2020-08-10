@@ -78,8 +78,9 @@ Tool.prototype.getInterfaceConfiguration = function()
 {
     return new Promise((success) =>
     {
+        
         network.get_network_interfaces(function(error, interfaces)
-        {        
+        {    
             var interfaceConfiguration = {};
             interfaceConfiguration.error = '-';
             interfaceConfiguration.name = '-';
@@ -103,7 +104,6 @@ Tool.prototype.getInterfaceConfiguration = function()
                     //check for link-local ipv4 addresses
                     if (typeof interfaces[index].ipv4_address !== 'undefined' && interfaces[index].ipv4_address.includes('169.254.'))
                     {
-                        interfaces.splice(index, 1);
                         continue;
                     } 
 
@@ -137,7 +137,6 @@ Tool.prototype.getInterfaceConfiguration = function()
             {
                 interfaceConfiguration.error = error;
             }
-            
             success(JSON.stringify(interfaceConfiguration));
         });
     });
