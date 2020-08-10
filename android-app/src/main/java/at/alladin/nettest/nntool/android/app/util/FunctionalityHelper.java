@@ -29,23 +29,29 @@ import at.alladin.nntool.shared.qos.QosMeasurementType;
  * @author Felix Kendlbacher (alladin-IT GmbH)
  */
 public class FunctionalityHelper {
+    private static final String TAG = "FunctionalityHelper";
 
     static Set<QosMeasurementType> unavailableQoSTypes = null;
 
     /**
-     *
      * @param isAvailableType
      * @param context
      * @return true if the given type is allowed to be executed on this android device
      */
-    public static boolean isQoSTypeAvailable(final QosMeasurementType isAvailableType, final Context context) {
-        if (unavailableQoSTypes == null) {
+    public static boolean isQoSTypeAvailable(final QosMeasurementType isAvailableType, final Context context)
+    {
+        if (unavailableQoSTypes == null)
+        {
             unavailableQoSTypes = new HashSet<>();
+            unavailableQoSTypes.add(QosMeasurementType.UNSUPPORTED);
             final String[] unavailableQosTypeStrings = context.getResources().getStringArray(R.array.functionality_unavailable_qos_types);
-            for (String type : unavailableQosTypeStrings) {
-                try {
+            for (String type : unavailableQosTypeStrings)
+            {
+                try
+                {
                     unavailableQoSTypes.add(QosMeasurementType.fromValue(type.toLowerCase()));
-                } catch (IllegalArgumentException ex) {
+                } catch (IllegalArgumentException ex)
+                {
                     ex.printStackTrace();
                 }
             }
@@ -54,10 +60,13 @@ public class FunctionalityHelper {
         return !unavailableQoSTypes.contains(isAvailableType);
     }
 
-    public static boolean isQoSTypeAvailable(final QoSMeasurementTypeDto isAvailableType, final Context context) {
-        try {
+    public static boolean isQoSTypeAvailable(final QoSMeasurementTypeDto isAvailableType, final Context context)
+    {
+        try
+        {
             return isQoSTypeAvailable(QosMeasurementType.fromValue(isAvailableType.name().toLowerCase()), context);
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex)
+        {
             ex.printStackTrace();
         }
         return true;
