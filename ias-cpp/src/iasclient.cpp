@@ -1,7 +1,7 @@
 /*!
     \file iasclient.cpp
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2020-05-11
+    \date Last update: 2020-08-06
 
     Copyright (C) 2016 - 2020 zafaco GmbH
 
@@ -101,8 +101,8 @@ int main(int argc, char** argv)
 	long int opt;
 	int tls = 0;
 	string target_port = "80";
-	string auth_token = "";
-	string auth_timestamp = "";
+	string auth_token;
+	string auth_timestamp;
 
 	while ( ( opt = getopt( argc, argv, "rdutp:nhva:m:" ) ) != -1 )
 	{
