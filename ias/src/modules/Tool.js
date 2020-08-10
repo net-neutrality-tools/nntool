@@ -1,7 +1,7 @@
 /*!
     \file Tool.js
     \author zafaco GmbH <info@zafaco.de>
-    \date Last update: 2020-04-06
+    \date Last update: 2020-08-06
 
     Copyright (C) 2016 - 2020 zafaco GmbH
 
@@ -363,10 +363,25 @@ JSTool.prototype.extend = function ()
     return extended;
 };
 
-JSTool.prototype.performRouteToClientLookup = function(target, port, https, auth_token, auth_timestamp)
+JSTool.prototype.performRouteToClientLookup = function(target, port, https, timeout, auth_token, auth_timestamp)
 {
-    var protocol = https ? 'https://' : 'http://';
-    var xhr = createCORSRequest('POST', protocol + target + ':' + port);
+    var xhrTimeout = 5000;
+    if (typeof timeout !== 'undefined')
+    {
+        xhrTimeout = timeout;
+    }
+
+    var xhr;
+    if (typeof https !== 'undefined' && typeof port !== 'undefined')
+    {
+        var protocol = https ? 'https://' : 'http://';
+        xhr = createCORSRequest('POST', protocol + target + ':' + port);
+    }
+    else
+    {
+        xhr = createCORSRequest('POST', target);
+    }
+
     if (xhr)
     {
         xhr.setRequestHeader('Content-Type', 'application/json');
