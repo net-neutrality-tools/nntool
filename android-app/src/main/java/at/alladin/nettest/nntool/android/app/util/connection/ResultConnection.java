@@ -29,11 +29,11 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.full.Ful
 public class ResultConnection extends AbstractConnection<ResultService> {
 
     public ResultConnection(final String url) {
-        super(url, null, ResultService.class);
+        super(url, null, null, ResultService.class);
     }
 
     public ResultConnection(final boolean isEncrypted, final String hostname, final int port, final String pathPrefix) {
-        super(isEncrypted, hostname, null, port, pathPrefix, ResultService.class);
+        super(isEncrypted, hostname, null, null, port, pathPrefix, ResultService.class);
     }
 
     public ApiResponse<ApiPagination<BriefMeasurementResponse>> requestHistory(final String agentUuid) {
