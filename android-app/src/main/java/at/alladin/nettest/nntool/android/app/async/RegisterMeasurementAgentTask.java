@@ -54,7 +54,7 @@ public class RegisterMeasurementAgentTask extends AsyncTask<Void, Void, Registra
 
     @Override
     protected RegistrationResponse doInBackground(Void... voids) {
-        final ControllerConnection controllerConnection = ConnectionUtil.createControllerConnection(context, false);
+        final ControllerConnection controllerConnection = ConnectionUtil.createControllerConnection(context);
         final RegistrationResponse response = controllerConnection.registerMeasurementAgent(
                 RequestUtil.prepareApiRegistrationRequest(context));
         return response;

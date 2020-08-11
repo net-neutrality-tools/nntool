@@ -16,11 +16,14 @@
 
 package at.alladin.nettest.nntool.android.app.util.connection;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import at.alladin.nettest.nntool.android.app.util.ObjectMapperUtil;
+import at.alladin.nettest.nntool.android.app.util.PreferencesUtil;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import retrofit2.Retrofit;
@@ -35,17 +38,21 @@ public abstract class AbstractConnection<T> {
 
     T controllerService;
 
+    //will be used for IPv4 only requests
+    T controllerService4;
+
     //will be used for IPv6 only requests
     T controllerService6;
 
-    public AbstractConnection(final boolean isEncrypted, final String hostname,
+    public AbstractConnection(final boolean isEncrypted, final String hostname, final String hostname4,
                               final String hostname6, final int port, final String pathPrefix,
                               final Class<T> serviceClazz) {
         this ((isEncrypted ? "https://" : "http://") + hostname + ":" + port + pathPrefix,
+                (isEncrypted ? "https://" : "http://") + hostname4 + ":" + port + pathPrefix,
                 (isEncrypted ? "https://" : "http://") + hostname6 + ":" + port + pathPrefix, serviceClazz);
     }
 
-    public AbstractConnection(final String url, final String url6, final Class<T> serviceClazz) {
+    public AbstractConnection(final String url, final String url4, final String url6, final Class<T> serviceClazz) {
         final List<Protocol> protocols = new ArrayList<>();
         protocols.add(Protocol.HTTP_1_1);
         OkHttpClient httpClient = new OkHttpClient.Builder()
@@ -68,6 +75,19 @@ public abstract class AbstractConnection<T> {
             e.printStackTrace();
         }
 
+        try {
+            Retrofit r4 = new Retrofit.Builder()
+                    .baseUrl(appendTrailingSlashToUrl(url4 == null ? url : url4))
+                    .addConverterFactory(JacksonConverterFactory.create(ObjectMapperUtil.createBasicObjectMapper()))
+                    .client(httpClient)
+                    .build();
+
+            System.out.println("BASE URL v4: " + r4.baseUrl().toString());
+            controllerService4 = r4.create(serviceClazz);
+        }
+        catch (final Exception e) {
+            e.printStackTrace();
+        }
 
         try {
             Retrofit r6 = new Retrofit.Builder()
@@ -90,6 +110,14 @@ public abstract class AbstractConnection<T> {
 
     public T getControllerService6() {
         return controllerService6;
+    }
+
+    public T getControllerService4() {
+        return controllerService4;
+    }
+
+    public T getPreferredControllerService(final Context context) {
+        return PreferencesUtil.isForceIpv4(context) ? controllerService4 : controllerService;
     }
 
     private String appendTrailingSlashToUrl(final String url) {
