@@ -68,9 +68,9 @@ public class RequestMeasurementTask extends AsyncTask<Void, Void, LmapControlDto
 
     @Override
     protected LmapControlDto doInBackground(Void... voids) {
-        final ControllerConnection controllerConnection = ConnectionUtil.createControllerConnection(context, false);
+        final ControllerConnection controllerConnection = ConnectionUtil.createControllerConnection(context);
         return controllerConnection.requestMeasurement(
-                RequestUtil.prepareMeasurementInitiationRequest(selectedMeasurementPeerIdentifier, context));
+                RequestUtil.prepareMeasurementInitiationRequest(selectedMeasurementPeerIdentifier, context), context);
     }
 
     @Override

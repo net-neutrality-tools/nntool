@@ -16,6 +16,8 @@
 
 package at.alladin.nettest.nntool.android.app.util.connection;
 
+import android.content.Context;
+
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.ApiRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationRequest;
 import at.alladin.nettest.shared.berec.collector.api.v1.dto.agent.registration.RegistrationResponse;
@@ -31,14 +33,17 @@ public class ControllerConnection extends AbstractConnection<ControllerService> 
 
     private final String hostname;
 
+    private final String hostname4;
+
     private final String hostname6;
 
     private final int port;
 
-    public ControllerConnection(final boolean isEncrypted, final String hostname,
+    public ControllerConnection(final boolean isEncrypted, final String hostname, final String hostname4,
                                 final String hostname6, final int port, final String pathPrefix) {
-        super(isEncrypted, hostname, hostname6, port, pathPrefix, ControllerService.class);
+        super(isEncrypted, hostname, hostname4, hostname6, port, pathPrefix, ControllerService.class);
         this.hostname = hostname;
+        this.hostname4 = hostname4;
         this.hostname6 = hostname6;
         this.port = port;
     }
@@ -54,9 +59,9 @@ public class ControllerConnection extends AbstractConnection<ControllerService> 
         return null;
     }
 
-    public LmapControlDto requestMeasurement (final LmapControlDto request) {
+    public LmapControlDto requestMeasurement (final LmapControlDto request, final Context context) {
         try {
-            return getControllerService().postMeasurementRequest(request).execute().body();
+            return getPreferredControllerService(context).postMeasurementRequest(request).execute().body();
         } catch (final Exception ex) {
             ex.printStackTrace();
         }
@@ -76,7 +81,7 @@ public class ControllerConnection extends AbstractConnection<ControllerService> 
         try {
             switch (ipVersion) {
                 case IPv4:
-                    return getControllerService().getAgentIpAddress().execute().body().getData();
+                    return getControllerService4().getAgentIpAddress().execute().body().getData();
                 case IPv6:
                     return getControllerService6().getAgentIpAddress().execute().body().getData();
             }
