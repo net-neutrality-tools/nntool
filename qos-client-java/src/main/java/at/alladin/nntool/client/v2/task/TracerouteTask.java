@@ -105,11 +105,11 @@ public class TracerouteTask extends AbstractQoSTask {
         this.maxHops = value != null ? Integer.parseInt(value) : DEFAULT_MAX_HOPS;
 
         this.authToken = (String) taskDesc.getParams().get(PARAM_AUTH_TOKEN);
+        
+		Object val = taskDesc.getParams().get(PARAM_AUTH_TIMESTAMP);
+		this.authTimestamp = val != null ? Long.parseLong(String.valueOf(val)) : Long.MIN_VALUE;
 
-		value = (String) taskDesc.getParams().get(PARAM_AUTH_TIMESTAMP);
-		this.authTimestamp = value != null ? Long.parseLong(value) : Long.MIN_VALUE;
-
-		Object val = taskDesc.getParams().get(PARAM_IS_REVERSE);
+		val = taskDesc.getParams().get(PARAM_IS_REVERSE);
 		this.isReverse = val != null && Boolean.parseBoolean(String.valueOf(val));
 
     }

@@ -31,11 +31,11 @@ import at.alladin.nntool.shared.map.info.MapInfoResponse;
 public class MapConnection extends AbstractConnection<MapService> {
 
     public MapConnection(final String url) {
-        super(url, null, MapService.class);
+        super(url, null, null, MapService.class);
     }
 
     public MapConnection(final boolean isEncrypted, final String hostname, final int port, final String pathPrefix) {
-        super(isEncrypted, hostname, null, port, pathPrefix, MapService.class);
+        super(isEncrypted, hostname, null, null, port, pathPrefix, MapService.class);
     }
 
     public MapMarkerResponse requestMapMarker(final MapCoordinate coordinate, final Map<String, String> mapOptions, final Map<String, String> mapFilters) {

@@ -25,11 +25,11 @@ import at.alladin.nettest.shared.berec.collector.api.v1.dto.measurement.result.M
 public class CollectorConnection extends AbstractConnection<CollectorService> {
 
     public CollectorConnection(final String url) {
-        super(url, null, CollectorService.class);
+        super(url, null, null, CollectorService.class);
     }
 
     public CollectorConnection(final boolean isEncrypted, final String hostname, final int port, final String pathPrefix) {
-        super(isEncrypted, hostname, null, port, pathPrefix, CollectorService.class);
+        super(isEncrypted, hostname, null,  null, port, pathPrefix, CollectorService.class);
     }
 
     public MeasurementResultResponse sendMeasurementReport(final LmapReportDto reportDto) {
