@@ -99,6 +99,10 @@ public class ControllerConnection extends AbstractConnection<ControllerService> 
         return hostname6;
     }
 
+    public String getHostname4() {
+        return hostname4;
+    }
+
     public int getPort() {
         return port;
     }

@@ -88,7 +88,7 @@ public class RequestAgentIpTask extends AsyncTask<Void, Void, Map<IpResponse.IpV
                     address = new InetSocketAddress(controllerConnection.getHostname6(), controllerConnection.getPort());
                     break;
                 case IPv4:
-                    address = new InetSocketAddress(controllerConnection.getHostname(), controllerConnection.getPort());
+                    address = new InetSocketAddress(controllerConnection.getHostname4(), controllerConnection.getPort());
                     break;
             }
             s.connect(address, 2000);
