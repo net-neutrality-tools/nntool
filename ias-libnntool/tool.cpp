@@ -269,6 +269,14 @@ int CTool::calculateResults(struct measurement_data &sMeasurement, double increm
 	        sMeasurement.standard_deviation_ns = sqrt(variancePopulation) * 1000;
 		#endif
 	}
+	else
+	{
+		sMeasurement.min = 0;
+		sMeasurement.avg = 0;
+		sMeasurement.max = 0;
+		sMeasurement.median_ns = 0;
+		sMeasurement.standard_deviation_ns = 0;
+	}
 	
 	return 0;
 }
