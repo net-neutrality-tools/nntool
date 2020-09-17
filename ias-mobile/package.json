@@ -16,7 +16,7 @@
 	"dependencies": {
 		"nativescript-theme-core": "1.0.4",
 		"nativescript-websockets": "1.5.3",
-		"node-forge": "0.8.0",
+		"node-forge": "0.10.0",
 		"performance-now": "2.1.0",
 		"tns-core-modules": "5.2.0"
 	}
