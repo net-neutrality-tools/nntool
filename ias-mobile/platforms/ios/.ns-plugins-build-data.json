@@ -1,0 +1,24 @@
+{
+	"nativescript-websockets": {
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/nativescript-websockets/platforms/ios/Podfile": "e1474d4c5b0d4c2e044988d56b19af05acd3beda"
+	},
+	"@nativescript/core": {
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/Podfile": "32c7118af05cda2870d9693d93b4c9376840221e",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/TNSWidgets.framework/Headers/NSData+Async.h": "4eae4f66d67dc99a53dbbb7c2d8cf1b3df7eb487",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/TNSWidgets.framework/Headers/NSString+Async.h": "a3cdfaeb2f7360c395c8e6c2defb4a2b2ffc8f10",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/TNSWidgets.framework/Headers/TNSLabel.h": "c7c5788d3ea834d96cf8a137cbf0c4ea28fd7829",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/TNSWidgets.framework/Headers/TNSProcess.h": "787f09c57ede174d6323990e6d6e9eaf134da6f0",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/TNSWidgets.framework/Headers/TNSWidgets.h": "814beee5b8d98390227b9889d64af11660eb1f09",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/TNSWidgets.framework/Headers/UIImage+TNSBlocks.h": "3b31a5be818e25c142e99f98479c538632d350ae",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/TNSWidgets.framework/Headers/UIView+PassThroughParent.h": "cddc4157f40983b34fcb1d3846666b5ecc5b1ca5",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/TNSWidgets.framework/Info.plist": "615a01ba7fa48b8aa53f6c0cf2a5dade94d48475",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/TNSWidgets.framework/Modules/module.modulemap": "00d2220e76eb098f1808eb4e9b5c43ad4cadf1da",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/native-api-usage.json": "57877386fe966e8697d5c5dbc50d42feab6bed8c",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/src/NativeScriptEmbedder.h": "61d5332c711cc0ac62e0194e18077d2ff5293b11",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/src/NativeScriptEmbedder.m": "177d5673fac79dff28d09182eaef20778f66e787",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/src/module.modulemap": "e3696280d924e540c4525889e025e1314ec183b9",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/typings/objc!MaterialComponents.d.ts": "7ed17f247f445c1ae064ae00d1b9024c9c2650a1",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/TNSWidgets.framework/TNSWidgets": "600bd44588ed742f9686d55e287d2b515b1dfc8c",
+		"/Users/mike/nextcloud.zafaco/projects/zafaco/bm_ios/common_mobile/node_modules/@nativescript/core/platforms/ios/TNSWidgets.framework.dSYM.zip": "c15ce07e5b7b5872d0d08332fd1ff461b622d845"
+	}
+}
