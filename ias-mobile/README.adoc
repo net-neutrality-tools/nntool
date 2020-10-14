@@ -29,11 +29,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * NativeScript = 5.x
 * macOS (any Version)
 
-Please Note: The `speed` framework of `ias-ios` uses the `TNSRuntime` (which is part of `nativescript`) provided by 'ias-mobile' . NativeScript 7 defaults to the `v8 iOS engine`, which does not include `TNSRuntime`, and is therefore NOT compatible with `speed`. Hence, `tns-ios 6.5.3` must be used for the time being. Moreover, if compiled with xcode 12, the execution of JavaSript code within the `TNSRuntime` fails. Hence, xcode 11 must be used for the time being to compile the `speed` framework of `ias-ios`.
+Please Note: The `speed` framework of `ias-ios` uses the `TNSRuntime` (which is part of `nativescript`) provided by `ias-mobile`. NativeScript 7 defaults to the `v8 iOS engine`, which does not include `TNSRuntime`, and is therefore NOT compatible with `speed`. Hence, `tns-ios 6.5.3` must be used for the time being. Moreover, if compiled with xcode 12, the execution of JavaSript code within the `TNSRuntime` fails. Hence, xcode 11 must be used for the time being to compile the `speed` framework of `ias-ios`.
+
 References:
-https://nativescript.org/blog/nativescript-7-announcement/
-https://github.com/NativeScript/NativeScript/issues/8867
-https://github.com/NativeScript/NativeScript/issues/8741
+* https://nativescript.org/blog/nativescript-7-announcement/
+* https://github.com/NativeScript/NativeScript/issues/8867
+* https://github.com/NativeScript/NativeScript/issues/8741
 
 === Build
 
