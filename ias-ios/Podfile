@@ -28,6 +28,7 @@ target 'Speed'
 
 pod 'nntool-shared-swift', :path => '../nntool-shared-swift'
 pod 'QoSKit', :path => '../qos-client-swift'
+pod 'qos-client-cpp', :path => '../qos-cpp'
 
 target 'Demo'
 
