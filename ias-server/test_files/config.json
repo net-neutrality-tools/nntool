@@ -22,9 +22,9 @@
     "monitoring": {
       "enabled": true,
       "interface": "lo",
-      "bandwidth_bps": {
-        "max": 1000000000,
-        "free": 200000000
+      "bandwidth": {
+        "bits_max": 1000000000,
+        "bits_free": 200000000
       }
     },
     "balancer": {

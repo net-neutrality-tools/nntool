@@ -21,9 +21,9 @@ The following options are available:
 |string
 |`eth1`
 |Interface which should be monitored for rx and tx rates
-|`bandwidth_bps`
+|`bandwidth`
 |object
-|`{"max":1000000000, "free":200000000}`
+|`{"bits_max":1000000000, "bits_free":200000000}`
 |Maximum capacity in bits per second of monitored interface, and overload threshold of minimum free capacity in rx and tx directions  
 |===
 
