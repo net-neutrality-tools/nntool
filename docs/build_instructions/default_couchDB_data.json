@@ -425,6 +425,14 @@
       "docType": "EmbeddedNetworkType"
     },
     {
+      "_id": "network_type_NR",
+      "network_type_id": 20,
+      "name": "NR",
+      "group_name": "5G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
+    },
+    {
       "_id": "network_type_CLI",
       "network_type_id": 97,
       "name": "CLI",
@@ -453,6 +461,14 @@
       "network_type_id": 105,
       "name": "CELLULAR_ANY",
       "group_name": "MOBILE",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
+    },
+    {
+      "_id": "network_type_NRNSA",
+      "network_type_id": 120,
+      "name": "NRSA",
+      "group_name": "5G",
       "category": "MOBILE",
       "docType": "EmbeddedNetworkType"
     },
