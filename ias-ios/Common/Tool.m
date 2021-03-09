@@ -588,7 +588,7 @@
     //5G Networks
     else if ([currentRadioAccessTechnologyString isEqualToString:@"CTRadioAccessTechnologyNRNSA"])
     {
-        [currentRadioAccessTechnology setObject:[NSNumber numberWithInteger:19] forKey:@"app_access_id"];
+        [currentRadioAccessTechnology setObject:[NSNumber numberWithInteger:120] forKey:@"app_access_id"];
         [currentRadioAccessTechnology setObject:@"NRNSA" forKey:@"app_access"];
         [currentRadioAccessTechnology setObject:@"5G" forKey:@"app_access_category"];
     }

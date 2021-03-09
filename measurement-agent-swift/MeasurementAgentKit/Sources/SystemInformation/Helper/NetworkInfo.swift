@@ -33,8 +33,8 @@ public class NetworkInfo {
         CTRadioAccessTechnologyLTE: 13,
         CTRadioAccessTechnologyeHRPD: 14,
         // As only available in iOS14, we must use strings here.
-        "CTRadioAccessTechnologyNRNSA": 16,
-        "CTRadioAccessTechnologyNR": 17
+        "CTRadioAccessTechnologyNRNSA": 120,
+        "CTRadioAccessTechnologyNR": 20
         
     ]
     
@@ -54,7 +54,7 @@ public class NetworkInfo {
         CTRadioAccessTechnologyLTE: "LTE (4G)",
         CTRadioAccessTechnologyeHRPD: "HRPD (2G)",
         "CTRadioAccessTechnologyNRNSA": "NRNSA (5G)",
-        "CTRadioAccessTechnologyNR": "NRSA (5G)"
+        "CTRadioAccessTechnologyNR": "NR (5G)"
     ]
 
     public class func getWifiInfo() -> (String?, String?) {
