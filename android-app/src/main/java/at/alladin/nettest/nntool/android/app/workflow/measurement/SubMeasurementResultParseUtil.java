@@ -57,7 +57,7 @@ public class SubMeasurementResultParseUtil {
         ret.setRttInfo(rttInfoDto);
 
         if (speedTaskDesc != null) {
-            connectionInfoDto.setAddress(speedTaskDesc.getSpeedServerAddrV4());
+            connectionInfoDto.setAddress(speedTaskDesc.getSpeedServerAddrDefault());
             connectionInfoDto.setPort(speedTaskDesc.getSpeedServerPort());
             connectionInfoDto.setEncrypted(speedTaskDesc.isUseEncryption());
             connectionInfoDto.setRequestedNumStreamsDownload(speedTaskDesc.getDownloadStreams());
