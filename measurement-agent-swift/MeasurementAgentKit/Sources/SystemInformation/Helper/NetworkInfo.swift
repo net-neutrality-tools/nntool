@@ -20,7 +20,7 @@ import SystemConfiguration.CaptiveNetwork
 
 public class NetworkInfo {
 
-    private static let cellularNetworkIdDictionary = [
+    private static var cellularNetworkIdDictionary = [
         CTRadioAccessTechnologyGPRS: 1,
         CTRadioAccessTechnologyEdge: 2,
         CTRadioAccessTechnologyWCDMA: 3,
@@ -31,8 +31,15 @@ public class NetworkInfo {
         CTRadioAccessTechnologyHSUPA: 9,
         CTRadioAccessTechnologyCDMAEVDORevB: 12,
         CTRadioAccessTechnologyLTE: 13,
-        CTRadioAccessTechnologyeHRPD: 14
+        CTRadioAccessTechnologyeHRPD: 14,
+        // As only available in iOS14, we must use strings here.
+        "CTRadioAccessTechnologyNRNSA": 120,
+        "CTRadioAccessTechnologyNR": 20
+        
     ]
+    
+    
+    
 
     private static let cellularNetworkNameDictionary = [
         CTRadioAccessTechnologyGPRS: "GPRS (2G)",
@@ -45,7 +52,9 @@ public class NetworkInfo {
         CTRadioAccessTechnologyHSUPA: "HSUPA (3G)",
         CTRadioAccessTechnologyCDMAEVDORevB: "EVDOB (2G)",
         CTRadioAccessTechnologyLTE: "LTE (4G)",
-        CTRadioAccessTechnologyeHRPD: "HRPD (2G)"
+        CTRadioAccessTechnologyeHRPD: "HRPD (2G)",
+        "CTRadioAccessTechnologyNRNSA": "NRNSA (5G)",
+        "CTRadioAccessTechnologyNR": "NR (5G)"
     ]
 
     public class func getWifiInfo() -> (String?, String?) {

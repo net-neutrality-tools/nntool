@@ -306,164 +306,180 @@
     },
     {
       "_id": "network_type_GSM",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "2G",
+      "network_type_id": 1,
       "name": "GSM",
-      "network_type_id": 1
+      "group_name": "2G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_EDGE",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "2G",
+      "network_type_id": 2,
       "name": "EDGE",
-      "network_type_id": 2
+      "group_name": "2G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_UMTS",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "3G",
+      "network_type_id": 3,
       "name": "UMTS",
-      "network_type_id": 3
+      "group_name": "3G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_CDMA",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "2G",
+      "network_type_id": 4,
       "name": "CDMA",
-      "network_type_id": 4
+      "group_name": "2G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_EVDO_0",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "2G",
+      "network_type_id": 5,
       "name": "EVDO_0",
-      "network_type_id": 5
+      "group_name": "2G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_EVDO_A",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "2G",
+      "network_type_id": 6,
       "name": "EVDO_A",
-      "network_type_id": 6
+      "group_name": "2G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_1xRTT",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "2G",
+      "network_type_id": 7,
       "name": "1xRTT",
-      "network_type_id": 7
+      "group_name": "2G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_HSDPA",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "3G",
+      "network_type_id": 8,
       "name": "HSDPA",
-      "network_type_id": 8
+      "group_name": "3G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_HSUPA",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "3G",
+      "network_type_id": 9,
       "name": "HSUPA",
-      "network_type_id": 9
+      "group_name": "3G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_HSPA",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "3G",
+      "network_type_id": 10,
       "name": "HSPA",
-      "network_type_id": 10
+      "group_name": "3G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_IDEN",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "2G",
+      "network_type_id": 11,
       "name": "IDEN",
-      "network_type_id": 11
+      "group_name": "2G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_EVDO_B",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "2G",
+      "network_type_id": 12,
       "name": "EVDO_B",
-      "network_type_id": 12
+      "group_name": "2G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_LTE",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "4G",
+      "network_type_id": 13,
       "name": "LTE",
-      "network_type_id": 13
+      "group_name": "4G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_EHRPD",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "2G",
+      "network_type_id": 14,
       "name": "EHRPD",
-      "network_type_id": 14
+      "group_name": "2G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_HSPA+",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "3G",
+      "network_type_id": 15,
       "name": "HSPA+",
-      "network_type_id": 15
+      "group_name": "3G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
+    },
+    {
+      "_id": "network_type_NR",
+      "network_type_id": 20,
+      "name": "NR",
+      "group_name": "5G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_CLI",
-      "category": "UNKNOWN",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "CLI",
+      "network_type_id": 97,
       "name": "CLI",
-      "network_type_id": 97
+      "group_name": "CLI",
+      "category": "UNKNOWN",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_LAN",
-      "category": "LAN",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "LAN",
+      "network_type_id": 98,
       "name": "LAN",
-      "network_type_id": 98
+      "group_name": "LAN",
+      "category": "LAN",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_WLAN",
-      "category": "WIFI",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "WLAN",
+      "network_type_id": 99,
       "name": "WLAN",
-      "network_type_id": 99
+      "group_name": "WLAN",
+      "category": "WIFI",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_CELLULAR_ANY",
-      "category": "MOBILE",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "MOBILE",
+      "network_type_id": 105,
       "name": "CELLULAR_ANY",
-      "network_type_id": 105
+      "group_name": "MOBILE",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
+    },
+    {
+      "_id": "network_type_NRNSA",
+      "network_type_id": 120,
+      "name": "NRSA",
+      "group_name": "5G",
+      "category": "MOBILE",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "_id": "network_type_UNKNOWN",
       "_rev": "2-c5e2c3c2fb336c5b186e8a3e516a3295",
-      "category": "UNKNOWN",
-      "docType": "EmbeddedNetworkType",
-      "group_name": "UNKNOWN",
+      "network_type_id": 95,
       "name": "UNKNOWN",
-      "network_type_id": 95
+      "group_name": "UNKNOWN",
+      "category": "UNKNOWN",
+      "docType": "EmbeddedNetworkType"
     },
     {
       "docType": "Settings",

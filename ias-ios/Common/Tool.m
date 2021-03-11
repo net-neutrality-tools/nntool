@@ -585,6 +585,20 @@
         [currentRadioAccessTechnology setObject:@"4G" forKey:@"app_access_category"];
     }
     
+    //5G Networks
+    else if ([currentRadioAccessTechnologyString isEqualToString:@"CTRadioAccessTechnologyNRNSA"])
+    {
+        [currentRadioAccessTechnology setObject:[NSNumber numberWithInteger:120] forKey:@"app_access_id"];
+        [currentRadioAccessTechnology setObject:@"NRNSA" forKey:@"app_access"];
+        [currentRadioAccessTechnology setObject:@"5G" forKey:@"app_access_category"];
+    }
+    else if ([currentRadioAccessTechnologyString isEqualToString:@"CTRadioAccessTechnologyNR"])
+    {
+        [currentRadioAccessTechnology setObject:[NSNumber numberWithInteger:20] forKey:@"app_access_id"];
+        [currentRadioAccessTechnology setObject:@"NR" forKey:@"app_access"];
+        [currentRadioAccessTechnology setObject:@"5G" forKey:@"app_access_category"];
+    }
+    
     return (NSDictionary*)currentRadioAccessTechnology;
 }
 
