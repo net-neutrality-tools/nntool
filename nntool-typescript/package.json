@@ -101,7 +101,7 @@
     "copyfiles": "^2.1.1",
     "cpx": "^1.5.0",
     "dotenv": "8.0.0",
-    "electron": "5.0.12",
+    "electron": "9.4.0",
     "electron-builder": "^22.5.1",
     "electron-cookies": "heap/electron-cookies",
     "electron-installer-dmg": "~3.0.0",
