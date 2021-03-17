@@ -467,7 +467,7 @@
     {
       "_id": "network_type_NRNSA",
       "network_type_id": 120,
-      "name": "NRSA",
+      "name": "NRNSA",
       "group_name": "5G",
       "category": "MOBILE",
       "docType": "EmbeddedNetworkType"
