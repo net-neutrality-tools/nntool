@@ -5,21 +5,30 @@
 
 === Prerequisites
 
-- XCode >= 11
-- CocoaPods
-- NativeScript = 5.x
-- macOS >= MacOS 10.14 (Mojave)
-- gstreamer binaries (install from https://gstreamer.freedesktop.org/documentation/installing/for-ios-development.html?gi-language=c, version used during development: https://gstreamer.freedesktop.org/data/pkg/ios/1.16.1/)
+* XCode == 11 (see below
+* CocoaPods
+* NativeScript-cli = 7.x (This is the CLI, NOT the runtime - see below)
+* macOS >= MacOS 10.14 (Mojave)
+* gstreamer binaries (install from https://gstreamer.freedesktop.org/documentation/installing/for-ios-development.html?gi-language=c, version used during development: https://gstreamer.freedesktop.org/data/pkg/ios/1.16.1/)
+
+Please Note: The `speed` framework of `ias-ios` uses the `TNSRuntime` (which is part of `nativescript`) provided by `ias-mobile`. NativeScript 7 defaults to the `v8 iOS engine`, which does not include `TNSRuntime`, and is therefore NOT compatible with `speed`. Hence, `tns-ios 6.5.3` must be used for the time being. Moreover, if compiled with xcode 12, the execution of JavaSript code within the `TNSRuntime` fails. Hence, xcode 11 must be used for the time being to compile the `speed` framework of `ias-ios`.
+
+References:
+
+https://nativescript.org/blog/nativescript-7-announcement/
+
+https://github.com/NativeScript/NativeScript/issues/8867
+
+https://github.com/NativeScript/NativeScript/issues/8741
 
 === Build
 
 With fullfilled prerequisites perform the following steps:
 
 1. Build *ias*, see instructions in *ias/README.md*
-2. Build *ias-mobile*, see instructions in *ias-mobile/README.md*
-3. In directory *qos-client-swift* run *pod install* to install MeasurementKit
-4. In directory *ios-app*, run *pod install* to install required CocoaPods dependencies
-5. Open *ios-app.xcworkspace* in XCode and build target *BEREC_nntool*
+2. In directory *qos-client-swift* run *pod install* to install MeasurementKit
+3. In directory *ios-app*, run *pod install* to install required CocoaPods dependencies
+4. Open *ios-app.xcworkspace* in XCode and build target *BEREC_nntool*
 
 == Configuration
 
