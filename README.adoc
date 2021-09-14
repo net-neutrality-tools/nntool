@@ -1,6 +1,10 @@
 [[nntool-overview]]
 = nntool.eu
 
+== Important: Project archived
+
+The development of the Net Neutrality (NN) Reference Measurement System has been successfully completed by the project partners, and the repository has been archived. Development will possibly continue within forks of this project.
+
 == Overview
 
 BEREC–the Body of European Regulators for Electronic Communications–assigned the contract for development, implementation and validation of the Net Neutrality (NN) Reference Measurement System in July 2018.
